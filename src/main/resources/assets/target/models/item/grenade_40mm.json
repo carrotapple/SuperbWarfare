@@ -1,0 +1,7 @@
+{
+  "parent": "target:custom/gungranade",
+  "textures": {
+    "0": "target:block/gungranade",
+    "particle": "target:item/gungranade"
+  }
+}

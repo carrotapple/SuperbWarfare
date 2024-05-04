@@ -1,0 +1,9 @@
+{
+  "parent": "target:custom/tiesiwang",
+  "textures": {
+    "all": "target:block/sandbag",
+    "particle": "target:block/sandbag",
+    "1": "target:block/tiesiwang"
+  },
+  "render_type": "cutout"
+}

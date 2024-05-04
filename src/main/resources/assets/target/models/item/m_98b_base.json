@@ -1,0 +1,6 @@
+{
+  "parent": "target:displaysettings/m98b.item",
+  "textures": {
+    "layer0": "target:item/m98b"
+  }
+}

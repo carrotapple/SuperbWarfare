@@ -1,0 +1,6 @@
+{
+  "parent": "target:displaysettings/taser.item",
+  "textures": {
+    "layer0": "target:item/tasergun"
+  }
+}

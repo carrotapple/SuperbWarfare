@@ -1,0 +1,27 @@
+{
+	"loader": "forge:separate_transforms",
+	"gui_light": "front",
+	"base": {
+		"parent": "target:item/kraber_base"
+	},
+	"perspectives": {
+		"gui": {
+			"parent": "target:item/kraber_icon"
+		},
+		"thirdperson_righthand": {
+			"parent": "target:item/kraber3d"
+		},
+		"thirdperson_lefthand": {
+			"parent": "target:item/kraber3d"
+		},
+		"ground": {
+			"parent": "target:item/kraber3d"
+		},
+		"fixed": {
+			"parent": "target:item/kraber3d"
+		},
+		"head": {
+			"parent": "target:item/kraber3d"
+		}
+	}
+}

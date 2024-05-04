@@ -1,0 +1,6 @@
+{
+  "parent": "target:displaysettings/sks.item",
+  "textures": {
+    "layer0": "target:item/sks"
+  }
+}

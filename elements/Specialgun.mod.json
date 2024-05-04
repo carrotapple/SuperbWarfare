@@ -1,0 +1,25 @@
+{
+  "_fv": 57,
+  "_type": "tag",
+  "definition": {
+    "type": "Items",
+    "items": [
+      {
+        "value": "CUSTOM:Bocek"
+      },
+      {
+        "value": "CUSTOM:Kraber"
+      },
+      {
+        "value": "CUSTOM:Minigun"
+      }
+    ],
+    "blocks": [],
+    "functions": [],
+    "entities": [],
+    "biomes": [],
+    "damageTypes": [],
+    "name": "specialgun",
+    "namespace": "mod"
+  }
+}

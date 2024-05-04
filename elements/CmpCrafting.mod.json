@@ -1,0 +1,48 @@
+{
+  "_fv": 57,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Crafting",
+    "recipeRetstackSize": 1,
+    "group": "",
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": true,
+    "recipeSlots": [
+      {
+        "value": "CUSTOM:IronBarrel"
+      },
+      {
+        "value": "CUSTOM:IronAction"
+      },
+      {
+        "value": "CUSTOM:IronSpring"
+      },
+      {
+        "value": "CUSTOM:IronTrigger"
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": ""
+      },
+      {
+        "value": ""
+      }
+    ],
+    "recipeReturnStack": {
+      "value": "CUSTOM:Commonmaterialpack"
+    },
+    "name": "cmp_crafting",
+    "namespace": "mod"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "target:displaysettings/hk416.item",
+  "textures": {
+    "layer0": "target:item/hk416"
+  }
+}

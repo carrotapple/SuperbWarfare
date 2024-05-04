@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "target:block/no_tex",
+    "up": "target:block/no_tex",
+    "north": "target:block/no_tex",
+    "east": "target:block/no_tex",
+    "south": "target:block/no_tex",
+    "west": "target:block/no_tex",
+    "particle": "target:block/no_tex"
+  },
+  "render_type": "solid"
+}

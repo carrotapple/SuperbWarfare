@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "target:kraber_blueprint"
+  },
+  "base": {
+    "item": "target:specialmaterialpack"
+  },
+  "addition": {
+    "item": "minecraft:spyglass"
+  },
+  "result": {
+    "item": "target:kraber"
+  }
+}

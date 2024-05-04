@@ -1,0 +1,60 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.bocek.idle": {
+			"loop": true,
+			"animation_length": 1,
+			"bones": {
+				"bow": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.bocek.draw": {
+			"animation_length": 1,
+			"bones": {
+				"bow": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"anim": {
+					"rotation": {
+						"0.0": {
+							"vector": [27.21312, -47.42646, -2.0218]
+						},
+						"0.2917": {
+							"vector": [12.5, -15, 0]
+						},
+						"0.4167": {
+							"vector": [3.48268, 0.40464, 8.20687]
+						},
+						"0.5833": {
+							"vector": [0, 0, -2]
+						},
+						"0.7083": {
+							"vector": [0, 0, 0]
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [3, -17.3, 0]
+						},
+						"0.4167": {
+							"vector": [0, 0, -1.65]
+						},
+						"0.5": {
+							"vector": [0, 0, 0.93]
+						},
+						"0.7083": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

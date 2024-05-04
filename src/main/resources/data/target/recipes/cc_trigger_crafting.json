@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ab",
+    " b"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:tripwire_hook"
+    },
+    "b": {
+      "item": "target:cemented_carbide_ingot"
+    }
+  },
+  "result": {
+    "item": "target:cementedcarbide_trigger",
+    "count": 1
+  }
+}

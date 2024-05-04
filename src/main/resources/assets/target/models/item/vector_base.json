@@ -1,0 +1,6 @@
+{
+  "parent": "target:displaysettings/vector.item",
+  "textures": {
+    "layer0": "target:item/vector"
+  }
+}

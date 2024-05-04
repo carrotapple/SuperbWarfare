@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "target:m_79_blueprint"
+  },
+  "base": {
+    "item": "target:rarematerialpack"
+  },
+  "addition": {
+    "tag": "minecraft:logs"
+  },
+  "result": {
+    "item": "target:m_79"
+  }
+}

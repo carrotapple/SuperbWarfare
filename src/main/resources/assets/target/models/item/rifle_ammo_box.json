@@ -1,0 +1,7 @@
+{
+  "parent": "target:custom/rifleammobox",
+  "textures": {
+    "0": "target:block/rifleammobox",
+    "particle": "target:item/hk4163d"
+  }
+}

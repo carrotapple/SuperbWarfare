@@ -1,0 +1,6 @@
+{
+  "parent": "target:displaysettings/lightsaber.item",
+  "textures": {
+    "layer0": "target:item/lightsaber"
+  }
+}

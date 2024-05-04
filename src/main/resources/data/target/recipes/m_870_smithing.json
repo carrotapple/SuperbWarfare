@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "target:m_870_blueprint"
+  },
+  "base": {
+    "item": "target:rarematerialpack"
+  },
+  "addition": {
+    "item": "target:ingot_steel"
+  },
+  "result": {
+    "item": "target:m_870"
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "_fv": 57,
+  "_type": "tag",
+  "definition": {
+    "type": "Items",
+    "items": [
+      {
+        "value": "CUSTOM:Taser"
+      },
+      {
+        "value": "CUSTOM:Trachelium"
+      },
+      {
+        "value": "CUSTOM:HuntingRifle"
+      },
+      {
+        "value": "CUSTOM:M79"
+      },
+      {
+        "value": "CUSTOM:Abekiri"
+      },
+      {
+        "value": "CUSTOM:Devotion"
+      },
+      {
+        "value": "CUSTOM:M4"
+      },
+      {
+        "value": "CUSTOM:Aa12"
+      },
+      {
+        "value": "CUSTOM:Bocek"
+      },
+      {
+        "value": "CUSTOM:Hk416"
+      },
+      {
+        "value": "CUSTOM:Rpk"
+      },
+      {
+        "value": "CUSTOM:Sks"
+      },
+      {
+        "value": "CUSTOM:Kraber"
+      },
+      {
+        "value": "CUSTOM:Vector"
+      },
+      {
+        "value": "CUSTOM:Minigun"
+      },
+      {
+        "value": "CUSTOM:Mk14"
+      },
+      {
+        "value": "CUSTOM:Sentinel"
+      },
+      {
+        "value": "CUSTOM:M60"
+      },
+      {
+        "value": "CUSTOM:Svd"
+      },
+      {
+        "value": "CUSTOM:Marlin"
+      },
+      {
+        "value": "CUSTOM:M870"
+      },
+      {
+        "value": "CUSTOM:M98b"
+      },
+      {
+        "value": "CUSTOM:AK47"
+      },
+      {
+        "value": "CUSTOM:Rpg"
+      }
+    ],
+    "blocks": [],
+    "functions": [],
+    "entities": [],
+    "biomes": [],
+    "damageTypes": [],
+    "name": "gun",
+    "namespace": "mod"
+  }
+}

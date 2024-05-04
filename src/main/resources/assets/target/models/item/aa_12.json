@@ -1,0 +1,27 @@
+{
+	"loader": "forge:separate_transforms",
+	"gui_light": "front",
+	"base": {
+		"parent": "target:item/aa_12_base"
+	},
+	"perspectives": {
+		"gui": {
+			"parent": "target:item/aa_12_icon"
+		},
+		"thirdperson_righthand": {
+			"parent": "target:item/aa123d"
+		},
+		"thirdperson_lefthand": {
+			"parent": "target:item/aa123d"
+		},
+		"ground": {
+			"parent": "target:item/aa123d"
+		},
+		"fixed": {
+			"parent": "target:item/aa123d"
+		},
+		"head": {
+			"parent": "target:item/aa123d"
+		}
+	}
+}

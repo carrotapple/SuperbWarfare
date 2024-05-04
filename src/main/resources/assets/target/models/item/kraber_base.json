@@ -1,0 +1,6 @@
+{
+  "parent": "target:displaysettings/kraber.item",
+  "textures": {
+    "layer0": "target:item/kraber"
+  }
+}

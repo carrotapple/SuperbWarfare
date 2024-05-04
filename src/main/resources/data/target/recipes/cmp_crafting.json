@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "target:iron_barrel"
+    },
+    {
+      "item": "target:iron_action"
+    },
+    {
+      "item": "target:iron_spring"
+    },
+    {
+      "item": "target:iron_trigger"
+    }
+  ],
+  "result": {
+    "item": "target:commonmaterialpack",
+    "count": 1
+  }
+}

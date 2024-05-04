@@ -1,0 +1,22 @@
+{
+  "_fv": 57,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Blasting",
+    "recipeRetstackSize": 1,
+    "group": "",
+    "cookingBookCategory": "MISC",
+    "xpReward": 4.0,
+    "cookingTime": 400,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": false,
+    "blastingInputStack": {
+      "value": "CUSTOM:Scheelite"
+    },
+    "blastingReturnStack": {
+      "value": "CUSTOM:TungstenIngot"
+    },
+    "name": "tungsten_blasting",
+    "namespace": "mod"
+  }
+}

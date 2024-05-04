@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "target:steel_barrel"
+    },
+    {
+      "item": "target:steel_action"
+    },
+    {
+      "item": "target:steel_spring"
+    },
+    {
+      "item": "target:steel_trigger"
+    }
+  ],
+  "result": {
+    "item": "target:rarematerialpack",
+    "count": 1
+  }
+}

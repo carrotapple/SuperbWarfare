@@ -1,0 +1,6 @@
+{
+  "parent": "target:displaysettings/mk14ebr.item",
+  "textures": {
+    "layer0": "target:item/mk14"
+  }
+}

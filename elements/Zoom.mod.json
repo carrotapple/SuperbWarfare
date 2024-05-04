@@ -1,0 +1,15 @@
+{
+  "_fv": 57,
+  "_type": "keybind",
+  "definition": {
+    "triggerKey": "MOUSE_RIGHT",
+    "keyBindingName": "Zoom",
+    "keyBindingCategoryKey": "target",
+    "onKeyPressed": {
+      "name": "ToZoom"
+    },
+    "onKeyReleased": {
+      "name": "OutZoom"
+    }
+  }
+}

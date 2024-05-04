@@ -1,0 +1,27 @@
+{
+	"loader": "forge:separate_transforms",
+	"gui_light": "front",
+	"base": {
+		"parent": "target:item/sks_base"
+	},
+	"perspectives": {
+		"gui": {
+			"parent": "target:item/sks_icon"
+		},
+		"thirdperson_righthand": {
+			"parent": "target:item/sks3d"
+		},
+		"thirdperson_lefthand": {
+			"parent": "target:item/sks3d"
+		},
+		"ground": {
+			"parent": "target:item/sks3d"
+		},
+		"fixed": {
+			"parent": "target:item/sks3d"
+		},
+		"head": {
+			"parent": "target:item/sks3d"
+		}
+	}
+}

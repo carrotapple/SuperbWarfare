@@ -1,0 +1,25 @@
+{
+  "entries": [
+    "target:common_chest",
+    "target:common_chest_2",
+    "target:common_chest_3",
+    "target:common_chest_4",
+    "target:common_chest_5",
+    "target:rare_chest",
+    "target:rare_chest_2",
+    "target:common_chest_6",
+    "target:rare_chest_3",
+    "target:rare_chest_4",
+    "target:rare_chest_5",
+    "target:rare_chest_6",
+    "target:rare_chest_7",
+    "target:rare_chest_8",
+    "target:rare_chest_9",
+    "target:rare_chest_10",
+    "target:epic_chest",
+    "target:epic_chest_2",
+    "target:epic_chest_3",
+    "target:epic_chest_4"
+  ],
+  "replace": false
+}

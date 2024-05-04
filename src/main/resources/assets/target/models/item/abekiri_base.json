@@ -1,0 +1,6 @@
+{
+  "parent": "target:displaysettings/abekiri.item",
+  "textures": {
+    "layer0": "target:item/abekiri"
+  }
+}

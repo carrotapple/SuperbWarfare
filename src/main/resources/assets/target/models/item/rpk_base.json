@@ -1,0 +1,6 @@
+{
+  "parent": "target:displaysettings/rpk.item",
+  "textures": {
+    "layer0": "target:item/rpk"
+  }
+}

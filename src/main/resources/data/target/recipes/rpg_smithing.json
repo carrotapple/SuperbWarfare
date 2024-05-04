@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "target:rpg_blueprint"
+  },
+  "base": {
+    "item": "target:epicmaterialpack"
+  },
+  "addition": {
+    "tag": "minecraft:logs"
+  },
+  "result": {
+    "item": "target:rpg"
+  }
+}

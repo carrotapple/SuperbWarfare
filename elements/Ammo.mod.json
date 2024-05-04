@@ -1,0 +1,11 @@
+{
+  "_fv": 57,
+  "_type": "tab",
+  "definition": {
+    "name": "Target Ammo",
+    "icon": {
+      "value": "CUSTOM:ShotgunAmmoBox"
+    },
+    "showSearch": false
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "target:custom/sniperammobox",
+  "textures": {
+    "0": "target:block/sniperammobox",
+    "particle": "target:item/hk4163d"
+  }
+}

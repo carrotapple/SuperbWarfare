@@ -1,0 +1,16 @@
+{
+  "_fv": 57,
+  "_type": "attribute",
+  "definition": {
+    "description": "Motar Pitch",
+    "minValue": 20.0,
+    "maxValue": 90.0,
+    "defaultValue": 70.0,
+    "isPersistent": false,
+    "entities": [
+      {
+        "value": "CUSTOM:Mortar"
+      }
+    ]
+  }
+}

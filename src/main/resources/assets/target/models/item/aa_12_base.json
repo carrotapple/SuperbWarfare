@@ -1,0 +1,6 @@
+{
+  "parent": "target:displaysettings/aa12.item",
+  "textures": {
+    "layer0": "target:item/aa12_new"
+  }
+}

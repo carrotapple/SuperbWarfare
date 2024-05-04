@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "target:cemented_carbide_barrel"
+    },
+    {
+      "item": "target:cemented_carbide_action"
+    },
+    {
+      "item": "target:cementedcarbidespring"
+    },
+    {
+      "item": "target:cementedcarbide_trigger"
+    }
+  ],
+  "result": {
+    "item": "target:epicmaterialpack",
+    "count": 1
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "target:displaysettings/hunting_rifle.item",
+  "textures": {
+    "layer0": "target:item/huntingrifle"
+  }
+}

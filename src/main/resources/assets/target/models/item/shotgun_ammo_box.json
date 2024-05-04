@@ -1,0 +1,7 @@
+{
+  "parent": "target:custom/shotgunammobox",
+  "textures": {
+    "1": "target:block/shotgunammobox",
+    "particle": "target:item/hk4163d"
+  }
+}

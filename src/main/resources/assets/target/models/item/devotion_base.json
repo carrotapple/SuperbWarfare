@@ -1,0 +1,6 @@
+{
+  "parent": "target:displaysettings/devotion.item",
+  "textures": {
+    "layer0": "target:item/devotion"
+  }
+}

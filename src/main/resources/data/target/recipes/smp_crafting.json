@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "target:netherite_barrel"
+    },
+    {
+      "item": "target:netherite_spring"
+    },
+    {
+      "item": "target:netherite_action"
+    },
+    {
+      "item": "target:netherite_trigger"
+    }
+  ],
+  "result": {
+    "item": "target:legendarymaterialpack",
+    "count": 1
+  }
+}

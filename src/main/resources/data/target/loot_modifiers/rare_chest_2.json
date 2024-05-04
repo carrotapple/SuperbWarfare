@@ -1,0 +1,10 @@
+{
+  "type": "target:target_loot_modifier",
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:chests/ancient_city_ice_box"
+    }
+  ],
+  "lootTable": "target:blue_print_rare"
+}

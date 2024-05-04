@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "a",
+    "a",
+    "a"
+  ],
+  "key": {
+    "a": {
+      "item": "target:cemented_carbide_ingot"
+    }
+  },
+  "result": {
+    "item": "target:cementedcarbidespring",
+    "count": 1
+  }
+}

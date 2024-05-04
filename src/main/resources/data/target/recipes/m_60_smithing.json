@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "target:m_60_blueprint"
+  },
+  "base": {
+    "item": "target:epicmaterialpack"
+  },
+  "addition": {
+    "item": "target:cemented_carbide_ingot"
+  },
+  "result": {
+    "item": "target:m_60"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "a ",
+    "bc"
+  ],
+  "key": {
+    "a": {
+      "item": "target:mortarbarrel"
+    },
+    "b": {
+      "item": "target:mortarbipod"
+    },
+    "c": {
+      "item": "target:moratr_base_plate"
+    }
+  },
+  "result": {
+    "item": "target:mortar_depolyer",
+    "count": 1
+  }
+}

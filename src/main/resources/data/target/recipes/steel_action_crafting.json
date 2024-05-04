@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "aaa",
+    "  a"
+  ],
+  "key": {
+    "a": {
+      "item": "target:ingot_steel"
+    }
+  },
+  "result": {
+    "item": "target:steel_action",
+    "count": 1
+  }
+}

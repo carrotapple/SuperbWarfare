@@ -1,0 +1,27 @@
+{
+	"loader": "forge:separate_transforms",
+	"gui_light": "front",
+	"base": {
+		"parent": "target:item/svd_base"
+	},
+	"perspectives": {
+		"gui": {
+			"parent": "target:item/svd_icon"
+		},
+		"thirdperson_righthand": {
+			"parent": "target:item/svd3d"
+		},
+		"thirdperson_lefthand": {
+			"parent": "target:item/svd3d"
+		},
+		"ground": {
+			"parent": "target:item/svd3d"
+		},
+		"fixed": {
+			"parent": "target:item/svd3d"
+		},
+		"head": {
+			"parent": "target:item/svd3d"
+		}
+	}
+}

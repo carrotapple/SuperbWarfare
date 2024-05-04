@@ -1,0 +1,9 @@
+{
+  "parent": "target:custom/pad",
+  "textures": {
+    "all": "target:block/pad",
+    "particle": "target:block/pad",
+    "0": "target:block/pad"
+  },
+  "render_type": "solid"
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "minecraft:coals"
+    },
+    {
+      "item": "target:hammer"
+    }
+  ],
+  "result": {
+    "item": "target:coal_powder",
+    "count": 1
+  }
+}

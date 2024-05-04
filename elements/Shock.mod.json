@@ -1,0 +1,23 @@
+{
+  "_fv": 57,
+  "_type": "potioneffect",
+  "definition": {
+    "effectName": "Shock",
+    "icon": "shock.png",
+    "color": {
+      "value": -256,
+      "falpha": 0.0
+    },
+    "isInstant": false,
+    "isBad": false,
+    "isBenefitical": true,
+    "renderStatusInInventory": true,
+    "renderStatusInHUD": true,
+    "onStarted": {
+      "name": "ShockDangYaoShuiXiaoGuoKaiShiYingYongShi"
+    },
+    "onActiveTick": {
+      "name": "ShockZaiXiaoGuoChiXuShiMeiKeFaSheng"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " a ",
+    "bcb",
+    " d "
+  ],
+  "key": {
+    "a": {
+      "item": "target:fusee"
+    },
+    "b": {
+      "item": "minecraft:iron_ingot"
+    },
+    "c": {
+      "item": "minecraft:tnt"
+    },
+    "d": {
+      "item": "minecraft:gunpowder"
+    }
+  },
+  "result": {
+    "item": "target:mortar_shells",
+    "count": 1
+  }
+}

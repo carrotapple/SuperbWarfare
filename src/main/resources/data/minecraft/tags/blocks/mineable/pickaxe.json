@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "target:galena_ore",
+    "target:deepslate_galena_ore",
+    "target:scheelite_ore",
+    "target:deepslate_scheelite_ore"
+  ]
+}

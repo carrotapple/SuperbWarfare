@@ -1,0 +1,27 @@
+{
+	"loader": "forge:separate_transforms",
+	"gui_light": "front",
+	"base": {
+		"parent": "target:item/sentinel_base"
+	},
+	"perspectives": {
+		"gui": {
+			"parent": "target:item/sentinel_icon"
+		},
+		"thirdperson_righthand": {
+			"parent": "target:item/sentinel3d"
+		},
+		"thirdperson_lefthand": {
+			"parent": "target:item/sentinel3d"
+		},
+		"ground": {
+			"parent": "target:item/sentinel3d"
+		},
+		"fixed": {
+			"parent": "target:item/sentinel3d"
+		},
+		"head": {
+			"parent": "target:item/sentinel3d"
+		}
+	}
+}

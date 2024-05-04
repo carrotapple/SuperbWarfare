@@ -1,0 +1,6 @@
+{
+  "parent": "target:displaysettings/trachelium.item",
+  "textures": {
+    "layer0": "target:item/trachelium_texture"
+  }
+}

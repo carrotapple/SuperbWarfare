@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "target:block/sandbagdi",
+    "up": "target:block/sand",
+    "north": "target:block/sandbag",
+    "east": "target:block/sandbag",
+    "south": "target:block/sandbag",
+    "west": "target:block/sandbag",
+    "particle": "target:block/sandbagdi"
+  },
+  "render_type": "solid"
+}

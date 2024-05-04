@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "target:svd_blueprint"
+  },
+  "base": {
+    "item": "target:epicmaterialpack"
+  },
+  "addition": {
+    "item": "target:cemented_carbide_ingot"
+  },
+  "result": {
+    "item": "target:svd"
+  }
+}

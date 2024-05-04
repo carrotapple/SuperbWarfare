@@ -1,0 +1,11 @@
+{
+  "_fv": 57,
+  "_type": "tab",
+  "definition": {
+    "name": "Target Item",
+    "icon": {
+      "value": "CUSTOM:Targetdeployer"
+    },
+    "showSearch": false
+  }
+}

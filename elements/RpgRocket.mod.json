@@ -1,0 +1,28 @@
+{
+  "_fv": 57,
+  "_type": "projectile",
+  "definition": {
+    "projectileItem": {
+      "value": "Blocks.AIR"
+    },
+    "showParticles": false,
+    "actionSound": {
+      "value": ""
+    },
+    "igniteFire": false,
+    "power": 1.0,
+    "damage": 5.0,
+    "knockback": 5,
+    "entityModel": "Modelrpg7_rocket_Converted",
+    "customModelTexture": "rocket.png",
+    "onHitsBlock": {
+      "name": "RpgRocketDanSheWuJiZhongFangKuaiShi"
+    },
+    "onHitsEntity": {
+      "name": "RocketHit"
+    },
+    "onFlyingTick": {
+      "name": "RpgRocketDanSheWuFeiXingShiMeiKeFaSheng"
+    }
+  }
+}

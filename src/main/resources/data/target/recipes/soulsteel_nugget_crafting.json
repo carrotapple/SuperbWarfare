@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "target:soulsteel_ingot"
+    }
+  ],
+  "result": {
+    "item": "target:soulsteelnugget",
+    "count": 9
+  }
+}

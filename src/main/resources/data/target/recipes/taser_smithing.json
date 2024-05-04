@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "target:taser_blueprint"
+  },
+  "base": {
+    "item": "target:commonmaterialpack"
+  },
+  "addition": {
+    "item": "minecraft:yellow_concrete"
+  },
+  "result": {
+    "item": "target:taser"
+  }
+}

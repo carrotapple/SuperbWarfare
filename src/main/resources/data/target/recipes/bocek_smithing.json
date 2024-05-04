@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "target:bocek_blueprint"
+  },
+  "base": {
+    "item": "minecraft:bow"
+  },
+  "addition": {
+    "item": "target:soulsteel_ingot"
+  },
+  "result": {
+    "item": "target:bocek"
+  }
+}

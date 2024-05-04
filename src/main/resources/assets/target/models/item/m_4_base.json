@@ -1,0 +1,6 @@
+{
+  "parent": "target:displaysettings/m4.item",
+  "textures": {
+    "layer0": "target:item/m4"
+  }
+}
