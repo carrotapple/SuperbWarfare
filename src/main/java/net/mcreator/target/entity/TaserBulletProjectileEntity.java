@@ -143,7 +143,7 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
 				super.onHitEntity(result);
 				TaserBulletDangTouZhiWuJiZhongShiTiShiProcedure.execute(result.getEntity(), this, this.getOwner());
 				this.discard();
-	}
+        }
 
 	@Override
 	public void tick() {
