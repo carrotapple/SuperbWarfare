@@ -1,7 +1,4 @@
 
-/*
- *    MCreator note: This file will be REGENERATED on each build.
- */
 package net.mcreator.target.init;
 
 import net.minecraftforge.registries.RegistryObject;
@@ -18,3 +15,4 @@ public class TargetModParticleTypes {
 	public static final RegistryObject<SimpleParticleType> FIRESTAR = REGISTRY.register("firestar", () -> new SimpleParticleType(false));
 	public static final RegistryObject<SimpleParticleType> BULLTHOLE = REGISTRY.register("bullthole", () -> new SimpleParticleType(false));
 }
+

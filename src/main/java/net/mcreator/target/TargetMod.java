@@ -41,7 +41,6 @@ import java.util.function.Supplier;
 public class TargetMod {
     public static final Logger LOGGER = LogManager.getLogger(TargetMod.class);
     public static final String MODID = "target";
-
     public TargetMod() {
         MinecraftForge.EVENT_BUS.register(this);
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();

@@ -1,7 +1,4 @@
 
-/*
- *    MCreator note: This file will be REGENERATED on each build.
- */
 package net.mcreator.target.init;
 
 import net.minecraftforge.fml.common.Mod;
@@ -20,3 +17,4 @@ public class TargetModParticles {
 		event.registerSpriteSet(TargetModParticleTypes.BULLTHOLE.get(), BulltholeParticle::provider);
 	}
 }
+

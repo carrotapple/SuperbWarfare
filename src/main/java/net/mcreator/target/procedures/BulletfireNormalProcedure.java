@@ -44,7 +44,7 @@ public class BulletfireNormalProcedure {
 			ProjectileEntity projectile = new ProjectileEntity(entity.level(), living);
 			projectile.setOwner(living);
 
-			projectile.setPos(living.getX(), living.getEyeY() - 0.1, living.getZ());
+			projectile.setPos((living.getX() + (-0.5) * living.getLookAngle().x), (living.getEyeY() - 0.1  + (-0.5) * living.getLookAngle().y), (living.getZ() + (-0.5) * living.getLookAngle().z));
 			projectile.shoot(living.getLookAngle().x, living.getLookAngle().y, living.getLookAngle().z, (float) usehand.getOrCreateTag().getDouble("velocity"),
 					(float) living.getAttribute(TargetModAttributes.SPREAD.get()).getBaseValue());
 			entity.level().addFreshEntity(projectile);
