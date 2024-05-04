@@ -43,6 +43,8 @@ public class ProjectileEntity extends ThrowableItemProjectile {
         super(TargetCustomModEntities.PROJECTILE.get(), p_i1775_2_, p_i1775_4_, p_i1775_6_, p_i1775_1_);
     }
 
+
+
     @Override
     protected void onHitEntity(EntityHitResult pResult) {
 
@@ -79,13 +81,11 @@ public class ProjectileEntity extends ThrowableItemProjectile {
                     }
                     if(headshot){
                         ProjectileHeadshotEntity.execute(this.level(), pResult.getEntity(), this, this.getOwner());
-                    } else {
-                        ProjectileHitEntity.execute(this.level(), pResult.getEntity(), this, this.getOwner());
-
                     }
                 }
             }
         }
+        ProjectileHitEntity.execute(this.level(), pResult.getEntity(), this, this.getOwner());
     }
 
     @Override
