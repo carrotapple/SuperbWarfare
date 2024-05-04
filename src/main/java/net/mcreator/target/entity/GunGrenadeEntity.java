@@ -142,7 +142,7 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
 		}
 				super.onHitEntity(result);
 				this.discard();
-	}
+    }
 
 	@Override
 	public void onHitBlock(BlockHitResult blockHitResult) {

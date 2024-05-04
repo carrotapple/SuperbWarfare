@@ -72,7 +72,7 @@ public class MortarShellEntity extends AbstractArrow implements ItemSupplier {
 	public void onHitEntity(EntityHitResult entityHitResult) {
 		super.onHitEntity(entityHitResult);
 		MortarShellDanSheWuJiZhongShiTiShiProcedure.execute(this.level(), this);
-	}
+    }
 
 	@Override
 	public void onHitBlock(BlockHitResult blockHitResult) {

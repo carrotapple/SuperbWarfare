@@ -148,7 +148,7 @@ public class BocekarrowEntity extends AbstractArrow implements ItemSupplier {
 		}
 				super.onHitEntity(result);
 				this.discard();
-	}
+    }
 
 	@Override
 	public void tick() {
