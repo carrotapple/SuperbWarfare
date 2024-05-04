@@ -40,14 +40,8 @@ public class BulletfireNormalProcedure {
 			capability.syncPlayerVariables(entity);
 		});
 
-		if (usehand.getOrCreateTag().getDouble("level") >= 10) {
-			dam = usehand.getOrCreateTag().getDouble("damage") * (1 + 0.05 * (usehand.getOrCreateTag().getDouble("level") - 10));
-		} else {
-			dam = usehand.getOrCreateTag().getDouble("damage");
-		}
-
 		if (!entity.level().isClientSide() && entity instanceof LivingEntity living) {
-			ProjectileEntity projectile = new ProjectileEntity(entity.level(), living, (float) dam);
+			ProjectileEntity projectile = new ProjectileEntity(entity.level(), living);
 			projectile.setOwner(living);
 
 			projectile.setPos(living.getX(), living.getEyeY() - 0.1, living.getZ());

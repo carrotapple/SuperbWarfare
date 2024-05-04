@@ -1,57 +1,24 @@
 package net.mcreator.target.entity;
 
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.util.Mth;
+
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.BlockHitResult;
-
 import net.minecraft.world.level.Level;
-
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
-import net.mcreator.target.init.TargetCustomModEntities;
-import net.mcreator.target.init.TargetModItems;
-
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.block.*;
 import net.minecraft.world.phys.*;
-
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.network.PlayMessages;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.api.distmarker.Dist;
-
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.BlockHitResult;
-
-import net.minecraft.world.level.Level;
-import net.minecraft.world.entity.projectile.ItemSupplier;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.Packet;
 
 import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
-import net.mcreator.target.init.TargetModEntities;
+import net.mcreator.target.init.TargetCustomModEntities;
+import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.procedures.ProjectileHitEntity;
+import net.mcreator.target.procedures.ProjectileHeadshotEntity;
 
-import net.mcreator.target.procedures.BullettestDanSheWuJiZhongFangKuaiShiProcedure;
-import net.mcreator.target.network.TargetModVariables;
-
-import java.util.Iterator;
 import java.util.Optional;
 
 public class ProjectileEntity extends ThrowableItemProjectile {
@@ -78,14 +45,46 @@ public class ProjectileEntity extends ThrowableItemProjectile {
 
     @Override
     protected void onHitEntity(EntityHitResult pResult) {
-        super.onHitEntity(pResult);
+
+        final Vec3 position = this.position();
         Entity entity = pResult.getEntity();
         if (entity instanceof LivingEntity livingEntity) {
-            livingEntity.hurt(this.damageSources().thrown(this, this.getOwner() instanceof LivingEntity living ? living : null), this.damage);
+            entity.invulnerableTime = 0;
         }
+        AABB boundingBox = entity.getBoundingBox();
+        Vec3 startVec = this.position();
+        Vec3 endVec = startVec.add(this.getDeltaMovement());
+        Vec3 hitPos = boundingBox.clip(startVec, endVec).orElse(null);
+        /* Check for headshot */
+        boolean headshot = false;
+        if(entity instanceof LivingEntity)
+        {
+            IHeadshotBox<LivingEntity> headshotBox = (IHeadshotBox<LivingEntity>) BoundingBoxManager.getHeadshotBoxes(entity.getType());
+            if(headshotBox != null)
+            {
+                AABB box = headshotBox.getHeadshotBox((LivingEntity) entity);
+                if(box != null)
+                {
+                    box = box.move(boundingBox.getCenter().x, boundingBox.minY, boundingBox.getCenter().z);
+                    Optional<Vec3> headshotHitPos = box.clip(startVec, endVec);
+                    if(!headshotHitPos.isPresent())
+                    {
+                        box = box.inflate( 0.2, 0.2, 0.2);
+                        headshotHitPos = box.clip(startVec, endVec);
+                    }
+                    if(headshotHitPos.isPresent() && (hitPos == null || headshotHitPos.get().distanceTo(hitPos) < 0.55))
+                    {
+                        hitPos = headshotHitPos.get();
+                        headshot = true;
+                    }
+                    if(headshot){
+                        ProjectileHeadshotEntity.execute(this.level(), pResult.getEntity(), this, this.getOwner());
+                    } else {
+                        ProjectileHitEntity.execute(this.level(), pResult.getEntity(), this, this.getOwner());
 
-        if (!this.level().isClientSide) {
-            this.discard();
+                    }
+                }
+            }
         }
     }
 

@@ -1,10 +1,7 @@
 package net.mcreator.target.procedures;
 
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Entity;
@@ -16,9 +13,6 @@ import net.minecraft.client.Minecraft;
 
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.init.TargetModItems;
-import net.mcreator.target.init.TargetModEntities;
-import net.mcreator.target.init.TargetModAttributes;
-import net.mcreator.target.entity.BulletEntity;
 
 public class SentinelFireProcedure {
 	public static void execute(Entity entity) {
@@ -38,37 +32,6 @@ public class SentinelFireProcedure {
 			usehand = (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY);
 			if (usehand.getItem() == TargetModItems.SENTINEL.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !(entity instanceof Player _plrCldCheck4 && _plrCldCheck4.getCooldowns().isOnCooldown(usehand.getItem()))
 					&& usehand.getOrCreateTag().getDouble("ammo") > 0) {
-				if (Math.random() < 0.5) {
-					{
-						double _setval = -1;
-						entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-							capability.recoilhorizon = _setval;
-							capability.syncPlayerVariables(entity);
-						});
-					}
-				} else {
-					{
-						double _setval = 1;
-						entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-							capability.recoilhorizon = _setval;
-							capability.syncPlayerVariables(entity);
-						});
-					}
-				}
-				{
-					double _setval = 0.1;
-					entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-						capability.recoil = _setval;
-						capability.syncPlayerVariables(entity);
-					});
-				}
-				{
-					double _setval = 1;
-					entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-						capability.firing = _setval;
-						capability.syncPlayerVariables(entity);
-					});
-				}
 				if (usehand.getOrCreateTag().getDouble("power") > 0) {
 					if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming == true) {
 						usehand.getOrCreateTag().putDouble("zoomfiring", 24);
@@ -115,25 +78,7 @@ public class SentinelFireProcedure {
 						}
 					}
 				}
-				{
-					Entity _shootFrom = entity;
-					Level projectileLevel = _shootFrom.level();
-					if (!projectileLevel.isClientSide()) {
-						Projectile _entityToSpawn = new Object() {
-							public Projectile getArrow(Level level, Entity shooter, float damage, int knockback) {
-								AbstractArrow entityToSpawn = new BulletEntity(TargetModEntities.BULLET.get(), level);
-								entityToSpawn.setOwner(shooter);
-								entityToSpawn.setBaseDamage(damage);
-								entityToSpawn.setKnockback(knockback);
-								entityToSpawn.setSilent(true);
-								return entityToSpawn;
-							}
-						}.getArrow(projectileLevel, entity, (float) ((usehand.getOrCreateTag().getDouble("damage") + usehand.getOrCreateTag().getDouble("adddamage")) / usehand.getOrCreateTag().getDouble("velocity")), 0);
-						_entityToSpawn.setPos(_shootFrom.getX(), _shootFrom.getEyeY() - 0.1, _shootFrom.getZ());
-						_entityToSpawn.shoot(_shootFrom.getLookAngle().x, _shootFrom.getLookAngle().y, _shootFrom.getLookAngle().z, 50, (float) ((LivingEntity) entity).getAttribute(TargetModAttributes.SPREAD.get()).getBaseValue());
-						projectileLevel.addFreshEntity(_entityToSpawn);
-					}
-				}
+				BulletfireNormalProcedure.execute(entity);
 				usehand.getOrCreateTag().putDouble("crot", 20);
 				if (entity instanceof Player _player)
 					_player.getCooldowns().addCooldown(usehand.getItem(), 23);

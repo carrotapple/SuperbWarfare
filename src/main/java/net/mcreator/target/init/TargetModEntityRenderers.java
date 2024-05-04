@@ -1,7 +1,3 @@
-
-/*
- *    MCreator note: This file will be REGENERATED on each build.
- */
 package net.mcreator.target.init;
 
 import net.minecraftforge.fml.common.Mod;
@@ -18,7 +14,6 @@ import net.mcreator.target.client.renderer.MortarShellRenderer;
 import net.mcreator.target.client.renderer.MortarRenderer;
 import net.mcreator.target.client.renderer.GunGrenadeRenderer;
 import net.mcreator.target.client.renderer.ClaymoreRenderer;
-import net.mcreator.target.client.renderer.BulletRenderer;
 import net.mcreator.target.client.renderer.BocekarrowRenderer;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -32,7 +27,6 @@ public class TargetModEntityRenderers {
 		event.registerEntityRenderer(TargetModEntities.TASER_BULLET_PROJECTILE.get(), TaserBulletProjectileRenderer::new);
 		event.registerEntityRenderer(TargetModEntities.GUN_GRENADE.get(), GunGrenadeRenderer::new);
 		event.registerEntityRenderer(TargetModEntities.TARGET.get(), TargetRenderer::new);
-		event.registerEntityRenderer(TargetModEntities.BULLET.get(), BulletRenderer::new);
 		event.registerEntityRenderer(TargetModEntities.RPG_ROCKET.get(), RpgRocketRenderer::new);
 		event.registerEntityRenderer(TargetModEntities.MORTAR_SHELL.get(), MortarShellRenderer::new);
 		event.registerEntityRenderer(TargetModEntities.BOCEKARROW.get(), BocekarrowRenderer::new);

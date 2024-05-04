@@ -36,20 +36,12 @@ public class GunsTipsProcedure {
 		String firemode = "";
 		ItemStack usehand = ItemStack.EMPTY;
 		if (itemstack.is(ItemTags.create(new ResourceLocation("target:gun")))) {
-			if (itemstack.getOrCreateTag().getDouble("level") <= 10) {
-				if (itemstack.getItem() == TargetModItems.BOCEK.get()) {
-					tooltip.add(Component.literal("\u00A7l\u00A77Damage:2.4*10/24"));
-				} else {
-					tooltip.add(Component.literal(("\u00A7l\u00A77Damage:" + new java.text.DecimalFormat("##.##").format(itemstack.getOrCreateTag().getDouble("damage") + itemstack.getOrCreateTag().getDouble("adddamage")))));
-				}
+			if (itemstack.getItem() == TargetModItems.BOCEK.get()) {
+				tooltip.add(Component.literal(("\u00A7l\u00A77Damage:(" + new java.text.DecimalFormat("##.##").format(2.4 * itemstack.getOrCreateTag().getDouble("damageadd")) + ")*10/"
+						+ new java.text.DecimalFormat("##.##").format(24 * itemstack.getOrCreateTag().getDouble("damageadd")))));
 			} else {
-				if (itemstack.getItem() == TargetModItems.BOCEK.get()) {
-					tooltip.add(Component.literal(("\u00A7l\u00A77Damage:(2.4" + " + " + new java.text.DecimalFormat("##.##").format(((itemstack.getOrCreateTag().getDouble("level") - 10) / 20) * 10) + ")*10/24" + " + "
-							+ new java.text.DecimalFormat("##.##").format(((itemstack.getOrCreateTag().getDouble("level") - 10) / 20) * 24))));
-				} else {
-					tooltip.add(Component.literal(("\u00A7l\u00A77Damage:" + new java.text.DecimalFormat("##.##").format(itemstack.getOrCreateTag().getDouble("damage") + itemstack.getOrCreateTag().getDouble("adddamage")) + " + "
-							+ new java.text.DecimalFormat("##.##").format(((itemstack.getOrCreateTag().getDouble("level") - 10) / 20) * (itemstack.getOrCreateTag().getDouble("damage") + itemstack.getOrCreateTag().getDouble("adddamage"))))));
-				}
+				tooltip.add(Component.literal(("\u00A7l\u00A77Damage:"
+						+ new java.text.DecimalFormat("##.##").format((itemstack.getOrCreateTag().getDouble("damage") + itemstack.getOrCreateTag().getDouble("adddamage")) * itemstack.getOrCreateTag().getDouble("damageadd")))));
 			}
 			if (itemstack.getOrCreateTag().getDouble("level") < 4) {
 				tooltip.add(Component.literal(("\u00A7f\u00A7lLevel:" + new java.text.DecimalFormat("##").format(itemstack.getOrCreateTag().getDouble("level")) + " "

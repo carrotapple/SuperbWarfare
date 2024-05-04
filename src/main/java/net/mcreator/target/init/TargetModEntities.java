@@ -25,7 +25,6 @@ import net.mcreator.target.entity.MortarShellEntity;
 import net.mcreator.target.entity.MortarEntity;
 import net.mcreator.target.entity.GunGrenadeEntity;
 import net.mcreator.target.entity.ClaymoreEntity;
-import net.mcreator.target.entity.BulletEntity;
 import net.mcreator.target.entity.BocekarrowEntity;
 import net.mcreator.target.TargetMod;
 
@@ -49,14 +48,13 @@ public class TargetModEntities {
 			EntityType.Builder.<GunGrenadeEntity>of(GunGrenadeEntity::new, MobCategory.MISC).setCustomClientFactory(GunGrenadeEntity::new).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.5f, 0.5f));
 	public static final RegistryObject<EntityType<TargetEntity>> TARGET = register("target",
 			EntityType.Builder.<TargetEntity>of(TargetEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(TargetEntity::new).fireImmune().sized(0.875f, 2f));
-	public static final RegistryObject<EntityType<BulletEntity>> BULLET = register("projectile_bullet",
-			EntityType.Builder.<BulletEntity>of(BulletEntity::new, MobCategory.MISC).setCustomClientFactory(BulletEntity::new).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.5f, 0.5f));
 	public static final RegistryObject<EntityType<RpgRocketEntity>> RPG_ROCKET = register("projectile_rpg_rocket",
 			EntityType.Builder.<RpgRocketEntity>of(RpgRocketEntity::new, MobCategory.MISC).setCustomClientFactory(RpgRocketEntity::new).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.5f, 0.5f));
 	public static final RegistryObject<EntityType<MortarShellEntity>> MORTAR_SHELL = register("projectile_mortar_shell",
 			EntityType.Builder.<MortarShellEntity>of(MortarShellEntity::new, MobCategory.MISC).setCustomClientFactory(MortarShellEntity::new).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.5f, 0.5f));
 	public static final RegistryObject<EntityType<BocekarrowEntity>> BOCEKARROW = register("projectile_bocekarrow",
 			EntityType.Builder.<BocekarrowEntity>of(BocekarrowEntity::new, MobCategory.MISC).setCustomClientFactory(BocekarrowEntity::new).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.5f, 0.5f));
+
 
 	private static <T extends Entity> RegistryObject<EntityType<T>> register(String registryname, EntityType.Builder<T> entityTypeBuilder) {
 		return REGISTRY.register(registryname, () -> (EntityType<T>) entityTypeBuilder.build(registryname));

@@ -1,20 +1,10 @@
 
 package net.mcreator.target.entity;
 
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementProgress;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.phys.*;
 import net.mcreator.target.headshot.BoundingBoxManager;
@@ -26,25 +16,19 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.api.distmarker.Dist;
 
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.util.RandomSource;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.world.entity.player.Player;
 
 import net.mcreator.target.procedures.GunGrenadeDanSheWuJiZhongShiTiShiProcedure;
 import net.mcreator.target.procedures.GunGrenadeDanSheWuJiZhongFangKuaiShiProcedure;
 import net.mcreator.target.procedures.GunGrenadeDanSheWuFeiXingShiMeiKeFaShengProcedure;
-import net.mcreator.target.init.TargetModEntities;
 
 import net.mcreator.target.network.TargetModVariables;
 

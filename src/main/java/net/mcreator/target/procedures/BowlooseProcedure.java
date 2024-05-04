@@ -1,5 +1,6 @@
 package net.mcreator.target.procedures;
 
+import net.mcreator.target.entity.ProjectileEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.item.Items;
@@ -18,7 +19,6 @@ import net.minecraft.client.Minecraft;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModEntities;
-import net.mcreator.target.entity.BulletEntity;
 import net.mcreator.target.entity.BocekarrowEntity;
 
 public class BowlooseProcedure {
@@ -44,6 +44,8 @@ public class BowlooseProcedure {
 		}
 		if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == TargetModItems.BOCEK.get()
 				&& (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("power") >= 6) {
+			(entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().putDouble("speed",
+					((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("power")));
 			if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming == true) {
 				{
 					Entity _shootFrom = entity;
@@ -89,24 +91,12 @@ public class BowlooseProcedure {
 				}
 			} else {
 				for (int index0 = 0; index0 < 10; index0++) {
-					{
-						Entity _shootFrom = entity;
-						Level projectileLevel = _shootFrom.level();
-						if (!projectileLevel.isClientSide()) {
-							Projectile _entityToSpawn = new Object() {
-								public Projectile getArrow(Level level, Entity shooter, float damage, int knockback) {
-									AbstractArrow entityToSpawn = new BulletEntity(TargetModEntities.BULLET.get(), level);
-									entityToSpawn.setOwner(shooter);
-									entityToSpawn.setBaseDamage(damage);
-									entityToSpawn.setKnockback(knockback);
-									entityToSpawn.setSilent(true);
-									return entityToSpawn;
-								}
-							}.getArrow(projectileLevel, entity, (float) (0.05 * (1 + 0.05 * usehand.getOrCreateTag().getDouble("level"))), 0);
-							_entityToSpawn.setPos(_shootFrom.getX(), _shootFrom.getEyeY() - 0.1, _shootFrom.getZ());
-							_entityToSpawn.shoot(_shootFrom.getLookAngle().x, _shootFrom.getLookAngle().y, _shootFrom.getLookAngle().z, (float) (4 * power), 2);
-							projectileLevel.addFreshEntity(_entityToSpawn);
-						}
+					if (!entity.level().isClientSide() && entity instanceof LivingEntity living) {
+						ProjectileEntity projectile = new ProjectileEntity(entity.level(), living);
+						projectile.setOwner(living);
+						projectile.setPos(living.getX(), living.getEyeY() - 0.1, living.getZ());
+						projectile.shoot(living.getLookAngle().x, living.getLookAngle().y, living.getLookAngle().z, (float) (4 * power),2);
+						entity.level().addFreshEntity(projectile);
 					}
 				}
 				{
