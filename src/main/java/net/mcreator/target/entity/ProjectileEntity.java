@@ -39,6 +39,7 @@ import net.mcreator.target.util.math.ExtendedEntityRayTraceResult;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -177,13 +178,72 @@ public class ProjectileEntity extends ThrowableItemProjectile {
 
         return new EntityResult(entity, hitPos, headshot);
     }
-    
+
     @Override
-    public void tick() {
+    public void tick()
+    {
         super.tick();
-        if(this.tickCount >= 20){
+        this.updateHeading();
+        this.onProjectileTick();
+
+        if(!this.level().isClientSide())
+        {
+            Vec3 startVec = this.position();
+            Vec3 endVec = startVec.add(this.getDeltaMovement());
+            HitResult result = rayTraceBlocks(this.level(), new ClipContext(startVec, endVec, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this), IGNORE_LEAVES);
+            if(result.getType() != HitResult.Type.MISS)
+            {
+                endVec = result.getLocation();
+            }
+
+            List<EntityResult> hitEntities = null;
+            int level = 0;
+            if(level == 0)
+            {
+                EntityResult entityResult = this.findEntityOnPath(startVec, endVec);
+                if(entityResult != null)
+                {
+                    hitEntities = Collections.singletonList(entityResult);
+                }
+            }
+            else
+            {
+                hitEntities = this.findEntitiesOnPath(startVec, endVec);
+            }
+
+            if(hitEntities != null && hitEntities.size() > 0)
+            {
+                for(EntityResult entityResult : hitEntities)
+                {
+                    result = new ExtendedEntityRayTraceResult(entityResult);
+                    if(((EntityHitResult) result).getEntity() instanceof Player)
+                    {
+                        Player player = (Player) ((EntityHitResult) result).getEntity();
+
+                        if(this.shooter instanceof Player && !((Player) this.shooter).canHarmPlayer(player))
+                        {
+                            result = null;
+                        }
+                    }
+                    if(result != null)
+                    {
+                        this.onHit(result, startVec, endVec);
+                    }
+                }
+            }
+            else
+            {
+                this.onHit(result, startVec, endVec);
+            }
+        }
+
+        if(this.tickCount>200){
             this.discard();
         }
+    }
+
+    protected void onProjectileTick()
+    {
     }
 
     @Override
@@ -234,10 +294,10 @@ public class ProjectileEntity extends ThrowableItemProjectile {
 
         if(headshot){
 
-        ProjectileHeadshotEntity.execute(this.level(), entity, this, this.getOwner());
+        ProjectileHeadshotEntity.execute(this.level(), entity, this, this.shooter);
 
         }
-            ProjectileHitEntity.execute(this.level(), entity, this, this.getOwner());
+            ProjectileHitEntity.execute(this.level(), entity, this, this.shooter);
     }
 
     @Override
@@ -348,6 +408,24 @@ public class ProjectileEntity extends ThrowableItemProjectile {
 
             return p_217300_2_.apply(context);
         }
+    }
+
+    public LivingEntity getShooter()
+    {
+        return this.shooter;
+    }
+    public int getShooterId()
+    {
+        return this.shooterId;
+    }
+
+    public void updateHeading()
+    {
+        double horizontalDistance = this.getDeltaMovement().horizontalDistance();
+        this.setYRot((float) (Mth.atan2(this.getDeltaMovement().x(), this.getDeltaMovement().z()) * (180D / Math.PI)));
+        this.setXRot((float) (Mth.atan2(this.getDeltaMovement().y(), horizontalDistance) * (180D / Math.PI)));
+        this.yRotO = this.getYRot();
+        this.xRotO = this.getXRot();
     }
 
     public static class EntityResult
