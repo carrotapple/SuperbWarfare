@@ -42,9 +42,6 @@ public class ProjectileEntity extends ThrowableItemProjectile {
     public ProjectileEntity(Level p_i1775_1_, double p_i1775_2_, double p_i1775_4_, double p_i1775_6_) {
         super(TargetCustomModEntities.PROJECTILE.get(), p_i1775_2_, p_i1775_4_, p_i1775_6_, p_i1775_1_);
     }
-
-
-
     @Override
     protected void onHitEntity(EntityHitResult pResult) {
 
