@@ -1,151 +1,146 @@
 package net.mcreator.target.item.model;
 
+import net.mcreator.target.item.KraberItem;
+import net.mcreator.target.network.TargetModVariables;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-import net.minecraft.resources.ResourceLocation;
-
-import net.mcreator.target.item.KraberItem;
-
-import net.minecraft.client.Minecraft;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import net.minecraft.world.entity.player.Player;
-import net.mcreator.target.init.TargetModMobEffects;
-
-import net.mcreator.target.network.TargetModVariables;
-import net.minecraft.world.item.ItemStack;
-
 public class KraberItemModel extends GeoModel<KraberItem> {
-	@Override
-	public ResourceLocation getAnimationResource(KraberItem animatable) {
-		return new ResourceLocation("target", "animations/kraber.animation.json");
-	}
+    @Override
+    public ResourceLocation getAnimationResource(KraberItem animatable) {
+        return new ResourceLocation("target", "animations/kraber.animation.json");
+    }
 
-	@Override
-	public ResourceLocation getModelResource(KraberItem animatable) {
-		return new ResourceLocation("target", "geo/kraber.geo.json");
-	}
+    @Override
+    public ResourceLocation getModelResource(KraberItem animatable) {
+        return new ResourceLocation("target", "geo/kraber.geo.json");
+    }
 
-	@Override
-	public ResourceLocation getTextureResource(KraberItem animatable) {
-		return new ResourceLocation("target", "textures/item/kraber.png");
-	}
+    @Override
+    public ResourceLocation getTextureResource(KraberItem animatable) {
+        return new ResourceLocation("target", "textures/item/kraber.png");
+    }
 
-	@Override
-	public void setCustomAnimations(KraberItem animatable, long instanceId, AnimationState animationState) {
-		CoreGeoBone gun = getAnimationProcessor().getBone("bone");
-		CoreGeoBone shen = getAnimationProcessor().getBone("shen");
-		CoreGeoBone scope = getAnimationProcessor().getBone("scope");
-		CoreGeoBone flare = getAnimationProcessor().getBone("flare");
-		CoreGeoBone l = getAnimationProcessor().getBone("l");
-		CoreGeoBone r = getAnimationProcessor().getBone("r");
+    @Override
+    public void setCustomAnimations(KraberItem animatable, long instanceId, AnimationState animationState) {
+        CoreGeoBone gun = getAnimationProcessor().getBone("bone");
+        CoreGeoBone shen = getAnimationProcessor().getBone("shen");
+        CoreGeoBone scope = getAnimationProcessor().getBone("scope");
+        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
+        CoreGeoBone l = getAnimationProcessor().getBone("l");
+        CoreGeoBone r = getAnimationProcessor().getBone("r");
 
-		Player player = Minecraft.getInstance().player;
-		ItemStack stack = player.getMainHandItem();
+        Player player = Minecraft.getInstance().player;
+        ItemStack stack = player.getMainHandItem();
 
-		if (player.getPersistentData().getDouble("prone") > 0) {
-			l.setRotX(-1.5f);
-			r.setRotX(-1.5f);
-		}
+        if (player.getPersistentData().getDouble("prone") > 0) {
+            l.setRotX(-1.5f);
+            r.setRotX(-1.5f);
+        }
 
-		double fp = 0;
-		fp = player.getPersistentData().getDouble("firepos");
+        double fp = 0;
+        fp = player.getPersistentData().getDouble("firepos");
 
-		if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming == true) {
-			shen.setPosZ(3f * (float)fp);
-		} else {
-			shen.setPosZ(4f * (float)fp);
-		}
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+            shen.setPosZ(3f * (float) fp);
+        } else {
+            shen.setPosZ(4f * (float) fp);
+        }
 
-		if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming == true) {
-			shen.setPosY(0.5f * (float)fp);
-		} else {
-			shen.setPosY(1f * (float)fp);
-		}
-		
-		shen.setRotX(0.1f * (float)fp);
-		
-		if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilhorizon == 1) {
-			shen.setRotZ(0.003f * (float)fp);
-		} else {
-			shen.setRotZ(-0.003f * (float)fp);
-		}
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+            shen.setPosY(0.5f * (float) fp);
+        } else {
+            shen.setPosY((float) fp);
+        }
 
-		double p = 0;
-		p = player.getPersistentData().getDouble("zoompos");
+        shen.setRotX(0.1f * (float) fp);
 
-		double zp = 0;
-		zp = player.getPersistentData().getDouble("zoomposz");
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilhorizon == 1) {
+            shen.setRotZ(0.003f * (float) fp);
+        } else {
+            shen.setRotZ(-0.003f * (float) fp);
+        }
 
-		gun.setPosX(6.298f * (float)p);
+        double p = 0;
+        p = player.getPersistentData().getDouble("zoompos");
 
-		gun.setPosY(0.32f * (float)p - (float)(0.2f * zp));
+        double zp = 0;
+        zp = player.getPersistentData().getDouble("zoomposz");
 
-		gun.setPosZ(10.4f * (float)p + (float)(0.3f * zp));
+        gun.setPosX(6.298f * (float) p);
 
-		gun.setRotZ((float)(0.02f * zp));
+        gun.setPosY(0.32f * (float) p - (float) (0.2f * zp));
 
-		gun.setScaleZ(1f - (0.8f * (float)p));
+        gun.setPosZ(10.4f * (float) p + (float) (0.3f * zp));
 
-		scope.setScaleZ(1f - (0.9f * (float)p));
+        gun.setRotZ((float) (0.02f * zp));
 
-		if (stack.getOrCreateTag().getDouble("fireanim") > 37) {
-			flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
-			flare.setScaleY((float) (1.0 + 0.5 * (Math.random() - 0.5)));
-			flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-		} else {
-			flare.setScaleX(0);
-			flare.setScaleY(0);
-			flare.setRotZ(0);
-		}
+        gun.setScaleZ(1f - (0.8f * (float) p));
 
-		CoreGeoBone root = getAnimationProcessor().getBone("root");
-        
-		double y = 0;
-		double x = 0;
-		y = player.getPersistentData().getDouble("y");
-		x = player.getPersistentData().getDouble("x");
+        scope.setScaleZ(1f - (0.9f * (float) p));
 
-		root.setPosY((float)y);
-		root.setRotX((float)x);
+        if (stack.getOrCreateTag().getDouble("fireanim") > 37) {
+            flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
+            flare.setScaleY((float) (1.0 + 0.5 * (Math.random() - 0.5)));
+            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
+        } else {
+            flare.setScaleX(0);
+            flare.setScaleY(0);
+            flare.setRotZ(0);
+        }
 
-		CoreGeoBone move = getAnimationProcessor().getBone("move");
-        
-		double m = 0;
-		m = player.getPersistentData().getDouble("move");
+        CoreGeoBone root = getAnimationProcessor().getBone("root");
 
-		double yaw = 0;
-		yaw = player.getPersistentData().getDouble("yaw");
+        double y = 0;
+        double x = 0;
+        y = player.getPersistentData().getDouble("y");
+        x = player.getPersistentData().getDouble("x");
 
-		double pit = 0;
-		pit = player.getPersistentData().getDouble("gunpitch");
+        root.setPosY((float) y);
+        root.setRotX((float) x);
 
-		double vy = 0;
-		vy = player.getPersistentData().getDouble("vy");
+        CoreGeoBone move = getAnimationProcessor().getBone("move");
 
-		if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming == true) {
-			
-			move.setPosX(0);
+        double m = 0;
+        m = player.getPersistentData().getDouble("move");
 
-			move.setRotX(0);
+        double yaw = 0;
+        yaw = player.getPersistentData().getDouble("yaw");
 
-			move.setRotZ(0);
+        double pit = 0;
+        pit = player.getPersistentData().getDouble("gunpitch");
 
-			move.setRotY(0);
+        double vy = 0;
+        vy = player.getPersistentData().getDouble("vy");
 
-			move.setPosY(-0.2f * (float)vy);
-			
-		} else {
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
 
-			move.setPosY(-1 * (float)vy);
-			
-			move.setPosX(9.3f * (float)m);
+            move.setPosX(0);
 
-			move.setRotX(2.0f * (float)pit);
+            move.setRotX(0);
 
-			move.setRotZ(3.7f * (float)yaw + 2.7f * (float)m);
+            move.setRotZ(0);
 
-			move.setRotY(1.9f * (float)yaw - 1.7f * (float)m);
-		}
-	}
+            move.setRotY(0);
+
+            move.setPosY(-0.2f * (float) vy);
+
+        } else {
+
+            move.setPosY(-1 * (float) vy);
+
+            move.setPosX(9.3f * (float) m);
+
+            move.setRotX(2.0f * (float) pit);
+
+            move.setRotZ(3.7f * (float) yaw + 2.7f * (float) m);
+
+            move.setRotY(1.9f * (float) yaw - 1.7f * (float) m);
+        }
+    }
 }

@@ -1,94 +1,90 @@
 package net.mcreator.target.item.model;
 
+import net.mcreator.target.item.TaserItem;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-import net.minecraft.resources.ResourceLocation;
-
-import net.mcreator.target.item.TaserItem;
-
-import net.minecraft.client.Minecraft;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import net.minecraft.world.entity.player.Player;
-import net.mcreator.target.init.TargetModMobEffects;
-
 public class TaserItemModel extends GeoModel<TaserItem> {
-	@Override
-	public ResourceLocation getAnimationResource(TaserItem animatable) {
-		return new ResourceLocation("target", "animations/taser.animation.json");
-	}
+    @Override
+    public ResourceLocation getAnimationResource(TaserItem animatable) {
+        return new ResourceLocation("target", "animations/taser.animation.json");
+    }
 
-	@Override
-	public ResourceLocation getModelResource(TaserItem animatable) {
-		return new ResourceLocation("target", "geo/taser.geo.json");
-	}
+    @Override
+    public ResourceLocation getModelResource(TaserItem animatable) {
+        return new ResourceLocation("target", "geo/taser.geo.json");
+    }
 
-	@Override
-	public ResourceLocation getTextureResource(TaserItem animatable) {
-		return new ResourceLocation("target", "textures/item/tasergun.png");
-	}
+    @Override
+    public ResourceLocation getTextureResource(TaserItem animatable) {
+        return new ResourceLocation("target", "textures/item/tasergun.png");
+    }
 
-	@Override
-	public void setCustomAnimations(TaserItem animatable, long instanceId, AnimationState animationState) {
-		CoreGeoBone gun = getAnimationProcessor().getBone("bone");
-		CoreGeoBone shen = getAnimationProcessor().getBone("shen");
+    @Override
+    public void setCustomAnimations(TaserItem animatable, long instanceId, AnimationState animationState) {
+        CoreGeoBone gun = getAnimationProcessor().getBone("bone");
+        CoreGeoBone shen = getAnimationProcessor().getBone("shen");
 
-		Player player = Minecraft.getInstance().player;
+        Player player = Minecraft.getInstance().player;
 
-		double fp = 0;
-		fp = player.getPersistentData().getDouble("firepos");
+        double fp = 0;
+        fp = player.getPersistentData().getDouble("firepos");
 
-		shen.setPosZ(0.75f * (float)fp);
+        shen.setPosZ(0.75f * (float) fp);
 
-		shen.setRotX(0.02f * (float)fp);
-		
-		double p = 0;
-		p = player.getPersistentData().getDouble("zoompos");
+        shen.setRotX(0.02f * (float) fp);
 
-		double zp = 0;
-		zp = player.getPersistentData().getDouble("zoomposz");
+        double p = 0;
+        p = player.getPersistentData().getDouble("zoompos");
 
-		gun.setPosX(2.6f * (float)p);
+        double zp = 0;
+        zp = player.getPersistentData().getDouble("zoomposz");
 
-		gun.setPosY(1.2f * (float)p - (float)(0.6f * zp));
+        gun.setPosX(2.6f * (float) p);
 
-		gun.setPosZ(1f * (float)p + (float)(0.5f * zp));
+        gun.setPosY(1.2f * (float) p - (float) (0.6f * zp));
 
-		gun.setRotZ((float)(0.05f * zp));
+        gun.setPosZ((float) p + (float) (0.5f * zp));
 
-		CoreGeoBone root = getAnimationProcessor().getBone("root");
-        
-		double y = 0;
-		double x = 0;
-		y = player.getPersistentData().getDouble("y");
-		x = player.getPersistentData().getDouble("x");
+        gun.setRotZ((float) (0.05f * zp));
 
-		root.setPosY((float)y);
-		root.setRotX((float)x);
+        CoreGeoBone root = getAnimationProcessor().getBone("root");
 
-		CoreGeoBone move = getAnimationProcessor().getBone("move");
-        
-		double m = 0;
-		m = player.getPersistentData().getDouble("move");
+        double y = 0;
+        double x = 0;
+        y = player.getPersistentData().getDouble("y");
+        x = player.getPersistentData().getDouble("x");
 
-		double yaw = 0;
-		yaw = player.getPersistentData().getDouble("yaw");
+        root.setPosY((float) y);
+        root.setRotX((float) x);
 
-		double pit = 0;
-		pit = player.getPersistentData().getDouble("gunpitch");
+        CoreGeoBone move = getAnimationProcessor().getBone("move");
 
-		double vy = 0;
-		vy = player.getPersistentData().getDouble("vy");
+        double m = 0;
+        m = player.getPersistentData().getDouble("move");
 
-		move.setPosY(-1 * (float)vy);
+        double yaw = 0;
+        yaw = player.getPersistentData().getDouble("yaw");
 
-		move.setPosX(9.3f * (float)m);
+        double pit = 0;
+        pit = player.getPersistentData().getDouble("gunpitch");
 
-		move.setRotX(2.0f * (float)pit);
+        double vy = 0;
+        vy = player.getPersistentData().getDouble("vy");
 
-		move.setRotZ(3.7f * (float)yaw + 2.7f * (float)m);
+        move.setPosY(-1 * (float) vy);
 
-		move.setRotY(1.9f * (float)yaw - 1.7f * (float)m);
+        move.setPosX(9.3f * (float) m);
 
-	}	
+        move.setRotX(2.0f * (float) pit);
+
+        move.setRotZ(3.7f * (float) yaw + 2.7f * (float) m);
+
+        move.setRotY(1.9f * (float) yaw - 1.7f * (float) m);
+
+    }
 }

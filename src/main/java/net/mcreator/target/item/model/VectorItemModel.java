@@ -1,126 +1,120 @@
 package net.mcreator.target.item.model;
 
+import net.mcreator.target.item.VectorItem;
+import net.mcreator.target.network.TargetModVariables;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-import net.minecraft.resources.ResourceLocation;
-
-import net.mcreator.target.item.VectorItem;
-
-import net.minecraft.client.Minecraft;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
-import net.minecraft.world.entity.player.Player;
-import net.mcreator.target.init.TargetModMobEffects;
-import net.minecraft.world.entity.ai.control.BodyRotationControl;
-
-import net.mcreator.target.network.TargetModVariables;
-
 public class VectorItemModel extends GeoModel<VectorItem> {
-	@Override
-	public ResourceLocation getAnimationResource(VectorItem animatable) {
-		return new ResourceLocation("target", "animations/vector.animation.json");
-	}
+    @Override
+    public ResourceLocation getAnimationResource(VectorItem animatable) {
+        return new ResourceLocation("target", "animations/vector.animation.json");
+    }
 
-	@Override
-	public ResourceLocation getModelResource(VectorItem animatable) {
-		return new ResourceLocation("target", "geo/vector.geo.json");
-	}
+    @Override
+    public ResourceLocation getModelResource(VectorItem animatable) {
+        return new ResourceLocation("target", "geo/vector.geo.json");
+    }
 
-	@Override
-	public ResourceLocation getTextureResource(VectorItem animatable) {
-		return new ResourceLocation("target", "textures/item/vector.png");
-	}
+    @Override
+    public ResourceLocation getTextureResource(VectorItem animatable) {
+        return new ResourceLocation("target", "textures/item/vector.png");
+    }
 
-	@Override
-	public void setCustomAnimations(VectorItem animatable, long instanceId, AnimationState animationState) {
-		CoreGeoBone gun = getAnimationProcessor().getBone("bone");
-		CoreGeoBone shen = getAnimationProcessor().getBone("shen");
-		CoreGeoBone scope = getAnimationProcessor().getBone("scope");
+    @Override
+    public void setCustomAnimations(VectorItem animatable, long instanceId, AnimationState animationState) {
+        CoreGeoBone gun = getAnimationProcessor().getBone("bone");
+        CoreGeoBone shen = getAnimationProcessor().getBone("shen");
+        CoreGeoBone scope = getAnimationProcessor().getBone("scope");
 
-		Player player = Minecraft.getInstance().player;
+        Player player = Minecraft.getInstance().player;
 
-		double p = 0;
-		p = player.getPersistentData().getDouble("zoompos");
+        double p = 0;
+        p = player.getPersistentData().getDouble("zoompos");
 
-		double zp = 0;
-		zp = player.getPersistentData().getDouble("zoomposz");
+        double zp = 0;
+        zp = player.getPersistentData().getDouble("zoomposz");
 
-		gun.setPosX(2.62f * (float)p);
+        gun.setPosX(2.62f * (float) p);
 
-		gun.setPosY(0.9f * (float)p - (float)(0.6f * zp));
+        gun.setPosY(0.9f * (float) p - (float) (0.6f * zp));
 
-		gun.setPosZ(3f * (float)p + (float)(0.5f * zp));
+        gun.setPosZ(3f * (float) p + (float) (0.5f * zp));
 
-		gun.setRotZ(-0.087f * (float)p + (float)(0.05f * zp));
+        gun.setRotZ(-0.087f * (float) p + (float) (0.05f * zp));
 
-		gun.setScaleZ(1f - (0.5f * (float)p));
+        gun.setScaleZ(1f - (0.5f * (float) p));
 
-		scope.setScaleZ(1f - (0.6f * (float)p));
-		
-		float fps = Minecraft.getInstance().getFps();
-		if (fps <= 0) {
-   			fps = 1f;
-			}
-		float times = 250f / fps;
+        scope.setScaleZ(1f - (0.6f * (float) p));
 
-		CoreGeoBone holo = getAnimationProcessor().getBone("holo");
-		if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming == true && gun.getPosX() > 2.45) {
-			holo.setScaleX(1);
-			holo.setScaleY(1);
-		} else {
-			holo.setScaleX(0);
-			holo.setScaleY(0);
-		}
-		
-		double fp = 0;
-		fp = player.getPersistentData().getDouble("firepos");
+        float fps = Minecraft.getInstance().getFps();
+        if (fps <= 0) {
+            fps = 1f;
+        }
+        float times = 250f / fps;
 
-		shen.setPosZ(0.75f * (float)fp);
+        CoreGeoBone holo = getAnimationProcessor().getBone("holo");
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming && gun.getPosX() > 2.45) {
+            holo.setScaleX(1);
+            holo.setScaleY(1);
+        } else {
+            holo.setScaleX(0);
+            holo.setScaleY(0);
+        }
 
-		if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming == true) {
-			shen.setRotX(0.0002f * (float)fp);
-		} else {
-			shen.setRotX(0.02f * (float)fp);
-		}
-		
-		if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilhorizon == 1) {
-			shen.setRotZ(0.003f * (float)fp);
-		} else {
-			shen.setRotZ(-0.003f * (float)fp);
-		}
+        double fp = 0;
+        fp = player.getPersistentData().getDouble("firepos");
 
-		CoreGeoBone root = getAnimationProcessor().getBone("root");
-        
-		double y = 0;
-		double x = 0;
-		y = player.getPersistentData().getDouble("y");
-		x = player.getPersistentData().getDouble("x");
+        shen.setPosZ(0.75f * (float) fp);
 
-		root.setPosY((float)y);
-		root.setRotX((float)x);
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+            shen.setRotX(0.0002f * (float) fp);
+        } else {
+            shen.setRotX(0.02f * (float) fp);
+        }
 
-		CoreGeoBone move = getAnimationProcessor().getBone("move");
-        
-		double m = 0;
-		m = player.getPersistentData().getDouble("move");
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilhorizon == 1) {
+            shen.setRotZ(0.003f * (float) fp);
+        } else {
+            shen.setRotZ(-0.003f * (float) fp);
+        }
 
-		double yaw = 0;
-		yaw = player.getPersistentData().getDouble("yaw");
+        CoreGeoBone root = getAnimationProcessor().getBone("root");
 
-		double pit = 0;
-		pit = player.getPersistentData().getDouble("gunpitch");
+        double y = 0;
+        double x = 0;
+        y = player.getPersistentData().getDouble("y");
+        x = player.getPersistentData().getDouble("x");
 
-		double vy = 0;
-		vy = player.getPersistentData().getDouble("vy");
+        root.setPosY((float) y);
+        root.setRotX((float) x);
 
-		move.setPosY(-1 * (float)vy);
+        CoreGeoBone move = getAnimationProcessor().getBone("move");
 
-		move.setPosX(9.3f * (float)m);
+        double m = 0;
+        m = player.getPersistentData().getDouble("move");
 
-		move.setRotX(2.0f * (float)pit);
+        double yaw = 0;
+        yaw = player.getPersistentData().getDouble("yaw");
 
-		move.setRotZ(3.7f * (float)yaw + 2.7f * (float)m);
+        double pit = 0;
+        pit = player.getPersistentData().getDouble("gunpitch");
 
-		move.setRotY(1.9f * (float)yaw - 1.7f * (float)m);
-	}
+        double vy = 0;
+        vy = player.getPersistentData().getDouble("vy");
+
+        move.setPosY(-1 * (float) vy);
+
+        move.setPosX(9.3f * (float) m);
+
+        move.setRotX(2.0f * (float) pit);
+
+        move.setRotZ(3.7f * (float) yaw + 2.7f * (float) m);
+
+        move.setRotY(1.9f * (float) yaw - 1.7f * (float) m);
+    }
 }

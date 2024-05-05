@@ -4,23 +4,21 @@
  */
 package net.mcreator.target.init;
 
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.api.distmarker.Dist;
-
-import net.minecraft.client.gui.screens.MenuScreens;
-
-import net.mcreator.target.client.gui.MortarGUIScreen;
 import net.mcreator.target.client.gui.GunRecycleGuiScreen;
+import net.mcreator.target.client.gui.MortarGUIScreen;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class TargetModScreens {
-	@SubscribeEvent
-	public static void clientLoad(FMLClientSetupEvent event) {
-		event.enqueueWork(() -> {
-			MenuScreens.register(TargetModMenus.MORTAR_GUI.get(), MortarGUIScreen::new);
-			MenuScreens.register(TargetModMenus.GUN_RECYCLE_GUI.get(), GunRecycleGuiScreen::new);
-		});
-	}
+    @SubscribeEvent
+    public static void clientLoad(FMLClientSetupEvent event) {
+        event.enqueueWork(() -> {
+            MenuScreens.register(TargetModMenus.MORTAR_GUI.get(), MortarGUIScreen::new);
+            MenuScreens.register(TargetModMenus.GUN_RECYCLE_GUI.get(), GunRecycleGuiScreen::new);
+        });
+    }
 }

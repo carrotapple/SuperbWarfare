@@ -1,4 +1,3 @@
-
 package net.mcreator.target.procedures;
 
 import net.mcreator.target.init.TargetModItems;

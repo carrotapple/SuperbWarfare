@@ -1,21 +1,20 @@
 package net.mcreator.target.procedures;
 
-import net.minecraft.world.entity.Entity;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 
 public class GunGrenadeDanSheWuFeiXingShiMeiKeFaShengProcedure {
-	public static void execute(Entity immediatesourceentity) {
-		if (immediatesourceentity == null)
-			return;
-		immediatesourceentity.getPersistentData().putDouble("baoxian", (immediatesourceentity.getPersistentData().getDouble("baoxian") + 1));
-		{
-			Entity _ent = immediatesourceentity;
-			if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-				_ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-						_ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "particle minecraft:campfire_cosy_smoke ~ ~ ~ 0 0 0 0 1 force");
-			}
-		}
-	}
+    public static void execute(Entity immediatesourceentity) {
+        if (immediatesourceentity == null)
+            return;
+        immediatesourceentity.getPersistentData().putDouble("baoxian", (immediatesourceentity.getPersistentData().getDouble("baoxian") + 1));
+        {
+            if (!immediatesourceentity.level().isClientSide() && immediatesourceentity.getServer() != null) {
+                immediatesourceentity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, immediatesourceentity.position(), immediatesourceentity.getRotationVector(), immediatesourceentity.level() instanceof ServerLevel ? (ServerLevel) immediatesourceentity.level() : null, 4,
+                        immediatesourceentity.getName().getString(), immediatesourceentity.getDisplayName(), immediatesourceentity.level().getServer(), immediatesourceentity), "particle minecraft:campfire_cosy_smoke ~ ~ ~ 0 0 0 0 1 force");
+            }
+        }
+    }
 }

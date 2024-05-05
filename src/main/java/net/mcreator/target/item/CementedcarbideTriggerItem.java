@@ -1,4 +1,3 @@
-
 package net.mcreator.target.item;
 
 import net.minecraft.world.level.Level;
@@ -11,12 +10,12 @@ import net.minecraft.network.chat.Component;
 import java.util.List;
 
 public class CementedcarbideTriggerItem extends Item {
-	public CementedcarbideTriggerItem() {
-		super(new Item.Properties().stacksTo(64).rarity(Rarity.EPIC));
-	}
+    public CementedcarbideTriggerItem() {
+        super(new Item.Properties().stacksTo(64).rarity(Rarity.EPIC));
+    }
 
-	@Override
-	public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
-		super.appendHoverText(itemstack, world, list, flag);
-	}
+    @Override
+    public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
+        super.appendHoverText(itemstack, world, list, flag);
+    }
 }

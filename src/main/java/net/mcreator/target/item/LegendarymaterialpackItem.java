@@ -1,4 +1,3 @@
-
 package net.mcreator.target.item;
 
 import net.minecraft.world.level.Level;
@@ -13,12 +12,12 @@ import net.mcreator.target.rarity.RarityTool;
 import java.util.List;
 
 public class LegendarymaterialpackItem extends Item {
-	public LegendarymaterialpackItem() {
-		super(new Item.Properties().stacksTo(64).rarity(RarityTool.LEGENDARY));
-	}
+    public LegendarymaterialpackItem() {
+        super(new Item.Properties().stacksTo(64).rarity(RarityTool.LEGENDARY));
+    }
 
-	@Override
-	public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
-		super.appendHoverText(itemstack, world, list, flag);
-	}
+    @Override
+    public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
+        super.appendHoverText(itemstack, world, list, flag);
+    }
 }

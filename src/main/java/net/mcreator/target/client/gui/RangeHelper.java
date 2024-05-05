@@ -1,7 +1,7 @@
 package net.mcreator.target.client.gui;
 
 public class RangeHelper {
-// 发射角度（以度为单位），需要根据实际情况修改
+    // 发射角度（以度为单位），需要根据实际情况修改
     public static double getRange(double thetaDegrees) {
         double initialVelocity = 8.0; // 初始速度 8 m/s
         double thetaRadians = Math.toRadians(thetaDegrees); // 将角度转换为弧度
