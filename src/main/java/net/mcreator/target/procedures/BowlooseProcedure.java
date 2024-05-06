@@ -3,7 +3,7 @@ package net.mcreator.target.procedures;
 import net.mcreator.target.entity.BocekarrowEntity;
 import net.mcreator.target.entity.ProjectileEntity;
 import net.mcreator.target.init.TargetModEntities;
-import net.mcreator.target.init.ItemRegistry;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
@@ -29,7 +29,7 @@ public class BowlooseProcedure {
             entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
                     entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:bowpull1p");
         }
-        if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == ItemRegistry.BOCEK.get()
+        if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == TargetModItems.BOCEK.get()
                 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("power") >= 6) {
             (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().putDouble("speed",
                     ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("power")));

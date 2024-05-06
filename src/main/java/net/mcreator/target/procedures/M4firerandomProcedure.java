@@ -1,6 +1,6 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.init.ItemRegistry;
+import net.mcreator.target.init.TargetModItems;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -35,13 +35,13 @@ public class M4firerandomProcedure {
             entity.getPersistentData().putDouble("m4fire", 0);
         }
         if (entity.getPersistentData().getDouble("firing") == 1) {
-            if (usehand.getItem() == ItemRegistry.M_4.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("m4fire") == 1) {
+            if (usehand.getItem() == TargetModItems.M_4.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("m4fire") == 1) {
                 M4autofireProcedure.execute(entity);
             }
-            if (usehand.getItem() == ItemRegistry.M_4.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("m4fire") == 3) {
+            if (usehand.getItem() == TargetModItems.M_4.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("m4fire") == 3) {
                 M4autofireProcedure.execute(entity);
             }
-            if (usehand.getItem() == ItemRegistry.M_4.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("m4fire") == 5) {
+            if (usehand.getItem() == TargetModItems.M_4.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("m4fire") == 5) {
                 M4autofireProcedure.execute(entity);
             }
             if (entity.getPersistentData().getDouble("m4fire") >= 5) {

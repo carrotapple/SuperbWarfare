@@ -1,6 +1,6 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.init.ItemRegistry;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
@@ -32,7 +32,7 @@ public class SniperAmmoYouJiKongQiShiShiTiDeWeiZhiProcedure {
             }
         }
         if (entity instanceof Player _player) {
-            ItemStack _stktoremove = new ItemStack(ItemRegistry.SNIPER_AMMO.get());
+            ItemStack _stktoremove = new ItemStack(TargetModItems.SNIPER_AMMO.get());
             _player.getInventory().clearOrCountMatchingItems(p -> _stktoremove.getItem() == p.getItem(), 1, _player.inventoryMenu.getCraftSlots());
         }
         if (entity instanceof Player _player)

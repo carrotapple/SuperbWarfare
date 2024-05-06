@@ -1,6 +1,6 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.init.ItemRegistry;
+import net.mcreator.target.init.TargetModItems;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.Entity;
@@ -30,14 +30,14 @@ public class DismantlePressProcedure {
             }
             if (stack.getRarity() == Rarity.RARE) {
                 if (entity instanceof Player _player) {
-                    ItemStack _setstack = new ItemStack(ItemRegistry.INGOT_STEEL.get());
+                    ItemStack _setstack = new ItemStack(TargetModItems.INGOT_STEEL.get());
                     _setstack.setCount(1);
                     ItemHandlerHelper.giveItemToPlayer(_player, _setstack);
                 }
             }
             if (stack.getRarity() == Rarity.EPIC) {
                 if (entity instanceof Player _player) {
-                    ItemStack _setstack = new ItemStack(ItemRegistry.CEMENTED_CARBIDE_INGOT.get());
+                    ItemStack _setstack = new ItemStack(TargetModItems.CEMENTED_CARBIDE_INGOT.get());
                     _setstack.setCount(1);
                     ItemHandlerHelper.giveItemToPlayer(_player, _setstack);
                 }
@@ -51,7 +51,7 @@ public class DismantlePressProcedure {
             }
             if (stack.is(ItemTags.create(new ResourceLocation("target:special_gun")))) {
                 if (entity instanceof Player _player) {
-                    ItemStack _setstack = new ItemStack(ItemRegistry.SOUL_STEEL_INGOT.get());
+                    ItemStack _setstack = new ItemStack(TargetModItems.SOUL_STEEL_INGOT.get());
                     _setstack.setCount(1);
                     ItemHandlerHelper.giveItemToPlayer(_player, _setstack);
                 }
@@ -59,34 +59,34 @@ public class DismantlePressProcedure {
             if (stack.getOrCreateTag().getDouble("level") >= 10) {
                 if (Math.random() < 0.005 * stack.getOrCreateTag().getDouble("level")) {
                     if (entity instanceof Player _player) {
-                        ItemStack _setstack = new ItemStack(ItemRegistry.SOUL_STEEL_NUGGET.get());
+                        ItemStack _setstack = new ItemStack(TargetModItems.SOUL_STEEL_NUGGET.get());
                         _setstack.setCount(3);
                         ItemHandlerHelper.giveItemToPlayer(_player, _setstack);
                     }
                 }
                 if (Math.random() < 0.01 * stack.getOrCreateTag().getDouble("level")) {
                     if (entity instanceof Player _player) {
-                        ItemStack _setstack = new ItemStack(ItemRegistry.SOUL_STEEL_NUGGET.get());
+                        ItemStack _setstack = new ItemStack(TargetModItems.SOUL_STEEL_NUGGET.get());
                         _setstack.setCount(2);
                         ItemHandlerHelper.giveItemToPlayer(_player, _setstack);
                     }
                 }
                 if (Math.random() < 0.03 * stack.getOrCreateTag().getDouble("level")) {
                     if (entity instanceof Player _player) {
-                        ItemStack _setstack = new ItemStack(ItemRegistry.SOUL_STEEL_NUGGET.get());
+                        ItemStack _setstack = new ItemStack(TargetModItems.SOUL_STEEL_NUGGET.get());
                         _setstack.setCount(1);
                         ItemHandlerHelper.giveItemToPlayer(_player, _setstack);
                     }
                 }
                 if (Math.random() < 0.06 * stack.getOrCreateTag().getDouble("level")) {
                     if (entity instanceof Player _player) {
-                        ItemStack _setstack = new ItemStack(ItemRegistry.SOUL_STEEL_NUGGET.get());
+                        ItemStack _setstack = new ItemStack(TargetModItems.SOUL_STEEL_NUGGET.get());
                         _setstack.setCount(1);
                         ItemHandlerHelper.giveItemToPlayer(_player, _setstack);
                     }
                 }
                 if (entity instanceof Player _player) {
-                    ItemStack _setstack = new ItemStack(ItemRegistry.SOUL_STEEL_NUGGET.get());
+                    ItemStack _setstack = new ItemStack(TargetModItems.SOUL_STEEL_NUGGET.get());
                     _setstack.setCount(1);
                     ItemHandlerHelper.giveItemToPlayer(_player, _setstack);
                 }

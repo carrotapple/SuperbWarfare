@@ -1,6 +1,6 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.init.ItemRegistry;
+import net.mcreator.target.init.TargetModItems;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -33,7 +33,7 @@ public class GunsTipsProcedure {
         String firemode = "";
         ItemStack usehand = ItemStack.EMPTY;
         if (itemstack.is(ItemTags.create(new ResourceLocation("target:gun")))) {
-            if (itemstack.getItem() == ItemRegistry.BOCEK.get()) {
+            if (itemstack.getItem() == TargetModItems.BOCEK.get()) {
                 tooltip.add(Component.literal(("\u00A7l\u00A77Damage:(" + new java.text.DecimalFormat("##.##").format(2.4 * itemstack.getOrCreateTag().getDouble("damageadd")) + ")*10/"
                         + new java.text.DecimalFormat("##.##").format(24 * itemstack.getOrCreateTag().getDouble("damageadd")))));
             } else {
@@ -57,19 +57,19 @@ public class GunsTipsProcedure {
                         + new java.text.DecimalFormat("##.##").format(100 * (itemstack.getOrCreateTag().getDouble("damagenow") / itemstack.getOrCreateTag().getDouble("damageneed"))) + "%")));
             }
         }
-        if (itemstack.getItem() == ItemRegistry.CREATIVE_AMMO_BOX.get()) {
+        if (itemstack.getItem() == TargetModItems.CREATIVE_AMMO_BOX.get()) {
             tooltip.add(Component.literal("Creative Ammo * 2147483647"));
         }
-        if (itemstack.getItem() == ItemRegistry.RIFLE_AMMO_BOX.get()) {
+        if (itemstack.getItem() == TargetModItems.RIFLE_AMMO_BOX.get()) {
             tooltip.add(Component.literal("Rifle Ammo * 30"));
         }
-        if (itemstack.getItem() == ItemRegistry.HANDGUN_AMMO_BOX.get()) {
+        if (itemstack.getItem() == TargetModItems.HANDGUN_AMMO_BOX.get()) {
             tooltip.add(Component.literal("Handgun Ammo * 30"));
         }
-        if (itemstack.getItem() == ItemRegistry.SHOTGUN_AMMO_BOX.get()) {
+        if (itemstack.getItem() == TargetModItems.SHOTGUN_AMMO_BOX.get()) {
             tooltip.add(Component.literal("Shotgun Ammo * 12"));
         }
-        if (itemstack.getItem() == ItemRegistry.SNIPER_AMMO_BOX.get()) {
+        if (itemstack.getItem() == TargetModItems.SNIPER_AMMO_BOX.get()) {
             tooltip.add(Component.literal("Sniper Ammo * 12"));
         }
     }

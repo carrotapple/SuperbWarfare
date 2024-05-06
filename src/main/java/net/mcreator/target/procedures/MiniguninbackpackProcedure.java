@@ -1,6 +1,6 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.init.ItemRegistry;
+import net.mcreator.target.init.TargetModItems;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +17,7 @@ public class MiniguninbackpackProcedure {
         } else {
             itemstack.getOrCreateTag().putDouble("heatbar", (itemstack.getOrCreateTag().getDouble("heat")));
         }
-        if (!((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == ItemRegistry.MINIGUN.get())) {
+        if (!((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == TargetModItems.MINIGUN.get())) {
             entity.getPersistentData().putDouble("minigunfiring", 0);
         }
         if (itemstack.getOrCreateTag().getDouble("overheat") > 0) {

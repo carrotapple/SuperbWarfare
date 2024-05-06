@@ -27,7 +27,7 @@ import net.minecraft.client.model.HumanoidModel;
 
 import net.mcreator.target.procedures.TacRpgWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
 import net.mcreator.target.client.renderer.item.RpgItemRenderer;
-import net.mcreator.target.init.ItemRegistry;
+import net.mcreator.target.init.TargetModItems;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.Minecraft;
@@ -178,6 +178,6 @@ public class RpgItem extends Item implements GeoItem {
     }
 
     protected static boolean check(ItemStack stack) {
-        return stack.getItem() == ItemRegistry.ROCKET.get();
+        return stack.getItem() == TargetModItems.ROCKET.get();
     }
 }

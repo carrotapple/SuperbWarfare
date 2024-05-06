@@ -1,6 +1,6 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.init.ItemRegistry;
+import net.mcreator.target.init.TargetModItems;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -18,8 +18,8 @@ public class ChangefiremodeProcedure {
             return;
         ItemStack usehand = ItemStack.EMPTY;
         usehand = (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY);
-        if (usehand.getItem() == ItemRegistry.AK_47.get() || usehand.getItem() == ItemRegistry.M_4.get() || usehand.getItem() == ItemRegistry.AA_12.get() || usehand.getItem() == ItemRegistry.HK_416.get()
-                || usehand.getItem() == ItemRegistry.RPK.get() || usehand.getItem() == ItemRegistry.MK_14.get()) {
+        if (usehand.getItem() == TargetModItems.AK_47.get() || usehand.getItem() == TargetModItems.M_4.get() || usehand.getItem() == TargetModItems.AA_12.get() || usehand.getItem() == TargetModItems.HK_416.get()
+                || usehand.getItem() == TargetModItems.RPK.get() || usehand.getItem() == TargetModItems.MK_14.get()) {
             if (usehand.getOrCreateTag().getDouble("firemode") == 2) {
                 usehand.getOrCreateTag().putDouble("firemode", 0);
                 usehand.getOrCreateTag().putDouble("cg", 10);
@@ -45,7 +45,7 @@ public class ChangefiremodeProcedure {
                     _player.displayClientMessage(Component.literal("Auto"), true);
             }
         }
-        if (usehand.getItem() == ItemRegistry.VECTOR.get()) {
+        if (usehand.getItem() == TargetModItems.VECTOR.get()) {
             if (usehand.getOrCreateTag().getDouble("firemode") == 0) {
                 usehand.getOrCreateTag().putDouble("firemode", 1);
                 usehand.getOrCreateTag().putDouble("cg", 10);
@@ -82,7 +82,7 @@ public class ChangefiremodeProcedure {
                     _player.displayClientMessage(Component.literal("Semi"), true);
             }
         }
-        if (usehand.getItem() == ItemRegistry.SENTINEL.get() && !(entity instanceof Player _plrCldCheck36 && _plrCldCheck36.getCooldowns().isOnCooldown(usehand.getItem())) && usehand.getOrCreateTag().getDouble("charging") == 0) {
+        if (usehand.getItem() == TargetModItems.SENTINEL.get() && !(entity instanceof Player _plrCldCheck36 && _plrCldCheck36.getCooldowns().isOnCooldown(usehand.getItem())) && usehand.getOrCreateTag().getDouble("charging") == 0) {
             usehand.getOrCreateTag().putDouble("charging", 1);
             usehand.getOrCreateTag().putDouble("cid", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
             usehand.getOrCreateTag().putDouble("chargingtime", 128);

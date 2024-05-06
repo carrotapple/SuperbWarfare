@@ -1,6 +1,6 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.init.ItemRegistry;
+import net.mcreator.target.init.TargetModItems;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
@@ -16,7 +16,7 @@ public class ClaymoreYouJiShiTiShiProcedure {
             if (!entity.level().isClientSide())
                 entity.discard();
             if (sourceentity instanceof Player _player) {
-                ItemStack _setstack = new ItemStack(ItemRegistry.CLAYMORE_MINE.get());
+                ItemStack _setstack = new ItemStack(TargetModItems.CLAYMORE_MINE.get());
                 _setstack.setCount(1);
                 ItemHandlerHelper.giveItemToPlayer(_player, _setstack);
             }

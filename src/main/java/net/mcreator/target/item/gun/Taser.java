@@ -2,7 +2,7 @@ package net.mcreator.target.item.gun;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.mcreator.target.init.ItemRegistry;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.client.renderer.item.TaserItemRenderer;
 import net.mcreator.target.procedures.TasercooldownProcedure;
 import net.minecraft.client.Minecraft;
@@ -167,6 +167,6 @@ public class Taser extends Item implements GeoItem {
     }
 
     protected static boolean check(ItemStack stack) {
-        return stack.getItem() == ItemRegistry.TASER_ELECTRODE.get();
+        return stack.getItem() == TargetModItems.TASER_ELECTRODE.get();
     }
 }

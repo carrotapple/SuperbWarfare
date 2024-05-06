@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "target:item/base_plate"
+    "layer0": "target:item/mortar_base_plate"
   }
 }

@@ -35,7 +35,7 @@ public class TargetMod {
         TargetModSounds.REGISTRY.register(bus);
         TargetModBlocks.REGISTRY.register(bus);
 
-        ItemRegistry.ITEMS.register(bus);
+        TargetModItems.ITEMS.register(bus);
 
         TargetModEntities.REGISTRY.register(bus);
         TargetCustomModEntities.ENTITY_TYPES.register(bus);

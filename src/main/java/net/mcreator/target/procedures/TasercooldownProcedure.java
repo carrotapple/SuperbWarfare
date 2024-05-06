@@ -1,6 +1,6 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.init.ItemRegistry;
+import net.mcreator.target.init.TargetModItems;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
@@ -45,7 +45,7 @@ public class TasercooldownProcedure {
                 if (itemstack.getOrCreateTag().getDouble("maxammo") >= 1) {
                     itemstack.getOrCreateTag().putDouble("ammo", 1);
                     if (entity instanceof Player _player) {
-                        ItemStack _stktoremove = new ItemStack(ItemRegistry.TASER_ELECTRODE.get());
+                        ItemStack _stktoremove = new ItemStack(TargetModItems.TASER_ELECTRODE.get());
                         _player.getInventory().clearOrCountMatchingItems(p -> _stktoremove.getItem() == p.getItem(), 1, _player.inventoryMenu.getCraftSlots());
                     }
                     itemstack.getOrCreateTag().putDouble("reloading", 0);

@@ -25,7 +25,7 @@ public class RengchumortarProcedure {
             }
         }
         if (entity instanceof Player player && !player.isCreative()) {
-            ItemStack _stktoremove = new ItemStack(TargetModItems.MORTAR_DEPOLYER.get());
+            ItemStack _stktoremove = new ItemStack(TargetModItems.MORTAR_DEPLOYER.get());
             player.getInventory().clearOrCountMatchingItems(p -> _stktoremove.getItem() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
             player.swing(InteractionHand.MAIN_HAND, true);
         }

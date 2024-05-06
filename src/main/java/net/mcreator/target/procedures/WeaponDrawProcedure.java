@@ -1,6 +1,6 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.init.ItemRegistry;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,10 +29,10 @@ public class WeaponDrawProcedure {
             }
             if (entity instanceof Player _player)
                 _player.getCooldowns().addCooldown(itemstack.getItem(), 16);
-            if (itemstack.getItem() == ItemRegistry.RPG.get() && itemstack.getOrCreateTag().getDouble("ammo") == 0) {
+            if (itemstack.getItem() == TargetModItems.RPG.get() && itemstack.getOrCreateTag().getDouble("ammo") == 0) {
                 itemstack.getOrCreateTag().putDouble("empty", 1);
             }
-            if (itemstack.getItem() == ItemRegistry.SKS.get() && itemstack.getOrCreateTag().getDouble("ammo") == 0) {
+            if (itemstack.getItem() == TargetModItems.SKS.get() && itemstack.getOrCreateTag().getDouble("ammo") == 0) {
                 itemstack.getOrCreateTag().putDouble("gj", 1);
             }
         }
