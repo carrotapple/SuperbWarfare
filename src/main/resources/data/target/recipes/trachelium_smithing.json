@@ -4,7 +4,7 @@
     "item": "target:trachelium_blueprint"
   },
   "base": {
-    "item": "target:legendarymaterialpack"
+    "item": "target:legendary_material_pack"
   },
   "addition": {
     "item": "minecraft:netherite_ingot"

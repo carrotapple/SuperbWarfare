@@ -4,7 +4,7 @@
     "item": "target:ak_47_blueprint"
   },
   "base": {
-    "item": "target:rarematerialpack"
+    "item": "target:rare_material_pack"
   },
   "addition": {
     "tag": "minecraft:logs"

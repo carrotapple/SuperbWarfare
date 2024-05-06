@@ -4,7 +4,7 @@
     "item": "target:bocek_blueprint"
   },
   "base": {
-    "item": "minecraft:bow"
+    "item": "target:special_material_pack"
   },
   "addition": {
     "item": "target:soulsteel_ingot"

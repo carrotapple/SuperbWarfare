@@ -4,7 +4,7 @@
     "item": "target:taser_blueprint"
   },
   "base": {
-    "item": "target:commonmaterialpack"
+    "item": "target:common_material_pack"
   },
   "addition": {
     "item": "minecraft:yellow_concrete"

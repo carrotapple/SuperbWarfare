@@ -230,7 +230,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "target:devotion_bluprint",
+          "name": "target:devotion_blueprint",
           "weight": 1,
           "functions": [
             {

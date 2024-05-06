@@ -4,7 +4,7 @@
     "item": "target:rpk_blueprint"
   },
   "base": {
-    "item": "target:epicmaterialpack"
+    "item": "target:epic_material_pack"
   },
   "addition": {
     "tag": "minecraft:logs"

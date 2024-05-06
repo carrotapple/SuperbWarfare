@@ -4,7 +4,7 @@
     "item": "target:m_4_blueprint"
   },
   "base": {
-    "item": "target:rarematerialpack"
+    "item": "target:rare_material_pack"
   },
   "addition": {
     "item": "target:ingot_steel"

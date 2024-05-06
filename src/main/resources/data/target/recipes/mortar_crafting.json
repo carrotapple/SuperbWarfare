@@ -7,17 +7,17 @@
   ],
   "key": {
     "a": {
-      "item": "target:mortarbarrel"
+      "item": "target:mortar_barrel"
     },
     "b": {
-      "item": "target:mortarbipod"
+      "item": "target:mortar_bipod"
     },
     "c": {
-      "item": "target:moratr_base_plate"
+      "item": "target:mortar_base_plate"
     }
   },
   "result": {
-    "item": "target:mortar_depolyer",
+    "item": "target:mortar_deployer",
     "count": 1
   }
 }

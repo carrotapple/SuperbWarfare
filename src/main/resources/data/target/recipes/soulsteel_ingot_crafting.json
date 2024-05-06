@@ -3,35 +3,35 @@
   "category": "misc",
   "ingredients": [
     {
-      "item": "target:soulsteelnugget"
+      "item": "target:soul_steel_nugget"
     },
     {
-      "item": "target:soulsteelnugget"
+      "item": "target:soul_steel_nugget"
     },
     {
-      "item": "target:soulsteelnugget"
+      "item": "target:soul_steel_nugget"
     },
     {
-      "item": "target:soulsteelnugget"
+      "item": "target:soul_steel_nugget"
     },
     {
-      "item": "target:soulsteelnugget"
+      "item": "target:soul_steel_nugget"
     },
     {
-      "item": "target:soulsteelnugget"
+      "item": "target:soul_steel_nugget"
     },
     {
-      "item": "target:soulsteelnugget"
+      "item": "target:soul_steel_nugget"
     },
     {
-      "item": "target:soulsteelnugget"
+      "item": "target:soul_steel_nugget"
     },
     {
-      "item": "target:soulsteelnugget"
+      "item": "target:soul_steel_nugget"
     }
   ],
   "result": {
-    "item": "target:soulsteel_ingot",
+    "item": "target:soul_steel_ingot",
     "count": 1
   }
 }

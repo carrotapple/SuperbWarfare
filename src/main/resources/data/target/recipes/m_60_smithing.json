@@ -4,7 +4,7 @@
     "item": "target:m_60_blueprint"
   },
   "base": {
-    "item": "target:epicmaterialpack"
+    "item": "target:epic_material_pack"
   },
   "addition": {
     "item": "target:cemented_carbide_ingot"

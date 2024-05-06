@@ -4,7 +4,7 @@
   "experience": 8,
   "cookingtime": 800,
   "ingredient": {
-    "item": "target:unblastedcementedcarbidepodwer"
+    "item": "target:raw_cemented_carbide_powder"
   },
   "result": "target:cemented_carbide_ingot"
 }
