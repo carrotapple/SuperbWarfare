@@ -2,9 +2,9 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.Hk416Item;
-import net.mcreator.target.item.layer.Hk416Layer;
-import net.mcreator.target.item.model.Hk416ItemModel;
+import net.mcreator.target.item.gun.Hk416Item;
+import net.mcreator.target.client.layer.Hk416Layer;
+import net.mcreator.target.client.model.item.Hk416ItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;

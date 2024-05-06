@@ -2,9 +2,9 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.SksItem;
-import net.mcreator.target.item.layer.SksLayer;
-import net.mcreator.target.item.model.SksItemModel;
+import net.mcreator.target.item.gun.SksItem;
+import net.mcreator.target.client.layer.SksLayer;
+import net.mcreator.target.client.model.item.SksItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;

@@ -2,9 +2,9 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.Aa12Item;
-import net.mcreator.target.item.layer.Aa12Layer;
-import net.mcreator.target.item.model.Aa12ItemModel;
+import net.mcreator.target.item.gun.Aa12Item;
+import net.mcreator.target.client.layer.Aa12Layer;
+import net.mcreator.target.client.model.item.Aa12ItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;

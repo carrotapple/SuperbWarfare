@@ -2,9 +2,9 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.BocekItem;
-import net.mcreator.target.item.layer.BocekLayer;
-import net.mcreator.target.item.model.BocekItemModel;
+import net.mcreator.target.item.gun.BocekItem;
+import net.mcreator.target.client.layer.BocekLayer;
+import net.mcreator.target.client.model.item.BocekItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;

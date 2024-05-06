@@ -1,6 +1,8 @@
 package net.mcreator.target.init;
 
 import net.mcreator.target.item.*;
+import net.mcreator.target.item.common.ammo.RocketItem;
+import net.mcreator.target.item.gun.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.world.item.ArmorItem;

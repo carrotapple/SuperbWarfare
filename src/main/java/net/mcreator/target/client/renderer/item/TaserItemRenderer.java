@@ -2,8 +2,8 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.TaserItem;
-import net.mcreator.target.item.model.TaserItemModel;
+import net.mcreator.target.item.gun.TaserItem;
+import net.mcreator.target.client.model.item.TaserItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;

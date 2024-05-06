@@ -2,9 +2,9 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.M870Item;
-import net.mcreator.target.item.layer.M870Layer;
-import net.mcreator.target.item.model.M870ItemModel;
+import net.mcreator.target.item.gun.M870Item;
+import net.mcreator.target.client.layer.M870Layer;
+import net.mcreator.target.client.model.item.M870ItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;

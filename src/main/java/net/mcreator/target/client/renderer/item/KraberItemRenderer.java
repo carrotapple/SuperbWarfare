@@ -2,9 +2,9 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.KraberItem;
-import net.mcreator.target.item.layer.KraberLayer;
-import net.mcreator.target.item.model.KraberItemModel;
+import net.mcreator.target.item.gun.KraberItem;
+import net.mcreator.target.client.layer.KraberLayer;
+import net.mcreator.target.client.model.item.KraberItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;

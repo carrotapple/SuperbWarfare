@@ -2,9 +2,9 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.DevotionItem;
-import net.mcreator.target.item.layer.DevotionLayer;
-import net.mcreator.target.item.model.DevotionItemModel;
+import net.mcreator.target.item.gun.DevotionItem;
+import net.mcreator.target.client.layer.DevotionLayer;
+import net.mcreator.target.client.model.item.DevotionItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;

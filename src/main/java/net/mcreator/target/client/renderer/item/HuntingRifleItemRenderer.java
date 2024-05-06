@@ -2,9 +2,9 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.HuntingRifleItem;
-import net.mcreator.target.item.layer.HuntingRifleLayer;
-import net.mcreator.target.item.model.HuntingRifleItemModel;
+import net.mcreator.target.item.gun.HuntingRifleItem;
+import net.mcreator.target.client.layer.HuntingRifleLayer;
+import net.mcreator.target.client.model.item.HuntingRifleItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;

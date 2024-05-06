@@ -2,8 +2,8 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.RocketItem;
-import net.mcreator.target.item.model.RocketItemModel;
+import net.mcreator.target.item.common.ammo.RocketItem;
+import net.mcreator.target.client.model.item.RocketItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;

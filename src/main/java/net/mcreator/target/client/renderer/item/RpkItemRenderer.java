@@ -2,9 +2,9 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.RpkItem;
-import net.mcreator.target.item.layer.RpkLayer;
-import net.mcreator.target.item.model.RpkItemModel;
+import net.mcreator.target.item.gun.RpkItem;
+import net.mcreator.target.client.layer.RpkLayer;
+import net.mcreator.target.client.model.item.RpkItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
