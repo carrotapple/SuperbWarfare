@@ -38,7 +38,7 @@ public class RpkautofireProcedure {
                     && !(entity instanceof Player _plrCldCheck5 && _plrCldCheck5.getCooldowns().isOnCooldown(usehand.getItem()))) {
                 if (entity instanceof Player _player)
                     _player.getCooldowns().addCooldown(usehand.getItem(), 2);
-                BulletfireNormalProcedure.execute(entity);
+                BulletFireNormalProcedure.execute(entity);
                 AkDsProcedure.execute(entity);
                 {
                     Entity _ent = entity;

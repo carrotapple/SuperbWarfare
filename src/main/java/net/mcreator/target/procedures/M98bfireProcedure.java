@@ -31,7 +31,7 @@ public class M98bfireProcedure {
             if (usehand.getItem() == TargetModItems.M_98B.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !(entity instanceof Player _plrCldCheck4 && _plrCldCheck4.getCooldowns().isOnCooldown(usehand.getItem()))
                     && usehand.getOrCreateTag().getDouble("ammo") > 0) {
                 usehand.getOrCreateTag().putDouble("fireanim", 17);
-                BulletfireNormalProcedure.execute(entity);
+                BulletFireNormalProcedure.execute(entity);
                 if (entity instanceof Player _player)
                     _player.getCooldowns().addCooldown(usehand.getItem(), 17);
                 {

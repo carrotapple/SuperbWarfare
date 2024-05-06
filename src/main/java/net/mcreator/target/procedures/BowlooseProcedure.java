@@ -86,7 +86,6 @@ public class BowlooseProcedure {
                 for (int index0 = 0; index0 < 10; index0++) {
                     if (!entity.level().isClientSide() && entity instanceof LivingEntity living) {
                         ProjectileEntity projectile = new ProjectileEntity(entity.level(), living);
-                        projectile.setOwner(living);
                         projectile.setPos(living.getX(), living.getEyeY() - 0.1, living.getZ());
                         projectile.shoot(living.getLookAngle().x, living.getLookAngle().y, living.getLookAngle().z, (float) (4 * power), 2);
                         entity.level().addFreshEntity(projectile);

@@ -13,7 +13,7 @@ public class Hk416autofireProcedure {
             return;
         ItemStack usehand = ItemStack.EMPTY;
         usehand = (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY);
-        BulletfireNormalProcedure.execute(entity);
+        BulletFireNormalProcedure.execute(entity);
         HkDsProcedure.execute(entity);
         {
             if (!entity.level().isClientSide() && entity.getServer() != null) {

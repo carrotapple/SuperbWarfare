@@ -47,7 +47,7 @@ public class MarlinfireProcedure {
                     usehand.getOrCreateTag().putDouble("fastfiring", 1);
                     usehand.getOrCreateTag().putDouble("firing", 10);
                 }
-                BulletfireNormalProcedure.execute(entity);
+                BulletFireNormalProcedure.execute(entity);
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,

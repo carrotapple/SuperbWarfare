@@ -37,7 +37,7 @@ public class Aa12autofireProcedure {
             if (usehand.getItem() == TargetModItems.AA_12.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0
                     && !(entity instanceof Player _plrCldCheck6 && _plrCldCheck6.getCooldowns().isOnCooldown(usehand.getItem()))) {
                 for (int index0 = 0; index0 < 8; index0++) {
-                    BulletfireNormalProcedure.execute(entity);
+                    BulletFireNormalProcedure.execute(entity);
                 }
                 As12DsProcedure.execute(entity);
                 if (entity instanceof Player _player)
@@ -68,7 +68,7 @@ public class Aa12autofireProcedure {
             if (usehand.getItem() == TargetModItems.AA_12.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0
                     && !(entity instanceof Player _plrCldCheck20 && _plrCldCheck20.getCooldowns().isOnCooldown(usehand.getItem()))) {
                 for (int index1 = 0; index1 < 8; index1++) {
-                    BulletfireNormalProcedure.execute(entity);
+                    BulletFireNormalProcedure.execute(entity);
                 }
                 As12DsProcedure.execute(entity);
                 if (entity instanceof Player _player)

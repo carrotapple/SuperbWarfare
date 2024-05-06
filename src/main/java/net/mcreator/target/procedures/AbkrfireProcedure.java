@@ -32,7 +32,7 @@ public class AbkrfireProcedure {
             if (usehand.getItem() == TargetModItems.ABEKIRI.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !(entity instanceof Player _plrCldCheck4 && _plrCldCheck4.getCooldowns().isOnCooldown(usehand.getItem()))
                     && usehand.getOrCreateTag().getDouble("ammo") > 0) {
                 for (int index0 = 0; index0 < 8; index0++) {
-                    BulletfireNormalProcedure.execute(entity);
+                    BulletFireNormalProcedure.execute(entity);
                 }
                 {
                     if (usehand.hurt(1, RandomSource.create(), null)) {

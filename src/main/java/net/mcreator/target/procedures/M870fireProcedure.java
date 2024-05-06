@@ -34,7 +34,7 @@ public class M870fireProcedure {
             if (usehand.getItem() == TargetModItems.M_870.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !(entity instanceof Player _plrCldCheck8 && _plrCldCheck8.getCooldowns().isOnCooldown(usehand.getItem()))
                     && usehand.getOrCreateTag().getDouble("ammo") > 0) {
                 for (int index0 = 0; index0 < 12; index0++) {
-                    BulletfireNormalProcedure.execute(entity);
+                    BulletFireNormalProcedure.execute(entity);
                 }
                 if (entity instanceof Player _player)
                     _player.getCooldowns().addCooldown(usehand.getItem(), 13);

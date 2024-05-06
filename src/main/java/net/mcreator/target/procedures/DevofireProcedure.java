@@ -45,7 +45,7 @@ public class DevofireProcedure {
                 capability.syncPlayerVariables(entity);
             });
         }
-        BulletfireNormalProcedure.execute(entity);
+        BulletFireNormalProcedure.execute(entity);
         ArDsProcedure.execute(entity);
         {
             if (!entity.level().isClientSide() && entity.getServer() != null) {

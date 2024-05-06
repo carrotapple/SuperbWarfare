@@ -3,7 +3,6 @@ package net.mcreator.target.entity;
 import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
 import net.mcreator.target.init.TargetCustomModEntities;
-import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.procedures.ProjectileHeadshotEntity;
 import net.mcreator.target.procedures.ProjectileHitEntity;
 import net.mcreator.target.util.math.ExtendedEntityRayTraceResult;
@@ -11,6 +10,8 @@ import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,8 +20,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LeavesBlock;
@@ -28,45 +27,36 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class ProjectileEntity extends ThrowableItemProjectile {
-
+public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnData {
     private static final Predicate<Entity> PROJECTILE_TARGETS = input -> input != null && input.isPickable() && !input.isSpectator();
 
     private static final Predicate<BlockState> IGNORE_LEAVES = input -> input != null && input.getBlock() instanceof LeavesBlock;
     protected LivingEntity shooter;
     protected int shooterId;
-    private float damage;
+    private float damage = 1f;
 
     public ProjectileEntity(EntityType<? extends ProjectileEntity> p_i50159_1_, Level p_i50159_2_) {
         super(p_i50159_1_, p_i50159_2_);
     }
 
     public ProjectileEntity(Level world, LivingEntity entity) {
-        super(TargetCustomModEntities.PROJECTILE.get(), entity, world);
-        this.damage = 0f;
+        super(TargetCustomModEntities.PROJECTILE.get(), world);
+        this.shooter = entity;
     }
 
     public ProjectileEntity(Level world, LivingEntity entity, float damage) {
-        super(TargetCustomModEntities.PROJECTILE.get(), entity, world);
+        super(TargetCustomModEntities.PROJECTILE.get(), world);
+        this.shooter = entity;
         this.damage = damage;
-    }
-
-    public ProjectileEntity(Level p_i1775_1_, double p_i1775_2_, double p_i1775_4_, double p_i1775_6_) {
-        super(TargetCustomModEntities.PROJECTILE.get(), p_i1775_2_, p_i1775_4_, p_i1775_6_, p_i1775_1_);
-    }
-
-    @Override
-    protected void onHitEntity(EntityHitResult result) {
-        super.onHitEntity(result);
     }
 
     @Nullable
@@ -76,11 +66,13 @@ public class ProjectileEntity extends ThrowableItemProjectile {
         boolean headshot = false;
         List<Entity> entities = this.level().getEntities(this, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0), PROJECTILE_TARGETS);
         double closestDistance = Double.MAX_VALUE;
+
         for (Entity entity : entities) {
             if (!entity.equals(this.shooter)) {
                 EntityResult result = this.getHitResult(entity, startVec, endVec);
-                if (result == null)
+                if (result == null) {
                     continue;
+                }
 
                 Vec3 hitPos = result.getHitPos();
                 double distanceToHit = startVec.distanceTo(hitPos);
@@ -95,20 +87,20 @@ public class ProjectileEntity extends ThrowableItemProjectile {
         return hitEntity != null ? new EntityResult(hitEntity, hitVec, headshot) : null;
     }
 
-    @Nullable
-    protected List<EntityResult> findEntitiesOnPath(Vec3 startVec, Vec3 endVec) {
-        List<EntityResult> hitEntities = new ArrayList<>();
-        List<Entity> entities = this.level().getEntities(this, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0), PROJECTILE_TARGETS);
-        for (Entity entity : entities) {
-            if (!entity.equals(this.shooter)) {
-                EntityResult result = this.getHitResult(entity, startVec, endVec);
-                if (result == null)
-                    continue;
-                hitEntities.add(result);
-            }
-        }
-        return hitEntities;
-    }
+//    @Nullable
+//    protected List<EntityResult> findEntitiesOnPath(Vec3 startVec, Vec3 endVec) {
+//        List<EntityResult> hitEntities = new ArrayList<>();
+//        List<Entity> entities = this.level().getEntities(this, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0), PROJECTILE_TARGETS);
+//        for (Entity entity : entities) {
+//            if (!entity.equals(this.shooter)) {
+//                EntityResult result = this.getHitResult(entity, startVec, endVec);
+//                if (result == null)
+//                    continue;
+//                hitEntities.add(result);
+//            }
+//        }
+//        return hitEntities;
+//    }
 
     @Nullable
     @SuppressWarnings("unchecked")
@@ -142,7 +134,7 @@ public class ProjectileEntity extends ThrowableItemProjectile {
                 if (box != null) {
                     box = box.move(boundingBox.getCenter().x, boundingBox.minY, boundingBox.getCenter().z);
                     Optional<Vec3> headshotHitPos = box.clip(startVec, endVec);
-                    if (!headshotHitPos.isPresent()) {
+                    if (headshotHitPos.isEmpty()) {
                         box = box.inflate(0.2, 0.2, 0.2);
                         headshotHitPos = box.clip(startVec, endVec);
                     }
@@ -159,6 +151,11 @@ public class ProjectileEntity extends ThrowableItemProjectile {
         }
 
         return new EntityResult(entity, hitPos, headshot);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+
     }
 
     @Override
@@ -197,14 +194,21 @@ public class ProjectileEntity extends ThrowableItemProjectile {
         }
     }
 
-    protected void onProjectileTick() {
+    @Override
+    protected void readAdditionalSaveData(CompoundTag p_20052_) {
+
     }
 
     @Override
-    protected void onHitBlock(BlockHitResult hitResult) {
-        super.onHitBlock(hitResult);
-        Vec3 location = hitResult.getLocation();
+    protected void addAdditionalSaveData(CompoundTag p_20139_) {
 
+    }
+
+    protected void onProjectileTick() {
+    }
+
+    protected void onHitBlock(Vec3 location) {
+        // TODO 修改成正常的音效播放/粒子显示方法
         if (this.level() instanceof ServerLevel _level)
             _level.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, new Vec3(location.x, location.y, location.z), Vec2.ZERO, _level, 4, "", Component.literal(""), _level.getServer(), null).withSuppressedOutput(),
                     "particle target:bullthole ~ ~ ~ 0 0 0 0 1 force");
@@ -219,6 +223,15 @@ public class ProjectileEntity extends ThrowableItemProjectile {
     }
 
     private void onHit(HitResult result, Vec3 startVec, Vec3 endVec) {
+        if (result instanceof BlockHitResult blockHitResult) {
+            if (blockHitResult.getType() == HitResult.Type.MISS) {
+                return;
+            }
+
+            Vec3 hitVec = result.getLocation();
+            this.onHitBlock(hitVec);
+        }
+
         if (result instanceof ExtendedEntityRayTraceResult entityHitResult) {
             Entity entity = entityHitResult.getEntity();
             if (entity.getId() == this.shooterId) {
@@ -243,11 +256,6 @@ public class ProjectileEntity extends ThrowableItemProjectile {
         ProjectileHitEntity.execute(this.level(), entity, this, this.shooter);
     }
 
-    @Override
-    protected Item getDefaultItem() {
-        return TargetModItems.RIFLE_AMMO.get().asItem();
-    }
-
     public void setDamage(float damage) {
         this.damage = damage;
     }
@@ -256,6 +264,17 @@ public class ProjectileEntity extends ThrowableItemProjectile {
         return this.damage;
     }
 
+    public void shoot(double p_37266_, double p_37267_, double p_37268_, float p_37269_, float p_37270_) {
+        Vec3 vec3 = (new Vec3(p_37266_, p_37267_, p_37268_)).normalize().add(this.random.triangle(0.0D, 0.0172275D * (double)p_37270_), this.random.triangle(0.0D, 0.0172275D * (double)p_37270_), this.random.triangle(0.0D, 0.0172275D * (double)p_37270_)).scale((double)p_37269_);
+        this.setDeltaMovement(vec3);
+        double d0 = vec3.horizontalDistance();
+        this.setYRot((float)(Mth.atan2(vec3.x, vec3.z) * (double)(180F / (float)Math.PI)));
+        this.setXRot((float)(Mth.atan2(vec3.y, d0) * (double)(180F / (float)Math.PI)));
+        this.yRotO = this.getYRot();
+        this.xRotO = this.getXRot();
+    }
+
+    @SuppressWarnings("SameParameterValue")
     private static BlockHitResult rayTraceBlocks(Level world, ClipContext context, Predicate<BlockState> ignorePredicate) {
         return performRayTrace(context, (rayTraceContext, blockPos) -> {
             BlockState blockState = world.getBlockState(blockPos);
@@ -351,6 +370,16 @@ public class ProjectileEntity extends ThrowableItemProjectile {
         this.setXRot((float) (Mth.atan2(this.getDeltaMovement().y(), horizontalDistance) * (180D / Math.PI)));
         this.yRotO = this.getYRot();
         this.xRotO = this.getXRot();
+    }
+
+    @Override
+    public void writeSpawnData(FriendlyByteBuf buffer) {
+
+    }
+
+    @Override
+    public void readSpawnData(FriendlyByteBuf additionalData) {
+
     }
 
     public static class EntityResult {

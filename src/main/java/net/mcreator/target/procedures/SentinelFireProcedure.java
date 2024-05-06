@@ -77,7 +77,7 @@ public class SentinelFireProcedure {
                         }
                     }
                 }
-                BulletfireNormalProcedure.execute(entity);
+                BulletFireNormalProcedure.execute(entity);
                 usehand.getOrCreateTag().putDouble("crot", 20);
                 if (entity instanceof Player _player)
                     _player.getCooldowns().addCooldown(usehand.getItem(), 23);

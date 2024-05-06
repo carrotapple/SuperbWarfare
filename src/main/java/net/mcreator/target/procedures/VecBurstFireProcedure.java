@@ -53,7 +53,7 @@ public class VecBurstFireProcedure {
                     _player.getCooldowns().addCooldown(usehand.getItem(), 1);
             }
             usehand.getOrCreateTag().putDouble("burst", (usehand.getOrCreateTag().getDouble("burst") - 1));
-            BulletfireNormalProcedure.execute(entity);
+            BulletFireNormalProcedure.execute(entity);
             {
                 Entity _ent = entity;
                 if (!_ent.level().isClientSide() && _ent.getServer() != null) {

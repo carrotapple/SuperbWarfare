@@ -101,7 +101,7 @@ public class MinigunautofireProcedure {
                             entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:minigun_fire_3p");
                 }
             }
-            BulletfireNormalProcedure.execute(entity);
+            BulletFireNormalProcedure.execute(entity);
             {
                 double _setval = (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleammo - 1;
                 entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {

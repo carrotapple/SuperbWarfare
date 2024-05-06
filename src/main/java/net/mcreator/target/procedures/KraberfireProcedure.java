@@ -31,7 +31,7 @@ public class KraberfireProcedure {
             if (usehand.getItem() == TargetModItems.KRABER.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !(entity instanceof Player _plrCldCheck4 && _plrCldCheck4.getCooldowns().isOnCooldown(usehand.getItem()))
                     && usehand.getOrCreateTag().getDouble("ammo") > 0) {
                 usehand.getOrCreateTag().putDouble("fireanim", 40);
-                BulletfireNormalProcedure.execute(entity);
+                BulletFireNormalProcedure.execute(entity);
                 KraberDsProcedure.execute(entity);
                 if (entity instanceof Player _player)
                     _player.getCooldowns().addCooldown(usehand.getItem(), 40);

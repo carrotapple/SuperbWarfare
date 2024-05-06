@@ -39,7 +39,7 @@ public class Ak47autofireProcedure {
                 usehand.getOrCreateTag().putDouble("firecooldown", 7);
                 if (entity instanceof Player _player)
                     _player.getCooldowns().addCooldown(usehand.getItem(), 2);
-                BulletfireNormalProcedure.execute(entity);
+                BulletFireNormalProcedure.execute(entity);
                 AkDsProcedure.execute(entity);
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {

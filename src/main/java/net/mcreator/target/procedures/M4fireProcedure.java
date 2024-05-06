@@ -34,7 +34,7 @@ public class M4fireProcedure {
                     if (usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && !(entity instanceof Player _plrCldCheck6 && _plrCldCheck6.getCooldowns().isOnCooldown(usehand.getItem()))) {
                         if (entity instanceof Player _player)
                             _player.getCooldowns().addCooldown(usehand.getItem(), 2);
-                        BulletfireNormalProcedure.execute(entity);
+                        BulletFireNormalProcedure.execute(entity);
                         ArDsProcedure.execute(entity);
                         {
                             if (!entity.level().isClientSide() && entity.getServer() != null) {

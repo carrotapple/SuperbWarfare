@@ -51,7 +51,7 @@ public class AKfireProcedure {
                                         entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:ak47_fire_3p");
                             }
                         }
-                        BulletfireNormalProcedure.execute(entity);
+                        BulletFireNormalProcedure.execute(entity);
                         AkDsProcedure.execute(entity);
                         usehand.getOrCreateTag().putDouble("fireanim", 2);
                         usehand.getOrCreateTag().putDouble("ammo", (usehand.getOrCreateTag().getDouble("ammo") - 1));

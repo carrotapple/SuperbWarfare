@@ -33,7 +33,7 @@ public class VecfireProcedure {
                     if (usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && !(entity instanceof Player _plrCldCheck6 && _plrCldCheck6.getCooldowns().isOnCooldown(usehand.getItem()))) {
                         if (entity instanceof Player _player)
                             _player.getCooldowns().addCooldown(usehand.getItem(), 1);
-                        BulletfireNormalProcedure.execute(entity);
+                        BulletFireNormalProcedure.execute(entity);
                         {
                             Entity _ent = entity;
                             if (!_ent.level().isClientSide() && _ent.getServer() != null) {

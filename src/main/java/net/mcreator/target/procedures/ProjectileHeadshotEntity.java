@@ -23,10 +23,9 @@ public class ProjectileHeadshotEntity {
         double dam = 0;
         usehand = (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY);
         {
-            Entity _ent = sourceentity;
-            if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                        _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:headshot voice @s ~ ~ ~ 1 1");
+            if (!sourceentity.level().isClientSide() && sourceentity.getServer() != null) {
+                sourceentity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, sourceentity.position(), sourceentity.getRotationVector(), sourceentity.level() instanceof ServerLevel ? (ServerLevel) sourceentity.level() : null, 4,
+                        sourceentity.getName().getString(), sourceentity.getDisplayName(), sourceentity.level().getServer(), sourceentity), "playsound target:headshot voice @s ~ ~ ~ 1 1");
             }
         }
         double _setval = 25;

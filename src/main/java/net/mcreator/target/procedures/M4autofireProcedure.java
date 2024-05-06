@@ -13,7 +13,7 @@ public class M4autofireProcedure {
             return;
         ItemStack usehand;
         usehand = (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY);
-        BulletfireNormalProcedure.execute(entity);
+        BulletFireNormalProcedure.execute(entity);
         ArDsProcedure.execute(entity);
         {
             if (!entity.level().isClientSide() && entity.getServer() != null) {
