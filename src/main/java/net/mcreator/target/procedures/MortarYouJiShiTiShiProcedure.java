@@ -6,7 +6,6 @@ import net.mcreator.target.entity.MortarShellEntity;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.world.inventory.MortarGUIMenu;
-import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
@@ -24,7 +23,6 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.network.NetworkHooks;
@@ -35,18 +33,16 @@ public class MortarYouJiShiTiShiProcedure {
             return;
         if ((sourceentity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == ItemStack.EMPTY.getItem()) {
             if (sourceentity.isShiftKeyDown()) {
-                {
-                    Entity _ent = entity;
-                    _ent.setYRot(sourceentity.getYRot());
-                    _ent.setXRot(entity.getXRot());
-                    _ent.setYBodyRot(_ent.getYRot());
-                    _ent.setYHeadRot(_ent.getYRot());
-                    _ent.yRotO = _ent.getYRot();
-                    _ent.xRotO = _ent.getXRot();
-                    if (_ent instanceof LivingEntity _entity) {
-                        _entity.yBodyRotO = _entity.getYRot();
-                        _entity.yHeadRotO = _entity.getYRot();
-                    }
+
+                entity.setYRot(sourceentity.getYRot());
+                entity.setXRot(entity.getXRot());
+                entity.setYBodyRot(entity.getYRot());
+                entity.setYHeadRot(entity.getYRot());
+                entity.yRotO = entity.getYRot();
+                entity.xRotO = entity.getXRot();
+                if (entity instanceof LivingEntity _entity) {
+                    _entity.yBodyRotO = _entity.getYRot();
+                    _entity.yHeadRotO = _entity.getYRot();
                 }
             } else {
                 if (sourceentity instanceof ServerPlayer _ent) {
@@ -67,64 +63,37 @@ public class MortarYouJiShiTiShiProcedure {
         }
         if ((sourceentity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == TargetModItems.MORTAR_SHELLS.get()
                 && !(sourceentity instanceof Player _plrCldCheck10 && _plrCldCheck10.getCooldowns().isOnCooldown(TargetModItems.MORTAR_SHELLS.get()))) {
-            if (sourceentity instanceof Player _player)
-                _player.getCooldowns().addCooldown(TargetModItems.MORTAR_SHELLS.get(), 30);
-            if (!(new Object() {
-                public boolean checkGamemode(Entity _ent) {
-                    if (_ent instanceof ServerPlayer _serverPlayer) {
-                        return _serverPlayer.gameMode.getGameModeForPlayer() == GameType.CREATIVE;
-                    } else if (_ent.level().isClientSide() && _ent instanceof Player _player) {
-                        return Minecraft.getInstance().getConnection().getPlayerInfo(_player.getGameProfile().getId()) != null
-                                && Minecraft.getInstance().getConnection().getPlayerInfo(_player.getGameProfile().getId()).getGameMode() == GameType.CREATIVE;
-                    }
-                    return false;
-                }
-            }.checkGamemode(sourceentity))) {
-                if (sourceentity instanceof Player _player) {
+            if (sourceentity instanceof Player player) {
+                player.getCooldowns().addCooldown(TargetModItems.MORTAR_SHELLS.get(), 30);
+                if (!player.isCreative()) {
                     ItemStack _stktoremove = new ItemStack(TargetModItems.MORTAR_SHELLS.get());
-                    _player.getInventory().clearOrCountMatchingItems(p -> _stktoremove.getItem() == p.getItem(), 1, _player.inventoryMenu.getCraftSlots());
+                    player.getInventory().clearOrCountMatchingItems(p -> _stktoremove.getItem() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
                 }
             }
-            {
-                Entity _ent = entity;
-                if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                    _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                            _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:mortar_load player @a ~ ~ ~ 1 1");
-                }
-            }
-            {
-                Entity _ent = entity;
-                if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                    _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                            _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:mortar_fire player @a ~ ~ ~ 8 1");
-                }
-            }
-            {
-                Entity _ent = entity;
-                if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                    _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                            _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:mortar_distant player @a ~ ~ ~ 32 1");
-                }
+            if (!entity.level().isClientSide() && entity.getServer() != null) {
+                entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                        entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:mortar_load player @a ~ ~ ~ 1 1");
+                entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                        entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:mortar_fire player @a ~ ~ ~ 8 1");
+                entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                        entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:mortar_distant player @a ~ ~ ~ 32 1");
             }
             TargetMod.queueServerWork(20, () -> {
-                {
-                    Entity _shootFrom = entity;
-                    Level projectileLevel = _shootFrom.level();
-                    if (!projectileLevel.isClientSide()) {
-                        Projectile _entityToSpawn = new Object() {
-                            public Projectile getArrow(Level level, Entity shooter, float damage, int knockback) {
-                                AbstractArrow entityToSpawn = new MortarShellEntity(TargetModEntities.MORTAR_SHELL.get(), level);
-                                entityToSpawn.setOwner(shooter);
-                                entityToSpawn.setBaseDamage(damage);
-                                entityToSpawn.setKnockback(knockback);
-                                entityToSpawn.setSilent(true);
-                                return entityToSpawn;
-                            }
-                        }.getArrow(projectileLevel, sourceentity, 100, 0);
-                        _entityToSpawn.setPos(_shootFrom.getX(), _shootFrom.getEyeY() - 0.1, _shootFrom.getZ());
-                        _entityToSpawn.shoot(_shootFrom.getLookAngle().x, _shootFrom.getLookAngle().y, _shootFrom.getLookAngle().z, 8, (float) 0.5);
-                        projectileLevel.addFreshEntity(_entityToSpawn);
-                    }
+                Level projectileLevel = entity.level();
+                if (!projectileLevel.isClientSide()) {
+                    Projectile _entityToSpawn = new Object() {
+                        public Projectile getArrow(Level level, Entity shooter, float damage, int knockback) {
+                            AbstractArrow entityToSpawn = new MortarShellEntity(TargetModEntities.MORTAR_SHELL.get(), level);
+                            entityToSpawn.setOwner(shooter);
+                            entityToSpawn.setBaseDamage(damage);
+                            entityToSpawn.setKnockback(knockback);
+                            entityToSpawn.setSilent(true);
+                            return entityToSpawn;
+                        }
+                    }.getArrow(projectileLevel, sourceentity, 100, 0);
+                    _entityToSpawn.setPos(entity.getX(), entity.getEyeY() - 0.1, entity.getZ());
+                    _entityToSpawn.shoot(entity.getLookAngle().x, entity.getLookAngle().y, entity.getLookAngle().z, 8, (float) 0.5);
+                    projectileLevel.addFreshEntity(_entityToSpawn);
                 }
                 if (world instanceof ServerLevel _level)
                     _level.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, (entity.getX() + 2.2 * entity.getLookAngle().x), (entity.getY() + 0.1 + 2.2 * entity.getLookAngle().y), (entity.getZ() + 2.2 * entity.getLookAngle().z), 40, 0.4, 0.4, 0.4,

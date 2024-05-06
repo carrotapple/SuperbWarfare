@@ -147,7 +147,7 @@ public class TargetModVariables {
         public double killind = 0;
 
         public void syncPlayerVariables(Entity entity) {
-            if (entity instanceof ServerPlayer serverPlayer)
+            if (entity instanceof ServerPlayer)
                 TargetMod.PACKET_HANDLER.send(PacketDistributor.DIMENSION.with(entity.level()::dimension), new PlayerVariablesSyncMessage(this, entity.getId()));
         }
 

@@ -2,20 +2,19 @@ package net.mcreator.target.procedures;
 
 import net.mcreator.target.entity.ClaymoreEntity;
 import net.mcreator.target.init.TargetModEntities;
-import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.LevelAccessor;
 
 public class ClaymoreMineYouJiFangKuaiShiFangKuaiDeWeiZhiProcedure {
     public static void execute(LevelAccessor world, double x, double y, double z, Entity entity, ItemStack itemstack) {
-        if (entity == null)
-            return;
+        if (entity == null) return;
         if (entity instanceof LivingEntity _entity)
             _entity.swing(InteractionHand.MAIN_HAND, true);
         if (world instanceof ServerLevel _level) {
@@ -30,20 +29,10 @@ public class ClaymoreMineYouJiFangKuaiShiFangKuaiDeWeiZhiProcedure {
             }
             _level.addFreshEntity(entityToSpawn);
         }
-        if (entity instanceof Player _player)
-            _player.getCooldowns().addCooldown(itemstack.getItem(), 20);
-        if (!(new Object() {
-            public boolean checkGamemode(Entity _ent) {
-                if (_ent instanceof ServerPlayer _serverPlayer) {
-                    return _serverPlayer.gameMode.getGameModeForPlayer() == GameType.CREATIVE;
-                } else if (_ent.level().isClientSide() && _ent instanceof Player _player) {
-                    return Minecraft.getInstance().getConnection().getPlayerInfo(_player.getGameProfile().getId()) != null && Minecraft.getInstance().getConnection().getPlayerInfo(_player.getGameProfile().getId()).getGameMode() == GameType.CREATIVE;
-                }
-                return false;
-            }
-        }.checkGamemode(entity))) {
-            if (entity instanceof Player _player) {
-                _player.getInventory().clearOrCountMatchingItems(p -> itemstack.getItem() == p.getItem(), 1, _player.inventoryMenu.getCraftSlots());
+        if (entity instanceof Player player) {
+            player.getCooldowns().addCooldown(itemstack.getItem(), 20);
+            if (!player.isCreative()) {
+                player.getInventory().clearOrCountMatchingItems(p -> itemstack.getItem() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
             }
         }
     }
