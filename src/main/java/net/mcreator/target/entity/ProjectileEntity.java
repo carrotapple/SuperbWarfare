@@ -122,13 +122,13 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
         // 延迟补偿
         if (entity instanceof ServerPlayer && this.shooter != null) {
-            int ping = (int) Math.floor((((ServerPlayer) this.shooter).latency / 1000.0) * 20.0 + 3.5);
+            int ping = (int) Math.floor((((ServerPlayer) this.shooter).latency / 1000.0) * 20.0 + 4.5);
             boundingBox = BoundingBoxManager.getBoundingBox((Player) entity, ping);
         }
         boundingBox = boundingBox.expandTowards(0, expandHeight, 0);
 
         Vec3 hitPos = boundingBox.clip(startVec, endVec).orElse(null);
-        Vec3 grownHitPos = boundingBox.inflate(0.2, 0, 0.2).clip(startVec, endVec).orElse(null);
+        Vec3 grownHitPos = boundingBox.inflate(0.3, 2, 0.3).clip(startVec, endVec).orElse(null);
         if (hitPos == null && grownHitPos != null) {
             HitResult result = rayTraceBlocks(this.level(), new ClipContext(startVec, grownHitPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this), IGNORE_LEAVES);
             if (result.getType() == HitResult.Type.BLOCK) {
