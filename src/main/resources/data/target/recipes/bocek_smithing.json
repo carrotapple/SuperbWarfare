@@ -7,7 +7,7 @@
     "item": "target:special_material_pack"
   },
   "addition": {
-    "item": "target:soulsteel_ingot"
+    "item": "target:soul_steel_ingot"
   },
   "result": {
     "item": "target:bocek"

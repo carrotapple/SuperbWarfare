@@ -1,7 +1,7 @@
 {
   "type": "minecraft:smithing_transform",
   "template": {
-    "item": "target:devotion_bluprint"
+    "item": "target:devotion_blueprint"
   },
   "base": {
     "item": "target:epic_material_pack"

@@ -4,7 +4,7 @@
     "item": "minecraft:netherite_upgrade_smithing_template"
   },
   "base": {
-    "item": "target:cementedcarbidespring"
+    "item": "target:cemented_carbide_spring"
   },
   "addition": {
     "item": "minecraft:netherite_ingot"

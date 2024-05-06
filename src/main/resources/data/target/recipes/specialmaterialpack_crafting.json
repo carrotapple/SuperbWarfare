@@ -4,7 +4,7 @@
     "item": "target:legendarymaterialpack"
   },
   "base": {
-    "item": "target:soulsteel_ingot"
+    "item": "target:soul_steel_ingot"
   },
   "addition": {
     "item": "minecraft:nether_star"
