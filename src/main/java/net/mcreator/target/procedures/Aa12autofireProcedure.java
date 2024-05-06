@@ -1,6 +1,6 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.ItemRegistry;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
@@ -34,7 +34,7 @@ public class Aa12autofireProcedure {
         ItemStack usehand = ItemStack.EMPTY;
         usehand = (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY);
         if (entity.getPersistentData().getDouble("firing") == 1 && usehand.getOrCreateTag().getDouble("firemode") == 2) {
-            if (usehand.getItem() == TargetModItems.AA_12.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0
+            if (usehand.getItem() == ItemRegistry.AA_12.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0
                     && !(entity instanceof Player _plrCldCheck6 && _plrCldCheck6.getCooldowns().isOnCooldown(usehand.getItem()))) {
                 for (int index0 = 0; index0 < 8; index0++) {
                     BulletFireNormalProcedure.execute(entity);
@@ -65,7 +65,7 @@ public class Aa12autofireProcedure {
             }
         } else if (entity.getPersistentData().getDouble("firing") == 1 && usehand.getOrCreateTag().getDouble("firemode") == 0) {
             entity.getPersistentData().putDouble("firing", 0);
-            if (usehand.getItem() == TargetModItems.AA_12.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0
+            if (usehand.getItem() == ItemRegistry.AA_12.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0
                     && !(entity instanceof Player _plrCldCheck20 && _plrCldCheck20.getCooldowns().isOnCooldown(usehand.getItem()))) {
                 for (int index1 = 0; index1 < 8; index1++) {
                     BulletFireNormalProcedure.execute(entity);

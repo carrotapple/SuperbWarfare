@@ -1,6 +1,6 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.ItemRegistry;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.world.entity.Entity;
@@ -18,7 +18,7 @@ public class Target1DangYouJiShiTiShiProcedure {
             if (!entity.level().isClientSide())
                 entity.discard();
             if (sourceentity instanceof Player _player) {
-                ItemStack _setstack = new ItemStack(TargetModItems.TARGETDEPLOYER.get());
+                ItemStack _setstack = new ItemStack(ItemRegistry.TARGET_DEPLOYER.get());
                 _setstack.setCount(1);
                 ItemHandlerHelper.giveItemToPlayer(_player, _setstack);
             }

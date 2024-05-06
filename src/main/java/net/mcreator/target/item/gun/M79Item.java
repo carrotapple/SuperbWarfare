@@ -2,7 +2,7 @@ package net.mcreator.target.item.gun;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.ItemRegistry;
 import net.mcreator.target.client.renderer.item.M79ItemRenderer;
 import net.mcreator.target.procedures.M79WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
 import net.minecraft.client.Minecraft;
@@ -166,6 +166,6 @@ public class M79Item extends Item implements GeoItem {
     }
 
     protected static boolean check(ItemStack stack) {
-        return stack.getItem() == TargetModItems.GRENADE_40MM.get();
+        return stack.getItem() == ItemRegistry.GRENADE_40MM.get();
     }
 }

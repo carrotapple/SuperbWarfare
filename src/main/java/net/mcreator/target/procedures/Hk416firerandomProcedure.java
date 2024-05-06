@@ -1,6 +1,6 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.ItemRegistry;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -35,13 +35,13 @@ public class Hk416firerandomProcedure {
             entity.getPersistentData().putDouble("hkfire", 0);
         }
         if (entity.getPersistentData().getDouble("firing") == 1) {
-            if (usehand.getItem() == TargetModItems.HK_416.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("hkfire") == 1) {
+            if (usehand.getItem() == ItemRegistry.HK_416.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("hkfire") == 1) {
                 Hk416autofireProcedure.execute(entity);
             }
-            if (usehand.getItem() == TargetModItems.HK_416.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("hkfire") == 3) {
+            if (usehand.getItem() == ItemRegistry.HK_416.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("hkfire") == 3) {
                 Hk416autofireProcedure.execute(entity);
             }
-            if (usehand.getItem() == TargetModItems.HK_416.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("hkfire") == 5) {
+            if (usehand.getItem() == ItemRegistry.HK_416.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("hkfire") == 5) {
                 Hk416autofireProcedure.execute(entity);
             }
             if (entity.getPersistentData().getDouble("hkfire") >= 5) {

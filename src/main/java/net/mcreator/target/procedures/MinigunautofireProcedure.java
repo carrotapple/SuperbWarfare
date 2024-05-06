@@ -1,6 +1,6 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.ItemRegistry;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
@@ -34,7 +34,7 @@ public class MinigunautofireProcedure {
             return;
         ItemStack usehand;
         usehand = (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY);
-        if (usehand.getItem() == TargetModItems.MINIGUN.get()) {
+        if (usehand.getItem() == ItemRegistry.MINIGUN.get()) {
             if (entity.getPersistentData().getDouble("minifiring") == 1 && !entity.isSprinting()) {
                 if (usehand.getOrCreateTag().getDouble("rot") < 10) {
                     usehand.getOrCreateTag().putDouble("rot", (usehand.getOrCreateTag().getDouble("rot") + 1));
@@ -51,7 +51,7 @@ public class MinigunautofireProcedure {
                 }
             }
         }
-        if (usehand.getItem() == TargetModItems.MINIGUN.get() && usehand.getOrCreateTag().getDouble("overheat") == 0
+        if (usehand.getItem() == ItemRegistry.MINIGUN.get() && usehand.getOrCreateTag().getDouble("overheat") == 0
                 && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleammo > 0
                 && !(entity instanceof Player _plrCldCheck13 && _plrCldCheck13.getCooldowns().isOnCooldown(usehand.getItem())) && usehand.getOrCreateTag().getDouble("rot") >= 10) {
             usehand.getOrCreateTag().putDouble("heat", (usehand.getOrCreateTag().getDouble("heat") + 1));

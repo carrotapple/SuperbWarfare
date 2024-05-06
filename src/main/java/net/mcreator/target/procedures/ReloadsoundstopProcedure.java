@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.CommandSource;
 
-import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.ItemRegistry;
 
 import javax.annotation.Nullable;
 
@@ -272,7 +272,7 @@ public class ReloadsoundstopProcedure {
                 }
             }
         }
-        if (!((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == TargetModItems.MARLIN.get())) {
+        if (!((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == ItemRegistry.MARLIN.get())) {
             {
                 Entity _ent = entity;
                 if (!_ent.level().isClientSide() && _ent.getServer() != null) {
@@ -295,7 +295,7 @@ public class ReloadsoundstopProcedure {
                 }
             }
         }
-        if (!((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == TargetModItems.M_870.get())) {
+        if (!((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == ItemRegistry.M_870.get())) {
             {
                 Entity _ent = entity;
                 if (!_ent.level().isClientSide() && _ent.getServer() != null) {

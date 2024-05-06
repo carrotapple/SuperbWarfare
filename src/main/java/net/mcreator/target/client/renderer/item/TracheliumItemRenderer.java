@@ -2,7 +2,7 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.gun.TracheliumItem;
+import net.mcreator.target.item.gun.Trachelium;
 import net.mcreator.target.client.layer.TracheliumLayer;
 import net.mcreator.target.client.model.item.TracheliumItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,14 +16,14 @@ import software.bernie.geckolib.renderer.GeoItemRenderer;
 import java.util.HashSet;
 import java.util.Set;
 
-public class TracheliumItemRenderer extends GeoItemRenderer<TracheliumItem> {
+public class TracheliumItemRenderer extends GeoItemRenderer<Trachelium> {
     public TracheliumItemRenderer() {
         super(new TracheliumItemModel());
         this.addRenderLayer(new TracheliumLayer(this));
     }
 
     @Override
-    public RenderType getRenderType(TracheliumItem animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(Trachelium animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
@@ -32,7 +32,7 @@ public class TracheliumItemRenderer extends GeoItemRenderer<TracheliumItem> {
     protected MultiBufferSource currentBuffer;
     protected RenderType renderType;
     public ItemDisplayContext transformType;
-    protected TracheliumItem animatable;
+    protected Trachelium animatable;
     private final Set<String> hiddenBones = new HashSet<>();
     private final Set<String> suppressedBones = new HashSet<>();
 
@@ -45,7 +45,7 @@ public class TracheliumItemRenderer extends GeoItemRenderer<TracheliumItem> {
     }
 
     @Override
-    public void actuallyRender(PoseStack matrixStackIn, TracheliumItem animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
+    public void actuallyRender(PoseStack matrixStackIn, Trachelium animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
                                int packedOverlayIn, float red, float green, float blue, float alpha) {
         this.currentBuffer = renderTypeBuffer;
         this.renderType = type;
@@ -57,7 +57,7 @@ public class TracheliumItemRenderer extends GeoItemRenderer<TracheliumItem> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(TracheliumItem instance) {
+    public ResourceLocation getTextureLocation(Trachelium instance) {
         return super.getTextureLocation(instance);
     }
 }

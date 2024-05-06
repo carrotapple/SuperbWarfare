@@ -1,6 +1,6 @@
 package net.mcreator.target.client.model.item;
 
-import net.mcreator.target.item.gun.TaserItem;
+import net.mcreator.target.item.gun.Taser;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -8,24 +8,24 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class TaserItemModel extends GeoModel<TaserItem> {
+public class TaserItemModel extends GeoModel<Taser> {
     @Override
-    public ResourceLocation getAnimationResource(TaserItem animatable) {
+    public ResourceLocation getAnimationResource(Taser animatable) {
         return new ResourceLocation("target", "animations/taser.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(TaserItem animatable) {
+    public ResourceLocation getModelResource(Taser animatable) {
         return new ResourceLocation("target", "geo/taser.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(TaserItem animatable) {
+    public ResourceLocation getTextureResource(Taser animatable) {
         return new ResourceLocation("target", "textures/item/tasergun.png");
     }
 
     @Override
-    public void setCustomAnimations(TaserItem animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(Taser animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
 

@@ -3,7 +3,7 @@ package net.mcreator.target.procedures;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.entity.ClaymoreEntity;
 import net.mcreator.target.entity.Target1Entity;
-import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.ItemRegistry;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
@@ -52,7 +52,7 @@ public class ClaymoreDangShiTiGengXinKeShiProcedure {
                 }
             }
             if (world instanceof ServerLevel _level) {
-                ItemEntity entityToSpawn = new ItemEntity(_level, x, y, z, new ItemStack(TargetModItems.CLAYMORE_MINE.get()));
+                ItemEntity entityToSpawn = new ItemEntity(_level, x, y, z, new ItemStack(ItemRegistry.CLAYMORE_MINE.get()));
                 entityToSpawn.setPickUpDelay(10);
                 _level.addFreshEntity(entityToSpawn);
             }

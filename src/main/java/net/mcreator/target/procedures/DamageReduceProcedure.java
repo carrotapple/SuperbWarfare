@@ -1,6 +1,6 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.ItemRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -42,8 +42,8 @@ public class DamageReduceProcedure {
         }
         if (damagesource.is(DamageTypes.EXPLOSION) || damagesource.is(DamageTypes.PLAYER_EXPLOSION) || damagesource.is(DamageTypes.ARROW)) {
             stack = (sourceentity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY);
-            if ((sourceentity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == TargetModItems.M_79.get()
-                    || (sourceentity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == TargetModItems.RPG.get()) {
+            if ((sourceentity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == ItemRegistry.M_79.get()
+                    || (sourceentity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == ItemRegistry.RPG.get()) {
                 damage = amount;
                 stack.getOrCreateTag().putDouble("damagetotal", (stack.getOrCreateTag().getDouble("damagetotal") + damage));
             }
@@ -51,7 +51,7 @@ public class DamageReduceProcedure {
         if (damagesource.is(ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("target:gunfire")))) {
             stack = (sourceentity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY);
             distanse = (entity.position()).distanceTo((sourceentity.position()));
-            if (stack.getOrCreateTag().getDouble("shotgun") == 1 || stack.getItem() == TargetModItems.BOCEK.get()) {
+            if (stack.getOrCreateTag().getDouble("shotgun") == 1 || stack.getItem() == ItemRegistry.BOCEK.get()) {
                 if (distanse > 20) {
                     ((LivingHurtEvent) event).setAmount(((float) (amount / (1 + 0.05 * (distanse - 20)))));
                     damage = amount / (1 + 0.05 * (distanse - 20));

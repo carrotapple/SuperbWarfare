@@ -2,7 +2,7 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.gun.SksItem;
+import net.mcreator.target.item.gun.Sks;
 import net.mcreator.target.client.layer.SksLayer;
 import net.mcreator.target.client.model.item.SksItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,14 +16,14 @@ import software.bernie.geckolib.renderer.GeoItemRenderer;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SksItemRenderer extends GeoItemRenderer<SksItem> {
+public class SksItemRenderer extends GeoItemRenderer<Sks> {
     public SksItemRenderer() {
         super(new SksItemModel());
         this.addRenderLayer(new SksLayer(this));
     }
 
     @Override
-    public RenderType getRenderType(SksItem animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(Sks animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
@@ -32,7 +32,7 @@ public class SksItemRenderer extends GeoItemRenderer<SksItem> {
     protected MultiBufferSource currentBuffer;
     protected RenderType renderType;
     public ItemDisplayContext transformType;
-    protected SksItem animatable;
+    protected Sks animatable;
     private final Set<String> hiddenBones = new HashSet<>();
     private final Set<String> suppressedBones = new HashSet<>();
 
@@ -45,7 +45,7 @@ public class SksItemRenderer extends GeoItemRenderer<SksItem> {
     }
 
     @Override
-    public void actuallyRender(PoseStack matrixStackIn, SksItem animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
+    public void actuallyRender(PoseStack matrixStackIn, Sks animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
                                int packedOverlayIn, float red, float green, float blue, float alpha) {
         this.currentBuffer = renderTypeBuffer;
         this.renderType = type;
@@ -57,7 +57,7 @@ public class SksItemRenderer extends GeoItemRenderer<SksItem> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(SksItem instance) {
+    public ResourceLocation getTextureLocation(Sks instance) {
         return super.getTextureLocation(instance);
     }
 }

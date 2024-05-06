@@ -1,6 +1,6 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.ItemRegistry;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
@@ -35,7 +35,7 @@ public class M60autofireProcedure {
         ItemStack usehand;
         usehand = (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY);
         if (entity.getPersistentData().getDouble("firing") == 1) {
-            if (usehand.getItem() == TargetModItems.M_60.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0
+            if (usehand.getItem() == ItemRegistry.M_60.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0
                     && !(entity instanceof Player _plrCldCheck5 && _plrCldCheck5.getCooldowns().isOnCooldown(usehand.getItem()))) {
                 if (usehand.getOrCreateTag().getDouble("animindex") == 1) {
                     usehand.getOrCreateTag().putDouble("animindex", 0);

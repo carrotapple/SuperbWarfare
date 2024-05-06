@@ -2,7 +2,7 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.gun.TaserItem;
+import net.mcreator.target.item.gun.Taser;
 import net.mcreator.target.client.model.item.TaserItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -15,13 +15,13 @@ import software.bernie.geckolib.renderer.GeoItemRenderer;
 import java.util.HashSet;
 import java.util.Set;
 
-public class TaserItemRenderer extends GeoItemRenderer<TaserItem> {
+public class TaserItemRenderer extends GeoItemRenderer<Taser> {
     public TaserItemRenderer() {
         super(new TaserItemModel());
     }
 
     @Override
-    public RenderType getRenderType(TaserItem animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(Taser animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
@@ -30,7 +30,7 @@ public class TaserItemRenderer extends GeoItemRenderer<TaserItem> {
     protected MultiBufferSource currentBuffer;
     protected RenderType renderType;
     public ItemDisplayContext transformType;
-    protected TaserItem animatable;
+    protected Taser animatable;
     private final Set<String> hiddenBones = new HashSet<>();
     private final Set<String> suppressedBones = new HashSet<>();
 
@@ -43,7 +43,7 @@ public class TaserItemRenderer extends GeoItemRenderer<TaserItem> {
     }
 
     @Override
-    public void actuallyRender(PoseStack matrixStackIn, TaserItem animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
+    public void actuallyRender(PoseStack matrixStackIn, Taser animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
                                int packedOverlayIn, float red, float green, float blue, float alpha) {
         this.currentBuffer = renderTypeBuffer;
         this.renderType = type;
@@ -55,7 +55,7 @@ public class TaserItemRenderer extends GeoItemRenderer<TaserItem> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(TaserItem instance) {
+    public ResourceLocation getTextureLocation(Taser instance) {
         return super.getTextureLocation(instance);
     }
 }

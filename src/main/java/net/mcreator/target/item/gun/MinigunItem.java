@@ -4,7 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.target.client.renderer.item.MinigunItemRenderer;
 import net.mcreator.target.procedures.MiniguninbackpackProcedure;
-import net.mcreator.target.rarity.RarityTool;
+import net.mcreator.target.tools.RarityTool;
 import net.mcreator.target.tools.ItemNBTTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;

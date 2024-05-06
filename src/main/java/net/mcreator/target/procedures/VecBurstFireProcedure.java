@@ -1,6 +1,6 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.ItemRegistry;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
@@ -43,7 +43,7 @@ public class VecBurstFireProcedure {
                 usehand.getOrCreateTag().putDouble("burst", 0);
             }
         }
-        if (usehand.getItem() == TargetModItems.VECTOR.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0
+        if (usehand.getItem() == ItemRegistry.VECTOR.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0
                 && !(entity instanceof Player _plrCldCheck9 && _plrCldCheck9.getCooldowns().isOnCooldown(usehand.getItem())) && usehand.getOrCreateTag().getDouble("burst") > 0) {
             if (usehand.getOrCreateTag().getDouble("burst") == 1) {
                 if (entity instanceof Player _player)

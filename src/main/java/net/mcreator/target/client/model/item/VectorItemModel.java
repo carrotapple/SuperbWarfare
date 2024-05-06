@@ -1,6 +1,6 @@
 package net.mcreator.target.client.model.item;
 
-import net.mcreator.target.item.gun.VectorItem;
+import net.mcreator.target.item.gun.Vector;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -9,24 +9,24 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class VectorItemModel extends GeoModel<VectorItem> {
+public class VectorItemModel extends GeoModel<Vector> {
     @Override
-    public ResourceLocation getAnimationResource(VectorItem animatable) {
+    public ResourceLocation getAnimationResource(Vector animatable) {
         return new ResourceLocation("target", "animations/vector.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(VectorItem animatable) {
+    public ResourceLocation getModelResource(Vector animatable) {
         return new ResourceLocation("target", "geo/vector.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(VectorItem animatable) {
+    public ResourceLocation getTextureResource(Vector animatable) {
         return new ResourceLocation("target", "textures/item/vector.png");
     }
 
     @Override
-    public void setCustomAnimations(VectorItem animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(Vector animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone scope = getAnimationProcessor().getBone("scope");

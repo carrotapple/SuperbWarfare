@@ -1,6 +1,6 @@
 package net.mcreator.target.client.model.item;
 
-import net.mcreator.target.item.gun.AbekiriItem;
+import net.mcreator.target.item.gun.Abekiri;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -10,24 +10,24 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class AbekiriItemModel extends GeoModel<AbekiriItem> {
+public class AbekiriItemModel extends GeoModel<Abekiri> {
     @Override
-    public ResourceLocation getAnimationResource(AbekiriItem animatable) {
+    public ResourceLocation getAnimationResource(Abekiri animatable) {
         return new ResourceLocation("target", "animations/abekiri.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(AbekiriItem animatable) {
+    public ResourceLocation getModelResource(Abekiri animatable) {
         return new ResourceLocation("target", "geo/abekiri.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(AbekiriItem animatable) {
+    public ResourceLocation getTextureResource(Abekiri animatable) {
         return new ResourceLocation("target", "textures/item/abekiri.png");
     }
 
     @Override
-    public void setCustomAnimations(AbekiriItem animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(Abekiri animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
 

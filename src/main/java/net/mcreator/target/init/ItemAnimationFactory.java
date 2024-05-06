@@ -32,32 +32,32 @@ public class ItemAnimationFactory {
             if (!event.player.getMainHandItem().getOrCreateTag().getString("geckoAnim").isEmpty() && !(event.player.getMainHandItem().getItem() instanceof ArmorItem)) {
                 animation = event.player.getMainHandItem().getOrCreateTag().getString("geckoAnim");
                 event.player.getMainHandItem().getOrCreateTag().putString("geckoAnim", "");
-                if (event.player.getMainHandItem().getItem() instanceof TaserItem animatable)
+                if (event.player.getMainHandItem().getItem() instanceof Taser animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof AbekiriItem animatable)
+                if (event.player.getMainHandItem().getItem() instanceof Abekiri animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof TracheliumItem animatable)
+                if (event.player.getMainHandItem().getItem() instanceof Trachelium animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof VectorItem animatable)
+                if (event.player.getMainHandItem().getItem() instanceof Vector animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof AK47Item animatable)
+                if (event.player.getMainHandItem().getItem() instanceof AK47 animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof SksItem animatable)
+                if (event.player.getMainHandItem().getItem() instanceof Sks animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
@@ -166,32 +166,32 @@ public class ItemAnimationFactory {
             if (!event.player.getOffhandItem().getOrCreateTag().getString("geckoAnim").equals("") && !(event.player.getOffhandItem().getItem() instanceof ArmorItem)) {
                 animation = event.player.getOffhandItem().getOrCreateTag().getString("geckoAnim");
                 event.player.getOffhandItem().getOrCreateTag().putString("geckoAnim", "");
-                if (event.player.getOffhandItem().getItem() instanceof TaserItem animatable)
+                if (event.player.getOffhandItem().getItem() instanceof Taser animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getOffhandItem().getItem() instanceof AbekiriItem animatable)
+                if (event.player.getOffhandItem().getItem() instanceof Abekiri animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getOffhandItem().getItem() instanceof TracheliumItem animatable)
+                if (event.player.getOffhandItem().getItem() instanceof Trachelium animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getOffhandItem().getItem() instanceof VectorItem animatable)
+                if (event.player.getOffhandItem().getItem() instanceof Vector animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getOffhandItem().getItem() instanceof AK47Item animatable)
+                if (event.player.getOffhandItem().getItem() instanceof AK47 animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getOffhandItem().getItem() instanceof SksItem animatable)
+                if (event.player.getOffhandItem().getItem() instanceof Sks animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();

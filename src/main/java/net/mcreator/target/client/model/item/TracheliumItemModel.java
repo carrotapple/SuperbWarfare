@@ -1,6 +1,6 @@
 package net.mcreator.target.client.model.item;
 
-import net.mcreator.target.item.gun.TracheliumItem;
+import net.mcreator.target.item.gun.Trachelium;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -10,24 +10,24 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class TracheliumItemModel extends GeoModel<TracheliumItem> {
+public class TracheliumItemModel extends GeoModel<Trachelium> {
     @Override
-    public ResourceLocation getAnimationResource(TracheliumItem animatable) {
+    public ResourceLocation getAnimationResource(Trachelium animatable) {
         return new ResourceLocation("target", "animations/trachelium.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(TracheliumItem animatable) {
+    public ResourceLocation getModelResource(Trachelium animatable) {
         return new ResourceLocation("target", "geo/trachelium.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(TracheliumItem animatable) {
+    public ResourceLocation getTextureResource(Trachelium animatable) {
         return new ResourceLocation("target", "textures/item/trachelium_texture.png");
     }
 
     @Override
-    public void setCustomAnimations(TracheliumItem animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(Trachelium animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
 

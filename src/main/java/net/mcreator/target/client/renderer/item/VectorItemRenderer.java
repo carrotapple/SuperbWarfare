@@ -2,7 +2,7 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.gun.VectorItem;
+import net.mcreator.target.item.gun.Vector;
 import net.mcreator.target.client.layer.VectorLayer;
 import net.mcreator.target.client.model.item.VectorItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,14 +16,14 @@ import software.bernie.geckolib.renderer.GeoItemRenderer;
 import java.util.HashSet;
 import java.util.Set;
 
-public class VectorItemRenderer extends GeoItemRenderer<VectorItem> {
+public class VectorItemRenderer extends GeoItemRenderer<Vector> {
     public VectorItemRenderer() {
         super(new VectorItemModel());
         this.addRenderLayer(new VectorLayer(this));
     }
 
     @Override
-    public RenderType getRenderType(VectorItem animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(Vector animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
@@ -32,7 +32,7 @@ public class VectorItemRenderer extends GeoItemRenderer<VectorItem> {
     protected MultiBufferSource currentBuffer;
     protected RenderType renderType;
     public ItemDisplayContext transformType;
-    protected VectorItem animatable;
+    protected Vector animatable;
     private final Set<String> hiddenBones = new HashSet<>();
     private final Set<String> suppressedBones = new HashSet<>();
 
@@ -45,7 +45,7 @@ public class VectorItemRenderer extends GeoItemRenderer<VectorItem> {
     }
 
     @Override
-    public void actuallyRender(PoseStack matrixStackIn, VectorItem animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
+    public void actuallyRender(PoseStack matrixStackIn, Vector animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
                                int packedOverlayIn, float red, float green, float blue, float alpha) {
         this.currentBuffer = renderTypeBuffer;
         this.renderType = type;
@@ -57,7 +57,7 @@ public class VectorItemRenderer extends GeoItemRenderer<VectorItem> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(VectorItem instance) {
+    public ResourceLocation getTextureLocation(Vector instance) {
         return super.getTextureLocation(instance);
     }
 }

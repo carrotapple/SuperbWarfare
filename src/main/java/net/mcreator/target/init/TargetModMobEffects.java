@@ -5,7 +5,7 @@
 package net.mcreator.target.init;
 
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.potion.ShockMobEffect;
+import net.mcreator.target.mobeffect.ShockMobEffect;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;

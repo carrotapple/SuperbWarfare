@@ -2,7 +2,7 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.gun.AbekiriItem;
+import net.mcreator.target.item.gun.Abekiri;
 import net.mcreator.target.client.layer.AbekiriLayer;
 import net.mcreator.target.client.model.item.AbekiriItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,14 +16,14 @@ import software.bernie.geckolib.renderer.GeoItemRenderer;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AbekiriItemRenderer extends GeoItemRenderer<AbekiriItem> {
+public class AbekiriItemRenderer extends GeoItemRenderer<Abekiri> {
     public AbekiriItemRenderer() {
         super(new AbekiriItemModel());
         this.addRenderLayer(new AbekiriLayer(this));
     }
 
     @Override
-    public RenderType getRenderType(AbekiriItem animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(Abekiri animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
@@ -32,7 +32,7 @@ public class AbekiriItemRenderer extends GeoItemRenderer<AbekiriItem> {
     protected MultiBufferSource currentBuffer;
     protected RenderType renderType;
     public ItemDisplayContext transformType;
-    protected AbekiriItem animatable;
+    protected Abekiri animatable;
     private final Set<String> hiddenBones = new HashSet<>();
     private final Set<String> suppressedBones = new HashSet<>();
 
@@ -45,7 +45,7 @@ public class AbekiriItemRenderer extends GeoItemRenderer<AbekiriItem> {
     }
 
     @Override
-    public void actuallyRender(PoseStack matrixStackIn, AbekiriItem animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
+    public void actuallyRender(PoseStack matrixStackIn, Abekiri animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
                                int packedOverlayIn, float red, float green, float blue, float alpha) {
         this.currentBuffer = renderTypeBuffer;
         this.renderType = type;
@@ -57,7 +57,7 @@ public class AbekiriItemRenderer extends GeoItemRenderer<AbekiriItem> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(AbekiriItem instance) {
+    public ResourceLocation getTextureLocation(Abekiri instance) {
         return super.getTextureLocation(instance);
     }
 }

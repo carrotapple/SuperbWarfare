@@ -1,6 +1,6 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.ItemRegistry;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -37,22 +37,22 @@ public class DevotionAutofireProcedure {
             }
         }
         if (entity.getPersistentData().getDouble("firing") == 1) {
-            if (usehand.getItem() == TargetModItems.DEVOTION.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("dvfire") == 1) {
+            if (usehand.getItem() == ItemRegistry.DEVOTION.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("dvfire") == 1) {
                 DevofireProcedure.execute(entity);
             }
-            if (usehand.getItem() == TargetModItems.DEVOTION.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("dvfire") == 5) {
+            if (usehand.getItem() == ItemRegistry.DEVOTION.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("dvfire") == 5) {
                 DevofireProcedure.execute(entity);
             }
-            if (usehand.getItem() == TargetModItems.DEVOTION.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("dvfire") == 9) {
+            if (usehand.getItem() == ItemRegistry.DEVOTION.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("dvfire") == 9) {
                 DevofireProcedure.execute(entity);
             }
-            if (usehand.getItem() == TargetModItems.DEVOTION.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("dvfire") == 12) {
+            if (usehand.getItem() == ItemRegistry.DEVOTION.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("dvfire") == 12) {
                 DevofireProcedure.execute(entity);
             }
-            if (usehand.getItem() == TargetModItems.DEVOTION.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("dvfire") == 15) {
+            if (usehand.getItem() == ItemRegistry.DEVOTION.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0 && entity.getPersistentData().getDouble("dvfire") == 15) {
                 DevofireProcedure.execute(entity);
             }
-            if (usehand.getItem() == TargetModItems.DEVOTION.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0
+            if (usehand.getItem() == ItemRegistry.DEVOTION.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0
                     && (entity.getPersistentData().getDouble("dvfire") == 17 || entity.getPersistentData().getDouble("dvfire") == 18 || entity.getPersistentData().getDouble("dvfire") == 19)) {
                 DevofireProcedure.execute(entity);
             }

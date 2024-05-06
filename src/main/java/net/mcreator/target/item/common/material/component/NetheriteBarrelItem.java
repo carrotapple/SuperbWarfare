@@ -1,6 +1,6 @@
 package net.mcreator.target.item.common.material.component;
 
-import net.mcreator.target.rarity.RarityTool;
+import net.mcreator.target.tools.RarityTool;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

@@ -6,7 +6,7 @@ import net.mcreator.target.init.TargetCustomModEntities;
 import net.mcreator.target.init.TargetModDamageTypes;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
-import net.mcreator.target.util.math.ExtendedEntityRayTraceResult;
+import net.mcreator.target.tools.ExtendedEntityRayTraceResult;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;

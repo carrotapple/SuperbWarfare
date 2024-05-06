@@ -2,7 +2,7 @@ package net.mcreator.target.procedures;
 
 import net.mcreator.target.entity.ProjectileEntity;
 import net.mcreator.target.init.TargetModAttributes;
-import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.ItemRegistry;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,7 +36,7 @@ public class BulletFireNormalProcedure {
 
         if (!entity.level().isClientSide() && entity instanceof LivingEntity living) {
             float damage;
-            if (heldItem.getItem() == TargetModItems.BOCEK.get()) {
+            if (heldItem.getItem() == ItemRegistry.BOCEK.get()) {
                 damage = (float) heldItem.getOrCreateTag().getDouble("speed") * (float) heldItem.getOrCreateTag().getDouble("damageadd");
             } else {
                 damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("adddamage"))

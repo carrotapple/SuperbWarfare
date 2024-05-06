@@ -6,8 +6,8 @@ package net.mcreator.target.init;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.network.DoublejumpinputMessage;
-import net.mcreator.target.network.FiremodeMessage;
+import net.mcreator.target.network.DoubleJumpMessage;
+import net.mcreator.target.network.FireModeMessage;
 import net.mcreator.target.network.ReloadMessage;
 import net.mcreator.target.network.ZoomMessage;
 import net.minecraft.client.KeyMapping;
@@ -41,8 +41,8 @@ public class TargetModKeyMappings {
         public void setDown(boolean isDown) {
             super.setDown(isDown);
             if (isDownOld != isDown && isDown) {
-                TargetMod.PACKET_HANDLER.sendToServer(new DoublejumpinputMessage(0, 0));
-                DoublejumpinputMessage.pressAction(Minecraft.getInstance().player, 0, 0);
+                TargetMod.PACKET_HANDLER.sendToServer(new DoubleJumpMessage(0, 0));
+                DoubleJumpMessage.pressAction(Minecraft.getInstance().player, 0, 0);
             }
             isDownOld = isDown;
         }
@@ -54,8 +54,8 @@ public class TargetModKeyMappings {
         public void setDown(boolean isDown) {
             super.setDown(isDown);
             if (isDownOld != isDown && isDown) {
-                TargetMod.PACKET_HANDLER.sendToServer(new FiremodeMessage(0, 0));
-                FiremodeMessage.pressAction(Minecraft.getInstance().player, 0, 0);
+                TargetMod.PACKET_HANDLER.sendToServer(new FireModeMessage(0, 0));
+                FireModeMessage.pressAction(Minecraft.getInstance().player, 0, 0);
             }
             isDownOld = isDown;
         }
