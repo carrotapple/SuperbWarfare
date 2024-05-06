@@ -50,7 +50,7 @@ public class BowlooseProcedure {
                         }
                     }.getArrow(projectileLevel, entity, (float) (0.5 * (1 + 0.05 * usehand.getOrCreateTag().getDouble("level"))), 0, (byte) 2);
                     _entityToSpawn.setPos(entity.getX(), entity.getEyeY() - 0.1, entity.getZ());
-                    _entityToSpawn.shoot(entity.getLookAngle().x, entity.getLookAngle().y, entity.getLookAngle().z, (float) (4 * power), (float) 0.01);
+                    _entityToSpawn.shoot(entity.getLookAngle().x, entity.getLookAngle().y, entity.getLookAngle().z, (float) (4 * power), (float) 0.02);
                     projectileLevel.addFreshEntity(_entityToSpawn);
                 }
                 if (!entity.level().isClientSide() && entity.getServer() != null) {
