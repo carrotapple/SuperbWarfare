@@ -4,7 +4,7 @@
  */
 package net.mcreator.target.init;
 
-import net.mcreator.target.client.model.*;
+import net.mcreator.target.client.model.entity.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -14,12 +14,12 @@ import net.minecraftforge.fml.common.Mod;
 public class TargetModModels {
     @SubscribeEvent
     public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(Modelrpg7_rocket_Converted.LAYER_LOCATION, Modelrpg7_rocket_Converted::createBodyLayer);
-        event.registerLayerDefinition(Modelbullet.LAYER_LOCATION, Modelbullet::createBodyLayer);
-        event.registerLayerDefinition(Modelmortar_shell_Converted.LAYER_LOCATION, Modelmortar_shell_Converted::createBodyLayer);
-        event.registerLayerDefinition(Modeltaser_rod.LAYER_LOCATION, Modeltaser_rod::createBodyLayer);
+        event.registerLayerDefinition(ModelRPGRocket.LAYER_LOCATION, ModelRPGRocket::createBodyLayer);
+        event.registerLayerDefinition(ModelBullet.LAYER_LOCATION, ModelBullet::createBodyLayer);
+        event.registerLayerDefinition(ModelMortarShell.LAYER_LOCATION, ModelMortarShell::createBodyLayer);
+        event.registerLayerDefinition(ModelTaserRod.LAYER_LOCATION, ModelTaserRod::createBodyLayer);
         event.registerLayerDefinition(ModelGrenade.LAYER_LOCATION, ModelGrenade::createBodyLayer);
-        event.registerLayerDefinition(Modelbocekarrow.LAYER_LOCATION, Modelbocekarrow::createBodyLayer);
-        event.registerLayerDefinition(Modelclaymore.LAYER_LOCATION, Modelclaymore::createBodyLayer);
+        event.registerLayerDefinition(ModelBocekArrow.LAYER_LOCATION, ModelBocekArrow::createBodyLayer);
+        event.registerLayerDefinition(ModelClaymore.LAYER_LOCATION, ModelClaymore::createBodyLayer);
     }
 }

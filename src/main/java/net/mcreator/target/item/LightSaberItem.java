@@ -2,7 +2,7 @@ package net.mcreator.target.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.mcreator.target.item.renderer.LightSaberItemRenderer;
+import net.mcreator.target.client.renderer.item.LightSaberItemRenderer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;

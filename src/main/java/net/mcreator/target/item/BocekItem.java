@@ -2,7 +2,7 @@ package net.mcreator.target.item;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.mcreator.target.item.renderer.BocekItemRenderer;
+import net.mcreator.target.client.renderer.item.BocekItemRenderer;
 import net.mcreator.target.procedures.BocekreloadProcedure;
 import net.mcreator.target.rarity.RarityTool;
 import net.minecraft.client.Minecraft;

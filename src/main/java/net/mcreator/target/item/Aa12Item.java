@@ -2,7 +2,7 @@ package net.mcreator.target.item;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.mcreator.target.item.renderer.Aa12ItemRenderer;
+import net.mcreator.target.client.renderer.item.Aa12ItemRenderer;
 import net.mcreator.target.procedures.Aa12WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
 import net.mcreator.target.rarity.RarityTool;
 import net.minecraft.client.Minecraft;

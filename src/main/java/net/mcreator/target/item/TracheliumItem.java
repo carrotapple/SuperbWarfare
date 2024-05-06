@@ -2,7 +2,7 @@ package net.mcreator.target.item;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.mcreator.target.item.renderer.TracheliumItemRenderer;
+import net.mcreator.target.client.renderer.item.TracheliumItemRenderer;
 import net.mcreator.target.procedures.ReloadingProcedure;
 import net.mcreator.target.rarity.RarityTool;
 import net.minecraft.client.Minecraft;

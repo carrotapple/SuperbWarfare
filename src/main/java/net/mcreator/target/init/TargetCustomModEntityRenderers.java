@@ -1,6 +1,6 @@
 package net.mcreator.target.init;
 
-import net.mcreator.target.client.renderer.ProjectileRenderer;
+import net.mcreator.target.client.renderer.entity.ProjectileRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

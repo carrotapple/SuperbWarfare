@@ -22,10 +22,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.Minecraft;
 
@@ -35,14 +33,11 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.EquipmentSlot;
-import com.google.common.collect.ImmutableMultimap;
 
 import java.util.UUID;
 
-import net.mcreator.target.rarity.RarityTool;
-
 import net.mcreator.target.procedures.RpkWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
-import net.mcreator.target.item.renderer.RpkItemRenderer;
+import net.mcreator.target.client.renderer.item.RpkItemRenderer;
 
 import java.util.function.Consumer;
 import java.util.List;

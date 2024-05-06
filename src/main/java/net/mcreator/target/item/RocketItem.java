@@ -2,7 +2,7 @@ package net.mcreator.target.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.mcreator.target.item.renderer.RocketItemRenderer;
+import net.mcreator.target.client.renderer.item.RocketItemRenderer;
 import net.mcreator.target.procedures.RocketShiTiBeiGongJuJiZhongShiProcedure;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;

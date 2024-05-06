@@ -2,7 +2,7 @@ package net.mcreator.target.item;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.mcreator.target.item.renderer.SksItemRenderer;
+import net.mcreator.target.client.renderer.item.SksItemRenderer;
 import net.mcreator.target.procedures.SksWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;

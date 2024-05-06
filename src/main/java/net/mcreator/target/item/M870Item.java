@@ -2,7 +2,7 @@ package net.mcreator.target.item;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.mcreator.target.item.renderer.M870ItemRenderer;
+import net.mcreator.target.client.renderer.item.M870ItemRenderer;
 import net.mcreator.target.procedures.M870WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;

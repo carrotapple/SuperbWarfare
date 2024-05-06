@@ -2,7 +2,7 @@ package net.mcreator.target.item;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.mcreator.target.item.renderer.SentinelItemRenderer;
+import net.mcreator.target.client.renderer.item.SentinelItemRenderer;
 import net.mcreator.target.procedures.SentinelWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
 import net.mcreator.target.rarity.RarityTool;
 import net.mcreator.target.tools.ItemNBTTool;
