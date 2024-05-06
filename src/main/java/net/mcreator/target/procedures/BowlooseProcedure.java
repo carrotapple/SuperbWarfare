@@ -2,6 +2,7 @@ package net.mcreator.target.procedures;
 
 import net.mcreator.target.entity.BocekarrowEntity;
 import net.mcreator.target.entity.ProjectileEntity;
+import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.network.TargetModVariables;
@@ -62,12 +63,7 @@ public class BowlooseProcedure {
                 }
             } else {
                 for (int index0 = 0; index0 < 10; index0++) {
-                    if (!entity.level().isClientSide() && entity instanceof LivingEntity living) {
-                        ProjectileEntity projectile = new ProjectileEntity(entity.level(), living);
-                        projectile.setPos(living.getX(), living.getEyeY() - 0.1, living.getZ());
-                        projectile.shoot(living.getLookAngle().x, living.getLookAngle().y, living.getLookAngle().z, (float) (4 * power), 2);
-                        entity.level().addFreshEntity(projectile);
-                    }
+                    BulletFireNormalProcedure.execute(entity);
                 }
 
                 if (!entity.level().isClientSide() && entity.getServer() != null) {

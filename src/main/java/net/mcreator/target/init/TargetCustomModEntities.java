@@ -19,6 +19,6 @@ public class TargetCustomModEntities {
 
     public static final RegistryObject<EntityType<ProjectileEntity>> PROJECTILE =
             ENTITY_TYPES.register("projectile",
-                    () -> EntityType.Builder.<ProjectileEntity>of(ProjectileEntity::new, MobCategory.MISC).setTrackingRange(0).sized(0.5f, 0.5f).build("projectile"));
+                    () -> EntityType.Builder.<ProjectileEntity>of(ProjectileEntity::new, MobCategory.MISC).sized(0.5f, 0.5f).build("projectile"));
 
 }
