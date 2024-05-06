@@ -12,8 +12,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -26,7 +24,6 @@ import java.util.function.Supplier;
 
 @Mod("target")
 public class TargetMod {
-    public static final Logger LOGGER = LogManager.getLogger(TargetMod.class);
     public static final String MODID = "target";
 
     public TargetMod() {
@@ -35,15 +32,12 @@ public class TargetMod {
         TargetModSounds.REGISTRY.register(bus);
         TargetModBlocks.REGISTRY.register(bus);
 
-        TargetModItems.ITEMS.register(bus);
+        TargetModItems.register(bus);
 
         TargetModEntities.REGISTRY.register(bus);
         TargetCustomModEntities.ENTITY_TYPES.register(bus);
 
-
-        TargetModTabs.REGISTRY.register(bus);
-
-        TargetModGunTabs.REGISTRY.register(bus);
+        TargetModTabs.TABS.register(bus);
 
         TargetModMobEffects.REGISTRY.register(bus);
 
