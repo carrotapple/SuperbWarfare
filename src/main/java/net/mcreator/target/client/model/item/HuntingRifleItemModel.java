@@ -1,6 +1,6 @@
 package net.mcreator.target.client.model.item;
 
-import net.mcreator.target.item.gun.HuntingRifleItem;
+import net.mcreator.target.item.gun.HuntingRifle;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -10,24 +10,24 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class HuntingRifleItemModel extends GeoModel<HuntingRifleItem> {
+public class HuntingRifleItemModel extends GeoModel<HuntingRifle> {
     @Override
-    public ResourceLocation getAnimationResource(HuntingRifleItem animatable) {
+    public ResourceLocation getAnimationResource(HuntingRifle animatable) {
         return new ResourceLocation("target", "animations/hunting_rifle.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(HuntingRifleItem animatable) {
+    public ResourceLocation getModelResource(HuntingRifle animatable) {
         return new ResourceLocation("target", "geo/hunting_rifle.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(HuntingRifleItem animatable) {
+    public ResourceLocation getTextureResource(HuntingRifle animatable) {
         return new ResourceLocation("target", "textures/item/huntingrifle.png");
     }
 
     @Override
-    public void setCustomAnimations(HuntingRifleItem animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(HuntingRifle animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("lieqiang");
 

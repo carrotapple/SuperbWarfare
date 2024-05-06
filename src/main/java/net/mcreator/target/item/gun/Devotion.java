@@ -1,11 +1,9 @@
-package net.mcreator.target.item;
+package net.mcreator.target.item.gun;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import net.mcreator.target.client.renderer.item.SentinelItemRenderer;
-import net.mcreator.target.procedures.SentinelWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
-import net.mcreator.target.tools.RarityTool;
-import net.mcreator.target.tools.ItemNBTTool;
+import net.mcreator.target.client.renderer.item.DevotionItemRenderer;
+import net.mcreator.target.procedures.DevotionWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -18,10 +16,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -37,36 +32,20 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class SentinelItem extends Item implements GeoItem {
-    private static final String TAG_POWER = "power";
+public class Devotion extends Item implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationprocedure = "empty";
     public static ItemDisplayContext transformType;
 
-    public SentinelItem() {
-        super(new Item.Properties().stacksTo(1).rarity(RarityTool.LEGENDARY));
-    }
-
-    @Override
-    public boolean isBarVisible(ItemStack pStack) {
-        return ItemNBTTool.getInt(pStack, TAG_POWER, 0) != 0;
-    }
-
-    @Override
-    public int getBarWidth(ItemStack pStack) {
-        return Math.round((float) ItemNBTTool.getInt(pStack, TAG_POWER, 0) * 13.0F / 100F);
-    }
-
-    @Override
-    public int getBarColor(ItemStack pStack) {
-        return 0x95E9FF;
+    public Devotion() {
+        super(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     }
 
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
-            private final BlockEntityWithoutLevelRenderer renderer = new SentinelItemRenderer();
+            private final BlockEntityWithoutLevelRenderer renderer = new DevotionItemRenderer();
 
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
@@ -80,6 +59,7 @@ public class SentinelItem extends Item implements GeoItem {
         });
     }
 
+
     public void getTransformType(ItemDisplayContext type) {
         transformType = type;
     }
@@ -91,56 +71,38 @@ public class SentinelItem extends Item implements GeoItem {
         if (this.animationprocedure.equals("empty")) {
 
             if (stack.getOrCreateTag().getDouble("drawtime") < 16) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.draw"));
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.devotion.draw"));
             }
 
             if (stack.getOrCreateTag().getDouble("fireanim") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.fire"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.devotion.fire"));
             }
 
             if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 1) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.devotion.reload"));
             }
 
             if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload2"));
-            }
-
-            if (stack.getOrCreateTag().getDouble("firing") > 0 && stack.getOrCreateTag().getDouble("firing") < 23) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.shift"));
-            }
-
-            if (stack.getOrCreateTag().getDouble("zoomfiring") > 0 && stack.getOrCreateTag().getDouble("zoomfiring") < 23) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.shift2"));
-            }
-
-            if (stack.getOrCreateTag().getDouble("chargingtime") > 127 && stack.getOrCreateTag().getDouble("charging") == 1) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.chargep"));
-            }
-
-            if (stack.getOrCreateTag().getDouble("chargingtime") < 127 && stack.getOrCreateTag().getDouble("chargingtime") > 0 && stack.getOrCreateTag().getDouble("charging") == 1) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.charge"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.devotion.reload2"));
             }
 
             if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("unspringtable") == 0) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.run"));
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.devotion.run"));
             }
 
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.idle"));
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.devotion.idle"));
         }
         return PlayState.STOP;
     }
 
     private PlayState procedurePredicate(AnimationState event) {
         if (transformType != null && transformType.firstPerson()) {
-            if (!this.animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+            if (!(this.animationprocedure.equals("empty")) && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
                 if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                     this.animationprocedure = "empty";
                     event.getController().forceAnimationReset();
                 }
-            } else if (this.animationprocedure.equals("empty")) {
-                return PlayState.STOP;
             }
         }
         return PlayState.CONTINUE;
@@ -160,17 +122,6 @@ public class SentinelItem extends Item implements GeoItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
-        super.appendHoverText(itemstack, world, list, flag);
-    }
-
-    @Override
-    public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemstack, world, entity, slot, selected);
-        SentinelWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
-    }
-
-    @Override
     public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
         return true;
     }
@@ -187,8 +138,19 @@ public class SentinelItem extends Item implements GeoItem {
         if (slot == EquipmentSlot.MAINHAND) {
             map = HashMultimap.create(map);
             map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, "henghengaaa", -0.06f, AttributeModifier.Operation.MULTIPLY_BASE));
+                    new AttributeModifier(uuid, "henghengaaa", -0.05f, AttributeModifier.Operation.MULTIPLY_BASE));
         }
         return map;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
+        super.appendHoverText(itemstack, world, list, flag);
+    }
+
+    @Override
+    public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(itemstack, world, entity, slot, selected);
+        DevotionWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
     }
 }

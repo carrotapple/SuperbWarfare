@@ -38,15 +38,15 @@ public class TargetModItems {
     public static final RegistryObject<Item> MARLIN = GUNS.register("marlin", MarlinItem::new);
     public static final RegistryObject<Item> SVD = GUNS.register("svd", SvdItem::new);
     public static final RegistryObject<Item> M_98B = GUNS.register("m_98b", M98bItem::new);
-    public static final RegistryObject<Item> SENTINEL = GUNS.register("sentinel", SentinelItem::new);
-    public static final RegistryObject<Item> HUNTING_RIFLE = GUNS.register("hunting_rifle", HuntingRifleItem::new);
-    public static final RegistryObject<Item> KRABER = GUNS.register("kraber", KraberItem::new);
+    public static final RegistryObject<Item> SENTINEL = GUNS.register("sentinel", Sentinel::new);
+    public static final RegistryObject<Item> HUNTING_RIFLE = GUNS.register("hunting_rifle", HuntingRifle::new);
+    public static final RegistryObject<Item> KRABER = GUNS.register("kraber", Kraber::new);
     public static final RegistryObject<Item> M_870 = GUNS.register("m_870", M870Item::new);
     public static final RegistryObject<Item> AA_12 = GUNS.register("aa_12", Aa12Item::new);
-    public static final RegistryObject<Item> DEVOTION = GUNS.register("devotion", DevotionItem::new);
+    public static final RegistryObject<Item> DEVOTION = GUNS.register("devotion", Devotion::new);
     public static final RegistryObject<Item> RPK = GUNS.register("rpk", RpkItem::new);
     public static final RegistryObject<Item> M_60 = GUNS.register("m_60", M60Item::new);
-    public static final RegistryObject<Item> MINIGUN = GUNS.register("minigun", MinigunItem::new);
+    public static final RegistryObject<Item> MINIGUN = GUNS.register("minigun", Minigun::new);
     public static final RegistryObject<Item> M_79 = GUNS.register("m_79", M79Item::new);
     public static final RegistryObject<Item> RPG = GUNS.register("rpg", RpgItem::new);
     public static final RegistryObject<Item> BOCEK = GUNS.register("bocek", BocekItem::new);
@@ -56,19 +56,19 @@ public class TargetModItems {
      */
     public static final DeferredRegister<Item> AMMO = DeferredRegister.create(ForgeRegistries.ITEMS, TargetMod.MODID);
 
-    public static final RegistryObject<Item> HANDGUN_AMMO = AMMO.register("handgun_ammo", HandgunAmmoItem::new);
-    public static final RegistryObject<Item> RIFLE_AMMO = AMMO.register("rifle_ammo", RifleAmmoItem::new);
-    public static final RegistryObject<Item> SNIPER_AMMO = AMMO.register("sniper_ammo", SniperAmmoItem::new);
-    public static final RegistryObject<Item> SHOTGUN_AMMO = AMMO.register("shotgun_ammo", ShotgunAmmoItem::new);
-    public static final RegistryObject<Item> HANDGUN_AMMO_BOX = AMMO.register("handgun_ammo_box", HandgunAmmoBoxItem::new);
-    public static final RegistryObject<Item> RIFLE_AMMO_BOX = AMMO.register("rifle_ammo_box", RifleAmmoBoxItem::new);
-    public static final RegistryObject<Item> SNIPER_AMMO_BOX = AMMO.register("sniper_ammo_box", SniperAmmoBoxItem::new);
-    public static final RegistryObject<Item> SHOTGUN_AMMO_BOX = AMMO.register("shotgun_ammo_box", ShotgunAmmoBoxItem::new);
-    public static final RegistryObject<Item> CREATIVE_AMMO_BOX = AMMO.register("creative_ammo_box", CreativeAmmoBoxItem::new);
-    public static final RegistryObject<Item> TASER_ELECTRODE = AMMO.register("taser_electrode", TaserElectrodeItem::new);
-    public static final RegistryObject<Item> GRENADE_40MM = AMMO.register("grenade_40mm", Grenade40mmItem::new);
-    public static final RegistryObject<Item> MORTAR_SHELLS = AMMO.register("mortar_shells", MortarShellsItem::new);
-    public static final RegistryObject<Item> ROCKET = AMMO.register("rocket", RocketItem::new);
+    public static final RegistryObject<Item> HANDGUN_AMMO = AMMO.register("handgun_ammo", HandgunAmmo::new);
+    public static final RegistryObject<Item> RIFLE_AMMO = AMMO.register("rifle_ammo", RifleAmmo::new);
+    public static final RegistryObject<Item> SNIPER_AMMO = AMMO.register("sniper_ammo", SniperAmmo::new);
+    public static final RegistryObject<Item> SHOTGUN_AMMO = AMMO.register("shotgun_ammo", ShotgunAmmo::new);
+    public static final RegistryObject<Item> HANDGUN_AMMO_BOX = AMMO.register("handgun_ammo_box", HandgunAmmoBox::new);
+    public static final RegistryObject<Item> RIFLE_AMMO_BOX = AMMO.register("rifle_ammo_box", RifleAmmoBox::new);
+    public static final RegistryObject<Item> SNIPER_AMMO_BOX = AMMO.register("sniper_ammo_box", SniperAmmoBox::new);
+    public static final RegistryObject<Item> SHOTGUN_AMMO_BOX = AMMO.register("shotgun_ammo_box", ShotgunAmmoBox::new);
+    public static final RegistryObject<Item> CREATIVE_AMMO_BOX = AMMO.register("creative_ammo_box", CreativeAmmoBox::new);
+    public static final RegistryObject<Item> TASER_ELECTRODE = AMMO.register("taser_electrode", TaserElectrode::new);
+    public static final RegistryObject<Item> GRENADE_40MM = AMMO.register("grenade_40mm", Grenade40mm::new);
+    public static final RegistryObject<Item> MORTAR_SHELLS = AMMO.register("mortar_shells", MortarShells::new);
+    public static final RegistryObject<Item> ROCKET = AMMO.register("rocket", Rocket::new);
 
     /**
      * items
@@ -76,7 +76,7 @@ public class TargetModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, TargetMod.MODID);
 
     public static final RegistryObject<Item> SENPAI_SPAWN_EGG = ITEMS.register("senpai_spawn_egg", () -> new ForgeSpawnEggItem(TargetModEntities.SENPAI, -11584987, -14014413, new Item.Properties()));
-    public static final RegistryObject<Item> TARGET_DEPLOYER = ITEMS.register("target_deployer", TargetdeployerItem::new);
+    public static final RegistryObject<Item> TARGET_DEPLOYER = ITEMS.register("target_deployer", Targetdeployer::new);
     public static final RegistryObject<Item> SANDBAG = block(TargetModBlocks.SANDBAG);
     public static final RegistryObject<Item> BARBED_WIRE = block(TargetModBlocks.BARBED_WIRE);
     public static final RegistryObject<Item> CLAYMORE_MINE = ITEMS.register("claymore_mine", ClaymoreMineItem::new);

@@ -1,6 +1,6 @@
 package net.mcreator.target.client.model.item;
 
-import net.mcreator.target.item.gun.KraberItem;
+import net.mcreator.target.item.gun.Kraber;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -10,24 +10,24 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class KraberItemModel extends GeoModel<KraberItem> {
+public class KraberItemModel extends GeoModel<Kraber> {
     @Override
-    public ResourceLocation getAnimationResource(KraberItem animatable) {
+    public ResourceLocation getAnimationResource(Kraber animatable) {
         return new ResourceLocation("target", "animations/kraber.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(KraberItem animatable) {
+    public ResourceLocation getModelResource(Kraber animatable) {
         return new ResourceLocation("target", "geo/kraber.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(KraberItem animatable) {
+    public ResourceLocation getTextureResource(Kraber animatable) {
         return new ResourceLocation("target", "textures/item/kraber.png");
     }
 
     @Override
-    public void setCustomAnimations(KraberItem animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(Kraber animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone scope = getAnimationProcessor().getBone("scope");

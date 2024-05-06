@@ -9,8 +9,8 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class Grenade40mmItem extends Item {
-    public Grenade40mmItem() {
+public class Grenade40mm extends Item {
+    public Grenade40mm() {
         super(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON));
     }
 

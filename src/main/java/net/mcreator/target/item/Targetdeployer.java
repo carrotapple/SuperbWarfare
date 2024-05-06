@@ -12,8 +12,8 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class TargetdeployerItem extends Item {
-    public TargetdeployerItem() {
+public class Targetdeployer extends Item {
+    public Targetdeployer() {
         super(new Item.Properties().stacksTo(1).rarity(Rarity.COMMON));
     }
 

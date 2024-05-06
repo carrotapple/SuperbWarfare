@@ -2,7 +2,7 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.gun.DevotionItem;
+import net.mcreator.target.item.gun.Devotion;
 import net.mcreator.target.client.layer.DevotionLayer;
 import net.mcreator.target.client.model.item.DevotionItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,14 +16,14 @@ import software.bernie.geckolib.renderer.GeoItemRenderer;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DevotionItemRenderer extends GeoItemRenderer<DevotionItem> {
+public class DevotionItemRenderer extends GeoItemRenderer<Devotion> {
     public DevotionItemRenderer() {
         super(new DevotionItemModel());
         this.addRenderLayer(new DevotionLayer(this));
     }
 
     @Override
-    public RenderType getRenderType(DevotionItem animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(Devotion animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
@@ -32,7 +32,7 @@ public class DevotionItemRenderer extends GeoItemRenderer<DevotionItem> {
     protected MultiBufferSource currentBuffer;
     protected RenderType renderType;
     public ItemDisplayContext transformType;
-    protected DevotionItem animatable;
+    protected Devotion animatable;
     private final Set<String> hiddenBones = new HashSet<>();
     private final Set<String> suppressedBones = new HashSet<>();
 
@@ -45,7 +45,7 @@ public class DevotionItemRenderer extends GeoItemRenderer<DevotionItem> {
     }
 
     @Override
-    public void actuallyRender(PoseStack matrixStackIn, DevotionItem animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
+    public void actuallyRender(PoseStack matrixStackIn, Devotion animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
                                int packedOverlayIn, float red, float green, float blue, float alpha) {
         this.currentBuffer = renderTypeBuffer;
         this.renderType = type;
@@ -57,7 +57,7 @@ public class DevotionItemRenderer extends GeoItemRenderer<DevotionItem> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(DevotionItem instance) {
+    public ResourceLocation getTextureLocation(Devotion instance) {
         return super.getTextureLocation(instance);
     }
 }

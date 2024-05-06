@@ -10,8 +10,8 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class RifleAmmoBoxItem extends Item {
-    public RifleAmmoBoxItem() {
+public class RifleAmmoBox extends Item {
+    public RifleAmmoBox() {
         super(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON));
     }
 

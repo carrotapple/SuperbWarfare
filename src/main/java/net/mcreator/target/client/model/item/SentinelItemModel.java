@@ -1,6 +1,6 @@
 package net.mcreator.target.client.model.item;
 
-import net.mcreator.target.item.SentinelItem;
+import net.mcreator.target.item.Sentinel;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -10,24 +10,24 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class SentinelItemModel extends GeoModel<SentinelItem> {
+public class SentinelItemModel extends GeoModel<Sentinel> {
     @Override
-    public ResourceLocation getAnimationResource(SentinelItem animatable) {
+    public ResourceLocation getAnimationResource(Sentinel animatable) {
         return new ResourceLocation("target", "animations/sentinel.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(SentinelItem animatable) {
+    public ResourceLocation getModelResource(Sentinel animatable) {
         return new ResourceLocation("target", "geo/sentinel.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(SentinelItem animatable) {
+    public ResourceLocation getTextureResource(Sentinel animatable) {
         return new ResourceLocation("target", "textures/item/sentinel.png");
     }
 
     @Override
-    public void setCustomAnimations(SentinelItem animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(Sentinel animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone scope = getAnimationProcessor().getBone("scope2");

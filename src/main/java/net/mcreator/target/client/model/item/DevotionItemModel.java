@@ -1,6 +1,6 @@
 package net.mcreator.target.client.model.item;
 
-import net.mcreator.target.item.gun.DevotionItem;
+import net.mcreator.target.item.gun.Devotion;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -10,25 +10,25 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class DevotionItemModel extends GeoModel<DevotionItem> {
+public class DevotionItemModel extends GeoModel<Devotion> {
     @Override
-    public ResourceLocation getAnimationResource(DevotionItem animatable) {
+    public ResourceLocation getAnimationResource(Devotion animatable) {
         return new ResourceLocation("target", "animations/devotion.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(DevotionItem animatable) {
+    public ResourceLocation getModelResource(Devotion animatable) {
         return new ResourceLocation("target", "geo/devotion.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(DevotionItem animatable) {
+    public ResourceLocation getTextureResource(Devotion animatable) {
         return new ResourceLocation("target", "textures/item/devotion.png");
     }
 
 
     @Override
-    public void setCustomAnimations(DevotionItem animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(Devotion animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone l = getAnimationProcessor().getBone("l");
         CoreGeoBone r = getAnimationProcessor().getBone("r");

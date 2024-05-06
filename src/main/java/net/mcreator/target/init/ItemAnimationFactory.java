@@ -1,7 +1,7 @@
 package net.mcreator.target.init;
 
 import net.mcreator.target.item.*;
-import net.mcreator.target.item.common.ammo.RocketItem;
+import net.mcreator.target.item.common.ammo.Rocket;
 import net.mcreator.target.item.gun.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemInHandRenderer;
@@ -92,17 +92,17 @@ public class ItemAnimationFactory {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof SentinelItem animatable)
+                if (event.player.getMainHandItem().getItem() instanceof Sentinel animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof HuntingRifleItem animatable)
+                if (event.player.getMainHandItem().getItem() instanceof HuntingRifle animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof KraberItem animatable)
+                if (event.player.getMainHandItem().getItem() instanceof Kraber animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
@@ -117,7 +117,7 @@ public class ItemAnimationFactory {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof DevotionItem animatable)
+                if (event.player.getMainHandItem().getItem() instanceof Devotion animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
@@ -132,7 +132,7 @@ public class ItemAnimationFactory {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof MinigunItem animatable)
+                if (event.player.getMainHandItem().getItem() instanceof Minigun animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
@@ -157,7 +157,7 @@ public class ItemAnimationFactory {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof RocketItem animatable)
+                if (event.player.getMainHandItem().getItem() instanceof Rocket animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
@@ -226,17 +226,17 @@ public class ItemAnimationFactory {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getOffhandItem().getItem() instanceof SentinelItem animatable)
+                if (event.player.getOffhandItem().getItem() instanceof Sentinel animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getOffhandItem().getItem() instanceof HuntingRifleItem animatable)
+                if (event.player.getOffhandItem().getItem() instanceof HuntingRifle animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getOffhandItem().getItem() instanceof KraberItem animatable)
+                if (event.player.getOffhandItem().getItem() instanceof Kraber animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
@@ -251,7 +251,7 @@ public class ItemAnimationFactory {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getOffhandItem().getItem() instanceof DevotionItem animatable)
+                if (event.player.getOffhandItem().getItem() instanceof Devotion animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
@@ -266,7 +266,7 @@ public class ItemAnimationFactory {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getOffhandItem().getItem() instanceof MinigunItem animatable)
+                if (event.player.getOffhandItem().getItem() instanceof Minigun animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
@@ -291,7 +291,7 @@ public class ItemAnimationFactory {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getOffhandItem().getItem() instanceof RocketItem animatable)
+                if (event.player.getOffhandItem().getItem() instanceof Rocket animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();

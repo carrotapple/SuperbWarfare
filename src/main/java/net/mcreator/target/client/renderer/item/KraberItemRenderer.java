@@ -2,7 +2,7 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.gun.KraberItem;
+import net.mcreator.target.item.gun.Kraber;
 import net.mcreator.target.client.layer.KraberLayer;
 import net.mcreator.target.client.model.item.KraberItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,7 +16,7 @@ import software.bernie.geckolib.renderer.GeoItemRenderer;
 import java.util.HashSet;
 import java.util.Set;
 
-public class KraberItemRenderer extends GeoItemRenderer<KraberItem> {
+public class KraberItemRenderer extends GeoItemRenderer<Kraber> {
     public KraberItemRenderer() {
         super(new KraberItemModel());
         this.addRenderLayer(new KraberLayer(this));
@@ -24,7 +24,7 @@ public class KraberItemRenderer extends GeoItemRenderer<KraberItem> {
     }
 
     @Override
-    public RenderType getRenderType(KraberItem animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(Kraber animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
@@ -33,7 +33,7 @@ public class KraberItemRenderer extends GeoItemRenderer<KraberItem> {
     protected MultiBufferSource currentBuffer;
     protected RenderType renderType;
     public ItemDisplayContext transformType;
-    protected KraberItem animatable;
+    protected Kraber animatable;
     private final Set<String> hiddenBones = new HashSet<>();
     private final Set<String> suppressedBones = new HashSet<>();
 
@@ -46,7 +46,7 @@ public class KraberItemRenderer extends GeoItemRenderer<KraberItem> {
     }
 
     @Override
-    public void actuallyRender(PoseStack matrixStackIn, KraberItem animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
+    public void actuallyRender(PoseStack matrixStackIn, Kraber animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
                                int packedOverlayIn, float red, float green, float blue, float alpha) {
         this.currentBuffer = renderTypeBuffer;
         this.renderType = type;
@@ -58,7 +58,7 @@ public class KraberItemRenderer extends GeoItemRenderer<KraberItem> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(KraberItem instance) {
+    public ResourceLocation getTextureLocation(Kraber instance) {
         return super.getTextureLocation(instance);
     }
 }

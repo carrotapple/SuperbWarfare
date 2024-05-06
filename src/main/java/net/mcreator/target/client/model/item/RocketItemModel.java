@@ -1,22 +1,22 @@
 package net.mcreator.target.client.model.item;
 
-import net.mcreator.target.item.common.ammo.RocketItem;
+import net.mcreator.target.item.common.ammo.Rocket;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
-public class RocketItemModel extends GeoModel<RocketItem> {
+public class RocketItemModel extends GeoModel<Rocket> {
     @Override
-    public ResourceLocation getAnimationResource(RocketItem animatable) {
+    public ResourceLocation getAnimationResource(Rocket animatable) {
         return new ResourceLocation("target", "animations/rpg.head.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(RocketItem animatable) {
+    public ResourceLocation getModelResource(Rocket animatable) {
         return new ResourceLocation("target", "geo/rpg.head.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(RocketItem animatable) {
+    public ResourceLocation getTextureResource(Rocket animatable) {
         return new ResourceLocation("target", "textures/item/rpg7.png");
     }
 }

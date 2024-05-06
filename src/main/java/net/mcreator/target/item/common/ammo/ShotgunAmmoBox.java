@@ -1,20 +1,18 @@
 package net.mcreator.target.item.common.ammo;
 
-import net.mcreator.target.procedures.CreativeAmmoBoxWanJiaWanChengShiYongWuPinShiProcedure;
+import net.mcreator.target.procedures.ShotgunAmmoBoxWanJiaWanChengShiYongWuPinShiProcedure;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.List;
 
-public class CreativeAmmoBoxItem extends Item {
-    public CreativeAmmoBoxItem() {
-        super(new Item.Properties().stacksTo(64).rarity(Rarity.EPIC));
+public class ShotgunAmmoBox extends Item {
+    public ShotgunAmmoBox() {
+        super(new Item.Properties().stacksTo(8).rarity(Rarity.COMMON));
     }
 
     @Override
@@ -24,13 +22,7 @@ public class CreativeAmmoBoxItem extends Item {
 
     @Override
     public int getUseDuration(ItemStack itemstack) {
-        return 6;
-    }
-
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public boolean isFoil(ItemStack itemstack) {
-        return true;
+        return 16;
     }
 
     @Override
@@ -41,7 +33,7 @@ public class CreativeAmmoBoxItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player entity, InteractionHand hand) {
         InteractionResultHolder<ItemStack> ar = super.use(world, entity, hand);
-        CreativeAmmoBoxWanJiaWanChengShiYongWuPinShiProcedure.execute(entity, ar.getObject());
+        ShotgunAmmoBoxWanJiaWanChengShiYongWuPinShiProcedure.execute(entity, ar.getObject());
         return ar;
     }
 }

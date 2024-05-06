@@ -1,6 +1,6 @@
 package net.mcreator.target.client.model.item;
 
-import net.mcreator.target.item.gun.MinigunItem;
+import net.mcreator.target.item.gun.Minigun;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -10,24 +10,24 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class MinigunItemModel extends GeoModel<MinigunItem> {
+public class MinigunItemModel extends GeoModel<Minigun> {
     @Override
-    public ResourceLocation getAnimationResource(MinigunItem animatable) {
+    public ResourceLocation getAnimationResource(Minigun animatable) {
         return new ResourceLocation("target", "animations/minigun.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(MinigunItem animatable) {
+    public ResourceLocation getModelResource(Minigun animatable) {
         return new ResourceLocation("target", "geo/minigun.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(MinigunItem animatable) {
+    public ResourceLocation getTextureResource(Minigun animatable) {
         return new ResourceLocation("target", "textures/item/minigun.png");
     }
 
     @Override
-    public void setCustomAnimations(MinigunItem animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(Minigun animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("barrel");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");

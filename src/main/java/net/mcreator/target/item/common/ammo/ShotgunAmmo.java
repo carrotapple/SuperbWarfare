@@ -13,8 +13,8 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class ShotgunAmmoItem extends Item {
-    public ShotgunAmmoItem() {
+public class ShotgunAmmo extends Item {
+    public ShotgunAmmo() {
         super(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON));
     }
 

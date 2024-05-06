@@ -1,6 +1,6 @@
 package net.mcreator.target.item.common.ammo;
 
-import net.mcreator.target.procedures.HandgunAmmoBoxWanJiaWanChengShiYongWuPinShiProcedure;
+import net.mcreator.target.procedures.SniperAmmoBoxWanJiaWanChengShiYongWuPinShiProcedure;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -10,8 +10,8 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class HandgunAmmoBoxItem extends Item {
-    public HandgunAmmoBoxItem() {
+public class SniperAmmoBox extends Item {
+    public SniperAmmoBox() {
         super(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON));
     }
 
@@ -33,7 +33,7 @@ public class HandgunAmmoBoxItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player entity, InteractionHand hand) {
         InteractionResultHolder<ItemStack> ar = super.use(world, entity, hand);
-        HandgunAmmoBoxWanJiaWanChengShiYongWuPinShiProcedure.execute(entity, ar.getObject());
+        SniperAmmoBoxWanJiaWanChengShiYongWuPinShiProcedure.execute(entity, ar.getObject());
         return ar;
     }
 }

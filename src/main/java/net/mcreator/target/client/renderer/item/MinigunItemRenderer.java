@@ -2,7 +2,7 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.gun.MinigunItem;
+import net.mcreator.target.item.gun.Minigun;
 import net.mcreator.target.client.layer.MinigunLayer;
 import net.mcreator.target.client.model.item.MinigunItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,14 +16,14 @@ import software.bernie.geckolib.renderer.GeoItemRenderer;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MinigunItemRenderer extends GeoItemRenderer<MinigunItem> {
+public class MinigunItemRenderer extends GeoItemRenderer<Minigun> {
     public MinigunItemRenderer() {
         super(new MinigunItemModel());
         this.addRenderLayer(new MinigunLayer(this));
     }
 
     @Override
-    public RenderType getRenderType(MinigunItem animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(Minigun animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
@@ -32,7 +32,7 @@ public class MinigunItemRenderer extends GeoItemRenderer<MinigunItem> {
     protected MultiBufferSource currentBuffer;
     protected RenderType renderType;
     public ItemDisplayContext transformType;
-    protected MinigunItem animatable;
+    protected Minigun animatable;
     private final Set<String> hiddenBones = new HashSet<>();
     private final Set<String> suppressedBones = new HashSet<>();
 
@@ -45,7 +45,7 @@ public class MinigunItemRenderer extends GeoItemRenderer<MinigunItem> {
     }
 
     @Override
-    public void actuallyRender(PoseStack matrixStackIn, MinigunItem animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
+    public void actuallyRender(PoseStack matrixStackIn, Minigun animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
                                int packedOverlayIn, float red, float green, float blue, float alpha) {
         this.currentBuffer = renderTypeBuffer;
         this.renderType = type;
@@ -57,7 +57,7 @@ public class MinigunItemRenderer extends GeoItemRenderer<MinigunItem> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(MinigunItem instance) {
+    public ResourceLocation getTextureLocation(Minigun instance) {
         return super.getTextureLocation(instance);
     }
 }

@@ -9,8 +9,8 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class MortarShellsItem extends Item {
-    public MortarShellsItem() {
+public class MortarShells extends Item {
+    public MortarShells() {
         super(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON));
     }
 

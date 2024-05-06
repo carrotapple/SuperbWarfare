@@ -2,7 +2,7 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.common.ammo.RocketItem;
+import net.mcreator.target.item.common.ammo.Rocket;
 import net.mcreator.target.client.model.item.RocketItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -15,13 +15,13 @@ import software.bernie.geckolib.renderer.GeoItemRenderer;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RocketItemRenderer extends GeoItemRenderer<RocketItem> {
+public class RocketItemRenderer extends GeoItemRenderer<Rocket> {
     public RocketItemRenderer() {
         super(new RocketItemModel());
     }
 
     @Override
-    public RenderType getRenderType(RocketItem animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(Rocket animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
@@ -30,7 +30,7 @@ public class RocketItemRenderer extends GeoItemRenderer<RocketItem> {
     protected MultiBufferSource currentBuffer;
     protected RenderType renderType;
     public ItemDisplayContext transformType;
-    protected RocketItem animatable;
+    protected Rocket animatable;
     private final Set<String> hiddenBones = new HashSet<>();
     private final Set<String> suppressedBones = new HashSet<>();
 
@@ -43,7 +43,7 @@ public class RocketItemRenderer extends GeoItemRenderer<RocketItem> {
     }
 
     @Override
-    public void actuallyRender(PoseStack matrixStackIn, RocketItem animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
+    public void actuallyRender(PoseStack matrixStackIn, Rocket animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
                                int packedOverlayIn, float red, float green, float blue, float alpha) {
         this.currentBuffer = renderTypeBuffer;
         this.renderType = type;
@@ -55,7 +55,7 @@ public class RocketItemRenderer extends GeoItemRenderer<RocketItem> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(RocketItem instance) {
+    public ResourceLocation getTextureLocation(Rocket instance) {
         return super.getTextureLocation(instance);
     }
 }

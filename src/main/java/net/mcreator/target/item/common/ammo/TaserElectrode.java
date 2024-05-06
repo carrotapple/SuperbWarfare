@@ -9,8 +9,8 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class TaserElectrodeItem extends Item {
-    public TaserElectrodeItem() {
+public class TaserElectrode extends Item {
+    public TaserElectrode() {
         super(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON));
     }
 

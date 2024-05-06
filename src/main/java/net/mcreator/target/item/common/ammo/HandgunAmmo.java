@@ -1,28 +1,21 @@
 package net.mcreator.target.item.common.ammo;
 
-import net.mcreator.target.procedures.ShotgunAmmoBoxWanJiaWanChengShiYongWuPinShiProcedure;
+import net.mcreator.target.procedures.HandgunAmmoYouJiKongQiShiShiTiDeWeiZhiProcedure;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class ShotgunAmmoBoxItem extends Item {
-    public ShotgunAmmoBoxItem() {
-        super(new Item.Properties().stacksTo(8).rarity(Rarity.COMMON));
-    }
-
-    @Override
-    public UseAnim getUseAnimation(ItemStack itemstack) {
-        return UseAnim.EAT;
-    }
-
-    @Override
-    public int getUseDuration(ItemStack itemstack) {
-        return 16;
+public class HandgunAmmo extends Item {
+    public HandgunAmmo() {
+        super(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON));
     }
 
     @Override
@@ -33,7 +26,7 @@ public class ShotgunAmmoBoxItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player entity, InteractionHand hand) {
         InteractionResultHolder<ItemStack> ar = super.use(world, entity, hand);
-        ShotgunAmmoBoxWanJiaWanChengShiYongWuPinShiProcedure.execute(entity, ar.getObject());
+        HandgunAmmoYouJiKongQiShiShiTiDeWeiZhiProcedure.execute(entity, ar.getObject());
         return ar;
     }
 }
