@@ -35,8 +35,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.List;
-
+// TODO 重写阔剑地雷
 public class ClaymoreEntity extends TamableAnimal implements GeoEntity {
     public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.STRING);
@@ -87,7 +86,7 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity {
 
     @Override
     public MobType getMobType() {
-        return MobType.UNDEFINED;
+        return super.getMobType();
     }
 
     @Override
@@ -200,7 +199,9 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity {
     @Override
     public AgeableMob getBreedOffspring(ServerLevel serverWorld, AgeableMob ageable) {
         ClaymoreEntity retval = TargetModEntities.CLAYMORE.get().create(serverWorld);
-        retval.finalizeSpawn(serverWorld, serverWorld.getCurrentDifficultyAt(retval.blockPosition()), MobSpawnType.BREEDING, null, null);
+        if (retval != null) {
+            retval.finalizeSpawn(serverWorld, serverWorld.getCurrentDifficultyAt(retval.blockPosition()), MobSpawnType.BREEDING, null, null);
+        }
         return retval;
     }
 

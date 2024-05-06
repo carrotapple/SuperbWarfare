@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
 
+// TODO 把伤害逻辑移植到箭类中
 @Mod.EventBusSubscriber
 public class ArrowdamageProcedure {
     @SubscribeEvent

@@ -176,6 +176,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         this.updateHeading();
         this.onProjectileTick();
 
+        Vec3 vec = this.getDeltaMovement();
+
         if (!this.level().isClientSide()) {
             Vec3 startVec = this.position();
             Vec3 endVec = startVec.add(this.getDeltaMovement());
@@ -199,6 +201,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             } else {
                 this.onHit(result);
             }
+
+            this.setPos(this.getX() + vec.x, this.getY() + vec.y, this.getZ() + vec.z);
+        } else {
+            this.setPosRaw(this.getX() + vec.x, this.getY() + vec.y, this.getZ() + vec.z);
         }
 
         if (this.tickCount > 200) {
