@@ -2,6 +2,7 @@ package net.mcreator.target.procedures;
 
 import net.mcreator.target.entity.ProjectileEntity;
 import net.mcreator.target.init.TargetModAttributes;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,7 +35,17 @@ public class BulletFireNormalProcedure {
         });
 
         if (!entity.level().isClientSide() && entity instanceof LivingEntity living) {
-            ProjectileEntity projectile = new ProjectileEntity(entity.level(), living, (float) heldItem.getOrCreateTag().getDouble("dmg"));
+            float damage;
+            if (heldItem.getItem() == TargetModItems.BOCEK.get()) {
+                damage = (float) heldItem.getOrCreateTag().getDouble("speed") * (float) heldItem.getOrCreateTag().getDouble("damageadd");
+            } else {
+                damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("adddamage"))
+                        * (float) heldItem.getOrCreateTag().getDouble("damageadd");
+            }
+
+            float headshot = (float) heldItem.getOrCreateTag().getDouble("headshot");
+
+            ProjectileEntity projectile = new ProjectileEntity(entity.level(), living, damage, headshot);
 
             projectile.setPos((living.getX() + (-0.5) * living.getLookAngle().x), (living.getEyeY() - 0.1 + (-0.5) * living.getLookAngle().y), (living.getZ() + (-0.5) * living.getLookAngle().z));
             projectile.shoot(living.getLookAngle().x, living.getLookAngle().y, living.getLookAngle().z, (float) heldItem.getOrCreateTag().getDouble("velocity"),

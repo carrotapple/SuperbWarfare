@@ -3,18 +3,22 @@ package net.mcreator.target.entity;
 import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
 import net.mcreator.target.init.TargetCustomModEntities;
-import net.mcreator.target.procedures.ProjectileHeadshotEntity;
-import net.mcreator.target.procedures.ProjectileHitEntity;
+import net.mcreator.target.init.TargetModDamageTypes;
+import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.util.math.ExtendedEntityRayTraceResult;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -43,6 +47,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     protected LivingEntity shooter;
     protected int shooterId;
     private float damage = 1f;
+    private float headShot = 1f;
 
     public ProjectileEntity(EntityType<? extends ProjectileEntity> p_i50159_1_, Level p_i50159_2_) {
         super(p_i50159_1_, p_i50159_2_);
@@ -57,6 +62,13 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         super(TargetCustomModEntities.PROJECTILE.get(), world);
         this.shooter = entity;
         this.damage = damage;
+    }
+
+    public ProjectileEntity(Level world, LivingEntity entity, float damage, float headShot) {
+        super(TargetCustomModEntities.PROJECTILE.get(), world);
+        this.shooter = entity;
+        this.damage = damage;
+        this.headShot = headShot;
     }
 
     @Nullable
@@ -182,10 +194,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                     }
                 }
                 if (result != null) {
-                    this.onHit(result, startVec, endVec);
+                    this.onHit(result);
                 }
             } else {
-                this.onHit(result, startVec, endVec);
+                this.onHit(result);
             }
         }
 
@@ -222,7 +234,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         this.discard();
     }
 
-    private void onHit(HitResult result, Vec3 startVec, Vec3 endVec) {
+    private void onHit(HitResult result) {
         if (result instanceof BlockHitResult blockHitResult) {
             if (blockHitResult.getType() == HitResult.Type.MISS) {
                 return;
@@ -244,16 +256,47 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 }
             }
 
-            this.onHitEntity(entity, result.getLocation(), startVec, endVec, entityHitResult.isHeadshot());
+            this.onHitEntity(entity, entityHitResult.isHeadshot());
             entity.invulnerableTime = 0;
         }
     }
 
-    protected void onHitEntity(Entity entity, Vec3 hitVec, Vec3 startVec, Vec3 endVec, boolean headshot) {
+    protected void onHitEntity(Entity entity, boolean headshot) {
         if (headshot) {
-            ProjectileHeadshotEntity.execute(this.level(), entity, this, this.shooter);
+            if (entity == null)
+                return;
+
+            if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
+                var holder = Holder.direct(TargetModSounds.HEADSHOT.get());
+                player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
+            }
+
+            double i = 25;
+            shooter.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.headind = i;
+                capability.syncPlayerVariables(shooter);
+            });
+
+            entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this.shooter), this.damage * this.headShot);
+            this.discard();
+        } else {
+            if (entity == null)
+                return;
+
+            if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
+                var holder = Holder.direct(TargetModSounds.INDICATION.get());
+                player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
+            }
+
+            double i = 25;
+            shooter.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.hitind = i;
+                capability.syncPlayerVariables(shooter);
+            });
+
+            entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this.shooter), this.damage);
+            this.discard();
         }
-        ProjectileHitEntity.execute(this.level(), entity, this, this.shooter);
     }
 
     public void setDamage(float damage) {
@@ -265,11 +308,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     }
 
     public void shoot(double p_37266_, double p_37267_, double p_37268_, float p_37269_, float p_37270_) {
-        Vec3 vec3 = (new Vec3(p_37266_, p_37267_, p_37268_)).normalize().add(this.random.triangle(0.0D, 0.0172275D * (double)p_37270_), this.random.triangle(0.0D, 0.0172275D * (double)p_37270_), this.random.triangle(0.0D, 0.0172275D * (double)p_37270_)).scale((double)p_37269_);
+        Vec3 vec3 = (new Vec3(p_37266_, p_37267_, p_37268_)).normalize().add(this.random.triangle(0.0D, 0.0172275D * (double) p_37270_), this.random.triangle(0.0D, 0.0172275D * (double) p_37270_), this.random.triangle(0.0D, 0.0172275D * (double) p_37270_)).scale(p_37269_);
         this.setDeltaMovement(vec3);
         double d0 = vec3.horizontalDistance();
-        this.setYRot((float)(Mth.atan2(vec3.x, vec3.z) * (double)(180F / (float)Math.PI)));
-        this.setXRot((float)(Mth.atan2(vec3.y, d0) * (double)(180F / (float)Math.PI)));
+        this.setYRot((float) (Mth.atan2(vec3.x, vec3.z) * (double) (180F / (float) Math.PI)));
+        this.setXRot((float) (Mth.atan2(vec3.y, d0) * (double) (180F / (float) Math.PI)));
         this.yRotO = this.getYRot();
         this.xRotO = this.getXRot();
     }
