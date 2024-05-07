@@ -1,0 +1,15 @@
+{
+  "zoomspeed": 1,
+  "zoom": 1.25,
+  "rifle": 1,
+  "autorifle": 1,
+  "mg": 1,
+  "dev": 5,
+  "bipod": 1,
+  "recoilx": 0.0035,
+  "recoily": 0.012,
+  "damage": 8.75,
+  "headshot": 2,
+  "velocity": 35,
+  "mag": 50
+}

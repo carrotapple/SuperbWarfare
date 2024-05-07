@@ -1,0 +1,12 @@
+{
+  "zoomspeed": 1.1,
+  "zoom": 1.25,
+  "dev": 3,
+  "shotgun": 1,
+  "recoilx": 0.009,
+  "recoily": 0.03,
+  "damage": 2,
+  "headshot": 1.5,
+  "velocity": 20,
+  "mag": 8
+}

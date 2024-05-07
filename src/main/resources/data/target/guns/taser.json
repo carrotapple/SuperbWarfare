@@ -1,0 +1,10 @@
+{
+  "dev": 2,
+  "recoilx": 0.0001,
+  "recoily": 0.002,
+  "zoomspeed": 2,
+  "zoom": 1.25,
+  "damage": 5,
+  "velocity": 3,
+  "mag": 1
+}

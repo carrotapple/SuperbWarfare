@@ -9,6 +9,7 @@ public class GunsTool {
     // TODO 通过配置/json/枚举类的方式来初始化枪械
     public static void initGun(ItemStack stack) {
 
+
     }
 
     public static void pvpModeCheck(ItemStack stack, Level level) {
