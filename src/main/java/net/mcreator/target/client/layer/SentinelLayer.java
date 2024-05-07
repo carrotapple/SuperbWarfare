@@ -2,7 +2,7 @@ package net.mcreator.target.client.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.Sentinel;
+import net.mcreator.target.item.gun.SentinelItem;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -11,15 +11,15 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
-public class SentinelLayer extends GeoRenderLayer<Sentinel> {
+public class SentinelLayer extends GeoRenderLayer<SentinelItem> {
     private static final ResourceLocation LAYER = new ResourceLocation("target", "textures/item/sentinel_e.png");
 
-    public SentinelLayer(GeoRenderer<Sentinel> entityRenderer) {
+    public SentinelLayer(GeoRenderer<SentinelItem> entityRenderer) {
         super(entityRenderer);
     }
 
     @Override
-    public void render(PoseStack poseStack, Sentinel animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+    public void render(PoseStack poseStack, SentinelItem animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         RenderType glowRenderType = RenderType.eyes(LAYER);
         getRenderer().reRender(getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, glowRenderType, bufferSource.getBuffer(glowRenderType), partialTick, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
     }

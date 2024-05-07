@@ -1,5 +1,8 @@
 package net.mcreator.target.item.gun;
 
+import net.mcreator.target.TargetMod;
+import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.tools.ItemNBTTool;
 import net.mcreator.target.tools.TooltipTool;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.core.object.PlayState;
@@ -158,7 +161,7 @@ public class RpkItem extends GunItem implements GeoItem {
         if (slot == EquipmentSlot.MAINHAND) {
             map = HashMultimap.create(map);
             map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, "henghengaaa", -0.06f, AttributeModifier.Operation.MULTIPLY_BASE));
+                    new AttributeModifier(uuid, TargetMod.ATTRIBUTE_MODIFIER, -0.06f, AttributeModifier.Operation.MULTIPLY_BASE));
         }
         return map;
     }
@@ -172,5 +175,37 @@ public class RpkItem extends GunItem implements GeoItem {
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
         RpkWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
+
+        if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
+            initGun(itemstack, false);
+        }
+    }
+
+    public static ItemStack getGunInstance() {
+        ItemStack stack = new ItemStack(TargetModItems.RPK.get());
+
+        initGun(stack, true);
+        return stack;
+    }
+
+    private static void initGun(ItemStack stack, boolean isCreative) {
+        stack.getOrCreateTag().putDouble("zoomspeed", 1.0);
+        stack.getOrCreateTag().putDouble("zoom", 1.25);
+        stack.getOrCreateTag().putDouble("rifle", 1);
+        stack.getOrCreateTag().putDouble("autorifle", 1);
+        stack.getOrCreateTag().putDouble("mg", 1);
+        stack.getOrCreateTag().putDouble("dev", 5);
+        stack.getOrCreateTag().putDouble("bipod", 1);
+        stack.getOrCreateTag().putDouble("recoilx", 0.0035);
+        stack.getOrCreateTag().putDouble("recoily", 0.012);
+        stack.getOrCreateTag().putDouble("damage", 8.75);
+        stack.getOrCreateTag().putDouble("headshot", 2);
+        stack.getOrCreateTag().putDouble("velocity", 35);
+        stack.getOrCreateTag().putDouble("mag", 50);
+        stack.getOrCreateTag().putBoolean("init", true);
+
+        if (isCreative) {
+            stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        }
     }
 }

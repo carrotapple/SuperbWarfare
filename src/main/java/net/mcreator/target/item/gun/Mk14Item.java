@@ -2,8 +2,11 @@ package net.mcreator.target.item.gun;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.Mk14ItemRenderer;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.procedures.Mk14WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
+import net.mcreator.target.tools.ItemNBTTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -140,6 +143,10 @@ public class Mk14Item extends GunItem implements GeoItem {
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
         Mk14WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
+
+        if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
+            initGun(itemstack, false);
+        }
     }
 
     @Override
@@ -159,8 +166,35 @@ public class Mk14Item extends GunItem implements GeoItem {
         if (slot == EquipmentSlot.MAINHAND) {
             map = HashMultimap.create(map);
             map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, "henghengaaa", -0.05f, AttributeModifier.Operation.MULTIPLY_BASE));
+                    new AttributeModifier(uuid, TargetMod.ATTRIBUTE_MODIFIER, -0.05f, AttributeModifier.Operation.MULTIPLY_BASE));
         }
         return map;
+    }
+
+    public static ItemStack getGunInstance() {
+        ItemStack stack = new ItemStack(TargetModItems.MK_14.get());
+
+        initGun(stack, true);
+        return stack;
+    }
+
+    private static void initGun(ItemStack stack, boolean isCreative) {
+        stack.getOrCreateTag().putDouble("zoomspeed", 0.9);
+        stack.getOrCreateTag().putDouble("zoom", 3.4);
+        stack.getOrCreateTag().putDouble("rifle", 1);
+        stack.getOrCreateTag().putDouble("autorifle", 1);
+        stack.getOrCreateTag().putDouble("dev", 6);
+        stack.getOrCreateTag().putDouble("bipod", 1);
+        stack.getOrCreateTag().putDouble("recoilx", 0.006);
+        stack.getOrCreateTag().putDouble("recoily", 0.014);
+        stack.getOrCreateTag().putDouble("damage", 12);
+        stack.getOrCreateTag().putDouble("headshot", 2.5);
+        stack.getOrCreateTag().putDouble("velocity", 45);
+        stack.getOrCreateTag().putDouble("mag", 20);
+        stack.getOrCreateTag().putBoolean("init", true);
+
+        if (isCreative) {
+            stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        }
     }
 }

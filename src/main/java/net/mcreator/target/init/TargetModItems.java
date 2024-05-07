@@ -38,7 +38,7 @@ public class TargetModItems {
     public static final RegistryObject<Item> MARLIN = GUNS.register("marlin", MarlinItem::new);
     public static final RegistryObject<Item> SVD = GUNS.register("svd", SvdItem::new);
     public static final RegistryObject<Item> M_98B = GUNS.register("m_98b", M98bItem::new);
-    public static final RegistryObject<Item> SENTINEL = GUNS.register("sentinel", Sentinel::new);
+    public static final RegistryObject<Item> SENTINEL = GUNS.register("sentinel", SentinelItem::new);
     public static final RegistryObject<Item> HUNTING_RIFLE = GUNS.register("hunting_rifle", HuntingRifle::new);
     public static final RegistryObject<Item> KRABER = GUNS.register("kraber", Kraber::new);
     public static final RegistryObject<Item> M_870 = GUNS.register("m_870", M870Item::new);

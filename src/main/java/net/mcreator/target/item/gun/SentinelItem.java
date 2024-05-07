@@ -1,8 +1,10 @@
-package net.mcreator.target.item;
+package net.mcreator.target.item.gun;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.SentinelItemRenderer;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.procedures.SentinelWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
 import net.mcreator.target.tools.RarityTool;
 import net.mcreator.target.tools.ItemNBTTool;
@@ -37,13 +39,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class Sentinel extends Item implements GeoItem {
+public class SentinelItem extends GunItem implements GeoItem {
     private static final String TAG_POWER = "power";
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationprocedure = "empty";
     public static ItemDisplayContext transformType;
 
-    public Sentinel() {
+    public SentinelItem() {
         super(new Item.Properties().stacksTo(1).rarity(RarityTool.LEGENDARY));
     }
 
@@ -168,6 +170,10 @@ public class Sentinel extends Item implements GeoItem {
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
         SentinelWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
+
+        if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
+            initGun(itemstack, false);
+        }
     }
 
     @Override
@@ -187,8 +193,33 @@ public class Sentinel extends Item implements GeoItem {
         if (slot == EquipmentSlot.MAINHAND) {
             map = HashMultimap.create(map);
             map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, "henghengaaa", -0.06f, AttributeModifier.Operation.MULTIPLY_BASE));
+                    new AttributeModifier(uuid, TargetMod.ATTRIBUTE_MODIFIER, -0.06f, AttributeModifier.Operation.MULTIPLY_BASE));
         }
         return map;
+    }
+
+    public static ItemStack getGunInstance() {
+        ItemStack stack = new ItemStack(TargetModItems.SENTINEL.get());
+
+        initGun(stack, true);
+        return stack;
+    }
+
+    private static void initGun(ItemStack stack, boolean isCreative) {
+        stack.getOrCreateTag().putDouble("zoomspeed", 0.95);
+        stack.getOrCreateTag().putDouble("zoom", 3);
+        stack.getOrCreateTag().putDouble("sniperguns", 1);
+        stack.getOrCreateTag().putDouble("dev", 6);
+        stack.getOrCreateTag().putDouble("recoilx", 0.007);
+        stack.getOrCreateTag().putDouble("recoily", 0.018);
+        stack.getOrCreateTag().putDouble("damage", 25);
+        stack.getOrCreateTag().putDouble("mag", 5);
+        stack.getOrCreateTag().putDouble("headshot", 3);
+        stack.getOrCreateTag().putDouble("velocity", 50);
+        stack.getOrCreateTag().putBoolean("init", true);
+
+        if (isCreative) {
+            stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        }
     }
 }

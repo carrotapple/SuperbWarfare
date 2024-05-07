@@ -92,7 +92,7 @@ public class ItemAnimationFactory {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof Sentinel animatable)
+                if (event.player.getMainHandItem().getItem() instanceof SentinelItem animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
@@ -226,7 +226,7 @@ public class ItemAnimationFactory {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getOffhandItem().getItem() instanceof Sentinel animatable)
+                if (event.player.getOffhandItem().getItem() instanceof SentinelItem animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
