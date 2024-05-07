@@ -3,7 +3,9 @@ package net.mcreator.target.item.gun;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.target.client.renderer.item.Hk416ItemRenderer;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.procedures.Hk416WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
+import net.mcreator.target.tools.ItemNBTTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -162,5 +164,35 @@ public class Hk416Item extends GunItem implements GeoItem {
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
         Hk416WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
+
+        if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
+            initGun(itemstack, false);
+        }
+    }
+
+    public static ItemStack getGunInstance() {
+        ItemStack stack = new ItemStack(TargetModItems.HK_416.get());
+
+        initGun(stack, true);
+        return stack;
+    }
+
+    private static void initGun(ItemStack stack, boolean isCreative) {
+        stack.getOrCreateTag().putDouble("zoomspeed", 1.3);
+        stack.getOrCreateTag().putDouble("zoom", 1.25);
+        stack.getOrCreateTag().putDouble("rifle", 1);
+        stack.getOrCreateTag().putDouble("autorifle", 1);
+        stack.getOrCreateTag().putDouble("dev", 4);
+        stack.getOrCreateTag().putDouble("recoilx", 0.0016);
+        stack.getOrCreateTag().putDouble("recoily", 0.009);
+        stack.getOrCreateTag().putDouble("damage", 7.5);
+        stack.getOrCreateTag().putDouble("headshot", 2);
+        stack.getOrCreateTag().putDouble("velocity", 45);
+        stack.getOrCreateTag().putDouble("mag", 30);
+        stack.getOrCreateTag().putBoolean("init", true);
+
+        if (isCreative) {
+            stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        }
     }
 }

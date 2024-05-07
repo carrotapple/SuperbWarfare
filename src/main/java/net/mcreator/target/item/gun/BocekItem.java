@@ -3,7 +3,9 @@ package net.mcreator.target.item.gun;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.target.client.renderer.item.BocekItemRenderer;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.procedures.BocekreloadProcedure;
+import net.mcreator.target.tools.ItemNBTTool;
 import net.mcreator.target.tools.RarityTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -144,6 +146,10 @@ public class BocekItem extends GunItem implements GeoItem {
             itemstack.getOrCreateTag().putDouble("maxammo", getAmmoCount(player));
         }
         BocekreloadProcedure.execute(entity, itemstack);
+
+        if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
+            initGun(itemstack, false);
+        }
     }
 
     public static double getAmmoCount(Player player) {
@@ -159,5 +165,28 @@ public class BocekItem extends GunItem implements GeoItem {
 
     protected static boolean check(ItemStack stack) {
         return stack.getItem() == Items.ARROW;
+    }
+
+    public static ItemStack getGunInstance() {
+        ItemStack stack = new ItemStack(TargetModItems.BOCEK.get());
+
+        initGun(stack, true);
+        return stack;
+    }
+
+    private static void initGun(ItemStack stack, boolean isCreative) {
+        stack.getOrCreateTag().putDouble("zoomspeed", 1);
+        stack.getOrCreateTag().putDouble("zoom", 2);
+        stack.getOrCreateTag().putDouble("autorifle", 1);
+        stack.getOrCreateTag().putDouble("dev", 4);
+        stack.getOrCreateTag().putDouble("recoilx", 0.005);
+        stack.getOrCreateTag().putDouble("recoily", 0.003);
+        stack.getOrCreateTag().putDouble("headshot", 1.5);
+        stack.getOrCreateTag().putDouble("damage", 2.4);
+        stack.getOrCreateTag().putBoolean("init", true);
+
+        if (isCreative) {
+            stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        }
     }
 }

@@ -1,5 +1,6 @@
 package net.mcreator.target.item.gun;
 
+import net.mcreator.target.tools.ItemNBTTool;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.core.animation.RawAnimation;
@@ -164,6 +165,10 @@ public class RpgItem extends GunItem implements GeoItem {
             itemstack.getOrCreateTag().putDouble("maxammo", getAmmoCount(player));
         }
         TacRpgWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
+
+        if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
+            initGun(itemstack, false);
+        }
     }
 
     public static double getAmmoCount(Player player) {
@@ -179,5 +184,27 @@ public class RpgItem extends GunItem implements GeoItem {
 
     protected static boolean check(ItemStack stack) {
         return stack.getItem() == TargetModItems.ROCKET.get();
+    }
+
+    public static ItemStack getGunInstance() {
+        ItemStack stack = new ItemStack(TargetModItems.RPG.get());
+
+        initGun(stack, true);
+        return stack;
+    }
+
+    private static void initGun(ItemStack stack, boolean isCreative) {
+        stack.getOrCreateTag().putDouble("zoomspeed", 0.77);
+        stack.getOrCreateTag().putDouble("zoom", 1.25);
+        stack.getOrCreateTag().putDouble("dev", 5);
+        stack.getOrCreateTag().putDouble("recoilx", 0.008);
+        stack.getOrCreateTag().putDouble("recoily", 0.018);
+        stack.getOrCreateTag().putDouble("damage", 150);
+        stack.getOrCreateTag().putDouble("velocity", 5.75);
+        stack.getOrCreateTag().putBoolean("init", true);
+
+        if (isCreative) {
+            stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        }
     }
 }

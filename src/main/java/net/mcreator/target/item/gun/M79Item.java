@@ -182,15 +182,13 @@ public class M79Item extends GunItem implements GeoItem {
     }
 
     private static void initGun(ItemStack stack, boolean isCreative) {
-        stack.getOrCreateTag().putDouble("zoomspeed", 1);
+        stack.getOrCreateTag().putDouble("zoomspeed", 0.95);
         stack.getOrCreateTag().putDouble("zoom", 1.25);
-        stack.getOrCreateTag().putDouble("sniperguns", 1);
-        stack.getOrCreateTag().putDouble("dev", 7);
+        stack.getOrCreateTag().putDouble("dev", 1);
         stack.getOrCreateTag().putDouble("recoilx", 0.004);
-        stack.getOrCreateTag().putDouble("recoily", 0.03);
+        stack.getOrCreateTag().putDouble("recoily", 0.023);
         stack.getOrCreateTag().putDouble("damage", 40);
-        stack.getOrCreateTag().putDouble("headshot", 3);
-        stack.getOrCreateTag().putDouble("velocity", 50);
+        stack.getOrCreateTag().putDouble("velocity", 3.75);
         stack.getOrCreateTag().putDouble("mag", 1);
         stack.getOrCreateTag().putBoolean("init", true);
 

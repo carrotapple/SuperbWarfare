@@ -29,24 +29,28 @@ public class TargetModTabs {
                                 output.accept(VectorItem.getGunInstance());
                                 output.accept(SksItem.getGunInstance());
                                 output.accept(AK47Item.getGunInstance());
-                                output.accept(Devotion.getGunInstance());
-                                output.accept(HuntingRifle.getGunInstance());
-                                output.accept(M79Item.getGunInstance());
+                                output.accept(M4Item.getGunInstance());
+                                output.accept(Hk416Item.getGunInstance());
 
                                 output.accept(Mk14Item.getGunInstance());
                                 output.accept(MarlinItem.getGunInstance());
                                 output.accept(SvdItem.getGunInstance());
-
+                                output.accept(HuntingRifle.getGunInstance());
+                                output.accept(M98bItem.getGunInstance());
                                 output.accept(SentinelItem.getGunInstance());
-
                                 output.accept(Kraber.getGunInstance());
 
                                 output.accept(M870Item.getGunInstance());
                                 output.accept(Aa12Item.getGunInstance());
 
+                                output.accept(Devotion.getGunInstance());
                                 output.accept(RpkItem.getGunInstance());
                                 output.accept(M60Item.getGunInstance());
                                 output.accept(Minigun.getGunInstance());
+
+                                output.accept(BocekItem.getGunInstance());
+                                output.accept(M79Item.getGunInstance());
+                                output.accept(RpgItem.getGunInstance());
                             }
                     )
                     .build());
