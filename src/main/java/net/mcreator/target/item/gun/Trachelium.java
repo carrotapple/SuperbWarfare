@@ -6,6 +6,7 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.TracheliumItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.procedures.ReloadingProcedure;
+import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.ItemNBTTool;
 import net.mcreator.target.tools.RarityTool;
 import net.mcreator.target.tools.TooltipTool;
@@ -157,6 +158,8 @@ public class Trachelium extends GunItem implements GeoItem {
         if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
             initGun(itemstack, false);
         }
+
+        GunsTool.initGun(world, itemstack, TargetModItems.TRACHELIUM.getId().getPath());
     }
 
     @Override

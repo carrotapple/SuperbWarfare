@@ -1,13 +1,28 @@
 package net.mcreator.target.tools;
 
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.network.TargetModVariables;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 public class GunsTool {
 
-    // TODO 通过配置/json/枚举类的方式来初始化枪械
-    public static void initGun(ItemStack stack) {
+    // TODO 通过配置json的方式来初始化枪械
+    public static void initGun(Level level, ItemStack stack, String location) {
+        if (level.getServer() != null) {
+            return;
+        }
+
+        var manager = level.getServer().getResourceManager();
+
+        ResourceLocation resourceLocation = new ResourceLocation(TargetMod.MODID, "guns/" + location);
+        manager.getResource(resourceLocation).ifPresent(
+                resource -> {
+
+                }
+        );
+
 
 
     }
