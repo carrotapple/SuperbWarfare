@@ -1,5 +1,6 @@
 package net.mcreator.target.event;
 
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.core.BlockPos;
@@ -46,6 +47,7 @@ public class PlayerEventHandler {
             handlePlayerSprint(player);
             handleWeaponLevel(player);
             handleWeaponSway(player);
+            handleAmmoCount(player);
         }
     }
 
@@ -145,5 +147,51 @@ public class PlayerEventHandler {
 
         Thread recoilThread = new Thread(recoilRunnable);
         recoilThread.start();
+    }
+
+    public static String handleAmmoCount(Player player) {
+        ItemStack stack = player.getMainHandItem();
+
+        String firemode = "";
+        if (stack.getOrCreateTag().getDouble("firemode") == 2) {
+            firemode = "Auto";
+        } else if (stack.getOrCreateTag().getDouble("firemode") == 1) {
+            firemode = "Burst";
+        } else if (stack.getOrCreateTag().getDouble("firemode") == 0) {
+            firemode = "Semi";
+        }
+        if (stack.getItem() == TargetModItems.BOCEK.get()) {
+            return (new java.text.DecimalFormat("##").format(stack.getOrCreateTag().getDouble("maxammo"))) + " " + firemode;
+        }
+        if (stack.getItem() == TargetModItems.MINIGUN.get()) {
+            return new java.text.DecimalFormat("##").format((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleammo) + " " + firemode;
+        }
+        if (stack.getOrCreateTag().getDouble("rifle") == 1) {
+            stack.getOrCreateTag().putDouble("maxammo",
+                    ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleammo));
+            return (new java.text.DecimalFormat("##").format(stack.getOrCreateTag().getDouble("ammo"))) + "/"
+                    + new java.text.DecimalFormat("##").format((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleammo) + " " + firemode;
+        }
+        if (stack.getOrCreateTag().getDouble("handgun") == 1
+                || stack.getOrCreateTag().getDouble("smg") == 1) {
+            stack.getOrCreateTag().putDouble("maxammo",
+                    ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).handgunammo));
+            return (new java.text.DecimalFormat("##").format(stack.getOrCreateTag().getDouble("ammo"))) + "/"
+                    + new java.text.DecimalFormat("##").format((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).handgunammo) + " " + firemode;
+        }
+        if (stack.getOrCreateTag().getDouble("shotgun") == 1) {
+            stack.getOrCreateTag().putDouble("maxammo",
+                    ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunammo));
+            return (new java.text.DecimalFormat("##").format(stack.getOrCreateTag().getDouble("ammo"))) + "/"
+                    + new java.text.DecimalFormat("##").format((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunammo) + " " + firemode;
+        }
+        if (stack.getOrCreateTag().getDouble("sniperguns") == 1) {
+            stack.getOrCreateTag().putDouble("maxammo",
+                    ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperammo));
+            return (new java.text.DecimalFormat("##").format(stack.getOrCreateTag().getDouble("ammo"))) + "/"
+                    + new java.text.DecimalFormat("##").format((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperammo) + " " + firemode;
+        }
+        return (new java.text.DecimalFormat("##").format(stack.getOrCreateTag().getDouble("ammo"))) + "/"
+                + (new java.text.DecimalFormat("##").format(stack.getOrCreateTag().getDouble("maxammo"))) + " " + firemode;
     }
 }
