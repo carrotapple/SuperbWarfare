@@ -1,6 +1,8 @@
 package net.mcreator.target.item.gun;
 
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.tools.ItemNBTTool;
+import net.mcreator.target.tools.TooltipTool;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.core.animation.RawAnimation;
@@ -148,14 +150,14 @@ public class RpgItem extends GunItem implements GeoItem {
         if (slot == EquipmentSlot.MAINHAND) {
             map = HashMultimap.create(map);
             map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, "henghengaaa", -0.11f, AttributeModifier.Operation.MULTIPLY_BASE));
+                    new AttributeModifier(uuid, TargetMod.ATTRIBUTE_MODIFIER, -0.11f, AttributeModifier.Operation.MULTIPLY_BASE));
         }
         return map;
     }
 
     @Override
-    public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
-        super.appendHoverText(itemstack, world, list, flag);
+    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
+        TooltipTool.addGunTips(list, stack);
     }
 
     @Override
