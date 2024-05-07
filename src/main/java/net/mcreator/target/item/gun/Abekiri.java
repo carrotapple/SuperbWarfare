@@ -154,21 +154,22 @@ public class Abekiri extends GunItem implements GeoItem {
 
     @Override
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(itemstack, world, entity, slot, selected);
         AbekiriWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
 
         if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
-            initGun(itemstack);
+            initGun(itemstack, false);
         }
     }
 
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(TargetModItems.ABEKIRI.get());
 
-        initGun(stack);
+        initGun(stack, true);
         return stack;
     }
 
-    private static void initGun(ItemStack stack) {
+    private static void initGun(ItemStack stack, boolean isCreative) {
         stack.getOrCreateTag().putDouble("zoomspeed", 1.4);
         stack.getOrCreateTag().putDouble("zoom", 1.25);
         stack.getOrCreateTag().putDouble("dev", 5);
@@ -180,5 +181,9 @@ public class Abekiri extends GunItem implements GeoItem {
         stack.getOrCreateTag().putDouble("velocity", 15);
         stack.getOrCreateTag().putDouble("mag", 2);
         stack.getOrCreateTag().putBoolean("init", true);
+
+        if (isCreative) {
+            stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        }
     }
 }

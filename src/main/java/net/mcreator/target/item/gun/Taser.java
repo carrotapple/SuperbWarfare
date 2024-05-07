@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.client.renderer.item.TaserItemRenderer;
 import net.mcreator.target.procedures.TasercooldownProcedure;
+import net.mcreator.target.tools.ItemNBTTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -153,6 +154,10 @@ public class Taser extends GunItem implements GeoItem {
             itemstack.getOrCreateTag().putDouble("maxammo", getAmmoCount(player));
         }
         TasercooldownProcedure.execute(entity, itemstack);
+
+        if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
+            initGun(itemstack);
+        }
     }
 
     public static double getAmmoCount(Player player) {
@@ -168,5 +173,24 @@ public class Taser extends GunItem implements GeoItem {
 
     protected static boolean check(ItemStack stack) {
         return stack.getItem() == TargetModItems.TASER_ELECTRODE.get();
+    }
+
+    public static ItemStack getGunInstance() {
+        ItemStack stack = new ItemStack(TargetModItems.TASER.get());
+
+        initGun(stack);
+        return stack;
+    }
+
+    private static void initGun(ItemStack stack) {
+        stack.getOrCreateTag().putDouble("dev", 2);
+        stack.getOrCreateTag().putDouble("recoilx", 0.0001);
+        stack.getOrCreateTag().putDouble("recoily", 0.002);
+        stack.getOrCreateTag().putDouble("zoomspeed", 2.0);
+        stack.getOrCreateTag().putDouble("zoom", 1.25);
+        stack.getOrCreateTag().putDouble("damage", 5);
+        stack.getOrCreateTag().putDouble("velocity", 3);
+        stack.getOrCreateTag().putDouble("mag", 1);
+        stack.getOrCreateTag().putBoolean("init", true);
     }
 }

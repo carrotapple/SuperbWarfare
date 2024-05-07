@@ -145,10 +145,11 @@ public class VectorItem extends GunItem implements GeoItem {
 
     @Override
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(itemstack, world, entity, slot, selected);
         VectorWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
 
         if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
-            initGun(itemstack);
+            initGun(itemstack, false);
         }
     }
 
@@ -175,13 +176,13 @@ public class VectorItem extends GunItem implements GeoItem {
     }
 
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(TargetModItems.TRACHELIUM.get());
+        ItemStack stack = new ItemStack(TargetModItems.VECTOR.get());
 
-        initGun(stack);
+        initGun(stack, true);
         return stack;
     }
 
-    private static void initGun(ItemStack stack) {
+    private static void initGun(ItemStack stack, boolean isCreative) {
         stack.getOrCreateTag().putDouble("zoomspeed", 1.6);
         stack.getOrCreateTag().putDouble("zoom", 1.25);
         stack.getOrCreateTag().putDouble("autorifle", 1);
@@ -194,5 +195,9 @@ public class VectorItem extends GunItem implements GeoItem {
         stack.getOrCreateTag().putDouble("velocity", 22);
         stack.getOrCreateTag().putDouble("mag", 33);
         stack.getOrCreateTag().putBoolean("init", true);
+
+        if (isCreative) {
+            stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        }
     }
 }

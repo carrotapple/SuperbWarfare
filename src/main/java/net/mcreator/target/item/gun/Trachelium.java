@@ -149,11 +149,13 @@ public class Trachelium extends GunItem implements GeoItem {
 
     @Override
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(itemstack, world, entity, slot, selected);
+
         // TODO 把这坨procedure删了
         ReloadingProcedure.execute(entity, itemstack);
 
         if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
-            initGun(itemstack);
+            initGun(itemstack, false);
         }
     }
 
@@ -168,11 +170,11 @@ public class Trachelium extends GunItem implements GeoItem {
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(TargetModItems.TRACHELIUM.get());
 
-        initGun(stack);
+        initGun(stack, true);
         return stack;
     }
 
-    private static void initGun(ItemStack stack) {
+    private static void initGun(ItemStack stack, boolean isCreative) {
         stack.getOrCreateTag().putDouble("zoomspeed", 1.7);
         stack.getOrCreateTag().putDouble("zoom", 1.25);
         stack.getOrCreateTag().putDouble("dev", 3);
@@ -184,5 +186,9 @@ public class Trachelium extends GunItem implements GeoItem {
         stack.getOrCreateTag().putDouble("velocity", 60);
         stack.getOrCreateTag().putDouble("mag", 8);
         stack.getOrCreateTag().putBoolean("init", true);
+
+        if (isCreative) {
+            stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        }
     }
 }

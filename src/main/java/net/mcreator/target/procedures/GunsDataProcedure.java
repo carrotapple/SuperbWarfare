@@ -12,8 +12,6 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import net.mcreator.target.network.TargetModVariables;
-
 import javax.annotation.Nullable;
 
 
@@ -37,17 +35,6 @@ public class GunsDataProcedure {
         itemstackiterator = (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY);
 
         if (itemstackiterator.is(ItemTags.create(new ResourceLocation("target:gun")))) {
-
-            if (!TargetModVariables.MapVariables.get(world).pvpmode) {
-                if (itemstackiterator.getOrCreateTag().getDouble("level") >= 10) {
-                    itemstackiterator.getOrCreateTag().putDouble("damageadd", 1 + 0.05 * (itemstackiterator.getOrCreateTag().getDouble("level") - 10));
-                } else {
-                    itemstackiterator.getOrCreateTag().putDouble("damageadd", 1);
-                }
-            } else {
-                itemstackiterator.getOrCreateTag().putDouble("damageadd", 1);
-            }
-
             if (itemstackiterator.getItem() == TargetModItems.SKS.get()) {
                 itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 1);
                 itemstackiterator.getOrCreateTag().putDouble("zoom", 1.25);
@@ -114,16 +101,16 @@ public class GunsDataProcedure {
                 itemstackiterator.getOrCreateTag().putDouble("velocity", 50);
                 itemstackiterator.getOrCreateTag().putDouble("mag", 1);
             }
-            if (itemstackiterator.getItem() == TargetModItems.TASER.get()) {
-                itemstackiterator.getOrCreateTag().putDouble("dev", 2);
-                itemstackiterator.getOrCreateTag().putDouble("recoilx", 0.0001);
-                itemstackiterator.getOrCreateTag().putDouble("recoily", 0.002);
-                itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 2.0);
-                itemstackiterator.getOrCreateTag().putDouble("zoom", 1.25);
-                itemstackiterator.getOrCreateTag().putDouble("damage", 5);
-                itemstackiterator.getOrCreateTag().putDouble("velocity", 3);
-                itemstackiterator.getOrCreateTag().putDouble("mag", 1);
-            }
+//            if (itemstackiterator.getItem() == TargetModItems.TASER.get()) {
+//                itemstackiterator.getOrCreateTag().putDouble("dev", 2);
+//                itemstackiterator.getOrCreateTag().putDouble("recoilx", 0.0001);
+//                itemstackiterator.getOrCreateTag().putDouble("recoily", 0.002);
+//                itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 2.0);
+//                itemstackiterator.getOrCreateTag().putDouble("zoom", 1.25);
+//                itemstackiterator.getOrCreateTag().putDouble("damage", 5);
+//                itemstackiterator.getOrCreateTag().putDouble("velocity", 3);
+//                itemstackiterator.getOrCreateTag().putDouble("mag", 1);
+//            }
             if (itemstackiterator.getItem() == TargetModItems.M_79.get()) {
                 itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 0.95);
                 itemstackiterator.getOrCreateTag().putDouble("zoom", 1.25);
@@ -181,19 +168,19 @@ public class GunsDataProcedure {
                 itemstackiterator.getOrCreateTag().putDouble("velocity", 45);
                 itemstackiterator.getOrCreateTag().putDouble("mag", 30);
             }
-            if (itemstackiterator.getItem() == TargetModItems.AA_12.get()) {
-                itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 0.95);
-                itemstackiterator.getOrCreateTag().putDouble("zoom", 1.25);
-                itemstackiterator.getOrCreateTag().putDouble("autorifle", 1);
-                itemstackiterator.getOrCreateTag().putDouble("dev", 3.5);
-                itemstackiterator.getOrCreateTag().putDouble("shotgun", 1);
-                itemstackiterator.getOrCreateTag().putDouble("recoilx", 0.016);
-                itemstackiterator.getOrCreateTag().putDouble("recoily", 0.007);
-                itemstackiterator.getOrCreateTag().putDouble("damage", 1.5);
-                itemstackiterator.getOrCreateTag().putDouble("headshot", 1.5);
-                itemstackiterator.getOrCreateTag().putDouble("velocity", 16);
-                itemstackiterator.getOrCreateTag().putDouble("mag", 25);
-            }
+//            if (itemstackiterator.getItem() == TargetModItems.AA_12.get()) {
+//                itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 0.95);
+//                itemstackiterator.getOrCreateTag().putDouble("zoom", 1.25);
+//                itemstackiterator.getOrCreateTag().putDouble("autorifle", 1);
+//                itemstackiterator.getOrCreateTag().putDouble("dev", 3.5);
+//                itemstackiterator.getOrCreateTag().putDouble("shotgun", 1);
+//                itemstackiterator.getOrCreateTag().putDouble("recoilx", 0.016);
+//                itemstackiterator.getOrCreateTag().putDouble("recoily", 0.007);
+//                itemstackiterator.getOrCreateTag().putDouble("damage", 1.5);
+//                itemstackiterator.getOrCreateTag().putDouble("headshot", 1.5);
+//                itemstackiterator.getOrCreateTag().putDouble("velocity", 16);
+//                itemstackiterator.getOrCreateTag().putDouble("mag", 25);
+//            }
             if (itemstackiterator.getItem() == TargetModItems.BOCEK.get()) {
                 itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 1);
                 itemstackiterator.getOrCreateTag().putDouble("zoom", 2);

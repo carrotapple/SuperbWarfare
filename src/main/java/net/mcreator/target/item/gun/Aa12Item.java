@@ -4,7 +4,9 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.Aa12ItemRenderer;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.procedures.Aa12WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
+import net.mcreator.target.tools.ItemNBTTool;
 import net.mcreator.target.tools.RarityTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
@@ -168,5 +170,35 @@ public class Aa12Item extends GunItem implements GeoItem {
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
         Aa12WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
+
+        if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
+            initGun(itemstack, false);
+        }
+    }
+
+    public static ItemStack getGunInstance() {
+        ItemStack stack = new ItemStack(TargetModItems.AA_12.get());
+
+        initGun(stack, true);
+        return stack;
+    }
+
+    private static void initGun(ItemStack stack, boolean isCreative) {
+        stack.getOrCreateTag().putDouble("zoomspeed", 0.95);
+        stack.getOrCreateTag().putDouble("zoom", 1.25);
+        stack.getOrCreateTag().putDouble("autorifle", 1);
+        stack.getOrCreateTag().putDouble("dev", 3.5);
+        stack.getOrCreateTag().putDouble("shotgun", 1);
+        stack.getOrCreateTag().putDouble("recoilx", 0.016);
+        stack.getOrCreateTag().putDouble("recoily", 0.007);
+        stack.getOrCreateTag().putDouble("damage", 1.5);
+        stack.getOrCreateTag().putDouble("headshot", 1.5);
+        stack.getOrCreateTag().putDouble("velocity", 16);
+        stack.getOrCreateTag().putDouble("mag", 25);
+        stack.getOrCreateTag().putBoolean("init", true);
+
+        if (isCreative) {
+            stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        }
     }
 }

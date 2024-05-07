@@ -1,9 +1,7 @@
 package net.mcreator.target.init;
 
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.item.gun.Abekiri;
-import net.mcreator.target.item.gun.Trachelium;
-import net.mcreator.target.item.gun.VectorItem;
+import net.mcreator.target.item.gun.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -25,10 +23,12 @@ public class TargetModTabs {
                     .icon(() -> new ItemStack(TargetModItems.TASER.get()))
                     .displayItems(
                             (param, output) -> {
-                                output.accept(TargetModItems.TASER.get());
+                                output.accept(Taser.getGunInstance());
                                 output.accept(Abekiri.getGunInstance());
                                 output.accept(Trachelium.getGunInstance());
                                 output.accept(VectorItem.getGunInstance());
+
+                                output.accept(Aa12Item.getGunInstance());
                             }
                     )
                     .build());
