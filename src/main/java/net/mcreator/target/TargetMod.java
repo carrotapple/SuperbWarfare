@@ -1,6 +1,8 @@
 package net.mcreator.target;
 
 import net.mcreator.target.init.*;
+import net.mcreator.target.network.DoubleJumpMessage;
+import net.mcreator.target.network.ZoomMessage;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -8,6 +10,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
@@ -28,23 +31,21 @@ public class TargetMod {
     public static final String ATTRIBUTE_MODIFIER = "target_attribute_modifier";
 
     public TargetMod() {
-        MinecraftForge.EVENT_BUS.register(this);
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+
         TargetModSounds.REGISTRY.register(bus);
         TargetModBlocks.REGISTRY.register(bus);
-
         TargetModItems.register(bus);
-
         TargetModEntities.REGISTRY.register(bus);
         TargetCustomModEntities.ENTITY_TYPES.register(bus);
-
         TargetModTabs.TABS.register(bus);
-
         TargetModMobEffects.REGISTRY.register(bus);
-
         TargetModParticleTypes.REGISTRY.register(bus);
-
         TargetModMenus.REGISTRY.register(bus);
+
+        bus.addListener(this::onCommonSetup);
+
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     private static final String PROTOCOL_VERSION = "1";
@@ -74,5 +75,11 @@ public class TargetMod {
             actions.forEach(e -> e.getKey().run());
             workQueue.removeAll(actions);
         }
+    }
+
+    public void onCommonSetup(final FMLCommonSetupEvent event) {
+        addNetworkMessage(ZoomMessage.class, ZoomMessage::buffer, ZoomMessage::new, ZoomMessage::handler);
+        addNetworkMessage(DoubleJumpMessage.class, DoubleJumpMessage::buffer, DoubleJumpMessage::new, DoubleJumpMessage::handler);
+
     }
 }

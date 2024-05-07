@@ -41,8 +41,10 @@ public class TargetModKeyMappings {
         public void setDown(boolean isDown) {
             super.setDown(isDown);
             if (isDownOld != isDown && isDown) {
-                TargetMod.PACKET_HANDLER.sendToServer(new DoubleJumpMessage(0, 0));
-                DoubleJumpMessage.pressAction(Minecraft.getInstance().player, 0, 0);
+                TargetMod.PACKET_HANDLER.sendToServer(new DoubleJumpMessage(0));
+                if (Minecraft.getInstance().player != null) {
+                    DoubleJumpMessage.pressAction(Minecraft.getInstance().player, 0);
+                }
             }
             isDownOld = isDown;
         }
@@ -68,12 +70,12 @@ public class TargetModKeyMappings {
             super.setDown(isDown);
             if (isDownOld != isDown && isDown) {
                 TargetMod.PACKET_HANDLER.sendToServer(new ZoomMessage(0, 0));
-                ZoomMessage.pressAction(Minecraft.getInstance().player, 0, 0);
+                ZoomMessage.pressAction(Minecraft.getInstance().player, 0);
                 ZOOM_LASTPRESS = System.currentTimeMillis();
             } else if (isDownOld != isDown) {
                 int dt = (int) (System.currentTimeMillis() - ZOOM_LASTPRESS);
                 TargetMod.PACKET_HANDLER.sendToServer(new ZoomMessage(1, dt));
-                ZoomMessage.pressAction(Minecraft.getInstance().player, 1, dt);
+                ZoomMessage.pressAction(Minecraft.getInstance().player, 1);
             }
             isDownOld = isDown;
         }
