@@ -1,6 +1,7 @@
 package net.mcreator.target.item.gun;
 
 import net.mcreator.target.tools.GunsTool;
+import net.mcreator.target.tools.ItemNBTTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +21,12 @@ public class GunItem extends Item {
     }
 
     @Override
-    public void inventoryTick(ItemStack p_41404_, Level p_41405_, Entity p_41406_, int p_41407_, boolean p_41408_) {
-        GunsTool.pvpModeCheck(p_41404_, p_41405_);
+    public void inventoryTick(ItemStack itemstack, Level level, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(itemstack, level, entity, slot, selected);
+
+        if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
+            GunsTool.initGun(level, itemstack, this.getDescriptionId().substring(this.getDescriptionId().lastIndexOf('.') + 1));
+        }
+        GunsTool.pvpModeCheck(itemstack, level);
     }
 }

@@ -6,7 +6,7 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.VectorItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.procedures.VectorWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
-import net.mcreator.target.tools.ItemNBTTool;
+import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -147,10 +147,6 @@ public class VectorItem extends GunItem implements GeoItem {
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
         VectorWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
-
-        if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
-            initGun(itemstack, false);
-        }
     }
 
     @Override
@@ -177,27 +173,8 @@ public class VectorItem extends GunItem implements GeoItem {
 
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(TargetModItems.VECTOR.get());
-
-        initGun(stack, true);
+        //GunsTool.initGun(stack, TargetModItems.VECTOR.getId().getPath());
+        stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
         return stack;
-    }
-
-    private static void initGun(ItemStack stack, boolean isCreative) {
-        stack.getOrCreateTag().putDouble("zoomspeed", 1.6);
-        stack.getOrCreateTag().putDouble("zoom", 1.25);
-        stack.getOrCreateTag().putDouble("autorifle", 1);
-        stack.getOrCreateTag().putDouble("dev", 3.5);
-        stack.getOrCreateTag().putDouble("smg", 1);
-        stack.getOrCreateTag().putDouble("recoilx", 0.011);
-        stack.getOrCreateTag().putDouble("recoily", 0.004);
-        stack.getOrCreateTag().putDouble("damage", 4.5);
-        stack.getOrCreateTag().putDouble("headshot", 1.5);
-        stack.getOrCreateTag().putDouble("velocity", 22);
-        stack.getOrCreateTag().putDouble("mag", 33);
-        stack.getOrCreateTag().putBoolean("init", true);
-
-        if (isCreative) {
-            stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
-        }
     }
 }

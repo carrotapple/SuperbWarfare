@@ -1,30 +1,43 @@
 package net.mcreator.target.tools;
 
-import net.mcreator.target.TargetMod;
+import com.google.gson.stream.JsonReader;
 import net.mcreator.target.network.TargetModVariables;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+import java.io.InputStreamReader;
+import java.util.HashMap;
+
 public class GunsTool {
 
-    // TODO 通过配置json的方式来初始化枪械
-    public static void initGun(Level level, ItemStack stack, String location) {
-        if (level.getServer() != null) {
-            return;
-        }
+    public static final HashMap<String, HashMap<String, Double>> gunsData = new HashMap<>();
 
+    public static void initJsonData(Level level) {
         var manager = level.getServer().getResourceManager();
 
-        ResourceLocation resourceLocation = new ResourceLocation(TargetMod.MODID, "guns/" + location);
-        manager.getResource(resourceLocation).ifPresent(
-                resource -> {
+        for (var entry : manager.listResources("guns", file -> file.getPath().endsWith(".json")).entrySet()) {
+            var id = entry.getKey();
+            var attribute = entry.getValue();
+            try {
+                JsonReader reader = new JsonReader(new InputStreamReader(attribute.open()));
 
+                reader.beginObject();
+                var map = new HashMap<String, Double>();
+                while (reader.hasNext()) {
+                    map.put(reader.nextName(), reader.nextDouble());
                 }
-        );
+                var path = id.getPath();
+                gunsData.put(path.substring(5, path.length() - 5), map);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-
-
+    public static void initGun(Level level, ItemStack stack, String location) {
+        if (level.getServer() == null) return;
+        initJsonData(level);
+        gunsData.get(location).forEach((k, v) -> stack.getOrCreateTag().putDouble(k, v));
     }
 
     public static void pvpModeCheck(ItemStack stack, Level level) {

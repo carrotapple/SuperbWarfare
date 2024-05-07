@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import net.mcreator.target.client.renderer.item.M98bItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.procedures.M98bWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
-import net.mcreator.target.tools.ItemNBTTool;
+import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -160,34 +160,12 @@ public class M98bItem extends GunItem implements GeoItem {
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
         M98bWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
-
-        if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
-            initGun(itemstack, false);
-        }
     }
 
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(TargetModItems.M_98B.get());
-
-        initGun(stack, true);
+        //GunsTool.initGun(stack, TargetModItems.M_98B.getId().getPath());
+        stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
         return stack;
-    }
-
-    private static void initGun(ItemStack stack, boolean isCreative) {
-        stack.getOrCreateTag().putDouble("zoomspeed", 0.85);
-        stack.getOrCreateTag().putDouble("zoom", 4);
-        stack.getOrCreateTag().putDouble("sniperguns", 1);
-        stack.getOrCreateTag().putDouble("dev", 6);
-        stack.getOrCreateTag().putDouble("recoilx", 0.007);
-        stack.getOrCreateTag().putDouble("recoily", 0.013);
-        stack.getOrCreateTag().putDouble("damage", 28);
-        stack.getOrCreateTag().putDouble("headshot", 3);
-        stack.getOrCreateTag().putDouble("velocity", 55);
-        stack.getOrCreateTag().putDouble("mag", 5);
-        stack.getOrCreateTag().putBoolean("init", true);
-
-        if (isCreative) {
-            stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
-        }
     }
 }

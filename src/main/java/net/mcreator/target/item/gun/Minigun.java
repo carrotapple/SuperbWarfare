@@ -6,8 +6,9 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.MinigunItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.procedures.MiniguninbackpackProcedure;
-import net.mcreator.target.tools.RarityTool;
+import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.ItemNBTTool;
+import net.mcreator.target.tools.RarityTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -181,36 +182,13 @@ public class Minigun extends GunItem implements GeoItem {
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
         MiniguninbackpackProcedure.execute(entity, itemstack);
-
-        if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
-            initGun(itemstack, false);
-        }
     }
 
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(TargetModItems.MINIGUN.get());
-
-        initGun(stack, true);
+        //GunsTool.initGun(stack, TargetModItems.MINIGUN.getId().getPath());
+        stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
         return stack;
-    }
-
-    private static void initGun(ItemStack stack, boolean isCreative) {
-        stack.getOrCreateTag().putDouble("zoom", 1);
-        stack.getOrCreateTag().putDouble("rifle", 1);
-        stack.getOrCreateTag().putDouble("autorifle", 1);
-        stack.getOrCreateTag().putDouble("mg", 1);
-        stack.getOrCreateTag().putDouble("dev", 5);
-        stack.getOrCreateTag().putDouble("recoilx", 0.024);
-        stack.getOrCreateTag().putDouble("recoily", 0.005);
-        stack.getOrCreateTag().putDouble("damage", 8);
-        stack.getOrCreateTag().putDouble("headshot", 2);
-        stack.getOrCreateTag().putDouble("velocity", 40);
-        stack.getOrCreateTag().putDouble("firemode", 2);
-        stack.getOrCreateTag().putBoolean("init", true);
-
-        if (isCreative) {
-            stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
-        }
     }
 }
 

@@ -7,7 +7,6 @@ import net.mcreator.target.client.renderer.item.TracheliumItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.procedures.ReloadingProcedure;
 import net.mcreator.target.tools.GunsTool;
-import net.mcreator.target.tools.ItemNBTTool;
 import net.mcreator.target.tools.RarityTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.ChatFormatting;
@@ -154,12 +153,6 @@ public class Trachelium extends GunItem implements GeoItem {
 
         // TODO 把这坨procedure删了
         ReloadingProcedure.execute(entity, itemstack);
-
-        if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
-            initGun(itemstack, false);
-        }
-
-        GunsTool.initGun(world, itemstack, TargetModItems.TRACHELIUM.getId().getPath());
     }
 
     @Override
@@ -172,26 +165,8 @@ public class Trachelium extends GunItem implements GeoItem {
 
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(TargetModItems.TRACHELIUM.get());
-
-        initGun(stack, true);
+        //GunsTool.initGun(stack, TargetModItems.TRACHELIUM.getId().getPath());
+        stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
         return stack;
-    }
-
-    private static void initGun(ItemStack stack, boolean isCreative) {
-        stack.getOrCreateTag().putDouble("zoomspeed", 1.7);
-        stack.getOrCreateTag().putDouble("zoom", 1.25);
-        stack.getOrCreateTag().putDouble("dev", 3);
-        stack.getOrCreateTag().putDouble("handgun", 1);
-        stack.getOrCreateTag().putDouble("recoilx", 0.005);
-        stack.getOrCreateTag().putDouble("recoily", 0.022);
-        stack.getOrCreateTag().putDouble("damage", 18);
-        stack.getOrCreateTag().putDouble("headshot", 1.5);
-        stack.getOrCreateTag().putDouble("velocity", 60);
-        stack.getOrCreateTag().putDouble("mag", 8);
-        stack.getOrCreateTag().putBoolean("init", true);
-
-        if (isCreative) {
-            stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
-        }
     }
 }

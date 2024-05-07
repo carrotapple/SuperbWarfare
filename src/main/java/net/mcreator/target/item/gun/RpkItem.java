@@ -1,50 +1,40 @@
 package net.mcreator.target.item.gun;
 
-import net.mcreator.target.TargetMod;
-import net.mcreator.target.init.TargetModItems;
-import net.mcreator.target.tools.ItemNBTTool;
-import net.mcreator.target.tools.TooltipTool;
-import software.bernie.geckolib.util.GeckoLibUtil;
-import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animatable.GeoItem;
-
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-
-import net.minecraft.world.level.Level;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.network.chat.Component;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.Minecraft;
-
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.mcreator.target.TargetMod;
+import net.mcreator.target.client.renderer.item.RpkItemRenderer;
+import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.procedures.RpkWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
+import net.mcreator.target.tools.GunsTool;
+import net.mcreator.target.tools.TooltipTool;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.UUID;
-
-import net.mcreator.target.procedures.RpkWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
-import net.mcreator.target.client.renderer.item.RpkItemRenderer;
-
-import java.util.function.Consumer;
 import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 public class RpkItem extends GunItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -175,37 +165,12 @@ public class RpkItem extends GunItem implements GeoItem {
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
         RpkWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
-
-        if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
-            initGun(itemstack, false);
-        }
     }
 
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(TargetModItems.RPK.get());
-
-        initGun(stack, true);
+        //GunsTool.initGun(stack, TargetModItems.RPK.getId().getPath());
+        stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
         return stack;
-    }
-
-    private static void initGun(ItemStack stack, boolean isCreative) {
-        stack.getOrCreateTag().putDouble("zoomspeed", 1.0);
-        stack.getOrCreateTag().putDouble("zoom", 1.25);
-        stack.getOrCreateTag().putDouble("rifle", 1);
-        stack.getOrCreateTag().putDouble("autorifle", 1);
-        stack.getOrCreateTag().putDouble("mg", 1);
-        stack.getOrCreateTag().putDouble("dev", 5);
-        stack.getOrCreateTag().putDouble("bipod", 1);
-        stack.getOrCreateTag().putDouble("recoilx", 0.0035);
-        stack.getOrCreateTag().putDouble("recoily", 0.012);
-        stack.getOrCreateTag().putDouble("damage", 8.75);
-        stack.getOrCreateTag().putDouble("headshot", 2);
-        stack.getOrCreateTag().putDouble("velocity", 35);
-        stack.getOrCreateTag().putDouble("mag", 50);
-        stack.getOrCreateTag().putBoolean("init", true);
-
-        if (isCreative) {
-            stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
-        }
     }
 }
