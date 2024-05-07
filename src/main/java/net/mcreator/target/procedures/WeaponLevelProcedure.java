@@ -28,7 +28,7 @@ public class WeaponLevelProcedure {
     private static void execute(@Nullable Event event, Entity entity) {
         if (entity == null)
             return;
-        ItemStack stack = ItemStack.EMPTY;
+        ItemStack stack;
         stack = (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY);
         if (stack.is(ItemTags.create(new ResourceLocation("target:gun")))) {
             if (stack.getOrCreateTag().getDouble("level") == 0) {

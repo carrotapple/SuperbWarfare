@@ -6,6 +6,7 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.TracheliumItemRenderer;
 import net.mcreator.target.procedures.ReloadingProcedure;
 import net.mcreator.target.tools.RarityTool;
+import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -154,5 +155,7 @@ public class Trachelium extends GunItem implements GeoItem {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
         list.add(Component.translatable("des.target.trachelium_1").withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
         list.add(Component.translatable("des.target.trachelium_2").withStyle(ChatFormatting.GRAY));
+
+        TooltipTool.addGunTips(list, stack);
     }
 }

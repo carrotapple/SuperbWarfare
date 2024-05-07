@@ -4,12 +4,12 @@ import net.minecraft.world.item.ItemStack;
 
 //from Botania
 public final class ItemNBTTool {
-    public static void setBoolean(ItemStack stack, String tag, boolean b) {
-        stack.getOrCreateTag().putBoolean(tag, b);
-    }
-
     public static boolean verifyExistence(ItemStack stack, String tag) {
         return !stack.isEmpty() && stack.getOrCreateTag().contains(tag);
+    }
+
+    public static void setBoolean(ItemStack stack, String tag, boolean b) {
+        stack.getOrCreateTag().putBoolean(tag, b);
     }
 
     public static boolean getBoolean(ItemStack stack, String tag, boolean defaultExpected) {
@@ -38,5 +38,13 @@ public final class ItemNBTTool {
 
     public static long getLong(ItemStack stack, String tag, long num) {
         return verifyExistence(stack, tag) ? stack.getOrCreateTag().getLong(tag) : num;
+    }
+
+    public static void setDouble(ItemStack stack, String tag, double num) {
+        stack.getOrCreateTag().putDouble(tag, num);
+    }
+
+    public static double getDouble(ItemStack stack, String tag, double num) {
+        return verifyExistence(stack, tag) ? stack.getOrCreateTag().getDouble(tag) : num;
     }
 }

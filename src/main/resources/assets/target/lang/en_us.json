@@ -30,6 +30,9 @@
   "item.target.svd": "SVD",
   "item.target.kraber": "KRABER",
 
+  "des.target.tips.damage": "Damage: ",
+  "des.target.tips.level": "Level: ",
+
   "item.target.vector_blueprint": "VECTOR Blueprint",
   "item.target.m_60_blueprint": "M60 Blueprint",
   "item.target.hk_416_blueprint": "Hk-416 Blueprint",
