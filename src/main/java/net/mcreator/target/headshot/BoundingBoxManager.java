@@ -45,6 +45,7 @@ public class BoundingBoxManager {
         });
         registerHeadshotBox(TargetModEntities.SENPAI.get(), new BasicHeadshotBox<>(8.0, 22.0));
         registerHeadshotBox(TargetModEntities.TARGET_1.get(), new BasicHeadshotBox<>(14.0, 20.0));
+        registerHeadshotBox(EntityType.ENDERMAN, new BasicHeadshotBox<>(8.0, 38.0));
         registerHeadshotBox(EntityType.ZOMBIE, new ChildHeadshotBox<>(8.0, 26.0, 0.75, 0.5));
         registerHeadshotBox(EntityType.ZOMBIFIED_PIGLIN, new ChildHeadshotBox<>(8.0, 26.0, 0.75, 0.5));
         registerHeadshotBox(EntityType.HUSK, new ChildHeadshotBox<>(8.0, 26.0, 0.75, 0.5));

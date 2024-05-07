@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "mixins.target.refmap.json",
   "mixins": [
+    "LivingEntityMixin",
     "ClientboundSetEntityMotionPacketMixin"
   ],
   "client": [
