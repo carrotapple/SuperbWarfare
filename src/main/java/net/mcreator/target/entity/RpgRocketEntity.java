@@ -141,6 +141,11 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
     }
 
     @Override
+    public boolean isNoGravity() {
+        return true;
+    }
+
+    @Override
     public void tick() {
         super.tick();
         RpgRocketDanSheWuFeiXingShiMeiKeFaShengProcedure.execute(this);
