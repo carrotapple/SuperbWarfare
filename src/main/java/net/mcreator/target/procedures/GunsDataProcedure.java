@@ -12,6 +12,8 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import net.mcreator.target.network.TargetModVariables;
+
 import javax.annotation.Nullable;
 
 
@@ -35,11 +37,17 @@ public class GunsDataProcedure {
         itemstackiterator = (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY);
 
         if (itemstackiterator.is(ItemTags.create(new ResourceLocation("target:gun")))) {
-            if (itemstackiterator.getOrCreateTag().getDouble("level") >= 10) {
-                itemstackiterator.getOrCreateTag().putDouble("damageadd", 1 + 0.05 * (itemstackiterator.getOrCreateTag().getDouble("level") - 10));
+
+            if (TargetModVariables.MapVariables.get(world).pvpmode == false) {
+                if (itemstackiterator.getOrCreateTag().getDouble("level") >= 10) {
+                    itemstackiterator.getOrCreateTag().putDouble("damageadd", 1 + 0.05 * (itemstackiterator.getOrCreateTag().getDouble("level") - 10));
+                } else {
+                    itemstackiterator.getOrCreateTag().putDouble("damageadd", 1);
+                }
             } else {
                 itemstackiterator.getOrCreateTag().putDouble("damageadd", 1);
             }
+
             if (itemstackiterator.getItem() == TargetModItems.SKS.get()) {
                 itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 1);
                 itemstackiterator.getOrCreateTag().putDouble("zoom", 1.25);
