@@ -28,7 +28,13 @@ public class TargetModTabs {
                                 output.accept(Trachelium.getGunInstance());
                                 output.accept(VectorItem.getGunInstance());
 
+                                output.accept(MarlinItem.getGunInstance());
+                                output.accept(SvdItem.getGunInstance());
+
+                                output.accept(M870Item.getGunInstance());
                                 output.accept(Aa12Item.getGunInstance());
+
+                                output.accept(M60Item.getGunInstance());
                             }
                     )
                     .build());

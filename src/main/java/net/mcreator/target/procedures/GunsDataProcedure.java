@@ -77,18 +77,6 @@ public class GunsDataProcedure {
                 itemstackiterator.getOrCreateTag().putDouble("mag", 55);
                 itemstackiterator.getOrCreateTag().putDouble("firemode", 2);
             }
-//            if (itemstackiterator.getItem() == TargetModItems.TRACHELIUM.get()) {
-//                itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 1.7);
-//                itemstackiterator.getOrCreateTag().putDouble("zoom", 1.25);
-//                itemstackiterator.getOrCreateTag().putDouble("dev", 3);
-//                itemstackiterator.getOrCreateTag().putDouble("handgun", 1);
-//                itemstackiterator.getOrCreateTag().putDouble("recoilx", 0.005);
-//                itemstackiterator.getOrCreateTag().putDouble("recoily", 0.022);
-//                itemstackiterator.getOrCreateTag().putDouble("damage", 18);
-//                itemstackiterator.getOrCreateTag().putDouble("headshot", 1.5);
-//                itemstackiterator.getOrCreateTag().putDouble("velocity", 60);
-//                itemstackiterator.getOrCreateTag().putDouble("mag", 8);
-//            }
             if (itemstackiterator.getItem() == TargetModItems.HUNTING_RIFLE.get()) {
                 itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 1);
                 itemstackiterator.getOrCreateTag().putDouble("zoom", 1.25);
@@ -101,16 +89,6 @@ public class GunsDataProcedure {
                 itemstackiterator.getOrCreateTag().putDouble("velocity", 50);
                 itemstackiterator.getOrCreateTag().putDouble("mag", 1);
             }
-//            if (itemstackiterator.getItem() == TargetModItems.TASER.get()) {
-//                itemstackiterator.getOrCreateTag().putDouble("dev", 2);
-//                itemstackiterator.getOrCreateTag().putDouble("recoilx", 0.0001);
-//                itemstackiterator.getOrCreateTag().putDouble("recoily", 0.002);
-//                itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 2.0);
-//                itemstackiterator.getOrCreateTag().putDouble("zoom", 1.25);
-//                itemstackiterator.getOrCreateTag().putDouble("damage", 5);
-//                itemstackiterator.getOrCreateTag().putDouble("velocity", 3);
-//                itemstackiterator.getOrCreateTag().putDouble("mag", 1);
-//            }
             if (itemstackiterator.getItem() == TargetModItems.M_79.get()) {
                 itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 0.95);
                 itemstackiterator.getOrCreateTag().putDouble("zoom", 1.25);
@@ -121,18 +99,6 @@ public class GunsDataProcedure {
                 itemstackiterator.getOrCreateTag().putDouble("velocity", 3.75);
                 itemstackiterator.getOrCreateTag().putDouble("mag", 1);
             }
-//            if (itemstackiterator.getItem() == TargetModItems.ABEKIRI.get()) {
-//                itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 1.4);
-//                itemstackiterator.getOrCreateTag().putDouble("zoom", 1.25);
-//                itemstackiterator.getOrCreateTag().putDouble("dev", 5);
-//                itemstackiterator.getOrCreateTag().putDouble("shotgun", 1);
-//                itemstackiterator.getOrCreateTag().putDouble("recoilx", 0.005);
-//                itemstackiterator.getOrCreateTag().putDouble("recoily", 0.026);
-//                itemstackiterator.getOrCreateTag().putDouble("damage", 2.5);
-//                itemstackiterator.getOrCreateTag().putDouble("headshot", 1.5);
-//                itemstackiterator.getOrCreateTag().putDouble("velocity", 15);
-//                itemstackiterator.getOrCreateTag().putDouble("mag", 2);
-//            }
             if (itemstackiterator.getItem() == TargetModItems.M_98B.get()) {
                 itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 0.85);
                 itemstackiterator.getOrCreateTag().putDouble("zoom", 4);
@@ -168,19 +134,6 @@ public class GunsDataProcedure {
                 itemstackiterator.getOrCreateTag().putDouble("velocity", 45);
                 itemstackiterator.getOrCreateTag().putDouble("mag", 30);
             }
-//            if (itemstackiterator.getItem() == TargetModItems.AA_12.get()) {
-//                itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 0.95);
-//                itemstackiterator.getOrCreateTag().putDouble("zoom", 1.25);
-//                itemstackiterator.getOrCreateTag().putDouble("autorifle", 1);
-//                itemstackiterator.getOrCreateTag().putDouble("dev", 3.5);
-//                itemstackiterator.getOrCreateTag().putDouble("shotgun", 1);
-//                itemstackiterator.getOrCreateTag().putDouble("recoilx", 0.016);
-//                itemstackiterator.getOrCreateTag().putDouble("recoily", 0.007);
-//                itemstackiterator.getOrCreateTag().putDouble("damage", 1.5);
-//                itemstackiterator.getOrCreateTag().putDouble("headshot", 1.5);
-//                itemstackiterator.getOrCreateTag().putDouble("velocity", 16);
-//                itemstackiterator.getOrCreateTag().putDouble("mag", 25);
-//            }
             if (itemstackiterator.getItem() == TargetModItems.BOCEK.get()) {
                 itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 1);
                 itemstackiterator.getOrCreateTag().putDouble("zoom", 2);
@@ -233,19 +186,6 @@ public class GunsDataProcedure {
                 itemstackiterator.getOrCreateTag().putDouble("velocity", 40);
                 itemstackiterator.getOrCreateTag().putDouble("mag", 4);
             }
-//            if (itemstackiterator.getItem() == TargetModItems.VECTOR.get()) {
-//                itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 1.6);
-//                itemstackiterator.getOrCreateTag().putDouble("zoom", 1.25);
-//                itemstackiterator.getOrCreateTag().putDouble("autorifle", 1);
-//                itemstackiterator.getOrCreateTag().putDouble("dev", 3.5);
-//                itemstackiterator.getOrCreateTag().putDouble("smg", 1);
-//                itemstackiterator.getOrCreateTag().putDouble("recoilx", 0.011);
-//                itemstackiterator.getOrCreateTag().putDouble("recoily", 0.004);
-//                itemstackiterator.getOrCreateTag().putDouble("damage", 4.5);
-//                itemstackiterator.getOrCreateTag().putDouble("headshot", 1.5);
-//                itemstackiterator.getOrCreateTag().putDouble("velocity", 22);
-//                itemstackiterator.getOrCreateTag().putDouble("mag", 33);
-//            }
             if (itemstackiterator.getItem() == TargetModItems.MINIGUN.get()) {
                 itemstackiterator.getOrCreateTag().putDouble("zoom", 1);
                 itemstackiterator.getOrCreateTag().putDouble("rifle", 1);
@@ -285,59 +225,6 @@ public class GunsDataProcedure {
                 itemstackiterator.getOrCreateTag().putDouble("headshot", 3);
                 itemstackiterator.getOrCreateTag().putDouble("velocity", 50);
             }
-            if (itemstackiterator.getItem() == TargetModItems.M_60.get()) {
-                itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 0.85);
-                itemstackiterator.getOrCreateTag().putDouble("zoom", 1.25);
-                itemstackiterator.getOrCreateTag().putDouble("rifle", 1);
-                itemstackiterator.getOrCreateTag().putDouble("autorifle", 1);
-                itemstackiterator.getOrCreateTag().putDouble("mg", 1);
-                itemstackiterator.getOrCreateTag().putDouble("dev", 5);
-                itemstackiterator.getOrCreateTag().putDouble("bipod", 1);
-                itemstackiterator.getOrCreateTag().putDouble("recoilx", 0.004);
-                itemstackiterator.getOrCreateTag().putDouble("recoily", 0.014);
-                itemstackiterator.getOrCreateTag().putDouble("damage", 9);
-                itemstackiterator.getOrCreateTag().putDouble("headshot", 2);
-                itemstackiterator.getOrCreateTag().putDouble("velocity", 40);
-                itemstackiterator.getOrCreateTag().putDouble("mag", 100);
-                itemstackiterator.getOrCreateTag().putDouble("firemode", 2);
-            }
-            if (itemstackiterator.getItem() == TargetModItems.SVD.get()) {
-                itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 0.9);
-                itemstackiterator.getOrCreateTag().putDouble("zoom", 4);
-                itemstackiterator.getOrCreateTag().putDouble("sniperguns", 1);
-                itemstackiterator.getOrCreateTag().putDouble("dev", 6);
-                itemstackiterator.getOrCreateTag().putDouble("recoilx", 0.008);
-                itemstackiterator.getOrCreateTag().putDouble("recoily", 0.015);
-                itemstackiterator.getOrCreateTag().putDouble("damage", 18);
-                itemstackiterator.getOrCreateTag().putDouble("headshot", 2.5);
-                itemstackiterator.getOrCreateTag().putDouble("velocity", 50);
-                itemstackiterator.getOrCreateTag().putDouble("mag", 10);
-            }
-            if (itemstackiterator.getItem() == TargetModItems.MARLIN.get()) {
-                itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 1.1);
-                itemstackiterator.getOrCreateTag().putDouble("zoom", 1.25);
-                itemstackiterator.getOrCreateTag().putDouble("rifle", 1);
-                itemstackiterator.getOrCreateTag().putDouble("dev", 2);
-                itemstackiterator.getOrCreateTag().putDouble("recoilx", 0.004);
-                itemstackiterator.getOrCreateTag().putDouble("recoily", 0.011);
-                itemstackiterator.getOrCreateTag().putDouble("damage", 16);
-                itemstackiterator.getOrCreateTag().putDouble("headshot", 2.5);
-                itemstackiterator.getOrCreateTag().putDouble("velocity", 27);
-                itemstackiterator.getOrCreateTag().putDouble("mag", 8);
-            }
-            if (itemstackiterator.getItem() == TargetModItems.M_870.get()) {
-                itemstackiterator.getOrCreateTag().putDouble("zoomspeed", 1.1);
-                itemstackiterator.getOrCreateTag().putDouble("zoom", 1.25);
-                itemstackiterator.getOrCreateTag().putDouble("dev", 3);
-                itemstackiterator.getOrCreateTag().putDouble("shotgun", 1);
-                itemstackiterator.getOrCreateTag().putDouble("recoilx", 0.009);
-                itemstackiterator.getOrCreateTag().putDouble("recoily", 0.03);
-                itemstackiterator.getOrCreateTag().putDouble("damage", 2);
-                itemstackiterator.getOrCreateTag().putDouble("headshot", 1.5);
-                itemstackiterator.getOrCreateTag().putDouble("velocity", 20);
-                itemstackiterator.getOrCreateTag().putDouble("mag", 8);
-            }
-
         }
     }
 
