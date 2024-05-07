@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class Minigun extends Item implements GeoItem {
+public class Minigun extends GunItem implements GeoItem {
     private static final String TAG_HEAT = "heatbar";
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationprocedure = "empty";

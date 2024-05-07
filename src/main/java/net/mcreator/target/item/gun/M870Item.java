@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class M870Item extends Item implements GeoItem {
+public class M870Item extends GunItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationprocedure = "empty";
     public static ItemDisplayContext transformType;

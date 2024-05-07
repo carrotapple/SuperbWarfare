@@ -44,7 +44,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.List;
 
-public class RpgItem extends Item implements GeoItem {
+public class RpgItem extends GunItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationprocedure = "empty";
     public static ItemDisplayContext transformType;

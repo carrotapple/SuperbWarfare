@@ -1,6 +1,6 @@
 package net.mcreator.target.client.model.item;
 
-import net.mcreator.target.item.gun.Sks;
+import net.mcreator.target.item.gun.SksItem;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -10,25 +10,25 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class SksItemModel extends GeoModel<Sks> {
+public class SksItemModel extends GeoModel<SksItem> {
     @Override
-    public ResourceLocation getAnimationResource(Sks animatable) {
+    public ResourceLocation getAnimationResource(SksItem animatable) {
         return new ResourceLocation("target", "animations/sks.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(Sks animatable) {
+    public ResourceLocation getModelResource(SksItem animatable) {
         return new ResourceLocation("target", "geo/sks.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(Sks animatable) {
+    public ResourceLocation getTextureResource(SksItem animatable) {
         return new ResourceLocation("target", "textures/item/sks.png");
     }
 
 
     @Override
-    public void setCustomAnimations(Sks animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(SksItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
         CoreGeoBone bolt = getAnimationProcessor().getBone("bolt");

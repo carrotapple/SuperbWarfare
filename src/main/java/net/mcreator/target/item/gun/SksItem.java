@@ -32,12 +32,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class Sks extends Item implements GeoItem {
+public class SksItem extends GunItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationprocedure = "empty";
     public static ItemDisplayContext transformType;
 
-    public Sks() {
+    public SksItem() {
         super(new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
     }
 

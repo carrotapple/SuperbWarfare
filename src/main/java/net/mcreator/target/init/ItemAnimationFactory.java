@@ -52,12 +52,12 @@ public class ItemAnimationFactory {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof AK47 animatable)
+                if (event.player.getMainHandItem().getItem() instanceof AK47Item animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof Sks animatable)
+                if (event.player.getMainHandItem().getItem() instanceof SksItem animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
@@ -186,12 +186,12 @@ public class ItemAnimationFactory {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getOffhandItem().getItem() instanceof AK47 animatable)
+                if (event.player.getOffhandItem().getItem() instanceof AK47Item animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getOffhandItem().getItem() instanceof Sks animatable)
+                if (event.player.getOffhandItem().getItem() instanceof SksItem animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();

@@ -1,6 +1,6 @@
 package net.mcreator.target.client.model.item;
 
-import net.mcreator.target.item.gun.AK47;
+import net.mcreator.target.item.gun.AK47Item;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -10,24 +10,24 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class AK47ItemModel extends GeoModel<AK47> {
+public class AK47ItemModel extends GeoModel<AK47Item> {
     @Override
-    public ResourceLocation getAnimationResource(AK47 animatable) {
+    public ResourceLocation getAnimationResource(AK47Item animatable) {
         return new ResourceLocation("target", "animations/ak.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(AK47 animatable) {
+    public ResourceLocation getModelResource(AK47Item animatable) {
         return new ResourceLocation("target", "geo/ak.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(AK47 animatable) {
+    public ResourceLocation getTextureResource(AK47Item animatable) {
         return new ResourceLocation("target", "textures/item/ak47.png");
     }
 
     @Override
-    public void setCustomAnimations(AK47 animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(AK47Item animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone scope = getAnimationProcessor().getBone("kobra");

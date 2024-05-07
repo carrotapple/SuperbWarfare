@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class Taser extends Item implements GeoItem {
+public class Taser extends GunItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationprocedure = "empty";
     public static ItemDisplayContext transformType;

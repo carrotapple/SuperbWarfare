@@ -2,7 +2,7 @@ package net.mcreator.target.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.target.item.gun.AK47;
+import net.mcreator.target.item.gun.AK47Item;
 import net.mcreator.target.client.layer.AK47Layer;
 import net.mcreator.target.client.model.item.AK47ItemModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,14 +16,14 @@ import software.bernie.geckolib.renderer.GeoItemRenderer;
 import java.util.HashSet;
 import java.util.Set;
 
-public class AK47ItemRenderer extends GeoItemRenderer<AK47> {
+public class AK47ItemRenderer extends GeoItemRenderer<AK47Item> {
     public AK47ItemRenderer() {
         super(new AK47ItemModel());
         this.addRenderLayer(new AK47Layer(this));
     }
 
     @Override
-    public RenderType getRenderType(AK47 animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(AK47Item animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
@@ -32,7 +32,7 @@ public class AK47ItemRenderer extends GeoItemRenderer<AK47> {
     protected MultiBufferSource currentBuffer;
     protected RenderType renderType;
     public ItemDisplayContext transformType;
-    protected AK47 animatable;
+    protected AK47Item animatable;
     private final Set<String> hiddenBones = new HashSet<>();
     private final Set<String> suppressedBones = new HashSet<>();
 
@@ -45,7 +45,7 @@ public class AK47ItemRenderer extends GeoItemRenderer<AK47> {
     }
 
     @Override
-    public void actuallyRender(PoseStack matrixStackIn, AK47 animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
+    public void actuallyRender(PoseStack matrixStackIn, AK47Item animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
                                int packedOverlayIn, float red, float green, float blue, float alpha) {
         this.currentBuffer = renderTypeBuffer;
         this.renderType = type;
@@ -57,7 +57,7 @@ public class AK47ItemRenderer extends GeoItemRenderer<AK47> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(AK47 instance) {
+    public ResourceLocation getTextureLocation(AK47Item instance) {
         return super.getTextureLocation(instance);
     }
 }

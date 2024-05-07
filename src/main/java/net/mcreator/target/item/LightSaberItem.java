@@ -1,7 +1,8 @@
 package net.mcreator.target.item;
 
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.LightSaberItemRenderer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
@@ -27,13 +28,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class LightSaberItem extends Item implements GeoItem {
+public class LightSaberItem extends SwordItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationprocedure = "empty";
     public static ItemDisplayContext transformType;
 
     public LightSaberItem() {
-        super(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
+        super(Tiers.NETHERITE, 10, -1.8f, new Item.Properties().rarity(Rarity.EPIC));
     }
 
     @Override
@@ -93,19 +94,15 @@ public class LightSaberItem extends Item implements GeoItem {
 
     @Override
     public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
+        Multimap<Attribute, AttributeModifier> map = super.getDefaultAttributeModifiers(equipmentSlot);
         UUID uuid = new UUID(equipmentSlot.toString().hashCode(), 0);
         if (equipmentSlot == EquipmentSlot.MAINHAND) {
-            ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-            builder.putAll(super.getDefaultAttributeModifiers(equipmentSlot));
-            builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Item modifier", 14d, AttributeModifier.Operation.ADDITION));
-            builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Item modifier", -1.8, AttributeModifier.Operation.ADDITION));
-            builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(uuid, "henghengaaa", 0.2f, AttributeModifier.Operation.MULTIPLY_BASE));
+            map = HashMultimap.create(map);
+            map.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(uuid, TargetMod.ATTRIBUTE_MODIFIER, 0.2f, AttributeModifier.Operation.MULTIPLY_BASE));
 
-            return builder.build();
         }
-        return super.getDefaultAttributeModifiers(equipmentSlot);
+        return map;
     }
-
 
     @Override
     public int getEnchantmentValue() {

@@ -42,7 +42,7 @@ import net.mcreator.target.client.renderer.item.RpkItemRenderer;
 import java.util.function.Consumer;
 import java.util.List;
 
-public class RpkItem extends Item implements GeoItem {
+public class RpkItem extends GunItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationprocedure = "empty";
     public static ItemDisplayContext transformType;

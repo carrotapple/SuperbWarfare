@@ -25,6 +25,7 @@ import java.util.function.Supplier;
 @Mod("target")
 public class TargetMod {
     public static final String MODID = "target";
+    public static final String ATTRIBUTE_MODIFIER = "target_attribute_modifier";
 
     public TargetMod() {
         MinecraftForge.EVENT_BUS.register(this);
