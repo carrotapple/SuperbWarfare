@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.client.renderer.item.M79ItemRenderer;
 import net.mcreator.target.procedures.M79WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
+import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -141,8 +142,8 @@ public class M79Item extends GunItem implements GeoItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
-        super.appendHoverText(itemstack, world, list, flag);
+    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
+        TooltipTool.addGunTips(list, stack);
     }
 
     @Override

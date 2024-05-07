@@ -27,6 +27,24 @@ public class TooltipTool {
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.#").format(damage)).withStyle(ChatFormatting.GREEN)));
 
+        addLevelTips(tooltip, stack);
+    }
+
+    public static void addShotgunTips(List<Component> tooltip, ItemStack stack, int count) {
+        tooltip.add(Component.literal(""));
+
+        double damage = (ItemNBTTool.getDouble(stack, "damage", 0) +
+                ItemNBTTool.getDouble(stack, "adddamage", 0))
+                * ItemNBTTool.getDouble(stack, "damageadd", 1);
+
+        tooltip.add(Component.translatable("des.target.tips.damage").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.literal(new DecimalFormat("##.#").format(damage) + " * " + count).withStyle(ChatFormatting.GREEN)));
+
+        addLevelTips(tooltip, stack);
+    }
+
+    private static void addLevelTips(List<Component> tooltip, ItemStack stack) {
         int level = (int) ItemNBTTool.getDouble(stack, "level", 0);
         double rate = ItemNBTTool.getDouble(stack, "damagenow", 0) / ItemNBTTool.getDouble(stack, "damageneed", 1);
 
@@ -46,5 +64,6 @@ public class TooltipTool {
         tooltip.add(Component.translatable("des.target.tips.level").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(level + " " + new DecimalFormat("##.##").format(rate) + "%").withStyle(formatting).withStyle(ChatFormatting.BOLD)));
+
     }
 }

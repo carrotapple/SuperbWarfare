@@ -1,5 +1,6 @@
 package net.mcreator.target.item.gun;
 
+import net.mcreator.target.tools.TooltipTool;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.core.animation.RawAnimation;
@@ -163,8 +164,8 @@ public class RpkItem extends GunItem implements GeoItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
-        super.appendHoverText(itemstack, world, list, flag);
+    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
+        TooltipTool.addGunTips(list, stack);
     }
 
     @Override
