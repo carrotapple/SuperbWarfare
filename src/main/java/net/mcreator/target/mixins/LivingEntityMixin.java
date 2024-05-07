@@ -1,43 +1,29 @@
 package net.mcreator.target.mixins;
 
-import net.mcreator.target.entity.ProjectileEntity;
+import net.mcreator.target.init.TargetModDamageTypes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/**
- * Author: MrCrayfish
- */
 @Mixin(LivingEntity.class)
-public class LivingEntityMixin
-{
-    private DamageSource source;
+public class LivingEntityMixin {
+    @Unique
+    private DamageSource target$source;
 
     @Inject(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;knockback(DDD)V"))
-    private void capture(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir)
-    {
-        this.source = source;
+    private void capture(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        this.target$source = source;
     }
 
     @ModifyArg(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;knockback(DDD)V"), index = 0)
-    private double modifyApplyKnockbackArgs(double original)
-    {
-        if(this.source.getEntity() instanceof ProjectileEntity)
-        {
-            if(true)
-            {
-                return 0;
-            }
-
-            double strength = 0;
-            if(strength > 0)
-            {
-                return strength;
-            }
+    private double modifyApplyKnockbackArgs(double original) {
+        if (this.target$source.is(TargetModDamageTypes.GUNFIRE)) {
+            return 0;
         }
         return original;
     }
