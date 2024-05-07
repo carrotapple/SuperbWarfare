@@ -23,7 +23,7 @@ public class TooltipTool {
                 ItemNBTTool.getDouble(stack, "adddamage", 0))
                 * ItemNBTTool.getDouble(stack, "damageadd", 1);
 
-        tooltip.add(Component.translatable("des.target.tips.damage").withStyle(ChatFormatting.WHITE)
+        tooltip.add(Component.translatable("des.target.tips.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.#").format(damage)).withStyle(ChatFormatting.GREEN)));
 
@@ -32,7 +32,7 @@ public class TooltipTool {
 
         ChatFormatting formatting;
         if (level < 4) {
-            formatting = ChatFormatting.GRAY;
+            formatting = ChatFormatting.WHITE;
         } else if (level < 6) {
             formatting = ChatFormatting.AQUA;
         } else if (level < 8) {
@@ -43,8 +43,8 @@ public class TooltipTool {
             formatting = ChatFormatting.RED;
         }
 
-        tooltip.add(Component.translatable("des.target.tips.level").withStyle(ChatFormatting.WHITE)
+        tooltip.add(Component.translatable("des.target.tips.level").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(level + " " + new DecimalFormat("##.##").format(rate) + "%")).withStyle(formatting).withStyle(ChatFormatting.BOLD));
+                .append(Component.literal(level + " " + new DecimalFormat("##.##").format(rate) + "%").withStyle(formatting).withStyle(ChatFormatting.BOLD)));
     }
 }

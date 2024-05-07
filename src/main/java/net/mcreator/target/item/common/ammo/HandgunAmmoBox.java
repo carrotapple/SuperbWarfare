@@ -1,6 +1,7 @@
 package net.mcreator.target.item.common.ammo;
 
 import net.mcreator.target.procedures.HandgunAmmoBoxWanJiaWanChengShiYongWuPinShiProcedure;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -27,7 +28,7 @@ public class HandgunAmmoBox extends Item {
 
     @Override
     public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
-        super.appendHoverText(itemstack, world, list, flag);
+        list.add(Component.translatable("des.target.handgun_ammo_box").withStyle(ChatFormatting.GRAY));
     }
 
     @Override
