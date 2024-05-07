@@ -87,7 +87,7 @@ public class Taser extends GunItem implements GeoItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.taser.reload"));
             }
 
-            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("unspringtable") == 0) {
+            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.taser.run"));
             }
 

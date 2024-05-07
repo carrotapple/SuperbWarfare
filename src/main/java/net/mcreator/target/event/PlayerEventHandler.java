@@ -3,6 +3,7 @@ package net.mcreator.target.event;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -42,27 +43,50 @@ public class PlayerEventHandler {
         }
 
         if (event.phase == TickEvent.Phase.END) {
-            Level level = player.level();
+            handlePlayerProne(player);
+            handlePlayerSprint(player);
+        }
+    }
 
-            if (player.getBbHeight() <= 1) {
-                player.getPersistentData().putDouble("prone", 3);
-            }
+    private static void handlePlayerProne(Player player) {
+        Level level = player.level();
 
-            if (player.isShiftKeyDown() && level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 0.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude()
-                    && !level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 1.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude()) {
-                player.getPersistentData().putDouble("prone", 3);
-            }
+        if (player.getBbHeight() <= 1) {
+            player.getPersistentData().putDouble("prone", 3);
+        }
 
-            if (player.getPersistentData().getDouble("prone") > 0) {
-                player.getPersistentData().putDouble("prone", (player.getPersistentData().getDouble("prone") - 1));
-            }
+        if (player.isShiftKeyDown() && level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 0.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude()
+                && !level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 1.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude()) {
+            player.getPersistentData().putDouble("prone", 3);
+        }
 
-            boolean flag = !(player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).refresh;
+        if (player.getPersistentData().getDouble("prone") > 0) {
+            player.getPersistentData().putDouble("prone", (player.getPersistentData().getDouble("prone") - 1));
+        }
 
-            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.refresh = flag;
-                capability.syncPlayerVariables(player);
-            });
+        boolean flag = !(player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).refresh;
+
+        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            capability.refresh = flag;
+            capability.syncPlayerVariables(player);
+        });
+    }
+
+    private static void handlePlayerSprint(Player player) {
+        if (player.getMainHandItem().getOrCreateTag().getDouble("fireanim") > 0) {
+            player.getPersistentData().putDouble("noRun", 20);
+        }
+
+        if (player.isShiftKeyDown() || player.isPassenger() || player.isInWater() || (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+            player.getPersistentData().putDouble("noRun", 1);
+        }
+
+        if (player.getPersistentData().getDouble("noRun") > 0) {
+            player.getPersistentData().putDouble("noRun", (player.getPersistentData().getDouble("noRun") - 1));
+        }
+
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+            player.setSprinting(false);
         }
     }
 }

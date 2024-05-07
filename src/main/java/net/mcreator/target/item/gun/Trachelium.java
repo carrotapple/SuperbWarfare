@@ -89,7 +89,7 @@ public class Trachelium extends GunItem implements GeoItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.reload"));
             }
 
-            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("unspringtable") == 0) {
+            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.run"));
             }
 

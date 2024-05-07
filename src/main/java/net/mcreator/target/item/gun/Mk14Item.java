@@ -97,7 +97,7 @@ public class Mk14Item extends GunItem implements GeoItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.model.changefirerate"));
             }
 
-            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("unspringtable") == 0) {
+            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.model.run"));
             }
 
