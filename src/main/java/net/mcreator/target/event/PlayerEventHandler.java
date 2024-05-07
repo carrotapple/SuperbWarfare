@@ -3,7 +3,6 @@ package net.mcreator.target.event;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -45,6 +44,8 @@ public class PlayerEventHandler {
         if (event.phase == TickEvent.Phase.END) {
             handlePlayerProne(player);
             handlePlayerSprint(player);
+            handleWeaponLevel(player);
+            handleWeaponSway(player);
         }
     }
 
@@ -88,5 +89,61 @@ public class PlayerEventHandler {
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
             player.setSprinting(false);
         }
+    }
+
+    private static void handleWeaponLevel(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        if (stack.is(TargetModTags.Items.GUN)) {
+            if (stack.getOrCreateTag().getDouble("level") == 0) {
+                stack.getOrCreateTag().putDouble("exp2", 20);
+            } else {
+                stack.getOrCreateTag().putDouble("exp2", (stack.getOrCreateTag().getDouble("exp1") + stack.getOrCreateTag().getDouble("level") * 500));
+            }
+            if (stack.getOrCreateTag().getDouble("damagetotal") >= stack.getOrCreateTag().getDouble("exp2")) {
+                stack.getOrCreateTag().putDouble("exp1", (stack.getOrCreateTag().getDouble("exp2")));
+                stack.getOrCreateTag().putDouble("level", (stack.getOrCreateTag().getDouble("level") + 1));
+            }
+            stack.getOrCreateTag().putDouble("damagenow", (stack.getOrCreateTag().getDouble("damagetotal") - stack.getOrCreateTag().getDouble("exp1")));
+            stack.getOrCreateTag().putDouble("damageneed", (stack.getOrCreateTag().getDouble("exp2") - stack.getOrCreateTag().getDouble("exp1")));
+        }
+    }
+
+    private static void handleWeaponSway(Player player) {
+        double[] recoilTimer = {0};
+        double totalTime = 10;
+        int sleepTime = 2;
+        double recoilDuration = totalTime / sleepTime;
+
+        Runnable recoilRunnable = () -> {
+            while (recoilTimer[0] < recoilDuration) {
+                if (player == null)
+                    return;
+                double pose;
+                if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && player.getPersistentData().getDouble("prone") == 0) {
+                    pose = 0.85;
+                } else if (player.getPersistentData().getDouble("prone") > 0) {
+                    if (player.getMainHandItem().getOrCreateTag().getDouble("bipod") == 1) {
+                        pose = 0;
+                    } else {
+                        pose = 0.25;
+                    }
+                } else {
+                    pose = 1;
+                }
+                player.getPersistentData().putDouble("time", (player.getPersistentData().getDouble("time") + 0.015));
+                player.getPersistentData().putDouble("x", (pose * (-0.008) * Math.sin(1 * player.getPersistentData().getDouble("time")) * (1 - 0.9 * player.getPersistentData().getDouble("zoomtime"))));
+                player.getPersistentData().putDouble("y", (pose * 0.125 * Math.sin(player.getPersistentData().getDouble("time") - 1.585) * (1 - 0.9 * player.getPersistentData().getDouble("zoomtime"))));
+
+                recoilTimer[0]++;
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        Thread recoilThread = new Thread(recoilRunnable);
+        recoilThread.start();
     }
 }
