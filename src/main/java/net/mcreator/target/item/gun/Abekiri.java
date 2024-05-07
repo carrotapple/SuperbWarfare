@@ -4,7 +4,9 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.AbekiriItemRenderer;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.procedures.AbekiriWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
+import net.mcreator.target.tools.ItemNBTTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -152,7 +154,31 @@ public class Abekiri extends GunItem implements GeoItem {
 
     @Override
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemstack, world, entity, slot, selected);
         AbekiriWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
+
+        if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
+            initGun(itemstack);
+        }
+    }
+
+    public static ItemStack getGunInstance() {
+        ItemStack stack = new ItemStack(TargetModItems.ABEKIRI.get());
+
+        initGun(stack);
+        return stack;
+    }
+
+    private static void initGun(ItemStack stack) {
+        stack.getOrCreateTag().putDouble("zoomspeed", 1.4);
+        stack.getOrCreateTag().putDouble("zoom", 1.25);
+        stack.getOrCreateTag().putDouble("dev", 5);
+        stack.getOrCreateTag().putDouble("shotgun", 1);
+        stack.getOrCreateTag().putDouble("recoilx", 0.005);
+        stack.getOrCreateTag().putDouble("recoily", 0.026);
+        stack.getOrCreateTag().putDouble("damage", 2.5);
+        stack.getOrCreateTag().putDouble("headshot", 1.5);
+        stack.getOrCreateTag().putDouble("velocity", 15);
+        stack.getOrCreateTag().putDouble("mag", 2);
+        stack.getOrCreateTag().putBoolean("init", true);
     }
 }

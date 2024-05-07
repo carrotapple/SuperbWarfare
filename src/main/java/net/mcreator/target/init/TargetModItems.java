@@ -29,7 +29,7 @@ public class TargetModItems {
     public static final RegistryObject<Item> TASER = GUNS.register("taser", Taser::new);
     public static final RegistryObject<Item> ABEKIRI = GUNS.register("abekiri", Abekiri::new);
     public static final RegistryObject<Item> TRACHELIUM = GUNS.register("trachelium", Trachelium::new);
-    public static final RegistryObject<Item> VECTOR = GUNS.register("vector", Vector::new);
+    public static final RegistryObject<Item> VECTOR = GUNS.register("vector", VectorItem::new);
     public static final RegistryObject<Item> AK_47 = GUNS.register("ak_47", AK47Item::new);
     public static final RegistryObject<Item> SKS = GUNS.register("sks", SksItem::new);
     public static final RegistryObject<Item> M_4 = GUNS.register("m_4", M4Item::new);

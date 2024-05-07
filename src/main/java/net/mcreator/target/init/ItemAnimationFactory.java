@@ -47,7 +47,7 @@ public class ItemAnimationFactory {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof Vector animatable)
+                if (event.player.getMainHandItem().getItem() instanceof VectorItem animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
@@ -181,7 +181,7 @@ public class ItemAnimationFactory {
                         animatable.animationprocedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getOffhandItem().getItem() instanceof Vector animatable)
+                if (event.player.getOffhandItem().getItem() instanceof VectorItem animatable)
                     if (event.player.level().isClientSide()) {
                         animatable.animationprocedure = animation;
                         disableUseAnim();

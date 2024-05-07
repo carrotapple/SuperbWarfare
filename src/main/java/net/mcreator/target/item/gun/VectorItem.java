@@ -2,8 +2,11 @@ package net.mcreator.target.item.gun;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.VectorItemRenderer;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.procedures.VectorWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
+import net.mcreator.target.tools.ItemNBTTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -33,12 +36,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class Vector extends GunItem implements GeoItem {
+public class VectorItem extends GunItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationprocedure = "empty";
     public static ItemDisplayContext transformType;
 
-    public Vector() {
+    public VectorItem() {
         super(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     }
 
@@ -64,7 +67,7 @@ public class Vector extends GunItem implements GeoItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState<Vector> event) {
+    private PlayState idlePredicate(AnimationState<VectorItem> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         ItemStack stack = player.getMainHandItem();
 
@@ -107,7 +110,7 @@ public class Vector extends GunItem implements GeoItem {
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState<Vector> event) {
+    private PlayState procedurePredicate(AnimationState<VectorItem> event) {
         if (transformType != null && transformType.firstPerson()) {
             if (!this.animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
@@ -124,9 +127,9 @@ public class Vector extends GunItem implements GeoItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        AnimationController<Vector> procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
+        AnimationController<VectorItem> procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
         data.add(procedureController);
-        AnimationController<Vector> idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
+        AnimationController<VectorItem> idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
         data.add(idleController);
     }
 
@@ -142,8 +145,11 @@ public class Vector extends GunItem implements GeoItem {
 
     @Override
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemstack, world, entity, slot, selected);
         VectorWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
+
+        if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
+            initGun(itemstack);
+        }
     }
 
     @Override
@@ -163,8 +169,30 @@ public class Vector extends GunItem implements GeoItem {
         if (slot == EquipmentSlot.MAINHAND) {
             map = HashMultimap.create(map);
             map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, "henghengaaa", -0.03f, AttributeModifier.Operation.MULTIPLY_BASE));
+                    new AttributeModifier(uuid, TargetMod.ATTRIBUTE_MODIFIER, -0.03f, AttributeModifier.Operation.MULTIPLY_BASE));
         }
         return map;
+    }
+
+    public static ItemStack getGunInstance() {
+        ItemStack stack = new ItemStack(TargetModItems.TRACHELIUM.get());
+
+        initGun(stack);
+        return stack;
+    }
+
+    private static void initGun(ItemStack stack) {
+        stack.getOrCreateTag().putDouble("zoomspeed", 1.6);
+        stack.getOrCreateTag().putDouble("zoom", 1.25);
+        stack.getOrCreateTag().putDouble("autorifle", 1);
+        stack.getOrCreateTag().putDouble("dev", 3.5);
+        stack.getOrCreateTag().putDouble("smg", 1);
+        stack.getOrCreateTag().putDouble("recoilx", 0.011);
+        stack.getOrCreateTag().putDouble("recoily", 0.004);
+        stack.getOrCreateTag().putDouble("damage", 4.5);
+        stack.getOrCreateTag().putDouble("headshot", 1.5);
+        stack.getOrCreateTag().putDouble("velocity", 22);
+        stack.getOrCreateTag().putDouble("mag", 33);
+        stack.getOrCreateTag().putBoolean("init", true);
     }
 }

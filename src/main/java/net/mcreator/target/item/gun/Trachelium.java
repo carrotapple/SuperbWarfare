@@ -4,7 +4,9 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.TracheliumItemRenderer;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.procedures.ReloadingProcedure;
+import net.mcreator.target.tools.ItemNBTTool;
 import net.mcreator.target.tools.RarityTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.ChatFormatting;
@@ -71,7 +73,7 @@ public class Trachelium extends GunItem implements GeoItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState event) {
+    private PlayState idlePredicate(AnimationState<Trachelium> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         ItemStack stack = player.getMainHandItem();
         if (this.animationprocedure.equals("empty")) {
@@ -97,7 +99,7 @@ public class Trachelium extends GunItem implements GeoItem {
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState event) {
+    private PlayState procedurePredicate(AnimationState<Trachelium> event) {
         if (transformType != null && transformType.firstPerson()) {
             if (!(this.animationprocedure.equals("empty")) && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
@@ -112,9 +114,9 @@ public class Trachelium extends GunItem implements GeoItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        AnimationController procedureController = new AnimationController(this, "procedureController", 0, this::procedurePredicate);
+        AnimationController<Trachelium> procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
         data.add(procedureController);
-        AnimationController idleController = new AnimationController(this, "idleController", 6, this::idlePredicate);
+        AnimationController<Trachelium> idleController = new AnimationController<>(this, "idleController", 6, this::idlePredicate);
         data.add(idleController);
     }
 
@@ -147,8 +149,12 @@ public class Trachelium extends GunItem implements GeoItem {
 
     @Override
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemstack, world, entity, slot, selected);
+        // TODO 把这坨procedure删了
         ReloadingProcedure.execute(entity, itemstack);
+
+        if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
+            initGun(itemstack);
+        }
     }
 
     @Override
@@ -157,5 +163,26 @@ public class Trachelium extends GunItem implements GeoItem {
         list.add(Component.translatable("des.target.trachelium_2").withStyle(ChatFormatting.GRAY));
 
         TooltipTool.addGunTips(list, stack);
+    }
+
+    public static ItemStack getGunInstance() {
+        ItemStack stack = new ItemStack(TargetModItems.TRACHELIUM.get());
+
+        initGun(stack);
+        return stack;
+    }
+
+    private static void initGun(ItemStack stack) {
+        stack.getOrCreateTag().putDouble("zoomspeed", 1.7);
+        stack.getOrCreateTag().putDouble("zoom", 1.25);
+        stack.getOrCreateTag().putDouble("dev", 3);
+        stack.getOrCreateTag().putDouble("handgun", 1);
+        stack.getOrCreateTag().putDouble("recoilx", 0.005);
+        stack.getOrCreateTag().putDouble("recoily", 0.022);
+        stack.getOrCreateTag().putDouble("damage", 18);
+        stack.getOrCreateTag().putDouble("headshot", 1.5);
+        stack.getOrCreateTag().putDouble("velocity", 60);
+        stack.getOrCreateTag().putDouble("mag", 8);
+        stack.getOrCreateTag().putBoolean("init", true);
     }
 }
