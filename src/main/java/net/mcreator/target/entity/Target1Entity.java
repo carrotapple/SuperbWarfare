@@ -1,7 +1,11 @@
 package net.mcreator.target.entity;
 
 import net.mcreator.target.init.TargetModEntities;
-import net.mcreator.target.procedures.*;
+import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.procedures.Target1DangShiTiGengXinKeShiProcedure;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -9,6 +13,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -26,6 +31,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -44,9 +50,7 @@ public class Target1Entity extends PathfinderMob implements GeoEntity {
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(Target1Entity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(Target1Entity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private boolean swinging;
-    private boolean lastloop;
-    private long lastSwing;
+
     public String animationprocedure = "empty";
 
     public Target1Entity(PlayMessages.SpawnEntity packet, Level world) {
@@ -89,7 +93,7 @@ public class Target1Entity extends PathfinderMob implements GeoEntity {
 
     @Override
     public MobType getMobType() {
-        return MobType.UNDEFINED;
+        return super.getMobType();
     }
 
     @Override
@@ -104,7 +108,12 @@ public class Target1Entity extends PathfinderMob implements GeoEntity {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        Target1DangShiTiShouShangShiProcedure.execute(this.level(), this.getX(), this.getY(), this.getZ());
+        if (!this.level().isClientSide()) {
+            this.level().playSound(null, BlockPos.containing(this.getX(), this.getY(), this.getZ()), TargetModSounds.HIT.get(), SoundSource.BLOCKS, 2, 1);
+        } else {
+            this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), TargetModSounds.HIT.get(), SoundSource.BLOCKS, 2, 1, false);
+        }
+
         if (source.is(DamageTypes.IN_FIRE))
             return false;
         if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
@@ -130,9 +139,16 @@ public class Target1Entity extends PathfinderMob implements GeoEntity {
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
-        SpawnGroupData retval = super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
-        Target1ShiTiChuShiShengChengShiProcedure.execute(this);
-        return retval;
+        SpawnGroupData data = super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
+
+        this.setYRot(0);
+        this.setXRot(0);
+        this.setYBodyRot(this.getYRot());
+        this.setYHeadRot(this.getYRot());
+        this.yRotO = this.getYRot();
+        this.xRotO = this.getXRot();
+
+        return data;
     }
 
     @Override
@@ -149,18 +165,32 @@ public class Target1Entity extends PathfinderMob implements GeoEntity {
     }
 
     @Override
-    public InteractionResult mobInteract(Player sourceentity, InteractionHand hand) {
-        ItemStack itemstack = sourceentity.getItemInHand(hand);
-        InteractionResult retval = InteractionResult.sidedSuccess(this.level().isClientSide());
-        super.mobInteract(sourceentity, hand);
-        double x = this.getX();
-        double y = this.getY();
-        double z = this.getZ();
-        Entity entity = this;
-        Level world = this.level();
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        InteractionResult result = InteractionResult.sidedSuccess(this.level().isClientSide());
+        super.mobInteract(player, hand);
 
-        Target1DangYouJiShiTiShiProcedure.execute(y, entity, sourceentity);
-        return retval;
+        if (player.isShiftKeyDown()) {
+            if (!this.level().isClientSide()) {
+                this.discard();
+            }
+
+            player.addItem(new ItemStack(TargetModItems.TARGET_DEPLOYER.get()));
+        } else {
+            if (!(player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+                this.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3((player.getX()), this.getY(), (player.getZ())));
+
+                this.setYRot(this.getYRot());
+                this.setXRot(0);
+                this.setYBodyRot(this.getYRot());
+                this.setYHeadRot(this.getYRot());
+                this.yRotO = this.getYRot();
+                this.xRotO = this.getXRot();
+
+                this.getPersistentData().putDouble("targetdown", 0);
+            }
+        }
+
+        return result;
     }
 
     @Override
@@ -172,14 +202,16 @@ public class Target1Entity extends PathfinderMob implements GeoEntity {
 
     @Override
     public EntityDimensions getDimensions(Pose p_33597_) {
-        Entity entity = this;
+        float num;
+        if (this.getPersistentData().getDouble("targetdown") > 0) {
+            num = 0.1f;
+        } else {
+            num = 1f;
+        }
 
-        Level world = this.level();
-        double x = this.getX();
-        double y = entity.getY();
-        double z = entity.getZ();
-        return super.getDimensions(p_33597_).scale((float) BazipengzhuangProcedure.execute(entity));
+        return super.getDimensions(p_33597_).scale(num);
     }
+
 
     @Override
     public boolean isPushable() {
@@ -225,14 +257,14 @@ public class Target1Entity extends PathfinderMob implements GeoEntity {
         return builder;
     }
 
-    private PlayState movementPredicate(AnimationState event) {
+    private PlayState movementPredicate(AnimationState<Target1Entity> event) {
         if (this.animationprocedure.equals("empty")) {
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.target.idle"));
         }
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState event) {
+    private PlayState procedurePredicate(AnimationState<Target1Entity> event) {
         if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
             event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
             if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {

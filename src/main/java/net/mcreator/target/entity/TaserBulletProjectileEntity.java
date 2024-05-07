@@ -5,7 +5,6 @@ import net.mcreator.target.headshot.IHeadshotBox;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.procedures.TaserBulletDangTouZhiWuJiZhongShiTiShiProcedure;
-import net.mcreator.target.procedures.TaserBulletTouZhiWuFeiXingKeProcedure;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.protocol.Packet;
@@ -74,14 +73,13 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        final Vec3 position = this.position();
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
-            double _setval = 25;
             living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.hitind = _setval;
+                capability.hitind = 25;
                 capability.syncPlayerVariables(living);
             });
+
             if (!living.level().isClientSide() && living.getServer() != null) {
                 living.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, living.position(), living.getRotationVector(), living.level() instanceof ServerLevel ? (ServerLevel) living.level() : null, 4,
                         living.getName().getString(), living.getDisplayName(), living.level().getServer(), living), "playsound target:indication voice @a ~ ~ ~ 1 1");
@@ -113,9 +111,8 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
                     if (headshot) {
                         if (this.getOwner() instanceof LivingEntity living) {
                             setBaseDamage(getBaseDamage() * 1.5f);
-                            double _setval = 25;
                             living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                                capability.headind = _setval;
+                                capability.headind = 25;
                                 capability.syncPlayerVariables(living);
                             });
                             if (!living.level().isClientSide() && living.getServer() != null) {
@@ -135,7 +132,12 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
     @Override
     public void tick() {
         super.tick();
-        TaserBulletTouZhiWuFeiXingKeProcedure.execute(this);
+
+        this.getPersistentData().putDouble("live", (this.getPersistentData().getDouble("live") + 1));
+        if (this.getPersistentData().getDouble("live") == 5) {
+            this.setDeltaMovement(new Vec3(0, 0, 0));
+        }
+
         if (this.tickCount > 200) {
             this.discard();
         }
