@@ -51,6 +51,7 @@ public class PlayerEventHandler {
             handleFireTime(player);
             handleGround(player);
             handlePrepareZoom(player);
+            handleSpecialWeaponAmmo(player);
         }
     }
 
@@ -254,6 +255,17 @@ public class PlayerEventHandler {
                     player.getPersistentData().putDouble("miaozhunshijian", 0);
                 }
             }
+        }
+    }
+
+    private static void handleSpecialWeaponAmmo(Player player) {
+        ItemStack stack = player.getMainHandItem();
+
+        if (stack.getItem() == TargetModItems.RPG.get() && stack.getOrCreateTag().getDouble("ammo") == 1) {
+            stack.getOrCreateTag().putDouble("empty", 0);
+        }
+        if (stack.getItem() == TargetModItems.BOCEK.get() && stack.getOrCreateTag().getDouble("ammo") == 1) {
+            stack.getOrCreateTag().putDouble("empty", 0);
         }
     }
 }

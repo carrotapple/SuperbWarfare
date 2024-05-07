@@ -1,9 +1,13 @@
 package net.mcreator.target.event;
 
+import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -23,6 +27,7 @@ public class ClientEventHandler {
             handleWeaponMove(living);
             handleWeaponZoom(living);
             handleWeaponFire(event, living);
+            handleShockCamera(event, living);
         }
     }
 
@@ -308,6 +313,14 @@ public class ClientEventHandler {
         }
         if (entity.getPersistentData().getDouble("firetime") >= 1) {
             entity.getPersistentData().putDouble("firetime", 0);
+        }
+    }
+
+    private static void handleShockCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
+        if (entity.hasEffect(TargetModMobEffects.SHOCK.get()) && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
+            event.setYaw(Minecraft.getInstance().gameRenderer.getMainCamera().getYRot());
+            event.setPitch(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot());
+            event.setRoll((float) Mth.nextDouble(RandomSource.create(), 8, 12));
         }
     }
 
