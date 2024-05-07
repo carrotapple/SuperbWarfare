@@ -27,6 +27,11 @@ public class TargetModTabs {
                                 output.accept(Abekiri.getGunInstance());
                                 output.accept(Trachelium.getGunInstance());
                                 output.accept(VectorItem.getGunInstance());
+                                output.accept(SksItem.getGunInstance());
+                                output.accept(AK47Item.getGunInstance());
+                                output.accept(Devotion.getGunInstance());
+                                output.accept(HuntingRifle.getGunInstance());
+                                output.accept(M79Item.getGunInstance());
 
                                 output.accept(Mk14Item.getGunInstance());
                                 output.accept(MarlinItem.getGunInstance());

@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.client.renderer.item.M79ItemRenderer;
 import net.mcreator.target.procedures.M79WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
+import net.mcreator.target.tools.ItemNBTTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -153,6 +154,10 @@ public class M79Item extends GunItem implements GeoItem {
             itemstack.getOrCreateTag().putDouble("maxammo", getAmmoCount(player));
         }
         M79WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
+
+        if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
+            initGun(itemstack, false);
+        }
     }
 
     public static double getAmmoCount(Player player) {
@@ -165,8 +170,32 @@ public class M79Item extends GunItem implements GeoItem {
         }
         return sum;
     }
-
     protected static boolean check(ItemStack stack) {
         return stack.getItem() == TargetModItems.GRENADE_40MM.get();
+    }
+
+    public static ItemStack getGunInstance() {
+        ItemStack stack = new ItemStack(TargetModItems.M_79.get());
+
+        initGun(stack, true);
+        return stack;
+    }
+
+    private static void initGun(ItemStack stack, boolean isCreative) {
+        stack.getOrCreateTag().putDouble("zoomspeed", 1);
+        stack.getOrCreateTag().putDouble("zoom", 1.25);
+        stack.getOrCreateTag().putDouble("sniperguns", 1);
+        stack.getOrCreateTag().putDouble("dev", 7);
+        stack.getOrCreateTag().putDouble("recoilx", 0.004);
+        stack.getOrCreateTag().putDouble("recoily", 0.03);
+        stack.getOrCreateTag().putDouble("damage", 40);
+        stack.getOrCreateTag().putDouble("headshot", 3);
+        stack.getOrCreateTag().putDouble("velocity", 50);
+        stack.getOrCreateTag().putDouble("mag", 1);
+        stack.getOrCreateTag().putBoolean("init", true);
+
+        if (isCreative) {
+            stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        }
     }
 }
