@@ -6,7 +6,6 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.TracheliumItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.procedures.ReloadingProcedure;
-import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.RarityTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.ChatFormatting;
