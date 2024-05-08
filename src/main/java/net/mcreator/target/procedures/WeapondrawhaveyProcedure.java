@@ -6,6 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Entity;
 
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.init.TargetModItems;
 
 public class WeapondrawhaveyProcedure {
     public static void execute(Entity entity, ItemStack itemstack) {
@@ -28,6 +29,9 @@ public class WeapondrawhaveyProcedure {
             }
             if (entity instanceof Player _player)
                 _player.getCooldowns().addCooldown(itemstack.getItem(), 32);
+            if (itemstack.getItem() == TargetModItems.M_60.get() && itemstack.getOrCreateTag().getDouble("ammo") <= 5) {
+                itemstack.getOrCreateTag().putDouble("empty", 1);
+            }
         }
         if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == itemstack.getItem()) {
             if (itemstack.getOrCreateTag().getDouble("drawtime") < 29) {

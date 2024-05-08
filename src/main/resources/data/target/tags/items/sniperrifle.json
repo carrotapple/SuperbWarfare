@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "target:hunting_rifle",
+    "target:kraber",
+    "target:sentinel",
+    "target:svd",
+    "target:m_98b"
+  ]
+}

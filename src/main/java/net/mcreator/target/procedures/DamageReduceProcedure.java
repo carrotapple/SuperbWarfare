@@ -4,6 +4,7 @@ import net.mcreator.target.init.TargetModItems;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
@@ -13,6 +14,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraft.tags.ItemTags;
 
 import javax.annotation.Nullable;
 
@@ -51,35 +53,35 @@ public class DamageReduceProcedure {
         if (damagesource.is(ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("target:gunfire")))) {
             stack = (sourceentity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY);
             distanse = (entity.position()).distanceTo((sourceentity.position()));
-            if (stack.getOrCreateTag().getDouble("shotgun") == 1 || stack.getItem() == TargetModItems.BOCEK.get()) {
+            if (stack.is(ItemTags.create(new ResourceLocation("target:shotgun"))) || stack.getItem() == TargetModItems.BOCEK.get()) {
                 if (distanse > 20) {
                     ((LivingHurtEvent) event).setAmount(((float) (amount / (1 + 0.05 * (distanse - 20)))));
                     damage = amount / (1 + 0.05 * (distanse - 20));
                 } else {
                     damage = amount;
                 }
-            } else if (stack.getOrCreateTag().getDouble("sniperguns") == 1) {
+            } else if (stack.is(ItemTags.create(new ResourceLocation("target:sniperrifle")))) {
                 if (distanse > 200) {
                     ((LivingHurtEvent) event).setAmount(((float) (amount / (1 + 0.001 * (distanse - 200)))));
                     damage = amount / (1 + 0.001 * (distanse - 200));
                 } else {
                     damage = amount;
                 }
-            } else if (stack.getOrCreateTag().getDouble("handgun") == 1) {
+            } else if (stack.is(ItemTags.create(new ResourceLocation("target:handgun")))) {
                 if (distanse > 40) {
                     ((LivingHurtEvent) event).setAmount(((float) (amount / (1 + 0.04 * (distanse - 40)))));
                     damage = amount / (1 + 0.04 * (distanse - 40));
                 } else {
                     damage = amount;
                 }
-            } else if (stack.getOrCreateTag().getDouble("smg") == 1) {
+            } else if (stack.is(ItemTags.create(new ResourceLocation("target:smg")))) {
                 if (distanse > 50) {
                     ((LivingHurtEvent) event).setAmount(((float) (amount / (1 + 0.03 * (distanse - 50)))));
                     damage = amount / (1 + 0.03 * (distanse - 50));
                 } else {
                     damage = amount;
                 }
-            } else if (stack.getOrCreateTag().getDouble("rifle") == 1) {
+            } else if (stack.is(ItemTags.create(new ResourceLocation("target:rifle")))) {
                 if (distanse > 100) {
                     ((LivingHurtEvent) event).setAmount(((float) (amount / (1 + 0.005 * (distanse - 100)))));
                 } else {

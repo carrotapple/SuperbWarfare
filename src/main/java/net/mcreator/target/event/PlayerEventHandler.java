@@ -4,6 +4,8 @@ import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -170,26 +172,26 @@ public class PlayerEventHandler {
         if (stack.getItem() == TargetModItems.MINIGUN.get()) {
             return new java.text.DecimalFormat("##").format((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleammo) + " " + firemode;
         }
-        if (stack.getOrCreateTag().getDouble("rifle") == 1) {
+        if (stack.is(ItemTags.create(new ResourceLocation("target:rifle")))) {
             stack.getOrCreateTag().putDouble("maxammo",
                     ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleammo));
             return (new java.text.DecimalFormat("##").format(stack.getOrCreateTag().getDouble("ammo"))) + "/"
                     + new java.text.DecimalFormat("##").format((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleammo) + " " + firemode;
         }
-        if (stack.getOrCreateTag().getDouble("handgun") == 1
-                || stack.getOrCreateTag().getDouble("smg") == 1) {
+        if (stack.is(ItemTags.create(new ResourceLocation("target:handgun")))
+                || stack.is(ItemTags.create(new ResourceLocation("target:smg")))) {
             stack.getOrCreateTag().putDouble("maxammo",
                     ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).handgunammo));
             return (new java.text.DecimalFormat("##").format(stack.getOrCreateTag().getDouble("ammo"))) + "/"
                     + new java.text.DecimalFormat("##").format((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).handgunammo) + " " + firemode;
         }
-        if (stack.getOrCreateTag().getDouble("shotgun") == 1) {
+        if (stack.is(ItemTags.create(new ResourceLocation("target:shotgun")))) {
             stack.getOrCreateTag().putDouble("maxammo",
                     ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunammo));
             return (new java.text.DecimalFormat("##").format(stack.getOrCreateTag().getDouble("ammo"))) + "/"
                     + new java.text.DecimalFormat("##").format((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunammo) + " " + firemode;
         }
-        if (stack.getOrCreateTag().getDouble("sniperguns") == 1) {
+        if (stack.is(ItemTags.create(new ResourceLocation("target:sniperrifle")))) {
             stack.getOrCreateTag().putDouble("maxammo",
                     ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperammo));
             return (new java.text.DecimalFormat("##").format(stack.getOrCreateTag().getDouble("ammo"))) + "/"

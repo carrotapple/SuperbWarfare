@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "target:devotion",
+    "target:m_4",
+    "target:hk_416",
+    "target:rpk",
+    "target:sks",
+    "target:minigun",
+    "target:mk_14",
+    "target:m_60",
+    "target:marlin",
+    "target:ak_47"
+  ]
+}

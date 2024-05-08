@@ -1,7 +1,6 @@
 {
   "zoomspeed": 1,
   "zoom": 1.25,
-  "rifle": 1,
   "dev": 5,
   "recoilx": 0.004,
   "recoily": 0.015,
@@ -9,5 +8,5 @@
   "headshot": 1.75,
   "velocity": 40,
   "mag": 20,
-  v
+  "projectileamount": 1
 }
