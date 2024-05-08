@@ -37,7 +37,7 @@ public class BulletFireNormalProcedure {
         if (!entity.level().isClientSide() && entity instanceof LivingEntity living) {
             float damage;
             float headshot = (float) heldItem.getOrCreateTag().getDouble("headshot");
-            float velocity = 4 * (float) heldItem.getOrCreateTag().getDouble("power");
+            float velocity = 4 * (float) heldItem.getOrCreateTag().getDouble("speed");
 
             if (heldItem.getItem() == TargetModItems.BOCEK.get()) {
 
@@ -46,7 +46,7 @@ public class BulletFireNormalProcedure {
                 ProjectileEntity projectile = new ProjectileEntity(entity.level(), living, damage, headshot);
 
                 projectile.setPos((living.getX() + (-0.5) * living.getLookAngle().x), (living.getEyeY() - 0.1 + (-0.5) * living.getLookAngle().y), (living.getZ() + (-0.5) * living.getLookAngle().z));
-                projectile.shoot(living.getLookAngle().x, living.getLookAngle().y, living.getLookAngle().z,3 * (float) heldItem.getOrCreateTag().getDouble("speed"), 2.5f);
+                projectile.shoot(living.getLookAngle().x, living.getLookAngle().y, living.getLookAngle().z,3 * velocity, 2.5f);
                 entity.level().addFreshEntity(projectile);
 
             } else {

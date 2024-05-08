@@ -35,6 +35,7 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
         CoreGeoBone l = getAnimationProcessor().getBone("l");
         CoreGeoBone r = getAnimationProcessor().getBone("r");
         CoreGeoBone body = getAnimationProcessor().getBone("mk14_default");
+        CoreGeoBone shuan = getAnimationProcessor().getBone("shuan");
 
         Player player = Minecraft.getInstance().player;
         ItemStack stack = player.getMainHandItem();
@@ -68,6 +69,8 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
         fp = player.getPersistentData().getDouble("firepos");
 
         shen.setPosZ(3f * (float) fp);
+
+        shuan.setPosZ(6f * (float) fp);
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
             shen.setRotX(0.001f * (float) fp);

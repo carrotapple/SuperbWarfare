@@ -12,5 +12,6 @@
   "headshot": 2,
   "velocity": 40,
   "mag": 55,
-  "firemode": 2
+  "firemode": 2,
+  "projectileamount": 1
 }

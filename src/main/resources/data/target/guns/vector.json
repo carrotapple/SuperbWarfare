@@ -9,5 +9,6 @@
   "damage": 4.5,
   "headshot": 1.5,
   "velocity": 22,
-  "mag": 33
+  "mag": 33,
+  "projectileamount": 1
 }

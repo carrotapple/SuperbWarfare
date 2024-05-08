@@ -9408,8 +9408,13 @@
 					"pivot": [0, 7.63984, -23.7]
 				},
 				{
-					"name": "action",
+					"name": "shuan",
 					"parent": "bolt",
+					"pivot": [0, 7.63984, -23.7]
+				},
+				{
+					"name": "action",
+					"parent": "shuan",
 					"pivot": [0, 7.63984, -23.7],
 					"cubes": [
 						{
@@ -9546,7 +9551,7 @@
 				},
 				{
 					"name": "action2",
-					"parent": "bolt",
+					"parent": "shuan",
 					"pivot": [-0.00553, 5.73422, -16.03211],
 					"cubes": [
 						{

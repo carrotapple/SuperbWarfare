@@ -6,7 +6,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 
-public class As12DsProcedure {
+public class Aa12DsProcedure {
     public static void execute(Entity entity) {
         if (entity == null)
             return;

@@ -23,7 +23,6 @@ public class ChangefiremodeProcedure {
             if (usehand.getOrCreateTag().getDouble("firemode") == 2) {
                 usehand.getOrCreateTag().putDouble("firemode", 0);
                 usehand.getOrCreateTag().putDouble("cg", 10);
-                entity.getPersistentData().putDouble("firing", 0);
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
@@ -49,7 +48,6 @@ public class ChangefiremodeProcedure {
             if (usehand.getOrCreateTag().getDouble("firemode") == 0) {
                 usehand.getOrCreateTag().putDouble("firemode", 1);
                 usehand.getOrCreateTag().putDouble("cg", 10);
-                entity.getPersistentData().putDouble("firing", 0);
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,

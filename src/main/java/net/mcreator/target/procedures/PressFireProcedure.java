@@ -1,43 +1,33 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.init.TargetModItems;
-import net.mcreator.target.network.TargetModVariables;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.CommandSource;
+
+import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.init.TargetModItems;
 
 public class PressFireProcedure {
     public static void execute(Entity entity) {
         if (entity == null)
             return;
-        TracheliumfireProcedure.execute(entity);
         TaserfireProcedure.execute(entity);
-        HrfireProcedure.execute(entity);
         M79fireProcedure.execute(entity);
         AbkrfireProcedure.execute(entity);
         M98bfireProcedure.execute(entity);
-        DevotiongfireProcedure.execute(entity);
         RpgfireProcedure.execute(entity);
-        M4fireProcedure.execute(entity);
-        Aa12fireProcedure.execute(entity);
-        Hk416fireProcedure.execute(entity);
-        RpkfireProcedure.execute(entity);
-        SksfireProcedure.execute(entity);
         KraberfireProcedure.execute(entity);
-        VecfireProcedure.execute(entity);
         MinigunfireProcedure.execute(entity);
-        Mk14fireProcedure.execute(entity);
         SentinelFireProcedure.execute(entity);
-        M60fireProcedure.execute(entity);
-        SvdfireProcedure.execute(entity);
         MarlinfireProcedure.execute(entity);
         M870fireProcedure.execute(entity);
-        AKfireProcedure.execute(entity);
+        VecfireProcedure.execute(entity);
+        entity.getPersistentData().putDouble("firing", 1);
         if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).is(ItemTags.create(new ResourceLocation("target:gun")))
                 && !((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == TargetModItems.BOCEK.get())
                 && !((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == TargetModItems.MINIGUN.get())
