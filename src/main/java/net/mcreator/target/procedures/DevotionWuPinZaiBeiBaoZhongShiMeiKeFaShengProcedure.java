@@ -24,7 +24,7 @@ public class DevotionWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:devotion_reload player @s ~ ~ ~ 100 1");
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:devotion_reload_empty player @s ~ ~ ~ 100 1");
                     }
                 }
             }
@@ -48,7 +48,7 @@ public class DevotionWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                     Entity _ent = entity;
                     if (!_ent.level().isClientSide() && _ent.getServer() != null) {
                         _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:devotion_reload2 player @s ~ ~ ~ 100 1");
+                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:devotion_reload_normal player @s ~ ~ ~ 100 1");
                     }
                 }
             }

@@ -62,239 +62,163 @@ public class NormalMagGunFire {
             }
             if (usehand.getItem() == TargetModItems.AK_47.get()) {
                 {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:ak47_fire_1p player @s ~ ~ ~ 2 1");
+                    if (!entity.level().isClientSide() && entity.getServer() != null) {
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:ak47_fire_1p player @s ~ ~ ~ 2 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:ak47_fire_3p player @a ~ ~ ~ 4 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:ak47_far player @a ~ ~ ~ 12 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:ak47_veryfar player @a ~ ~ ~ 24 1");
                     }
                 }
-                {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:ak47_fire_3p player @a ~ ~ ~ 4 1");
-                    }
-                }
-                {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "stopsound @s player target:ak47_fire_3p");
-                    }
-                }
-                // 这个是远处的枪声
-                AkDsProcedure.execute(entity);
             }
             if (usehand.getItem() == TargetModItems.AA_12.get()) {
                 {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:aa12_fire_1p player @s ~ ~ ~ 2 1");
+                    if (!entity.level().isClientSide() && entity.getServer() != null) {
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:aa12_fire_1p player @s ~ ~ ~ 2 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:aa12fire player @a ~ ~ ~ 6 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:aa12_far player @a ~ ~ ~ 16 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:aa12_very_far player @a ~ ~ ~ 32 1");
                     }
                 }
-                {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:aa12fire player @a ~ ~ ~ 6 1");
-                    }
-                }
-                {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "stopsound @s player target:aa12fire");
-                    }
-                }
-                Aa12DsProcedure.execute(entity);
             }
             if (usehand.getItem() == TargetModItems.DEVOTION.get()) {
                 {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:devotion_fire_1p player @s ~ ~ ~ 2 1");
+                    if (!entity.level().isClientSide() && entity.getServer() != null) {
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:devotion_fire_1p player @s ~ ~ ~ 2 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:devotion_fire_3p player @a ~ ~ ~ 4 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:devotion_far player @a ~ ~ ~ 12 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:devotion_veryfar player @a ~ ~ ~ 24 1");
                     }
                 }
-                {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:devotion_fire_3p player @a ~ ~ ~ 4 1");
-                    }
-                }
-                {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "stopsound @s player target:devotion_fire_3p");
-                    }
-                }
-                ArDsProcedure.execute(entity);
             }
             if (usehand.getItem() == TargetModItems.HK_416.get()) {
                 {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:hk416_fire1p player @s ~ ~ ~ 2 1");
+                    if (!entity.level().isClientSide() && entity.getServer() != null) {
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:hk416_fire1p player @s ~ ~ ~ 2 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:hk416fire player @a ~ ~ ~ 4 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:hk_far player @a ~ ~ ~ 12 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:hk_very_far player @a ~ ~ ~ 24 1");
                     }
                 }
-                {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:hk416fire player @a ~ ~ ~ 4 1");
-                    }
-                }
-                {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "stopsound @s player target:hk416fire");
-                    }
-                }
-                HkDsProcedure.execute(entity);
             }
             if (usehand.getItem() == TargetModItems.M_4.get()) {
                 {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:m4fire player @s ~ ~ ~ 2 1");
+                    if (!entity.level().isClientSide() && entity.getServer() != null) {
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m4fire player @s ~ ~ ~ 2 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m4fire_3p player @a ~ ~ ~ 4 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m4far player @a ~ ~ ~ 12 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m4veryfar player @a ~ ~ ~ 24 1");
                     }
                 }
-                {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:m4fire_3p player @a ~ ~ ~ 4 1");
-                    }
-                }
-                {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "stopsound @s player target:m4fire_3p");
-                    }
-                }
-                ArDsProcedure.execute(entity);
             }
             if (usehand.getItem() == TargetModItems.M_60.get()) {
                 {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:m60fire player @a ~ ~ ~ 4 1");
+                    if (!entity.level().isClientSide() && entity.getServer() != null) {
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m60fire player @a ~ ~ ~ 4 1");
                     }
                 }
             }
             if (usehand.getItem() == TargetModItems.SKS.get()) {
                 {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:ak_fire_1p player @s ~ ~ ~ 2 1");
+                    if (!entity.level().isClientSide() && entity.getServer() != null) {
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:sks_fire_1p player @s ~ ~ ~ 2 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:sks_fire_3p player @a ~ ~ ~ 5 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:sks_far player @a ~ ~ ~ 12 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:sks_veryfar player @a ~ ~ ~ 24 1");
                     }
                 }
-                {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:ak_fire_3p player @a ~ ~ ~ 5 1");
-                    }
-                }
-                {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "stopsound @s player target:ak_fire_3p");
-                    }
-                }
-                SksDsProcedure.execute(entity);
             }
             if (usehand.getItem() == TargetModItems.MK_14.get()) {
                 {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:mk14fire player @a ~ ~ ~ 4 1");
+                    if (!entity.level().isClientSide() && entity.getServer() != null) {
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:mk14fire player @a ~ ~ ~ 4 1");
                     }
                 }
             }
             if (usehand.getItem() == TargetModItems.RPK.get()) {
                 {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:rpk_fire1p player @s ~ ~ ~ 2 1");
+                    if (!entity.level().isClientSide() && entity.getServer() != null) {
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:rpk_fire1p player @s ~ ~ ~ 2 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:rpkfire");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:rpkfire player @a ~ ~ ~ 4 1");
                     }
                 }
-                {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:rpkfire player @a ~ ~ ~ 4 1");
-                    }
-                }
-                {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "stopsound @s player target:rpkfire");
-                    }
-                }
-                AkDsProcedure.execute(entity);
             }
             if (usehand.getItem() == TargetModItems.SVD.get()) {
                 {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:svdfire1p player @s ~ ~ ~ 2 1");
+                    if (!entity.level().isClientSide() && entity.getServer() != null) {
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:svdfire1p player @s ~ ~ ~ 2 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:svdfire3p player @a ~ ~ ~ 6 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:svdfar player @a ~ ~ ~ 16 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:svdveryfar player @a ~ ~ ~ 32 1");
                     }
                 }
-                {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:svdfire3p player @a ~ ~ ~ 6 1");
-                    }
-                }
-                {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "stopsound @s player target:svdfire3p");
-                    }
-                }
-                SvdDsProcedure.execute(entity);
             }
             if (usehand.getItem() == TargetModItems.VECTOR.get()) {
                 {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:vec3 player @a ~ ~ ~ 2 1");
+                    if (!entity.level().isClientSide() && entity.getServer() != null) {
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:vec3 player @a ~ ~ ~ 2 1");
                     }
                 }
             }
             if (usehand.getItem() == TargetModItems.TRACHELIUM.get()) {
                 {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:trachelium3p player @a ~ ~ ~ 4 1");
+                    if (!entity.level().isClientSide() && entity.getServer() != null) {
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:trachelium_fire_1p player @s ~ ~ ~ 2 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:trachelium_fire_3p player @a ~ ~ ~ 4 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:trachelium_veryfar player @a ~ ~ ~ 16 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:trachelium_fire_3p");
                     }
                 }
             }
             if (usehand.getItem() == TargetModItems.HUNTING_RIFLE.get()) {
                 {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:hr_fire_1p player @a ~ ~ ~ 4 1");
+                    if (!entity.level().isClientSide() && entity.getServer() != null) {
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:hunting_rifle_fire_1p player @s ~ ~ ~ 1 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:hunting_rifle_fire_3p player @a ~ ~ ~ 4 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:hunting_rifle_far player @a ~ ~ ~ 16 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:hunting_rifle_veryfar player @a ~ ~ ~ 32 1");
                     }
                 }
             }

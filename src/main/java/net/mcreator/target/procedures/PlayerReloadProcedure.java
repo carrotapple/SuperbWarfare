@@ -21,7 +21,8 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.TASER.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 1) {
+                        && tag.getDouble("ammo") < 1
+                        && tag.getDouble("maxammo") > 0)  {
                     tag.putDouble("reloading", 1);
                     tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                     tag.putDouble("reloadtime", 55);

@@ -17,7 +17,6 @@ public class KraberfireProcedure {
                     && usehand.getOrCreateTag().getDouble("ammo") > 0) {
                 usehand.getOrCreateTag().putDouble("fireanim", 40);
                 BulletFireNormalProcedure.execute(entity);
-                KraberDsProcedure.execute(entity);
                 if (entity instanceof Player _player)
                     _player.getCooldowns().addCooldown(usehand.getItem(), 40);
 
@@ -27,7 +26,9 @@ public class KraberfireProcedure {
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
                             entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:kraber_fire_3p player @a ~ ~ ~ 6 1");
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:kraber_fire_3p");
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:kraberfar player @a ~ ~ ~ 16 1");
+                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:kraberveryfar player @a ~ ~ ~ 32 1");
                 }
                 usehand.getOrCreateTag().putDouble("ammo", (usehand.getOrCreateTag().getDouble("ammo") - 1));
             }
