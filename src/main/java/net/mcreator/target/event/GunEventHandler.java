@@ -165,9 +165,15 @@ public class GunEventHandler {
                 player.playSound(sound3p, 4f, 1f);
             }
 
+            SoundEvent soundFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_far"));
+            if (soundFar != null) {
+                player.playSound(soundFar, 12f, 1f);
+            }
 
-
-
+            SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_veryfar"));
+            if (soundVeryFar != null) {
+                player.playSound(soundVeryFar, 24f, 1f);
+            }
         }
     }
 

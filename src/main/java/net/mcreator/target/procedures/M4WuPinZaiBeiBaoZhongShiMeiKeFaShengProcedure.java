@@ -23,7 +23,7 @@ public class M4WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m4_reload_empty player @s ~ ~ ~ 100 1");
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m_4_reload_empty player @s ~ ~ ~ 100 1");
                     }
                 }
                 entity.getPersistentData().putDouble("id", id);
@@ -46,7 +46,7 @@ public class M4WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m4_reload_normal player @s ~ ~ ~ 100 1");
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m_4_reload_normal player @s ~ ~ ~ 100 1");
                     }
                 }
                 entity.getPersistentData().putDouble("id", id);

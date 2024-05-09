@@ -245,50 +245,50 @@
     ]
   },
 
-  "ak47_fire_1p": {
+  "ak_47_fire_1p": {
     "sounds": [
       {
-        "name": "target:ak47/ak47_fire_1p",
+        "name": "target:ak_47/ak_47_fire_1p",
         "stream": false
       }
     ]
   },
-  "ak47_fire_3p": {
+  "ak_47_fire_3p": {
     "sounds": [
       {
-        "name": "target:ak47/ak47_fire_3p",
+        "name": "target:ak_47/ak_47_fire_3p",
         "stream": false
       }
     ]
   },
-  "ak47_far": {
+  "ak_47_far": {
     "sounds": [
       {
-        "name": "target:ak47/ak47_far",
+        "name": "target:ak_47/ak_47_far",
         "stream": false
       }
     ]
   },
-  "ak47_veryfar": {
+  "ak_47_veryfar": {
     "sounds": [
       {
-        "name": "target:ak47/ak47_veryfar",
+        "name": "target:ak_47/ak_47_veryfar",
         "stream": false
       }
     ]
   },
-  "ak47_reload_normal": {
+  "ak_47_reload_normal": {
     "sounds": [
       {
-        "name": "target:ak47/ak47_reload_normal",
+        "name": "target:ak_47/ak_47_reload_normal",
         "stream": false
       }
     ]
   },
-  "ak47_reload_empty": {
+  "ak_47_reload_empty": {
     "sounds": [
       {
-        "name": "target:ak47/ak47_reload_empty",
+        "name": "target:ak_47/ak_47_reload_empty",
         "stream": false
       }
     ]
@@ -531,50 +531,50 @@
     ]
   },
 
-  "hk416_fire_1p": {
+  "hk_416_fire_1p": {
     "sounds": [
       {
-        "name": "target:hk416/hk416_fire_1p",
+        "name": "target:hk_416/hk_416_fire_1p",
         "stream": false
       }
     ]
   },
-  "hk416_fire_3p": {
+  "hk_416_fire_3p": {
     "sounds": [
       {
-        "name": "target:hk416/hk416_fire_3p",
+        "name": "target:hk_416/hk_416_fire_3p",
         "stream": false
       }
     ]
   },
-  "hk416_far": {
+  "hk_416_far": {
     "sounds": [
       {
-        "name": "target:hk416/hk416_far",
+        "name": "target:hk_416/hk_416_far",
         "stream": false
       }
     ]
   },
-  "hk416_veryfar": {
+  "hk_416_veryfar": {
     "sounds": [
       {
-        "name": "target:hk416/hk416_veryfar",
+        "name": "target:hk_416/hk_416_veryfar",
         "stream": false
       }
     ]
   },
-  "hk416_reload_normal": {
+  "hk_416_reload_normal": {
     "sounds": [
       {
-        "name": "target:hk416/hk416_reload_normal",
+        "name": "target:hk_416/hk_416_reload_normal",
         "stream": false
       }
     ]
   },
-  "hk416_reload_empty": {
+  "hk_416_reload_empty": {
     "sounds": [
       {
-        "name": "target:hk416/hk416_reload_empty",
+        "name": "target:hk_416/hk_416_reload_empty",
         "stream": false
       }
     ]
