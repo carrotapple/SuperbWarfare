@@ -246,15 +246,14 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        AttributeSupplier.Builder builder = Mob.createMobAttributes();
-        builder = builder.add(Attributes.MOVEMENT_SPEED, 0);
-        builder = builder.add(Attributes.MAX_HEALTH, 40);
-        builder = builder.add(Attributes.ARMOR, 0);
-        builder = builder.add(Attributes.ATTACK_DAMAGE, 0);
-        builder = builder.add(Attributes.FOLLOW_RANGE, 16);
-        builder = builder.add(Attributes.KNOCKBACK_RESISTANCE, 10);
-        builder = builder.add(Attributes.FLYING_SPEED, 0);
-        return builder;
+        return Mob.createMobAttributes()
+                .add(Attributes.MOVEMENT_SPEED, 0)
+                .add(Attributes.MAX_HEALTH, 40)
+                .add(Attributes.ARMOR, 0)
+                .add(Attributes.ATTACK_DAMAGE, 0)
+                .add(Attributes.FOLLOW_RANGE, 16)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 10)
+                .add(Attributes.FLYING_SPEED, 0);
     }
 
     private PlayState movementPredicate(AnimationState<Target1Entity> event) {
