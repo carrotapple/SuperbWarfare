@@ -13,7 +13,9 @@ public class CrosshairXianShiYouXiNeiDieJiaCengProcedure {
     public static boolean execute(Entity entity) {
         if (entity == null)
             return false;
-        return (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).is(ItemTags.create(new ResourceLocation("target:gun"))) && entity.getPersistentData().getDouble("miaozhunshijian") < 7
-                && !((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == TargetModItems.M_79.get()) && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
+        return (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).is(ItemTags.create(new ResourceLocation("target:gun")))
+                && entity.getPersistentData().getDouble("zoom_time") < 7
+                && !((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == TargetModItems.M_79.get())
+                && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
     }
 }
