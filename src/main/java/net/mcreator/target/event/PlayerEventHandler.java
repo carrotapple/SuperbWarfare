@@ -1,14 +1,19 @@
 package net.mcreator.target.event;
 
+import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -54,9 +59,15 @@ public class PlayerEventHandler {
             handleGround(player);
             handlePrepareZoom(player);
             handleSpecialWeaponAmmo(player);
+            handleChangeFireRate(player);
+            handleDistantRange(player);
+            handleGunsDev(player);
         }
     }
 
+    /**
+     * 判断玩家是否趴下
+     */
     private static void handlePlayerProne(Player player) {
         Level level = player.level();
 
@@ -81,6 +92,9 @@ public class PlayerEventHandler {
         });
     }
 
+    /**
+     * 判断玩家是否在奔跑
+     */
     private static void handlePlayerSprint(Player player) {
         if (player.getMainHandItem().getOrCreateTag().getDouble("fireanim") > 0) {
             player.getPersistentData().putDouble("noRun", 20);
@@ -99,6 +113,9 @@ public class PlayerEventHandler {
         }
     }
 
+    /**
+     * 处理武器等级
+     */
     private static void handleWeaponLevel(Player player) {
         ItemStack stack = player.getMainHandItem();
         if (stack.is(TargetModTags.Items.GUN)) {
@@ -172,26 +189,26 @@ public class PlayerEventHandler {
         if (stack.getItem() == TargetModItems.MINIGUN.get()) {
             return new java.text.DecimalFormat("##").format((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleammo) + " " + firemode;
         }
-        if (stack.is(ItemTags.create(new ResourceLocation("target:rifle")))) {
+        if (stack.is(TargetModTags.Items.RIFLE)) {
             stack.getOrCreateTag().putDouble("maxammo",
                     ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleammo));
             return (new java.text.DecimalFormat("##").format(stack.getOrCreateTag().getDouble("ammo"))) + "/"
                     + new java.text.DecimalFormat("##").format((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleammo) + " " + firemode;
         }
-        if (stack.is(ItemTags.create(new ResourceLocation("target:handgun")))
+        if (stack.is(TargetModTags.Items.HANDGUN)
                 || stack.is(ItemTags.create(new ResourceLocation("target:smg")))) {
             stack.getOrCreateTag().putDouble("maxammo",
                     ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).handgunammo));
             return (new java.text.DecimalFormat("##").format(stack.getOrCreateTag().getDouble("ammo"))) + "/"
                     + new java.text.DecimalFormat("##").format((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).handgunammo) + " " + firemode;
         }
-        if (stack.is(ItemTags.create(new ResourceLocation("target:shotgun")))) {
+        if (stack.is(TargetModTags.Items.SHOTGUN)) {
             stack.getOrCreateTag().putDouble("maxammo",
                     ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunammo));
             return (new java.text.DecimalFormat("##").format(stack.getOrCreateTag().getDouble("ammo"))) + "/"
                     + new java.text.DecimalFormat("##").format((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunammo) + " " + firemode;
         }
-        if (stack.is(ItemTags.create(new ResourceLocation("target:sniperrifle")))) {
+        if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
             stack.getOrCreateTag().putDouble("maxammo",
                     ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperammo));
             return (new java.text.DecimalFormat("##").format(stack.getOrCreateTag().getDouble("ammo"))) + "/"
@@ -250,11 +267,11 @@ public class PlayerEventHandler {
                         capability.syncPlayerVariables(player);
                     });
 
-                    if (player.getPersistentData().getDouble("miaozhunshijian") < 10) {
-                        player.getPersistentData().putDouble("miaozhunshijian", (player.getPersistentData().getDouble("miaozhunshijian") + 1));
+                    if (player.getPersistentData().getDouble("zoom_time") < 10) {
+                        player.getPersistentData().putDouble("zoom_time", (player.getPersistentData().getDouble("zoom_time") + 1));
                     }
                 } else {
-                    player.getPersistentData().putDouble("miaozhunshijian", 0);
+                    player.getPersistentData().putDouble("zoom_time", 0);
                 }
             }
         }
@@ -269,5 +286,103 @@ public class PlayerEventHandler {
         if (stack.getItem() == TargetModItems.BOCEK.get() && stack.getOrCreateTag().getDouble("ammo") == 1) {
             stack.getOrCreateTag().putDouble("empty", 0);
         }
+    }
+
+    private static void handleChangeFireRate(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        if (stack.is(TargetModTags.Items.GUN)) {
+            if (stack.getOrCreateTag().getDouble("cg") > 0) {
+                stack.getOrCreateTag().putDouble("cg", (stack.getOrCreateTag().getDouble("cg") - 1));
+            }
+        }
+    }
+
+    /**
+     * 望远镜瞄准时显示距离
+     */
+    private static void handleDistantRange(Player player) {
+        ItemStack stack = player.getUseItem();
+        if (stack.getItem() == Items.SPYGLASS) {
+            if (player.position().distanceTo((Vec3.atLowerCornerOf(player.level().clip(
+                    new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(1024)),
+                            ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos()))) <= 512) {
+                if (!player.level().isClientSide())
+                    player.displayClientMessage(Component.literal((new java.text.DecimalFormat("##.#")
+                            .format(player.position().distanceTo((Vec3.atLowerCornerOf(
+                                    player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(768)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos()))))
+                            + "M")), true);
+            } else {
+                if (player.level().isClientSide())
+                    player.displayClientMessage(Component.literal("---M"), true);
+            }
+        }
+    }
+
+    private static void handleGunsDev(Player player) {
+        double[] recoilTimer = {0};
+        double totalTime = 20;
+        int sleepTime = 2;
+        double recoilDuration = totalTime / sleepTime;
+
+        Runnable recoilRunnable = () -> {
+            while (recoilTimer[0] < recoilDuration) {
+                if (player == null) {
+                    return;
+                }
+
+                ItemStack stack = player.getMainHandItem();
+
+                double basic = stack.getOrCreateTag().getDouble("dev");
+
+                double sprint = player.isSprinting() ? 0.5 * basic : 0;
+                double sneaking = player.isShiftKeyDown() ? (-0.25) * basic : 0;
+                double prone = player.getPersistentData().getDouble("prone") > 0 ? (-0.5) * basic : 0;
+                double jump = player.onGround() ? 0 : 1.5 * basic;
+                double fire = stack.getOrCreateTag().getDouble("fireanim") > 0 ? 0.5 * basic : 0;
+                double ride = player.isPassenger() ? (-0.5) * basic : 0;
+
+                double walk;
+                if (player.getPersistentData().getDouble("qian") == 1 || player.getPersistentData().getDouble("tui") == 1 ||
+                        player.getPersistentData().getDouble("mover") == 1 || player.getPersistentData().getDouble("movel") == 1) {
+                    walk = 0.2 * basic;
+                } else {
+                    walk = 0;
+                }
+
+                double zoom;
+                if (player.getPersistentData().getDouble("zoom_time") > 4) {
+                    if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
+                        zoom = 0.0001;
+                    } else if (stack.is(TargetModTags.Items.SHOTGUN)) {
+                        zoom = 0.9;
+                    } else {
+                        zoom = 0.0001;
+                    }
+                } else {
+                    zoom = 1;
+                }
+
+                double index = zoom * (basic + walk + sprint + sneaking + prone + jump + fire + ride);
+
+                if (player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) < index) {
+                    player.getAttribute(TargetModAttributes.SPREAD.get())
+                            .setBaseValue(player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) + 0.0125 * Math.pow(index - player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()), 2));
+                } else {
+                    player.getAttribute(TargetModAttributes.SPREAD.get())
+                            .setBaseValue(player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) - 0.0125 * Math.pow(index - player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()), 2));
+                }
+
+                recoilTimer[0]++;
+
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        Thread recoilThread = new Thread(recoilRunnable);
+        recoilThread.start();
     }
 }
