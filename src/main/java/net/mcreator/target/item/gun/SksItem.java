@@ -4,8 +4,8 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.target.client.renderer.item.SksItemRenderer;
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.SksWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
-import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class SksItem extends GunItem implements GeoItem {
+public class SksItem extends GunItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
@@ -163,5 +163,10 @@ public class SksItem extends GunItem implements GeoItem {
         //GunsTool.initGun(stack, TargetModItems.SKS.getId().getPath());
         stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
         return stack;
+    }
+
+    @Override
+    public void setAnimationProcedure(String procedure) {
+        this.animationProcedure = procedure;
     }
 }

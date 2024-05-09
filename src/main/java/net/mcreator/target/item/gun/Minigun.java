@@ -5,8 +5,8 @@ import com.google.common.collect.Multimap;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.MinigunItemRenderer;
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.MiniguninbackpackProcedure;
-import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.ItemNBTTool;
 import net.mcreator.target.tools.RarityTool;
 import net.mcreator.target.tools.TooltipTool;
@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class Minigun extends GunItem implements GeoItem {
+public class Minigun extends GunItem implements GeoItem, AnimatedItem {
     private static final String TAG_HEAT = "heatbar";
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
@@ -190,5 +190,9 @@ public class Minigun extends GunItem implements GeoItem {
         stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
         return stack;
     }
-}
 
+    @Override
+    public void setAnimationProcedure(String procedure) {
+        this.animationProcedure = procedure;
+    }
+}

@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.TracheliumItemRenderer;
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.ReloadingProcedure;
 import net.mcreator.target.tools.RarityTool;
 import net.mcreator.target.tools.TooltipTool;
@@ -41,7 +42,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class Trachelium extends GunItem implements GeoItem {
+public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
@@ -167,5 +168,10 @@ public class Trachelium extends GunItem implements GeoItem {
         //GunsTool.initGun(stack, TargetModItems.TRACHELIUM.getId().getPath());
         stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
         return stack;
+    }
+
+    @Override
+    public void setAnimationProcedure(String procedure) {
+        this.animationProcedure = procedure;
     }
 }

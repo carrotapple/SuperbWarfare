@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class LightSaberItem extends SwordItem implements GeoItem {
+public class LightSaberItem extends SwordItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
@@ -117,5 +117,10 @@ public class LightSaberItem extends SwordItem implements GeoItem {
     @Override
     public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(itemstack, world, list, flag);
+    }
+
+    @Override
+    public void setAnimationProcedure(String procedure) {
+        this.animationProcedure = procedure;
     }
 }

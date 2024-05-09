@@ -3,6 +3,7 @@ package net.mcreator.target.item.common.ammo;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.target.client.renderer.item.RocketItemRenderer;
+import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.RocketShiTiBeiGongJuJiZhongShiProcedure;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
@@ -26,7 +27,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class Rocket extends Item implements GeoItem {
+public class Rocket extends Item implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
@@ -112,5 +113,10 @@ public class Rocket extends Item implements GeoItem {
         boolean retval = super.hurtEnemy(itemstack, entity, sourceentity);
         RocketShiTiBeiGongJuJiZhongShiProcedure.execute(entity.level(), sourceentity);
         return retval;
+    }
+
+    @Override
+    public void setAnimationProcedure(String procedure) {
+        this.animationProcedure = procedure;
     }
 }

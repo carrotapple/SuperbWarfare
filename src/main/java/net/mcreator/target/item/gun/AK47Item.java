@@ -4,8 +4,8 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.target.client.renderer.item.AK47ItemRenderer;
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.AK47WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
-import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class AK47Item extends GunItem implements GeoItem {
+public class AK47Item extends GunItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
@@ -173,4 +173,8 @@ public class AK47Item extends GunItem implements GeoItem {
         return stack;
     }
 
+    @Override
+    public void setAnimationProcedure(String procedure) {
+        this.animationProcedure = procedure;
+    }
 }
