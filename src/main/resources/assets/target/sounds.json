@@ -384,99 +384,99 @@
     ]
   },
 
-  "m4_fire_1p": {
+  "m_4_fire_1p": {
     "sounds": [
       {
-        "name": "target:m4/m4_fire_1p",
+        "name": "target:m_4/m_4_fire_1p",
         "stream": false
       }
     ]
   },
-  "m4_fire_3p": {
+  "m_4_fire_3p": {
     "sounds": [
       {
-        "name": "target:m4/m4_fire_3p",
+        "name": "target:m_4/m_4_fire_3p",
         "stream": false
       }
     ]
   },
-  "m4_far": {
+  "m_4_far": {
     "sounds": [
       {
-        "name": "target:m4/m4_far",
+        "name": "target:m_4/m_4_far",
         "stream": false
       }
     ]
   },
-  "m4_veryfar": {
+  "m_4_veryfar": {
     "sounds": [
       {
-        "name": "target:m4/m4_veryfar",
+        "name": "target:m_4/m_4_veryfar",
         "stream": false
       }
     ]
   },
-  "m4_reload_normal": {
+  "m_4_reload_normal": {
     "sounds": [
       {
-        "name": "target:m4/m4_reload_normal",
+        "name": "target:m_4/m_4_reload_normal",
         "stream": false
       }
     ]
   },
-  "m4_reload_empty": {
+  "m_4_reload_empty": {
     "sounds": [
       {
-        "name": "target:m4/m4_reload_empty",
+        "name": "target:m_4/m_4_reload_empty",
         "stream": false
       }
     ]
   },
 
-  "aa12_fire_1p": {
+  "aa_12_fire_1p": {
     "sounds": [
       {
-        "name": "target:aa12/aa12_fire_1p",
+        "name": "target:aa_12/aa_12_fire_1p",
         "stream": false
       }
     ]
   },
-  "aa12_fire_3p": {
+  "aa_12_fire_3p": {
     "sounds": [
       {
-        "name": "target:aa12/aa12_fire_3p",
+        "name": "target:aa_12/aa_12_fire_3p",
         "stream": false
       }
     ]
   },
-  "aa12_far": {
+  "aa_12_far": {
     "sounds": [
       {
-        "name": "target:aa12/aa12_far",
+        "name": "target:aa_12/aa_12_far",
         "stream": false
       }
     ]
   },
-  "aa12_veryfar": {
+  "aa_12_veryfar": {
     "sounds": [
       {
-        "name": "target:aa12/aa12_veryfar",
+        "name": "target:aa_12/aa_12_veryfar",
         "stream": false
       }
     ]
   },
-  "aa12_reload_normal": {
+  "aa_12_reload_normal": {
     "sounds": [
       {
-        "name": "target:aa12/aa12_reload_normal",
+        "name": "target:aa_12/aa_12_reload_normal",
         "stream": false
       }
     ]
   },
-  "aa12_reload_empty": {
+  "aa_12_reload_empty": {
     "sounds": [
       {
-        "name": "target:aa12/aa12_reload_empty",
+        "name": "target:aa_12/aa_12_reload_empty",
         "stream": false
       }
     ]

@@ -5,9 +5,12 @@ import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.procedures.BulletFireNormalProcedure;
 import net.mcreator.target.tools.ItemNBTTool;
+import net.minecraft.core.Holder;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.TickEvent;
@@ -137,9 +140,9 @@ public class GunEventHandler {
             }
 
             playGunSounds(player);
-
         }
     }
+
 
     public static void playGunSounds(Player player) {
         ItemStack stack = player.getMainHandItem();
@@ -151,16 +154,18 @@ public class GunEventHandler {
             String origin = stack.getItem().getDescriptionId();
             String name = origin.substring(origin.lastIndexOf(".") + 1);
 
-            ResourceLocation resourceLocation = new ResourceLocation(TargetMod.MODID, name + "_fire_1p");
-
-            System.out.println(resourceLocation);
-
-            SoundEvent sound = ForgeRegistries.SOUND_EVENTS.getValue(resourceLocation);
-            if (sound != null) {
-                player.playSound(sound);
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_fire_1p"));
+            if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
+                serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(sound1p),
+                        SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 2f, 1f, serverPlayer.level().random.nextLong()));
             }
 
-//            ((ServerPlayer) player).connection.send
+            SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_fire_3p"));
+            if (sound3p != null) {
+                player.playSound(sound3p, 4f, 1f);
+            }
+
+
 
 
         }
