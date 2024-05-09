@@ -1121,7 +1121,7 @@
   "m870_fire_1p": {
     "sounds": [
       {
-        "name": "target:m870/ m870_fire_1p",
+        "name": "target:m870/m870_fire_1p",
         "stream": false
       }
     ]
