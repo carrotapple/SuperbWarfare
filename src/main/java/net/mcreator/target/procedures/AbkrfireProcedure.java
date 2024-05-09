@@ -4,7 +4,7 @@ import net.mcreator.target.init.TargetModItems;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -19,10 +19,9 @@ public class AbkrfireProcedure {
                 for (int index0 = 0; index0 < 8; index0++) {
                     BulletFireNormalProcedure.execute(entity);
                 }
-                if (!player.isCreative() && usehand.hurt(1, RandomSource.create(), null)) {
-                    usehand.shrink(1);
-                    usehand.setDamageValue(0);
-                }
+
+                usehand.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+
                 if (!entity.level().isClientSide() && entity.getServer() != null) {
                     entity.getServer().getCommands().performPrefixedCommand(
                             new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4, entity.getName().getString(), entity.getDisplayName(),
