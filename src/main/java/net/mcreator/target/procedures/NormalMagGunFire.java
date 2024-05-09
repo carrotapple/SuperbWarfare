@@ -67,7 +67,7 @@ public class NormalMagGunFire {
 //            for (int index0 = 0; index0 < (int) usehand.getOrCreateTag().getDouble("projectileamount"); index0++) {
 //                BulletFireNormalProcedure.execute(entity);
 //            }
-            if (usehand.getItem() == TargetModItems.AK47.get()) {
+            if (usehand.getItem() == TargetModItems.AK_47.get()) {
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
@@ -81,7 +81,7 @@ public class NormalMagGunFire {
                     }
                 }
             }
-            if (usehand.getItem() == TargetModItems.AA12.get()) {
+            if (usehand.getItem() == TargetModItems.AA_12.get()) {
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
@@ -109,7 +109,7 @@ public class NormalMagGunFire {
                     }
                 }
             }
-            if (usehand.getItem() == TargetModItems.HK416.get()) {
+            if (usehand.getItem() == TargetModItems.HK_416.get()) {
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
@@ -123,7 +123,7 @@ public class NormalMagGunFire {
                     }
                 }
             }
-            if (usehand.getItem() == TargetModItems.M4.get()) {
+            if (usehand.getItem() == TargetModItems.M_4.get()) {
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
@@ -137,7 +137,7 @@ public class NormalMagGunFire {
                     }
                 }
             }
-            if (usehand.getItem() == TargetModItems.M60.get()) {
+            if (usehand.getItem() == TargetModItems.M_60.get()) {
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
@@ -165,7 +165,7 @@ public class NormalMagGunFire {
                     }
                 }
             }
-            if (usehand.getItem() == TargetModItems.MK14.get()) {
+            if (usehand.getItem() == TargetModItems.MK_14.get()) {
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,

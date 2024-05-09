@@ -16,7 +16,7 @@ public class M870fireProcedure {
             if (usehand.getOrCreateTag().getDouble("reloading") == 1 && usehand.getOrCreateTag().getDouble("prepare") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0) {
                 usehand.getOrCreateTag().putDouble("forcestop", 1);
             }
-            if (usehand.getItem() == TargetModItems.M870.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !(entity instanceof Player _plrCldCheck8 && _plrCldCheck8.getCooldowns().isOnCooldown(usehand.getItem()))
+            if (usehand.getItem() == TargetModItems.M_870.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !(entity instanceof Player _plrCldCheck8 && _plrCldCheck8.getCooldowns().isOnCooldown(usehand.getItem()))
                     && usehand.getOrCreateTag().getDouble("ammo") > 0) {
                 for (int index0 = 0; index0 < 12; index0++) {
                     BulletFireNormalProcedure.execute(entity);

@@ -173,7 +173,7 @@ public class Aa12Item extends GunItem implements GeoItem, AnimatedItem {
     }
 
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(TargetModItems.AA12.get());
+        ItemStack stack = new ItemStack(TargetModItems.AA_12.get());
         //GunsTool.initGun(stack, TargetModItems.AA_12.getId().getPath());
         stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
         return stack;

@@ -21,7 +21,7 @@ public class M79fireProcedure {
         if (entity == null) return;
         if (entity instanceof Player player && !player.isSpectator()) {
             ItemStack usehand = player.getMainHandItem();
-            if (usehand.getItem() == TargetModItems.M79.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !(entity instanceof Player _plrCldCheck4 && _plrCldCheck4.getCooldowns().isOnCooldown(usehand.getItem()))
+            if (usehand.getItem() == TargetModItems.M_79.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !(entity instanceof Player _plrCldCheck4 && _plrCldCheck4.getCooldowns().isOnCooldown(usehand.getItem()))
                     && usehand.getOrCreateTag().getDouble("ammo") > 0) {
                 entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                     capability.recoilhorizon = Math.random() < 0.5 ? -1 : 1;

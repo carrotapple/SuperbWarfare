@@ -164,7 +164,7 @@ public class ReloadsoundstopProcedure {
                 }
             }
         }
-        if (!((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == TargetModItems.M870.get())) {
+        if (!((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == TargetModItems.M_870.get())) {
             {
                 Entity _ent = entity;
                 if (!_ent.level().isClientSide() && _ent.getServer() != null) {

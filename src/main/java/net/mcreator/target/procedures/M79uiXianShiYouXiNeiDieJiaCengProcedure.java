@@ -12,7 +12,7 @@ public class M79uiXianShiYouXiNeiDieJiaCengProcedure {
         if (entity == null) return false;
         if (entity instanceof Player player) {
             return !player.isSpectator()
-                    && player.getMainHandItem().getItem() == TargetModItems.M79.get()
+                    && player.getMainHandItem().getItem() == TargetModItems.M_79.get()
                     && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON
                     && !entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables()).zooming;
         }

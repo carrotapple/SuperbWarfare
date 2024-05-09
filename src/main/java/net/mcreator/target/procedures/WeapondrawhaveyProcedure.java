@@ -29,7 +29,7 @@ public class WeapondrawhaveyProcedure {
             }
             if (entity instanceof Player _player)
                 _player.getCooldowns().addCooldown(itemstack.getItem(), 32);
-            if (itemstack.getItem() == TargetModItems.M60.get() && itemstack.getOrCreateTag().getDouble("ammo") <= 5) {
+            if (itemstack.getItem() == TargetModItems.M_60.get() && itemstack.getOrCreateTag().getDouble("ammo") <= 5) {
                 itemstack.getOrCreateTag().putDouble("empty", 1);
             }
         }
