@@ -39,7 +39,7 @@ import java.util.function.Consumer;
 
 public class Abekiri extends GunItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public String animationprocedure = "empty";
+    public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
     public Abekiri() {
@@ -72,7 +72,7 @@ public class Abekiri extends GunItem implements GeoItem {
         LocalPlayer player = Minecraft.getInstance().player;
         ItemStack stack = player.getMainHandItem();
 
-        if (this.animationprocedure.equals("empty")) {
+        if (this.animationProcedure.equals("empty")) {
 
             if (stack.getOrCreateTag().getDouble("drawtime") < 11) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ab.draw"));
@@ -101,10 +101,10 @@ public class Abekiri extends GunItem implements GeoItem {
 
     private PlayState procedurePredicate(AnimationState event) {
         if (transformType != null) {
-            if (!(this.animationprocedure.equals("empty")) && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
+            if (!(this.animationProcedure.equals("empty")) && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
                 if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                    this.animationprocedure = "empty";
+                    this.animationProcedure = "empty";
                     event.getController().forceAnimationReset();
                 }
             }

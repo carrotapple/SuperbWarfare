@@ -6,6 +6,8 @@ import net.mcreator.target.item.gun.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -27,139 +29,142 @@ public class ItemAnimationFactory {
 
     @SubscribeEvent
     public static void animatedItems(TickEvent.PlayerTickEvent event) {
-        String animation = "";
-        if (event.phase == TickEvent.Phase.START && (event.player.getMainHandItem().getItem() instanceof GeoItem || event.player.getOffhandItem().getItem() instanceof GeoItem)) {
-            if (!event.player.getMainHandItem().getOrCreateTag().getString("geckoAnim").isEmpty() && !(event.player.getMainHandItem().getItem() instanceof ArmorItem)) {
-                animation = event.player.getMainHandItem().getOrCreateTag().getString("geckoAnim");
-                event.player.getMainHandItem().getOrCreateTag().putString("geckoAnim", "");
-                if (event.player.getMainHandItem().getItem() instanceof Taser animatable)
+        String animation;
+        ItemStack mainHandItemStack = event.player.getMainHandItem();
+        Item mainHandItem = mainHandItemStack.getItem();
+        if (event.phase == TickEvent.Phase.START && (mainHandItem instanceof GeoItem || event.player.getOffhandItem().getItem() instanceof GeoItem)) {
+            if (!mainHandItemStack.getOrCreateTag().getString("geckoAnim").isEmpty() && !(mainHandItem instanceof ArmorItem)) {
+                animation = mainHandItemStack.getOrCreateTag().getString("geckoAnim");
+                mainHandItemStack.getOrCreateTag().putString("geckoAnim", "");
+
+                if (mainHandItem instanceof Taser animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof Abekiri animatable)
+                if (mainHandItem instanceof Abekiri animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof Trachelium animatable)
+                if (mainHandItem instanceof Trachelium animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof VectorItem animatable)
+                if (mainHandItem instanceof VectorItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof AK47Item animatable)
+                if (mainHandItem instanceof AK47Item animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof SksItem animatable)
+                if (mainHandItem instanceof SksItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof M4Item animatable)
+                if (mainHandItem instanceof M4Item animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof Hk416Item animatable)
+                if (mainHandItem instanceof Hk416Item animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof Mk14Item animatable)
+                if (mainHandItem instanceof Mk14Item animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof MarlinItem animatable)
+                if (mainHandItem instanceof MarlinItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof SvdItem animatable)
+                if (mainHandItem instanceof SvdItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof M98bItem animatable)
+                if (mainHandItem instanceof M98bItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof SentinelItem animatable)
+                if (mainHandItem instanceof SentinelItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof HuntingRifle animatable)
+                if (mainHandItem instanceof HuntingRifle animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof Kraber animatable)
+                if (mainHandItem instanceof Kraber animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof M870Item animatable)
+                if (mainHandItem instanceof M870Item animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof Aa12Item animatable)
+                if (mainHandItem instanceof Aa12Item animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof Devotion animatable)
+                if (mainHandItem instanceof Devotion animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof RpkItem animatable)
+                if (mainHandItem instanceof RpkItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof M60Item animatable)
+                if (mainHandItem instanceof M60Item animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof Minigun animatable)
+                if (mainHandItem instanceof Minigun animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof M79Item animatable)
+                if (mainHandItem instanceof M79Item animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof RpgItem animatable)
+                if (mainHandItem instanceof RpgItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof BocekItem animatable)
+                if (mainHandItem instanceof BocekItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof LightSaberItem animatable)
+                if (mainHandItem instanceof LightSaberItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
-                if (event.player.getMainHandItem().getItem() instanceof Rocket animatable)
+                if (mainHandItem instanceof Rocket animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
             }
@@ -168,132 +173,132 @@ public class ItemAnimationFactory {
                 event.player.getOffhandItem().getOrCreateTag().putString("geckoAnim", "");
                 if (event.player.getOffhandItem().getItem() instanceof Taser animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof Abekiri animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof Trachelium animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof VectorItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof AK47Item animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof SksItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof M4Item animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof Hk416Item animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof Mk14Item animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof MarlinItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof SvdItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof M98bItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof SentinelItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof HuntingRifle animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof Kraber animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof M870Item animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof Aa12Item animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof Devotion animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof RpkItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof M60Item animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof Minigun animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof M79Item animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof RpgItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof BocekItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof LightSaberItem animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
                 if (event.player.getOffhandItem().getItem() instanceof Rocket animatable)
                     if (event.player.level().isClientSide()) {
-                        animatable.animationprocedure = animation;
+                        animatable.animationProcedure = animation;
                         disableUseAnim();
                     }
             }

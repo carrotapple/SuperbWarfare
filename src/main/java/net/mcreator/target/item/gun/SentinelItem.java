@@ -43,7 +43,7 @@ import java.util.function.Consumer;
 public class SentinelItem extends GunItem implements GeoItem {
     private static final String TAG_POWER = "power";
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public String animationprocedure = "empty";
+    public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
     public SentinelItem() {
@@ -91,7 +91,7 @@ public class SentinelItem extends GunItem implements GeoItem {
         LocalPlayer player = Minecraft.getInstance().player;
         ItemStack stack = player.getMainHandItem();
 
-        if (this.animationprocedure.equals("empty")) {
+        if (this.animationProcedure.equals("empty")) {
 
             if (stack.getOrCreateTag().getDouble("drawtime") < 16) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.draw"));
@@ -136,13 +136,13 @@ public class SentinelItem extends GunItem implements GeoItem {
 
     private PlayState procedurePredicate(AnimationState event) {
         if (transformType != null && transformType.firstPerson()) {
-            if (!this.animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
+            if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
                 if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                    this.animationprocedure = "empty";
+                    this.animationProcedure = "empty";
                     event.getController().forceAnimationReset();
                 }
-            } else if (this.animationprocedure.equals("empty")) {
+            } else if (this.animationProcedure.equals("empty")) {
                 return PlayState.STOP;
             }
         }
