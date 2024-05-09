@@ -10,5 +10,6 @@
   "velocity": 40,
   "mag": 100,
   "firemode": 2,
-  "projectileamount": 1
+  "projectileamount": 1,
+  "rpm": 600
 }

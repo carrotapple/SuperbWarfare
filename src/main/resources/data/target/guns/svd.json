@@ -8,5 +8,6 @@
   "headshot": 2.5,
   "velocity": 50,
   "mag": 10,
-  "projectileamount": 1
+  "projectileamount": 1,
+  "rpm": 200
 }
