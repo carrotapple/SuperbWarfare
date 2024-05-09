@@ -45,13 +45,13 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 
-public class Target1Entity extends PathfinderMob implements GeoEntity {
+public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(Target1Entity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(Target1Entity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(Target1Entity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public String animationprocedure = "empty";
+    public String animationProcedure = "empty";
 
     public Target1Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(TargetModEntities.TARGET_1.get(), world);
@@ -258,20 +258,20 @@ public class Target1Entity extends PathfinderMob implements GeoEntity {
     }
 
     private PlayState movementPredicate(AnimationState<Target1Entity> event) {
-        if (this.animationprocedure.equals("empty")) {
+        if (this.animationProcedure.equals("empty")) {
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.target.idle"));
         }
         return PlayState.STOP;
     }
 
     private PlayState procedurePredicate(AnimationState<Target1Entity> event) {
-        if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
+        if (!animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
             if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                this.animationprocedure = "empty";
+                this.animationProcedure = "empty";
                 event.getController().forceAnimationReset();
             }
-        } else if (animationprocedure.equals("empty")) {
+        } else if (animationProcedure.equals("empty")) {
             return PlayState.STOP;
         }
         return PlayState.CONTINUE;
@@ -292,6 +292,11 @@ public class Target1Entity extends PathfinderMob implements GeoEntity {
 
     public void setAnimation(String animation) {
         this.entityData.set(ANIMATION, animation);
+    }
+
+    @Override
+    public void setAnimationProcedure(String procedure) {
+        this.animationProcedure = procedure;
     }
 
     @Override

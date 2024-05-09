@@ -36,7 +36,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 // TODO 重写阔剑地雷
-public class ClaymoreEntity extends TamableAnimal implements GeoEntity {
+public class ClaymoreEntity extends TamableAnimal implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.STRING);
@@ -44,7 +44,7 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity {
     private boolean swinging;
     private boolean lastloop;
     private long lastSwing;
-    public String animationprocedure = "empty";
+    public String animationProcedure = "empty";
 
     public ClaymoreEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(TargetModEntities.CLAYMORE.get(), world);
@@ -244,20 +244,20 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity {
     }
 
     private PlayState movementPredicate(AnimationState event) {
-        if (this.animationprocedure.equals("empty")) {
+        if (this.animationProcedure.equals("empty")) {
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.claymore.idle"));
         }
         return PlayState.STOP;
     }
 
     private PlayState procedurePredicate(AnimationState event) {
-        if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
+        if (!animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
             if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                this.animationprocedure = "empty";
+                this.animationProcedure = "empty";
                 event.getController().forceAnimationReset();
             }
-        } else if (animationprocedure.equals("empty")) {
+        } else if (animationProcedure.equals("empty")) {
             return PlayState.STOP;
         }
         return PlayState.CONTINUE;
@@ -278,6 +278,11 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity {
 
     public void setAnimation(String animation) {
         this.entityData.set(ANIMATION, animation);
+    }
+
+    @Override
+    public void setAnimationProcedure(String procedure) {
+        this.animationProcedure = procedure;
     }
 
     @Override
