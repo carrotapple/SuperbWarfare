@@ -106,42 +106,42 @@
     ]
   },
 
-  "m79_fire_1p": {
+  "m_79_fire_1p": {
     "sounds": [
       {
-        "name": "target:m79/m79_fire_1p",
+        "name": "target:m_79/m_79_fire_1p",
         "stream": false
       }
     ]
   },
-  "m79_fire_3p": {
+  "m_79_fire_3p": {
     "sounds": [
       {
-        "name": "target:m79/m79_fire_3p",
+        "name": "target:m_79/m_79_fire_3p",
         "stream": false
       }
     ]
   },
-  "m79_far": {
+  "m_79_far": {
     "sounds": [
       {
-        "name": "target:m79/m79_far",
+        "name": "target:m_79/m_79_far",
         "stream": false
       }
     ]
   },
-  "m79_veryfar": {
+  "m_79_veryfar": {
     "sounds": [
       {
-        "name": "target:m79/v_veryfar",
+        "name": "target:m_79/v_veryfar",
         "stream": false
       }
     ]
   },
-  "m79_reload": {
+  "m_79_reload": {
     "sounds": [
       {
-        "name": "target:m79/m79_reload",
+        "name": "target:m_79/m_79_reload",
         "stream": false
       }
     ]
@@ -343,42 +343,42 @@
     ]
   },
 
-  "rpg7_fire_1p": {
+  "rpg_fire_1p": {
     "sounds": [
       {
-        "name": "target:rpg/rpg7_fire_1p",
+        "name": "target:rpg/rpg_fire_1p",
         "stream": false
       }
     ]
   },
-  "rpg7_fire_3p": {
+  "rpg_fire_3p": {
     "sounds": [
       {
-        "name": "target:rpg/rpg7_fire_3p",
+        "name": "target:rpg/rpg_fire_3p",
         "stream": false
       }
     ]
   },
-  "rpg7_far": {
+  "rpg_far": {
     "sounds": [
       {
-        "name": "target:rpg/rpg7_far",
+        "name": "target:rpg/rpg_far",
         "stream": false
       }
     ]
   },
-  "rpg7_veryfar": {
+  "rpg_veryfar": {
     "sounds": [
       {
-        "name": "target:rpg/rpg7_veryfar",
+        "name": "target:rpg/rpg_veryfar",
         "stream": false
       }
     ]
   },
-  "rpg7_reload": {
+  "rpg_reload": {
     "sounds": [
       {
-        "name": "target:rpg/rpg7_reload",
+        "name": "target:rpg/rpg_reload",
         "stream": false
       }
     ]
@@ -776,50 +776,50 @@
     ]
   },
 
-  "mk14_fire_1p": {
+  "mk_14_fire_1p": {
     "sounds": [
       {
-        "name": "target:mk14/mk14_fire_1p",
+        "name": "target:mk_14/mk_14_fire_1p",
         "stream": false
       }
     ]
   },
-  "mk14_fire_3p": {
+  "mk_14_fire_3p": {
     "sounds": [
       {
-        "name": "target:mk14/mk14_fire_3p",
+        "name": "target:mk_14/mk_14_fire_3p",
         "stream": false
       }
     ]
   },
-  "mk14_far": {
+  "mk_14_far": {
     "sounds": [
       {
-        "name": "target:mk14/mk14_far",
+        "name": "target:mk_14/mk_14_far",
         "stream": false
       }
     ]
   },
-  "mk14_veryfar": {
+  "mk_14_veryfar": {
     "sounds": [
       {
-        "name": "target:mk14/mk14_veryfar",
+        "name": "target:mk_14/mk_14_veryfar",
         "stream": false
       }
     ]
   },
-  "mk14_reload_normal": {
+  "mk_14_reload_normal": {
     "sounds": [
       {
-        "name": "target:mk14/mk14_reload_normal",
+        "name": "target:mk_14/mk_14_reload_normal",
         "stream": false
       }
     ]
   },
-  "mk14_reload_empty": {
+  "mk_14_reload_empty": {
     "sounds": [
       {
-        "name": "target:mk14/mk14_reload_empty",
+        "name": "target:mk_14/mk_14_reload_empty",
         "stream": false
       }
     ]
@@ -914,50 +914,50 @@
     ]
   },
 
-  "m60_fire_1p": {
+  "m_60_fire_1p": {
     "sounds": [
       {
-        "name": "target:m60/m60_fire_1p",
+        "name": "target:m_60/m_60_fire_1p",
         "stream": false
       }
     ]
   },
-  "m60_fire_3p": {
+  "m_60_fire_3p": {
     "sounds": [
       {
-        "name": "target:m60/m60_fire_3p",
+        "name": "target:m_60/m_60_fire_3p",
         "stream": false
       }
     ]
   },
-  "m60_far": {
+  "m_60_far": {
     "sounds": [
       {
-        "name": "target:m60/m60_far",
+        "name": "target:m_60/m_60_far",
         "stream": false
       }
     ]
   },
-  "m60_veryfar": {
+  "m_60_veryfar": {
     "sounds": [
       {
-        "name": "target:m60/m60_veryfar",
+        "name": "target:m_60/m_60_veryfar",
         "stream": false
       }
     ]
   },
-  "m60_reload_normal": {
+  "m_60_reload_normal": {
     "sounds": [
       {
-        "name": "target:m60/m60_reload_normal",
+        "name": "target:m_60/m_60_reload_normal",
         "stream": false
       }
     ]
   },
-  "m60_reload_empty": {
+  "m_60_reload_empty": {
     "sounds": [
       {
-        "name": "target:m60/m60_reload_empty",
+        "name": "target:m_60/m_60_reload_empty",
         "stream": false
       }
     ]
@@ -1012,50 +1012,50 @@
     ]
   },
 
-  "m98b_fire_1p": {
+  "m_98b_fire_1p": {
     "sounds": [
       {
-        "name": "target:m98b/m98b_fire_1p",
+        "name": "target:m_98b/m_98b_fire_1p",
         "stream": false
       }
     ]
   },
-  "m98b_fire_3p": {
+  "m_98b_fire_3p": {
     "sounds": [
       {
-        "name": "target:m98b/m98b_fire_3p",
+        "name": "target:m_98b/m_98b_fire_3p",
         "stream": false
       }
     ]
   },
-  "m98b_far": {
+  "m_98b_far": {
     "sounds": [
       {
-        "name": "target:m98b/m98b_far",
+        "name": "target:m_98b/m_98b_far",
         "stream": false
       }
     ]
   },
-  "m98b_veryfar": {
+  "m_98b_veryfar": {
     "sounds": [
       {
-        "name": "target:m98b/m98b_veryfar",
+        "name": "target:m_98b/m_98b_veryfar",
         "stream": false
       }
     ]
   },
-  "m98b_reload_normal": {
+  "m_98b_reload_normal": {
     "sounds": [
       {
-        "name": "target:m98b/m98b_reload_normal",
+        "name": "target:m_98b/m_98b_reload_normal",
         "stream": false
       }
     ]
   },
-  "m98b_reload_empty": {
+  "m_98b_reload_empty": {
     "sounds": [
       {
-        "name": "target:m98b/m98b_reload_empty",
+        "name": "target:m_98b/m_98b_reload_empty",
         "stream": false
       }
     ]
@@ -1118,50 +1118,50 @@
     ]
   },
 
-  "m870_fire_1p": {
+  "m_870_fire_1p": {
     "sounds": [
       {
-        "name": "target:m870/m870_fire_1p",
+        "name": "target:m_870/m_870_fire_1p",
         "stream": false
       }
     ]
   },
-  "m870_fire_3p": {
+  "m_870_fire_3p": {
     "sounds": [
       {
-        "name": "target:m870/m870_fire_3p",
+        "name": "target:m_870/m_870_fire_3p",
         "stream": false
       }
     ]
   },
-  "m870_far": {
+  "m_870_far": {
     "sounds": [
       {
-        "name": "target:m870/m870_far",
+        "name": "target:m_870/m_870_far",
         "stream": false
       }
     ]
   },
-  "m870_veryfar": {
+  "m_870_veryfar": {
     "sounds": [
       {
-        "name": "target:m870/m870_veryfar",
+        "name": "target:m_870/m_870_veryfar",
         "stream": false
       }
     ]
   },
-  "m870_preparealt": {
+  "m_870_preparealt": {
     "sounds": [
       {
-        "name": "target:m870/m870_preparealt",
+        "name": "target:m_870/m_870_preparealt",
         "stream": false
       }
     ]
   },
-  "m870_reloadloop": {
+  "m_870_reloadloop": {
     "sounds": [
       {
-        "name": "target:m870/m870_reload_loop",
+        "name": "target:m_870/m_870_reload_loop",
         "stream": false
       }
     ]
