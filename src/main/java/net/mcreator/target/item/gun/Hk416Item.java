@@ -167,7 +167,7 @@ public class Hk416Item extends GunItem implements GeoItem, AnimatedItem {
     }
 
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(TargetModItems.HK_416.get());
+        ItemStack stack = new ItemStack(TargetModItems.HK416.get());
         //GunsTool.initGun(stack, TargetModItems.HK_416.getId().getPath());
         stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
         return stack;

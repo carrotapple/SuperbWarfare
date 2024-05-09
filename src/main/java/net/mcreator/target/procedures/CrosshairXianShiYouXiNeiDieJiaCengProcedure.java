@@ -18,7 +18,7 @@ public class CrosshairXianShiYouXiNeiDieJiaCengProcedure {
                     || !(entity.getPersistentData().getDouble("zoom_time") < 7)
             ) return false;
 
-            return !(player.getMainHandItem().getItem() == TargetModItems.M_79.get())
+            return !(player.getMainHandItem().getItem() == TargetModItems.M79.get())
                     && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
         }
         return false;

@@ -167,7 +167,7 @@ public class AK47Item extends GunItem implements GeoItem, AnimatedItem {
     }
 
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(TargetModItems.AK_47.get());
+        ItemStack stack = new ItemStack(TargetModItems.AK47.get());
         //GunsTool.initGun(stack, TargetModItems.AK_47.getId().getPath());
         stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
         return stack;

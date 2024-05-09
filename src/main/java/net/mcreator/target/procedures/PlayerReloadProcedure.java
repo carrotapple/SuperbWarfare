@@ -47,7 +47,7 @@ public class PlayerReloadProcedure {
                     tag.putDouble("emptyreload", 1);
                     tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                 }
-                if (player.getMainHandItem().getItem() == TargetModItems.M_79.get()
+                if (player.getMainHandItem().getItem() == TargetModItems.M79.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
                         && tag.getDouble("ammo") < 1
@@ -84,7 +84,7 @@ public class PlayerReloadProcedure {
                         tag.putDouble("reloadtime", 99);
                     }
                 }
-                if (player.getMainHandItem().getItem() == TargetModItems.M_98B.get()
+                if (player.getMainHandItem().getItem() == TargetModItems.M98B.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
                         && tag.getDouble("ammo") < 6
@@ -135,7 +135,7 @@ public class PlayerReloadProcedure {
                         tag.putDouble("reloadtime", 61);
                     }
                 }
-                if (player.getMainHandItem().getItem() == TargetModItems.MK_14.get()
+                if (player.getMainHandItem().getItem() == TargetModItems.MK14.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
                         && tag.getDouble("ammo") < 21
@@ -169,7 +169,7 @@ public class PlayerReloadProcedure {
                         tag.putDouble("reloadtime", 57);
                     }
                 }
-                if (player.getMainHandItem().getItem() == TargetModItems.AK_47.get()
+                if (player.getMainHandItem().getItem() == TargetModItems.AK47.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
                         && tag.getDouble("ammo") < 31
@@ -186,8 +186,8 @@ public class PlayerReloadProcedure {
                         tag.putDouble("reloadtime", 57);
                     }
                 }
-                if ((player.getMainHandItem().getItem() == TargetModItems.M_4.get()
-                        || player.getMainHandItem().getItem() == TargetModItems.HK_416.get())
+                if ((player.getMainHandItem().getItem() == TargetModItems.M4.get()
+                        || player.getMainHandItem().getItem() == TargetModItems.HK416.get())
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
                         && tag.getDouble("ammo") < 31
@@ -204,7 +204,7 @@ public class PlayerReloadProcedure {
                         tag.putDouble("reloadtime", 55);
                     }
                 }
-                if (player.getMainHandItem().getItem() == TargetModItems.AA_12.get()
+                if (player.getMainHandItem().getItem() == TargetModItems.AA12.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
                         && tag.getDouble("ammo") < 26
@@ -289,7 +289,7 @@ public class PlayerReloadProcedure {
                         tag.putDouble("reloadtime", 57);
                     }
                 }
-                if (player.getMainHandItem().getItem() == TargetModItems.M_60.get()
+                if (player.getMainHandItem().getItem() == TargetModItems.M60.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleammo > 0
@@ -320,7 +320,7 @@ public class PlayerReloadProcedure {
                                 entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:marlin_start player @s ~ ~ ~ 100 1");
                     }
                 }
-                if (player.getMainHandItem().getItem() == TargetModItems.M_870.get()
+                if (player.getMainHandItem().getItem() == TargetModItems.M870.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
                         && tag.getDouble("ammo") < 8

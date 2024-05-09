@@ -1,14 +1,19 @@
 package net.mcreator.target.event;
 
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.procedures.BulletFireNormalProcedure;
 import net.mcreator.target.tools.ItemNBTTool;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber
 public class GunEventHandler {
@@ -130,10 +135,35 @@ public class GunEventHandler {
             for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectileamount"); index0++) {
                 BulletFireNormalProcedure.execute(player);
             }
+
+            playGunSounds(player);
+
         }
-
-
     }
 
+    public static void playGunSounds(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) {
+            return;
+        }
+
+        if (!player.level().isClientSide) {
+            String origin = stack.getItem().getDescriptionId();
+            String name = origin.substring(origin.lastIndexOf(".") + 1);
+
+            ResourceLocation resourceLocation = new ResourceLocation(TargetMod.MODID, name + "_fire_1p");
+
+            System.out.println(resourceLocation);
+
+            SoundEvent sound = ForgeRegistries.SOUND_EVENTS.getValue(resourceLocation);
+            if (sound != null) {
+                player.playSound(sound);
+            }
+
+//            ((ServerPlayer) player).connection.send
+
+
+        }
+    }
 
 }

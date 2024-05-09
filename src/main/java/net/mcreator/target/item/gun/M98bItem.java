@@ -163,7 +163,7 @@ public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(TargetModItems.M_98B.get());
+        ItemStack stack = new ItemStack(TargetModItems.M98B.get());
         //GunsTool.initGun(stack, TargetModItems.M_98B.getId().getPath());
         stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
         return stack;

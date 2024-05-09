@@ -13,7 +13,7 @@ public class M98bfireProcedure {
         if (entity == null) return;
         if (entity instanceof Player player && !player.isSpectator()) {
             ItemStack usehand = player.getMainHandItem();
-            if (usehand.getItem() == TargetModItems.M_98B.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !(entity instanceof Player _plrCldCheck4 && _plrCldCheck4.getCooldowns().isOnCooldown(usehand.getItem()))
+            if (usehand.getItem() == TargetModItems.M98B.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !(entity instanceof Player _plrCldCheck4 && _plrCldCheck4.getCooldowns().isOnCooldown(usehand.getItem()))
                     && usehand.getOrCreateTag().getDouble("ammo") > 0) {
                 usehand.getOrCreateTag().putDouble("fireanim", 17);
                 BulletFireNormalProcedure.execute(entity);

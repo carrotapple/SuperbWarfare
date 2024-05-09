@@ -18,8 +18,8 @@ public class ChangefiremodeProcedure {
             return;
         ItemStack usehand = ItemStack.EMPTY;
         usehand = (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY);
-        if (usehand.getItem() == TargetModItems.AK_47.get() || usehand.getItem() == TargetModItems.M_4.get() || usehand.getItem() == TargetModItems.AA_12.get() || usehand.getItem() == TargetModItems.HK_416.get()
-                || usehand.getItem() == TargetModItems.RPK.get() || usehand.getItem() == TargetModItems.MK_14.get()) {
+        if (usehand.getItem() == TargetModItems.AK47.get() || usehand.getItem() == TargetModItems.M4.get() || usehand.getItem() == TargetModItems.AA12.get() || usehand.getItem() == TargetModItems.HK416.get()
+                || usehand.getItem() == TargetModItems.RPK.get() || usehand.getItem() == TargetModItems.MK14.get()) {
             if (usehand.getOrCreateTag().getDouble("firemode") == 2) {
                 usehand.getOrCreateTag().putDouble("firemode", 0);
                 usehand.getOrCreateTag().putDouble("cg", 10);
