@@ -19,7 +19,7 @@ public class AbkrfireProcedure {
                 for (int index0 = 0; index0 < 8; index0++) {
                     BulletFireNormalProcedure.execute(entity);
                 }
-                if (usehand.hurt(1, RandomSource.create(), null)) {
+                if (!player.isCreative() && usehand.hurt(1, RandomSource.create(), null)) {
                     usehand.shrink(1);
                     usehand.setDamageValue(0);
                 }
