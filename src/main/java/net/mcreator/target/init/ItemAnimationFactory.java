@@ -26,7 +26,7 @@ public class ItemAnimationFactory {
     }
 
     private static void setAnimationState(ItemStack itemStack, boolean isClientSide) {
-        if (itemStack.getOrCreateTag().getString("geckoAnim").isEmpty() && !(itemStack.getItem() instanceof ArmorItem)) {
+        if (!itemStack.getOrCreateTag().getString("geckoAnim").isEmpty() && !(itemStack.getItem() instanceof ArmorItem)) {
             String animation = itemStack.getOrCreateTag().getString("geckoAnim");
             itemStack.getOrCreateTag().putString("geckoAnim", "");
 
