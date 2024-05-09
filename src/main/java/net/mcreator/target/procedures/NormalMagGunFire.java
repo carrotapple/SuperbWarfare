@@ -60,11 +60,13 @@ public class NormalMagGunFire {
             usehand.getOrCreateTag().putDouble("firecooldown", 7);
             usehand.getOrCreateTag().putDouble("fireanim", 2);
             usehand.getOrCreateTag().putDouble("empty", 1);
-            if (entity instanceof Player _player)
-                _player.getCooldowns().addCooldown(usehand.getItem(), 2);
-            for (int index0 = 0; index0 < (int) usehand.getOrCreateTag().getDouble("projectileamount"); index0++) {
-                BulletFireNormalProcedure.execute(entity);
-            }
+
+            // TODO 修改后面的音效播放方法，使其成为通用方法
+//            if (entity instanceof Player _player)
+//                _player.getCooldowns().addCooldown(usehand.getItem(), 2);
+//            for (int index0 = 0; index0 < (int) usehand.getOrCreateTag().getDouble("projectileamount"); index0++) {
+//                BulletFireNormalProcedure.execute(entity);
+//            }
             if (usehand.getItem() == TargetModItems.AK_47.get()) {
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {

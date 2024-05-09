@@ -1,6 +1,5 @@
 package net.mcreator.target.event;
 
-import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
@@ -61,7 +60,6 @@ public class PlayerEventHandler {
             handleSpecialWeaponAmmo(player);
             handleChangeFireRate(player);
             handleDistantRange(player);
-            handleGunsDev(player);
         }
     }
 
@@ -316,73 +314,5 @@ public class PlayerEventHandler {
                     player.displayClientMessage(Component.literal("---M"), true);
             }
         }
-    }
-
-    private static void handleGunsDev(Player player) {
-        double[] recoilTimer = {0};
-        double totalTime = 20;
-        int sleepTime = 2;
-        double recoilDuration = totalTime / sleepTime;
-
-        Runnable recoilRunnable = () -> {
-            while (recoilTimer[0] < recoilDuration) {
-                if (player == null) {
-                    return;
-                }
-
-                ItemStack stack = player.getMainHandItem();
-
-                double basic = stack.getOrCreateTag().getDouble("dev");
-
-                double sprint = player.isSprinting() ? 0.5 * basic : 0;
-                double sneaking = player.isShiftKeyDown() ? (-0.25) * basic : 0;
-                double prone = player.getPersistentData().getDouble("prone") > 0 ? (-0.5) * basic : 0;
-                double jump = player.onGround() ? 0 : 1.5 * basic;
-                double fire = stack.getOrCreateTag().getDouble("fireanim") > 0 ? 0.5 * basic : 0;
-                double ride = player.isPassenger() ? (-0.5) * basic : 0;
-
-                double walk;
-                if (player.getPersistentData().getDouble("qian") == 1 || player.getPersistentData().getDouble("tui") == 1 ||
-                        player.getPersistentData().getDouble("mover") == 1 || player.getPersistentData().getDouble("movel") == 1) {
-                    walk = 0.2 * basic;
-                } else {
-                    walk = 0;
-                }
-
-                double zoom;
-                if (player.getPersistentData().getDouble("zoom_time") > 4) {
-                    if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
-                        zoom = 0.0001;
-                    } else if (stack.is(TargetModTags.Items.SHOTGUN)) {
-                        zoom = 0.9;
-                    } else {
-                        zoom = 0.0001;
-                    }
-                } else {
-                    zoom = 1;
-                }
-
-                double index = zoom * (basic + walk + sprint + sneaking + prone + jump + fire + ride);
-
-                if (player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) < index) {
-                    player.getAttribute(TargetModAttributes.SPREAD.get())
-                            .setBaseValue(player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) + 0.0125 * Math.pow(index - player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()), 2));
-                } else {
-                    player.getAttribute(TargetModAttributes.SPREAD.get())
-                            .setBaseValue(player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) - 0.0125 * Math.pow(index - player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()), 2));
-                }
-
-                recoilTimer[0]++;
-
-                try {
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        Thread recoilThread = new Thread(recoilRunnable);
-        recoilThread.start();
     }
 }
