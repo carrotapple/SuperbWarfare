@@ -1,9 +1,11 @@
 package net.mcreator.target.event;
 
 import net.mcreator.target.TargetMod;
+import net.mcreator.target.entity.ProjectileEntity;
 import net.mcreator.target.init.TargetModAttributes;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
-import net.mcreator.target.procedures.BulletFireNormalProcedure;
+import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.ItemNBTTool;
 import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
@@ -18,8 +20,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 @Mod.EventBusSubscriber
 public class GunEventHandler {
+    private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
@@ -109,7 +116,7 @@ public class GunEventHandler {
                 && player.getPersistentData().getDouble("firing") == 1
                 && stack.getOrCreateTag().getDouble("reloading") == 0
                 && stack.getOrCreateTag().getDouble("ammo") > 0
-                && !player.getCooldowns().isOnCooldown(stack.getItem())
+                && !stack.getOrCreateTag().getBoolean("shootCooldown")
                 && stack.getOrCreateTag().getDouble("firemode") != 1) {
 
             if (stack.getOrCreateTag().getDouble("firemode") == 0) {
@@ -131,19 +138,23 @@ public class GunEventHandler {
             stack.getOrCreateTag().putDouble("fireanim", 2);
             stack.getOrCreateTag().putDouble("empty", 1);
 
-            // TODO 补齐rpm数据
-            int cooldown = (int) Math.ceil(20 * 60 / ItemNBTTool.getDouble(stack, "rpm", 60));
-            player.getCooldowns().addCooldown(stack.getItem(), cooldown);
+            int cooldown = (int) Math.ceil(1000 * 60 / ItemNBTTool.getDouble(stack, "rpm", 60));
 
             for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectileamount"); index0++) {
-                BulletFireNormalProcedure.execute(player);
+                gunShoot(player);
             }
-
             playGunSounds(player);
+            stack.getOrCreateTag().putBoolean("shootCooldown", true);
+
+            // 使用线程池来处理发射，不保证能用
+            Runnable reset = () -> stack.getOrCreateTag().putBoolean("shootCooldown", false);
+            scheduler.schedule(reset, cooldown, TimeUnit.MILLISECONDS);
         }
     }
 
-
+    /**
+     * 根据武器的注册名来寻找音效并播放
+     */
     public static void playGunSounds(Player player) {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(TargetModTags.Items.GUN)) {
@@ -173,6 +184,57 @@ public class GunEventHandler {
             SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_veryfar"));
             if (soundVeryFar != null) {
                 player.playSound(soundVeryFar, 24f, 1f);
+            }
+        }
+    }
+
+    public static void gunShoot(Player player) {
+        ItemStack heldItem = player.getMainHandItem();
+        if (Math.random() < 0.5) {
+            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.recoilhorizon = -1;
+                capability.syncPlayerVariables(player);
+            });
+        } else {
+            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.recoilhorizon = 1;
+                capability.syncPlayerVariables(player);
+            });
+        }
+
+        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            capability.recoil = 0.1;
+            capability.syncPlayerVariables(player);
+        });
+        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            capability.firing = 1;
+            capability.syncPlayerVariables(player);
+        });
+
+        if (!player.level().isClientSide()) {
+            float damage;
+            float headshot = (float) heldItem.getOrCreateTag().getDouble("headshot");
+            float velocity = 4 * (float) heldItem.getOrCreateTag().getDouble("speed");
+
+            if (heldItem.getItem() == TargetModItems.BOCEK.get()) {
+
+                damage = 0.2f * (float) heldItem.getOrCreateTag().getDouble("speed") * (float) heldItem.getOrCreateTag().getDouble("damageadd");
+
+                ProjectileEntity projectile = new ProjectileEntity(player.level(), player, damage, headshot);
+
+                projectile.setPos((player.getX() + (-0.5) * player.getLookAngle().x), (player.getEyeY() - 0.1 + (-0.5) * player.getLookAngle().y), (player.getZ() + (-0.5) * player.getLookAngle().z));
+                projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, 1 * velocity, 2.5f);
+                player.level().addFreshEntity(projectile);
+            } else {
+                damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("adddamage"))
+                        * (float) heldItem.getOrCreateTag().getDouble("damageadd");
+
+                ProjectileEntity projectile = new ProjectileEntity(player.level(), player, damage, headshot);
+
+                projectile.setPos((player.getX() + (-0.5) * player.getLookAngle().x), (player.getEyeY() - 0.1 + (-0.5) * player.getLookAngle().y), (player.getZ() + (-0.5) * player.getLookAngle().z));
+                projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, 1 * (float) heldItem.getOrCreateTag().getDouble("velocity"),
+                        (float) player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()));
+                player.level().addFreshEntity(projectile);
             }
         }
     }
