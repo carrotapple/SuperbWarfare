@@ -57,10 +57,15 @@ public class VecBurstFireProcedure {
             usehand.getOrCreateTag().putDouble("burst", (usehand.getOrCreateTag().getDouble("burst") - 1));
             BulletFireNormalProcedure.execute(entity);
             {
-                Entity _ent = entity;
-                if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                    _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                            _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:vec3 player @a ~ ~ ~ 2 1");
+                if (!entity.level().isClientSide() && entity.getServer() != null) {
+                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:vector_fire_1p player @a ~ ~ ~ 2 1");
+                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:vector_fire_1p player @s ~ ~ ~ 4 1");
+                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:vector_far player @a ~ ~ ~ 6 1");
+                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:vector_veryfar player @a ~ ~ ~ 12 1");
                 }
             }
             usehand.getOrCreateTag().putDouble("fireanim", 2);

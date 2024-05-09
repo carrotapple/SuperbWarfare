@@ -24,9 +24,13 @@ public class SentinelFireProcedure {
                     }
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:sentinelfirecharge1 player @s ~ ~ ~ 100 1");
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:sentinel_charge_fire_1p player @s ~ ~ ~ 2 1");
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:sentinelfirecharge3 player @a ~ ~ ~ 4 1");
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:sentinel_charge_fire_3p player @a ~ ~ ~ 4 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:sentinel_charge_far player @s ~ ~ ~ 12 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:sentinel_charge_veryfar player @a ~ ~ ~ 24 1");
                     }
                     if (usehand.getOrCreateTag().getDouble("power") > 20) {
                         usehand.getOrCreateTag().putDouble("power", (usehand.getOrCreateTag().getDouble("power") - 20));
@@ -41,21 +45,18 @@ public class SentinelFireProcedure {
                     }
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:sentinelfire1 player @s ~ ~ ~ 100 1");
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:sentinel_fire_1p player @s ~ ~ ~ 2 1");
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:sentinelfire3 player @a ~ ~ ~ 4 1");
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:sentinel_fire_3p player @a ~ ~ ~ 4 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:sentinel_far player @s ~ ~ ~ 12 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:sentinel_veryfar player @a ~ ~ ~ 24 1");
                     }
                 }
                 BulletFireNormalProcedure.execute(entity);
                 usehand.getOrCreateTag().putDouble("crot", 20);
                 player.getCooldowns().addCooldown(usehand.getItem(), 23);
-
-                if (!entity.level().isClientSide() && entity.getServer() != null) {
-                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:sentinelfire3");
-                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:sentinelfirecharge3");
-                }
                 usehand.getOrCreateTag().putDouble("ammo", (usehand.getOrCreateTag().getDouble("ammo") - 1));
                 usehand.getOrCreateTag().putDouble("fireanim", 2);
             }

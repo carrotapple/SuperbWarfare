@@ -26,9 +26,9 @@ public class BowlooseProcedure {
         power = (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("power");
         if (!entity.level().isClientSide() && entity.getServer() != null) {
             entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:bowpull");
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @a player target:bocek_pull_1p");
             entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:bowpull1p");
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @a player target:bocek_pull_3p");
         }
         if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == TargetModItems.BOCEK.get()
                 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("power") >= 6) {
@@ -55,11 +55,9 @@ public class BowlooseProcedure {
                 }
                 if (!entity.level().isClientSide() && entity.getServer() != null) {
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:bowfire1p player @s ~ ~ ~ 10 1");
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:bocek_zoom_fire_1p player @s ~ ~ ~ 10 1");
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:bowfire3p player @a ~ ~ ~ 2 1");
-                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:bowfire3p");
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:bocek_zoom_fire_3p player @a ~ ~ ~ 2 1");
                 }
             } else {
                 for (int index0 = 0; index0 < 10; index0++) {
@@ -68,11 +66,9 @@ public class BowlooseProcedure {
 
                 if (!entity.level().isClientSide() && entity.getServer() != null) {
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:shotfire player @s ~ ~ ~ 10 1");
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:bocek_shatter_cap_fire_1p player @s ~ ~ ~ 10 1");
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:shotfire3p player @a ~ ~ ~ 2 1");
-                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:shotfire3p");
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:bocek_shatter_cap_fire_3p player @a ~ ~ ~ 2 1");
                 }
             }
             entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {

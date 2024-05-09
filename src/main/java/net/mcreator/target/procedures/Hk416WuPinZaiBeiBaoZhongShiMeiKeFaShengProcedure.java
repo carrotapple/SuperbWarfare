@@ -24,7 +24,7 @@ public class Hk416WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:hk416reload player @s ~ ~ ~ 100 1");
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:hk416_reload_empty player @s ~ ~ ~ 100 1");
                     }
                 }
             }
@@ -47,7 +47,7 @@ public class Hk416WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:hk416reload2 player @s ~ ~ ~ 100 1");
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:hk416_reload_normal player @s ~ ~ ~ 100 1");
                     }
                 }
             }

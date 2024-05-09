@@ -122,6 +122,22 @@
       }
     ]
   },
+  "m79_far": {
+    "sounds": [
+      {
+        "name": "target:m79/m79_far",
+        "stream": false
+      }
+    ]
+  },
+  "m79_veryfar": {
+    "sounds": [
+      {
+        "name": "target:m79/v_veryfar",
+        "stream": false
+      }
+    ]
+  },
   "m79_reload": {
     "sounds": [
       {
@@ -327,10 +343,34 @@
     ]
   },
 
-  "rpg7_fire": {
+  "rpg7_fire_1p": {
     "sounds": [
       {
-        "name": "target:rpg7_fire",
+        "name": "target:rpg/rpg7_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "rpg7_fire_3p": {
+    "sounds": [
+      {
+        "name": "target:rpg/rpg7_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "rpg7_far": {
+    "sounds": [
+      {
+        "name": "target:rpg/rpg7_far",
+        "stream": false
+      }
+    ]
+  },
+  "rpg7_veryfar": {
+    "sounds": [
+      {
+        "name": "target:rpg/rpg7_veryfar",
         "stream": false
       }
     ]
@@ -338,191 +378,261 @@
   "rpg7_reload": {
     "sounds": [
       {
-        "name": "target:rpg7_reload",
+        "name": "target:rpg/rpg7_reload",
         "stream": false
       }
     ]
   },
-  "mortar_fire": {
+
+  "m4_fire_1p": {
     "sounds": [
       {
-        "name": "target:mortar_fire",
+        "name": "target:m4/m4_fire_1p",
         "stream": false
       }
     ]
   },
-  "mortar_load": {
+  "m4_fire_3p": {
     "sounds": [
       {
-        "name": "target:mortar_load",
+        "name": "target:m4/m4_fire_3p",
         "stream": false
       }
     ]
   },
-  "mortar_distant": {
+  "m4_far": {
     "sounds": [
       {
-        "name": "target:mortar_distant",
+        "name": "target:m4/m4_far",
         "stream": false
       }
     ]
   },
-  "firerate": {
+  "m4_veryfar": {
     "sounds": [
       {
-        "name": "target:firerate",
+        "name": "target:m4/m4_veryfar",
         "stream": false
       }
     ]
   },
-  "m4fire": {
+  "m4_reload_normal": {
     "sounds": [
       {
-        "name": "target:m4fire",
+        "name": "target:m4/m4_reload_normal",
         "stream": false
       }
     ]
   },
-  "m4reload": {
+  "m4_reload_empty": {
     "sounds": [
       {
-        "name": "target:m4reload",
+        "name": "target:m4/m4_reload_empty",
         "stream": false
       }
     ]
   },
-  "m4reload2": {
+
+  "aa12_fire_1p": {
     "sounds": [
       {
-        "name": "target:m4reload2",
+        "name": "target:aa12/aa12_fire_1p",
         "stream": false
       }
     ]
   },
-  "aa12fire": {
+  "aa12_fire_3p": {
     "sounds": [
       {
-        "name": "target:aa12_fire",
+        "name": "target:aa12/aa12_fire_3p",
         "stream": false
       }
     ]
   },
-  "aa12reload": {
+  "aa12_far": {
     "sounds": [
       {
-        "name": "target:aa12reload",
+        "name": "target:aa12/aa12_far",
         "stream": false
       }
     ]
   },
-  "aa12reload2": {
+  "aa12_veryfar": {
     "sounds": [
       {
-        "name": "target:aa12reload2",
+        "name": "target:aa12/aa12_veryfar",
         "stream": false
       }
     ]
   },
-  "bowpull": {
+  "aa12_reload_normal": {
     "sounds": [
       {
-        "name": "target:bow_pull",
+        "name": "target:aa12/aa12_reload_normal",
         "stream": false
       }
     ]
   },
-  "bowfire1p": {
+  "aa12_reload_empty": {
     "sounds": [
       {
-        "name": "target:bow_fire_1p",
+        "name": "target:aa12/aa12_reload_empty",
         "stream": false
       }
     ]
   },
-  "bowfire3p": {
+
+  "bocek_zoom_fire_1p": {
     "sounds": [
       {
-        "name": "target:bow_fire_3p",
+        "name": "target:bocek/bocek_zoom_fire_1p",
         "stream": false
       }
     ]
   },
-  "shotfire": {
+  "bocek_zoom_fire_3p": {
     "sounds": [
       {
-        "name": "target:shotfire",
+        "name": "target:bocek/bocek_zoom_fire_3p",
         "stream": false
       }
     ]
   },
-  "shotfire3p": {
+  "bocek_shatter_cap_fire_1p": {
     "sounds": [
       {
-        "name": "target:shotfire_3p",
+        "name": "target:bocek/bocek_shatter_cap_fire_1p",
         "stream": false
       }
     ]
   },
-  "bowpull1p": {
+  "bocek_shatter_cap_fire_3p": {
     "sounds": [
       {
-        "name": "target:bow_pull_1p",
+        "name": "target:bocek/bocek_shatter_cap_fire_3p",
         "stream": false
       }
     ]
   },
-  "hk416reload": {
+  "bocek_pull_1p": {
     "sounds": [
       {
-        "name": "target:hk416reload",
+        "name": "target:bocek/bocek_pull_1p",
         "stream": false
       }
     ]
   },
-  "hk416reload2": {
+  "bocek_pull_3p": {
     "sounds": [
       {
-        "name": "target:hk416reload2",
+        "name": "target:bocek/bocek_pull_3p",
         "stream": false
       }
     ]
   },
-  "hk416fire": {
+
+  "hk416_fire_1p": {
     "sounds": [
       {
-        "name": "target:hk416_fire_s",
+        "name": "target:hk416/hk416_fire_1p",
         "stream": false
       }
     ]
   },
-  "rpkfire": {
+  "hk416_fire_3p": {
     "sounds": [
       {
-        "name": "target:rpk_fire",
+        "name": "target:hk416/hk416_fire_3p",
         "stream": false
       }
     ]
   },
-  "rpkreload": {
+  "hk416_far": {
     "sounds": [
       {
-        "name": "target:akreload",
+        "name": "target:hk416/hk416_far",
         "stream": false
       }
     ]
   },
-  "rpkreload2": {
+  "hk416_veryfar": {
     "sounds": [
       {
-        "name": "target:akreload2",
+        "name": "target:hk416/hk416_veryfar",
         "stream": false
       }
     ]
   },
+  "hk416_reload_normal": {
+    "sounds": [
+      {
+        "name": "target:hk416/hk416_reload_normal",
+        "stream": false
+      }
+    ]
+  },
+  "hk416_reload_empty": {
+    "sounds": [
+      {
+        "name": "target:hk416/hk416_reload_empty",
+        "stream": false
+      }
+    ]
+  },
+
+  "rpk_fire_1p": {
+    "sounds": [
+      {
+        "name": "target:rpk/rpk_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "rpk_fire_3p": {
+    "sounds": [
+      {
+        "name": "target:rpk/rpk_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "rpk_far": {
+    "sounds": [
+      {
+        "name": "target:rpk/rpk_far",
+        "stream": false
+      }
+    ]
+  },
+  "rpk_veryfar": {
+    "sounds": [
+      {
+        "name": "target:rpk/rpk_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "rpk_reload_normal": {
+    "sounds": [
+      {
+        "name": "target:rpk/rpk_reload_normal",
+        "stream": false
+      }
+    ]
+  },
+  "rpk_reload_empty": {
+    "sounds": [
+      {
+        "name": "target:rpk/rpk_reload_empty",
+        "stream": false
+      }
+    ]
+  },
+
   "kraber_fire_1p": {
     "sounds": [
       {
-        "name": "target:kraber_fire_1p",
+        "name": "target:kraber/kraber_fire_1p",
         "stream": false
       }
     ]
@@ -530,71 +640,97 @@
   "kraber_fire_3p": {
     "sounds": [
       {
-        "name": "target:kraber_fire_3p",
+        "name": "target:kraber/kraber_fire_3p",
         "stream": false
       }
     ]
   },
-  "kraberreload1": {
+  "kraber_far": {
     "sounds": [
       {
-        "name": "target:kraber_reload_norm",
+        "name": "target:kraber/kraber_far",
         "stream": false
       }
     ]
   },
-  "kraberreload2": {
+  "kraber_veryfar": {
     "sounds": [
       {
-        "name": "target:kraber_reload_empty",
+        "name": "target:kraber/kraber_veryfar",
         "stream": false
       }
     ]
   },
-  "vec1": {
+  "kraber_reload_normal": {
     "sounds": [
       {
-        "name": "target:vector_fire_1p",
+        "name": "target:kraber/kraber_reload_normal",
         "stream": false
       }
     ]
   },
-  "vec3": {
+  "kraber_reload_empty": {
     "sounds": [
       {
-        "name": "target:vector_fire_3p",
+        "name": "target:kraber/kraber_reload_empty",
         "stream": false
       }
     ]
   },
-  "vecreload": {
+
+  "vector_fire_1p": {
     "sounds": [
       {
-        "name": "target:vecreload",
+        "name": "target:vector/vector_fire_1p",
         "stream": false
       }
     ]
   },
-  "vecreload2": {
+  "vector_fire_3p": {
     "sounds": [
       {
-        "name": "target:vecreload2",
+        "name": "target:vector/vector_fire_3p",
         "stream": false
       }
     ]
   },
-  "minigunstop": {
+  "vector_far": {
     "sounds": [
       {
-        "name": "target:minigun_stop",
+        "name": "target:vector/vector_far",
         "stream": false
       }
     ]
   },
+  "vector_veryfar": {
+    "sounds": [
+      {
+        "name": "target:vector/vector_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "vector_reload_normal": {
+    "sounds": [
+      {
+        "name": "target:vector/vector_reload_normal",
+        "stream": false
+      }
+    ]
+  },
+  "vector_reload_empty": {
+    "sounds": [
+      {
+        "name": "target:vector/vector_reload_empty",
+        "stream": false
+      }
+    ]
+  },
+
   "minigun_fire_1p": {
     "sounds": [
       {
-        "name": "target:minigun_fire",
+        "name": "target:minigun/minigun_fire_1p",
         "stream": false
       }
     ]
@@ -602,39 +738,72 @@
   "minigun_fire_3p": {
     "sounds": [
       {
-        "name": "target:minigun_fire_3p",
+        "name": "target:minigun/minigun_fire_3p",
         "stream": false
       }
     ]
   },
-  "overheat": {
+  "minigun_far": {
     "sounds": [
       {
-        "name": "target:minigun_overheat",
+        "name": "target:minigun/minigun_far",
         "stream": false
       }
     ]
   },
-  "overheat_warn": {
+  "minigun_veryfar": {
     "sounds": [
       {
-        "name": "target:overheat",
+        "name": "target:minigun/minigun_veryfar",
         "stream": false
       }
     ]
   },
-  "mk14fire": {
+  "minigun_rot": {
     "sounds": [
       {
-        "name": "target:mk14ebr_fire",
+        "name": "target:minigun/minigun_rot",
         "stream": false
       }
     ]
   },
-  "mk14_reload_empty": {
+  "minigun_overheat": {
     "sounds": [
       {
-        "name": "target:mk14_reload_empty",
+        "name": "target:minigun/minigun_overheat",
+        "stream": false
+      }
+    ]
+  },
+
+  "mk14_fire_1p": {
+    "sounds": [
+      {
+        "name": "target:mk14/mk14_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "mk14_fire_3p": {
+    "sounds": [
+      {
+        "name": "target:mk14/mk14_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "mk14_far": {
+    "sounds": [
+      {
+        "name": "target:mk14/mk14_far",
+        "stream": false
+      }
+    ]
+  },
+  "mk14_veryfar": {
+    "sounds": [
+      {
+        "name": "target:mk14/mk14_veryfar",
         "stream": false
       }
     ]
@@ -642,91 +811,362 @@
   "mk14_reload_normal": {
     "sounds": [
       {
-        "name": "target:mk14_reload_norm",
+        "name": "target:mk14/mk14_reload_normal",
         "stream": false
       }
     ]
   },
-  "sentinelfire1": {
+  "mk14_reload_empty": {
     "sounds": [
       {
-        "name": "target:sentinel_fire_1",
+        "name": "target:mk14/mk14_reload_empty",
         "stream": false
       }
     ]
   },
-  "sentinelfire3": {
+
+  "sentinel_fire_1p": {
     "sounds": [
       {
-        "name": "target:sentinel_fire_3",
+        "name": "target:sentinel/sentinel_fire_1p",
         "stream": false
       }
     ]
   },
-  "sentinelfirecharge1": {
+  "sentinel_fire_3p": {
     "sounds": [
       {
-        "name": "target:sentinel_fire_charge1",
+        "name": "target:sentinel/sentinel_fire_3p",
         "stream": false
       }
     ]
   },
-  "sentinelfirecharge3": {
+  "sentinel_charge_fire_1p": {
     "sounds": [
       {
-        "name": "target:sentinel_fire_charge3",
+        "name": "target:sentinel/sentinel_charge_fire_1p",
         "stream": false
       }
     ]
   },
-  "charge": {
+  "sentinel_charge_fire_3p": {
     "sounds": [
       {
-        "name": "target:charge",
+        "name": "target:sentinel/sentinel_charge_fire_3p",
         "stream": false
       }
     ]
   },
-  "sentinel_reload": {
+  "sentinel_far": {
     "sounds": [
       {
-        "name": "target:sentinel_reload",
+        "name": "target:sentinel/sentinel_far",
         "stream": false
       }
     ]
   },
-  "sentinel_reload2": {
+  "sentinel_veryfar": {
     "sounds": [
       {
-        "name": "target:sentinel_reload2",
+        "name": "target:sentinel/sentinel_veryfar",
         "stream": false
       }
     ]
   },
-  "m60reload": {
+  "sentinel_charge_far": {
     "sounds": [
       {
-        "name": "target:m60_reload",
+        "name": "target:sentinel/sentinel_charge_far",
         "stream": false
       }
     ]
   },
-  "m60reload2": {
+  "sentinel_charge_veryfar": {
     "sounds": [
       {
-        "name": "target:m60_reload2",
+        "name": "target:sentinel/sentinel_charge_veryfar",
         "stream": false
       }
     ]
   },
-  "m60fire": {
+  "sentinel_reload_normal": {
     "sounds": [
       {
-        "name": "target:m60_fire",
+        "name": "target:sentinel/sentinel_reload_normal",
         "stream": false
       }
     ]
   },
+  "sentinel_reload_empty": {
+    "sounds": [
+      {
+        "name": "target:sentinel/sentinel_reload_empty",
+        "stream": false
+      }
+    ]
+  },
+  "sentinel_charge": {
+    "sounds": [
+      {
+        "name": "target:sentinel/sentinel_charge",
+        "stream": false
+      }
+    ]
+  },
+
+  "m60_fire_1p": {
+    "sounds": [
+      {
+        "name": "target:m60/m60_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "m60_fire_3p": {
+    "sounds": [
+      {
+        "name": "target:m60/m60_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "m60_far": {
+    "sounds": [
+      {
+        "name": "target:m60/m60_far",
+        "stream": false
+      }
+    ]
+  },
+  "m60_veryfar": {
+    "sounds": [
+      {
+        "name": "target:m60/m60_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "m60_reload_normal": {
+    "sounds": [
+      {
+        "name": "target:m60/m60_reload_normal",
+        "stream": false
+      }
+    ]
+  },
+  "m60_reload_empty": {
+    "sounds": [
+      {
+        "name": "target:m60/m60_reload_empty",
+        "stream": false
+      }
+    ]
+  },
+
+  "svd_fire_1p": {
+    "sounds": [
+      {
+        "name": "target:svd/svd_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "svd_fire_3p": {
+    "sounds": [
+      {
+        "name": "target:svd/svd_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "svd_far": {
+    "sounds": [
+      {
+        "name": "target:svd/svd_far",
+        "stream": false
+      }
+    ]
+  },
+  "svd_veryfar": {
+    "sounds": [
+      {
+        "name": "target:svd/svd_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "svd_reload_normal": {
+    "sounds": [
+      {
+        "name": "target:svd/svd_reload_normal",
+        "stream": false
+      }
+    ]
+  },
+  "svd_reload_empty": {
+    "sounds": [
+      {
+        "name": "target:svd/svd_reload_empty",
+        "stream": false
+      }
+    ]
+  },
+
+  "m98b_fire_1p": {
+    "sounds": [
+      {
+        "name": "target:m98b/m98b_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "m98b_fire_3p": {
+    "sounds": [
+      {
+        "name": "target:m98b/m98b_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "m98b_far": {
+    "sounds": [
+      {
+        "name": "target:m98b/m98b_far",
+        "stream": false
+      }
+    ]
+  },
+  "m98b_veryfar": {
+    "sounds": [
+      {
+        "name": "target:m98b/m98b_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "m98b_reload_normal": {
+    "sounds": [
+      {
+        "name": "target:m98b/m98b_reload_normal",
+        "stream": false
+      }
+    ]
+  },
+  "m98b_reload_empty": {
+    "sounds": [
+      {
+        "name": "target:m98b/m98b_reload_empty",
+        "stream": false
+      }
+    ]
+  },
+
+  "marlin_fire_1p": {
+    "sounds": [
+      {
+        "name": "target:marlin/marlin_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "marlin_fire_3p": {
+    "sounds": [
+      {
+        "name": "target:marlin/marlin_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "marlin_far": {
+    "sounds": [
+      {
+        "name": "target:marlin/marlin_far",
+        "stream": false
+      }
+    ]
+  },
+  "marlin_veryfar": {
+    "sounds": [
+      {
+        "name": "target:marlin/marlin_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "marlin_loop": {
+    "sounds": [
+      {
+        "name": "target:marlin/marlin_loop",
+        "stream": false
+      }
+    ]
+  },
+  "marlin_start": {
+    "sounds": [
+      {
+        "name": "target:marlin/marlin_start",
+        "stream": false
+      }
+    ]
+  },
+  "marlin_end": {
+    "sounds": [
+      {
+        "name": "target:marlin/marlin_end",
+        "stream": false
+      }
+    ]
+  },
+
+  "m870_fire_1p": {
+    "sounds": [
+      {
+        "name": "target:m870/ m870_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "m870_fire_3p": {
+    "sounds": [
+      {
+        "name": "target:m870/m870_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "m870_far": {
+    "sounds": [
+      {
+        "name": "target:m870/m870_far",
+        "stream": false
+      }
+    ]
+  },
+  "m870_veryfar": {
+    "sounds": [
+      {
+        "name": "target:m870/m870_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "m870_preparealt": {
+    "sounds": [
+      {
+        "name": "target:m870/m870_preparealt",
+        "stream": false
+      }
+    ]
+  },
+  "m870_reloadloop": {
+    "sounds": [
+      {
+        "name": "target:m870/m870_reload_loop",
+        "stream": false
+      }
+    ]
+  },
+
   "lightsaber": {
     "sounds": [
       {
@@ -743,142 +1183,6 @@
       }
     ]
   },
-  "svdreload": {
-    "sounds": [
-      {
-        "name": "target:svdreload",
-        "stream": false
-      }
-    ]
-  },
-  "svdreload2": {
-    "sounds": [
-      {
-        "name": "target:svdreload2",
-        "stream": false
-      }
-    ]
-  },
-  "svdfire1p": {
-    "sounds": [
-      {
-        "name": "target:svd_fire_1p",
-        "stream": false
-      }
-    ]
-  },
-  "svdfire3p": {
-    "sounds": [
-      {
-        "name": "target:svd_fire_3p",
-        "stream": false
-      }
-    ]
-  },
-  "marlin_fire1p": {
-    "sounds": [
-      {
-        "name": "target:marlin__fire1p",
-        "stream": false
-      }
-    ]
-  },
-  "marlin_fire3p": {
-    "sounds": [
-      {
-        "name": "target:marlin__fire3p",
-        "stream": false
-      }
-    ]
-  },
-  "marlin_loop": {
-    "sounds": [
-      {
-        "name": "target:marlin_loop",
-        "stream": false
-      }
-    ]
-  },
-  "marlin_start": {
-    "sounds": [
-      {
-        "name": "target:marlin_start",
-        "stream": false
-      }
-    ]
-  },
-  "marlin_end": {
-    "sounds": [
-      {
-        "name": "target:marlin_end",
-        "stream": false
-      }
-    ]
-  },
-  "m870_fire1p": {
-    "sounds": [
-      {
-        "name": "target:m870_fire1p",
-        "stream": false
-      }
-    ]
-  },
-  "m870_fire3p": {
-    "sounds": [
-      {
-        "name": "target:m870_fire3p",
-        "stream": false
-      }
-    ]
-  },
-  "m870_preparealt": {
-    "sounds": [
-      {
-        "name": "target:m870_preparealt",
-        "stream": false
-      }
-    ]
-  },
-  "m870_reloadloop": {
-    "sounds": [
-      {
-        "name": "target:m870_reload_loop",
-        "stream": false
-      }
-    ]
-  },
-  "m98b_fire_1p": {
-    "sounds": [
-      {
-        "name": "target:m98b_fire_1p",
-        "stream": false
-      }
-    ]
-  },
-  "m98b_fire_3p": {
-    "sounds": [
-      {
-        "name": "target:m98b_fire_3p",
-        "stream": false
-      }
-    ]
-  },
-  "m98breload": {
-    "sounds": [
-      {
-        "name": "target:m98breload",
-        "stream": false
-      }
-    ]
-  },
-  "m98breload2": {
-    "sounds": [
-      {
-        "name": "target:m98breload2",
-        "stream": false
-      }
-    ]
-  },
   "bulletsupply": {
     "sounds": [
       {
@@ -887,119 +1191,6 @@
       }
     ]
   },
-  "m4fire_3p": {
-    "sounds": [
-      {
-        "name": "target:m4fire_3p",
-        "stream": false
-      }
-    ]
-  },
-  "m4far": {
-    "sounds": [
-      {
-        "name": "target:m4_far",
-        "stream": false
-      }
-    ]
-  },
-  "m4veryfar": {
-    "sounds": [
-      {
-        "name": "target:m4_very_far",
-        "stream": false
-      }
-    ]
-  },
-  "rpk_fire1p": {
-    "sounds": [
-      {
-        "name": "target:rpk_fire1p",
-        "stream": false
-      }
-    ]
-  },
-  "kraberfar": {
-    "sounds": [
-      {
-        "name": "target:kraberfar",
-        "stream": false
-      }
-    ]
-  },
-  "kraberveryfar": {
-    "sounds": [
-      {
-        "name": "target:kraberveryfar",
-        "stream": false
-      }
-    ]
-  },
-  "svdfar": {
-    "sounds": [
-      {
-        "name": "target:svdfar",
-        "stream": false
-      }
-    ]
-  },
-  "svdveryfar": {
-    "sounds": [
-      {
-        "name": "target:svdveryfar",
-        "stream": false
-      }
-    ]
-  },
-  "hk416_fire1p": {
-    "sounds": [
-      {
-        "name": "target:hk416_fire1p",
-        "stream": false
-      }
-    ]
-  },
-  "hk_far": {
-    "sounds": [
-      {
-        "name": "target:hk_far",
-        "stream": false
-      }
-    ]
-  },
-  "hk_very_far": {
-    "sounds": [
-      {
-        "name": "target:hk_very_far",
-        "stream": false
-      }
-    ]
-  },
-  "aa12_fire_1p": {
-    "sounds": [
-      {
-        "name": "target:aa12_fire_1p",
-        "stream": false
-      }
-    ]
-  },
-  "aa12_far": {
-    "sounds": [
-      {
-        "name": "target:aa12_far",
-        "stream": false
-      }
-    ]
-  },
-  "aa12_very_far": {
-    "sounds": [
-      {
-        "name": "target:aa12_very_far",
-        "stream": false
-      }
-    ]
-  },
-
   "shock": {
     "sounds": [
       {
@@ -1248,6 +1439,38 @@
     "sounds": [
       {
         "name": "target:headshot",
+        "stream": false
+      }
+    ]
+  },
+  "mortar_fire": {
+    "sounds": [
+      {
+        "name": "target:mortar_fire",
+        "stream": false
+      }
+    ]
+  },
+  "mortar_distant": {
+    "sounds": [
+      {
+        "name": "target:mortar_distant",
+        "stream": false
+      }
+    ]
+  },
+  "mortar_load": {
+    "sounds": [
+      {
+        "name": "target:mortar_load",
+        "stream": false
+      }
+    ]
+  },
+  "firerate": {
+    "sounds": [
+      {
+        "name": "target:firerate",
         "stream": false
       }
     ]

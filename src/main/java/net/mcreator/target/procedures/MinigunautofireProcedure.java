@@ -42,7 +42,7 @@ public class MinigunautofireProcedure {
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:minigunstop player @s ~ ~ ~ 4 1");
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:minigun_rot player @s ~ ~ ~ 2 1");
                     }
                 }
             } else {
@@ -62,15 +62,7 @@ public class MinigunautofireProcedure {
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:overheat player @s ~ ~ ~ 2 1");
-                    }
-                }
-            }
-            if (usehand.getOrCreateTag().getDouble("heat") == 40) {
-                {
-                    if (!entity.level().isClientSide() && entity.getServer() != null) {
-                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:overheat_warn player @s ~ ~ ~ 2 1");
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:minigun_overheat player @s ~ ~ ~ 2 1");
                     }
                 }
             }
@@ -79,6 +71,12 @@ public class MinigunautofireProcedure {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
                                 entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:minigun_fire_1p player @s ~ ~ ~ 2 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:minigun_fire_3p player @a ~ ~ ~ 4 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:minigun_far player @a ~ ~ ~ 12 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:minigun_veryfar player @a ~ ~ ~ 24 1");
                     }
                 }
             } else {
@@ -86,19 +84,13 @@ public class MinigunautofireProcedure {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
                                 entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), ("playsound target:minigun_fire_1p player @s ~ ~ ~ 2 " + (1 - 0.025 * Math.abs(40 - usehand.getOrCreateTag().getDouble("heat")))));
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), ("playsound target:minigun_fire_3p player @a ~ ~ ~ 4 " + (1 - 0.025 * Math.abs(40 - usehand.getOrCreateTag().getDouble("heat")))));
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), ("playsound target:minigun_far player @a ~ ~ ~ 12 " + (1 - 0.025 * Math.abs(40 - usehand.getOrCreateTag().getDouble("heat")))));
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), ("playsound target:minigun_veryfar player @a ~ ~ ~ 24 " + (1 - 0.025 * Math.abs(40 - usehand.getOrCreateTag().getDouble("heat")))));
                     }
-                }
-            }
-            {
-                if (!entity.level().isClientSide() && entity.getServer() != null) {
-                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:minigun_fire_3p player @a ~ ~ ~ 4 1");
-                }
-            }
-            {
-                if (!entity.level().isClientSide() && entity.getServer() != null) {
-                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:minigun_fire_3p");
                 }
             }
             BulletFireNormalProcedure.execute(entity);

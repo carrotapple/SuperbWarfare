@@ -46,7 +46,7 @@ public class BulletFireNormalProcedure {
                 ProjectileEntity projectile = new ProjectileEntity(entity.level(), living, damage, headshot);
 
                 projectile.setPos((living.getX() + (-0.5) * living.getLookAngle().x), (living.getEyeY() - 0.1 + (-0.5) * living.getLookAngle().y), (living.getZ() + (-0.5) * living.getLookAngle().z));
-                projectile.shoot(living.getLookAngle().x, living.getLookAngle().y, living.getLookAngle().z,3 * velocity, 2.5f);
+                projectile.shoot(living.getLookAngle().x, living.getLookAngle().y, living.getLookAngle().z,1 * velocity, 2.5f);
                 entity.level().addFreshEntity(projectile);
 
             } else {
@@ -56,7 +56,7 @@ public class BulletFireNormalProcedure {
                 ProjectileEntity projectile = new ProjectileEntity(entity.level(), living, damage, headshot);
 
                 projectile.setPos((living.getX() + (-0.5) * living.getLookAngle().x), (living.getEyeY() - 0.1 + (-0.5) * living.getLookAngle().y), (living.getZ() + (-0.5) * living.getLookAngle().z));
-                projectile.shoot(living.getLookAngle().x, living.getLookAngle().y, living.getLookAngle().z,3 * (float) heldItem.getOrCreateTag().getDouble("velocity"),
+                projectile.shoot(living.getLookAngle().x, living.getLookAngle().y, living.getLookAngle().z,1 * (float) heldItem.getOrCreateTag().getDouble("velocity"),
                         (float) living.getAttribute(TargetModAttributes.SPREAD.get()).getBaseValue());
                 entity.level().addFreshEntity(projectile);
             }

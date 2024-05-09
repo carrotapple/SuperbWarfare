@@ -72,11 +72,11 @@ public class GunsDevProcedure {
                 }
                 if (entity.getPersistentData().getDouble("miaozhunshijian") > 4) {
                     if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("sniperguns") == 1) {
-                        zoom = 0.001;
+                        zoom = 0.0001;
                     } else if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("shotgun") == 1) {
                         zoom = 0.9;
                     } else {
-                        zoom = 0.1;
+                        zoom = 0.0001;
                     }
                 } else {
                     zoom = 1;

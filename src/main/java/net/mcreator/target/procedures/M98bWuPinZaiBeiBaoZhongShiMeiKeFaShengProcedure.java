@@ -28,7 +28,7 @@ public class M98bWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m98breload player @s ~ ~ ~ 100 1");
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m98b_reload_empty player @s ~ ~ ~ 100 1");
                     }
                 }
             }
@@ -51,7 +51,7 @@ public class M98bWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m98breload2 player @s ~ ~ ~ 100 1");
+                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m98b_reload_normal player @s ~ ~ ~ 100 1");
                     }
                 }
             }

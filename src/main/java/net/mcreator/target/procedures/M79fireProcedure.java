@@ -62,6 +62,10 @@ public class M79fireProcedure {
                             entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m79_fire_1p player @s ~ ~ ~ 2 1");
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
                             entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m79_fire_3p player @a ~ ~ ~ 4 1");
+                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m79_far player @s ~ ~ ~ 6 1");
+                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m79_veryfar player @a ~ ~ ~ 12 1");
                 }
                 usehand.getOrCreateTag().putDouble("fireanim", 2);
                 usehand.getOrCreateTag().putDouble("ammo", (usehand.getOrCreateTag().getDouble("ammo") - 1));
