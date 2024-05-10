@@ -77,7 +77,6 @@ public class GunRecycleGuiMenu extends AbstractContainerMenu implements Supplier
             }
         }
         this.customSlots.put(0, this.addSlot(new SlotItemHandler(internal, 0, 79, 27) {
-            private final int slot = 0;
 
             @Override
             public boolean mayPlace(ItemStack stack) {
@@ -109,29 +108,29 @@ public class GunRecycleGuiMenu extends AbstractContainerMenu implements Supplier
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot.hasItem()) {
-            ItemStack itemstack1 = slot.getItem();
-            itemstack = itemstack1.copy();
+            ItemStack itemStack = slot.getItem();
+            itemstack = itemStack.copy();
             if (index < 1) {
-                if (!this.moveItemStackTo(itemstack1, 1, this.slots.size(), true))
+                if (!this.moveItemStackTo(itemStack, 1, this.slots.size(), true))
                     return ItemStack.EMPTY;
-                slot.onQuickCraft(itemstack1, itemstack);
-            } else if (!this.moveItemStackTo(itemstack1, 0, 1, false)) {
+                slot.onQuickCraft(itemStack, itemstack);
+            } else if (!this.moveItemStackTo(itemStack, 0, 1, false)) {
                 if (index < 1 + 27) {
-                    if (!this.moveItemStackTo(itemstack1, 1 + 27, this.slots.size(), true))
+                    if (!this.moveItemStackTo(itemStack, 1 + 27, this.slots.size(), true))
                         return ItemStack.EMPTY;
                 } else {
-                    if (!this.moveItemStackTo(itemstack1, 1, 1 + 27, false))
+                    if (!this.moveItemStackTo(itemStack, 1, 1 + 27, false))
                         return ItemStack.EMPTY;
                 }
                 return ItemStack.EMPTY;
             }
-            if (itemstack1.getCount() == 0)
+            if (itemStack.getCount() == 0)
                 slot.set(ItemStack.EMPTY);
             else
                 slot.setChanged();
-            if (itemstack1.getCount() == itemstack.getCount())
+            if (itemStack.getCount() == itemstack.getCount())
                 return ItemStack.EMPTY;
-            slot.onTake(playerIn, itemstack1);
+            slot.onTake(playerIn, itemStack);
         }
         return itemstack;
     }
