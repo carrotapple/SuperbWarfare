@@ -1,6 +1,7 @@
 package net.mcreator.target.procedures;
 
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.tools.GunsTool;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
@@ -18,7 +19,7 @@ public class M870fireProcedure {
         if (usehand.getItem() == TargetModItems.M_870.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !player.getCooldowns().isOnCooldown(usehand.getItem())
                 && usehand.getOrCreateTag().getDouble("ammo") > 0) {
             for (int index0 = 0; index0 < 12; index0++) {
-                BulletFireNormalProcedure.execute(player);
+                GunsTool.spawnBullet(player);
             }
             player.getCooldowns().addCooldown(usehand.getItem(), 13);
             usehand.getOrCreateTag().putDouble("recoil", 1);

@@ -2,6 +2,7 @@ package net.mcreator.target.procedures;
 
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.tools.GunsTool;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
@@ -27,7 +28,7 @@ public class MarlinfireProcedure {
                 usehand.getOrCreateTag().putDouble("fastfiring", 1);
                 usehand.getOrCreateTag().putDouble("firing", 10);
             }
-            BulletFireNormalProcedure.execute(player);
+            GunsTool.spawnBullet(player);
 
             if (!player.level().isClientSide() && player.getServer() != null) {
                 player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,

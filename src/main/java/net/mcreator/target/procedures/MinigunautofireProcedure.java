@@ -2,6 +2,7 @@ package net.mcreator.target.procedures;
 
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.tools.GunsTool;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
@@ -69,7 +70,7 @@ public class MinigunautofireProcedure {
                             player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), ("playsound target:minigun_veryfar player @a ~ ~ ~ 24 " + (1 - 0.025 * Math.abs(40 - usehand.getOrCreateTag().getDouble("heat")))));
                 }
             }
-            BulletFireNormalProcedure.execute(player);
+            GunsTool.spawnBullet(player);
 
             player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.rifleammo = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables()).rifleammo - 1;

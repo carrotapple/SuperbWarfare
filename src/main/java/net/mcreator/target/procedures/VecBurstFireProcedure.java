@@ -1,6 +1,7 @@
 package net.mcreator.target.procedures;
 
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.tools.GunsTool;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
@@ -21,32 +22,32 @@ public class VecBurstFireProcedure {
         }
     }
 
-    private static void execute(Player entity) {
+    private static void execute(Player player) {
         ItemStack usehand;
-        usehand = entity.getMainHandItem();
+        usehand = player.getMainHandItem();
         if (usehand.is(ItemTags.create(new ResourceLocation("target:gun")))) {
             if (usehand.getOrCreateTag().getDouble("firemode") == 1) {
-                entity.getPersistentData().putDouble("firing", 0);
+                player.getPersistentData().putDouble("firing", 0);
             }
             if (usehand.getOrCreateTag().getDouble("ammo") == 0) {
                 usehand.getOrCreateTag().putDouble("burst", 0);
             }
         }
         if (usehand.getItem() == TargetModItems.VECTOR.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0
-                && !(entity.getCooldowns().isOnCooldown(usehand.getItem())) && usehand.getOrCreateTag().getDouble("burst") > 0) {
+                && !(player.getCooldowns().isOnCooldown(usehand.getItem())) && usehand.getOrCreateTag().getDouble("burst") > 0) {
 
-            entity.getCooldowns().addCooldown(usehand.getItem(), usehand.getOrCreateTag().getDouble("burst") == 1 ? 5 : 1);
+            player.getCooldowns().addCooldown(usehand.getItem(), usehand.getOrCreateTag().getDouble("burst") == 1 ? 5 : 1);
             usehand.getOrCreateTag().putDouble("burst", (usehand.getOrCreateTag().getDouble("burst") - 1));
-            BulletFireNormalProcedure.execute(entity);
-            if (!entity.level().isClientSide() && entity.getServer() != null) {
-                entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
-                        entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:vector_fire_1p player @a ~ ~ ~ 2 1");
-                entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
-                        entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:vector_fire_1p player @s ~ ~ ~ 4 1");
-                entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
-                        entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:vector_far player @a ~ ~ ~ 6 1");
-                entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
-                        entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:vector_veryfar player @a ~ ~ ~ 12 1");
+            GunsTool.spawnBullet(player);
+            if (!player.level().isClientSide() && player.getServer() != null) {
+                player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
+                        player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:vector_fire_1p player @a ~ ~ ~ 2 1");
+                player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
+                        player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:vector_fire_1p player @s ~ ~ ~ 4 1");
+                player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
+                        player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:vector_far player @a ~ ~ ~ 6 1");
+                player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
+                        player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:vector_veryfar player @a ~ ~ ~ 12 1");
             }
             usehand.getOrCreateTag().putDouble("fireanim", 2);
             usehand.getOrCreateTag().putDouble("ammo", (usehand.getOrCreateTag().getDouble("ammo") - 1));

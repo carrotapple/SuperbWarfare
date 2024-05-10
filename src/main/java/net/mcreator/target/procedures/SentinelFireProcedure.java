@@ -2,6 +2,7 @@ package net.mcreator.target.procedures;
 
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.tools.GunsTool;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
@@ -53,7 +54,7 @@ public class SentinelFireProcedure {
                             player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:sentinel_veryfar player @a ~ ~ ~ 24 1");
                 }
             }
-            BulletFireNormalProcedure.execute(player);
+            GunsTool.spawnBullet(player);
             usehand.getOrCreateTag().putDouble("crot", 20);
             player.getCooldowns().addCooldown(usehand.getItem(), 23);
             usehand.getOrCreateTag().putDouble("ammo", (usehand.getOrCreateTag().getDouble("ammo") - 1));

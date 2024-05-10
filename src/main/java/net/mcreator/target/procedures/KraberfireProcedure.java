@@ -1,6 +1,7 @@
 package net.mcreator.target.procedures;
 
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.tools.GunsTool;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
@@ -15,7 +16,7 @@ public class KraberfireProcedure {
         if (usehand.getItem() == TargetModItems.KRABER.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !player.getCooldowns().isOnCooldown(usehand.getItem())
                 && usehand.getOrCreateTag().getDouble("ammo") > 0) {
             usehand.getOrCreateTag().putDouble("fireanim", 40);
-            BulletFireNormalProcedure.execute(player);
+            GunsTool.spawnBullet(player);
             player.getCooldowns().addCooldown(usehand.getItem(), 40);
 
             if (!player.level().isClientSide() && player.getServer() != null) {

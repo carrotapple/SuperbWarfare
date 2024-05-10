@@ -4,6 +4,7 @@ import net.mcreator.target.entity.BocekarrowEntity;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.tools.GunsTool;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
@@ -57,7 +58,7 @@ public class BowlooseProcedure {
                 }
             } else {
                 for (int index0 = 0; index0 < 10; index0++) {
-                    BulletFireNormalProcedure.execute(player);
+                    GunsTool.spawnBullet(player);
                 }
 
                 if (!player.level().isClientSide() && player.getServer() != null) {
