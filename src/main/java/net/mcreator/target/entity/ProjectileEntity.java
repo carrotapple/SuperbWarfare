@@ -324,7 +324,17 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 living.remove(Entity.RemovalReason.KILLED);
                 living.gameEvent(GameEvent.ENTITY_DIE);
             }
-            ((ServerLevel) this.level()).sendParticles(ParticleTypes.DAMAGE_INDICATOR, living.getX(), living.getY() + .5, living.getZ(), 1000, .4, .7, .4, 0);
+
+            if (this.shooter instanceof ServerPlayer player) {
+                player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    capability.hitind = 25;
+                    capability.syncPlayerVariables(living);
+                });
+                var holder = Holder.direct(TargetModSounds.INDICATION.get());
+                player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
+                ((ServerLevel) this.level()).sendParticles(ParticleTypes.DAMAGE_INDICATOR, living.getX(), living.getY() + .5, living.getZ(), 1000, .4, .7, .4, 0);
+            }
+
             return;
         }
 
