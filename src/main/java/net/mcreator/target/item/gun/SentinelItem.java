@@ -10,6 +10,7 @@ import net.mcreator.target.procedures.SentinelWuPinZaiBeiBaoZhongShiMeiKeFaSheng
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.ItemNBTTool;
 import net.mcreator.target.tools.RarityTool;
+import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -164,8 +165,8 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
-        super.appendHoverText(itemstack, world, list, flag);
+    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
+        TooltipTool.addSentinelTips(list, stack);
     }
 
     @Override

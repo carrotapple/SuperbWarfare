@@ -66,4 +66,42 @@ public class TooltipTool {
                 .append(Component.literal(level + " " + new DecimalFormat("##.##").format(rate) + "%").withStyle(formatting).withStyle(ChatFormatting.BOLD)));
 
     }
+
+    public static void addBocekTips(List<Component> tooltip, ItemStack stack) {
+//        tooltip.add(Component.literal(""));
+//
+//        double damage = (ItemNBTTool.getDouble(stack, "damage", 0) +
+//                ItemNBTTool.getDouble(stack, "adddamage", 0))
+//                * ItemNBTTool.getDouble(stack, "damageadd", 1);
+//
+//        tooltip.add(Component.translatable("des.target.tips.damage").withStyle(ChatFormatting.GRAY)
+//                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+//                .append(Component.literal(new DecimalFormat("##.#").format(damage)).withStyle(ChatFormatting.GREEN)));
+//
+//        addLevelTips(tooltip, stack);
+    }
+
+    public static void addSentinelTips(List<Component> tooltip, ItemStack stack) {
+        tooltip.add(Component.literal(""));
+
+        boolean flag = ItemNBTTool.getDouble(stack, "chargingtime", 0) > 0;
+
+        if (flag) {
+            double damage = (ItemNBTTool.getDouble(stack, "damage", 0) +
+                    ItemNBTTool.getDouble(stack, "adddamage", 0))
+                    * ItemNBTTool.getDouble(stack, "damageadd", 1);
+
+            tooltip.add(Component.translatable("des.target.tips.damage").withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                    .append(Component.literal(new DecimalFormat("##.#").format(damage)).withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.BOLD)));
+        } else {
+            double damage = ItemNBTTool.getDouble(stack, "damage", 0) * ItemNBTTool.getDouble(stack, "damageadd", 1);
+
+            tooltip.add(Component.translatable("des.target.tips.damage").withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                    .append(Component.literal(new DecimalFormat("##.#").format(damage)).withStyle(ChatFormatting.GREEN)));
+        }
+
+        addLevelTips(tooltip, stack);
+    }
 }
