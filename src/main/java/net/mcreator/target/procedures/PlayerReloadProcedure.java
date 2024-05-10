@@ -334,7 +334,7 @@ public class PlayerReloadProcedure {
 
                         if (!entity.level().isClientSide() && entity.getServer() != null) {
                             entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m870_preparealt player @s ~ ~ ~ 100 1");
+                                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m_870_preparealt player @s ~ ~ ~ 100 1");
                         }
                     } else {
                         tag.putDouble("reloading", 1);

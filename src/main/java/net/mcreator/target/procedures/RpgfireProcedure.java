@@ -61,13 +61,13 @@ public class RpgfireProcedure {
                 player.getCooldowns().addCooldown(usehand.getItem(), 10);
                 if (!entity.level().isClientSide() && entity.getServer() != null) {
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:rpg7_fire_1p player @s ~ ~ ~ 2 1");
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:rpg_fire_1p player @s ~ ~ ~ 2 1");
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:rpg7_fire_3p player @a ~ ~ ~ 4 1");
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:rpg_fire_3p player @a ~ ~ ~ 4 1");
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:rpg7_far player @a ~ ~ ~ 8 1");
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:rpg_far player @a ~ ~ ~ 8 1");
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:rpg7_veryfar player @a ~ ~ ~ 16 1");
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:rpg_veryfar player @a ~ ~ ~ 16 1");
                 }
                 usehand.getOrCreateTag().putDouble("fireanim", 2);
                 usehand.getOrCreateTag().putDouble("ammo", (usehand.getOrCreateTag().getDouble("ammo") - 1));

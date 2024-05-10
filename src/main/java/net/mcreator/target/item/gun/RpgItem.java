@@ -6,7 +6,7 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.RpgItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
-import net.mcreator.target.procedures.TacRpgWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
+import net.mcreator.target.procedures.RpgWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -156,7 +156,7 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
         if (entity instanceof Player player) {
             itemstack.getOrCreateTag().putDouble("maxammo", getAmmoCount(player));
         }
-        TacRpgWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
+        RpgWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
     }
 
     public static double getAmmoCount(Player player) {

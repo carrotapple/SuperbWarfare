@@ -28,13 +28,13 @@ public class M870fireProcedure {
 
                 if (!entity.level().isClientSide() && entity.getServer() != null) {
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m870_fire_1p player @s ~ ~ ~ 2 1");
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m_870_fire_1p player @s ~ ~ ~ 2 1");
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m870_fire_3p player @a ~ ~ ~ 4 1");
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m_870_fire_3p player @a ~ ~ ~ 4 1");
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m870_far player @s ~ ~ ~ 12 1");
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m_870_far player @s ~ ~ ~ 12 1");
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m870_veryfar player @a ~ ~ ~ 24 1");
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m_870_veryfar player @a ~ ~ ~ 24 1");
                 }
                 usehand.getOrCreateTag().putDouble("ammo", (usehand.getOrCreateTag().getDouble("ammo") - 1));
                 usehand.getOrCreateTag().putDouble("fireanim", 2);
