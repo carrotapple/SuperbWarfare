@@ -16,6 +16,7 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -160,6 +161,10 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
         list.add(Component.translatable("des.target.trachelium_1").withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
         list.add(Component.translatable("des.target.trachelium_2").withStyle(ChatFormatting.GRAY));
+
+        TooltipTool.addHideText(list, Component.literal(""));
+        TooltipTool.addHideText(list, Component.translatable("des.target.trachelium_3").withStyle(ChatFormatting.WHITE));
+        TooltipTool.addHideText(list, Component.translatable("des.target.trachelium_4").withStyle(Style.EMPTY.withColor(0xF4F0FF)));
 
         TooltipTool.addGunTips(list, stack);
     }
