@@ -5,9 +5,11 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.network.GunsDataMessage;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
@@ -20,9 +22,7 @@ public class GunsTool {
 
     public static HashMap<String, HashMap<String, Double>> gunsData = new HashMap<>();
 
-    public static void initJsonData(Level level) {
-        var manager = level.getServer().getResourceManager();
-
+    public static void initJsonData(ResourceManager manager) {
         for (var entry : manager.listResources("guns", file -> file.getPath().endsWith(".json")).entrySet()) {
             var id = entry.getKey();
             var attribute = entry.getValue();
@@ -44,7 +44,6 @@ public class GunsTool {
 
     public static void initGun(Level level, ItemStack stack, String location) {
         if (level.getServer() == null) return;
-        initJsonData(level);
         gunsData.get(location).forEach((k, v) -> stack.getOrCreateTag().putDouble(k, v));
     }
 
@@ -70,8 +69,12 @@ public class GunsTool {
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            GunsTool.initJsonData(player.serverLevel());
             TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new GunsDataMessage(GunsTool.gunsData));
         }
+    }
+
+    @SubscribeEvent
+    public static void serverStarted(ServerStartedEvent event) {
+        initJsonData(event.getServer().getResourceManager());
     }
 }
