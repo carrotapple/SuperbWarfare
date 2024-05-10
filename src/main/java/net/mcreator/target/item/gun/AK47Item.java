@@ -2,6 +2,7 @@ package net.mcreator.target.item.gun;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.AK47ItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
@@ -155,7 +156,7 @@ public class AK47Item extends GunItem implements GeoItem, AnimatedItem {
         if (slot == EquipmentSlot.MAINHAND) {
             map = HashMultimap.create(map);
             map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, "henghengaaa", -0.04f, AttributeModifier.Operation.MULTIPLY_BASE));
+                    new AttributeModifier(uuid, TargetMod.ATTRIBUTE_MODIFIER, -0.04f, AttributeModifier.Operation.MULTIPLY_BASE));
         }
         return map;
     }
