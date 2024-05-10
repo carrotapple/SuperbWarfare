@@ -63,7 +63,7 @@ public class TooltipTool {
 
         tooltip.add(Component.translatable("des.target.tips.level").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(level + " " + new DecimalFormat("##.##").format(rate) + "%").withStyle(formatting).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(level + " " + new DecimalFormat("##.##").format(rate * 100) + "%").withStyle(formatting).withStyle(ChatFormatting.BOLD)));
 
     }
 
