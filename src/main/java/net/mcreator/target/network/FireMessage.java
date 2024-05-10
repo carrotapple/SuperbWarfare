@@ -2,7 +2,7 @@ package net.mcreator.target.network;
 
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.procedures.PressFireProcedure;
-import net.mcreator.target.procedures.RleaseFireProcedure;
+import net.mcreator.target.procedures.ReleaseFireProcedure;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -40,9 +40,6 @@ public class FireMessage {
 
     public static void pressAction(Player entity, int type, int pressedms) {
         Level world = entity.level();
-        double x = entity.getX();
-        double y = entity.getY();
-        double z = entity.getZ();
         // security measure to prevent arbitrary chunk generation
         if (!world.hasChunkAt(entity.blockPosition()))
             return;
@@ -50,7 +47,7 @@ public class FireMessage {
             PressFireProcedure.execute(entity);
         }
         if (type == 1) {
-            RleaseFireProcedure.execute(entity);
+            ReleaseFireProcedure.execute(entity);
         }
     }
 
