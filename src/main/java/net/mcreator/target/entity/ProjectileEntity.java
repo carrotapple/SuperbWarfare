@@ -4,11 +4,10 @@ import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
 import net.mcreator.target.init.TargetCustomModEntities;
 import net.mcreator.target.init.TargetModDamageTypes;
+import net.mcreator.target.init.TargetModParticleTypes;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.ExtendedEntityRayTraceResult;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -258,18 +257,18 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     }
 
     protected void onHitBlock(Vec3 location) {
-        // TODO 修改成正常的音效播放/粒子显示方法
-        if (this.level() instanceof ServerLevel _level)
-            _level.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, new Vec3(location.x, location.y, location.z), Vec2.ZERO, _level, 4, "", Component.literal(""), _level.getServer(), null).withSuppressedOutput(),
-                    "particle target:bullthole ~ ~ ~ 0 0 0 0 1 force");
-        if (this.level() instanceof ServerLevel _level)
-            _level.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, new Vec3(location.x, location.y, location.z), Vec2.ZERO, _level, 4, "", Component.literal(""), _level.getServer(), null).withSuppressedOutput(),
-                    "particle minecraft:smoke ~ ~ ~ 0 0.1 0 0.01 3 force");
-        if (this.level() instanceof ServerLevel _level)
-            _level.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, new Vec3(location.x, location.y, location.z), Vec2.ZERO, _level, 4, "", Component.literal(""), _level.getServer(), null).withSuppressedOutput(),
-                    "playsound target:land block @a ~ ~ ~ 1 1");
+        if (this.level() instanceof ServerLevel serverLevel) {
+            if (this.beast) {
+                serverLevel.sendParticles(ParticleTypes.END_ROD, location.x, location.y, location.z, 15, 0.1, 0.1, 0.1, 0.05);
+            } else {
+                serverLevel.sendParticles(TargetModParticleTypes.BULLTHOLE.get(), location.x, location.y, location.z, 1, 0, 0, 0, 0);
+                serverLevel.sendParticles(ParticleTypes.SMOKE, location.x, location.y, location.z, 3, 0, 0.1, 0, 0.01);
+                serverLevel.sendParticles(TargetModParticleTypes.BULLTHOLE.get(), location.x, location.y, location.z, 1, 0, 0, 0, 0);
 
-        this.discard();
+                this.discard();
+            }
+            serverLevel.playSound(null, new BlockPos((int) location.x, (int) location.y, (int) location.z), TargetModSounds.LAND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+        }
     }
 
     private void onHit(HitResult result) {
