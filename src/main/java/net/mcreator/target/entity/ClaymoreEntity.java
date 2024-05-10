@@ -4,12 +4,15 @@ import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.procedures.ClaymoreDangShiTiGengXinKeShiProcedure;
 import net.mcreator.target.procedures.ClaymoreDangShiTiSiWangShiProcedure;
 import net.mcreator.target.procedures.ClaymoreYouJiShiTiShiProcedure;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -24,6 +27,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -36,6 +42,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 // TODO 重写阔剑地雷
+@Mod.EventBusSubscriber
 public class ClaymoreEntity extends TamableAnimal implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.STRING);
@@ -293,5 +300,29 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    @SubscribeEvent
+    public static void onEntityAttacked(LivingAttackEvent event) {
+        var damagesource = event.getSource();
+        var entity = event.getEntity();
+        var sourceentity = event.getSource().getEntity();
+        if (damagesource == null || entity == null || sourceentity == null) return;
+
+        if (entity instanceof ClaymoreEntity tamEnt && tamEnt.getOwner() == sourceentity) {
+            if (tamEnt.getOwner() instanceof Player player && player.isCreative()) {
+                if (entity instanceof ClaymoreEntity claymore && damagesource.is(ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("target:deleted_mod_element")))) {
+                    entity.setYRot(sourceentity.getYRot());
+                    entity.setXRot(entity.getXRot());
+                    entity.setYBodyRot(entity.getYRot());
+                    entity.setYHeadRot(entity.getYRot());
+                    entity.yRotO = entity.getYRot();
+                    entity.xRotO = entity.getXRot();
+                    claymore.yBodyRotO = claymore.getYRot();
+                    claymore.yHeadRotO = claymore.getYRot();
+                }
+                event.setCanceled(true);
+            }
+        }
     }
 }
