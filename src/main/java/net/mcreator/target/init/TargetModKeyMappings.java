@@ -57,7 +57,7 @@ public class TargetModKeyMappings {
             super.setDown(isDown);
             if (isDownOld != isDown && isDown) {
                 TargetMod.PACKET_HANDLER.sendToServer(new FireModeMessage(0, 0));
-                FireModeMessage.pressAction(Minecraft.getInstance().player, 0, 0);
+                FireModeMessage.pressAction(Minecraft.getInstance().player, 0);
             }
             isDownOld = isDown;
         }
