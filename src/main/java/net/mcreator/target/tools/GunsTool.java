@@ -36,6 +36,9 @@ public class GunsTool {
                 }
                 var path = id.getPath();
                 gunsData.put(path.substring(5, path.length() - 5), map);
+
+                reader.endObject();
+                reader.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
