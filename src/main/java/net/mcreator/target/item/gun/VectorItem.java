@@ -8,7 +8,9 @@ import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.AnimatedItem;
-import net.mcreator.target.procedures.VectorWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
+import net.mcreator.target.procedures.HandgunReload1Procedure;
+import net.mcreator.target.procedures.HandgunReload2Procedure;
+import net.mcreator.target.procedures.WeaponDrawLightProcedure;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
@@ -152,9 +154,54 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemstack, world, entity, slot, selected);
-        VectorWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
+    public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(itemStack, world, entity, slot, selected);
+
+        CompoundTag tag = itemStack.getOrCreateTag();
+        double id = tag.getDouble("id");
+        var mainHandItem = entity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
+        if (mainHandItem.getOrCreateTag().getDouble("id") != tag.getDouble("id")) {
+            tag.putDouble("emptyreload", 0);
+            tag.putDouble("reloading", 0);
+            tag.putDouble("reloadtime", 0);
+        }
+        if (tag.getDouble("reloading") == 1 && tag.getDouble("ammo") == 0) {
+            if (tag.getDouble("reloadtime") == 61) {
+                entity.getPersistentData().putDouble("id", id);
+                entity.level().playSound(null, entity.blockPosition(), TargetModSounds.VECTOR_RELOAD_EMPTY.get(), SoundSource.PLAYERS, 100, 1);
+            }
+            if (mainHandItem.getItem() == itemStack.getItem()
+                    && mainHandItem.getOrCreateTag().getDouble("id") == id
+                    && tag.getDouble("reloadtime") > 0) {
+                tag.putDouble("reloadtime", tag.getDouble("reloadtime") - 1);
+            } else {
+                tag.putDouble("reloading", 0);
+                tag.putDouble("emptyreload", 0);
+                tag.putDouble("reloadtime", 0);
+            }
+            if (tag.getDouble("reloadtime") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
+                HandgunReload1Procedure.execute(entity);
+            }
+        } else if (tag.getDouble("reloading") == 1 && tag.getDouble("ammo") > 0) {
+            if (tag.getDouble("reloadtime") == 47) {
+                entity.getPersistentData().putDouble("id", id);
+                entity.level().playSound(null, entity.blockPosition(), TargetModSounds.VECTOR_RELOAD_NORMAL.get(), SoundSource.PLAYERS, 100, 1);
+            }
+            if (mainHandItem.getItem() == itemStack.getItem()
+                    && mainHandItem.getOrCreateTag().getDouble("id") == id
+                    && tag.getDouble("reloadtime") > 0) {
+                tag.putDouble("reloadtime", (tag.getDouble("reloadtime") - 1));
+            } else {
+                tag.putDouble("reloading", 0);
+                tag.putDouble("emptyreload", 0);
+                tag.putDouble("reloadtime", 0);
+            }
+            if (tag.getDouble("reloadtime") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
+                HandgunReload2Procedure.execute(entity);
+            }
+        }
+
+        WeaponDrawLightProcedure.execute(entity, itemStack);
     }
 
     @Override
