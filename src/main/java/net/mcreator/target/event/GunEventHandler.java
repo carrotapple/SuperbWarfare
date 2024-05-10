@@ -169,8 +169,8 @@ public class GunEventHandler {
 
                 for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectileamount"); index0++) {
                     gunShoot(player);
-                    playGunSounds(player);
                 }
+                playGunSounds(player);
             }
         }
     }
