@@ -11,5 +11,5 @@
   "mag": 100,
   "firemode": 2,
   "projectileamount": 1,
-  "rpm": 600
+  "fire_interval": 2
 }

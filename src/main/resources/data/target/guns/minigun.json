@@ -6,5 +6,6 @@
   "damage": 8,
   "headshot": 2,
   "velocity": 40,
-  "firemode": 2
+  "firemode": 2,
+  "fire_interval": 1
 }

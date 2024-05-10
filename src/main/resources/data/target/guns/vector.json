@@ -9,5 +9,5 @@
   "velocity": 22,
   "mag": 33,
   "projectileamount": 1,
-  "rpm": 1200
+  "fire_interval": 1
 }

@@ -7,5 +7,6 @@
   "damage": 2.5,
   "headshot": 1.5,
   "velocity": 15,
-  "mag": 2
+  "mag": 2,
+  "fire_interval": 2
 }

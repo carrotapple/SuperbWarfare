@@ -3,6 +3,7 @@ package net.mcreator.target.event;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.entity.ProjectileEntity;
 import net.mcreator.target.init.TargetModAttributes;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.ItemNBTTool;
@@ -108,13 +109,17 @@ public class GunEventHandler {
         ItemStack stack = player.getMainHandItem();
         if (stack.is(TargetModTags.Items.NORMAL_MAG_GUN)) {
             double mode = stack.getOrCreateTag().getDouble("firemode");
+            if (player.getPersistentData().getDouble("firing") == 0 && player.getMainHandItem().getItem() == TargetModItems.DEVOTION.get()) {
+                    stack.getOrCreateTag().putDouble("fire_increase", 0);
+            }
 
             if (player.getPersistentData().getDouble("firing") == 1
                     && stack.getOrCreateTag().getDouble("reloading") == 0
                     && stack.getOrCreateTag().getDouble("ammo") > 0
                     && !player.getCooldowns().isOnCooldown(stack.getItem())
                     && mode != 1
-                    && !player.getCooldowns().isOnCooldown(stack.getItem())) {
+                    && !player.getCooldowns().isOnCooldown(stack.getItem()))
+            {
 
                 if (stack.getOrCreateTag().getDouble("firemode") == 0) {
                     player.getPersistentData().putDouble("firing", 0);
@@ -135,7 +140,19 @@ public class GunEventHandler {
                 stack.getOrCreateTag().putDouble("fireanim", 2);
                 stack.getOrCreateTag().putDouble("empty", 1);
 
-                int cooldown = (int) Math.ceil(20 * 60 / ItemNBTTool.getDouble(stack, "rpm", 60));
+                if (player.getMainHandItem().getItem() == TargetModItems.M_4.get() || player.getMainHandItem().getItem() == TargetModItems.HK_416.get()) {
+                    if (stack.getOrCreateTag().getDouble("fire_sequence") == 1) {
+                        stack.getOrCreateTag().putDouble("fire_sequence", 0);
+                    } else {
+                        stack.getOrCreateTag().putDouble("fire_sequence", 1);
+                    }
+                }
+
+                if (player.getMainHandItem().getItem() == TargetModItems.DEVOTION.get()) {
+                        stack.getOrCreateTag().putDouble("fire_increase", stack.getOrCreateTag().getDouble("fire_increase") + 0.334);
+                }
+
+                int cooldown = (int) stack.getOrCreateTag().getDouble("fire_interval") + (int) stack.getOrCreateTag().getDouble("fire_sequence") - (int) stack.getOrCreateTag().getDouble("fire_increase");
                 player.getCooldowns().addCooldown(stack.getItem(), cooldown);
 
                 for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectileamount"); index0++) {
