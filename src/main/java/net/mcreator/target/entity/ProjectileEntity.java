@@ -139,16 +139,16 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         double expandHeight = entity instanceof Player && !entity.isCrouching() ? 0.0625 : 0.0;
         AABB boundingBox = entity.getBoundingBox();
 
-        if (this.beast) {
-            boundingBox = boundingBox.inflate(3);
-        }
-
         // 延迟补偿
         if (entity instanceof ServerPlayer && this.shooter != null) {
             int ping = (int) Math.floor((((ServerPlayer) this.shooter).latency / 1000.0) * 20.0 + 4.0);
             boundingBox = BoundingBoxManager.getBoundingBox((Player) entity, ping);
         }
         boundingBox = boundingBox.expandTowards(0, expandHeight, 0);
+
+        if (this.beast) {
+            boundingBox = boundingBox.inflate(3);
+        }
 
         Vec3 hitPos = boundingBox.clip(startVec, endVec).orElse(null);
         Vec3 grownHitPos = boundingBox.inflate(0.35, 0.2, 0.35).clip(startVec, endVec).orElse(null);
@@ -325,7 +325,6 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 living.gameEvent(GameEvent.ENTITY_DIE);
             }
             ((ServerLevel) this.level()).sendParticles(ParticleTypes.DAMAGE_INDICATOR, living.getX(), living.getY() + .5, living.getZ(), 1000, .4, .7, .4, 0);
-            this.discard();
             return;
         }
 
