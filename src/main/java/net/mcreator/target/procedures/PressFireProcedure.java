@@ -20,7 +20,7 @@ public class PressFireProcedure {
         SentinelFireProcedure.execute(player);
         MarlinfireProcedure.execute(player);
         M870fireProcedure.execute(player);
-        VecfireProcedure.execute(player);
+        VectorFireProcedure.execute(player);
         player.getPersistentData().putDouble("firing", 1);
         if (player.getMainHandItem().is(ItemTags.create(new ResourceLocation("target:gun")))
                 && !(player.getMainHandItem().getItem() == TargetModItems.BOCEK.get())
