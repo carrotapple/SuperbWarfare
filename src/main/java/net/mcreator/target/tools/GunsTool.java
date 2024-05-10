@@ -1,16 +1,24 @@
 package net.mcreator.target.tools;
 
 import com.google.gson.stream.JsonReader;
+import net.mcreator.target.TargetMod;
+import net.mcreator.target.network.GunsDataMessage;
 import net.mcreator.target.network.TargetModVariables;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+@Mod.EventBusSubscriber(modid = TargetMod.MODID)
 public class GunsTool {
 
-    public static final HashMap<String, HashMap<String, Double>> gunsData = new HashMap<>();
+    public static HashMap<String, HashMap<String, Double>> gunsData = new HashMap<>();
 
     public static void initJsonData(Level level) {
         var manager = level.getServer().getResourceManager();
@@ -40,6 +48,13 @@ public class GunsTool {
         gunsData.get(location).forEach((k, v) -> stack.getOrCreateTag().putDouble(k, v));
     }
 
+    public static void initCreativeGun(ItemStack stack, String location) {
+        if (gunsData != null && gunsData.get(location) != null) {
+            gunsData.get(location).forEach((k, v) -> stack.getOrCreateTag().putDouble(k, v));
+            stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        }
+    }
+
     public static void pvpModeCheck(ItemStack stack, Level level) {
         if (!TargetModVariables.MapVariables.get(level).pvpmode) {
             if (stack.getOrCreateTag().getDouble("level") >= 10) {
@@ -49,6 +64,14 @@ public class GunsTool {
             }
         } else {
             stack.getOrCreateTag().putDouble("damageadd", 1);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            GunsTool.initJsonData(player.serverLevel());
+            TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new GunsDataMessage(GunsTool.gunsData));
         }
     }
 }

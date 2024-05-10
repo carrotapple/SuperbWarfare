@@ -6,6 +6,7 @@ import net.mcreator.target.client.renderer.item.BocekItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.BocekreloadProcedure;
+import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.RarityTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -165,8 +166,7 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
 
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(TargetModItems.BOCEK.get());
-        //GunsTool.initGun(stack, TargetModItems.BOCEK.getId().getPath());
-        stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        GunsTool.initCreativeGun(stack, TargetModItems.BOCEK.getId().getPath());
         return stack;
     }
 
