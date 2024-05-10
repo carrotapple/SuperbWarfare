@@ -5,6 +5,8 @@ import com.google.common.collect.Multimap;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.VectorItemRenderer;
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.VectorWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
 import net.mcreator.target.tools.GunsTool;
@@ -13,7 +15,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -24,6 +28,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -37,6 +44,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+@Mod.EventBusSubscriber
 public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
@@ -73,7 +81,6 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
 
         if (this.animationProcedure.equals("empty")) {
-
             if (stack.getOrCreateTag().getDouble("drawtime") < 11) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.vec.draw"));
             }
@@ -181,5 +188,41 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public void setAnimationProcedure(String procedure) {
         this.animationProcedure = procedure;
+    }
+
+    @SubscribeEvent
+    public static void handleBurstFire(TickEvent.PlayerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
+
+        var player = event.player;
+        ItemStack mainHandItem = player.getMainHandItem();
+        CompoundTag tag = mainHandItem.getOrCreateTag();
+        if (mainHandItem.is(TargetModTags.Items.GUN)) {
+            if (tag.getDouble("firemode") == 1) {
+                player.getPersistentData().putDouble("firing", 0);
+            }
+            if (tag.getDouble("ammo") == 0) {
+                tag.putDouble("burst", 0);
+            }
+        }
+        Item item = mainHandItem.getItem();
+        if (item == TargetModItems.VECTOR.get()
+                && tag.getDouble("reloading") == 0
+                && tag.getDouble("ammo") > 0
+                && !player.getCooldowns().isOnCooldown(item)
+                && tag.getDouble("burst") > 0
+        ) {
+            player.getCooldowns().addCooldown(item, tag.getDouble("burst") == 1 ? 5 : 1);
+            tag.putDouble("burst", tag.getDouble("burst") - 1);
+            tag.putDouble("fireanim", 2);
+            tag.putDouble("ammo", (tag.getDouble("ammo") - 1));
+
+            GunsTool.spawnBullet(player);
+
+            player.level().playSound(null, player.blockPosition(), TargetModSounds.VECTOR_FIRE_1P.get(), SoundSource.PLAYERS, 2, 1);
+            player.level().playSound(null, player.blockPosition(), TargetModSounds.VECTOR_FIRE_1P.get(), SoundSource.PLAYERS, 4, 1);
+            player.level().playSound(null, player.blockPosition(), TargetModSounds.VECTOR_FAR.get(), SoundSource.PLAYERS, 6, 1);
+            player.level().playSound(null, player.blockPosition(), TargetModSounds.VECTOR_VERYFAR.get(), SoundSource.PLAYERS, 12, 1);
+        }
     }
 }
