@@ -236,7 +236,14 @@ public class GunEventHandler {
             float damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("adddamage"))
                     * (float) heldItem.getOrCreateTag().getDouble("damageadd");
 
-            ProjectileEntity projectile = new ProjectileEntity(player.level(), player, damage, headshot);
+            ProjectileEntity projectile = new ProjectileEntity(player.level())
+                    .shooter(player)
+                    .damage(damage)
+                    .headShot(headshot);
+
+            if (heldItem.getOrCreateTag().getBoolean("beast")) {
+                projectile.beast();
+            }
 
             projectile.setPos((player.getX() + (-0.5) * player.getLookAngle().x), (player.getEyeY() - 0.1 + (-0.5) * player.getLookAngle().y), (player.getZ() + (-0.5) * player.getLookAngle().z));
             projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, 1 * (float) heldItem.getOrCreateTag().getDouble("velocity"),

@@ -150,6 +150,7 @@
   "death.attack.arrow_in_brain": "%1$s的脑子进矢了,凶手是%2$s",
   "death.attack.arrow_in_brain.item": "%1$s的脑子进矢了,凶手%2$s使用了%3$s",
   "death.attack.arrow_in_brain.player": "%1$s在逃离%2$s的时候脑子进矢了",
+  "death.attack.beast_gun": "%1$s被%2$s用BEAST枪械臭炸了",
 
   "Shell Estimated Range": "炮弹预估射程:",
   "gui.target.mortar_gui.label_proc_range": "预估射程:",

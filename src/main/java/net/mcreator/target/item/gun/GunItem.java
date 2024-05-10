@@ -29,4 +29,9 @@ public class GunItem extends Item {
         }
         GunsTool.pvpModeCheck(itemstack, level);
     }
+
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        return stack.getOrCreateTag().getBoolean("beast");
+    }
 }

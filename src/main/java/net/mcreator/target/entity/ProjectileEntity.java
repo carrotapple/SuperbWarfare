@@ -12,6 +12,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -28,12 +29,14 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -48,27 +51,34 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     protected int shooterId;
     private float damage = 1f;
     private float headShot = 1f;
+    private boolean beast = false;
 
     public ProjectileEntity(EntityType<? extends ProjectileEntity> p_i50159_1_, Level p_i50159_2_) {
         super(p_i50159_1_, p_i50159_2_);
     }
 
-    public ProjectileEntity(Level world, LivingEntity entity) {
-        super(TargetCustomModEntities.PROJECTILE.get(), world);
-        this.shooter = entity;
+    public ProjectileEntity(Level level) {
+        super(TargetCustomModEntities.PROJECTILE.get(), level);
     }
 
-    public ProjectileEntity(Level world, LivingEntity entity, float damage) {
-        super(TargetCustomModEntities.PROJECTILE.get(), world);
-        this.shooter = entity;
-        this.damage = damage;
+    public ProjectileEntity shooter(LivingEntity shooter) {
+        this.shooter = shooter;
+        return this;
     }
 
-    public ProjectileEntity(Level world, LivingEntity entity, float damage, float headShot) {
-        super(TargetCustomModEntities.PROJECTILE.get(), world);
-        this.shooter = entity;
+    public ProjectileEntity damage(float damage) {
         this.damage = damage;
+        return this;
+    }
+
+    public ProjectileEntity headShot(float headShot) {
         this.headShot = headShot;
+        return this;
+    }
+
+    public ProjectileEntity beast() {
+        this.beast = true;
+        return this;
     }
 
     @Nullable
@@ -76,49 +86,62 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         Vec3 hitVec = null;
         Entity hitEntity = null;
         boolean headshot = false;
-        List<Entity> entities = this.level().getEntities(this, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0), PROJECTILE_TARGETS);
+        List<Entity> entities = this.level()
+                .getEntities(this,
+                        this.getBoundingBox()
+                                .expandTowards(this.getDeltaMovement())
+                                .inflate(this.beast ? 3 : 1),
+                        PROJECTILE_TARGETS
+                );
         double closestDistance = Double.MAX_VALUE;
 
         for (Entity entity : entities) {
-            if (!entity.equals(this.shooter)) {
-                EntityResult result = this.getHitResult(entity, startVec, endVec);
-                if (result == null) {
-                    continue;
-                }
+            if (entity.equals(this.shooter)) continue;
 
-                Vec3 hitPos = result.getHitPos();
-                double distanceToHit = startVec.distanceTo(hitPos);
-                if (distanceToHit < closestDistance) {
-                    hitVec = hitPos;
-                    hitEntity = entity;
-                    closestDistance = distanceToHit;
-                    headshot = result.isHeadshot();
-                }
+            EntityResult result = this.getHitResult(entity, startVec, endVec);
+            if (result == null) continue;
+
+            Vec3 hitPos = result.getHitPos();
+            double distanceToHit = startVec.distanceTo(hitPos);
+            if (distanceToHit < closestDistance) {
+                hitVec = hitPos;
+                hitEntity = entity;
+                closestDistance = distanceToHit;
+                headshot = result.isHeadshot();
             }
         }
         return hitEntity != null ? new EntityResult(hitEntity, hitVec, headshot) : null;
     }
 
-//    @Nullable
-//    protected List<EntityResult> findEntitiesOnPath(Vec3 startVec, Vec3 endVec) {
-//        List<EntityResult> hitEntities = new ArrayList<>();
-//        List<Entity> entities = this.level().getEntities(this, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0), PROJECTILE_TARGETS);
-//        for (Entity entity : entities) {
-//            if (!entity.equals(this.shooter)) {
-//                EntityResult result = this.getHitResult(entity, startVec, endVec);
-//                if (result == null)
-//                    continue;
-//                hitEntities.add(result);
-//            }
-//        }
-//        return hitEntities;
-//    }
+    @Nullable
+    protected List<EntityResult> findEntitiesOnPath(Vec3 startVec, Vec3 endVec) {
+        List<EntityResult> hitEntities = new ArrayList<>();
+        List<Entity> entities = this.level().getEntities(
+                this,
+                this.getBoundingBox()
+                        .expandTowards(this.getDeltaMovement())
+                        .inflate(this.beast ? 3 : 1),
+                PROJECTILE_TARGETS
+        );
+        for (Entity entity : entities) {
+            if (!entity.equals(this.shooter)) {
+                EntityResult result = this.getHitResult(entity, startVec, endVec);
+                if (result == null) continue;
+                hitEntities.add(result);
+            }
+        }
+        return hitEntities;
+    }
 
     @Nullable
     @SuppressWarnings("unchecked")
     private EntityResult getHitResult(Entity entity, Vec3 startVec, Vec3 endVec) {
         double expandHeight = entity instanceof Player && !entity.isCrouching() ? 0.0625 : 0.0;
         AABB boundingBox = entity.getBoundingBox();
+
+        if (this.beast) {
+            boundingBox = boundingBox.inflate(3);
+        }
 
         // 延迟补偿
         if (entity instanceof ServerPlayer && this.shooter != null) {
@@ -186,9 +209,17 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 endVec = result.getLocation();
             }
 
-            EntityResult entityResult = this.findEntityOnPath(startVec, endVec);
+            List<EntityResult> entityResults = new ArrayList<>();
 
-            if (entityResult != null) {
+            if (this.beast) {
+                var temp = findEntitiesOnPath(startVec, endVec);
+                if (temp != null) entityResults.addAll(temp);
+            } else {
+                var temp = this.findEntityOnPath(startVec, endVec);
+                if (temp != null) entityResults.add(temp);
+            }
+
+            for (var entityResult : entityResults) {
                 result = new ExtendedEntityRayTraceResult(entityResult);
                 if (((EntityHitResult) result).getEntity() instanceof Player player) {
                     if (this.shooter instanceof Player && !((Player) this.shooter).canHarmPlayer(player)) {
@@ -198,7 +229,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 if (result != null) {
                     this.onHit(result);
                 }
-            } else {
+            }
+            if (entityResults.isEmpty()) {
                 this.onHit(result);
             }
 
@@ -268,41 +300,57 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     }
 
     protected void onHitEntity(Entity entity, boolean headshot) {
-        if (headshot) {
-            if (entity == null)
-                return;
+        if (entity == null) return;
 
+        if (beast && entity instanceof LivingEntity living) {
+            if (living.isDeadOrDying()) return;
+            if (living instanceof ServerPlayer victim) {
+                living.setHealth(0);
+                living.level().players().forEach(
+                        p -> p.sendSystemMessage(
+                                Component.translatable("death.attack.beast_gun",
+                                        victim.getDisplayName(),
+                                        shooter.getDisplayName()
+                                )
+                        )
+                );
+            } else {
+                living.setHealth(0);
+                living.level().broadcastEntityEvent(living, (byte) 60);
+                living.remove(Entity.RemovalReason.KILLED);
+                living.gameEvent(GameEvent.ENTITY_DIE);
+            }
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.DAMAGE_INDICATOR, living.getX(), living.getY() + .5, living.getZ(), 1000, .4, .7, .4, 0);
+            this.discard();
+            return;
+        }
+
+        if (headshot) {
             if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
                 var holder = Holder.direct(TargetModSounds.HEADSHOT.get());
                 player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
             }
 
-            double i = 25;
             shooter.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.headind = i;
+                capability.headind = 25;
                 capability.syncPlayerVariables(shooter);
             });
 
             entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this.shooter), this.damage * this.headShot);
-            this.discard();
         } else {
-            if (entity == null)
-                return;
-
             if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
                 var holder = Holder.direct(TargetModSounds.INDICATION.get());
                 player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
             }
 
-            double i = 25;
             shooter.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.hitind = i;
+                capability.hitind = 25;
                 capability.syncPlayerVariables(shooter);
             });
 
             entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this.shooter), this.damage);
-            this.discard();
         }
+        this.discard();
     }
 
     public void setDamage(float damage) {
