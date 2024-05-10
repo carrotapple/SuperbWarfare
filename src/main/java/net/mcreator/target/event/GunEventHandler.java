@@ -112,7 +112,7 @@ public class GunEventHandler {
             if (player.getPersistentData().getDouble("firing") == 1
                     && stack.getOrCreateTag().getDouble("reloading") == 0
                     && stack.getOrCreateTag().getDouble("ammo") > 0
-                    && !stack.getOrCreateTag().getBoolean("shootCooldown")
+                    && !player.getCooldowns().isOnCooldown(stack.getItem())
                     && mode != 1
                     && !player.getCooldowns().isOnCooldown(stack.getItem())) {
 
@@ -135,34 +135,13 @@ public class GunEventHandler {
                 stack.getOrCreateTag().putDouble("fireanim", 2);
                 stack.getOrCreateTag().putDouble("empty", 1);
 
-                double tick = (20 * 60 / ItemNBTTool.getDouble(stack, "rpm", 60));
+                int cooldown = (int) Math.ceil(20 * 60 / ItemNBTTool.getDouble(stack, "rpm", 60));
+                player.getCooldowns().addCooldown(stack.getItem(), cooldown);
 
-                if (mode == 0) {
-                    player.getCooldowns().addCooldown(stack.getItem(), (int) tick);
-                    for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectileamount"); index0++) {
-                        gunShoot(player);
-                    }
+                for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectileamount"); index0++) {
+                    gunShoot(player);
                     playGunSounds(player);
-                } else {
-                    double tickCount = player.getPersistentData().getDouble("target_tick_count");
-                    ++tickCount;
-
-                    if (tickCount >= tick) {
-                        player.getCooldowns().addCooldown(stack.getItem(), (int) tickCount);
-                    }
-
-                    while (tickCount >= tick) {
-                        tickCount -= tick;
-                        for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectileamount"); index0++) {
-                            gunShoot(player);
-                        }
-                    }
-                    playGunSounds(player);
-
-                    player.getPersistentData().putDouble("target_tick_count", tickCount);
                 }
-            } else {
-                player.getPersistentData().putDouble("target_tick_count", 0);
             }
         }
     }
