@@ -18,7 +18,6 @@ public class PressFireProcedure {
             return;
         TaserfireProcedure.execute(entity);
         M79fireProcedure.execute(entity);
-        AbkrfireProcedure.execute(entity);
         M98bfireProcedure.execute(entity);
         RpgfireProcedure.execute(entity);
         KraberfireProcedure.execute(entity);

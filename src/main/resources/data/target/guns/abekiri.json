@@ -8,5 +8,6 @@
   "headshot": 1.5,
   "velocity": 15,
   "mag": 2,
+  "projectileamount": 8,
   "fire_interval": 2
 }

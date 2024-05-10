@@ -41,7 +41,7 @@ public class BulletFireNormalProcedure {
 
             if (heldItem.getItem() == TargetModItems.BOCEK.get()) {
 
-                damage = 0.2f * (float) heldItem.getOrCreateTag().getDouble("speed") * (float) heldItem.getOrCreateTag().getDouble("damageadd");
+                damage = 0.008333333f * (float) heldItem.getOrCreateTag().getDouble("damage")  * (float) heldItem.getOrCreateTag().getDouble("speed") * (float) heldItem.getOrCreateTag().getDouble("damageadd");
 
                 ProjectileEntity projectile = new ProjectileEntity(entity.level(), living, damage, headshot);
 
