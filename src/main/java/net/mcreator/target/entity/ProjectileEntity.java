@@ -33,6 +33,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
+import net.minecraftforge.entity.PartEntity;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -300,6 +301,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     protected void onHitEntity(Entity entity, boolean headshot) {
         if (entity == null) return;
+
+        if (entity instanceof PartEntity<?> part) {
+            entity = part.getParent();
+        }
 
         if (beast && entity instanceof LivingEntity living) {
             if (living.isDeadOrDying()) return;
