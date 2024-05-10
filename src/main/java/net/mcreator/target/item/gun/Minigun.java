@@ -7,6 +7,7 @@ import net.mcreator.target.client.renderer.item.MinigunItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.MiniguninbackpackProcedure;
+import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.ItemNBTTool;
 import net.mcreator.target.tools.RarityTool;
 import net.mcreator.target.tools.TooltipTool;
@@ -186,8 +187,7 @@ public class Minigun extends GunItem implements GeoItem, AnimatedItem {
 
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(TargetModItems.MINIGUN.get());
-        //GunsTool.initGun(stack, TargetModItems.MINIGUN.getId().getPath());
-        stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        GunsTool.initCreativeGun(stack, TargetModItems.MINIGUN.getId().getPath());
         return stack;
     }
 

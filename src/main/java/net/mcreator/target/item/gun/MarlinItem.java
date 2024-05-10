@@ -7,6 +7,7 @@ import net.mcreator.target.client.renderer.item.MarlinItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.MarlinWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
+import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -185,8 +186,7 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
 
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(TargetModItems.MARLIN.get());
-        //GunsTool.initGun(stack, TargetModItems.MARLIN.getId().getPath());
-        stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        GunsTool.initCreativeGun(stack, TargetModItems.MARLIN.getId().getPath());
         return stack;
     }
 

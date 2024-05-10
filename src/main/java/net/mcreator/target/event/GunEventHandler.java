@@ -6,7 +6,6 @@ import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
-import net.mcreator.target.tools.ItemNBTTool;
 import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -110,16 +109,14 @@ public class GunEventHandler {
         if (stack.is(TargetModTags.Items.NORMAL_MAG_GUN)) {
             double mode = stack.getOrCreateTag().getDouble("firemode");
             if (player.getPersistentData().getDouble("firing") == 0 && player.getMainHandItem().getItem() == TargetModItems.DEVOTION.get()) {
-                    stack.getOrCreateTag().putDouble("fire_increase", 0);
+                stack.getOrCreateTag().putDouble("fire_increase", 0);
             }
 
             if (player.getPersistentData().getDouble("firing") == 1
                     && stack.getOrCreateTag().getDouble("reloading") == 0
                     && stack.getOrCreateTag().getDouble("ammo") > 0
                     && !player.getCooldowns().isOnCooldown(stack.getItem())
-                    && mode != 1
-                    && !player.getCooldowns().isOnCooldown(stack.getItem()))
-            {
+                    && mode != 1) {
 
                 if (stack.getOrCreateTag().getDouble("firemode") == 0) {
                     player.getPersistentData().putDouble("firing", 0);
@@ -149,7 +146,7 @@ public class GunEventHandler {
                 }
 
                 if (player.getMainHandItem().getItem() == TargetModItems.DEVOTION.get()) {
-                        stack.getOrCreateTag().putDouble("fire_increase", stack.getOrCreateTag().getDouble("fire_increase") + 0.334);
+                    stack.getOrCreateTag().putDouble("fire_increase", stack.getOrCreateTag().getDouble("fire_increase") + 0.334);
                 }
 
                 int cooldown = (int) stack.getOrCreateTag().getDouble("fire_interval") + (int) stack.getOrCreateTag().getDouble("fire_sequence") - (int) stack.getOrCreateTag().getDouble("fire_increase");

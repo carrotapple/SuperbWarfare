@@ -7,6 +7,7 @@ import net.mcreator.target.client.renderer.item.TaserItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.TasercooldownProcedure;
+import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -175,8 +176,7 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
 
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(TargetModItems.TASER.get());
-
-        //GunsTool.initGun(stack, TargetModItems.TASER.getId().getPath());
+        GunsTool.initCreativeGun(stack, TargetModItems.TASER.getId().getPath());
         return stack;
     }
 

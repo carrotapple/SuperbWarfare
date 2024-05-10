@@ -7,6 +7,7 @@ import net.mcreator.target.client.renderer.item.Mk14ItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.Mk14WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
+import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -169,8 +170,7 @@ public class Mk14Item extends GunItem implements GeoItem, AnimatedItem {
 
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(TargetModItems.MK_14.get());
-        //GunsTool.initGun(stack, TargetModItems.MK_14.getId().getPath());
-        stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        GunsTool.initCreativeGun(stack, TargetModItems.MK_14.getId().getPath());
         return stack;
     }
 

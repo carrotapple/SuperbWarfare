@@ -7,6 +7,7 @@ import net.mcreator.target.client.renderer.item.M870ItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.M870WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
+import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -178,8 +179,7 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
 
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(TargetModItems.M_870.get());
-        //GunsTool.initGun(stack, TargetModItems.M_870.getId().getPath());
-        stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        GunsTool.initCreativeGun(stack, TargetModItems.M_870.getId().getPath());
         return stack;
     }
 

@@ -7,6 +7,7 @@ import net.mcreator.target.client.renderer.item.SvdItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.SvdWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
+import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -162,8 +163,7 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
 
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(TargetModItems.SVD.get());
-        //GunsTool.initGun(stack, TargetModItems.SVD.getId().getPath());
-        stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        GunsTool.initCreativeGun(stack, TargetModItems.SVD.getId().getPath());
         return stack;
     }
 

@@ -2,10 +2,12 @@ package net.mcreator.target.item.gun;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.HuntingRifleItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.HrrelodingProcedure;
+import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -136,7 +138,7 @@ public class HuntingRifle extends GunItem implements GeoItem, AnimatedItem {
         if (slot == EquipmentSlot.MAINHAND) {
             map = HashMultimap.create(map);
             map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, "henghengaaa", -0.05f, AttributeModifier.Operation.MULTIPLY_BASE));
+                    new AttributeModifier(uuid, TargetMod.ATTRIBUTE_MODIFIER, -0.05f, AttributeModifier.Operation.MULTIPLY_BASE));
         }
         return map;
     }
@@ -154,8 +156,7 @@ public class HuntingRifle extends GunItem implements GeoItem, AnimatedItem {
 
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(TargetModItems.HUNTING_RIFLE.get());
-        //GunsTool.initGun(stack, TargetModItems.HUNTING_RIFLE.getId().getPath());
-        stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        GunsTool.initCreativeGun(stack, TargetModItems.HUNTING_RIFLE.getId().getPath());
         return stack;
     }
 

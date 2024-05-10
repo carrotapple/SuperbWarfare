@@ -7,6 +7,7 @@ import net.mcreator.target.client.renderer.item.KraberItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.KraberWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
+import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.RarityTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
@@ -169,8 +170,7 @@ public class Kraber extends GunItem implements GeoItem, AnimatedItem {
 
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(TargetModItems.KRABER.get());
-        //GunsTool.initGun(stack, TargetModItems.KRABER.getId().getPath());
-        stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        GunsTool.initCreativeGun(stack, TargetModItems.KRABER.getId().getPath());
         return stack;
     }
 

@@ -7,6 +7,7 @@ import net.mcreator.target.client.renderer.item.SentinelItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.SentinelWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
+import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.ItemNBTTool;
 import net.mcreator.target.tools.RarityTool;
 import net.minecraft.client.Minecraft;
@@ -197,8 +198,7 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
 
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(TargetModItems.SENTINEL.get());
-        //GunsTool.initGun(stack, TargetModItems.SENTINEL.getId().getPath());
-        stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+        GunsTool.initCreativeGun(stack, TargetModItems.SENTINEL.getId().getPath());
         return stack;
     }
 
