@@ -1,7 +1,7 @@
 {
   "type": "minecraft:smithing_transform",
   "template": {
-    "item": "target:legendarymaterialpack"
+    "item": "target:legendary_material_pack"
   },
   "base": {
     "item": "target:soul_steel_ingot"
