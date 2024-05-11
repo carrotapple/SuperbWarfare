@@ -1,8 +1,10 @@
 package net.mcreator.target.item.common.ammo;
 
-import net.mcreator.target.procedures.SniperAmmoBoxWanJiaWanChengShiYongWuPinShiProcedure;
+import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -32,9 +34,22 @@ public class SniperAmmoBox extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player entity, InteractionHand hand) {
-        InteractionResultHolder<ItemStack> ar = super.use(world, entity, hand);
-        SniperAmmoBoxWanJiaWanChengShiYongWuPinShiProcedure.execute(entity, ar.getObject());
-        return ar;
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        player.getCooldowns().addCooldown(this, 20);
+        stack.shrink(1);
+
+        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            capability.sniperammo = (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperammo + 12;
+            capability.syncPlayerVariables(player);
+        });
+
+        if (!level.isClientSide()) {
+            level.playSound(player, player.getOnPos(), TargetModSounds.BULLETSUPPLY.get(), SoundSource.VOICE, 1f, 1f);
+
+            player.displayClientMessage(Component.translatable("des.target.sniper_ammo_box.use"), false);
+        }
+
+        return InteractionResultHolder.consume(stack);
     }
 }

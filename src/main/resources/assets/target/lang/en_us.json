@@ -89,6 +89,7 @@
   "item.target.sniper_ammo": "Sniper Ammo *2",
   "item.target.sniper_ammo_box": "Sniper Ammo Box",
   "des.target.sniper_ammo_box": "Sniper Ammo *12",
+  "des.target.sniper_ammo_box.use": "Sniper Ammo +12",
   "item.target.rifle_ammo": "Rifle Ammo *5",
   "item.target.rifle_ammo_box": "Rifle Ammo Box",
   "des.target.rifle_ammo_box": "Rifle Ammo *30",

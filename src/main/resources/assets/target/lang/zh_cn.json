@@ -89,6 +89,7 @@
   "item.target.sniper_ammo": "狙击枪弹药 *2",
   "item.target.sniper_ammo_box": "狙击枪弹药盒",
   "des.target.sniper_ammo_box": "狙击枪弹药 *12",
+  "des.target.sniper_ammo_box.use": "狙击枪弹药 +12",
   "item.target.rifle_ammo": "步枪弹药 *5",
   "item.target.rifle_ammo_box": "步枪弹药盒",
   "des.target.rifle_ammo_box": "步枪弹药 *30",
