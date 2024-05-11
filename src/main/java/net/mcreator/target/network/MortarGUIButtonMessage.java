@@ -1,10 +1,11 @@
 package net.mcreator.target.network;
 
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.procedures.*;
-import net.mcreator.target.world.inventory.MortarGUIMenu;
+import net.mcreator.target.tools.TraceTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -12,7 +13,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.HashMap;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -55,18 +55,73 @@ public class MortarGUIButtonMessage {
 
     public static void handleButtonAction(Player entity, int buttonID, int x, int y, int z) {
         Level world = entity.level();
-        HashMap<String, Object> guistate = MortarGUIMenu.guistate;
         // security measure to prevent arbitrary chunk generation
         if (!world.hasChunkAt(new BlockPos(x, y, z)))
             return;
 
+        handleButtonAction(entity, buttonID);
+    }
+
+    private static void handleButtonAction(Player player, int buttonID) {
+        Entity looking = TraceTool.findLookingEntity(player, 6);
+        if (looking == null) return;
+
+        boolean validXRot = true;
+
         switch (buttonID) {
-            case 0 -> AngleAddProcedure.execute(entity);
-            case 1 -> AngleReduceProcedure.execute(entity);
-            case 2 -> AngleAddPlusProcedure.execute(entity);
-            case 3 -> AngleReducePlusProcedure.execute(entity);
-            case 4 -> AngleReduceMiniProcedure.execute(entity);
-            case 5 -> AngleAddMiniProcedure.execute(entity);
+            case 0 -> {
+                if (looking.getXRot() <= -88) {
+                    validXRot = false;
+                } else {
+                    looking.setXRot(looking.getXRot() - 1);
+                }
+            }
+            case 1 -> {
+                if (looking.getXRot() >= -20) {
+                    validXRot = false;
+                } else {
+                    looking.setXRot(looking.getXRot() + 1);
+                }
+            }
+            case 2 -> {
+                if (looking.getXRot() <= -78) {
+                    validXRot = false;
+                } else {
+                    looking.setXRot(looking.getXRot() - 10);
+                }
+            }
+            case 3 -> {
+                if (looking.getXRot() >= -30) {
+                    validXRot = false;
+                } else {
+                    looking.setXRot(looking.getXRot() + 10);
+                }
+            }
+            case 4 -> {
+                if (looking.getXRot() >= -20.5) {
+                    validXRot = false;
+                } else {
+                    looking.setXRot(looking.getXRot() + 0.5f);
+                }
+            }
+            case 5 -> {
+                if (looking.getXRot() <= -87.5) {
+                    validXRot = false;
+                } else {
+                    looking.setXRot(looking.getXRot() - 0.5f);
+                }
+            }
+        }
+
+        if (!validXRot) return;
+        looking.setYRot(looking.getYRot());
+        looking.setYBodyRot(looking.getYRot());
+        looking.setYHeadRot(looking.getYRot());
+        looking.yRotO = looking.getYRot();
+        looking.xRotO = looking.getXRot();
+        if (looking instanceof LivingEntity living) {
+            living.yBodyRotO = living.getYRot();
+            living.yHeadRotO = living.getYRot();
         }
     }
 
