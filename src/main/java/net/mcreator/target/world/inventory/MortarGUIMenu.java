@@ -1,8 +1,9 @@
 package net.mcreator.target.world.inventory;
 
 import net.mcreator.target.init.TargetModMenus;
-import net.mcreator.target.procedures.MortarGUIGaiGUIDaKaiShiProcedure;
 import net.mcreator.target.procedures.MotarGUITickProcedure;
+import net.mcreator.target.tools.TraceTool;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
@@ -43,15 +44,18 @@ public class MortarGUIMenu extends AbstractContainerMenu implements Supplier<Map
         this.entity = inv.player;
         this.world = inv.player.level();
         this.internal = new ItemStackHandler(0);
-        BlockPos pos = null;
         if (extraData != null) {
-            pos = extraData.readBlockPos();
+            BlockPos pos = extraData.readBlockPos();
             this.x = pos.getX();
             this.y = pos.getY();
             this.z = pos.getZ();
             access = ContainerLevelAccess.create(world, pos);
         }
-        MortarGUIGaiGUIDaKaiShiProcedure.execute(entity, guistate);
+        Entity looking = TraceTool.findLookingEntity(entity, 6);
+        if (looking == null) return;
+
+        if (guistate.get("text:pitch") instanceof EditBox box)
+            box.setValue((new java.text.DecimalFormat("##").format(-looking.getXRot())));
     }
 
     @Override
@@ -72,10 +76,6 @@ public class MortarGUIMenu extends AbstractContainerMenu implements Supplier<Map
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         Player entity = event.player;
         if (event.phase == TickEvent.Phase.END && entity.containerMenu instanceof MortarGUIMenu) {
-            Level world = entity.level();
-            double x = entity.getX();
-            double y = entity.getY();
-            double z = entity.getZ();
             MotarGUITickProcedure.execute(entity, guistate);
         }
     }

@@ -59,29 +59,14 @@ public class MortarGUIButtonMessage {
         // security measure to prevent arbitrary chunk generation
         if (!world.hasChunkAt(new BlockPos(x, y, z)))
             return;
-        if (buttonID == 0) {
 
-            AngleAddProcedure.execute(entity);
-        }
-        if (buttonID == 1) {
-
-            AngleReduceProcedure.execute(entity);
-        }
-        if (buttonID == 2) {
-
-            AngleAddPlusProcedure.execute(entity);
-        }
-        if (buttonID == 3) {
-
-            AngleReducePlusProcedure.execute(entity);
-        }
-        if (buttonID == 4) {
-
-            AngleReduceMiniProcedure.execute(entity);
-        }
-        if (buttonID == 5) {
-
-            AngleAddMiniProcedure.execute(entity);
+        switch (buttonID) {
+            case 0 -> AngleAddProcedure.execute(entity);
+            case 1 -> AngleReduceProcedure.execute(entity);
+            case 2 -> AngleAddPlusProcedure.execute(entity);
+            case 3 -> AngleReducePlusProcedure.execute(entity);
+            case 4 -> AngleReduceMiniProcedure.execute(entity);
+            case 5 -> AngleAddMiniProcedure.execute(entity);
         }
     }
 

@@ -1,7 +1,9 @@
 package net.mcreator.target.client.screens;
 
-import net.mcreator.target.procedures.EntityRangeProcedure;
+import net.mcreator.target.tools.TraceTool;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
@@ -10,6 +12,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.text.DecimalFormat;
+
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class SpyglassRangeOverlay {
 
@@ -17,16 +21,24 @@ public class SpyglassRangeOverlay {
     public static void eventHandler(RenderGuiEvent.Pre event) {
         int w = event.getWindow().getGuiScaledWidth();
         int h = event.getWindow().getGuiScaledHeight();
-        Player entity = Minecraft.getInstance().player;
-        if (entity != null && entity.getMainHandItem().getItem() == Items.SPYGLASS) {
+        Player player = Minecraft.getInstance().player;
+        if (player != null && player.getMainHandItem().getItem() == Items.SPYGLASS) {
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
-                    EntityRangeProcedure.execute(entity),
+                    getDistanceString(player),
                     w / 2 + 19,
-                    h / 2 + -23,
+                    h / 2 - 23,
                     -1,
                     false
             );
         }
+    }
+
+    private static String getDistanceString(Player entity) {
+        Entity looking = TraceTool.findLookingEntity(entity, 1024);
+        if (looking instanceof LivingEntity) {
+            return looking.getDisplayName().getString() + ":" + new DecimalFormat("##.#").format(entity.position().distanceTo(looking.position())) + "M";
+        }
+        return "";
     }
 }

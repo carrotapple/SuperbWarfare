@@ -3,18 +3,19 @@ package net.mcreator.target.client.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.network.MortarGUIButtonMessage;
-import net.mcreator.target.procedures.MortarAngleProcedure;
-import net.mcreator.target.procedures.MortarPitchProcedure;
+import net.mcreator.target.tools.TraceTool;
 import net.mcreator.target.world.inventory.MortarGUIMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 public class MortarGUIScreen extends AbstractContainerScreen<MortarGUIMenu> {
@@ -72,12 +73,21 @@ public class MortarGUIScreen extends AbstractContainerScreen<MortarGUIMenu> {
         super.containerTick();
     }
 
+    private String getAngleString(Entity entity) {
+        if (entity == null) return "";
+        Entity mortar = TraceTool.findLookingEntity(entity, 6);
+        if (mortar == null) return "";
+        return "Angle: " + new DecimalFormat("##.#").format(-mortar.getXRot());
+    }
+
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(this.font,
+        guiGraphics.drawString(this.font, getAngleString(entity), -18, 98, -1, false);
 
-                MortarAngleProcedure.execute(entity), -18, 98, -1, false);
-        guiGraphics.drawString(this.font, Component.literal("Range:" + (int) RangeHelper.getRange(MortarPitchProcedure.execute(entity))), -18, 108, -16711885, false);
+        Entity looking = TraceTool.findLookingEntity(entity, 6);
+        var range = looking == null ? 0 : -looking.getXRot();
+
+        guiGraphics.drawString(this.font, Component.literal("Range:" + (int) RangeHelper.getRange(range)), -18, 108, -16711885, false);
     }
 
     @Override
@@ -97,7 +107,7 @@ public class MortarGUIScreen extends AbstractContainerScreen<MortarGUIMenu> {
         button_empty = Button.builder(Component.translatable("gui.target.mortar_gui.button_empty"), e -> {
             TargetMod.PACKET_HANDLER.sendToServer(new MortarGUIButtonMessage(1, x, y, z));
             MortarGUIButtonMessage.handleButtonAction(entity, 1, x, y, z);
-        }).bounds(this.leftPos + -73, this.topPos + 124, 30, 20).build();
+        }).bounds(this.leftPos - 73, this.topPos + 124, 30, 20).build();
         guistate.put("button:button_empty", button_empty);
         this.addRenderableWidget(button_empty);
         button_10 = Button.builder(Component.translatable("gui.target.mortar_gui.button_10"), e -> {
@@ -109,13 +119,13 @@ public class MortarGUIScreen extends AbstractContainerScreen<MortarGUIMenu> {
         button_101 = Button.builder(Component.translatable("gui.target.mortar_gui.button_101"), e -> {
             TargetMod.PACKET_HANDLER.sendToServer(new MortarGUIButtonMessage(3, x, y, z));
             MortarGUIButtonMessage.handleButtonAction(entity, 3, x, y, z);
-        }).bounds(this.leftPos + -73, this.topPos + 151, 30, 20).build();
+        }).bounds(this.leftPos - 73, this.topPos + 151, 30, 20).build();
         guistate.put("button:button_101", button_101);
         this.addRenderableWidget(button_101);
         button_05 = Button.builder(Component.translatable("gui.target.mortar_gui.button_05"), e -> {
             TargetMod.PACKET_HANDLER.sendToServer(new MortarGUIButtonMessage(4, x, y, z));
             MortarGUIButtonMessage.handleButtonAction(entity, 4, x, y, z);
-        }).bounds(this.leftPos + -73, this.topPos + 97, 30, 20).build();
+        }).bounds(this.leftPos - 73, this.topPos + 97, 30, 20).build();
         guistate.put("button:button_05", button_05);
         this.addRenderableWidget(button_05);
         button_051 = Button.builder(Component.translatable("gui.target.mortar_gui.button_051"), e -> {
