@@ -5,8 +5,6 @@ import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.procedures.Target1DangShiTiGengXinKeShiProcedure;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -16,7 +14,6 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -329,12 +326,7 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
         if (entity instanceof Target1Entity target1) {
             target1.setHealth(target1.getMaxHealth());
 
-            // TODO 修改为正确的音效播放方法
-//            sourceEntity.level().playSound(null, sourceEntity.blockPosition(), TargetModSounds.TARGETDOWN.get(), SoundSource.PLAYERS, 100, 1);
-            if (sourceEntity.getServer() != null) {
-                sourceEntity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, sourceEntity.position(), sourceEntity.getRotationVector(), sourceEntity.level() instanceof ServerLevel ? (ServerLevel) sourceEntity.level() : null, 4,
-                        sourceEntity.getName().getString(), sourceEntity.getDisplayName(), sourceEntity.level().getServer(), sourceEntity), "playsound target:targetdown player @s ~ ~ ~ 100 1");
-            }
+            sourceEntity.level().playLocalSound(sourceEntity.blockPosition(), TargetModSounds.TARGETDOWN.get(), SoundSource.PLAYERS, 100, 1, false);
 
             if (sourceEntity instanceof Player player)
                 player.displayClientMessage(Component.literal(("Target Down " + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceEntity.position()))) + "M")), true);
