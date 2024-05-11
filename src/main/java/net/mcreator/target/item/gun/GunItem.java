@@ -1,5 +1,6 @@
 package net.mcreator.target.item.gun;
 
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.ItemNBTTool;
 import net.minecraft.core.BlockPos;
@@ -9,7 +10,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber
 public class GunItem extends Item {
     public GunItem(Properties properties) {
         super(properties);
@@ -33,5 +38,12 @@ public class GunItem extends Item {
     @Override
     public boolean isFoil(ItemStack stack) {
         return stack.getOrCreateTag().getBoolean("beast");
+    }
+
+    @SubscribeEvent
+    public static void onPickup(EntityItemPickupEvent event) {
+        if (event.getItem().getItem().is(TargetModTags.Items.GUN)) {
+            event.getItem().getItem().getOrCreateTag().putDouble("drawtime", 0);
+        }
     }
 }
