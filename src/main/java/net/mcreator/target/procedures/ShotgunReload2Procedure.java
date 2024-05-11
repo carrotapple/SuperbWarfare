@@ -1,41 +1,23 @@
 package net.mcreator.target.procedures;
 
 import net.mcreator.target.network.TargetModVariables;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 public class ShotgunReload2Procedure {
-    public static void execute(Entity entity) {
-        if (entity == null)
-            return;
-        ItemStack stack = ItemStack.EMPTY;
-        double ammo2 = 0;
-        double ammo1 = 0;
-        stack = (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY);
-        ammo2 = (stack.getOrCreateTag().getDouble("mag") + 1) - stack.getOrCreateTag().getDouble("ammo");
-        if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunammo >= ammo2) {
-            {
-                double _setval = (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunammo - ammo2;
-                entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.shotgunammo = _setval;
-                    capability.syncPlayerVariables(entity);
-                });
-            }
-            stack.getOrCreateTag().putDouble("ammo", (stack.getOrCreateTag().getDouble("ammo") + ammo2));
-            stack.getOrCreateTag().putDouble("reloading", 0);
-            stack.getOrCreateTag().putDouble("emptyreload", 0);
-        } else {
-            stack.getOrCreateTag().putDouble("ammo", (stack.getOrCreateTag().getDouble("ammo") + (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunammo));
-            {
-                double _setval = 0;
-                entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.shotgunammo = _setval;
-                    capability.syncPlayerVariables(entity);
-                });
-            }
-            stack.getOrCreateTag().putDouble("reloading", 0);
-            stack.getOrCreateTag().putDouble("emptyreload", 0);
-        }
+    public static void execute(LivingEntity entity) {
+        ItemStack stack = entity.getMainHandItem();
+        double mag = stack.getOrCreateTag().getDouble("mag");
+        double ammo = stack.getOrCreateTag().getDouble("ammo");
+        double ammo2 = mag + 1 - ammo;
+        double shotgunAmmo = (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunammo;
+
+        stack.getOrCreateTag().putDouble("ammo", ammo + Math.min(ammo2, shotgunAmmo));
+        entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            capability.shotgunammo = shotgunAmmo >= ammo2 ? shotgunAmmo - ammo2 : 0;
+            capability.syncPlayerVariables(entity);
+        });
+        stack.getOrCreateTag().putDouble("reloading", 0);
+        stack.getOrCreateTag().putDouble("emptyreload", 0);
     }
 }

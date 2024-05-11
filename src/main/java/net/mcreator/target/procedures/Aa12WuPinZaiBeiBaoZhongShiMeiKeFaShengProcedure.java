@@ -9,10 +9,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class Aa12WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
     public static void execute(Entity entity, ItemStack itemstack) {
-        if (entity == null)
-            return;
-        double id = 0;
-        id = itemstack.getOrCreateTag().getDouble("id");
+        double id = itemstack.getOrCreateTag().getDouble("id");
         if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") != itemstack.getOrCreateTag().getDouble("id")) {
             itemstack.getOrCreateTag().putDouble("emptyreload", 0);
             itemstack.getOrCreateTag().putDouble("reloading", 0);
@@ -39,7 +36,9 @@ public class Aa12WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 itemstack.getOrCreateTag().putDouble("reloadtime", 0);
             }
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                ShotgunReload1Procedure.execute(entity);
+                if (entity instanceof LivingEntity) {
+                    ShotgunReload1Procedure.execute((LivingEntity) entity);
+                }
             }
         } else if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getDouble("ammo") > 0) {
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 41) {
@@ -62,7 +61,9 @@ public class Aa12WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 itemstack.getOrCreateTag().putDouble("reloadtime", 0);
             }
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                ShotgunReload2Procedure.execute(entity);
+                if (entity instanceof LivingEntity) {
+                    ShotgunReload2Procedure.execute((LivingEntity) entity);
+                }
             }
         }
         WeaponDrawProcedure.execute(entity, itemstack);
