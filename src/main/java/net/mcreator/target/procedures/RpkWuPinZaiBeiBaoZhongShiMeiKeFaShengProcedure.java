@@ -9,10 +9,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class RpkWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
     public static void execute(Entity entity, ItemStack itemstack) {
-        if (entity == null)
-            return;
-        double id = 0;
-        id = itemstack.getOrCreateTag().getDouble("id");
+        if (entity == null) return;
+        double id = itemstack.getOrCreateTag().getDouble("id");
         if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") != itemstack.getOrCreateTag().getDouble("id")) {
             itemstack.getOrCreateTag().putDouble("emptyreload", 0);
             itemstack.getOrCreateTag().putDouble("reloading", 0);
@@ -21,12 +19,9 @@ public class RpkWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
         if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getDouble("ammo") == 0) {
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 57) {
                 entity.getPersistentData().putDouble("id", id);
-                {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:rpk_reload_empty player @s ~ ~ ~ 100 1");
-                    }
+                if (!entity.level().isClientSide() && entity.getServer() != null) {
+                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:rpk_reload_empty player @s ~ ~ ~ 100 1");
                 }
             }
             if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == itemstack.getItem()
@@ -45,12 +40,9 @@ public class RpkWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
         } else if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getDouble("ammo") > 0) {
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 41) {
                 entity.getPersistentData().putDouble("id", id);
-                {
-                    Entity _ent = entity;
-                    if (!_ent.level().isClientSide() && _ent.getServer() != null) {
-                        _ent.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, _ent.position(), _ent.getRotationVector(), _ent.level() instanceof ServerLevel ? (ServerLevel) _ent.level() : null, 4,
-                                _ent.getName().getString(), _ent.getDisplayName(), _ent.level().getServer(), _ent), "playsound target:rpk_reload_normal player @s ~ ~ ~ 100 1");
-                    }
+                if (!entity.level().isClientSide() && entity.getServer() != null) {
+                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:rpk_reload_normal player @s ~ ~ ~ 100 1");
                 }
             }
             if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == itemstack.getItem()

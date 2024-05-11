@@ -14,7 +14,7 @@ public class PressFireProcedure {
         TaserfireProcedure.execute(player);
         M79fireProcedure.execute(player);
         M98bfireProcedure.execute(player);
-        RpgfireProcedure.execute(player);
+        RpgFireProcedure.execute(player);
         KraberfireProcedure.execute(player);
         MinigunfireProcedure.execute(player);
         SentinelFireProcedure.execute(player);

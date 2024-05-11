@@ -3,15 +3,18 @@ package net.mcreator.target.item.common.ammo;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.target.client.renderer.item.RocketItemRenderer;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
-import net.mcreator.target.procedures.RocketShiTiBeiGongJuJiZhongShiProcedure;
+import net.mcreator.target.procedures.MedexpProcedure;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
@@ -111,7 +114,19 @@ public class Rocket extends Item implements GeoItem, AnimatedItem {
     @Override
     public boolean hurtEnemy(ItemStack itemstack, LivingEntity entity, LivingEntity sourceentity) {
         boolean retval = super.hurtEnemy(itemstack, entity, sourceentity);
-        RocketShiTiBeiGongJuJiZhongShiProcedure.execute(entity.level(), sourceentity);
+
+        if (Math.random() >= 0.25) return retval;
+
+        if (entity.level() instanceof ServerLevel level) {
+            level.explode(sourceentity, sourceentity.getX(), sourceentity.getY() + 1, sourceentity.getZ(), 6, Level.ExplosionInteraction.NONE);
+            level.explode(null, sourceentity.getX(), sourceentity.getY() + 1, sourceentity.getZ(), 6, Level.ExplosionInteraction.NONE);
+
+            MedexpProcedure.execute(level, sourceentity.getX(), sourceentity.getY(), sourceentity.getZ());
+        }
+        if (sourceentity instanceof Player player) {
+            player.getInventory().clearOrCountMatchingItems(p -> TargetModItems.ROCKET.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
+        }
+
         return retval;
     }
 

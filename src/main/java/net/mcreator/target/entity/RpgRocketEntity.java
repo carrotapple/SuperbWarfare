@@ -4,9 +4,7 @@ import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.network.TargetModVariables;
-import net.mcreator.target.procedures.RocketHitProcedure;
-import net.mcreator.target.procedures.RpgRocketDanSheWuFeiXingShiMeiKeFaShengProcedure;
-import net.mcreator.target.procedures.RpgRocketDanSheWuJiZhongFangKuaiShiProcedure;
+import net.mcreator.target.procedures.MedexpProcedure;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.protocol.Packet;
@@ -74,14 +72,23 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
         entity.setArrowCount(entity.getArrowCount() - 1);
     }
 
+    public static RpgRocketEntity shoot(Level world, LivingEntity entity, RandomSource random, float power, double damage, int knockback) {
+        RpgRocketEntity entityArrow = new RpgRocketEntity(TargetModEntities.RPG_ROCKET.get(), entity, world);
+        entityArrow.shoot(entity.getViewVector(1).x, entity.getViewVector(1).y, entity.getViewVector(1).z, power * 2, 0);
+        entityArrow.setSilent(true);
+        entityArrow.setCritArrow(false);
+        entityArrow.setBaseDamage(damage);
+        entityArrow.setKnockback(knockback);
+        world.addFreshEntity(entityArrow);
+        return entityArrow;
+    }
+
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        final Vec3 position = this.position();
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
-            double _setval = 25;
             living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.hitind = _setval;
+                capability.hitind = 25;
                 capability.syncPlayerVariables(living);
             });
             if (!living.level().isClientSide() && living.getServer() != null) {
@@ -89,7 +96,15 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
                         living.getName().getString(), living.getDisplayName(), living.level().getServer(), living), "playsound target:indication voice @a ~ ~ ~ 1 1");
             }
         }
-        RocketHitProcedure.execute(this.level(), this);
+        if (this.getPersistentData().getDouble("time") > 0) {
+            if (this.level() instanceof ServerLevel level) {
+                level.explode(this, this.getX(), this.getY(), this.getZ(), 4, Level.ExplosionInteraction.NONE);
+
+                MedexpProcedure.execute(level, this.getX(), this.getY(), this.getZ());
+                this.discard();
+            }
+        }
+
         if (entity instanceof LivingEntity) {
             entity.invulnerableTime = 0;
         }
@@ -135,22 +150,21 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
     }
 
     @Override
-    public void onHitBlock(BlockHitResult blockHitResult) {
-        super.onHitBlock(blockHitResult);
-        RpgRocketDanSheWuJiZhongFangKuaiShiProcedure.execute(this.level(), this);
-    }
-
-    @Override
     public boolean isNoGravity() {
         return true;
     }
 
     @Override
-    public void tick() {
-        super.tick();
-        RpgRocketDanSheWuFeiXingShiMeiKeFaShengProcedure.execute(this);
-        if (this.tickCount > 100) {
-            this.discard();
+    public void onHitBlock(BlockHitResult blockHitResult) {
+        super.onHitBlock(blockHitResult);
+
+        if (this.getPersistentData().getDouble("time") > 0) {
+            if (this.level() instanceof ServerLevel level) {
+                level.explode(this, this.getX(), this.getY(), this.getZ(), 6, Level.ExplosionInteraction.NONE);
+                MedexpProcedure.execute(level, this.getX(), this.getY(), this.getZ());
+            }
+            if (!this.level().isClientSide())
+                this.discard();
         }
     }
 
@@ -158,15 +172,39 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
         return shoot(world, entity, source, 1f, 5, 5);
     }
 
-    public static RpgRocketEntity shoot(Level world, LivingEntity entity, RandomSource random, float power, double damage, int knockback) {
-        RpgRocketEntity entityarrow = new RpgRocketEntity(TargetModEntities.RPG_ROCKET.get(), entity, world);
-        entityarrow.shoot(entity.getViewVector(1).x, entity.getViewVector(1).y, entity.getViewVector(1).z, power * 2, 0);
-        entityarrow.setSilent(true);
-        entityarrow.setCritArrow(false);
-        entityarrow.setBaseDamage(damage);
-        entityarrow.setKnockback(knockback);
-        world.addFreshEntity(entityarrow);
-        return entityarrow;
+    @Override
+    public void tick() {
+        super.tick();
+
+        this.getPersistentData().putDouble("time", (1 + this.getPersistentData().getDouble("time")));
+        double life = this.getPersistentData().getDouble("time");
+        if (life == 4) {
+            if (!this.level().isClientSide() && this.getServer() != null) {
+                this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
+                        this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "particle minecraft:campfire_cosy_smoke ~ ~ ~ 0.8 0.8 0.8 0.01 50 force");
+            }
+        }
+        if (life >= 4) {
+            this.setDeltaMovement(new Vec3((1.04 * this.getDeltaMovement().x()), (1.04 * this.getDeltaMovement().y() - 0.02), (1.04 * this.getDeltaMovement().z())));
+
+            if (!this.level().isClientSide() && this.getServer() != null) {
+                this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
+                        this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "particle minecraft:smoke ~ ~ ~ 0 0 0 0 2 force");
+                this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
+                        this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "particle minecraft:campfire_cosy_smoke ~ ~ ~ 0 0 0 0 2 force");
+            }
+        }
+        if (life >= 90) {
+            if (!this.level().isClientSide() && this.getServer() != null) {
+                MedexpProcedure.execute(this.level(), this.getX(), this.getY(), this.getZ());
+            }
+            if (!this.level().isClientSide())
+                this.discard();
+        }
+
+        if (this.tickCount > 100) {
+            this.discard();
+        }
     }
 
     public static RpgRocketEntity shoot(LivingEntity entity, LivingEntity target) {
