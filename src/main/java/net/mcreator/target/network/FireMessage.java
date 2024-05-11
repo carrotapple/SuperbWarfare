@@ -1,8 +1,8 @@
 package net.mcreator.target.network;
 
 import net.mcreator.target.TargetMod;
+import net.mcreator.target.procedures.BowlooseProcedure;
 import net.mcreator.target.procedures.PressFireProcedure;
-import net.mcreator.target.procedures.ReleaseFireProcedure;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -34,20 +34,26 @@ public class FireMessage {
 
     public static void handler(FireMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
-        context.enqueueWork(() -> pressAction(context.getSender(), message.type, message.pressedms));
+        context.enqueueWork(() -> pressAction(context.getSender(), message.type));
         context.setPacketHandled(true);
     }
 
-    public static void pressAction(Player entity, int type, int pressedms) {
-        Level world = entity.level();
+    public static void pressAction(Player player, int type) {
+        Level world = player.level();
         // security measure to prevent arbitrary chunk generation
-        if (!world.hasChunkAt(entity.blockPosition()))
+        if (!world.hasChunkAt(player.blockPosition()))
             return;
         if (type == 0) {
-            PressFireProcedure.execute(entity);
-        }
-        if (type == 1) {
-            ReleaseFireProcedure.execute(entity);
+            PressFireProcedure.execute(player);
+        } else if (type == 1) {
+            player.getPersistentData().putDouble("firing", 0);
+            player.getPersistentData().putDouble("minifiring", 0);
+            player.getPersistentData().putDouble("minigunfiring", 0);
+            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.bowpullhold = false;
+                capability.syncPlayerVariables(player);
+            });
+            BowlooseProcedure.execute(player);
         }
     }
 
