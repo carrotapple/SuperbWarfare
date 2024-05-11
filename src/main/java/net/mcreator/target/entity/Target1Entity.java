@@ -5,14 +5,18 @@ import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.procedures.Target1DangShiTiGengXinKeShiProcedure;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -32,6 +36,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -45,6 +52,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 
+@Mod.EventBusSubscriber
 public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(Target1Entity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(Target1Entity.class, EntityDataSerializers.STRING);
@@ -307,5 +315,31 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    @SubscribeEvent
+    public static void onTarget1Down(LivingDeathEvent event) {
+        if (event.getEntity() == null) return;
+
+        var entity = event.getEntity();
+        var sourceEntity = event.getSource().getEntity();
+
+        if (entity == null || sourceEntity == null) return;
+
+        if (entity instanceof Target1Entity target1) {
+            target1.setHealth(target1.getMaxHealth());
+
+            // TODO 修改为正确的音效播放方法
+//            sourceEntity.level().playSound(null, sourceEntity.blockPosition(), TargetModSounds.TARGETDOWN.get(), SoundSource.PLAYERS, 100, 1);
+            if (sourceEntity.getServer() != null) {
+                sourceEntity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, sourceEntity.position(), sourceEntity.getRotationVector(), sourceEntity.level() instanceof ServerLevel ? (ServerLevel) sourceEntity.level() : null, 4,
+                        sourceEntity.getName().getString(), sourceEntity.getDisplayName(), sourceEntity.level().getServer(), sourceEntity), "playsound target:targetdown player @s ~ ~ ~ 100 1");
+            }
+
+            if (sourceEntity instanceof Player player)
+                player.displayClientMessage(Component.literal(("Target Down " + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceEntity.position()))) + "M")), true);
+            entity.getPersistentData().putDouble("targetdown", 201);
+            event.setCanceled(true);
+        }
     }
 }
