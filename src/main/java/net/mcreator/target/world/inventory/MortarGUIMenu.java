@@ -1,12 +1,13 @@
 package net.mcreator.target.world.inventory;
 
+import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModMenus;
-import net.mcreator.target.procedures.MotarGUITickProcedure;
 import net.mcreator.target.tools.TraceTool;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -76,7 +77,19 @@ public class MortarGUIMenu extends AbstractContainerMenu implements Supplier<Map
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         Player entity = event.player;
         if (event.phase == TickEvent.Phase.END && entity.containerMenu instanceof MortarGUIMenu) {
-            MotarGUITickProcedure.execute(entity, guistate);
+            Entity looking = TraceTool.findLookingEntity(entity, 6);
+            if (looking == null) return;
+
+            String s = guistate.containsKey("text:pitch") ? ((EditBox) guistate.get("text:pitch")).getValue() : "0";
+            double converted = 0;
+            try {
+                converted = Double.parseDouble(s);
+            } catch (Exception ignored) {
+            }
+
+            if (20 <= converted && converted <= 90) {
+                ((LivingEntity) looking).getAttribute(TargetModAttributes.MOTARPITCH.get()).setBaseValue(converted);
+            }
         }
     }
 }
