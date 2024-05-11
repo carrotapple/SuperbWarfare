@@ -81,7 +81,6 @@ public class BocekarrowEntity extends AbstractArrow implements ItemSupplier {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        final Vec3 position = this.position();
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
             double _setval = 25;
@@ -95,7 +94,7 @@ public class BocekarrowEntity extends AbstractArrow implements ItemSupplier {
             }
         }
         if (entity instanceof LivingEntity livingEntity) {
-            entity.invulnerableTime = 0;
+            livingEntity.invulnerableTime = 0;
         }
         AABB boundingBox = entity.getBoundingBox();
         Vec3 startVec = this.position();
@@ -110,7 +109,7 @@ public class BocekarrowEntity extends AbstractArrow implements ItemSupplier {
                 if (box != null) {
                     box = box.move(boundingBox.getCenter().x, boundingBox.minY, boundingBox.getCenter().z);
                     Optional<Vec3> headshotHitPos = box.clip(startVec, endVec);
-                    if (!headshotHitPos.isPresent()) {
+                    if (headshotHitPos.isEmpty()) {
                         box = box.inflate(0.2, 0.2, 0.2);
                         headshotHitPos = box.clip(startVec, endVec);
                     }

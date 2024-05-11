@@ -194,6 +194,11 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
     @Override
     public void baseTick() {
         super.baseTick();
+
+        if (this.getPersistentData().getDouble("claymore") > 0) {
+            this.getPersistentData().putDouble("claymore", (this.getPersistentData().getDouble("claymore") - 1));
+        }
+
         ClaymoreDangShiTiGengXinKeShiProcedure.execute(this.level(), this.getX(), this.getY(), this.getZ(), this);
         this.refreshDimensions();
     }
