@@ -4,6 +4,7 @@ import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.ItemNBTTool;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -14,8 +15,10 @@ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Set;
+
 @Mod.EventBusSubscriber
-public class GunItem extends Item {
+public abstract class GunItem extends Item {
     public GunItem(Properties properties) {
         super(properties);
     }
@@ -33,6 +36,10 @@ public class GunItem extends Item {
             GunsTool.initGun(level, itemstack, this.getDescriptionId().substring(this.getDescriptionId().lastIndexOf('.') + 1));
         }
         GunsTool.pvpModeCheck(itemstack, level);
+    }
+
+    public Set<SoundEvent> getReloadSound() {
+        return Set.of();
     }
 
     @Override

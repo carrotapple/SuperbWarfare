@@ -19,6 +19,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -43,6 +44,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -202,6 +204,11 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
         }
 
         WeaponDrawLightProcedure.execute(entity, itemStack);
+    }
+
+    @Override
+    public Set<SoundEvent> getReloadSound() {
+        return Set.of(TargetModSounds.VECTOR_RELOAD_NORMAL.get(), TargetModSounds.VECTOR_RELOAD_EMPTY.get());
     }
 
     @Override

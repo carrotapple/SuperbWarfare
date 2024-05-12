@@ -3,12 +3,15 @@ package net.mcreator.target.event;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
+import net.mcreator.target.item.gun.GunItem;
+import net.mcreator.target.item.gun.MarlinItem;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -68,6 +71,7 @@ public class PlayerEventHandler {
             handleDistantRange(player);
             renderDamageIndicator(player);
             bocekPulling(player);
+            stopLastGunReloadSound(player);
         }
     }
 
@@ -393,5 +397,152 @@ public class PlayerEventHandler {
                 capability.syncPlayerVariables(player);
             });
         }
+    }
+
+    private static void stopLastGunReloadSound(Player entity) {
+        if (entity.level().isClientSide() || entity.getServer() == null) return;
+
+        var server = (ServerLevel) entity.level();
+
+        ItemStack mainHandItem = entity.getMainHandItem();
+        if (mainHandItem.getOrCreateTag().getDouble("id") != entity.getPersistentData().getDouble("id")) {
+//            if (mainHandItem.getItem() instanceof GunItem gun) {
+//                stopReloadSound(server, gun);
+//            }
+
+            // TODO 把这坨修改成正确的实现（停止播放上一把枪的音效）
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:taser_reload");
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:ak47_reload_empty");
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:ak47_reload_normal");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:trachelium_reload");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:hunting_rifle_reload");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:m79_reload");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:sks_reload_normal");
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:sks_reload_empty");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:abekiri_reload_normal");
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:abekiri_reload_empty");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:m98b_reload_normal");
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:m98b_reload_empty");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:m4_reload_normal");
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:m4_reload_empty");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:devotion_reload_normal");
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:devotion_reload_empty");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:rpg7_reload");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:aa12_reload_normal");
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:aa12_reload_empty");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:hk416_reload_normal");
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:hk416_reload_empty");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:rpk_reload_normal");
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:rpk_reload_empty");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:kraber_reload_normal");
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:kraber_reload_empty");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:vector_reload_normal");
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:vector_reload_empty");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:mk14_reload_normal");
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:mk14_reload_empty");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:sentinel_reload_normal");
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:sentinel_reload_empty");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:sentinel_charge");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:m60_reload_normal");
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:m60_reload_empty");
+
+
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:svd_reload_normal");
+            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:svd_reload_empty");
+
+
+        }
+
+        if (mainHandItem.getItem() != TargetModItems.MARLIN.get()) {
+            stopGunReloadSound(server, (MarlinItem) TargetModItems.MARLIN.get());
+        }
+
+        if (mainHandItem.getItem() != TargetModItems.M_870.get()) {
+            stopGunReloadSound(server, (GunItem) TargetModItems.M_870.get());
+        }
+
+        if (mainHandItem.getOrCreateTag().getDouble("cid") != entity.getPersistentData().getDouble("cid")) {
+            stopGunReloadSound(server, (GunItem) TargetModItems.SENTINEL.get());
+        }
+    }
+
+    private static void stopGunReloadSound(ServerLevel server, GunItem gun) {
+        gun.getReloadSound().forEach(sound -> {
+            var clientboundstopsoundpacket = new ClientboundStopSoundPacket(sound.getLocation(), SoundSource.PLAYERS);
+            server.players().forEach(p -> p.connection.send(clientboundstopsoundpacket));
+        });
     }
 }

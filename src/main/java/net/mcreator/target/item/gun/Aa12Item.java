@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.Aa12ItemRenderer;
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.Aa12WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
 import net.mcreator.target.tools.GunsTool;
@@ -15,6 +16,7 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -39,6 +41,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -171,6 +174,11 @@ public class Aa12Item extends GunItem implements GeoItem, AnimatedItem {
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
         Aa12WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
+    }
+
+    @Override
+    public Set<SoundEvent> getReloadSound() {
+        return Set.of(TargetModSounds.AA_12_RELOAD_EMPTY.get(), TargetModSounds.AA_12_RELOAD_NORMAL.get());
     }
 
     public static ItemStack getGunInstance() {

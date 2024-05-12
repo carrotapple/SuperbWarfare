@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.TaserItemRenderer;
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.TasercooldownProcedure;
 import net.mcreator.target.tools.GunsTool;
@@ -14,6 +15,7 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -35,6 +37,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -47,6 +50,11 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
         super(new Item.Properties().stacksTo(1).rarity(Rarity.COMMON));
     }
 
+
+    @Override
+    public Set<SoundEvent> getReloadSound() {
+        return Set.of(TargetModSounds.TASER_RELOAD.get());
+    }
 
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
