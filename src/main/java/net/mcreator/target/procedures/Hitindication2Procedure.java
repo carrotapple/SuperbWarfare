@@ -44,7 +44,7 @@ public class Hitindication2Procedure {
             {
                 double _setval = 25;
                 sourceentity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.hitind = _setval;
+                    capability.hitIndicator = _setval;
                     capability.syncPlayerVariables(sourceentity);
                 });
             }

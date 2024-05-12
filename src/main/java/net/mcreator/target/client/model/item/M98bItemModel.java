@@ -50,7 +50,7 @@ public class M98bItemModel extends GeoModel<M98bItem> {
 
         shen.setRotX(0.1f * (float) fp);
 
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilhorizon == 1) {
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == 1) {
             shen.setRotZ(0.003f * (float) fp);
         } else {
             shen.setRotZ(-0.003f * (float) fp);

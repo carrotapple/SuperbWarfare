@@ -33,14 +33,14 @@ public class PressFireProcedure {
             }
         }
         if (player.getMainHandItem().getItem() == TargetModItems.MINIGUN.get()
-                && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleammo == 0) {
+                && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo == 0) {
             if (!player.level().isClientSide() && player.getServer() != null) {
                 player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
                         player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:triggerclick player @s ~ ~ ~ 10 1");
             }
         }
         player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            capability.bowpullhold = true;
+            capability.bowPullHold = true;
             capability.syncPlayerVariables(player);
         });
         if (player.getMainHandItem().getOrCreateTag().getDouble("ammo") == 0) {

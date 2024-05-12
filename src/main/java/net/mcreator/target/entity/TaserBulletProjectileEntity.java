@@ -76,7 +76,7 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
             living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.hitind = 25;
+                capability.hitIndicator = 25;
                 capability.syncPlayerVariables(living);
             });
 
@@ -112,7 +112,7 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
                         if (this.getOwner() instanceof LivingEntity living) {
                             setBaseDamage(getBaseDamage() * 1.5f);
                             living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                                capability.headind = 25;
+                                capability.headIndicator = 25;
                                 capability.syncPlayerVariables(living);
                             });
                             if (!living.level().isClientSide() && living.getServer() != null) {

@@ -1,39 +1,33 @@
 package net.mcreator.target.network;
 
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.Capability;
-
-import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.nbt.Tag;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.Direction;
-import net.minecraft.client.Minecraft;
-
 import net.mcreator.target.TargetMod;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 
-import java.util.function.Supplier;
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TargetModVariables {
@@ -52,86 +46,85 @@ public class TargetModVariables {
     public static class EventBusVariableHandlers {
         @SubscribeEvent
         public static void onPlayerLoggedInSyncPlayerVariables(PlayerEvent.PlayerLoggedInEvent event) {
-            if (!event.getEntity().level().isClientSide()) {
-                for (Entity entityiterator : new ArrayList<>(event.getEntity().level().players())) {
-                    ((PlayerVariables) entityiterator.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables())).syncPlayerVariables(entityiterator);
-                }
+            if (event.getEntity().level().isClientSide()) return;
+
+            for (Entity entity : new ArrayList<>(event.getEntity().level().players())) {
+                entity.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).syncPlayerVariables(entity);
             }
         }
 
         @SubscribeEvent
         public static void onPlayerRespawnedSyncPlayerVariables(PlayerEvent.PlayerRespawnEvent event) {
-            if (!event.getEntity().level().isClientSide()) {
-                for (Entity entityiterator : new ArrayList<>(event.getEntity().level().players())) {
-                    ((PlayerVariables) entityiterator.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables())).syncPlayerVariables(entityiterator);
-                }
+            if (event.getEntity().level().isClientSide()) return;
+
+            for (Entity entity : new ArrayList<>(event.getEntity().level().players())) {
+                entity.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).syncPlayerVariables(entity);
             }
         }
 
         @SubscribeEvent
         public static void onPlayerChangedDimensionSyncPlayerVariables(PlayerEvent.PlayerChangedDimensionEvent event) {
-            if (!event.getEntity().level().isClientSide()) {
-                for (Entity entityiterator : new ArrayList<>(event.getEntity().level().players())) {
-                    ((PlayerVariables) entityiterator.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables())).syncPlayerVariables(entityiterator);
-                }
+            if (event.getEntity().level().isClientSide()) return;
+
+            for (Entity entity : new ArrayList<>(event.getEntity().level().players())) {
+                entity.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).syncPlayerVariables(entity);
             }
         }
 
         @SubscribeEvent
         public static void clonePlayer(PlayerEvent.Clone event) {
             event.getOriginal().revive();
-            PlayerVariables original = ((PlayerVariables) event.getOriginal().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()));
-            PlayerVariables clone = ((PlayerVariables) event.getEntity().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()));
+            PlayerVariables original = event.getOriginal().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
+            PlayerVariables clone = event.getEntity().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
             clone.zoom = original.zoom;
             clone.zooming = original.zooming;
             clone.recoil = original.recoil;
-            clone.recoilhorizon = original.recoilhorizon;
+            clone.recoilHorizon = original.recoilHorizon;
             clone.firing = original.firing;
-            clone.targetangle = original.targetangle;
-            clone.rifleammo = original.rifleammo;
+            clone.targetAngle = original.targetAngle;
+            clone.rifleAmmo = original.rifleAmmo;
             clone.refresh = original.refresh;
-            clone.handgunammo = original.handgunammo;
-            clone.shotgunammo = original.shotgunammo;
-            clone.sniperammo = original.sniperammo;
-            clone.bowpullhold = original.bowpullhold;
-            clone.bowpull = original.bowpull;
-            clone.playerdoublejump = original.playerdoublejump;
-            clone.hitind = original.hitind;
-            clone.headind = original.headind;
-            clone.killind = original.killind;
-            if (!event.isWasDeath()) {
-            }
-            if (!event.getEntity().level().isClientSide()) {
-                for (Entity entityiterator : new ArrayList<>(event.getEntity().level().players())) {
-                    ((PlayerVariables) entityiterator.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables())).syncPlayerVariables(entityiterator);
-                }
+            clone.handgunAmmo = original.handgunAmmo;
+            clone.shotgunAmmo = original.shotgunAmmo;
+            clone.sniperAmmo = original.sniperAmmo;
+            clone.bowPullHold = original.bowPullHold;
+            clone.bowPull = original.bowPull;
+            clone.playerDoubleJump = original.playerDoubleJump;
+            clone.hitIndicator = original.hitIndicator;
+            clone.headIndicator = original.headIndicator;
+            clone.killIndicator = original.killIndicator;
+
+            if (event.getEntity().level().isClientSide()) return;
+
+            for (Entity entity : new ArrayList<>(event.getEntity().level().players())) {
+                entity.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).syncPlayerVariables(entity);
             }
         }
 
         @SubscribeEvent
         public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-            if (!event.getEntity().level().isClientSide()) {
-                SavedData mapdata = MapVariables.get(event.getEntity().level());
-                SavedData worlddata = WorldVariables.get(event.getEntity().level());
-                if (mapdata != null)
-                    TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new SavedDataSyncMessage(0, mapdata));
-                if (worlddata != null)
-                    TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new SavedDataSyncMessage(1, worlddata));
-            }
+            if (event.getEntity().level().isClientSide()) return;
+
+            SavedData mapData = MapVariables.get(event.getEntity().level());
+            SavedData worldData = WorldVariables.get(event.getEntity().level());
+            if (mapData != null)
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new SavedDataSyncMessage(0, mapData));
+            if (worldData != null)
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new SavedDataSyncMessage(1, worldData));
         }
 
         @SubscribeEvent
         public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
-            if (!event.getEntity().level().isClientSide()) {
-                SavedData worlddata = WorldVariables.get(event.getEntity().level());
-                if (worlddata != null)
-                    TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new SavedDataSyncMessage(1, worlddata));
-            }
+            if (event.getEntity().level().isClientSide()) return;
+
+            SavedData worldData = WorldVariables.get(event.getEntity().level());
+            if (worldData != null)
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new SavedDataSyncMessage(1, worldData));
         }
     }
 
     public static class WorldVariables extends SavedData {
-        public static final String DATA_NAME = "target_worldvars";
+        public static final String DATA_NAME = "target_world_variables";
 
         public static WorldVariables load(CompoundTag tag) {
             WorldVariables data = new WorldVariables();
@@ -156,17 +149,15 @@ public class TargetModVariables {
         static WorldVariables clientSide = new WorldVariables();
 
         public static WorldVariables get(LevelAccessor world) {
-            if (world instanceof ServerLevel level) {
-                return level.getDataStorage().computeIfAbsent(e -> WorldVariables.load(e), WorldVariables::new, DATA_NAME);
-            } else {
-                return clientSide;
-            }
+            if (world instanceof ServerLevel level)
+                return level.getDataStorage().computeIfAbsent(WorldVariables::load, WorldVariables::new, DATA_NAME);
+            return clientSide;
         }
     }
 
     public static class MapVariables extends SavedData {
-        public static final String DATA_NAME = "target_mapvars";
-        public boolean pvpmode = false;
+        public static final String DATA_NAME = "target_map_variables";
+        public boolean pvpMode = false;
 
         public static MapVariables load(CompoundTag tag) {
             MapVariables data = new MapVariables();
@@ -174,14 +165,14 @@ public class TargetModVariables {
             return data;
         }
 
-        public void read(CompoundTag nbt) {
-            pvpmode = nbt.getBoolean("pvpmode");
+        public static MapVariables get(LevelAccessor world) {
+            if (world instanceof ServerLevelAccessor serverLevelAcc)
+                return serverLevelAcc.getLevel().getServer().getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(MapVariables::load, MapVariables::new, DATA_NAME);
+            return clientSide;
         }
 
-        @Override
-        public CompoundTag save(CompoundTag nbt) {
-            nbt.putBoolean("pvpmode", pvpmode);
-            return nbt;
+        public void read(CompoundTag nbt) {
+            pvpMode = nbt.getBoolean("pvp_mode");
         }
 
         public void syncData(LevelAccessor world) {
@@ -192,12 +183,10 @@ public class TargetModVariables {
 
         static MapVariables clientSide = new MapVariables();
 
-        public static MapVariables get(LevelAccessor world) {
-            if (world instanceof ServerLevelAccessor serverLevelAcc) {
-                return serverLevelAcc.getLevel().getServer().getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(e -> MapVariables.load(e), MapVariables::new, DATA_NAME);
-            } else {
-                return clientSide;
-            }
+        @Override
+        public CompoundTag save(CompoundTag nbt) {
+            nbt.putBoolean("pvp_mode", pvpMode);
+            return nbt;
         }
     }
 
@@ -208,13 +197,13 @@ public class TargetModVariables {
         public SavedDataSyncMessage(FriendlyByteBuf buffer) {
             this.type = buffer.readInt();
             CompoundTag nbt = buffer.readNbt();
-            if (nbt != null) {
-                this.data = this.type == 0 ? new MapVariables() : new WorldVariables();
-                if (this.data instanceof MapVariables mapVariables)
-                    mapVariables.read(nbt);
-                else if (this.data instanceof WorldVariables worldVariables)
-                    worldVariables.read(nbt);
-            }
+            if (nbt == null) return;
+
+            this.data = this.type == 0 ? new MapVariables() : new WorldVariables();
+            if (this.data instanceof MapVariables mapVariables)
+                mapVariables.read(nbt);
+            else if (this.data instanceof WorldVariables worldVariables)
+                worldVariables.read(nbt);
         }
 
         public SavedDataSyncMessage(int type, SavedData data) {
@@ -276,23 +265,23 @@ public class TargetModVariables {
         public boolean zoom = false;
         public boolean zooming = false;
         public double recoil = 0;
-        public double recoilhorizon = 0;
+        public double recoilHorizon = 0;
         public double firing = 0;
-        public double targetangle = 0;
-        public double rifleammo = 0;
+        public double targetAngle = 0;
+        public double rifleAmmo = 0;
         public boolean refresh = false;
-        public double handgunammo = 0;
-        public double shotgunammo = 0;
-        public double sniperammo = 0;
-        public boolean bowpullhold = false;
-        public boolean bowpull = false;
-        public boolean playerdoublejump = false;
-        public double hitind = 0;
-        public double headind = 0;
-        public double killind = 0;
+        public double handgunAmmo = 0;
+        public double shotgunAmmo = 0;
+        public double sniperAmmo = 0;
+        public boolean bowPullHold = false;
+        public boolean bowPull = false;
+        public boolean playerDoubleJump = false;
+        public double hitIndicator = 0;
+        public double headIndicator = 0;
+        public double killIndicator = 0;
 
         public void syncPlayerVariables(Entity entity) {
-            if (entity instanceof ServerPlayer serverPlayer)
+            if (entity instanceof ServerPlayer)
                 TargetMod.PACKET_HANDLER.send(PacketDistributor.DIMENSION.with(entity.level()::dimension), new PlayerVariablesSyncMessage(this, entity.getId()));
         }
 
@@ -301,20 +290,20 @@ public class TargetModVariables {
             nbt.putBoolean("zoom", zoom);
             nbt.putBoolean("zooming", zooming);
             nbt.putDouble("recoil", recoil);
-            nbt.putDouble("recoilhorizon", recoilhorizon);
+            nbt.putDouble("recoil_horizon", recoilHorizon);
             nbt.putDouble("firing", firing);
-            nbt.putDouble("targetangle", targetangle);
-            nbt.putDouble("rifleammo", rifleammo);
+            nbt.putDouble("target_angle", targetAngle);
+            nbt.putDouble("rifle_ammo", rifleAmmo);
             nbt.putBoolean("refresh", refresh);
-            nbt.putDouble("handgunammo", handgunammo);
-            nbt.putDouble("shotgunammo", shotgunammo);
-            nbt.putDouble("sniperammo", sniperammo);
-            nbt.putBoolean("bowpullhold", bowpullhold);
-            nbt.putBoolean("bowpull", bowpull);
-            nbt.putBoolean("playerdoublejump", playerdoublejump);
-            nbt.putDouble("hitind", hitind);
-            nbt.putDouble("headind", headind);
-            nbt.putDouble("killind", killind);
+            nbt.putDouble("handgun_ammo", handgunAmmo);
+            nbt.putDouble("shotgun_ammo", shotgunAmmo);
+            nbt.putDouble("sniper_ammo", sniperAmmo);
+            nbt.putBoolean("bow_pull_hold", bowPullHold);
+            nbt.putBoolean("bow_pull", bowPull);
+            nbt.putBoolean("player_double_jump", playerDoubleJump);
+            nbt.putDouble("hit_indicator", hitIndicator);
+            nbt.putDouble("head_indicator", headIndicator);
+            nbt.putDouble("kill_indicator", killIndicator);
             return nbt;
         }
 
@@ -323,20 +312,20 @@ public class TargetModVariables {
             zoom = nbt.getBoolean("zoom");
             zooming = nbt.getBoolean("zooming");
             recoil = nbt.getDouble("recoil");
-            recoilhorizon = nbt.getDouble("recoilhorizon");
+            recoilHorizon = nbt.getDouble("recoil_horizon");
             firing = nbt.getDouble("firing");
-            targetangle = nbt.getDouble("targetangle");
-            rifleammo = nbt.getDouble("rifleammo");
+            targetAngle = nbt.getDouble("target_angle");
+            rifleAmmo = nbt.getDouble("rifle_ammo");
             refresh = nbt.getBoolean("refresh");
-            handgunammo = nbt.getDouble("handgunammo");
-            shotgunammo = nbt.getDouble("shotgunammo");
-            sniperammo = nbt.getDouble("sniperammo");
-            bowpullhold = nbt.getBoolean("bowpullhold");
-            bowpull = nbt.getBoolean("bowpull");
-            playerdoublejump = nbt.getBoolean("playerdoublejump");
-            hitind = nbt.getDouble("hitind");
-            headind = nbt.getDouble("headind");
-            killind = nbt.getDouble("killind");
+            handgunAmmo = nbt.getDouble("handgun_ammo");
+            shotgunAmmo = nbt.getDouble("shotgun_ammo");
+            sniperAmmo = nbt.getDouble("sniper_ammo");
+            bowPullHold = nbt.getBoolean("bow_pull_hold");
+            bowPull = nbt.getBoolean("bow_pull");
+            playerDoubleJump = nbt.getBoolean("player_double_jump");
+            hitIndicator = nbt.getDouble("hit_indicator");
+            headIndicator = nbt.getDouble("head_indicator");
+            killIndicator = nbt.getDouble("kill_indicator");
         }
     }
 
@@ -355,9 +344,9 @@ public class TargetModVariables {
             this.target = buffer.readInt();
         }
 
-        public PlayerVariablesSyncMessage(PlayerVariables data, int entityid) {
+        public PlayerVariablesSyncMessage(PlayerVariables data, int entityId) {
             this.data = data;
-            this.target = entityid;
+            this.target = entityId;
         }
 
         public static void buffer(PlayerVariablesSyncMessage message, FriendlyByteBuf buffer) {
@@ -368,28 +357,28 @@ public class TargetModVariables {
         public static void handler(PlayerVariablesSyncMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
             NetworkEvent.Context context = contextSupplier.get();
             context.enqueueWork(() -> {
-                if (!context.getDirection().getReceptionSide().isServer()) {
-                    PlayerVariables variables = ((PlayerVariables) Minecraft.getInstance().player.level().getEntity(message.target).getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()));
-                    variables.zoom = message.data.zoom;
-                    variables.zooming = message.data.zooming;
-                    variables.recoil = message.data.recoil;
-                    variables.recoilhorizon = message.data.recoilhorizon;
-                    variables.firing = message.data.firing;
-                    variables.targetangle = message.data.targetangle;
-                    variables.rifleammo = message.data.rifleammo;
-                    variables.refresh = message.data.refresh;
-                    variables.handgunammo = message.data.handgunammo;
-                    variables.shotgunammo = message.data.shotgunammo;
-                    variables.sniperammo = message.data.sniperammo;
-                    variables.bowpullhold = message.data.bowpullhold;
-                    variables.bowpull = message.data.bowpull;
-                    variables.playerdoublejump = message.data.playerdoublejump;
-                    variables.hitind = message.data.hitind;
-                    variables.headind = message.data.headind;
-                    variables.killind = message.data.killind;
-                }
+                context.setPacketHandled(true);
+                if (context.getDirection().getReceptionSide().isServer()) return;
+
+                PlayerVariables variables = Minecraft.getInstance().player.level().getEntity(message.target).getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
+                variables.zoom = message.data.zoom;
+                variables.zooming = message.data.zooming;
+                variables.recoil = message.data.recoil;
+                variables.recoilHorizon = message.data.recoilHorizon;
+                variables.firing = message.data.firing;
+                variables.targetAngle = message.data.targetAngle;
+                variables.rifleAmmo = message.data.rifleAmmo;
+                variables.refresh = message.data.refresh;
+                variables.handgunAmmo = message.data.handgunAmmo;
+                variables.shotgunAmmo = message.data.shotgunAmmo;
+                variables.sniperAmmo = message.data.sniperAmmo;
+                variables.bowPullHold = message.data.bowPullHold;
+                variables.bowPull = message.data.bowPull;
+                variables.playerDoubleJump = message.data.playerDoubleJump;
+                variables.hitIndicator = message.data.hitIndicator;
+                variables.headIndicator = message.data.headIndicator;
+                variables.killIndicator = message.data.killIndicator;
             });
-            context.setPacketHandled(true);
         }
     }
 }

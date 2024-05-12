@@ -37,7 +37,7 @@ public class MarlinWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
         }
         if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
             if (itemstack.getOrCreateTag().getDouble("prepare") == 0 && itemstack.getOrCreateTag().getDouble("loading") == 0
-                    && !(itemstack.getOrCreateTag().getDouble("ammo") >= 8 || (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleammo == 0)) {
+                    && !(itemstack.getOrCreateTag().getDouble("ammo") >= 8 || (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo == 0)) {
                 if (itemstack.getOrCreateTag().getDouble("forcestop") == 1) {
                     itemstack.getOrCreateTag().putDouble("stop", 1);
                 } else {
@@ -60,14 +60,14 @@ public class MarlinWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
             if (itemstack.getOrCreateTag().getDouble("loading") == 9) {
                 itemstack.getOrCreateTag().putDouble("ammo", (itemstack.getOrCreateTag().getDouble("ammo") + 1));
                 {
-                    double _setval = (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleammo - 1;
+                    double _setval = (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo - 1;
                     entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                        capability.rifleammo = _setval;
+                        capability.rifleAmmo = _setval;
                         capability.syncPlayerVariables(entity);
                     });
                 }
             }
-            if ((itemstack.getOrCreateTag().getDouble("ammo") >= 8 || (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleammo == 0)
+            if ((itemstack.getOrCreateTag().getDouble("ammo") >= 8 || (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo == 0)
                     && itemstack.getOrCreateTag().getDouble("loading") == 0 || itemstack.getOrCreateTag().getDouble("stop") == 1) {
                 itemstack.getOrCreateTag().putDouble("forcestop", 0);
                 itemstack.getOrCreateTag().putDouble("stop", 0);

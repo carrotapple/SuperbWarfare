@@ -29,7 +29,7 @@ public class BowPullAnimationProcedure {
         }
         float times = 90f / fps;
         CompoundTag persistentData = entity.getPersistentData();
-        if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).bowpull) {
+        if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).bowPull) {
             if (persistentData.getDouble("pulltime") < 1) {
                 persistentData.putDouble("pulltime", (persistentData.getDouble("pulltime") + 0.014 * times));
             } else {
@@ -43,7 +43,7 @@ public class BowPullAnimationProcedure {
             }
         }
         persistentData.putDouble("pullpos", (0.5 * Math.cos(Math.PI * Math.pow(Math.pow(persistentData.getDouble("pulltime"), 2) - 1, 2)) + 0.5));
-        if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).bowpull) {
+        if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).bowPull) {
             if (persistentData.getDouble("bowtime") < 1) {
                 persistentData.putDouble("bowtime", (persistentData.getDouble("bowtime") + 0.014 * times));
             } else {
@@ -57,7 +57,7 @@ public class BowPullAnimationProcedure {
             }
         }
         persistentData.putDouble("bowpos", (0.5 * Math.cos(Math.PI * Math.pow(Math.pow(persistentData.getDouble("bowtime"), 2) - 1, 2)) + 0.5));
-        if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).bowpull) {
+        if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).bowPull) {
             if (persistentData.getDouble("handtime") < 1) {
                 persistentData.putDouble("handtime", (persistentData.getDouble("handtime") + 0.014 * times));
             } else {

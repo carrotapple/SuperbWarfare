@@ -29,7 +29,7 @@ public class GunRecoilProcedure {
 
         float recoilx = ((float) (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("recoilx"));
         float recoily = ((float) (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("recoily"));
-        float recoilyaw = ((float) (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilhorizon);
+        float recoilyaw = ((float) (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon);
 
         double[] recoilTimer = {0};
         double totalTime = 100;

@@ -17,9 +17,9 @@ public class SniperAmmoYouJiKongQiShiShiTiDeWeiZhiProcedure {
         if (entity == null)
             return;
         {
-            double _setval = (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperammo + 2;
+            double _setval = (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperAmmo + 2;
             entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.sniperammo = _setval;
+                capability.sniperAmmo = _setval;
                 capability.syncPlayerVariables(entity);
             });
         }

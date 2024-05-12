@@ -48,7 +48,7 @@ public class DoubleJumpMessage {
         }
 
         if (type == 0) {
-            if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).playerdoublejump) {
+            if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).playerDoubleJump) {
                 entity.setDeltaMovement(new Vec3((1 * entity.getLookAngle().x), 0.8, (1 * entity.getLookAngle().z)));
                 if (!level.isClientSide()) {
                     level.playSound(null, BlockPos.containing(x, y, z), ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("target:doublejump")), SoundSource.BLOCKS, 1, 1);
@@ -56,7 +56,7 @@ public class DoubleJumpMessage {
                     level.playLocalSound(x, y, z, ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("target:doublejump")), SoundSource.BLOCKS, 1, 1, false);
                 }
                 entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.playerdoublejump = false;
+                    capability.playerDoubleJump = false;
                     capability.syncPlayerVariables(entity);
                 });
             }

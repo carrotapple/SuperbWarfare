@@ -81,7 +81,7 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
         if (this.getOwner() instanceof LivingEntity living) {
             double _setval = 25;
             living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.hitind = _setval;
+                capability.hitIndicator = _setval;
                 capability.syncPlayerVariables(living);
             });
             if (!living.level().isClientSide() && living.getServer() != null) {
@@ -118,7 +118,7 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
                             setBaseDamage(getBaseDamage() * 2);
                             double _setval = 25;
                             living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                                capability.headind = _setval;
+                                capability.headIndicator = _setval;
                                 capability.syncPlayerVariables(living);
                             });
                             if (!living.level().isClientSide() && living.getServer() != null) {

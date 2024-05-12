@@ -93,7 +93,7 @@ public class RpkItemModel extends GeoModel<RpkItem> {
             shen.setRotX(0.02f * (float) fp);
         }
 
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilhorizon == 1) {
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == 1) {
             shen.setRotZ(0.003f * (float) fp);
         } else {
             shen.setRotZ(-0.003f * (float) fp);

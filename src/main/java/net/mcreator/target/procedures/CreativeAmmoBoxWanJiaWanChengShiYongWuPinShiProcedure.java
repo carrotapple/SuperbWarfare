@@ -27,28 +27,28 @@ public class CreativeAmmoBoxWanJiaWanChengShiYongWuPinShiProcedure {
         {
             double _setval = 2147483647;
             entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.rifleammo = _setval;
+                capability.rifleAmmo = _setval;
                 capability.syncPlayerVariables(entity);
             });
         }
         {
             double _setval = 2147483647;
             entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.handgunammo = _setval;
+                capability.handgunAmmo = _setval;
                 capability.syncPlayerVariables(entity);
             });
         }
         {
             double _setval = 2147483647;
             entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.shotgunammo = _setval;
+                capability.shotgunAmmo = _setval;
                 capability.syncPlayerVariables(entity);
             });
         }
         {
             double _setval = 2147483647;
             entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.sniperammo = _setval;
+                capability.sniperAmmo = _setval;
                 capability.syncPlayerVariables(entity);
             });
         }

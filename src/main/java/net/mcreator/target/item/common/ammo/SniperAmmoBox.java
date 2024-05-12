@@ -40,7 +40,7 @@ public class SniperAmmoBox extends Item {
         stack.shrink(1);
 
         player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            capability.sniperammo = (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperammo + 12;
+            capability.sniperAmmo = (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperAmmo + 12;
             capability.syncPlayerVariables(player);
         });
 

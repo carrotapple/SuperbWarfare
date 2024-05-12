@@ -63,7 +63,7 @@ public class GunsTool {
     }
 
     public static void pvpModeCheck(ItemStack stack, Level level) {
-        if (!TargetModVariables.MapVariables.get(level).pvpmode) {
+        if (!TargetModVariables.MapVariables.get(level).pvpMode) {
             if (stack.getOrCreateTag().getDouble("level") >= 10) {
                 stack.getOrCreateTag().putDouble("damageadd", 1 + 0.05 * (stack.getOrCreateTag().getDouble("level") - 10));
             } else {
@@ -89,7 +89,7 @@ public class GunsTool {
     public static void spawnBullet(Player player) {
         ItemStack heldItem = player.getMainHandItem();
         player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            capability.recoilhorizon = Math.random() < 0.5 ? -1 : 1;
+            capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
             capability.recoil = 0.1;
             capability.firing = 1;
             capability.syncPlayerVariables(player);

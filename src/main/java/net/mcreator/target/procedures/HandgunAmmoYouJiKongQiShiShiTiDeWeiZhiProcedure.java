@@ -17,9 +17,9 @@ public class HandgunAmmoYouJiKongQiShiShiTiDeWeiZhiProcedure {
         if (entity == null)
             return;
         {
-            double _setval = (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).handgunammo + 5;
+            double _setval = (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).handgunAmmo + 5;
             entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.handgunammo = _setval;
+                capability.handgunAmmo = _setval;
                 capability.syncPlayerVariables(entity);
             });
         }

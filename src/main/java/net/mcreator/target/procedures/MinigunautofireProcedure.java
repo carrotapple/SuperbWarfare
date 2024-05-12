@@ -38,7 +38,7 @@ public class MinigunautofireProcedure {
             }
         }
         if (usehand.getItem() == TargetModItems.MINIGUN.get() && usehand.getOrCreateTag().getDouble("overheat") == 0
-                && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleammo > 0
+                && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo > 0
                 && !(player.getCooldowns().isOnCooldown(usehand.getItem())) && usehand.getOrCreateTag().getDouble("rot") >= 10) {
             usehand.getOrCreateTag().putDouble("heat", (usehand.getOrCreateTag().getDouble("heat") + 1));
             if (usehand.getOrCreateTag().getDouble("heat") >= 50.5) {
@@ -73,7 +73,7 @@ public class MinigunautofireProcedure {
             GunsTool.spawnBullet(player);
 
             player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.rifleammo = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables()).rifleammo - 1;
+                capability.rifleAmmo = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables()).rifleAmmo - 1;
                 capability.syncPlayerVariables(player);
             });
 

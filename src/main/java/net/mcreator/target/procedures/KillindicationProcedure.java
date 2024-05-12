@@ -43,7 +43,7 @@ public class KillindicationProcedure {
             {
                 double _setval = 40;
                 sourceentity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.killind = _setval;
+                    capability.killIndicator = _setval;
                     capability.syncPlayerVariables(sourceentity);
                 });
             }

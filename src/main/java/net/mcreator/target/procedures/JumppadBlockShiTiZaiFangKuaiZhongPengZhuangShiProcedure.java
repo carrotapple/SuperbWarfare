@@ -58,7 +58,7 @@ public class JumppadBlockShiTiZaiFangKuaiZhongPengZhuangShiProcedure {
             {
                 boolean _setval = true;
                 entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.playerdoublejump = _setval;
+                    capability.playerDoubleJump = _setval;
                     capability.syncPlayerVariables(entity);
                 });
             }

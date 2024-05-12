@@ -282,11 +282,11 @@ public class ClientEventHandler {
         if (0 < entity.getPersistentData().getDouble("firetime") && entity.getPersistentData().getDouble("firetime") < 0.2) {
             entity.getPersistentData().putDouble("firepos",
                     (pose * ((-18.34) * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) + 8.58 * entity.getPersistentData().getDouble("firetime") + entity.getPersistentData().getDouble("firepos2"))));
-            if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilhorizon == 1) {
+            if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == 1) {
                 event.setYaw((float) (yaw - 0.2 * amplitude * ((-18.34) * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) + 8.58 * entity.getPersistentData().getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
                 event.setPitch((float) (pitch + 0.2 * amplitude * ((-18.34) * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) + 8.58 * entity.getPersistentData().getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
                 event.setRoll((float) (roll + amplitude * ((-18.34) * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) + 8.58 * entity.getPersistentData().getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
-            } else if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilhorizon == -1) {
+            } else if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == -1) {
                 event.setYaw((float) (yaw - 0.2 * amplitude * ((-18.34) * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) + 8.58 * entity.getPersistentData().getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
                 event.setPitch((float) (pitch + 0.2 * amplitude * ((-18.34) * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) + 8.58 * entity.getPersistentData().getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
                 event.setRoll((float) (roll - amplitude * ((-18.34) * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) + 8.58 * entity.getPersistentData().getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
@@ -295,11 +295,11 @@ public class ClientEventHandler {
         if (0.2 <= entity.getPersistentData().getDouble("firetime") && entity.getPersistentData().getDouble("firetime") < 1) {
             entity.getPersistentData().putDouble("firepos",
                     (pose * (3.34 * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) - 5.5 * entity.getPersistentData().getDouble("firetime") + 2.167 + entity.getPersistentData().getDouble("firepos2"))));
-            if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilhorizon == 1) {
+            if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == 1) {
                 event.setYaw((float) (yaw - 0.2 * amplitude * (3.34 * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) - 5.5 * entity.getPersistentData().getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
                 event.setPitch((float) (pitch + 0.2 * amplitude * (3.34 * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) - 5.5 * entity.getPersistentData().getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
                 event.setRoll((float) (roll + amplitude * (3.34 * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) - 5.5 * entity.getPersistentData().getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
-            } else if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilhorizon == -1) {
+            } else if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == -1) {
                 event.setYaw((float) (yaw + 0.2 * amplitude * (3.34 * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) - 5.5 * entity.getPersistentData().getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
                 event.setPitch((float) (pitch - 0.2 * amplitude * (3.34 * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) - 5.5 * entity.getPersistentData().getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
                 event.setRoll((float) (roll - amplitude * (3.34 * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) - 5.5 * entity.getPersistentData().getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));

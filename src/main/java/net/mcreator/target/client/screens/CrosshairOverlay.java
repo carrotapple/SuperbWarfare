@@ -28,11 +28,11 @@ public class CrosshairOverlay {
 
         double spread = entity.getAttribute(TargetModAttributes.SPREAD.get()).getBaseValue();
 
-        double hitind = (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).hitind;
+        double hitind = (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).hitIndicator;
 
-        double headind = (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).headind;
+        double headind = (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).headIndicator;
 
-        double killind = (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).killind;
+        double killind = (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).killIndicator;
 
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);

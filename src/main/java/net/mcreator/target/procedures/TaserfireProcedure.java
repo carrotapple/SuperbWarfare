@@ -25,7 +25,7 @@ public class TaserfireProcedure {
                     && usehand.getOrCreateTag().getDouble("ammo") > 0) {
 
                 entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.recoilhorizon = Math.random() < 0.5 ? -1 : 1;
+                    capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
                     capability.recoil = 0.1;
                     capability.firing = 1;
                     capability.syncPlayerVariables(entity);

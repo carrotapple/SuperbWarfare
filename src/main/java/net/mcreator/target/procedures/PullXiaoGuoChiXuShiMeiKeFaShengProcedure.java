@@ -32,7 +32,7 @@ public class PullXiaoGuoChiXuShiMeiKeFaShengProcedure {
     private static void execute(@Nullable Event event, Entity entity) {
         if (entity == null)
             return;
-        if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).bowpullhold) {
+        if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).bowPullHold) {
             if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == TargetModItems.BOCEK.get()
                     && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("maxammo") > 0
                     && !(entity instanceof Player _plrCldCheck5 && _plrCldCheck5.getCooldowns().isOnCooldown((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem()))
@@ -42,7 +42,7 @@ public class PullXiaoGuoChiXuShiMeiKeFaShengProcedure {
                 {
                     boolean _setval = true;
                     entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                        capability.bowpull = _setval;
+                        capability.bowPull = _setval;
                         capability.syncPlayerVariables(entity);
                     });
                 }
@@ -64,7 +64,7 @@ public class PullXiaoGuoChiXuShiMeiKeFaShengProcedure {
             {
                 boolean _setval = false;
                 entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.bowpull = _setval;
+                    capability.bowPull = _setval;
                     capability.syncPlayerVariables(entity);
                 });
             }

@@ -11,12 +11,12 @@ public class AA12ReloadProcedure {
         double ammo = tag.getDouble("ammo");
 
         double empty = mag - ammo + (plusOne ? 1 : 0);
-        double shotgunAmmo = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.shotgunammo).orElse(0d);
+        double shotgunAmmo = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.shotgunAmmo).orElse(0d);
 
         tag.putDouble("ammo", ammo + Math.min(empty, shotgunAmmo));
 
         entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            capability.shotgunammo = Math.max(0, shotgunAmmo - empty);
+            capability.shotgunAmmo = Math.max(0, shotgunAmmo - empty);
             capability.syncPlayerVariables(entity);
         });
 

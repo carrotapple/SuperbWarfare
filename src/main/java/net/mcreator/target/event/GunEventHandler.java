@@ -215,12 +215,12 @@ public class GunEventHandler {
         ItemStack heldItem = player.getMainHandItem();
         if (Math.random() < 0.5) {
             player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.recoilhorizon = -1;
+                capability.recoilHorizon = -1;
                 capability.syncPlayerVariables(player);
             });
         } else {
             player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.recoilhorizon = 1;
+                capability.recoilHorizon = 1;
                 capability.syncPlayerVariables(player);
             });
         }

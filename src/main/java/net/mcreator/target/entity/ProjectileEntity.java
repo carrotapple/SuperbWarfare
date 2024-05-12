@@ -327,7 +327,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
             if (this.shooter instanceof ServerPlayer player) {
                 player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.hitind = 25;
+                    capability.hitIndicator = 25;
                     capability.syncPlayerVariables(living);
                 });
                 var holder = Holder.direct(TargetModSounds.INDICATION.get());
@@ -345,7 +345,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             }
 
             shooter.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.headind = 25;
+                capability.headIndicator = 25;
                 capability.syncPlayerVariables(shooter);
             });
 
@@ -357,7 +357,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             }
 
             shooter.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.hitind = 25;
+                capability.hitIndicator = 25;
                 capability.syncPlayerVariables(shooter);
             });
 

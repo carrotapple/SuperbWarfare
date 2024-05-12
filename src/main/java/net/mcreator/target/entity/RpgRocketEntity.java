@@ -88,7 +88,7 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
             living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.hitind = 25;
+                capability.hitIndicator = 25;
                 capability.syncPlayerVariables(living);
             });
             if (!living.level().isClientSide() && living.getServer() != null) {
@@ -133,7 +133,7 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
                             setBaseDamage(getBaseDamage() * 5);
                             double _setval = 25;
                             living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                                capability.headind = _setval;
+                                capability.headIndicator = _setval;
                                 capability.syncPlayerVariables(living);
                             });
                             if (!living.level().isClientSide() && living.getServer() != null) {

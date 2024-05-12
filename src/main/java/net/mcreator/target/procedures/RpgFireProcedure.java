@@ -28,7 +28,7 @@ public class RpgFireProcedure {
         if (mainHandItem.getItem() == TargetModItems.RPG.get() && tag.getDouble("reloading") == 0 && !player.getCooldowns().isOnCooldown(mainHandItem.getItem())
                 && tag.getDouble("ammo") > 0) {
             player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.recoilhorizon = Math.random() < 0.5 ? -1 : 1;
+                capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
                 capability.recoil = 0.1;
                 capability.firing = 1;
                 capability.syncPlayerVariables(player);

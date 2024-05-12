@@ -50,7 +50,7 @@ public class FireMessage {
             player.getPersistentData().putDouble("minifiring", 0);
             player.getPersistentData().putDouble("minigunfiring", 0);
             player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.bowpullhold = false;
+                capability.bowPullHold = false;
                 capability.syncPlayerVariables(player);
             });
             BowlooseProcedure.execute(player);

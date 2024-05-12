@@ -24,7 +24,7 @@ public class M79fireProcedure {
             if (usehand.getItem() == TargetModItems.M_79.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !(entity instanceof Player _plrCldCheck4 && _plrCldCheck4.getCooldowns().isOnCooldown(usehand.getItem()))
                     && usehand.getOrCreateTag().getDouble("ammo") > 0) {
                 entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.recoilhorizon = Math.random() < 0.5 ? -1 : 1;
+                    capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
                     capability.recoil = 0.1;
                     capability.firing = 1;
                     capability.syncPlayerVariables(entity);
