@@ -5,12 +5,16 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 
 public class ShotgunReloadProcedure {
-    public static void execute(LivingEntity entity, boolean plusOne) {
+    public static void execute(LivingEntity entity) {
+        execute(entity, false);
+    }
+
+    public static void execute(LivingEntity entity, boolean extraOne) {
         CompoundTag tag = entity.getMainHandItem().getOrCreateTag();
         double mag = tag.getDouble("mag");
         double ammo = tag.getDouble("ammo");
 
-        double empty = mag - ammo + (plusOne ? 1 : 0);
+        double empty = mag - ammo + (extraOne ? 1 : 0);
         double shotgunAmmo = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.shotgunAmmo).orElse(0d);
 
         tag.putDouble("ammo", ammo + Math.min(empty, shotgunAmmo));

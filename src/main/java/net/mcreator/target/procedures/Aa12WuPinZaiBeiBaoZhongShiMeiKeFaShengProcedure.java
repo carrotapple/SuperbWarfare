@@ -37,7 +37,7 @@ public class Aa12WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
             }
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
                 if (entity instanceof LivingEntity) {
-                    ShotgunReloadProcedure.execute((LivingEntity) entity, false);
+                    ShotgunReloadProcedure.execute((LivingEntity) entity);
                 }
             }
         } else if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getDouble("ammo") > 0) {

@@ -35,7 +35,7 @@ public class RpkWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 itemstack.getOrCreateTag().putDouble("reloadtime", 0);
             }
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                Reload1Procedure.execute(entity);
+                RifleReloadProcedure.execute(entity);
             }
         } else if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getDouble("ammo") > 0) {
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 41) {
@@ -56,7 +56,7 @@ public class RpkWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 itemstack.getOrCreateTag().putDouble("reloadtime", 0);
             }
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                Reload2Procedure.execute(entity);
+                RifleReloadProcedure.execute(entity, true);
             }
         }
         WeaponDrawProcedure.execute(entity, itemstack);

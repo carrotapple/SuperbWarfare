@@ -42,7 +42,7 @@ public class M60WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 itemstack.getOrCreateTag().putDouble("reloadtime", 0);
             }
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                Reload1Procedure.execute(entity);
+                RifleReloadProcedure.execute(entity);
             }
         } else if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getDouble("ammo") > 0) {
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 111) {
@@ -65,7 +65,7 @@ public class M60WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 itemstack.getOrCreateTag().putDouble("reloadtime", 0);
             }
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                Reload1Procedure.execute(entity);
+                RifleReloadProcedure.execute(entity);
             }
         }
         WeapondrawhaveyProcedure.execute(entity, itemstack);
