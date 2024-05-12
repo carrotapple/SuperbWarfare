@@ -28,7 +28,7 @@ authors="Atsuishio, MCreator"
 [[dependencies.target]]
     modId="geckolib"
     mandatory=false
-    versionRange="[0,)"
+    versionRange="[4.4.4,)"
     ordering="NONE"
     side="BOTH"
 
