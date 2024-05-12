@@ -37,7 +37,7 @@ public class Aa12WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
             }
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
                 if (entity instanceof LivingEntity) {
-                    ShotgunReload1Procedure.execute((LivingEntity) entity);
+                    AA12ReloadProcedure.execute((LivingEntity) entity, false);
                 }
             }
         } else if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getDouble("ammo") > 0) {
@@ -62,7 +62,7 @@ public class Aa12WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
             }
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
                 if (entity instanceof LivingEntity) {
-                    ShotgunReload2Procedure.execute((LivingEntity) entity);
+                    AA12ReloadProcedure.execute((LivingEntity) entity, true);
                 }
             }
         }
