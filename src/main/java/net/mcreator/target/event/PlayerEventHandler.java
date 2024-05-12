@@ -1,11 +1,17 @@
 package net.mcreator.target.event;
 
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -61,6 +67,7 @@ public class PlayerEventHandler {
             handleChangeFireRate(player);
             handleDistantRange(player);
             renderDamageIndicator(player);
+            bocekPulling(player);
         }
     }
 
@@ -349,5 +356,42 @@ public class PlayerEventHandler {
         };
         Thread recoilThread = new Thread(recoilRunnable);
         recoilThread.start();
+    }
+
+    private static void bocekPulling(Player player) {
+        ItemStack mainHandItem = player.getMainHandItem();
+        CompoundTag tag = mainHandItem.getOrCreateTag();
+
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).bowPullHold) {
+            if (mainHandItem.getItem() == TargetModItems.BOCEK.get()
+                    && tag.getDouble("maxammo") > 0
+                    && !player.getCooldowns().isOnCooldown(mainHandItem.getItem())
+                    && tag.getDouble("power") < 12
+            ) {
+                tag.putDouble("power", tag.getDouble("power") + 1);
+
+                player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    capability.bowPull = true;
+                    capability.syncPlayerVariables(player);
+                });
+            }
+            if (tag.getDouble("power") == 1) {
+                if (!player.level().isClientSide() && player.getServer() != null) {
+                    // TODO 修改为正确的音效播放
+                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), player.level() instanceof ServerLevel ? (ServerLevel) player.level() : null, 4,
+                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:bocek_pull_1p player @s ~ ~ ~ 2 1");
+
+                    player.level().playSound(null, player.blockPosition(), TargetModSounds.BOCEK_PULL_3P.get(), SoundSource.PLAYERS, 0.5f, 1);
+                }
+            }
+        } else {
+            if (mainHandItem.getItem() == TargetModItems.BOCEK.get()) {
+                tag.putDouble("power", 0);
+            }
+            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.bowPull = false;
+                capability.syncPlayerVariables(player);
+            });
+        }
     }
 }

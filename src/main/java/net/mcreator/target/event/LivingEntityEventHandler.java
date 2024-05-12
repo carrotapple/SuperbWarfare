@@ -1,5 +1,7 @@
 package net.mcreator.target.event;
 
+import net.mcreator.target.entity.Target1Entity;
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
@@ -7,9 +9,14 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -17,7 +24,53 @@ import net.minecraftforge.fml.common.Mod;
 public class LivingEntityEventHandler {
     @SubscribeEvent
     public static void onEntityAttacked(LivingHurtEvent event) {
+        if (event == null || event.getEntity() == null) return;
         renderDamageIndicator(event);
+        target1DamageImmune(event, event.getEntity());
+    }
+
+    @SubscribeEvent
+    public static void onEntityAttacked(LivingAttackEvent event) {
+        if (event == null || event.getEntity() == null) return;
+        arrowDamageImmuneForMine(event, event.getSource(), event.getSource().getEntity());
+    }
+
+    @SubscribeEvent
+    public static void onEntityDeath(LivingDeathEvent event) {
+        if (event == null || event.getEntity() == null) return;
+        killIndication(event.getSource().getEntity());
+    }
+
+    private static void target1DamageImmune(Event event, Entity entity) {
+        if (entity == null) return;
+        if (entity instanceof Target1Entity && entity.getPersistentData().getDouble("targetdown") > 0) {
+            event.setCanceled(true);
+        }
+    }
+
+    private static void killIndication(Entity sourceEntity) {
+        if (sourceEntity == null) return;
+        if (sourceEntity instanceof Player player && player.getMainHandItem().is(TargetModTags.Items.GUN)) {
+            if (!sourceEntity.level().isClientSide() && sourceEntity.getServer() != null) {
+
+                // TODO 修改为正确音效播放方法
+                sourceEntity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, sourceEntity.position(), sourceEntity.getRotationVector(), sourceEntity.level() instanceof ServerLevel ? (ServerLevel) sourceEntity.level() : null, 4,
+                        sourceEntity.getName().getString(), sourceEntity.getDisplayName(), sourceEntity.level().getServer(), sourceEntity), "playsound target:targetdown player @s ~ ~ ~ 100 1");
+            }
+            sourceEntity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.killIndicator = 40;
+                capability.syncPlayerVariables(sourceEntity);
+            });
+        }
+    }
+
+    private static void arrowDamageImmuneForMine(Event event, DamageSource damageSource, Entity sourceEntity) {
+        if (damageSource == null || sourceEntity == null) return;
+        if (sourceEntity instanceof Player player && (!sourceEntity.isAlive() || player.isSpectator())
+                && (damageSource.is(ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("target:arrow_in_brain")))
+                || damageSource.is(ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("target:mine")))
+                || damageSource.is(DamageTypes.ARROW))
+        ) event.setCanceled(true);
     }
 
     private static void renderDamageIndicator(LivingHurtEvent event) {

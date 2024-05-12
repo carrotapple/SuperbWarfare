@@ -4,12 +4,14 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.mcreator.target.init.TargetModAttributes;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.network.TargetModVariables;
-import net.mcreator.target.procedures.CrosshairXianShiYouXiNeiDieJiaCengProcedure;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiEvent;
@@ -40,7 +42,7 @@ public class CrosshairOverlay {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        if (CrosshairXianShiYouXiNeiDieJiaCengProcedure.execute(entity)) {
+        if (shouldRenderCrosshair(entity)) {
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("target:textures/screens/point.png"), w / 2 + -7.5f, h / 2 + -8, 0, 0, 16, 16, 16, 16);
 
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("target:textures/screens/rexheng.png"), w / 2 + -9.5f - 2.8f * (float) spread, h / 2 + -8, 0, 0, 16, 16, 16, 16);
@@ -101,5 +103,17 @@ public class CrosshairOverlay {
         bufferbuilder.vertex(matrix4f, pX2, pY2, pBlitOffset).uv(pMaxU, pMaxV).endVertex();
         bufferbuilder.vertex(matrix4f, pX2, pY, pBlitOffset).uv(pMaxU, pMinV).endVertex();
         BufferUploader.drawWithShader(bufferbuilder.end());
+    }
+
+    private static boolean shouldRenderCrosshair(Player player) {
+        if (player == null) return false;
+
+        if (player.isSpectator()) return false;
+        if (!player.getMainHandItem().is(ItemTags.create(new ResourceLocation("target:gun")))
+                || !(player.getPersistentData().getDouble("zoom_time") < 7)
+        ) return false;
+
+        return !(player.getMainHandItem().getItem() == TargetModItems.M_79.get())
+                && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
     }
 }

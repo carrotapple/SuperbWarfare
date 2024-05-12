@@ -1,7 +1,6 @@
 package net.mcreator.target.entity;
 
 import net.mcreator.target.init.TargetModEntities;
-import net.mcreator.target.procedures.SenpaiDangShiTiGengXinKeShiProcedure;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -30,6 +29,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.DungeonHooks;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
@@ -42,6 +43,8 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
+import java.util.Comparator;
 
 public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(SenpaiEntity.class, EntityDataSerializers.BOOLEAN);
@@ -146,7 +149,20 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
     @Override
     public void baseTick() {
         super.baseTick();
-        SenpaiDangShiTiGengXinKeShiProcedure.execute(this.level(), this.getX(), this.getY(), this.getZ(), this);
+
+        this.getPersistentData().putDouble("findtarget", this.getPersistentData().getDouble("findtarget") + 1);
+        double target = this.getPersistentData().getDouble("findtarget");
+        if (target == 1) {
+            final Vec3 center = new Vec3(this.getX(), this.getY(), this.getZ());
+            this.level().getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(1024 / 2d), e -> true)
+                    .stream()
+                    .sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center)))
+                    .filter(e -> e instanceof Player player && !player.isCreative())
+                    .forEach(e -> this.setTarget((LivingEntity) e));
+        } else if (target >= 100) {
+            this.getPersistentData().putDouble("findtarget", 0);
+        }
+
         this.refreshDimensions();
     }
 

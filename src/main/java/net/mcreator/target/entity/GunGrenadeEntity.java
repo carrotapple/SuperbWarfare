@@ -4,9 +4,7 @@ import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.network.TargetModVariables;
-import net.mcreator.target.procedures.GunGrenadeDanSheWuFeiXingShiMeiKeFaShengProcedure;
-import net.mcreator.target.procedures.GunGrenadeDanSheWuJiZhongFangKuaiShiProcedure;
-import net.mcreator.target.procedures.GunGrenadeDanSheWuJiZhongShiTiShiProcedure;
+import net.mcreator.target.procedures.MedexpProcedure;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.protocol.Packet;
@@ -89,7 +87,15 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
                         living.getName().getString(), living.getDisplayName(), living.level().getServer(), living), "playsound target:indication voice @a ~ ~ ~ 1 1");
             }
         }
-        GunGrenadeDanSheWuJiZhongShiTiShiProcedure.execute(this.level(), this);
+
+        if (this.getPersistentData().getDouble("baoxian") > 0) {
+            if (this.level() instanceof ServerLevel level) {
+                level.explode(this, (this.getX()), (this.getY()), (this.getZ()), 5.5f, Level.ExplosionInteraction.NONE);
+                MedexpProcedure.execute(this.level(), (this.getX()), (this.getY()), (this.getZ()));
+                this.discard();
+            }
+        }
+
         if (entity instanceof LivingEntity) {
             entity.invulnerableTime = 0;
         }
@@ -137,13 +143,27 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
     @Override
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
-        GunGrenadeDanSheWuJiZhongFangKuaiShiProcedure.execute(this.level(), this);
+        if (this.getPersistentData().getDouble("baoxian") > 0) {
+            if (this.level() instanceof ServerLevel level) {
+                this.level().explode(this, this.getX(), this.getY(), this.getZ(), 5.5f, Level.ExplosionInteraction.NONE);
+                MedexpProcedure.execute(level, this.getX(), this.getY(), this.getZ());
+                this.discard();
+            }
+        }
     }
 
     @Override
     public void tick() {
         super.tick();
-        GunGrenadeDanSheWuFeiXingShiMeiKeFaShengProcedure.execute(this);
+
+        this.getPersistentData().putDouble("baoxian", (this.getPersistentData().getDouble("baoxian") + 1));
+
+        // TODO 修改为正确的粒子效果添加
+        if (!this.level().isClientSide() && this.getServer() != null) {
+            this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
+                    this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "particle minecraft:campfire_cosy_smoke ~ ~ ~ 0 0 0 0 1 force");
+        }
+
         if (this.tickCount > 200) {
             this.discard();
         }
