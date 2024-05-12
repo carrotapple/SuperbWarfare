@@ -2,7 +2,8 @@ package net.mcreator.target.entity;
 
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.procedures.MedexpProcedure;
-import net.mcreator.target.procedures.MortarShellDanSheWuFeiXingShiMeiKeFaShengProcedure;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.resources.ResourceLocation;
@@ -88,9 +89,12 @@ public class MortarShellEntity extends AbstractArrow implements ItemSupplier {
     @Override
     public void tick() {
         super.tick();
-        MortarShellDanSheWuFeiXingShiMeiKeFaShengProcedure.execute(this);
-        if (this.inGround)
-            this.discard();
+        if (this.getServer() != null) {
+            // TODO 修改为正确的粒子效果播放方法
+            this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
+                    this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "particle minecraft:campfire_cosy_smoke ~ ~ ~ 0 0 0 0 2 force");
+        }
+        if (this.inGround) this.discard();
     }
 
     public static MortarShellEntity shoot(Level world, LivingEntity entity, RandomSource source) {

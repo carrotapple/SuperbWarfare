@@ -1,8 +1,7 @@
 package net.mcreator.target.entity;
 
 import net.mcreator.target.init.TargetModEntities;
-import net.mcreator.target.procedures.MortarDangXiaoShiShiJianDaoShiProcedure;
-import net.mcreator.target.procedures.MortarShiTiChuShiShengChengShiProcedure;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.procedures.MortarYouJiShiTiShiProcedure;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -11,6 +10,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -20,6 +20,7 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
@@ -134,7 +135,14 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
         SpawnGroupData retval = super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
-        MortarShiTiChuShiShengChengShiProcedure.execute(this);
+        this.setYRot(this.getYRot());
+        this.setXRot(-70);
+        this.setYBodyRot(this.getYRot());
+        this.setYHeadRot(this.getYRot());
+        this.yRotO = this.getYRot();
+        this.xRotO = this.getXRot();
+        this.yBodyRotO = this.getYRot();
+        this.yHeadRotO = this.getYRot();
         return retval;
     }
 
@@ -238,7 +246,21 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
         if (this.deathTime == 5) {
             this.remove(MortarEntity.RemovalReason.KILLED);
             this.dropExperience();
-            MortarDangXiaoShiShiJianDaoShiProcedure.execute(this.level(), this.getX(), this.getY(), this.getZ());
+            if (this.level() instanceof ServerLevel level) {
+                var x = this.getX();
+                var y = this.getY();
+                var z = this.getZ();
+                level.explode(null, x, y, z, 0, Level.ExplosionInteraction.NONE);
+                ItemEntity barrel = new ItemEntity(level, x, (y + 1), z, new ItemStack(TargetModItems.MORTAR_BARREL.get()));
+                barrel.setPickUpDelay(10);
+                level.addFreshEntity(barrel);
+                ItemEntity bipod = new ItemEntity(level, x, (y + 1), z, new ItemStack(TargetModItems.MORTAR_BIPOD.get()));
+                bipod.setPickUpDelay(10);
+                level.addFreshEntity(bipod);
+                ItemEntity plate = new ItemEntity(level, x, (y + 1), z, new ItemStack(TargetModItems.MORTAR_BASE_PLATE.get()));
+                plate.setPickUpDelay(10);
+                level.addFreshEntity(plate);
+            }
         }
     }
 

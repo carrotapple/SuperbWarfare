@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import net.mcreator.target.client.renderer.item.BocekItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
-import net.mcreator.target.procedures.BocekReloadProcedure;
+import net.mcreator.target.procedures.WeaponDrawProcedure;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.RarityTool;
 import net.mcreator.target.tools.TooltipTool;
@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -147,7 +148,13 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
         if (entity instanceof Player player) {
             itemstack.getOrCreateTag().putDouble("maxammo", getAmmoCount(player));
         }
-        BocekReloadProcedure.execute(entity, itemstack);
+
+        // TODO 合并至GunReload
+        CompoundTag tag = itemstack.getOrCreateTag();
+        if (tag.getDouble("arrowempty") > 0) {
+            tag.putDouble("arrowempty", tag.getDouble("arrowempty") - 1);
+        }
+        WeaponDrawProcedure.execute(entity, itemstack);
     }
 
     public static double getAmmoCount(Player player) {
