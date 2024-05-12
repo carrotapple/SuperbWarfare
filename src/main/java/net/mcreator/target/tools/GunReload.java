@@ -27,7 +27,14 @@ public class GunReload {
         }).orElse(0d);
 
         entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            capability.sniperAmmo = Math.max(0, playerAmmo - ammoToAdd);
+            var newAmmoCount = Math.max(0, playerAmmo - ammoToAdd);
+            switch (type) {
+                case RIFLE -> capability.rifleAmmo = newAmmoCount;
+                case HANDGUN -> capability.handgunAmmo = newAmmoCount;
+                case SHOTGUN -> capability.shotgunAmmo = newAmmoCount;
+                case SNIPER -> capability.sniperAmmo = newAmmoCount;
+            }
+
             capability.syncPlayerVariables(entity);
         });
         tag.putDouble("ammo", ammo + Math.min(ammoToAdd, playerAmmo));
