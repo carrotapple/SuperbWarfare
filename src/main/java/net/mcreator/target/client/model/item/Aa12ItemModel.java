@@ -41,11 +41,13 @@ public class Aa12ItemModel extends GeoModel<Aa12Item> {
 
         gun.setPosX(8.863f * (float) p);
 
-        gun.setPosY(0.98f * (float) p - (float) (1.2f * zp));
+        gun.setPosY(-0.88f * (float) p - (float) (1.2f * zp));
 
-        gun.setPosZ((float) p + (float) (1.3f * zp));
+        gun.setPosZ((float) p + (float) (3.3f * zp));
 
         gun.setRotZ((float) (0.02f * zp));
+
+        gun.setScaleZ(1f - (0.4f * (float) p));
 
         double fp = 0;
         fp = player.getPersistentData().getDouble("firepos");
