@@ -4,7 +4,6 @@ import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
-import net.mcreator.target.procedures.Target1DangShiTiGengXinKeShiProcedure;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -48,6 +47,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
+import java.text.DecimalFormat;
 
 @Mod.EventBusSubscriber
 public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedEntity {
@@ -201,7 +201,52 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
     @Override
     public void baseTick() {
         super.baseTick();
-        Target1DangShiTiGengXinKeShiProcedure.execute(this);
+
+        this.setCustomName(Component.literal("HP:" + new DecimalFormat("##.##").format(this.getHealth()) + "/"
+                + new DecimalFormat("##.##").format(this.getMaxHealth())));
+
+        double[] recoilTimer = {0};
+        double totalTime = 6;
+        int sleepTime = 2;
+        double recoilDuration = totalTime / sleepTime;
+        Runnable recoilRunnable = () -> {
+            while (recoilTimer[0] < recoilDuration) {
+
+                if (this.getPersistentData().getDouble("targetdown") > -1) {
+                    this.getPersistentData().putDouble("targetdown", (this.getPersistentData().getDouble("targetdown") - 1));
+                }
+                if (this.getPersistentData().getDouble("targetdown") > 195) {
+                    this.setYRot(this.getYRot());
+                    this.setXRot((float) ((201 - this.getPersistentData().getDouble("targetdown")) * (-18)));
+                    this.setYBodyRot(this.getYRot());
+                    this.setYHeadRot(this.getYRot());
+                    this.yRotO = this.getYRot();
+                    this.xRotO = this.getXRot();
+                    this.yBodyRotO = this.getYRot();
+                    this.yHeadRotO = this.getYRot();
+                }
+                if (this.getPersistentData().getDouble("targetdown") < 20 && this.getPersistentData().getDouble("targetdown") > -1) {
+                    this.setYRot(this.getYRot());
+                    this.setXRot((float) (-90 + (20 - this.getPersistentData().getDouble("targetdown")) * 4.5f));
+                    this.setYBodyRot(this.getYRot());
+                    this.setYHeadRot(this.getYRot());
+                    this.yRotO = this.getYRot();
+                    this.xRotO = this.getXRot();
+                    this.yBodyRotO = this.getYRot();
+                    this.yHeadRotO = this.getYRot();
+                }
+
+                recoilTimer[0]++;
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Thread recoilThread = new Thread(recoilRunnable);
+        recoilThread.start();
+
         this.refreshDimensions();
     }
 

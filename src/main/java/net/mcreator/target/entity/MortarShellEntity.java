@@ -1,11 +1,12 @@
 package net.mcreator.target.entity;
 
 import net.mcreator.target.init.TargetModEntities;
+import net.mcreator.target.procedures.MedexpProcedure;
 import net.mcreator.target.procedures.MortarShellDanSheWuFeiXingShiMeiKeFaShengProcedure;
-import net.mcreator.target.procedures.MortarShellDanSheWuJiZhongShiTiShiProcedure;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
@@ -68,13 +69,20 @@ public class MortarShellEntity extends AbstractArrow implements ItemSupplier {
     @Override
     public void onHitEntity(EntityHitResult entityHitResult) {
         super.onHitEntity(entityHitResult);
-        MortarShellDanSheWuJiZhongShiTiShiProcedure.execute(this.level(), this);
+        onHit();
+    }
+
+    private void onHit() {
+        if (this.level() instanceof ServerLevel server) {
+            MedexpProcedure.execute(this.level(), this.getX(), getY(), getZ());
+            server.explode(this, (this.getX()), (this.getY()), (this.getZ()), 7.5f, Level.ExplosionInteraction.NONE);
+        }
     }
 
     @Override
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
-        MortarShellDanSheWuJiZhongShiTiShiProcedure.execute(this.level(), this);
+        onHit();
     }
 
     @Override
