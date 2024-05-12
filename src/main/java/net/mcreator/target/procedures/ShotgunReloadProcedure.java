@@ -4,7 +4,7 @@ import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 
-public class AA12ReloadProcedure {
+public class ShotgunReloadProcedure {
     public static void execute(LivingEntity entity, boolean plusOne) {
         CompoundTag tag = entity.getMainHandItem().getOrCreateTag();
         double mag = tag.getDouble("mag");
