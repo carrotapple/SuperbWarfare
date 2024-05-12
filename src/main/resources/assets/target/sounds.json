@@ -133,7 +133,7 @@
   "m_79_veryfar": {
     "sounds": [
       {
-        "name": "target:m_79/v_veryfar",
+        "name": "target:m_79/m_79_veryfar",
         "stream": false
       }
     ]

@@ -12,109 +12,6 @@
 				}
 			}
 		},
-		"animation.aa12.hit": {
-			"animation_length": 0.58333,
-			"bones": {
-				"main": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.2083": {
-							"vector": [-147.50541, 34.52809, 101.28078],
-							"easing": "easeOutSine"
-						},
-						"0.4167": {
-							"vector": [-13.26827, 5.92455, 35.88217],
-							"easing": "easeInSine"
-						},
-						"0.5833": {
-							"vector": [0, 0, 0],
-							"easing": "easeOutSine"
-						}
-					},
-					"position": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.0833": {
-							"vector": [3.36, -2.44, -4.42]
-						},
-						"0.2083": {
-							"vector": [8.55, -0.7, -9.85],
-							"easing": "easeOutSine"
-						},
-						"0.4167": {
-							"vector": [0.97, 0.75, -3.12],
-							"easing": "easeInSine"
-						},
-						"0.5833": {
-							"vector": [0, 0, 0],
-							"easing": "easeOutSine"
-						}
-					}
-				},
-				"rightarm": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.2917": {
-							"vector": [112.5, 0, 0],
-							"easing": "easeOutSine"
-						},
-						"0.5833": {
-							"vector": [0, 0, 0],
-							"easing": "easeOutSine"
-						}
-					},
-					"position": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.2917": {
-							"vector": [0, 15, -10],
-							"easing": "easeOutSine"
-						},
-						"0.5833": {
-							"vector": [0, 0, 0],
-							"easing": "easeOutSine"
-						}
-					}
-				},
-				"leftarm": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.2917": {
-							"vector": [135, 0, 0],
-							"easing": "easeOutSine"
-						},
-						"0.5833": {
-							"vector": [0, 0, 0],
-							"easing": "easeOutSine"
-						}
-					},
-					"position": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.125": {
-							"vector": [-3.93, 44.17, -9.98]
-						},
-						"0.2917": {
-							"vector": [-6.3, 50, -16],
-							"easing": "easeOutSine"
-						},
-						"0.5833": {
-							"vector": [0, 0, 0],
-							"easing": "easeOutSine"
-						}
-					}
-				}
-			}
-		},
 		"animation.aa12.changefirerate": {
 			"animation_length": 0.5,
 			"bones": {
@@ -757,25 +654,7 @@
 			},
 			"sound_effects": {
 				"0.0": {
-					"effect": "ak_magout"
-				},
-				"0.1333": {
-					"effect": "m4_magout"
-				},
-				"0.5": {
-					"effect": "foley_start"
-				},
-				"1.0333": {
-					"effect": "ak_magin"
-				},
-				"1.1": {
-					"effect": "m4_magin"
-				},
-				"1.8": {
-					"effect": "wa2000_actionback"
-				},
-				"1.9667": {
-					"effect": "wa2000_actionforward"
+					"effect": "ouch"
 				}
 			}
 		},
