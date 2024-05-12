@@ -1,19 +1,16 @@
 package net.mcreator.target.item.common.ammo;
 
-import net.mcreator.target.procedures.ShotgunAmmoBoxWanJiaWanChengShiYongWuPinShiProcedure;
+import net.mcreator.target.tools.GunInfo;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class ShotgunAmmoBox extends Item {
+public class ShotgunAmmoBox extends AmmoSupplierItem {
     public ShotgunAmmoBox() {
-        super(new Item.Properties().stacksTo(8).rarity(Rarity.COMMON));
+        super(GunInfo.Type.SHOTGUN, 12, new Item.Properties().stacksTo(8).rarity(Rarity.COMMON));
     }
 
     @Override
@@ -29,12 +26,5 @@ public class ShotgunAmmoBox extends Item {
     @Override
     public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
         list.add(Component.translatable("des.target.shotgun_ammo_box").withStyle(ChatFormatting.GRAY));
-    }
-
-    @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player entity, InteractionHand hand) {
-        InteractionResultHolder<ItemStack> ar = super.use(world, entity, hand);
-        ShotgunAmmoBoxWanJiaWanChengShiYongWuPinShiProcedure.execute(entity, ar.getObject());
-        return ar;
     }
 }

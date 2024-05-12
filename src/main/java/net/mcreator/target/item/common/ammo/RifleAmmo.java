@@ -1,10 +1,7 @@
 package net.mcreator.target.item.common.ammo;
 
-import net.mcreator.target.procedures.RifleAmmoYouJiKongQiShiShiTiDeWeiZhiProcedure;
+import net.mcreator.target.tools.GunInfo;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
@@ -13,20 +10,13 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class RifleAmmo extends Item {
+public class RifleAmmo extends AmmoSupplierItem {
     public RifleAmmo() {
-        super(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON));
+        super(GunInfo.Type.RIFLE, 5, new Item.Properties().stacksTo(64).rarity(Rarity.COMMON));
     }
 
     @Override
     public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(itemstack, world, list, flag);
-    }
-
-    @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player entity, InteractionHand hand) {
-        InteractionResultHolder<ItemStack> ar = super.use(world, entity, hand);
-        RifleAmmoYouJiKongQiShiShiTiDeWeiZhiProcedure.execute(entity, ar.getObject());
-        return ar;
     }
 }

@@ -6,11 +6,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 
 public class GunReload {
-    public static void reload(Entity entity, GunType gunType) {
-        reload(entity, gunType, false);
+    public static void reload(Entity entity, GunInfo.Type type) {
+        reload(entity, type, false);
     }
 
-    public static void reload(Entity entity, GunType gunType, boolean extraOne) {
+    public static void reload(Entity entity, GunInfo.Type type, boolean extraOne) {
         if (!(entity instanceof LivingEntity living)) return;
 
         CompoundTag tag = living.getMainHandItem().getOrCreateTag();
@@ -19,7 +19,7 @@ public class GunReload {
         double ammo = tag.getDouble("ammo");
         double ammoToAdd = mag - ammo + (extraOne ? 1 : 0);
 
-        double playerAmmo = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> switch (gunType) {
+        double playerAmmo = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> switch (type) {
             case RIFLE -> c.rifleAmmo;
             case HANDGUN -> c.handgunAmmo;
             case SHOTGUN -> c.shotgunAmmo;
@@ -34,9 +34,5 @@ public class GunReload {
 
         tag.putDouble("reloading", 0);
         tag.putDouble("emptyreload", 0);
-    }
-
-    public enum GunType {
-        HANDGUN, RIFLE, SHOTGUN, SNIPER
     }
 }

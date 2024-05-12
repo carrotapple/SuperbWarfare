@@ -9,6 +9,7 @@ import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.procedures.WeaponDrawLightProcedure;
+import net.mcreator.target.tools.GunInfo;
 import net.mcreator.target.tools.GunReload;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.TooltipTool;
@@ -179,7 +180,7 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
                 tag.putDouble("reloadtime", 0);
             }
             if (tag.getDouble("reloadtime") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
-                GunReload.reload(entity, GunReload.GunType.HANDGUN);
+                GunReload.reload(entity, GunInfo.Type.HANDGUN);
             }
         } else if (tag.getDouble("reloading") == 1 && tag.getDouble("ammo") > 0) {
             if (tag.getDouble("reloadtime") == 47) {
@@ -196,7 +197,7 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
                 tag.putDouble("reloadtime", 0);
             }
             if (tag.getDouble("reloadtime") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
-                GunReload.reload(entity, GunReload.GunType.HANDGUN, true);
+                GunReload.reload(entity, GunInfo.Type.HANDGUN, true);
             }
         }
 
