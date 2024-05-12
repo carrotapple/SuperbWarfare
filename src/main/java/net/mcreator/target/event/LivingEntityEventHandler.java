@@ -1,5 +1,6 @@
 package net.mcreator.target.event;
 
+import net.mcreator.target.entity.BocekarrowEntity;
 import net.mcreator.target.entity.Target1Entity;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
@@ -13,6 +14,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -33,6 +35,7 @@ public class LivingEntityEventHandler {
     public static void onEntityAttacked(LivingAttackEvent event) {
         if (event == null || event.getEntity() == null) return;
         arrowDamageImmuneForMine(event, event.getSource(), event.getSource().getEntity());
+        arrowDamage(event, event.getEntity().level(), event.getSource(), event.getEntity(), event.getSource().getDirectEntity(), event.getSource().getEntity(), event.getAmount());
     }
 
     @SubscribeEvent
@@ -45,6 +48,15 @@ public class LivingEntityEventHandler {
         if (entity == null) return;
         if (entity instanceof Target1Entity && entity.getPersistentData().getDouble("targetdown") > 0) {
             event.setCanceled(true);
+        }
+    }
+
+    // TODO 把伤害逻辑移植到箭类中
+    private static void arrowDamage(LivingAttackEvent event, LevelAccessor world, DamageSource damagesource, Entity entity, Entity immediatesourceentity, Entity sourceentity, double amount) {
+        if (damagesource == null || entity == null || immediatesourceentity == null || sourceentity == null) return;
+        if (damagesource.is(DamageTypes.ARROW) && immediatesourceentity instanceof BocekarrowEntity) {
+            event.setCanceled(true);
+            entity.hurt(new DamageSource(world.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("target:arrow_in_brain"))), sourceentity), (float) amount);
         }
     }
 
