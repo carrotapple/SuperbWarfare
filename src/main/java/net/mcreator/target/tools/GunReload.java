@@ -1,0 +1,42 @@
+package net.mcreator.target.tools;
+
+import net.mcreator.target.network.TargetModVariables;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+
+public class GunReload {
+    public static void reload(Entity entity, GunType gunType) {
+        reload(entity, gunType, false);
+    }
+
+    public static void reload(Entity entity, GunType gunType, boolean extraOne) {
+        if (!(entity instanceof LivingEntity living)) return;
+
+        CompoundTag tag = living.getMainHandItem().getOrCreateTag();
+
+        double mag = tag.getDouble("mag");
+        double ammo = tag.getDouble("ammo");
+        double ammoToAdd = mag - ammo + (extraOne ? 1 : 0);
+
+        double playerAmmo = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> switch (gunType) {
+            case RIFLE -> c.rifleAmmo;
+            case HANDGUN -> c.handgunAmmo;
+            case SHOTGUN -> c.shotgunAmmo;
+            case SNIPER -> c.sniperAmmo;
+        }).orElse(0d);
+
+        entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            capability.sniperAmmo = Math.max(0, playerAmmo - ammoToAdd);
+            capability.syncPlayerVariables(entity);
+        });
+        tag.putDouble("ammo", ammo + Math.min(ammoToAdd, playerAmmo));
+
+        tag.putDouble("reloading", 0);
+        tag.putDouble("emptyreload", 0);
+    }
+
+    public enum GunType {
+        HANDGUN, RIFLE, SHOTGUN, SNIPER
+    }
+}

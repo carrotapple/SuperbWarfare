@@ -1,5 +1,6 @@
 package net.mcreator.target.procedures;
 
+import net.mcreator.target.tools.GunReload;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
@@ -36,9 +37,7 @@ public class Aa12WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 itemstack.getOrCreateTag().putDouble("reloadtime", 0);
             }
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                if (entity instanceof LivingEntity) {
-                    ShotgunReloadProcedure.execute((LivingEntity) entity);
-                }
+                GunReload.reload(entity, GunReload.GunType.SHOTGUN);
             }
         } else if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getDouble("ammo") > 0) {
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 41) {
@@ -61,9 +60,7 @@ public class Aa12WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 itemstack.getOrCreateTag().putDouble("reloadtime", 0);
             }
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                if (entity instanceof LivingEntity) {
-                    ShotgunReloadProcedure.execute((LivingEntity) entity, true);
-                }
+                GunReload.reload(entity, GunReload.GunType.SHOTGUN, true);
             }
         }
         WeaponDrawProcedure.execute(entity, itemstack);

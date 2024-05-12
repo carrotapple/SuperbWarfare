@@ -1,5 +1,6 @@
 package net.mcreator.target.procedures;
 
+import net.mcreator.target.tools.GunReload;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
@@ -42,7 +43,7 @@ public class M60WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 itemstack.getOrCreateTag().putDouble("reloadtime", 0);
             }
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                RifleReloadProcedure.execute(entity);
+                GunReload.reload(entity, GunReload.GunType.RIFLE);
             }
         } else if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getDouble("ammo") > 0) {
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 111) {
@@ -65,7 +66,7 @@ public class M60WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 itemstack.getOrCreateTag().putDouble("reloadtime", 0);
             }
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                RifleReloadProcedure.execute(entity);
+                GunReload.reload(entity, GunReload.GunType.RIFLE);
             }
         }
         WeapondrawhaveyProcedure.execute(entity, itemstack);

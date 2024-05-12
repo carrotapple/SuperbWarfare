@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import net.mcreator.target.client.renderer.item.BocekItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
-import net.mcreator.target.procedures.BocekreloadProcedure;
+import net.mcreator.target.procedures.BocekReloadProcedure;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.RarityTool;
 import net.mcreator.target.tools.TooltipTool;
@@ -147,7 +147,7 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
         if (entity instanceof Player player) {
             itemstack.getOrCreateTag().putDouble("maxammo", getAmmoCount(player));
         }
-        BocekreloadProcedure.execute(entity, itemstack);
+        BocekReloadProcedure.execute(entity, itemstack);
     }
 
     public static double getAmmoCount(Player player) {

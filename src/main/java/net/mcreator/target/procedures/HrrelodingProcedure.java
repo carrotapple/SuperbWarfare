@@ -1,5 +1,6 @@
 package net.mcreator.target.procedures;
 
+import net.mcreator.target.tools.GunReload;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
@@ -41,7 +42,7 @@ public class HrrelodingProcedure {
                 itemstack.getOrCreateTag().putDouble("reloadtime", 0);
             }
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                SniperReload1Procedure.execute(entity);
+                GunReload.reload(entity, GunReload.GunType.SNIPER);
             }
         }
         WeaponDrawProcedure.execute(entity, itemstack);
