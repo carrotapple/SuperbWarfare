@@ -76,7 +76,7 @@ public class TargetModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, TargetMod.MODID);
 
     public static final RegistryObject<Item> SENPAI_SPAWN_EGG = ITEMS.register("senpai_spawn_egg", () -> new ForgeSpawnEggItem(TargetModEntities.SENPAI, -11584987, -14014413, new Item.Properties()));
-    public static final RegistryObject<Item> TARGET_DEPLOYER = ITEMS.register("target_deployer", Targetdeployer::new);
+    public static final RegistryObject<Item> TARGET_DEPLOYER = ITEMS.register("target_deployer", TargetDeployer::new);
     public static final RegistryObject<Item> SANDBAG = block(TargetModBlocks.SANDBAG);
     public static final RegistryObject<Item> BARBED_WIRE = block(TargetModBlocks.BARBED_WIRE);
     public static final RegistryObject<Item> CLAYMORE_MINE = ITEMS.register("claymore_mine", ClaymoreMineItem::new);
