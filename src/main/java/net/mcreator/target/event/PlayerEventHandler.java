@@ -60,6 +60,7 @@ public class PlayerEventHandler {
             handleSpecialWeaponAmmo(player);
             handleChangeFireRate(player);
             handleDistantRange(player);
+            renderDamageIndicator(player);
         }
     }
 
@@ -314,5 +315,39 @@ public class PlayerEventHandler {
                     player.displayClientMessage(Component.literal("---M"), true);
             }
         }
+    }
+
+
+    private static void renderDamageIndicator(Player player) {
+        double[] recoilTimer = {0};
+        double totalTime = 10;
+        int sleepTime = 2;
+        double recoilDuration = totalTime / sleepTime;
+        Runnable recoilRunnable = () -> {
+            while (recoilTimer[0] < recoilDuration) {
+                if (player == null) return;
+
+                player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    var headIndicator = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.headIndicator).orElse(0d);
+                    var hitIndicator = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.headIndicator).orElse(0d);
+                    var killIndicator = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.killIndicator).orElse(0d);
+
+                    capability.headIndicator = Math.max(0, headIndicator - 1);
+                    capability.hitIndicator = Math.max(0, hitIndicator - 1);
+                    capability.killIndicator = Math.max(0, killIndicator - 1);
+
+                    capability.syncPlayerVariables(player);
+                });
+
+                recoilTimer[0]++;
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Thread recoilThread = new Thread(recoilRunnable);
+        recoilThread.start();
     }
 }
