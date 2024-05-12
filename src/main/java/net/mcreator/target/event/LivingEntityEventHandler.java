@@ -36,6 +36,7 @@ public class LivingEntityEventHandler {
         if (event == null || event.getEntity() == null) return;
         arrowDamageImmuneForMine(event, event.getSource(), event.getSource().getEntity());
         arrowDamage(event, event.getEntity().level(), event.getSource(), event.getEntity(), event.getSource().getDirectEntity(), event.getSource().getEntity(), event.getAmount());
+        claymoreDamage(event, event.getEntity().level(), event.getSource(), event.getEntity(), event.getSource().getEntity(), event.getAmount());
     }
 
     @SubscribeEvent
@@ -48,6 +49,17 @@ public class LivingEntityEventHandler {
         if (entity == null) return;
         if (entity instanceof Target1Entity && entity.getPersistentData().getDouble("targetdown") > 0) {
             event.setCanceled(true);
+        }
+    }
+
+    private static void claymoreDamage(LivingAttackEvent event, LevelAccessor world, DamageSource damagesource, Entity entity, Entity sourceentity, double amount) {
+        if (damagesource == null || entity == null || sourceentity == null)
+            return;
+        if ((damagesource.is(DamageTypes.EXPLOSION) || damagesource.is(DamageTypes.PLAYER_EXPLOSION)) && entity.getPersistentData().getDouble("claymore") > 0) {
+            if (event != null && event.isCancelable()) {
+                event.setCanceled(true);
+            }
+            entity.hurt(new DamageSource(world.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("target:mine"))), sourceentity), (float) amount);
         }
     }
 
