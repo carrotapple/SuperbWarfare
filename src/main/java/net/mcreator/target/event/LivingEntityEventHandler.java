@@ -2,6 +2,7 @@ package net.mcreator.target.event;
 
 import net.mcreator.target.entity.BocekarrowEntity;
 import net.mcreator.target.entity.Target1Entity;
+import net.mcreator.target.init.TargetModDamageTypes;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.commands.CommandSource;
@@ -59,7 +60,7 @@ public class LivingEntityEventHandler {
             if (event != null && event.isCancelable()) {
                 event.setCanceled(true);
             }
-            entity.hurt(new DamageSource(world.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("target:mine"))), sourceentity), (float) amount);
+            entity.hurt(TargetModDamageTypes.causeMineDamage(world.registryAccess(), sourceentity), (float) amount);
         }
     }
 
@@ -68,7 +69,7 @@ public class LivingEntityEventHandler {
         if (damagesource == null || entity == null || immediatesourceentity == null || sourceentity == null) return;
         if (damagesource.is(DamageTypes.ARROW) && immediatesourceentity instanceof BocekarrowEntity) {
             event.setCanceled(true);
-            entity.hurt(new DamageSource(world.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("target:arrow_in_brain"))), sourceentity), (float) amount);
+            entity.hurt(TargetModDamageTypes.causeArrowInBrainDamage(world.registryAccess(), sourceentity), (float) amount);
         }
     }
 
