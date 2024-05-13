@@ -48,7 +48,7 @@ public class ClickHandler {
 
         int button = event.getButton();
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            TargetMod.PACKET_HANDLER.sendToServer(new FireMessage(1, 0));
+            TargetMod.PACKET_HANDLER.sendToServer(new FireMessage(1));
         }
 
     }
@@ -75,7 +75,7 @@ public class ClickHandler {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if ((player.getMainHandItem()).is(ItemTags.create(new ResourceLocation("target:gun")))) {
                 event.setCanceled(true);
-                TargetMod.PACKET_HANDLER.sendToServer(new FireMessage(0, 0));
+                TargetMod.PACKET_HANDLER.sendToServer(new FireMessage(0));
             }
         }
     }
