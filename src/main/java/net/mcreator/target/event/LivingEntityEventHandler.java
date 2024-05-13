@@ -4,20 +4,26 @@ import net.mcreator.target.entity.BocekarrowEntity;
 import net.mcreator.target.entity.Target1Entity;
 import net.mcreator.target.init.TargetModDamageTypes;
 import net.mcreator.target.init.TargetModTags;
+import net.mcreator.target.item.gun.GunItem;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -116,5 +122,36 @@ public class LivingEntityEventHandler {
                 capability.syncPlayerVariables(sourceEntity);
             });
         }
+    }
+
+    /**
+     * 换弹时切换枪械，取消换弹音效播放
+     */
+    @SubscribeEvent
+    public static void handleChangeSlot(LivingEquipmentChangeEvent event) {
+        if (event.getEntity() instanceof Player player && event.getSlot() == EquipmentSlot.MAINHAND) {
+            if (player.level().isClientSide || player.level().getServer() == null) {
+                return;
+            }
+
+            ItemStack oldStack = event.getFrom();
+            ItemStack newStack = event.getTo();
+
+            if (oldStack.getItem() instanceof GunItem oldGun && player.level() instanceof ServerLevel serverLevel) {
+                if (newStack.getItem() != oldStack.getItem()) {
+                    stopGunReloadSound(serverLevel, oldGun);
+                } else if (!newStack.getOrCreateTag().hasUUID("gun_uuid") || !oldStack.getOrCreateTag().hasUUID("gun_uuid") ||
+                        !newStack.getOrCreateTag().getUUID("gun_uuid").equals(oldStack.getOrCreateTag().getUUID("gun_uuid"))) {
+                    stopGunReloadSound(serverLevel, oldGun);
+                }
+            }
+        }
+    }
+
+    private static void stopGunReloadSound(ServerLevel server, GunItem gun) {
+        gun.getReloadSound().forEach(sound -> {
+            var clientboundstopsoundpacket = new ClientboundStopSoundPacket(sound.getLocation(), SoundSource.PLAYERS);
+            server.players().forEach(p -> p.connection.send(clientboundstopsoundpacket));
+        });
     }
 }

@@ -21,6 +21,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = TargetMod.MODID)
 public class GunsTool {
@@ -72,6 +73,11 @@ public class GunsTool {
         } else {
             stack.getOrCreateTag().putDouble("damageadd", 1);
         }
+    }
+
+    public static void genUUID(ItemStack stack) {
+        UUID uuid = UUID.randomUUID();
+        stack.getOrCreateTag().putUUID("gun_uuid", uuid);
     }
 
     @SubscribeEvent
