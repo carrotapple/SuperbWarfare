@@ -6,6 +6,7 @@ import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -28,6 +29,7 @@ public class ClientEventHandler {
             handleWeaponZoom(living);
             handleWeaponFire(event, living);
             handleShockCamera(event, living);
+            handleBowPullAnimation(living);
         }
     }
 
@@ -322,6 +324,33 @@ public class ClientEventHandler {
             event.setPitch(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot());
             event.setRoll((float) Mth.nextDouble(RandomSource.create(), 8, 12));
         }
+    }
+
+    private static void handleBowPullAnimation(LivingEntity entity) {
+        float fps = Minecraft.getInstance().getFps();
+        if (fps <= 0) {
+            fps = 1f;
+        }
+
+        float times = 90f / fps;
+        CompoundTag persistentData = entity.getPersistentData();
+
+        if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).bowPull) {
+            persistentData.putDouble("pulltime", Math.min(persistentData.getDouble("pulltime") + 0.014 * times, 1));
+            persistentData.putDouble("bowtime", Math.min(persistentData.getDouble("bowtime") + 0.014 * times, 1));
+            persistentData.putDouble("handtime", Math.min(persistentData.getDouble("handtime") + 0.014 * times, 1));
+            persistentData.putDouble("handpos", (0.5 * Math.cos(Math.PI * Math.pow(Math.pow(persistentData.getDouble("handtime"), 2) - 1, 2)) + 0.5));
+        } else {
+            persistentData.putDouble("pulltime", Math.max(persistentData.getDouble("pulltime") - 0.009 * times, 0));
+            persistentData.putDouble("bowtime", Math.max(persistentData.getDouble("bowtime") - 1 * times, 0));
+            persistentData.putDouble("handtime", Math.max(persistentData.getDouble("handtime") - 0.04 * times, 0));
+            if (persistentData.getDouble("handtime") > 0 && persistentData.getDouble("handtime") < 0.5) {
+                persistentData.putDouble("handpos", (0.5 * Math.cos(Math.PI * Math.pow(Math.pow(persistentData.getDouble("handtime"), 2) - 1, 2)) + 0.5));
+            }
+        }
+
+        persistentData.putDouble("pullpos", (0.5 * Math.cos(Math.PI * Math.pow(Math.pow(persistentData.getDouble("pulltime"), 2) - 1, 2)) + 0.5));
+        persistentData.putDouble("bowpos", (0.5 * Math.cos(Math.PI * Math.pow(Math.pow(persistentData.getDouble("bowtime"), 2) - 1, 2)) + 0.5));
     }
 
 }
