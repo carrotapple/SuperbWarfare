@@ -66,8 +66,9 @@ public class PlayerEventHandler {
             handleSpecialWeaponAmmo(player);
             handleChangeFireRate(player);
             handleDistantRange(player);
-            renderDamageIndicator(player);
-            bocekPulling(player);
+            handleRenderDamageIndicator(player);
+            handleBocekPulling(player);
+            handleGunRecoil(player);
         }
     }
 
@@ -325,7 +326,7 @@ public class PlayerEventHandler {
     }
 
 
-    private static void renderDamageIndicator(Player player) {
+    private static void handleRenderDamageIndicator(Player player) {
         double[] recoilTimer = {0};
         double totalTime = 10;
         int sleepTime = 2;
@@ -358,7 +359,7 @@ public class PlayerEventHandler {
         recoilThread.start();
     }
 
-    private static void bocekPulling(Player player) {
+    private static void handleBocekPulling(Player player) {
         ItemStack mainHandItem = player.getMainHandItem();
         CompoundTag tag = mainHandItem.getOrCreateTag();
 
@@ -393,5 +394,78 @@ public class PlayerEventHandler {
                 capability.syncPlayerVariables(player);
             });
         }
+    }
+
+    private static void handleGunRecoil(Player player) {
+        ItemStack stack = player.getMainHandItem();
+
+        if (!stack.is(TargetModTags.Items.GUN)) {
+            return;
+        }
+
+        float recoilX = (float) stack.getOrCreateTag().getDouble("recoilx");
+        float recoilY = (float) stack.getOrCreateTag().getDouble("recoily");
+        float recoilYaw = (float) (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon;
+
+        double[] recoilTimer = {0};
+        double totalTime = 100;
+        int sleepTime = 2;
+        double recoilDuration = totalTime / sleepTime;
+
+        Runnable recoilRunnable = () -> {
+            while (recoilTimer[0] < recoilDuration) {
+                float rx;
+                float ry;
+                if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && player.getPersistentData().getDouble("prone") == 0) {
+                    rx = 0.7f;
+                    ry = 0.8f;
+                } else if (player.getPersistentData().getDouble("prone") > 0) {
+                    if (stack.getOrCreateTag().getDouble("bipod") == 1) {
+                        rx = 0.05f;
+                        ry = 0.1f;
+                    } else {
+                        rx = 0.5f;
+                        ry = 0.7f;
+                    }
+                } else {
+                    rx = 1f;
+                    ry = 1f;
+                }
+
+                double recoil = (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoil;
+                if (recoil >= 1) {
+                    player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        capability.recoil = 0;
+                        capability.syncPlayerVariables(player);
+                    });
+                }
+
+                if (recoil > 0) {
+                    player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        capability.recoil = recoil + 0.0025;
+                        capability.syncPlayerVariables(player);
+                    });
+
+                    double sinRes = Math.sin(2 * Math.PI * (1.03f * recoil - 0.032047110911)) + 0.2;
+
+                    float newPitch = ((float) (player.getXRot() - 1.5f * recoilY * ry * sinRes));
+                    player.setXRot(newPitch);
+                    player.xRotO = player.getXRot();
+
+                    float newYaw = ((float) (player.getYRot() - 1.0f * recoilYaw * recoilX * rx * sinRes));
+                    player.setYRot(newYaw);
+                    player.yRotO = player.getYRot();
+                }
+
+                recoilTimer[0]++;
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Thread recoilThread = new Thread(recoilRunnable);
+        recoilThread.start();
     }
 }
