@@ -47,9 +47,9 @@ public class SksItemModel extends GeoModel<SksItem> {
         double zp = 0;
         zp = player.getPersistentData().getDouble("zoomposz");
 
-        gun.setPosX(1.65f * (float) p);
+        gun.setPosX(2.09f * (float) p);
 
-        gun.setPosY(0.63f * (float) p - (float) (0.6f * zp));
+        gun.setPosY(0.83f * (float) p - (float) (0.6f * zp));
 
         gun.setPosZ(4f * (float) p + (float) (0.5f * zp));
 
