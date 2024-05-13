@@ -337,7 +337,7 @@ public class PlayerEventHandler {
 
                 player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                     var headIndicator = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.headIndicator).orElse(0d);
-                    var hitIndicator = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.headIndicator).orElse(0d);
+                    var hitIndicator = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.hitIndicator).orElse(0d);
                     var killIndicator = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.killIndicator).orElse(0d);
 
                     capability.headIndicator = Math.max(0, headIndicator - 1);
