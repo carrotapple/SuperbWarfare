@@ -53,21 +53,21 @@ public class Aa12ItemModel extends GeoModel<Aa12Item> {
         fp = player.getPersistentData().getDouble("firepos");
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-            shen.setPosZ(2f * (float) fp);
+            shen.setPosZ(5f * (float) fp);
         } else {
-            shen.setPosZ(4f * (float) fp);
+            shen.setPosZ(6f * (float) fp);
         }
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-            shen.setRotX(0.002f * (float) fp);
+            shen.setRotX(0.03f * (float) fp);
         } else {
-            shen.setRotX(0.02f * (float) fp);
+            shen.setRotX(0.06f * (float) fp);
         }
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == 1) {
-            shen.setRotZ(0.003f * (float) fp);
+            shen.setRotZ(0.007f * (float) fp);
         } else {
-            shen.setRotZ(-0.003f * (float) fp);
+            shen.setRotZ(-0.007f * (float) fp);
         }
 
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
