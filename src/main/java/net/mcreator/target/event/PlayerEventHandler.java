@@ -397,15 +397,14 @@ public class PlayerEventHandler {
     }
 
     private static void handleGunRecoil(Player player) {
-        ItemStack stack = player.getMainHandItem();
+        if (!player.getMainHandItem().is(TargetModTags.Items.GUN)) return;
 
-        if (!stack.is(TargetModTags.Items.GUN)) {
-            return;
-        }
+        CompoundTag tag = player.getMainHandItem().getOrCreateTag();
+        float recoilX = (float) tag.getDouble("recoilx");
+        float recoilY = (float) tag.getDouble("recoily");
 
-        float recoilX = (float) stack.getOrCreateTag().getDouble("recoilx");
-        float recoilY = (float) stack.getOrCreateTag().getDouble("recoily");
-        float recoilYaw = (float) (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon;
+        var capability = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null);
+        float recoilYaw = capability.map(c -> c.recoilHorizon).orElse(0d).floatValue();
 
         double[] recoilTimer = {0};
         double totalTime = 100;
@@ -414,13 +413,12 @@ public class PlayerEventHandler {
 
         Runnable recoilRunnable = () -> {
             while (recoilTimer[0] < recoilDuration) {
-                float rx;
-                float ry;
+                float rx, ry;
                 if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && player.getPersistentData().getDouble("prone") == 0) {
                     rx = 0.7f;
                     ry = 0.8f;
                 } else if (player.getPersistentData().getDouble("prone") > 0) {
-                    if (stack.getOrCreateTag().getDouble("bipod") == 1) {
+                    if (tag.getDouble("bipod") == 1) {
                         rx = 0.05f;
                         ry = 0.1f;
                     } else {
@@ -432,20 +430,14 @@ public class PlayerEventHandler {
                     ry = 1f;
                 }
 
-                if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoil >= 1) {
-                    player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                        capability.recoil = 0;
-                        capability.syncPlayerVariables(player);
-                    });
-                }
+                double recoil = capability.map(c -> c.recoil).orElse(0d);
 
-                if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoil > 0) {
-                    player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                        capability.recoil = (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoil + 0.0025;
-                        capability.syncPlayerVariables(player);
-                    });
+                if (recoil >= 1) recoil = 0d;
 
-                    double sinRes = Math.sin(2 * Math.PI * (1.03f * (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoil - 0.032047110911)) + 0.2;
+                if (recoil > 0) {
+                    recoil += 0.0025;
+
+                    double sinRes = Math.sin(2 * Math.PI * (1.03f * recoil - 0.032047110911)) + 0.2;
 
                     float newPitch = ((float) (player.getXRot() - 1.5f * recoilY * ry * sinRes));
                     player.setXRot(newPitch);
@@ -455,6 +447,12 @@ public class PlayerEventHandler {
                     player.setYRot(newYaw);
                     player.yRotO = player.getYRot();
                 }
+
+                double finalRecoil = recoil;
+                capability.ifPresent(c -> {
+                    c.recoil = finalRecoil;
+                    c.syncPlayerVariables(player);
+                });
 
                 recoilTimer[0]++;
                 try {
