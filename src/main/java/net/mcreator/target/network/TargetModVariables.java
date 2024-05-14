@@ -358,7 +358,8 @@ public class TargetModVariables {
             NetworkEvent.Context context = contextSupplier.get();
             context.enqueueWork(() -> {
                 context.setPacketHandled(true);
-                if (context.getDirection().getReceptionSide().isServer()) return;
+                if (context.getDirection().getReceptionSide().isServer() || Minecraft.getInstance().player == null)
+                    return;
 
                 PlayerVariables variables = Minecraft.getInstance().player.level().getEntity(message.target).getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
                 variables.zoom = message.data.zoom;
