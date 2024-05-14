@@ -1,13 +1,10 @@
 package net.mcreator.target.mixins;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Camera;
+import net.mcreator.target.init.TargetModTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -34,4 +31,15 @@ public class GameRendererMixin {
 //    public void renderItemInHandEnd(PoseStack p_109121_, Camera p_109122_, float p_109123_, CallbackInfo ci) {
 //        Minecraft.getInstance().options.bobView().set(flag);
 //    }
+
+    @Inject(method = "bobView(Lcom/mojang/blaze3d/vertex/PoseStack;F)V", at = @At("HEAD"), cancellable = true)
+    public void bobView(PoseStack p_109139_, float p_109140_, CallbackInfo ci) {
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
+        if (player != null) {
+            if (player.getMainHandItem().is(TargetModTags.Items.GUN)) {
+                ci.cancel();
+            }
+        }
+    }
 }
