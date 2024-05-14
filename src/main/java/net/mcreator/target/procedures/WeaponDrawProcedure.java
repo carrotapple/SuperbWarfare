@@ -14,14 +14,8 @@ public class WeaponDrawProcedure {
         if (entity == null) return;
         CompoundTag tag = itemStack.getOrCreateTag();
         Item mainHandItem = (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem();
-        if (mainHandItem == itemStack.getItem()) {
-            if (tag.getDouble("draw") < 2) {
-                tag.putDouble("draw", (tag.getDouble("draw") + 1));
-            }
-        } else {
-            tag.putDouble("draw", 0);
-        }
-        if (tag.getDouble("draw") == 1) {
+
+        if (tag.getDouble("drawtime") == 1) {
             entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.zooming = false;
                 capability.syncPlayerVariables(entity);
@@ -39,8 +33,6 @@ public class WeaponDrawProcedure {
             if (tag.getDouble("drawtime") < 16) {
                 tag.putDouble("drawtime", (tag.getDouble("drawtime") + 1));
             }
-        } else {
-            tag.putDouble("drawtime", 0);
         }
         if (tag.getDouble("fireanim") > 0) {
             tag.putDouble("fireanim", (tag.getDouble("fireanim") - 1));

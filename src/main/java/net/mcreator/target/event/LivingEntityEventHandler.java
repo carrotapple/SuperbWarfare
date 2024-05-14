@@ -140,9 +140,34 @@ public class LivingEntityEventHandler {
             if (oldStack.getItem() instanceof GunItem oldGun && player.level() instanceof ServerLevel serverLevel) {
                 if (newStack.getItem() != oldStack.getItem()) {
                     stopGunReloadSound(serverLevel, oldGun);
+
+                    newStack.getOrCreateTag().putDouble("drawtime", 0);
+                    player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        capability.zoom = false;
+                        capability.syncPlayerVariables(player);
+                    });
+                    player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        capability.zooming = false;
+                        capability.syncPlayerVariables(player);
+                    });
+                    player.getPersistentData().putDouble("zoompos", 0);
+                    player.getPersistentData().putDouble("zoom_time", 0);
+
                 } else if (!newStack.getOrCreateTag().hasUUID("gun_uuid") || !oldStack.getOrCreateTag().hasUUID("gun_uuid") ||
                         !newStack.getOrCreateTag().getUUID("gun_uuid").equals(oldStack.getOrCreateTag().getUUID("gun_uuid"))) {
                     stopGunReloadSound(serverLevel, oldGun);
+
+                    newStack.getOrCreateTag().putDouble("drawtime", 0);
+                    player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        capability.zoom = false;
+                        capability.syncPlayerVariables(player);
+                    });
+                    player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        capability.zooming = false;
+                        capability.syncPlayerVariables(player);
+                    });
+                    player.getPersistentData().putDouble("zoompos", 0);
+                    player.getPersistentData().putDouble("zoom_time", 0);
                 }
             }
         }

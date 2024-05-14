@@ -10,14 +10,7 @@ public class WeaponDrawLightProcedure {
     public static void execute(Entity entity, ItemStack itemstack) {
         if (entity == null)
             return;
-        if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == itemstack.getItem()) {
-            if (itemstack.getOrCreateTag().getDouble("draw") < 2) {
-                itemstack.getOrCreateTag().putDouble("draw", (itemstack.getOrCreateTag().getDouble("draw") + 1));
-            }
-        } else {
-            itemstack.getOrCreateTag().putDouble("draw", 0);
-        }
-        if (itemstack.getOrCreateTag().getDouble("draw") == 1) {
+        if (itemstack.getOrCreateTag().getDouble("drawtime") == 1) {
             {
                 boolean _setval = false;
                 entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
@@ -35,8 +28,6 @@ public class WeaponDrawLightProcedure {
             if (itemstack.getOrCreateTag().getDouble("drawtime") < 11) {
                 itemstack.getOrCreateTag().putDouble("drawtime", (itemstack.getOrCreateTag().getDouble("drawtime") + 1));
             }
-        } else {
-            itemstack.getOrCreateTag().putDouble("drawtime", 0);
         }
     }
 }

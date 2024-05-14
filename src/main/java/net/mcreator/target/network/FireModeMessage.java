@@ -3,9 +3,14 @@ package net.mcreator.target.network;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -16,6 +21,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Supplier;
 
@@ -63,8 +69,10 @@ public class FireModeMessage {
             default -> "";
         };
 
-        player.displayClientMessage(Component.literal(text), true);
-        player.level().playSound(null, player.blockPosition(), TargetModSounds.FIRERATE.get(), SoundSource.PLAYERS, 10, 1);
+        if (player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("target:firerate"))),
+                    SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1f, 1f, serverPlayer.level().random.nextLong()));
+        }
 
         tag.putDouble("firemode", mode);
         tag.putDouble("cg", 10);
