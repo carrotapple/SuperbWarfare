@@ -21,7 +21,7 @@ public class SvdWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
             itemstack.getOrCreateTag().putDouble("reloadtime", 0);
         }
         if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getDouble("ammo") == 0) {
-            if (itemstack.getOrCreateTag().getDouble("reloadtime") == 57) {
+            if (itemstack.getOrCreateTag().getDouble("reloadtime") == 66) {
                 entity.getPersistentData().putDouble("id", id);
                 {
                     Entity _ent = entity;
@@ -48,7 +48,7 @@ public class SvdWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 GunReload.reload(entity, GunInfo.Type.SNIPER);
             }
         } else if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getDouble("ammo") > 0) {
-            if (itemstack.getOrCreateTag().getDouble("reloadtime") == 41) {
+            if (itemstack.getOrCreateTag().getDouble("reloadtime") == 55) {
                 entity.getPersistentData().putDouble("id", id);
                 {
                     Entity _ent = entity;
