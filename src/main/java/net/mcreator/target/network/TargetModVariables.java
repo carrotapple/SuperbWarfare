@@ -166,8 +166,12 @@ public class TargetModVariables {
         }
 
         public static MapVariables get(LevelAccessor world) {
-            if (world instanceof ServerLevelAccessor serverLevelAcc)
-                return serverLevelAcc.getLevel().getServer().getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(MapVariables::load, MapVariables::new, DATA_NAME);
+            if (world instanceof ServerLevelAccessor serverLevelAcc) {
+                var level = serverLevelAcc.getLevel().getServer().getLevel(Level.OVERWORLD);
+                if (level != null) {
+                    return level.getDataStorage().computeIfAbsent(MapVariables::load, MapVariables::new, DATA_NAME);
+                }
+            }
             return clientSide;
         }
 
@@ -358,10 +362,16 @@ public class TargetModVariables {
             NetworkEvent.Context context = contextSupplier.get();
             context.enqueueWork(() -> {
                 context.setPacketHandled(true);
-                if (context.getDirection().getReceptionSide().isServer() || Minecraft.getInstance().player == null)
+                if (context.getDirection().getReceptionSide().isServer() || Minecraft.getInstance().player == null) {
                     return;
+                }
 
-                PlayerVariables variables = Minecraft.getInstance().player.level().getEntity(message.target).getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
+                var entity = Minecraft.getInstance().player.level().getEntity(message.target);
+                if (entity == null) {
+                    return;
+                }
+
+                PlayerVariables variables = entity.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
                 variables.zoom = message.data.zoom;
                 variables.zooming = message.data.zooming;
                 variables.recoil = message.data.recoil;
