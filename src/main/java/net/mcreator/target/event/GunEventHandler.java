@@ -64,8 +64,8 @@ public class GunEventHandler {
                 double ride = player.isPassenger() ? (-0.5) * basic : 0;
 
                 double walk;
-                if (player.getPersistentData().getDouble("qian") == 1 || player.getPersistentData().getDouble("tui") == 1 ||
-                        player.getPersistentData().getDouble("mover") == 1 || player.getPersistentData().getDouble("movel") == 1) {
+                if (player.getPersistentData().getDouble("move_forward") == 1 || player.getPersistentData().getDouble("move_backward") == 1 ||
+                        player.getPersistentData().getDouble("move_left") == 1 || player.getPersistentData().getDouble("move_right") == 1) {
                     walk = 0.2 * basic;
                 } else {
                     walk = 0;

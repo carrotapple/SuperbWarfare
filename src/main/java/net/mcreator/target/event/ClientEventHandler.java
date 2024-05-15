@@ -47,11 +47,11 @@ public class ClientEventHandler {
                 entity.getPersistentData().putDouble("move", ((entity.getPersistentData().getDouble("move") - 1 * times * Math.pow(entity.getPersistentData().getDouble("move"), 2) * (1 - 1 * entity.getPersistentData().getDouble("zoomtime")))
                         * (1 - 1 * entity.getPersistentData().getDouble("zoomtime"))));
             }
-            if (entity.getPersistentData().getDouble("movel") == 1) {
+            if (entity.getPersistentData().getDouble("move_right") == 1) {
                 entity.getPersistentData().putDouble("move",
                         ((entity.getPersistentData().getDouble("move") + Math.pow(Math.abs(entity.getPersistentData().getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * entity.getPersistentData().getDouble("zoomtime")))
                                 * (1 - 0.1 * entity.getPersistentData().getDouble("zoomtime"))));
-            } else if (entity.getPersistentData().getDouble("mover") == 1) {
+            } else if (entity.getPersistentData().getDouble("move_left") == 1) {
                 entity.getPersistentData().putDouble("move",
                         ((entity.getPersistentData().getDouble("move") - Math.pow(Math.abs(entity.getPersistentData().getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * entity.getPersistentData().getDouble("zoomtime")))
                                 * (1 - 0.1 * entity.getPersistentData().getDouble("zoomtime"))));
