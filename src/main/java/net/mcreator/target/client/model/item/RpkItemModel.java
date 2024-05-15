@@ -45,11 +45,11 @@ public class RpkItemModel extends GeoModel<RpkItem> {
         double zp = 0;
         zp = player.getPersistentData().getDouble("zoomposz");
 
-        gun.setPosX(2.13f * (float) p);
+        gun.setPosX(1.69f * (float) p);
 
-        gun.setPosY(0.545f * (float) p - (float) (0.6f * zp));
+        gun.setPosY(-0.33f * (float) p - (float) (0.6f * zp));
 
-        gun.setPosZ(5.0f * (float) p + (float) (0.5f * zp));
+        gun.setPosZ(3.2f * (float) p + (float) (0.5f * zp));
 
         gun.setRotZ((float) (0.05f * zp));
 
@@ -63,12 +63,11 @@ public class RpkItemModel extends GeoModel<RpkItem> {
 
         button.setScaleZ(1f - (0.3f * (float) p));
 
-        gun.setRotZ(-0.087f * (float) p + (float) (0.05f * zp));
 
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
-        if (gun.getPosX() > 1.8) {
-            holo.setScaleX(1);
-            holo.setScaleY(1);
+        if (gun.getPosX() > 1.65f) {
+            holo.setScaleX(0.9f);
+            holo.setScaleY(0.9f);
             hide.setScaleX(0);
             hide.setScaleY(0);
             hide.setScaleZ(0);

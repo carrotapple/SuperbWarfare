@@ -141,7 +141,7 @@ public class LivingEntityEventHandler {
                 if (newStack.getItem() != oldStack.getItem()) {
                     stopGunReloadSound(serverLevel, oldGun);
 
-                    newStack.getOrCreateTag().putDouble("drawtime", 0);
+                    newStack.getOrCreateTag().putDouble("draw", 1);
                     player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                         capability.zoom = false;
                         capability.syncPlayerVariables(player);
@@ -157,7 +157,7 @@ public class LivingEntityEventHandler {
                         !newStack.getOrCreateTag().getUUID("gun_uuid").equals(oldStack.getOrCreateTag().getUUID("gun_uuid"))) {
                     stopGunReloadSound(serverLevel, oldGun);
 
-                    newStack.getOrCreateTag().putDouble("drawtime", 0);
+                    newStack.getOrCreateTag().putDouble("draw", 1);
                     player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                         capability.zoom = false;
                         capability.syncPlayerVariables(player);

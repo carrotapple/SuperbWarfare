@@ -242,17 +242,17 @@ public class PlayerReloadProcedure {
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo > 0
-                        && tag.getDouble("ammo") < 51) {
+                        && tag.getDouble("ammo") < 76) {
                     if (tag.getDouble("ammo") > 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 0);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloadtime", 41);
+                        tag.putDouble("reloadtime", 66);
                     } else if (tag.getDouble("ammo") == 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloadtime", 57);
+                        tag.putDouble("reloadtime", 83);
                     }
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.SENTINEL.get()
