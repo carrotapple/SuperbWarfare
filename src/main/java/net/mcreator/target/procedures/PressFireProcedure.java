@@ -22,17 +22,21 @@ public class PressFireProcedure {
         M870fireProcedure.execute(player);
         VectorFireProcedure.execute(player);
         player.getPersistentData().putDouble("firing", 1);
-        if (player.getMainHandItem().is(ItemTags.create(new ResourceLocation("target:gun")))
-                && !(player.getMainHandItem().getItem() == TargetModItems.BOCEK.get())
-                && !(player.getMainHandItem().getItem() == TargetModItems.MINIGUN.get())
-                && player.getMainHandItem().getOrCreateTag().getDouble("ammo") == 0
-                && player.getMainHandItem().getOrCreateTag().getDouble("reloading") != 1) {
+
+        var mainHandItem = player.getMainHandItem();
+        var tag = mainHandItem.getOrCreateTag();
+
+        if (mainHandItem.is(ItemTags.create(new ResourceLocation("target:gun")))
+                && !(mainHandItem.getItem() == TargetModItems.BOCEK.get())
+                && !(mainHandItem.getItem() == TargetModItems.MINIGUN.get())
+                && tag.getDouble("ammo") == 0
+                && tag.getDouble("reloading") != 1) {
             if (!player.level().isClientSide() && player.getServer() != null) {
                 player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
                         player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:triggerclick player @s ~ ~ ~ 10 1");
             }
         }
-        if (player.getMainHandItem().getItem() == TargetModItems.MINIGUN.get()
+        if (mainHandItem.getItem() == TargetModItems.MINIGUN.get()
                 && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo == 0) {
             if (!player.level().isClientSide() && player.getServer() != null) {
                 player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
@@ -43,7 +47,7 @@ public class PressFireProcedure {
             capability.bowPullHold = true;
             capability.syncPlayerVariables(player);
         });
-        if (player.getMainHandItem().getOrCreateTag().getDouble("ammo") == 0) {
+        if (tag.getDouble("ammo") == 0) {
             PlayerReloadProcedure.execute(player);
         }
     }
