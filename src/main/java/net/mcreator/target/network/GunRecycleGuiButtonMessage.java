@@ -6,8 +6,6 @@ import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.world.inventory.GunRecycleGuiMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -72,7 +70,7 @@ public class GunRecycleGuiButtonMessage {
         var slot0 = menu.get(0);
         var gun = slot0.getItem();
 
-        if (gun.is(ItemTags.create(new ResourceLocation("target:gun")))) {
+        if (gun.is(TargetModTags.Items.GUN)) {
             // 普通稀有度
             var material = switch (gun.getRarity()) {
                 case COMMON -> Items.IRON_INGOT;

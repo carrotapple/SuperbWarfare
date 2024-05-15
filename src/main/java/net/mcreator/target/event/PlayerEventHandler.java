@@ -9,10 +9,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -203,7 +201,7 @@ public class PlayerEventHandler {
                     + new java.text.DecimalFormat("##").format((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo) + " " + firemode;
         }
         if (stack.is(TargetModTags.Items.HANDGUN)
-                || stack.is(ItemTags.create(new ResourceLocation("target:smg")))) {
+                || stack.is(TargetModTags.Items.SMG)) {
             stack.getOrCreateTag().putDouble("maxammo",
                     ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).handgunAmmo));
             return (new java.text.DecimalFormat("##").format(stack.getOrCreateTag().getDouble("ammo"))) + "/"

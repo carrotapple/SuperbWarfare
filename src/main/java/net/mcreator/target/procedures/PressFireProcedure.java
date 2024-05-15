@@ -1,12 +1,11 @@
 package net.mcreator.target.procedures;
 
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Player;
 
 public class PressFireProcedure {
@@ -26,7 +25,7 @@ public class PressFireProcedure {
         var mainHandItem = player.getMainHandItem();
         var tag = mainHandItem.getOrCreateTag();
 
-        if (mainHandItem.is(ItemTags.create(new ResourceLocation("target:gun")))
+        if (mainHandItem.is(TargetModTags.Items.GUN)
                 && !(mainHandItem.getItem() == TargetModItems.BOCEK.get())
                 && !(mainHandItem.getItem() == TargetModItems.MINIGUN.get())
                 && tag.getDouble("ammo") == 0

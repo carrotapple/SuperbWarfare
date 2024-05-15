@@ -1,11 +1,10 @@
 package net.mcreator.target.world.inventory;
 
 import net.mcreator.target.init.TargetModMenus;
+import net.mcreator.target.init.TargetModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -80,7 +79,7 @@ public class GunRecycleGuiMenu extends AbstractContainerMenu implements Supplier
 
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return stack.is(ItemTags.create(new ResourceLocation("target:gun")));
+                return stack.is(TargetModTags.Items.GUN);
             }
         }));
         for (int si = 0; si < 3; ++si)
