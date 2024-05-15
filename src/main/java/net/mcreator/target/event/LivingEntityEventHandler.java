@@ -3,6 +3,7 @@ package net.mcreator.target.event;
 import net.mcreator.target.entity.BocekarrowEntity;
 import net.mcreator.target.entity.Target1Entity;
 import net.mcreator.target.init.TargetModDamageTypes;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.GunItem;
 import net.mcreator.target.network.TargetModVariables;
@@ -18,6 +19,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
@@ -36,6 +38,7 @@ public class LivingEntityEventHandler {
         if (event == null || event.getEntity() == null) return;
         renderDamageIndicator(event);
         target1DamageImmune(event, event.getEntity());
+        reduceBulletDamage(event, event.getSource(), event.getEntity(), event.getSource().getEntity(), event.getAmount());
     }
 
     @SubscribeEvent
@@ -50,6 +53,43 @@ public class LivingEntityEventHandler {
     public static void onEntityDeath(LivingDeathEvent event) {
         if (event == null || event.getEntity() == null) return;
         killIndication(event.getSource().getEntity());
+    }
+
+    private static void reduceBulletDamage(LivingHurtEvent event, DamageSource damagesource, LivingEntity entity, Entity sourceentity, double amount) {
+        if (damagesource == null || entity == null || sourceentity == null) return;
+
+        double damage = amount;
+        ItemStack stack = sourceentity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
+        if (damagesource.is(TargetModDamageTypes.ARROW_IN_BRAIN)) {
+            stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
+        }
+        if ((damagesource.is(DamageTypes.EXPLOSION) || damagesource.is(DamageTypes.PLAYER_EXPLOSION) || damagesource.is(DamageTypes.ARROW))
+                && (stack.getItem() == TargetModItems.M_79.get() || stack.getItem() == TargetModItems.RPG.get())
+        ) {
+            stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
+        }
+
+        if (damagesource.is(TargetModDamageTypes.GUNFIRE)) {
+            double distance = entity.position().distanceTo(sourceentity.position());
+
+            if (stack.is(TargetModTags.Items.SHOTGUN) || stack.getItem() == TargetModItems.BOCEK.get()) {
+                damage = reduceDamageByDistance(amount, distance, 0.05, 20);
+            } else if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
+                damage = reduceDamageByDistance(amount, distance, 0.001, 200);
+            } else if (stack.is(TargetModTags.Items.HANDGUN)) {
+                damage = reduceDamageByDistance(amount, distance, 0.04, 40);
+            } else if (stack.is(TargetModTags.Items.SMG)) {
+                damage = reduceDamageByDistance(amount, distance, 0.03, 50);
+            } else if (stack.is(TargetModTags.Items.RIFLE)) {
+                damage = reduceDamageByDistance(amount, distance, 0.005, 100);
+            }
+            event.setAmount((float) damage);
+            stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
+        }
+    }
+
+    private static double reduceDamageByDistance(double amount, double distance, double rate, double minDistance) {
+        return amount / (1 + rate * Math.max(0, distance - minDistance));
     }
 
     private static void target1DamageImmune(Event event, Entity entity) {
