@@ -1,9 +1,12 @@
 package net.mcreator.target.entity;
 
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.init.TargetModEntities;
-import net.mcreator.target.procedures.ClaymoreDangShiTiGengXinKeShiProcedure;
-import net.mcreator.target.procedures.ClaymoreDangShiTiSiWangShiProcedure;
-import net.mcreator.target.procedures.ClaymoreYouJiShiTiShiProcedure;
+import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.procedures.MedexpProcedure;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -14,6 +17,8 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -21,15 +26,19 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -40,6 +49,8 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
+import java.util.Comparator;
 
 // TODO 重写阔剑地雷
 @Mod.EventBusSubscriber
@@ -129,7 +140,15 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
     @Override
     public void die(DamageSource source) {
         super.die(source);
-        ClaymoreDangShiTiSiWangShiProcedure.execute(this.level(), this.getX(), this.getY(), this.getZ(), this);
+
+        if (level() instanceof ServerLevel server) {
+            server.explode(null, this.getX(), this.getY(), this.getZ(), 6.5f, Level.ExplosionInteraction.NONE);
+            server.explode(this, this.getX(), this.getY(), this.getZ(), 6.5f, Level.ExplosionInteraction.NONE);
+
+            this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
+                    this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "target:mediumexp");
+            this.discard();
+        }
     }
 
     @Override
@@ -146,33 +165,33 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
     }
 
     @Override
-    public InteractionResult mobInteract(Player sourceentity, InteractionHand hand) {
-        ItemStack itemstack = sourceentity.getItemInHand(hand);
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        ItemStack itemstack = player.getItemInHand(hand);
         InteractionResult retval = InteractionResult.sidedSuccess(this.level().isClientSide());
         Item item = itemstack.getItem();
         if (itemstack.getItem() instanceof SpawnEggItem) {
-            retval = super.mobInteract(sourceentity, hand);
+            retval = super.mobInteract(player, hand);
         } else if (this.level().isClientSide()) {
-            retval = (this.isTame() && this.isOwnedBy(sourceentity) || this.isFood(itemstack)) ? InteractionResult.sidedSuccess(this.level().isClientSide()) : InteractionResult.PASS;
+            retval = (this.isTame() && this.isOwnedBy(player) || this.isFood(itemstack)) ? InteractionResult.sidedSuccess(this.level().isClientSide()) : InteractionResult.PASS;
         } else {
             if (this.isTame()) {
-                if (this.isOwnedBy(sourceentity)) {
+                if (this.isOwnedBy(player)) {
                     if (item.isEdible() && this.isFood(itemstack) && this.getHealth() < this.getMaxHealth()) {
-                        this.usePlayerItem(sourceentity, hand, itemstack);
+                        this.usePlayerItem(player, hand, itemstack);
                         this.heal((float) item.getFoodProperties().getNutrition());
                         retval = InteractionResult.sidedSuccess(this.level().isClientSide());
                     } else if (this.isFood(itemstack) && this.getHealth() < this.getMaxHealth()) {
-                        this.usePlayerItem(sourceentity, hand, itemstack);
+                        this.usePlayerItem(player, hand, itemstack);
                         this.heal(4);
                         retval = InteractionResult.sidedSuccess(this.level().isClientSide());
                     } else {
-                        retval = super.mobInteract(sourceentity, hand);
+                        retval = super.mobInteract(player, hand);
                     }
                 }
             } else if (this.isFood(itemstack)) {
-                this.usePlayerItem(sourceentity, hand, itemstack);
-                if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, sourceentity)) {
-                    this.tame(sourceentity);
+                this.usePlayerItem(player, hand, itemstack);
+                if (this.random.nextInt(3) == 0 && !net.minecraftforge.event.ForgeEventFactory.onAnimalTame(this, player)) {
+                    this.tame(player);
                     this.level().broadcastEntityEvent(this, (byte) 7);
                 } else {
                     this.level().broadcastEntityEvent(this, (byte) 6);
@@ -180,26 +199,85 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
                 this.setPersistenceRequired();
                 retval = InteractionResult.sidedSuccess(this.level().isClientSide());
             } else {
-                retval = super.mobInteract(sourceentity, hand);
+                retval = super.mobInteract(player, hand);
                 if (retval == InteractionResult.SUCCESS || retval == InteractionResult.CONSUME)
                     this.setPersistenceRequired();
             }
         }
-        Entity entity = this;
 
-        ClaymoreYouJiShiTiShiProcedure.execute(entity, sourceentity);
+        if (this.isOwnedBy(player) && player.isShiftKeyDown()) {
+            if (!this.level().isClientSide()) this.discard();
+            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TargetModItems.CLAYMORE_MINE.get()));
+        }
+
         return retval;
     }
 
     @Override
     public void baseTick() {
         super.baseTick();
+        var data = this.getPersistentData();
+        var level = this.level();
+        var x = this.getX();
+        var y = this.getY();
+        var z = this.getZ();
 
-        if (this.getPersistentData().getDouble("claymore") > 0) {
-            this.getPersistentData().putDouble("claymore", (this.getPersistentData().getDouble("claymore") - 1));
+        if (data.getDouble("claymore") > 0) {
+            data.putDouble("claymore", data.getDouble("claymore") - 1);
         }
 
-        ClaymoreDangShiTiGengXinKeShiProcedure.execute(this.level(), this.getX(), this.getY(), this.getZ(), this);
+        data.putDouble("life", data.getDouble("life") + 1);
+        if (data.getDouble("life") >= 12000) {
+            if (!this.level().isClientSide()) this.discard();
+        }
+        if (data.getDouble("def") >= 100) {
+            if (!this.level().isClientSide() && this.getServer() != null) {
+                this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
+                        this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "playsound minecraft:item.shield.break player @p ~ ~ ~ 1 1");
+            }
+            if (!this.level().isClientSide()) this.discard();
+
+            if (!level.isClientSide()) {
+                level.playSound(null, BlockPos.containing(x, y, z), SoundEvents.SHIELD_BREAK, SoundSource.PLAYERS, 1, 1);
+            } else {
+                level.playLocalSound(x, y, z, SoundEvents.SHIELD_BREAK, SoundSource.PLAYERS, 1, 1, false);
+            }
+
+            if (level instanceof ServerLevel server) {
+                ItemEntity entityToSpawn = new ItemEntity(server, x, y, z, new ItemStack(TargetModItems.CLAYMORE_MINE.get()));
+                entityToSpawn.setPickUpDelay(10);
+                server.addFreshEntity(entityToSpawn);
+            }
+        }
+        this.removeAllEffects();
+        this.clearFire();
+        if (data.getDouble("trigger") <= 60) {
+            data.putDouble("trigger", data.getDouble("trigger") + 1);
+        }
+        if (data.getDouble("trigger") >= 40) {
+            final Vec3 center = new Vec3(x + 1.5 * this.getLookAngle().x, y + 1.5 * this.getLookAngle().y, z + 1.5 * this.getLookAngle().z);
+            for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(2.5 / 2d), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
+                var condition = this.getOwner() != target
+                        && target instanceof LivingEntity
+                        && !(target instanceof ClaymoreEntity)
+                        && !(target instanceof Target1Entity)
+                        && !(target instanceof Player player && (player.isCreative() || player.isSpectator()))
+                        && (!this.isAlliedTo(target) || target.getTeam() == null || target.getTeam().getName().equals("TDM"))
+                        && !target.isShiftKeyDown();
+                if (!condition) continue;
+
+                if (!level.isClientSide()) {
+                    MedexpProcedure.execute(this.level(), this.getX(), this.getY(), this.getZ());
+                    this.discard();
+                }
+                target.getPersistentData().putDouble("claymore", 5);
+                TargetMod.queueServerWork(1, () -> {
+                    if (!level.isClientSide())
+                        level.explode(this.getOwner(), target.getX(), target.getY(), target.getZ(), 6.5f, Level.ExplosionInteraction.NONE);
+                });
+            }
+        }
+
         this.refreshDimensions();
     }
 
