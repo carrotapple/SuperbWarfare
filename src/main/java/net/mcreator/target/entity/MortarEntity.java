@@ -1,9 +1,16 @@
 package net.mcreator.target.entity;
 
+import io.netty.buffer.Unpooled;
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
-import net.mcreator.target.procedures.MortarYouJiShiTiShiProcedure;
+import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.world.inventory.MortarGUIMenu;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -11,18 +18,24 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -160,18 +173,66 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     }
 
     @Override
-    public InteractionResult mobInteract(Player sourceentity, InteractionHand hand) {
-        ItemStack itemstack = sourceentity.getItemInHand(hand);
-        InteractionResult retval = InteractionResult.sidedSuccess(this.level().isClientSide());
-        super.mobInteract(sourceentity, hand);
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        super.mobInteract(player, hand);
         double x = this.getX();
         double y = this.getY();
         double z = this.getZ();
-        Entity entity = this;
-        Level world = this.level();
 
-        MortarYouJiShiTiShiProcedure.execute(world, x, y, z, entity, sourceentity);
-        return retval;
+        ItemStack mainHandItem = player.getMainHandItem();
+        if (mainHandItem.getItem() == ItemStack.EMPTY.getItem()) {
+            if (player.isShiftKeyDown()) {
+                this.setYRot(player.getYRot());
+                this.setXRot(this.getXRot());
+                this.setYBodyRot(this.getYRot());
+                this.setYHeadRot(this.getYRot());
+                this.yRotO = this.getYRot();
+                this.xRotO = this.getXRot();
+                this.yBodyRotO = this.getYRot();
+                this.yHeadRotO = this.getYRot();
+            } else if (player instanceof ServerPlayer serverPlayer) {
+                NetworkHooks.openScreen(serverPlayer, new MenuProvider() {
+                    @Override
+                    public Component getDisplayName() {
+                        return Component.literal("MortarGUI");
+                    }
+
+                    @Override
+                    public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+                        return new MortarGUIMenu(id, inventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(BlockPos.containing(x, y, z)));
+                    }
+                }, BlockPos.containing(x, y, z));
+            }
+        }
+        if (mainHandItem.getItem() == TargetModItems.MORTAR_SHELLS.get() && !player.getCooldowns().isOnCooldown(TargetModItems.MORTAR_SHELLS.get())) {
+            player.getCooldowns().addCooldown(TargetModItems.MORTAR_SHELLS.get(), 30);
+            if (!player.isCreative()) {
+                player.getInventory().clearOrCountMatchingItems(p -> TargetModItems.MORTAR_SHELLS.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
+            }
+            if (!this.level().isClientSide()) {
+                this.level().playSound(null, this.getX(), this.getY(), this.getZ(), TargetModSounds.MORTAR_LOAD.get(), SoundSource.PLAYERS, 1f, 1f);
+                this.level().playSound(null, this.getX(), this.getY(), this.getZ(), TargetModSounds.MORTAR_FIRE.get(), SoundSource.PLAYERS, 8f, 1f);
+                this.level().playSound(null, this.getX(), this.getY(), this.getZ(), TargetModSounds.MORTAR_DISTANT.get(), SoundSource.PLAYERS, 32f, 1f);
+            }
+            TargetMod.queueServerWork(20, () -> {
+                Level level = this.level();
+                if (level instanceof ServerLevel server) {
+                    AbstractArrow entityToSpawn = new MortarShellEntity(TargetModEntities.MORTAR_SHELL.get(), level);
+                    entityToSpawn.setOwner(player);
+                    entityToSpawn.setBaseDamage(100);
+                    entityToSpawn.setKnockback(0);
+                    entityToSpawn.setSilent(true);
+                    entityToSpawn.setPos(this.getX(), this.getEyeY() - 0.1, this.getZ());
+                    entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 8, (float) 0.5);
+                    level.addFreshEntity(entityToSpawn);
+
+                    server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, (this.getX() + 2.2 * this.getLookAngle().x), (this.getY() + 0.1 + 2.2 * this.getLookAngle().y), (this.getZ() + 2.2 * this.getLookAngle().z), 40, 0.4, 0.4, 0.4,
+                            0.015);
+                }
+            });
+        }
+
+        return InteractionResult.sidedSuccess(this.level().isClientSide());
     }
 
     @Override
