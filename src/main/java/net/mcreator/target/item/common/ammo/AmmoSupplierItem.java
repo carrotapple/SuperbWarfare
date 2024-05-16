@@ -35,7 +35,7 @@ public abstract class AmmoSupplierItem extends Item {
                 case RIFLE -> c.rifleAmmo;
                 case SHOTGUN -> c.shotgunAmmo;
                 case SNIPER -> c.sniperAmmo;
-            }).orElse(0d) + ammoToAdd;
+            }).orElse(0) + ammoToAdd;
             switch (this.type) {
                 case HANDGUN -> capability.handgunAmmo = newAmmoCount;
                 case RIFLE -> capability.rifleAmmo = newAmmoCount;
