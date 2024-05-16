@@ -1,14 +1,13 @@
 package net.mcreator.target.network;
 
+import net.mcreator.target.init.TargetModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Supplier;
 
@@ -51,9 +50,9 @@ public class DoubleJumpMessage {
             if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).playerDoubleJump) {
                 entity.setDeltaMovement(new Vec3((1 * entity.getLookAngle().x), 0.8, (1 * entity.getLookAngle().z)));
                 if (!level.isClientSide()) {
-                    level.playSound(null, BlockPos.containing(x, y, z), ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("target:doublejump")), SoundSource.BLOCKS, 1, 1);
+                    level.playSound(null, BlockPos.containing(x, y, z), TargetModSounds.DOUBLEJUMP.get(), SoundSource.BLOCKS, 1, 1);
                 } else {
-                    level.playLocalSound(x, y, z, ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("target:doublejump")), SoundSource.BLOCKS, 1, 1, false);
+                    level.playLocalSound(x, y, z, TargetModSounds.DOUBLEJUMP.get(), SoundSource.BLOCKS, 1, 1, false);
                 }
                 entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                     capability.playerDoubleJump = false;

@@ -1,7 +1,3 @@
-
-/*
- *	MCreator note: This file will be REGENERATED on each build.
- */
 package net.mcreator.target.init;
 
 import com.mojang.blaze3d.platform.InputConstants;
@@ -27,9 +23,9 @@ public class TargetModKeyMappings {
         @Override
         public void setDown(boolean isDown) {
             super.setDown(isDown);
-            if (isDownOld != isDown && isDown) {
-                TargetMod.PACKET_HANDLER.sendToServer(new ReloadMessage(0, 0));
-                ReloadMessage.pressAction(Minecraft.getInstance().player, 0, 0);
+            if (isDownOld != isDown && isDown && Minecraft.getInstance().player != null) {
+                TargetMod.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
+                ReloadMessage.pressAction(Minecraft.getInstance().player, 0);
             }
             isDownOld = isDown;
         }
@@ -56,7 +52,7 @@ public class TargetModKeyMappings {
         public void setDown(boolean isDown) {
             super.setDown(isDown);
             if (isDownOld != isDown && isDown) {
-                TargetMod.PACKET_HANDLER.sendToServer(new FireModeMessage(0, 0));
+                TargetMod.PACKET_HANDLER.sendToServer(new FireModeMessage(0));
                 FireModeMessage.pressAction(Minecraft.getInstance().player, 0);
             }
             isDownOld = isDown;
@@ -68,11 +64,11 @@ public class TargetModKeyMappings {
         @Override
         public void setDown(boolean isDown) {
             super.setDown(isDown);
-            if (isDownOld != isDown && isDown) {
+            if (isDownOld != isDown && isDown && Minecraft.getInstance().player != null) {
                 TargetMod.PACKET_HANDLER.sendToServer(new ZoomMessage(0, 0));
                 ZoomMessage.pressAction(Minecraft.getInstance().player, 0);
                 ZOOM_LASTPRESS = System.currentTimeMillis();
-            } else if (isDownOld != isDown) {
+            } else if (isDownOld != isDown && Minecraft.getInstance().player != null) {
                 int dt = (int) (System.currentTimeMillis() - ZOOM_LASTPRESS);
                 TargetMod.PACKET_HANDLER.sendToServer(new ZoomMessage(1, dt));
                 ZoomMessage.pressAction(Minecraft.getInstance().player, 1);

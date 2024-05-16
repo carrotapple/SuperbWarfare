@@ -1,47 +1,35 @@
 package net.mcreator.target.network;
 
-import net.mcreator.target.TargetMod;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class FireModeMessage {
-    int type, pressedms;
+    private final int type;
 
-    public FireModeMessage(int type, int pressedms) {
+    public FireModeMessage(int type) {
         this.type = type;
-        this.pressedms = pressedms;
     }
 
     public FireModeMessage(FriendlyByteBuf buffer) {
         this.type = buffer.readInt();
-        this.pressedms = buffer.readInt();
     }
 
     public static void buffer(FireModeMessage message, FriendlyByteBuf buffer) {
         buffer.writeInt(message.type);
-        buffer.writeInt(message.pressedms);
     }
 
     public static void handler(FireModeMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
@@ -70,7 +58,7 @@ public class FireModeMessage {
         };
 
         if (player instanceof ServerPlayer serverPlayer) {
-            serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("target:firerate"))),
+            serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(TargetModSounds.FIRERATE.get()),
                     SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1f, 1f, serverPlayer.level().random.nextLong()));
         }
 
@@ -100,10 +88,5 @@ public class FireModeMessage {
             tag.putDouble("cid", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
             tag.putDouble("chargingtime", 128);
         }
-    }
-
-    @SubscribeEvent
-    public static void registerMessage(FMLCommonSetupEvent event) {
-        TargetMod.addNetworkMessage(FireModeMessage.class, FireModeMessage::buffer, FireModeMessage::new, FireModeMessage::handler);
     }
 }
