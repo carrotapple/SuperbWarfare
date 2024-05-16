@@ -121,7 +121,6 @@ public class LivingEntityEventHandler {
 
     private static void killIndication(Entity sourceEntity) {
         if (sourceEntity == null) return;
-        if (sourceEntity instanceof Player player && player.getMainHandItem().is(TargetModTags.Items.GUN)) {
             if (!sourceEntity.level().isClientSide() && sourceEntity.getServer() != null) {
 
                 // TODO 修改为正确音效播放方法
@@ -132,7 +131,6 @@ public class LivingEntityEventHandler {
                 capability.killIndicator = 40;
                 capability.syncPlayerVariables(sourceEntity);
             });
-        }
     }
 
     private static void arrowDamageImmuneForMine(Event event, DamageSource damageSource, Entity sourceEntity) {
@@ -187,7 +185,7 @@ public class LivingEntityEventHandler {
                         || !newTag.getUUID("gun_uuid").equals(oldTag.getUUID("gun_uuid"))
                 ) {
                     stopGunReloadSound(serverLevel, oldGun);
-
+                    // TODO 添加一个原先物品不是枪也能触发切枪动画
                     if (newStack.getItem() instanceof GunItem) {
                         newStack.getOrCreateTag().putDouble("draw", 1);
                     }

@@ -17,7 +17,7 @@ public class AmmoCommand {
     @SubscribeEvent
     public static void registerCommand(RegisterCommandsEvent event) {
         // mojang你看看你写的是个牛魔Builder😅
-        event.getDispatcher().register(Commands.literal("ammo").requires(s -> s.hasPermission(4))
+        event.getDispatcher().register(Commands.literal("target:ammo").requires(s -> s.hasPermission(4))
                 .then(Commands.literal("get").then(Commands.argument("player", EntityArgument.player()).then(Commands.argument("type", EnumArgument.enumArgument(GunInfo.Type.class)).executes(context -> {
                     var player = EntityArgument.getPlayer(context, "player");
 

@@ -52,7 +52,7 @@ public abstract class GunItem extends Item {
     @SubscribeEvent
     public static void onPickup(EntityItemPickupEvent event) {
         if (event.getItem().getItem().is(TargetModTags.Items.GUN)) {
-            event.getItem().getItem().getOrCreateTag().putDouble("drawtime", 0);
+            event.getItem().getItem().getOrCreateTag().putDouble("draw", 1);
         }
     }
 }

@@ -38,7 +38,7 @@ public class SksItemModel extends GeoModel<SksItem> {
         ItemStack stack = player.getMainHandItem();
 
         if (stack.getOrCreateTag().getDouble("gj") == 1) {
-            bolt.setPosZ(3.25f);
+            bolt.setPosZ(3f);
         }
 
         double p = 0;
@@ -83,7 +83,7 @@ public class SksItemModel extends GeoModel<SksItem> {
             shen.setRotZ(-0.003f * (float) fp);
         }
 
-        shuan.setPosZ(3 * (float) fp);
+        shuan.setPosZ(2.5f * (float) fp);
 
         if (stack.getOrCreateTag().getDouble("fireanim") > 0) {
             flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
