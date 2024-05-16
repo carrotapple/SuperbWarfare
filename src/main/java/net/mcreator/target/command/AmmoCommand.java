@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.server.command.EnumArgument;
 
 @Mod.EventBusSubscriber
-public class SetAmmoCommand {
+public class AmmoCommand {
     @SubscribeEvent
     public static void registerCommand(RegisterCommandsEvent event) {
         // mojang你看看你写的是个牛魔Builder😅
