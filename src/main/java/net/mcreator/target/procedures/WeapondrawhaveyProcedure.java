@@ -1,14 +1,13 @@
 package net.mcreator.target.procedures;
 
+import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Entity;
-
-import net.mcreator.target.network.TargetModVariables;
-import net.mcreator.target.init.TargetModItems;
 
 public class WeapondrawhaveyProcedure {
     public static void execute(Entity entity, ItemStack itemStack) {
@@ -24,7 +23,7 @@ public class WeapondrawhaveyProcedure {
             });
             if (entity instanceof Player _player)
                 _player.getCooldowns().addCooldown(itemStack.getItem(), 29);
-            if (itemStack.getItem() == TargetModItems.M_60.get() && tag.getDouble("ammo") <= 5) {
+            if (itemStack.getItem() == TargetModItems.M_60.get() && tag.getInt("ammo") <= 5) {
                 tag.putDouble("empty", 1);
             }
         }

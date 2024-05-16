@@ -59,7 +59,7 @@ public class GunsTool {
     public static void initCreativeGun(ItemStack stack, String location) {
         if (gunsData != null && gunsData.get(location) != null) {
             gunsData.get(location).forEach((k, v) -> stack.getOrCreateTag().putDouble(k, v));
-            stack.getOrCreateTag().putDouble("ammo", stack.getOrCreateTag().getDouble("mag"));
+            stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag"));
         }
     }
 

@@ -17,14 +17,14 @@ public class M98bWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
         double id = 0;
         double ammo2 = 0;
         id = itemstack.getOrCreateTag().getDouble("id");
-        ammo1 = 5 - itemstack.getOrCreateTag().getDouble("ammo");
-        ammo2 = 6 - itemstack.getOrCreateTag().getDouble("ammo");
+        ammo1 = 5 - itemstack.getOrCreateTag().getInt("ammo");
+        ammo2 = 6 - itemstack.getOrCreateTag().getInt("ammo");
         if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") != itemstack.getOrCreateTag().getDouble("id")) {
             itemstack.getOrCreateTag().putDouble("emptyreload", 0);
             itemstack.getOrCreateTag().putDouble("reloading", 0);
             itemstack.getOrCreateTag().putDouble("reloadtime", 0);
         }
-        if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getDouble("ammo") == 0) {
+        if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getInt("ammo") == 0) {
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 79) {
                 entity.getPersistentData().putDouble("id", id);
                 {
@@ -47,7 +47,7 @@ public class M98bWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
                 GunReload.reload(entity, GunInfo.Type.SNIPER);
             }
-        } else if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getDouble("ammo") > 0) {
+        } else if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getInt("ammo") > 0) {
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 57) {
                 entity.getPersistentData().putDouble("id", id);
                 {

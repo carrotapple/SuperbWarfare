@@ -175,7 +175,7 @@ public class Devotion extends GunItem implements GeoItem, AnimatedItem {
             itemTag.putDouble("reloading", 0);
             itemTag.putDouble("reloadtime", 0);
         }
-        if (itemTag.getDouble("reloading") == 1 && itemTag.getDouble("ammo") == 0) {
+        if (itemTag.getDouble("reloading") == 1 && itemTag.getInt("ammo") == 0) {
             if (itemTag.getDouble("reloadtime") == 71) {
                 entity.getPersistentData().putDouble("id", id);
                 if (!entity.level().isClientSide() && entity.getServer() != null) {
@@ -196,7 +196,7 @@ public class Devotion extends GunItem implements GeoItem, AnimatedItem {
             if (itemTag.getDouble("reloadtime") == 1 && mainHandItemTag.getDouble("id") == id) {
                 GunReload.reload(entity, GunInfo.Type.RIFLE);
             }
-        } else if (itemTag.getDouble("reloading") == 1 && itemTag.getDouble("ammo") > 0) {
+        } else if (itemTag.getDouble("reloading") == 1 && itemTag.getInt("ammo") > 0) {
             if (itemTag.getDouble("reloadtime") == 51) {
                 entity.getPersistentData().putDouble("id", id);
                 if (!entity.level().isClientSide() && entity.getServer() != null) {

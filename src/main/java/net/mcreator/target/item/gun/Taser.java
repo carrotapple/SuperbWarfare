@@ -158,17 +158,8 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
         TooltipTool.addGunTips(list, stack);
     }
 
-    @Override
-    public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemstack, world, entity, slot, selected);
-        if (entity instanceof Player player) {
-            itemstack.getOrCreateTag().putDouble("maxammo", getAmmoCount(player));
-        }
-        TasercooldownProcedure.execute(entity, itemstack);
-    }
-
-    public static double getAmmoCount(Player player) {
-        double sum = 0.0;
+    public static int getAmmoCount(Player player) {
+        int sum = 0;
         for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
             ItemStack itemstack = player.getInventory().getItem(i);
             if (check(itemstack)) {
@@ -176,6 +167,15 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
             }
         }
         return sum;
+    }
+
+    @Override
+    public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(itemstack, world, entity, slot, selected);
+        if (entity instanceof Player player) {
+            itemstack.getOrCreateTag().putInt("maxammo", getAmmoCount(player));
+        }
+        TasercooldownProcedure.execute(entity, itemstack);
     }
 
     protected static boolean check(ItemStack stack) {

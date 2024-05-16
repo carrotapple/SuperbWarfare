@@ -30,11 +30,11 @@ public class SetAmmoCommand {
                                 case SHOTGUN -> c.shotgunAmmo;
                                 case SNIPER -> c.sniperAmmo;
                             }
-                    ).orElse(0d);
+                    ).orElse(0);
                     context.getSource().sendSuccess(() -> Component.literal("Current " + type.name + " ammo: " + value), true);
                     return 0;
                 })))
-                .then(Commands.literal("set").then(Commands.argument("type", EnumArgument.enumArgument(GunInfo.Type.class)).then(Commands.argument("value", IntegerArgumentType.integer(0, 2147483647)).executes(context -> {
+                .then(Commands.literal("set").then(Commands.argument("type", EnumArgument.enumArgument(GunInfo.Type.class)).then(Commands.argument("value", IntegerArgumentType.integer(0)).executes(context -> {
                     var player = context.getSource().getPlayer();
                     if (player == null) return 0;
 
@@ -53,7 +53,7 @@ public class SetAmmoCommand {
                     context.getSource().sendSuccess(() -> Component.literal("Set " + type.name + " ammo to: " + value), true);
                     return 0;
                 }))))
-                .then(Commands.literal("add").then(Commands.argument("type", EnumArgument.enumArgument(GunInfo.Type.class)).then(Commands.argument("value", IntegerArgumentType.integer(0, 2147483647)).executes(context -> {
+                .then(Commands.literal("add").then(Commands.argument("type", EnumArgument.enumArgument(GunInfo.Type.class)).then(Commands.argument("value", IntegerArgumentType.integer(0)).executes(context -> {
                     var player = context.getSource().getPlayer();
                     if (player == null) return 0;
                     var type = context.getArgument("type", GunInfo.Type.class);
@@ -66,6 +66,12 @@ public class SetAmmoCommand {
                             case SHOTGUN -> capability.shotgunAmmo += value;
                             case SNIPER -> capability.sniperAmmo += value;
                         }
+                        // 迫真溢出检测
+                        if (capability.handgunAmmo < 0) capability.handgunAmmo = Integer.MAX_VALUE;
+                        if (capability.rifleAmmo < 0) capability.rifleAmmo = Integer.MAX_VALUE;
+                        if (capability.shotgunAmmo < 0) capability.shotgunAmmo = Integer.MAX_VALUE;
+                        if (capability.sniperAmmo < 0) capability.sniperAmmo = Integer.MAX_VALUE;
+
                         capability.syncPlayerVariables(player);
                     });
                     context.getSource().sendSuccess(() -> Component.literal("Added " + type.name + " ammo of amount " + value), true);

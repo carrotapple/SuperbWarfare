@@ -26,7 +26,7 @@ public class RpgFireProcedure {
         CompoundTag tag = mainHandItem.getOrCreateTag();
 
         if (mainHandItem.getItem() == TargetModItems.RPG.get() && tag.getDouble("reloading") == 0 && !player.getCooldowns().isOnCooldown(mainHandItem.getItem())
-                && tag.getDouble("ammo") > 0) {
+                && tag.getInt("ammo") > 0) {
             player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
                 capability.recoil = 0.1;
@@ -50,7 +50,7 @@ public class RpgFireProcedure {
                         ("particle minecraft:cloud" + (" " + (player.getX() + 1.8 * player.getLookAngle().x)) + (" " + (player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y))
                                 + (" " + (player.getZ() + 1.8 * player.getLookAngle().z)) + " 0.4 0.4 0.4 0.005 30 force @s"));
             }
-            if (tag.getDouble("ammo") == 1) {
+            if (tag.getInt("ammo") == 1) {
                 tag.putDouble("empty", 1);
             }
             player.getCooldowns().addCooldown(mainHandItem.getItem(), 10);
@@ -61,7 +61,7 @@ public class RpgFireProcedure {
                 player.level().playSound(null, player.blockPosition(), TargetModSounds.RPG_VERYFAR.get(), SoundSource.PLAYERS, 16, 1);
             }
             tag.putDouble("fireanim", 2);
-            tag.putDouble("ammo", tag.getDouble("ammo") - 1);
+            tag.putInt("ammo", tag.getInt("ammo") - 1);
         }
     }
 

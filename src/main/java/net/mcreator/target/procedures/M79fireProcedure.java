@@ -22,7 +22,7 @@ public class M79fireProcedure {
         if (entity instanceof Player player && !player.isSpectator()) {
             ItemStack usehand = player.getMainHandItem();
             if (usehand.getItem() == TargetModItems.M_79.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !(entity instanceof Player _plrCldCheck4 && _plrCldCheck4.getCooldowns().isOnCooldown(usehand.getItem()))
-                    && usehand.getOrCreateTag().getDouble("ammo") > 0) {
+                    && usehand.getOrCreateTag().getInt("ammo") > 0) {
                 entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                     capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
                     capability.recoil = 0.1;
@@ -68,7 +68,7 @@ public class M79fireProcedure {
                             entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m_79_veryfar player @a ~ ~ ~ 12 1");
                 }
                 usehand.getOrCreateTag().putDouble("fireanim", 2);
-                usehand.getOrCreateTag().putDouble("ammo", (usehand.getOrCreateTag().getDouble("ammo") - 1));
+                usehand.getOrCreateTag().putInt("ammo", (usehand.getOrCreateTag().getInt("ammo") - 1));
             }
         }
     }

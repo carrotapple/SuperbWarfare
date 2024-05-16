@@ -173,8 +173,8 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
             flare.setRotZ(0);
         }
 
-        if ((stack.getOrCreateTag().getDouble("ammo") <= 5)) {
-            ammo.setScaleX((float) (stack.getOrCreateTag().getDouble("ammo") / 5));
+        if ((stack.getOrCreateTag().getInt("ammo") <= 5)) {
+            ammo.setScaleX((float) (stack.getOrCreateTag().getInt("ammo") / 5));
         }
     }
 }

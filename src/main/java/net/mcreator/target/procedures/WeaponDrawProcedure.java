@@ -23,10 +23,10 @@ public class WeaponDrawProcedure {
             });
             if (entity instanceof Player _player)
                 _player.getCooldowns().addCooldown(itemStack.getItem(), 16);
-            if (itemStack.getItem() == TargetModItems.RPG.get() && tag.getDouble("ammo") == 0) {
+            if (itemStack.getItem() == TargetModItems.RPG.get() && tag.getInt("ammo") == 0) {
                 tag.putDouble("empty", 1);
             }
-            if (itemStack.getItem() == TargetModItems.SKS.get() && tag.getDouble("ammo") == 0) {
+            if (itemStack.getItem() == TargetModItems.SKS.get() && tag.getInt("ammo") == 0) {
                 tag.putDouble("gj", 1);
             }
         }

@@ -154,22 +154,8 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
         TooltipTool.addGunTips(list, stack);
     }
 
-    @Override
-    public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemstack, world, entity, slot, selected);
-        if (entity instanceof Player player) {
-            itemstack.getOrCreateTag().putDouble("maxammo", getAmmoCount(player));
-        }
-        RpgWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
-    }
-
-    @Override
-    public Set<SoundEvent> getReloadSound() {
-        return Set.of(TargetModSounds.RPG_RELOAD.get());
-    }
-
-    public static double getAmmoCount(Player player) {
-        double sum = 0.0;
+    public static int getAmmoCount(Player player) {
+        int sum = 0;
         for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
             ItemStack itemstack = player.getInventory().getItem(i);
             if (check(itemstack)) {
@@ -177,6 +163,20 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
             }
         }
         return sum;
+    }
+
+    @Override
+    public Set<SoundEvent> getReloadSound() {
+        return Set.of(TargetModSounds.RPG_RELOAD.get());
+    }
+
+    @Override
+    public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(itemstack, world, entity, slot, selected);
+        if (entity instanceof Player player) {
+            itemstack.getOrCreateTag().putInt("maxammo", getAmmoCount(player));
+        }
+        RpgWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
     }
 
     protected static boolean check(ItemStack stack) {

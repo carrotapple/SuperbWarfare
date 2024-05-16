@@ -93,11 +93,11 @@ public class Mk14Item extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.model.reload"));
             }
 
-            if (stack.getOrCreateTag().getDouble("firemode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
+            if (stack.getOrCreateTag().getInt("firemode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.model.changefirerate2"));
             }
 
-            if (stack.getOrCreateTag().getDouble("firemode") == 2 && stack.getOrCreateTag().getDouble("cg") > 0) {
+            if (stack.getOrCreateTag().getInt("firemode") == 2 && stack.getOrCreateTag().getDouble("cg") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.model.changefirerate"));
             }
 

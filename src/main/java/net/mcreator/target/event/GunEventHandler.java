@@ -111,18 +111,18 @@ public class GunEventHandler {
     private static void handleGunFire(Player player) {
         ItemStack stack = player.getMainHandItem();
         if (stack.is(TargetModTags.Items.NORMAL_MAG_GUN)) {
-            double mode = stack.getOrCreateTag().getDouble("firemode");
+            double mode = stack.getOrCreateTag().getInt("firemode");
             if (player.getPersistentData().getDouble("firing") == 0 && player.getMainHandItem().getItem() == TargetModItems.DEVOTION.get()) {
                 stack.getOrCreateTag().putDouble("fire_increase", 0);
             }
 
             if (player.getPersistentData().getDouble("firing") == 1
                     && stack.getOrCreateTag().getDouble("reloading") == 0
-                    && stack.getOrCreateTag().getDouble("ammo") > 0
+                    && stack.getOrCreateTag().getInt("ammo") > 0
                     && !player.getCooldowns().isOnCooldown(stack.getItem())
                     && mode != 1) {
 
-                if (stack.getOrCreateTag().getDouble("firemode") == 0) {
+                if (stack.getOrCreateTag().getInt("firemode") == 0) {
                     player.getPersistentData().putDouble("firing", 0);
                 }
 
@@ -132,11 +132,11 @@ public class GunEventHandler {
                     stack.getOrCreateTag().putDouble("animindex", 1);
                 }
 
-                if (stack.getOrCreateTag().getDouble("ammo") == 1) {
+                if (stack.getOrCreateTag().getInt("ammo") == 1) {
                     stack.getOrCreateTag().putDouble("gj", 1);
                 }
 
-                stack.getOrCreateTag().putDouble("ammo", (stack.getOrCreateTag().getDouble("ammo") - 1));
+                stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
                 stack.getOrCreateTag().putDouble("firecooldown", 7);
                 stack.getOrCreateTag().putDouble("fireanim", 2);
                 stack.getOrCreateTag().putDouble("empty", 1);

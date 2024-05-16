@@ -15,16 +15,16 @@ public class GunReload {
 
         CompoundTag tag = living.getMainHandItem().getOrCreateTag();
 
-        double mag = tag.getDouble("mag");
-        double ammo = tag.getDouble("ammo");
-        double ammoToAdd = mag - ammo + (extraOne ? 1 : 0);
+        int mag = tag.getInt("mag");
+        int ammo = tag.getInt("ammo");
+        int ammoToAdd = mag - ammo + (extraOne ? 1 : 0);
 
-        double playerAmmo = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> switch (type) {
+        int playerAmmo = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> switch (type) {
             case RIFLE -> c.rifleAmmo;
             case HANDGUN -> c.handgunAmmo;
             case SHOTGUN -> c.shotgunAmmo;
             case SNIPER -> c.sniperAmmo;
-        }).orElse(0d);
+        }).orElse(0);
 
         entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
             var newAmmoCount = Math.max(0, playerAmmo - ammoToAdd);
@@ -37,7 +37,7 @@ public class GunReload {
 
             capability.syncPlayerVariables(entity);
         });
-        tag.putDouble("ammo", ammo + Math.min(ammoToAdd, playerAmmo));
+        tag.putInt("ammo", ammo + Math.min(ammoToAdd, playerAmmo));
 
         tag.putDouble("reloading", 0);
         tag.putDouble("emptyreload", 0);

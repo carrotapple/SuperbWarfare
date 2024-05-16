@@ -15,7 +15,7 @@ public class SentinelFireProcedure {
 
         ItemStack usehand = player.getMainHandItem();
         if (usehand.getItem() == TargetModItems.SENTINEL.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !player.getCooldowns().isOnCooldown(usehand.getItem())
-                && usehand.getOrCreateTag().getDouble("ammo") > 0) {
+                && usehand.getOrCreateTag().getInt("ammo") > 0) {
             if (usehand.getOrCreateTag().getDouble("power") > 0) {
                 if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
                     usehand.getOrCreateTag().putDouble("zoomfiring", 24);
@@ -57,7 +57,7 @@ public class SentinelFireProcedure {
             GunsTool.spawnBullet(player);
             usehand.getOrCreateTag().putDouble("crot", 20);
             player.getCooldowns().addCooldown(usehand.getItem(), 23);
-            usehand.getOrCreateTag().putDouble("ammo", (usehand.getOrCreateTag().getDouble("ammo") - 1));
+            usehand.getOrCreateTag().putInt("ammo", (usehand.getOrCreateTag().getInt("ammo") - 1));
             usehand.getOrCreateTag().putDouble("fireanim", 2);
         }
     }

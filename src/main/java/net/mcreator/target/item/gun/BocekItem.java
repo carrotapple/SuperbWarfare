@@ -142,11 +142,22 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
         TooltipTool.addBocekTips(list, stack);
     }
 
+    public static int getAmmoCount(Player player) {
+        int sum = 0;
+        for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
+            ItemStack itemstack = player.getInventory().getItem(i);
+            if (check(itemstack)) {
+                sum += itemstack.getCount();
+            }
+        }
+        return sum;
+    }
+
     @Override
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
         if (entity instanceof Player player) {
-            itemstack.getOrCreateTag().putDouble("maxammo", getAmmoCount(player));
+            itemstack.getOrCreateTag().putInt("maxammo", getAmmoCount(player));
         }
 
         // TODO 合并至GunReload
@@ -155,17 +166,6 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
             tag.putDouble("arrowempty", tag.getDouble("arrowempty") - 1);
         }
         WeaponDrawProcedure.execute(entity, itemstack);
-    }
-
-    public static double getAmmoCount(Player player) {
-        double sum = 0.0;
-        for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
-            ItemStack itemstack = player.getInventory().getItem(i);
-            if (check(itemstack)) {
-                sum += itemstack.getCount();
-            }
-        }
-        return sum;
     }
 
     protected static boolean check(ItemStack stack) {

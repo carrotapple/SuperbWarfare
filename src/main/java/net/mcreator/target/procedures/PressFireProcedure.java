@@ -28,7 +28,7 @@ public class PressFireProcedure {
         if (mainHandItem.is(TargetModTags.Items.GUN)
                 && !(mainHandItem.getItem() == TargetModItems.BOCEK.get())
                 && !(mainHandItem.getItem() == TargetModItems.MINIGUN.get())
-                && tag.getDouble("ammo") == 0
+                && tag.getInt("ammo") == 0
                 && tag.getDouble("reloading") != 1) {
             if (!player.level().isClientSide() && player.getServer() != null) {
                 player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
@@ -46,7 +46,7 @@ public class PressFireProcedure {
             capability.bowPullHold = true;
             capability.syncPlayerVariables(player);
         });
-        if (tag.getDouble("ammo") == 0) {
+        if (tag.getInt("ammo") == 0) {
             PlayerReloadProcedure.execute(player);
         }
     }

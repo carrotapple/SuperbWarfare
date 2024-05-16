@@ -14,11 +14,11 @@ public class MarlinfireProcedure {
         if (player.isSpectator()) return;
 
         ItemStack usehand = player.getMainHandItem();
-        if (usehand.getOrCreateTag().getDouble("reloading") == 1 && usehand.getOrCreateTag().getDouble("prepare") == 0 && usehand.getOrCreateTag().getDouble("ammo") > 0) {
+        if (usehand.getOrCreateTag().getDouble("reloading") == 1 && usehand.getOrCreateTag().getDouble("prepare") == 0 && usehand.getOrCreateTag().getInt("ammo") > 0) {
             usehand.getOrCreateTag().putDouble("forcestop", 1);
         }
         if (usehand.getItem() == TargetModItems.MARLIN.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !player.getCooldowns().isOnCooldown(usehand.getItem())
-                && usehand.getOrCreateTag().getDouble("ammo") > 0) {
+                && usehand.getOrCreateTag().getInt("ammo") > 0) {
             if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
                 player.getCooldowns().addCooldown(usehand.getItem(), 15);
                 usehand.getOrCreateTag().putDouble("firing", 15);
@@ -40,7 +40,7 @@ public class MarlinfireProcedure {
                 player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
                         player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:marlin_veryfar player @a ~ ~ ~ 24 1");
             }
-            usehand.getOrCreateTag().putDouble("ammo", (usehand.getOrCreateTag().getDouble("ammo") - 1));
+            usehand.getOrCreateTag().putInt("ammo", (usehand.getOrCreateTag().getInt("ammo") - 1));
             if (usehand.getOrCreateTag().getDouble("animindex") == 1) {
                 usehand.getOrCreateTag().putDouble("animindex", 0);
             } else {

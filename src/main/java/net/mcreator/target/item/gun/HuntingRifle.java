@@ -176,7 +176,7 @@ public class HuntingRifle extends GunItem implements GeoItem, AnimatedItem {
             itemTag.putDouble("reloading", 0);
             itemTag.putDouble("reloadtime", 0);
         }
-        if (itemTag.getDouble("reloading") == 1 && itemTag.getDouble("ammo") == 0) {
+        if (itemTag.getDouble("reloading") == 1 && itemTag.getInt("ammo") == 0) {
             if (itemTag.getDouble("reloadtime") == 61) {
                 entity.getPersistentData().putDouble("id", id);
                 if (!entity.level().isClientSide() && entity.getServer() != null) {

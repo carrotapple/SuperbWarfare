@@ -14,7 +14,7 @@ public class M98bfireProcedure {
 
         ItemStack usehand = player.getMainHandItem();
         if (usehand.getItem() == TargetModItems.M_98B.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !(player.getCooldowns().isOnCooldown(usehand.getItem()))
-                && usehand.getOrCreateTag().getDouble("ammo") > 0) {
+                && usehand.getOrCreateTag().getInt("ammo") > 0) {
             usehand.getOrCreateTag().putDouble("fireanim", 17);
             GunsTool.spawnBullet(player);
             player.getCooldowns().addCooldown(usehand.getItem(), 17);
@@ -29,7 +29,7 @@ public class M98bfireProcedure {
                 player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
                         player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:m_98b_veryfar player @a ~ ~ ~ 24 1");
             }
-            usehand.getOrCreateTag().putDouble("ammo", (usehand.getOrCreateTag().getDouble("ammo") - 1));
+            usehand.getOrCreateTag().putInt("ammo", (usehand.getOrCreateTag().getInt("ammo") - 1));
         }
     }
 }

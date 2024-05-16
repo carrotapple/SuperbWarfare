@@ -164,7 +164,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
         CoreGeoBone n55 = getAnimationProcessor().getBone("55");
         CoreGeoBone n56 = getAnimationProcessor().getBone("56");
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 0) {
+        if (stack.getOrCreateTag().getInt("ammo") == 0) {
             n0.setScaleX(1);
             n0.setScaleY(1);
         } else {
@@ -172,7 +172,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n0.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 1) {
+        if (stack.getOrCreateTag().getInt("ammo") == 1) {
             n1.setScaleX(1);
             n1.setScaleY(1);
         } else {
@@ -181,7 +181,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
         }
 
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 2) {
+        if (stack.getOrCreateTag().getInt("ammo") == 2) {
             n2.setScaleX(1);
             n2.setScaleY(1);
         } else {
@@ -189,7 +189,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n2.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 3) {
+        if (stack.getOrCreateTag().getInt("ammo") == 3) {
             n3.setScaleX(1);
             n3.setScaleY(1);
         } else {
@@ -197,7 +197,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n3.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 4) {
+        if (stack.getOrCreateTag().getInt("ammo") == 4) {
             n4.setScaleX(1);
             n4.setScaleY(1);
         } else {
@@ -205,7 +205,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n4.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 5) {
+        if (stack.getOrCreateTag().getInt("ammo") == 5) {
             n5.setScaleX(1);
             n5.setScaleY(1);
         } else {
@@ -213,7 +213,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n5.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 6) {
+        if (stack.getOrCreateTag().getInt("ammo") == 6) {
             n6.setScaleX(1);
             n6.setScaleY(1);
         } else {
@@ -221,7 +221,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n6.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 7) {
+        if (stack.getOrCreateTag().getInt("ammo") == 7) {
             n7.setScaleX(1);
             n7.setScaleY(1);
         } else {
@@ -229,7 +229,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n7.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 8) {
+        if (stack.getOrCreateTag().getInt("ammo") == 8) {
             n8.setScaleX(1);
             n8.setScaleY(1);
         } else {
@@ -237,7 +237,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n8.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 9) {
+        if (stack.getOrCreateTag().getInt("ammo") == 9) {
             n9.setScaleX(1);
             n9.setScaleY(1);
         } else {
@@ -245,7 +245,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n9.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 10) {
+        if (stack.getOrCreateTag().getInt("ammo") == 10) {
             n10.setScaleX(1);
             n10.setScaleY(1);
         } else {
@@ -253,7 +253,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n10.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 11) {
+        if (stack.getOrCreateTag().getInt("ammo") == 11) {
             n11.setScaleX(1);
             n11.setScaleY(1);
         } else {
@@ -262,7 +262,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
         }
 
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 12) {
+        if (stack.getOrCreateTag().getInt("ammo") == 12) {
             n12.setScaleX(1);
             n12.setScaleY(1);
         } else {
@@ -270,7 +270,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n12.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 13) {
+        if (stack.getOrCreateTag().getInt("ammo") == 13) {
             n13.setScaleX(1);
             n13.setScaleY(1);
         } else {
@@ -278,7 +278,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n13.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 14) {
+        if (stack.getOrCreateTag().getInt("ammo") == 14) {
             n14.setScaleX(1);
             n14.setScaleY(1);
         } else {
@@ -286,7 +286,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n14.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 15) {
+        if (stack.getOrCreateTag().getInt("ammo") == 15) {
             n15.setScaleX(1);
             n15.setScaleY(1);
         } else {
@@ -294,7 +294,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n15.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 16) {
+        if (stack.getOrCreateTag().getInt("ammo") == 16) {
             n16.setScaleX(1);
             n16.setScaleY(1);
         } else {
@@ -302,7 +302,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n16.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 17) {
+        if (stack.getOrCreateTag().getInt("ammo") == 17) {
             n17.setScaleX(1);
             n17.setScaleY(1);
         } else {
@@ -310,7 +310,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n17.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 18) {
+        if (stack.getOrCreateTag().getInt("ammo") == 18) {
             n18.setScaleX(1);
             n18.setScaleY(1);
         } else {
@@ -318,7 +318,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n18.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 19) {
+        if (stack.getOrCreateTag().getInt("ammo") == 19) {
             n19.setScaleX(1);
             n19.setScaleY(1);
         } else {
@@ -326,7 +326,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n19.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 20) {
+        if (stack.getOrCreateTag().getInt("ammo") == 20) {
             n20.setScaleX(1);
             n20.setScaleY(1);
         } else {
@@ -334,7 +334,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n20.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 21) {
+        if (stack.getOrCreateTag().getInt("ammo") == 21) {
             n21.setScaleX(1);
             n21.setScaleY(1);
         } else {
@@ -343,7 +343,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
         }
 
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 22) {
+        if (stack.getOrCreateTag().getInt("ammo") == 22) {
             n22.setScaleX(1);
             n22.setScaleY(1);
         } else {
@@ -351,7 +351,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n22.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 23) {
+        if (stack.getOrCreateTag().getInt("ammo") == 23) {
             n23.setScaleX(1);
             n23.setScaleY(1);
         } else {
@@ -359,7 +359,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n23.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 24) {
+        if (stack.getOrCreateTag().getInt("ammo") == 24) {
             n24.setScaleX(1);
             n24.setScaleY(1);
         } else {
@@ -367,7 +367,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n24.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 25) {
+        if (stack.getOrCreateTag().getInt("ammo") == 25) {
             n25.setScaleX(1);
             n25.setScaleY(1);
         } else {
@@ -375,7 +375,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n25.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 26) {
+        if (stack.getOrCreateTag().getInt("ammo") == 26) {
             n26.setScaleX(1);
             n26.setScaleY(1);
         } else {
@@ -383,7 +383,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n26.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 27) {
+        if (stack.getOrCreateTag().getInt("ammo") == 27) {
             n27.setScaleX(1);
             n27.setScaleY(1);
         } else {
@@ -391,7 +391,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n27.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 28) {
+        if (stack.getOrCreateTag().getInt("ammo") == 28) {
             n28.setScaleX(1);
             n28.setScaleY(1);
         } else {
@@ -399,7 +399,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n28.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 29) {
+        if (stack.getOrCreateTag().getInt("ammo") == 29) {
             n29.setScaleX(1);
             n29.setScaleY(1);
         } else {
@@ -407,7 +407,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n29.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 30) {
+        if (stack.getOrCreateTag().getInt("ammo") == 30) {
             n30.setScaleX(1);
             n30.setScaleY(1);
         } else {
@@ -415,7 +415,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n30.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 31) {
+        if (stack.getOrCreateTag().getInt("ammo") == 31) {
             n31.setScaleX(1);
             n31.setScaleY(1);
         } else {
@@ -424,7 +424,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
         }
 
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 32) {
+        if (stack.getOrCreateTag().getInt("ammo") == 32) {
             n32.setScaleX(1);
             n32.setScaleY(1);
         } else {
@@ -432,7 +432,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n32.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 33) {
+        if (stack.getOrCreateTag().getInt("ammo") == 33) {
             n33.setScaleX(1);
             n33.setScaleY(1);
         } else {
@@ -440,7 +440,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n33.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 34) {
+        if (stack.getOrCreateTag().getInt("ammo") == 34) {
             n34.setScaleX(1);
             n34.setScaleY(1);
         } else {
@@ -448,7 +448,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n34.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 35) {
+        if (stack.getOrCreateTag().getInt("ammo") == 35) {
             n35.setScaleX(1);
             n35.setScaleY(1);
         } else {
@@ -456,7 +456,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n35.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 36) {
+        if (stack.getOrCreateTag().getInt("ammo") == 36) {
             n36.setScaleX(1);
             n36.setScaleY(1);
         } else {
@@ -464,7 +464,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n36.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 37) {
+        if (stack.getOrCreateTag().getInt("ammo") == 37) {
             n37.setScaleX(1);
             n37.setScaleY(1);
         } else {
@@ -472,7 +472,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n37.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 38) {
+        if (stack.getOrCreateTag().getInt("ammo") == 38) {
             n38.setScaleX(1);
             n38.setScaleY(1);
         } else {
@@ -480,7 +480,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n38.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 39) {
+        if (stack.getOrCreateTag().getInt("ammo") == 39) {
             n39.setScaleX(1);
             n39.setScaleY(1);
         } else {
@@ -488,7 +488,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n39.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 40) {
+        if (stack.getOrCreateTag().getInt("ammo") == 40) {
             n40.setScaleX(1);
             n40.setScaleY(1);
         } else {
@@ -496,7 +496,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n40.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 41) {
+        if (stack.getOrCreateTag().getInt("ammo") == 41) {
             n41.setScaleX(1);
             n41.setScaleY(1);
         } else {
@@ -505,7 +505,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
         }
 
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 42) {
+        if (stack.getOrCreateTag().getInt("ammo") == 42) {
             n42.setScaleX(1);
             n42.setScaleY(1);
         } else {
@@ -513,7 +513,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n42.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 43) {
+        if (stack.getOrCreateTag().getInt("ammo") == 43) {
             n43.setScaleX(1);
             n43.setScaleY(1);
         } else {
@@ -521,7 +521,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n43.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 44) {
+        if (stack.getOrCreateTag().getInt("ammo") == 44) {
             n44.setScaleX(1);
             n44.setScaleY(1);
         } else {
@@ -529,7 +529,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n44.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 45) {
+        if (stack.getOrCreateTag().getInt("ammo") == 45) {
             n45.setScaleX(1);
             n45.setScaleY(1);
         } else {
@@ -537,7 +537,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n45.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 46) {
+        if (stack.getOrCreateTag().getInt("ammo") == 46) {
             n46.setScaleX(1);
             n46.setScaleY(1);
         } else {
@@ -545,7 +545,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n46.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 47) {
+        if (stack.getOrCreateTag().getInt("ammo") == 47) {
             n47.setScaleX(1);
             n47.setScaleY(1);
         } else {
@@ -553,7 +553,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n47.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 48) {
+        if (stack.getOrCreateTag().getInt("ammo") == 48) {
             n48.setScaleX(1);
             n48.setScaleY(1);
         } else {
@@ -561,7 +561,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n48.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 49) {
+        if (stack.getOrCreateTag().getInt("ammo") == 49) {
             n49.setScaleX(1);
             n49.setScaleY(1);
         } else {
@@ -569,7 +569,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n49.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 50) {
+        if (stack.getOrCreateTag().getInt("ammo") == 50) {
             n50.setScaleX(1);
             n50.setScaleY(1);
         } else {
@@ -577,7 +577,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n50.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 51) {
+        if (stack.getOrCreateTag().getInt("ammo") == 51) {
             n51.setScaleX(1);
             n51.setScaleY(1);
         } else {
@@ -585,7 +585,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n51.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 52) {
+        if (stack.getOrCreateTag().getInt("ammo") == 52) {
             n52.setScaleX(1);
             n52.setScaleY(1);
         } else {
@@ -593,7 +593,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n52.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 53) {
+        if (stack.getOrCreateTag().getInt("ammo") == 53) {
             n53.setScaleX(1);
             n53.setScaleY(1);
         } else {
@@ -601,7 +601,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n53.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 54) {
+        if (stack.getOrCreateTag().getInt("ammo") == 54) {
             n54.setScaleX(1);
             n54.setScaleY(1);
         } else {
@@ -609,7 +609,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n54.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 55) {
+        if (stack.getOrCreateTag().getInt("ammo") == 55) {
             n55.setScaleX(1);
             n55.setScaleY(1);
         } else {
@@ -617,7 +617,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             n55.setScaleY(0);
         }
 
-        if (stack.getOrCreateTag().getDouble("ammo") == 56) {
+        if (stack.getOrCreateTag().getInt("ammo") == 56) {
             n56.setScaleX(1);
             n56.setScaleY(1);
         } else {

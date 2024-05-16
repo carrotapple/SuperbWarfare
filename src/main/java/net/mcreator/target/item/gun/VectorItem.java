@@ -85,46 +85,40 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState<VectorItem> event) {
-        LocalPlayer player = Minecraft.getInstance().player;
-        ItemStack stack = player.getMainHandItem();
+    @SubscribeEvent
+    public static void handleBurstFire(TickEvent.PlayerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
 
-        if (this.animationProcedure.equals("empty")) {
-            if (stack.getOrCreateTag().getDouble("drawtime") < 11) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.vec.draw"));
+        var player = event.player;
+        ItemStack mainHandItem = player.getMainHandItem();
+        CompoundTag tag = mainHandItem.getOrCreateTag();
+        if (mainHandItem.is(TargetModTags.Items.GUN)) {
+            if (tag.getInt("firemode") == 1) {
+                player.getPersistentData().putDouble("firing", 0);
             }
-
-            if (stack.getOrCreateTag().getDouble("fireanim") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.fire"));
+            if (tag.getInt("ammo") == 0) {
+                tag.putDouble("burst", 0);
             }
-
-            if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 1) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload"));
-            }
-
-            if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload2"));
-            }
-
-            if (stack.getOrCreateTag().getDouble("firemode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.changefirerate3"));
-            }
-
-            if (stack.getOrCreateTag().getDouble("firemode") == 1 && stack.getOrCreateTag().getDouble("cg") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.changefirerate2"));
-            }
-
-            if (stack.getOrCreateTag().getDouble("firemode") == 2 && stack.getOrCreateTag().getDouble("cg") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.changefirerate"));
-            }
-
-            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.vec.run"));
-            }
-
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.vec.idle"));
         }
-        return PlayState.STOP;
+        Item item = mainHandItem.getItem();
+        if (item == TargetModItems.VECTOR.get()
+                && tag.getDouble("reloading") == 0
+                && tag.getInt("ammo") > 0
+                && !player.getCooldowns().isOnCooldown(item)
+                && tag.getDouble("burst") > 0
+        ) {
+            player.getCooldowns().addCooldown(item, tag.getDouble("burst") == 1 ? 5 : 1);
+            tag.putDouble("burst", tag.getDouble("burst") - 1);
+            tag.putDouble("fireanim", 2);
+            tag.putInt("ammo", (tag.getInt("ammo") - 1));
+
+            GunsTool.spawnBullet(player);
+
+            player.level().playSound(null, player.blockPosition(), TargetModSounds.VECTOR_FIRE_1P.get(), SoundSource.PLAYERS, 2, 1);
+            player.level().playSound(null, player.blockPosition(), TargetModSounds.VECTOR_FIRE_1P.get(), SoundSource.PLAYERS, 4, 1);
+            player.level().playSound(null, player.blockPosition(), TargetModSounds.VECTOR_FAR.get(), SoundSource.PLAYERS, 6, 1);
+            player.level().playSound(null, player.blockPosition(), TargetModSounds.VECTOR_VERYFAR.get(), SoundSource.PLAYERS, 12, 1);
+        }
     }
 
     private PlayState procedurePredicate(AnimationState<VectorItem> event) {
@@ -160,63 +154,52 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
         TooltipTool.addGunTips(list, stack);
     }
 
-    @Override
-    public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemStack, world, entity, slot, selected);
+    public static ItemStack getGunInstance() {
+        ItemStack stack = new ItemStack(TargetModItems.VECTOR.get());
+        GunsTool.initCreativeGun(stack, TargetModItems.VECTOR.getId().getPath());
+        return stack;
+    }
 
-        CompoundTag tag = itemStack.getOrCreateTag();
-        double id = tag.getDouble("id");
-        var mainHandItem = entity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
-        if (mainHandItem.getOrCreateTag().getDouble("id") != tag.getDouble("id")) {
-            tag.putDouble("emptyreload", 0);
-            tag.putDouble("reloading", 0);
-            tag.putDouble("reloadtime", 0);
-        }
-        if (tag.getDouble("reloading") == 1 && tag.getDouble("ammo") == 0) {
-            if (tag.getDouble("reloadtime") == 61) {
-                entity.getPersistentData().putDouble("id", id);
-                if (entity instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("target:vector_reload_empty"))),
-                            SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 10f, 1f, serverPlayer.level().random.nextLong()));
-                }
-//                entity.level().playSound(null, entity.blockPosition(), TargetModSounds.VECTOR_RELOAD_EMPTY.get(), SoundSource.PLAYERS, 100, 1);
-            }
-            if (mainHandItem.getItem() == itemStack.getItem()
-                    && mainHandItem.getOrCreateTag().getDouble("id") == id
-                    && tag.getDouble("reloadtime") > 0) {
-                tag.putDouble("reloadtime", tag.getDouble("reloadtime") - 1);
-            } else {
-                tag.putDouble("reloading", 0);
-                tag.putDouble("emptyreload", 0);
-                tag.putDouble("reloadtime", 0);
-            }
-            if (tag.getDouble("reloadtime") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
-                GunReload.reload(entity, GunInfo.Type.HANDGUN);
-            }
-        } else if (tag.getDouble("reloading") == 1 && tag.getDouble("ammo") > 0) {
-            if (tag.getDouble("reloadtime") == 47) {
-                entity.getPersistentData().putDouble("id", id);
-                if (entity instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("target:vector_reload_normal"))),
-                            SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 10f, 1f, serverPlayer.level().random.nextLong()));
-                }
-//                entity.level().playSound(null, entity.blockPosition(), TargetModSounds.VECTOR_RELOAD_NORMAL.get(), SoundSource.PLAYERS, 100, 1);
-            }
-            if (mainHandItem.getItem() == itemStack.getItem()
-                    && mainHandItem.getOrCreateTag().getDouble("id") == id
-                    && tag.getDouble("reloadtime") > 0) {
-                tag.putDouble("reloadtime", (tag.getDouble("reloadtime") - 1));
-            } else {
-                tag.putDouble("reloading", 0);
-                tag.putDouble("emptyreload", 0);
-                tag.putDouble("reloadtime", 0);
-            }
-            if (tag.getDouble("reloadtime") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
-                GunReload.reload(entity, GunInfo.Type.HANDGUN, true);
-            }
-        }
+    private PlayState idlePredicate(AnimationState<VectorItem> event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        ItemStack stack = player.getMainHandItem();
 
-        WeaponDrawLightProcedure.execute(entity, itemStack);
+        if (this.animationProcedure.equals("empty")) {
+            if (stack.getOrCreateTag().getDouble("drawtime") < 11) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.vec.draw"));
+            }
+
+            if (stack.getOrCreateTag().getDouble("fireanim") > 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.fire"));
+            }
+
+            if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 1) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload"));
+            }
+
+            if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload2"));
+            }
+
+            if (stack.getOrCreateTag().getInt("firemode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.changefirerate3"));
+            }
+
+            if (stack.getOrCreateTag().getInt("firemode") == 1 && stack.getOrCreateTag().getDouble("cg") > 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.changefirerate2"));
+            }
+
+            if (stack.getOrCreateTag().getInt("firemode") == 2 && stack.getOrCreateTag().getDouble("cg") > 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.changefirerate"));
+            }
+
+            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.vec.run"));
+            }
+
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.vec.idle"));
+        }
+        return PlayState.STOP;
     }
 
     @Override
@@ -246,50 +229,67 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
         return map;
     }
 
-    public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(TargetModItems.VECTOR.get());
-        GunsTool.initCreativeGun(stack, TargetModItems.VECTOR.getId().getPath());
-        return stack;
-    }
-
     @Override
     public void setAnimationProcedure(String procedure) {
         this.animationProcedure = procedure;
     }
 
-    @SubscribeEvent
-    public static void handleBurstFire(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
+    @Override
+    public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(itemStack, world, entity, slot, selected);
 
-        var player = event.player;
-        ItemStack mainHandItem = player.getMainHandItem();
-        CompoundTag tag = mainHandItem.getOrCreateTag();
-        if (mainHandItem.is(TargetModTags.Items.GUN)) {
-            if (tag.getDouble("firemode") == 1) {
-                player.getPersistentData().putDouble("firing", 0);
+        CompoundTag tag = itemStack.getOrCreateTag();
+        double id = tag.getDouble("id");
+        var mainHandItem = entity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
+        if (mainHandItem.getOrCreateTag().getDouble("id") != tag.getDouble("id")) {
+            tag.putDouble("emptyreload", 0);
+            tag.putDouble("reloading", 0);
+            tag.putDouble("reloadtime", 0);
+        }
+        if (tag.getDouble("reloading") == 1 && tag.getInt("ammo") == 0) {
+            if (tag.getDouble("reloadtime") == 61) {
+                entity.getPersistentData().putDouble("id", id);
+                if (entity instanceof ServerPlayer serverPlayer) {
+                    serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("target:vector_reload_empty"))),
+                            SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 10f, 1f, serverPlayer.level().random.nextLong()));
+                }
+//                entity.level().playSound(null, entity.blockPosition(), TargetModSounds.VECTOR_RELOAD_EMPTY.get(), SoundSource.PLAYERS, 100, 1);
             }
-            if (tag.getDouble("ammo") == 0) {
-                tag.putDouble("burst", 0);
+            if (mainHandItem.getItem() == itemStack.getItem()
+                    && mainHandItem.getOrCreateTag().getDouble("id") == id
+                    && tag.getDouble("reloadtime") > 0) {
+                tag.putDouble("reloadtime", tag.getDouble("reloadtime") - 1);
+            } else {
+                tag.putDouble("reloading", 0);
+                tag.putDouble("emptyreload", 0);
+                tag.putDouble("reloadtime", 0);
+            }
+            if (tag.getDouble("reloadtime") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
+                GunReload.reload(entity, GunInfo.Type.HANDGUN);
+            }
+        } else if (tag.getDouble("reloading") == 1 && tag.getInt("ammo") > 0) {
+            if (tag.getDouble("reloadtime") == 47) {
+                entity.getPersistentData().putDouble("id", id);
+                if (entity instanceof ServerPlayer serverPlayer) {
+                    serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("target:vector_reload_normal"))),
+                            SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 10f, 1f, serverPlayer.level().random.nextLong()));
+                }
+//                entity.level().playSound(null, entity.blockPosition(), TargetModSounds.VECTOR_RELOAD_NORMAL.get(), SoundSource.PLAYERS, 100, 1);
+            }
+            if (mainHandItem.getItem() == itemStack.getItem()
+                    && mainHandItem.getOrCreateTag().getDouble("id") == id
+                    && tag.getDouble("reloadtime") > 0) {
+                tag.putDouble("reloadtime", (tag.getDouble("reloadtime") - 1));
+            } else {
+                tag.putDouble("reloading", 0);
+                tag.putDouble("emptyreload", 0);
+                tag.putDouble("reloadtime", 0);
+            }
+            if (tag.getDouble("reloadtime") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
+                GunReload.reload(entity, GunInfo.Type.HANDGUN, true);
             }
         }
-        Item item = mainHandItem.getItem();
-        if (item == TargetModItems.VECTOR.get()
-                && tag.getDouble("reloading") == 0
-                && tag.getDouble("ammo") > 0
-                && !player.getCooldowns().isOnCooldown(item)
-                && tag.getDouble("burst") > 0
-        ) {
-            player.getCooldowns().addCooldown(item, tag.getDouble("burst") == 1 ? 5 : 1);
-            tag.putDouble("burst", tag.getDouble("burst") - 1);
-            tag.putDouble("fireanim", 2);
-            tag.putDouble("ammo", (tag.getDouble("ammo") - 1));
 
-            GunsTool.spawnBullet(player);
-
-            player.level().playSound(null, player.blockPosition(), TargetModSounds.VECTOR_FIRE_1P.get(), SoundSource.PLAYERS, 2, 1);
-            player.level().playSound(null, player.blockPosition(), TargetModSounds.VECTOR_FIRE_1P.get(), SoundSource.PLAYERS, 4, 1);
-            player.level().playSound(null, player.blockPosition(), TargetModSounds.VECTOR_FAR.get(), SoundSource.PLAYERS, 6, 1);
-            player.level().playSound(null, player.blockPosition(), TargetModSounds.VECTOR_VERYFAR.get(), SoundSource.PLAYERS, 12, 1);
-        }
+        WeaponDrawLightProcedure.execute(entity, itemStack);
     }
 }

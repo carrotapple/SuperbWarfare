@@ -21,8 +21,8 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.TASER.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 1
-                        && tag.getDouble("maxammo") > 0)  {
+                        && tag.getInt("ammo") < 1
+                        && tag.getInt("maxammo") > 0) {
                     tag.putDouble("reloading", 1);
                     tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                     tag.putDouble("reloadtime", 55);
@@ -30,7 +30,7 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.TRACHELIUM.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 8
+                        && tag.getInt("ammo") < 8
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).handgunAmmo > 0) {
                     tag.putDouble("reloading", 1);
                     tag.putDouble("emptyreload", 1);
@@ -40,7 +40,7 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.HUNTING_RIFLE.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 1
+                        && tag.getInt("ammo") < 1
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperAmmo > 0) {
                     tag.putDouble("reloading", 1);
                     tag.putDouble("reloadtime", 61);
@@ -50,8 +50,8 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.M_79.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 1
-                        && tag.getDouble("maxammo") > 0) {
+                        && tag.getInt("ammo") < 1
+                        && tag.getInt("maxammo") > 0) {
                     tag.putDouble("reloading", 1);
                     tag.putDouble("emptyreload", 1);
                     tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
@@ -60,8 +60,8 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.RPG.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 1
-                        && tag.getDouble("maxammo") > 0) {
+                        && tag.getInt("ammo") < 1
+                        && tag.getInt("maxammo") > 0) {
                     tag.putDouble("reloading", 1);
                     tag.putDouble("emptyreload", 1);
                     tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
@@ -70,14 +70,14 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.ABEKIRI.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 2
+                        && tag.getInt("ammo") < 2
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunAmmo > 0) {
-                    if (tag.getDouble("ammo") == 1) {
+                    if (tag.getInt("ammo") == 1) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 0);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                         tag.putDouble("reloadtime", 83);
-                    } else if (tag.getDouble("ammo") == 0) {
+                    } else if (tag.getInt("ammo") == 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
@@ -87,14 +87,14 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.M_98B.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 6
+                        && tag.getInt("ammo") < 6
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperAmmo > 0) {
-                    if (tag.getDouble("ammo") > 0) {
+                    if (tag.getInt("ammo") > 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 0);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                         tag.putDouble("reloadtime", 57);
-                    } else if (tag.getDouble("ammo") == 0) {
+                    } else if (tag.getInt("ammo") == 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
@@ -104,14 +104,14 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.KRABER.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 5
+                        && tag.getInt("ammo") < 5
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperAmmo > 0) {
-                    if (tag.getDouble("ammo") > 0) {
+                    if (tag.getInt("ammo") > 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 0);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                         tag.putDouble("reloadtime", 65);
-                    } else if (tag.getDouble("ammo") == 0) {
+                    } else if (tag.getInt("ammo") == 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
@@ -121,14 +121,14 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.VECTOR.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 34
+                        && tag.getInt("ammo") < 34
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).handgunAmmo > 0) {
-                    if (tag.getDouble("ammo") > 0) {
+                    if (tag.getInt("ammo") > 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 0);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                         tag.putDouble("reloadtime", 47);
-                    } else if (tag.getDouble("ammo") == 0) {
+                    } else if (tag.getInt("ammo") == 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
@@ -138,14 +138,14 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.MK_14.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 21
+                        && tag.getInt("ammo") < 21
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo > 0) {
-                    if (tag.getDouble("ammo") > 0) {
+                    if (tag.getInt("ammo") > 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 0);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                         tag.putDouble("reloadtime", 45);
-                    } else if (tag.getDouble("ammo") == 0) {
+                    } else if (tag.getInt("ammo") == 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
@@ -155,14 +155,14 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.SKS.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 21
+                        && tag.getInt("ammo") < 21
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo > 0) {
-                    if (tag.getDouble("ammo") > 0) {
+                    if (tag.getInt("ammo") > 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 0);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                         tag.putDouble("reloadtime", 41);
-                    } else if (tag.getDouble("ammo") == 0) {
+                    } else if (tag.getInt("ammo") == 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
@@ -172,14 +172,14 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.AK_47.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 31
+                        && tag.getInt("ammo") < 31
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo > 0) {
-                    if (tag.getDouble("ammo") > 0) {
+                    if (tag.getInt("ammo") > 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 0);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                         tag.putDouble("reloadtime", 41);
-                    } else if (tag.getDouble("ammo") == 0) {
+                    } else if (tag.getInt("ammo") == 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
@@ -190,14 +190,14 @@ public class PlayerReloadProcedure {
                         || player.getMainHandItem().getItem() == TargetModItems.HK_416.get())
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 31
+                        && tag.getInt("ammo") < 31
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo > 0) {
-                    if (tag.getDouble("ammo") > 0) {
+                    if (tag.getInt("ammo") > 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 0);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                         tag.putDouble("reloadtime", 41);
-                    } else if (tag.getDouble("ammo") == 0) {
+                    } else if (tag.getInt("ammo") == 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
@@ -207,14 +207,14 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.AA_12.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 26
+                        && tag.getInt("ammo") < 26
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunAmmo > 0) {
-                    if (tag.getDouble("ammo") > 0) {
+                    if (tag.getInt("ammo") > 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 0);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                         tag.putDouble("reloadtime", 44);
-                    } else if (tag.getDouble("ammo") == 0) {
+                    } else if (tag.getInt("ammo") == 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
@@ -225,13 +225,13 @@ public class PlayerReloadProcedure {
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo > 0
-                        && tag.getDouble("ammo") < 56) {
-                    if (tag.getDouble("ammo") > 0) {
+                        && tag.getInt("ammo") < 56) {
+                    if (tag.getInt("ammo") > 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 0);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                         tag.putDouble("reloadtime", 51);
-                    } else if (tag.getDouble("ammo") == 0) {
+                    } else if (tag.getInt("ammo") == 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
@@ -242,13 +242,13 @@ public class PlayerReloadProcedure {
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo > 0
-                        && tag.getDouble("ammo") < 76) {
-                    if (tag.getDouble("ammo") > 0) {
+                        && tag.getInt("ammo") < 76) {
+                    if (tag.getInt("ammo") > 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 0);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                         tag.putDouble("reloadtime", 66);
-                    } else if (tag.getDouble("ammo") == 0) {
+                    } else if (tag.getInt("ammo") == 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
@@ -258,14 +258,14 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.SENTINEL.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 6
+                        && tag.getInt("ammo") < 6
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperAmmo > 0) {
-                    if (tag.getDouble("ammo") > 0) {
+                    if (tag.getInt("ammo") > 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 0);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                         tag.putDouble("reloadtime", 53);
-                    } else if (tag.getDouble("ammo") == 0) {
+                    } else if (tag.getInt("ammo") == 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
@@ -275,14 +275,14 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.SVD.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 11
+                        && tag.getInt("ammo") < 11
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperAmmo > 0) {
-                    if (tag.getDouble("ammo") > 0) {
+                    if (tag.getInt("ammo") > 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 0);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                         tag.putDouble("reloadtime", 55);
-                    } else if (tag.getDouble("ammo") == 0) {
+                    } else if (tag.getInt("ammo") == 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
@@ -293,13 +293,13 @@ public class PlayerReloadProcedure {
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo > 0
-                        && tag.getDouble("ammo") < 100) {
-                    if (tag.getDouble("ammo") > 0) {
+                        && tag.getInt("ammo") < 100) {
+                    if (tag.getInt("ammo") > 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 0);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                         tag.putDouble("reloadtime", 111);
-                    } else if (tag.getDouble("ammo") == 0) {
+                    } else if (tag.getInt("ammo") == 0) {
                         tag.putDouble("reloading", 1);
                         tag.putDouble("emptyreload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
@@ -309,7 +309,7 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.MARLIN.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 8
+                        && tag.getInt("ammo") < 8
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo > 0) {
                     tag.putDouble("reloading", 1);
                     tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
@@ -323,9 +323,9 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.M_870.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && tag.getDouble("reloading") == 0
-                        && tag.getDouble("ammo") < 8
+                        && tag.getInt("ammo") < 8
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunAmmo > 0) {
-                    if (tag.getDouble("ammo") == 0) {
+                    if (tag.getInt("ammo") == 0) {
                         tag.putDouble("emptyreload", 1);
                         tag.putDouble("reloading", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));

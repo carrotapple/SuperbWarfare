@@ -13,10 +13,8 @@ public class M79WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
     public static void execute(Entity entity, ItemStack itemstack) {
         if (entity == null)
             return;
-        double id;
-        double ammo1;
-        id = itemstack.getOrCreateTag().getDouble("id");
-        ammo1 = 1 - itemstack.getOrCreateTag().getDouble("ammo");
+        double id = itemstack.getOrCreateTag().getDouble("id");
+        int ammo1 = 1 - itemstack.getOrCreateTag().getInt("ammo");
         if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") != itemstack.getOrCreateTag().getDouble("id")) {
             itemstack.getOrCreateTag().putDouble("emptyreload", 0);
             itemstack.getOrCreateTag().putDouble("reloading", 0);
@@ -43,8 +41,8 @@ public class M79WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 itemstack.getOrCreateTag().putDouble("emptyreload", 0);
             }
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                if (itemstack.getOrCreateTag().getDouble("maxammo") >= ammo1) {
-                    itemstack.getOrCreateTag().putDouble("ammo", (itemstack.getOrCreateTag().getDouble("ammo") + ammo1));
+                if (itemstack.getOrCreateTag().getInt("maxammo") >= ammo1) {
+                    itemstack.getOrCreateTag().putInt("ammo", (itemstack.getOrCreateTag().getInt("ammo") + ammo1));
                     if (entity instanceof Player _player) {
                         ItemStack _stktoremove = new ItemStack(TargetModItems.GRENADE_40MM.get());
                         _player.getInventory().clearOrCountMatchingItems(p -> _stktoremove.getItem() == p.getItem(), 1, _player.inventoryMenu.getCraftSlots());
@@ -52,7 +50,7 @@ public class M79WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                     itemstack.getOrCreateTag().putDouble("reloading", 0);
                     itemstack.getOrCreateTag().putDouble("emptyreload", 0);
                 } else {
-                    itemstack.getOrCreateTag().putDouble("ammo", (itemstack.getOrCreateTag().getDouble("ammo") + itemstack.getOrCreateTag().getDouble("maxammo")));
+                    itemstack.getOrCreateTag().putInt("ammo", (itemstack.getOrCreateTag().getInt("ammo") + itemstack.getOrCreateTag().getInt("maxammo")));
                     if (entity instanceof Player _player) {
                         ItemStack _stktoremove = new ItemStack(TargetModItems.GRENADE_40MM.get());
                         _player.getInventory().clearOrCountMatchingItems(p -> _stktoremove.getItem() == p.getItem(), 1, _player.inventoryMenu.getCraftSlots());

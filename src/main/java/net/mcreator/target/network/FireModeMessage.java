@@ -62,7 +62,7 @@ public class FireModeMessage {
                     SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1f, 1f, serverPlayer.level().random.nextLong()));
         }
 
-        tag.putDouble("firemode", mode);
+        tag.putInt("firemode", mode);
         tag.putDouble("cg", 10);
     }
 
@@ -70,7 +70,7 @@ public class FireModeMessage {
         ItemStack mainHandItem = player.getMainHandItem();
         CompoundTag tag = mainHandItem.getOrCreateTag();
         Item item = mainHandItem.getItem();
-        int fireMode = (int) tag.getDouble("firemode");
+        int fireMode = (int) tag.getInt("firemode");
 
         if (item == TargetModItems.AK_47.get()
                 || item == TargetModItems.M_4.get()
