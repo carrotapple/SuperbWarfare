@@ -1,7 +1,6 @@
 package net.mcreator.target.entity;
 
 import net.mcreator.target.init.TargetModEntities;
-import net.mcreator.target.procedures.MedexpProcedure;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.protocol.Packet;
@@ -10,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -70,20 +70,27 @@ public class MortarShellEntity extends AbstractArrow implements ItemSupplier {
     @Override
     public void onHitEntity(EntityHitResult entityHitResult) {
         super.onHitEntity(entityHitResult);
-        onHit();
-    }
+        Entity entity = entityHitResult.getEntity();
 
-    private void onHit() {
-        if (this.level() instanceof ServerLevel server) {
-            MedexpProcedure.execute(this.level(), this.getX(), getY(), getZ());
-            server.explode(this, (this.getX()), (this.getY()), (this.getZ()), 7.5f, Level.ExplosionInteraction.NONE);
+        if (this.level() instanceof ServerLevel level) {
+            level.explode(this, (this.getX()), (this.getY()), (this.getZ()), 10, Level.ExplosionInteraction.NONE);
+            if (!entity.level().isClientSide() && entity.getServer() != null) {
+                entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                        entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "target:mediumexp");
+            }
         }
+        this.discard();
     }
 
     @Override
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
-        onHit();
+
+        if (this.getPersistentData().getDouble("time") > 0) {
+            if (this.level() instanceof ServerLevel level) {
+                level.explode(this, this.getX(), this.getY(), this.getZ(), 10, Level.ExplosionInteraction.NONE);
+            }
+        }
     }
 
     @Override
@@ -94,7 +101,13 @@ public class MortarShellEntity extends AbstractArrow implements ItemSupplier {
             this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
                     this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "particle minecraft:campfire_cosy_smoke ~ ~ ~ 0 0 0 0 2 force");
         }
-        if (this.inGround) this.discard();
+        if (this.inGround) {
+            if (!this.level().isClientSide() && this.getServer() != null) {
+                this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
+                        this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "target:mediumexp");
+            }
+            this.discard();
+        }
     }
 
     public static MortarShellEntity shoot(Level world, LivingEntity entity, RandomSource source) {

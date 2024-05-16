@@ -2,6 +2,7 @@ package net.mcreator.target.entity;
 
 import io.netty.buffer.Unpooled;
 import net.mcreator.target.TargetMod;
+import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
@@ -52,6 +53,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
+import java.text.DecimalFormat;
 
 public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.BOOLEAN);
@@ -222,7 +224,7 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
                     entityToSpawn.setBaseDamage(100);
                     entityToSpawn.setKnockback(0);
                     entityToSpawn.setSilent(true);
-                    entityToSpawn.setPos(this.getX(), this.getEyeY() - 0.1, this.getZ());
+                    entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
                     entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 8, (float) 0.5);
                     level.addFreshEntity(entityToSpawn);
 
@@ -238,6 +240,26 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     @Override
     public void baseTick() {
         super.baseTick();
+        double[] Timer = {0};
+        double totalTime = 4;
+        int sleepTime = 2;
+        double Duration = totalTime / sleepTime;
+        Runnable Runnable = () -> {
+            while (Timer[0] < Duration) {
+
+                this.setXRot((float) -this.getAttribute(TargetModAttributes.MORTAR_PITCH.get()).getBaseValue());
+
+                Timer[0]++;
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        Thread Thread = new Thread(Runnable);
+        Thread.start();
+
         this.refreshDimensions();
     }
 
@@ -271,7 +293,7 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0)
-                .add(Attributes.MAX_HEALTH, 10)
+                .add(Attributes.MAX_HEALTH, 100)
                 .add(Attributes.ARMOR, 0)
                 .add(Attributes.ATTACK_DAMAGE, 0)
                 .add(Attributes.FOLLOW_RANGE, 16)

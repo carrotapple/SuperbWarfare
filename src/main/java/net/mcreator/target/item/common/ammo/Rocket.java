@@ -5,8 +5,9 @@ import com.google.common.collect.Multimap;
 import net.mcreator.target.client.renderer.item.RocketItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
-import net.mcreator.target.procedures.MedexpProcedure;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -121,7 +122,10 @@ public class Rocket extends Item implements GeoItem, AnimatedItem {
             level.explode(sourceentity, sourceentity.getX(), sourceentity.getY() + 1, sourceentity.getZ(), 6, Level.ExplosionInteraction.NONE);
             level.explode(null, sourceentity.getX(), sourceentity.getY() + 1, sourceentity.getZ(), 6, Level.ExplosionInteraction.NONE);
 
-            MedexpProcedure.execute(level, sourceentity.getX(), sourceentity.getY(), sourceentity.getZ());
+            if (!sourceentity.level().isClientSide() && sourceentity.getServer() != null) {
+                sourceentity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, sourceentity.position(), sourceentity.getRotationVector(), sourceentity.level() instanceof ServerLevel ? (ServerLevel) sourceentity.level() : null, 4,
+                        sourceentity.getName().getString(), sourceentity.getDisplayName(), sourceentity.level().getServer(), sourceentity), "playsound target:target:mediumexp");
+            }
         }
         if (sourceentity instanceof Player player) {
             player.getInventory().clearOrCountMatchingItems(p -> TargetModItems.ROCKET.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());

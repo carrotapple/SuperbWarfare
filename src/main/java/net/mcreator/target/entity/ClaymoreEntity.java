@@ -3,7 +3,6 @@ package net.mcreator.target.entity;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
-import net.mcreator.target.procedures.MedexpProcedure;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
@@ -267,7 +266,10 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
                 if (!condition) continue;
 
                 if (!level.isClientSide()) {
-                    MedexpProcedure.execute(this.level(), this.getX(), this.getY(), this.getZ());
+                    if (!this.level().isClientSide() && this.getServer() != null) {
+                        this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
+                                this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "target:mediumexp");
+                    }
                     this.discard();
                 }
                 target.getPersistentData().putDouble("claymore", 5);

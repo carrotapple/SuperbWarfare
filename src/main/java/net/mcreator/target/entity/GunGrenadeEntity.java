@@ -4,7 +4,6 @@ import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.network.TargetModVariables;
-import net.mcreator.target.procedures.MedexpProcedure;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.protocol.Packet;
@@ -89,9 +88,13 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
         }
 
         if (this.getPersistentData().getDouble("baoxian") > 0) {
+
             if (this.level() instanceof ServerLevel level) {
                 level.explode(this, (this.getX()), (this.getY()), (this.getZ()), 5.5f, Level.ExplosionInteraction.NONE);
-                MedexpProcedure.execute(this.level(), (this.getX()), (this.getY()), (this.getZ()));
+                if (!entity.level().isClientSide() && entity.getServer() != null) {
+                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "target:mediumexp");
+                }
                 this.discard();
             }
         }
@@ -146,8 +149,6 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
         if (this.getPersistentData().getDouble("baoxian") > 0) {
             if (this.level() instanceof ServerLevel level) {
                 this.level().explode(this, this.getX(), this.getY(), this.getZ(), 5.5f, Level.ExplosionInteraction.NONE);
-                MedexpProcedure.execute(level, this.getX(), this.getY(), this.getZ());
-                this.discard();
             }
         }
     }
@@ -163,38 +164,15 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
             this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
                     this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "particle minecraft:campfire_cosy_smoke ~ ~ ~ 0 0 0 0 1 force");
         }
-
+        if (this.inGround) {
+            if (!this.level().isClientSide() && this.getServer() != null) {
+                this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
+                        this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "target:mediumexp");
+            }
+            this.discard();
+        }
         if (this.tickCount > 200) {
             this.discard();
         }
-    }
-
-    public static GunGrenadeEntity shoot(Level world, LivingEntity entity, RandomSource source) {
-        return shoot(world, entity, source, 1f, 5, 5);
-    }
-
-    public static GunGrenadeEntity shoot(Level world, LivingEntity entity, RandomSource random, float power, double damage, int knockback) {
-        GunGrenadeEntity entityarrow = new GunGrenadeEntity(TargetModEntities.GUN_GRENADE.get(), entity, world);
-        entityarrow.shoot(entity.getViewVector(1).x, entity.getViewVector(1).y, entity.getViewVector(1).z, power * 2, 0);
-        entityarrow.setSilent(true);
-        entityarrow.setCritArrow(false);
-        entityarrow.setBaseDamage(damage);
-        entityarrow.setKnockback(knockback);
-        world.addFreshEntity(entityarrow);
-        return entityarrow;
-    }
-
-    public static GunGrenadeEntity shoot(LivingEntity entity, LivingEntity target) {
-        GunGrenadeEntity entityarrow = new GunGrenadeEntity(TargetModEntities.GUN_GRENADE.get(), entity, entity.level());
-        double dx = target.getX() - entity.getX();
-        double dy = target.getY() + target.getEyeHeight() - 1.1;
-        double dz = target.getZ() - entity.getZ();
-        entityarrow.shoot(dx, dy - entityarrow.getY() + Math.hypot(dx, dz) * 0.2F, dz, 1f * 2, 12.0F);
-        entityarrow.setSilent(true);
-        entityarrow.setBaseDamage(5);
-        entityarrow.setKnockback(5);
-        entityarrow.setCritArrow(false);
-        entity.level().addFreshEntity(entityarrow);
-        return entityarrow;
     }
 }

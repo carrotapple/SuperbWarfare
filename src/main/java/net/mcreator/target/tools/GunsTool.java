@@ -114,7 +114,7 @@ public class GunsTool {
         if (tag.getBoolean("beast")) {
             projectile.beast();
         }
-        projectile.setPos(player.getX() + -0.5 * player.getLookAngle().x, player.getEyeY() - 0.1 + (-0.5) * player.getLookAngle().y, player.getZ() + (-0.5) * player.getLookAngle().z);
+        projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
 
         if (heldItem.getItem() == TargetModItems.BOCEK.get()) {
             damage = 0.008333333 * tag.getDouble("damage") * tag.getDouble("speed") * tag.getDouble("damageadd");

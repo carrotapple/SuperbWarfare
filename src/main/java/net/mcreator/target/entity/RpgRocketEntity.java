@@ -4,7 +4,6 @@ import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.network.TargetModVariables;
-import net.mcreator.target.procedures.MedexpProcedure;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.protocol.Packet;
@@ -100,7 +99,11 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
             if (this.level() instanceof ServerLevel level) {
                 level.explode(this, this.getX(), this.getY(), this.getZ(), 4, Level.ExplosionInteraction.NONE);
 
-                MedexpProcedure.execute(level, this.getX(), this.getY(), this.getZ());
+                if (!entity.level().isClientSide() && entity.getServer() != null) {
+                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
+                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "target:mediumexp");
+                }
+
                 this.discard();
             }
         }
@@ -161,17 +164,9 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
         if (this.getPersistentData().getDouble("time") > 0) {
             if (this.level() instanceof ServerLevel level) {
                 level.explode(this, this.getX(), this.getY(), this.getZ(), 6, Level.ExplosionInteraction.NONE);
-                MedexpProcedure.execute(level, this.getX(), this.getY(), this.getZ());
             }
-            if (!this.level().isClientSide())
-                this.discard();
         }
     }
-
-    public static RpgRocketEntity shoot(Level world, LivingEntity entity, RandomSource source) {
-        return shoot(world, entity, source, 1f, 5, 5);
-    }
-
     @Override
     public void tick() {
         super.tick();
@@ -196,28 +191,21 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
         }
         if (life >= 90) {
             if (!this.level().isClientSide() && this.getServer() != null) {
-                MedexpProcedure.execute(this.level(), this.getX(), this.getY(), this.getZ());
+                this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
+                        this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "target:mediumexp");
             }
             if (!this.level().isClientSide())
                 this.discard();
         }
-
+        if (this.inGround) {
+            if (!this.level().isClientSide() && this.getServer() != null) {
+                this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
+                        this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "target:mediumexp");
+            }
+            this.discard();
+        }
         if (this.tickCount > 100) {
             this.discard();
         }
-    }
-
-    public static RpgRocketEntity shoot(LivingEntity entity, LivingEntity target) {
-        RpgRocketEntity entityarrow = new RpgRocketEntity(TargetModEntities.RPG_ROCKET.get(), entity, entity.level());
-        double dx = target.getX() - entity.getX();
-        double dy = target.getY() + target.getEyeHeight() - 1.1;
-        double dz = target.getZ() - entity.getZ();
-        entityarrow.shoot(dx, dy - entityarrow.getY() + Math.hypot(dx, dz) * 0.2F, dz, 1f * 2, 12.0F);
-        entityarrow.setSilent(true);
-        entityarrow.setBaseDamage(5);
-        entityarrow.setKnockback(5);
-        entityarrow.setCritArrow(false);
-        entity.level().addFreshEntity(entityarrow);
-        return entityarrow;
     }
 }

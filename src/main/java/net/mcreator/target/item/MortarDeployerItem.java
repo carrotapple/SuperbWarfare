@@ -37,7 +37,6 @@ public class MortarDeployerItem extends Item {
                 entityToSpawn.setYRot(player.getYRot());
                 entityToSpawn.setYBodyRot(player.getYRot());
                 entityToSpawn.setYHeadRot(player.getYRot());
-                entityToSpawn.setXRot(-70);
                 entityToSpawn.setDeltaMovement(0, 0, 0);
             }
         }

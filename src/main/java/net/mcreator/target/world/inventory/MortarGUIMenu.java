@@ -88,7 +88,7 @@ public class MortarGUIMenu extends AbstractContainerMenu implements Supplier<Map
             }
 
             if (20 <= converted && converted <= 90) {
-                ((LivingEntity) looking).getAttribute(TargetModAttributes.MOTARPITCH.get()).setBaseValue(converted);
+                ((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).setBaseValue(converted);
             }
         }
     }

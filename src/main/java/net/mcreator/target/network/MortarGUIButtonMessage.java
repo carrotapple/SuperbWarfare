@@ -5,13 +5,16 @@ import net.mcreator.target.tools.TraceTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.world.entity.LivingEntity;
+
+import net.mcreator.target.init.TargetModAttributes;
+
 
 import java.util.function.Supplier;
 
@@ -66,62 +69,37 @@ public class MortarGUIButtonMessage {
         Entity looking = TraceTool.findLookingEntity(player, 6);
         if (looking == null) return;
 
-        boolean validXRot = true;
-
         switch (buttonID) {
             case 0 -> {
-                if (looking.getXRot() <= -88) {
-                    validXRot = false;
-                } else {
-                    looking.setXRot(looking.getXRot() - 1);
+                if (((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).getBaseValue() < 89) {
+                    ((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).setBaseValue((((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).getBaseValue() + 1));
                 }
             }
             case 1 -> {
-                if (looking.getXRot() >= -20) {
-                    validXRot = false;
-                } else {
-                    looking.setXRot(looking.getXRot() + 1);
+                if (((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).getBaseValue() > 21) {
+                    ((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).setBaseValue((((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).getBaseValue() - 1));
                 }
             }
             case 2 -> {
-                if (looking.getXRot() <= -78) {
-                    validXRot = false;
-                } else {
-                    looking.setXRot(looking.getXRot() - 10);
+                if (((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).getBaseValue() < 78) {
+                    ((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).setBaseValue((((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).getBaseValue() + 10));
                 }
             }
             case 3 -> {
-                if (looking.getXRot() >= -30) {
-                    validXRot = false;
-                } else {
-                    looking.setXRot(looking.getXRot() + 10);
+                if (((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).getBaseValue() > 31) {
+                    ((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).setBaseValue((((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).getBaseValue() - 10));
                 }
             }
             case 4 -> {
-                if (looking.getXRot() >= -20.5) {
-                    validXRot = false;
-                } else {
-                    looking.setXRot(looking.getXRot() + 0.5f);
+                if (((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).getBaseValue() > 20.5) {
+                    ((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).setBaseValue((((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).getBaseValue() - 0.5));
                 }
             }
             case 5 -> {
-                if (looking.getXRot() <= -87.5) {
-                    validXRot = false;
-                } else {
-                    looking.setXRot(looking.getXRot() - 0.5f);
+                if (((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).getBaseValue() < 88.5) {
+                    ((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).setBaseValue((((LivingEntity) looking).getAttribute(TargetModAttributes.MORTAR_PITCH.get()).getBaseValue() + 0.5));
                 }
             }
-        }
-
-        if (!validXRot) return;
-        looking.setYRot(looking.getYRot());
-        looking.setYBodyRot(looking.getYRot());
-        looking.setYHeadRot(looking.getYRot());
-        looking.yRotO = looking.getYRot();
-        looking.xRotO = looking.getXRot();
-        if (looking instanceof LivingEntity living) {
-            living.yBodyRotO = living.getYRot();
-            living.yHeadRotO = living.getYRot();
         }
     }
 
