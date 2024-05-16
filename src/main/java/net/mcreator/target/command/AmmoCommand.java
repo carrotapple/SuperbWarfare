@@ -31,7 +31,7 @@ public class AmmoCommand {
                                 case SNIPER -> c.sniperAmmo;
                             }
                     ).orElse(0);
-                    context.getSource().sendSuccess(() -> Component.literal("Current " + type.name + " ammo: " + value), true);
+                    context.getSource().sendSuccess(() -> Component.translatable("commands.ammo.get", Component.translatable(type.translatableKey).getString(), value), true);
                     return 0;
                 }))))
                 .then(Commands.literal("set").then(Commands.argument("players", EntityArgument.players()).then(Commands.argument("type", EnumArgument.enumArgument(GunInfo.Type.class)).then(Commands.argument("value", IntegerArgumentType.integer(0)).executes(context -> {
@@ -51,7 +51,7 @@ public class AmmoCommand {
                         });
                     }
 
-                    context.getSource().sendSuccess(() -> Component.literal("Set " + type.name + " ammo to " + value + " for " + players.size() + " player(s)"), true);
+                    context.getSource().sendSuccess(() -> Component.translatable("commands.ammo.set", Component.translatable(type.translatableKey).getString(), value, players.size()), true);
                     return 0;
                 })))))
                 .then(Commands.literal("add").then(Commands.argument("players", EntityArgument.players()).then(Commands.argument("type", EnumArgument.enumArgument(GunInfo.Type.class)).then(Commands.argument("value", IntegerArgumentType.integer(0)).executes(context -> {
@@ -77,7 +77,7 @@ public class AmmoCommand {
                         });
                     }
 
-                    context.getSource().sendSuccess(() -> Component.literal("Added " + type.name + " ammo of amount " + value + " for " + players.size() + " player(s)"), true);
+                    context.getSource().sendSuccess(() -> Component.translatable("commands.ammo.add", Component.translatable(type.translatableKey).getString(), value, players.size()), true);
                     return 0;
                 }))))));
     }

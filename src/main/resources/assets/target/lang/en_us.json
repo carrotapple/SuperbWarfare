@@ -3,6 +3,11 @@
   "item_group.target.target_item": "TARGET ITEM",
   "item_group.target.ammo": "TARGET AMMO",
 
+  "item.target.ammo.shotgun": "Shotgun",
+  "item.target.ammo.handgun": "Handgun",
+  "item.target.ammo.rifle": "Rifle",
+  "item.target.ammo.sniper": "Sniper",
+
   "item.target.sentinel": "SENTINEL",
   "item.target.rpk": "RPK",
   "item.target.m_870": "M870",
@@ -101,6 +106,8 @@
   "des.target.handgun_ammo_box": "Handgun Ammo *30",
   "item.target.creative_ammo_box": "Creative Ammo Box",
   "des.target.creative_ammo_box": "Creative Ammo *2147483647",
+  "item.target.ammo_supplier.supply": "%s Ammo +%s",
+  "item.target.ammo_supplier.creative": "All Ammo +2147483647",
 
   "item.target.target_deployer": "Target",
   "item.target.senpai_spawn_egg": "Senpai Spawn Egg",
@@ -183,5 +190,11 @@
   "key.target.firemode": "Fire Mode",
   "key.target.zoom": "Zoom",
 
-  "effect.target.shock": "Shock"
+  "effect.target.shock": "Shock",
+
+  "commands.ammo.get": "Current %s ammo: %s",
+  "commands.ammo.set": "Set %s ammo to %s for %s players",
+  "commands.ammo.add": "Added %s ammo of amount %s for %s players",
+  "commands.pvp_mode.on": "Enabled PVP Mode",
+  "commands.pvp_mode.off": "Disabled PVP Mode"
 }

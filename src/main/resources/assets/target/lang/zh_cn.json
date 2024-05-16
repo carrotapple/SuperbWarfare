@@ -3,6 +3,11 @@
   "item_group.target.target_item": "TARGET物品",
   "item_group.target.ammo": "TARGET弹药",
 
+  "item.target.ammo.shotgun": "霰弹枪",
+  "item.target.ammo.handgun": "手枪",
+  "item.target.ammo.rifle": "步枪",
+  "item.target.ammo.sniper": "狙击枪",
+
   "item.target.sentinel": "哨兵狙击步枪",
   "item.target.rpk": "RPK轻机枪",
   "item.target.m_870": "M870霰弹枪",
@@ -101,6 +106,8 @@
   "des.target.handgun_ammo_box": "手枪弹药 *30",
   "item.target.creative_ammo_box": "创造弹药盒",
   "des.target.creative_ammo_box": "创造弹药 *2147483647",
+  "item.target.ammo_supplier.supply": "%s弹药 +%s",
+  "item.target.ammo_supplier.creative": "所有弹药 +2147483647",
 
   "item.target.target_deployer": "标靶",
   "item.target.senpai_spawn_egg": "野兽先辈刷怪蛋",
@@ -147,7 +154,6 @@
   "death.attack.gunfire.entity": "%1$s被%2$s射爆了",
   "death.attack.gunfire.item": "%1$s被%2$s用%3$s射爆了",
   "death.attack.gunfire.player": "%1$s在逃离%2$s的时候被射爆了",
-
   "death.attack.arrow_in_brain": "%1$s的脑子进矢了,凶手是%2$s",
   "death.attack.arrow_in_brain.item": "%1$s的脑子进矢了,凶手%2$s使用了%3$s",
   "death.attack.arrow_in_brain.player": "%1$s在逃离%2$s的时候脑子进矢了",
@@ -183,5 +189,11 @@
   "key.target.firemode": "开火模式",
   "key.target.zoom": "缩放",
 
-  "effect.target.shock": "麻痹"
+  "effect.target.shock": "麻痹",
+
+  "commands.ammo.get": "当前%s弹药数量: %s",
+  "commands.ammo.set": "为%3$s位玩家的%1$s弹药数量设置为%2$s",
+  "commands.ammo.add": "为%3$s位玩家添加了%2$s发%1$s弹药",
+  "commands.pvp_mode.on": "已启用PVP模式",
+  "commands.pvp_mode.off": "已禁用PVP模式"
 }

@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 public class PVPModeCommand {
     @SubscribeEvent
     public static void registerCommand(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("target:pvpmode").requires(s -> s.hasPermission(4)).executes(arguments -> {
+        event.getDispatcher().register(Commands.literal("pvpmode").requires(s -> s.hasPermission(4)).executes(arguments -> {
             Level world = arguments.getSource().getUnsidedLevel();
             Entity entity = arguments.getSource().getEntity();
             if (entity == null && world instanceof ServerLevel server) {
@@ -29,7 +29,7 @@ public class PVPModeCommand {
             mapVariables.syncData(world);
 
             if (entity instanceof Player player && !player.level().isClientSide()) {
-                player.displayClientMessage(Component.literal("PVP MODE: " + (mapVariables.pvpMode ? "ON" : "OFF")), false);
+                player.displayClientMessage(Component.translatable("commands.pvp_mode." + (mapVariables.pvpMode ? "on" : "off")), false);
             }
             return 0;
         }));
