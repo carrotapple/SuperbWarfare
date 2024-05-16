@@ -11,20 +11,17 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
 
 public class GunRecycleGuiScreen extends AbstractContainerScreen<GunRecycleGuiMenu> {
-    private final static HashMap<String, Object> guistate = GunRecycleGuiMenu.guistate;
-    private final Level world;
+    private final static HashMap<String, Object> GUI_STATE = GunRecycleGuiMenu.GUI_STATE;
     private final int x, y, z;
     private final Player entity;
     Button button_dismantle;
 
     public GunRecycleGuiScreen(GunRecycleGuiMenu container, Inventory inventory, Component text) {
         super(container, inventory, text);
-        this.world = container.world;
         this.x = container.x;
         this.y = container.y;
         this.z = container.z;
@@ -56,7 +53,9 @@ public class GunRecycleGuiScreen extends AbstractContainerScreen<GunRecycleGuiMe
     @Override
     public boolean keyPressed(int key, int b, int c) {
         if (key == 256) {
-            this.minecraft.player.closeContainer();
+            if (this.minecraft != null && this.minecraft.player != null) {
+                this.minecraft.player.closeContainer();
+            }
             return true;
         }
         return super.keyPressed(key, b, c);
@@ -84,7 +83,7 @@ public class GunRecycleGuiScreen extends AbstractContainerScreen<GunRecycleGuiMe
             TargetMod.PACKET_HANDLER.sendToServer(new GunRecycleGuiButtonMessage(0, x, y, z));
             GunRecycleGuiButtonMessage.handleButtonAction(entity, 0, x, y, z);
         }).bounds(this.leftPos + 62, this.topPos + 56, 52, 20).build();
-        guistate.put("button:button_dismantle", button_dismantle);
+        GUI_STATE.put("button:button_dismantle", button_dismantle);
         this.addRenderableWidget(button_dismantle);
     }
 }

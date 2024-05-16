@@ -7,7 +7,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class BulltholeParticle extends TextureSheetParticle {
+public class BulletHoleParticle extends TextureSheetParticle {
     public static BulltholeParticleProvider provider(SpriteSet spriteSet) {
         return new BulltholeParticleProvider(spriteSet);
     }
@@ -20,15 +20,12 @@ public class BulltholeParticle extends TextureSheetParticle {
         }
 
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return new BulltholeParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
+            return new BulletHoleParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
         }
     }
 
-    private final SpriteSet spriteSet;
-
-    protected BulltholeParticle(ClientLevel world, double x, double y, double z, double vx, double vy, double vz, SpriteSet spriteSet) {
+    protected BulletHoleParticle(ClientLevel world, double x, double y, double z, double vx, double vy, double vz, SpriteSet spriteSet) {
         super(world, x, y, z);
-        this.spriteSet = spriteSet;
         this.setSize(0f, 0f);
         this.lifetime = 100;
         this.gravity = 0f;

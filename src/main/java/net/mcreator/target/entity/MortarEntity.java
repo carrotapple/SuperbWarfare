@@ -53,7 +53,6 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.text.DecimalFormat;
 
 public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.BOOLEAN);
@@ -104,7 +103,7 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
 
     @Override
     public MobType getMobType() {
-        return MobType.UNDEFINED;
+        return super.getMobType();
     }
 
     @Override

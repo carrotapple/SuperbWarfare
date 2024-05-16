@@ -28,8 +28,8 @@ public class M79uiOverlay {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        if (shouldRenderCrosshair(player)) {
-            event.getGuiGraphics().blit(new ResourceLocation("target:textures/screens/rex.png"), w / 2 + -16, h / 2 + -16, 0, 0, 32, 32, 32, 32);
+        if (shouldRenderCrossHair(player)) {
+            event.getGuiGraphics().blit(new ResourceLocation("target:textures/screens/rex.png"), w / 2 - 16, h / 2 - 16, 0, 0, 32, 32, 32, 32);
         }
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();
@@ -38,7 +38,7 @@ public class M79uiOverlay {
         RenderSystem.setShaderColor(1, 1, 1, 1);
     }
 
-    private static boolean shouldRenderCrosshair(Player player) {
+    private static boolean shouldRenderCrossHair(Player player) {
         if (player == null) return false;
         return !player.isSpectator()
                 && player.getMainHandItem().getItem() == TargetModItems.M_79.get()

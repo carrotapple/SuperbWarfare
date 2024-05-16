@@ -22,9 +22,7 @@ public class TargetModAttributes {
 
     @SubscribeEvent
     public static void register(FMLConstructModEvent event) {
-        event.enqueueWork(() -> {
-            ATTRIBUTES.register(FMLJavaModLoadingContext.get().getModEventBus());
-        });
+        event.enqueueWork(() -> ATTRIBUTES.register(FMLJavaModLoadingContext.get().getModEventBus()));
     }
 
     @SubscribeEvent

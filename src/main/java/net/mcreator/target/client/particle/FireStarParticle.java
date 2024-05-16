@@ -7,7 +7,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class FirestarParticle extends TextureSheetParticle {
+public class FireStarParticle extends TextureSheetParticle {
     public static FirestarParticleProvider provider(SpriteSet spriteSet) {
         return new FirestarParticleProvider(spriteSet);
     }
@@ -20,14 +20,13 @@ public class FirestarParticle extends TextureSheetParticle {
         }
 
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            FirestarParticle particle = new FirestarParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
-            return particle;
+            return new FireStarParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
         }
     }
 
     private final SpriteSet spriteSet;
 
-    protected FirestarParticle(ClientLevel world, double x, double y, double z, double vx, double vy, double vz, SpriteSet spriteSet) {
+    protected FireStarParticle(ClientLevel world, double x, double y, double z, double vx, double vy, double vz, SpriteSet spriteSet) {
         super(world, x, y, z);
         this.spriteSet = spriteSet;
         this.setSize(0.2f, 0.2f);

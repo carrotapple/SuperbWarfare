@@ -1,10 +1,7 @@
 package net.mcreator.target;
 
 import net.mcreator.target.init.*;
-import net.mcreator.target.network.DoubleJumpMessage;
-import net.mcreator.target.network.FireMessage;
-import net.mcreator.target.network.GunsDataMessage;
-import net.mcreator.target.network.ZoomMessage;
+import net.mcreator.target.network.*;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -87,5 +84,6 @@ public class TargetMod {
         addNetworkMessage(DoubleJumpMessage.class, DoubleJumpMessage::buffer, DoubleJumpMessage::new, DoubleJumpMessage::handler);
         addNetworkMessage(GunsDataMessage.class, GunsDataMessage::encode, GunsDataMessage::decode, GunsDataMessage::handler, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         addNetworkMessage(FireMessage.class, FireMessage::buffer, FireMessage::new, FireMessage::handler);
+        addNetworkMessage(MortarGUIButtonMessage.class, MortarGUIButtonMessage::buffer, MortarGUIButtonMessage::new, MortarGUIButtonMessage::handler);
     }
 }

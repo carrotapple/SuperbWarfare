@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class GunRecycleGuiMenu extends AbstractContainerMenu implements Supplier<Map<Integer, Slot>> {
-    public final static HashMap<String, Object> guistate = new HashMap<>();
+    public final static HashMap<String, Object> GUI_STATE = new HashMap<>();
     public final Level world;
     public final Player entity;
     public int x, y, z;
@@ -49,6 +49,7 @@ public class GunRecycleGuiMenu extends AbstractContainerMenu implements Supplier
             this.z = pos.getZ();
             access = ContainerLevelAccess.create(world, pos);
         }
+
         if (pos != null) {
             if (extraData.readableBytes() == 1) { // bound to item
                 byte hand = extraData.readByte();
@@ -75,18 +76,23 @@ public class GunRecycleGuiMenu extends AbstractContainerMenu implements Supplier
                     });
             }
         }
-        this.customSlots.put(0, this.addSlot(new SlotItemHandler(internal, 0, 79, 27) {
 
+        this.customSlots.put(0, this.addSlot(new SlotItemHandler(internal, 0, 79, 27) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return stack.is(TargetModTags.Items.GUN);
             }
         }));
-        for (int si = 0; si < 3; ++si)
-            for (int sj = 0; sj < 9; ++sj)
+
+        for (int si = 0; si < 3; ++si) {
+            for (int sj = 0; sj < 9; ++sj) {
                 this.addSlot(new Slot(inv, sj + (si + 1) * 9, 8 + sj * 18, 84 + si * 18));
-        for (int si = 0; si < 9; ++si)
+            }
+        }
+
+        for (int si = 0; si < 9; ++si) {
             this.addSlot(new Slot(inv, si, 8 + si * 18, 142));
+        }
     }
 
     @Override

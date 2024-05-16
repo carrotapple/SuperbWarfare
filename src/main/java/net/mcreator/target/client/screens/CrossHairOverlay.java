@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.joml.Matrix4f;
 
 @Mod.EventBusSubscriber({Dist.CLIENT})
-public class CrosshairOverlay {
+public class CrossHairOverlay {
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
         int w = event.getWindow().getGuiScaledWidth();
