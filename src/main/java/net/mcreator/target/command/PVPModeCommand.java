@@ -29,7 +29,7 @@ public class PVPModeCommand {
             mapVariables.syncData(world);
 
             if (entity instanceof Player player && !player.level().isClientSide()) {
-                player.displayClientMessage(Component.literal("PVPMODE:" + (mapVariables.pvpMode ? "ON" : "OFF")), false);
+                player.displayClientMessage(Component.literal("PVP MODE: " + (mapVariables.pvpMode ? "ON" : "OFF")), false);
             }
             return 0;
         }));
