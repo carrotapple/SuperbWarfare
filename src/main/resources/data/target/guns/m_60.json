@@ -11,5 +11,6 @@
   "mag": 100,
   "firemode": 2,
   "projectileamount": 1,
-  "fire_interval": 2
+  "fire_interval": 2,
+  "weight": 2
 }

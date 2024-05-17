@@ -85,7 +85,7 @@ public class SksItemModel extends GeoModel<SksItem> {
 
         shuan.setPosZ(2.5f * (float) fp);
 
-        if (stack.getOrCreateTag().getDouble("fireanim") > 0) {
+        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
             flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
             flare.setScaleY((float) (1.0 + 0.5 * (Math.random() - 0.5)));
             flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));

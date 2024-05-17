@@ -7,7 +7,6 @@ import net.mcreator.target.client.renderer.item.HuntingRifleItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.item.AnimatedItem;
-import net.mcreator.target.procedures.WeaponDrawProcedure;
 import net.mcreator.target.tools.GunInfo;
 import net.mcreator.target.tools.GunReload;
 import net.mcreator.target.tools.GunsTool;
@@ -198,7 +197,6 @@ public class HuntingRifle extends GunItem implements GeoItem, AnimatedItem {
                 GunReload.reload(entity, GunInfo.Type.SNIPER);
             }
         }
-        WeaponDrawProcedure.execute(entity, itemstack);
     }
 
     public static ItemStack getGunInstance() {

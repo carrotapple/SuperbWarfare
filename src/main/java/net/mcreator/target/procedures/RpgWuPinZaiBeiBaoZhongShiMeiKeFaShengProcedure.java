@@ -52,6 +52,5 @@ public class RpgWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 }
             }
         }
-        WeaponDrawProcedure.execute(entity, itemstack);
     }
 }

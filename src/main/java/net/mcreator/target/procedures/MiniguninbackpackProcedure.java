@@ -24,6 +24,5 @@ public class MiniguninbackpackProcedure {
             entity.getPersistentData().putDouble("minifiring", 0);
             itemstack.getOrCreateTag().putDouble("overheat", (itemstack.getOrCreateTag().getDouble("overheat") - 1));
         }
-        WeapondrawhaveyProcedure.execute(entity, itemstack);
     }
 }

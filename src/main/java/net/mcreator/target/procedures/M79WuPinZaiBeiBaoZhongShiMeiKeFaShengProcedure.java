@@ -60,6 +60,5 @@ public class M79WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 }
             }
         }
-        WeaponDrawProcedure.execute(entity, itemstack);
     }
 }

@@ -101,9 +101,9 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
             bolt.setPosZ(6);
         }
 
-        if (stack.getOrCreateTag().getDouble("fireanim") > 0) {
-            flare.setScaleX((float) (2 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (2 + 0.5 * (Math.random() - 0.5)));
+        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
+            flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
+            flare.setScaleY((float) (1.0 + 0.5 * (Math.random() - 0.5)));
             flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
         } else {
             flare.setScaleX(0);

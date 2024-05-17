@@ -8,5 +8,9 @@
   "damage": 70,
   "headshot": 3,
   "velocity": 40,
-  "mag": 4
+  "projectileamount": 1,
+  "mag": 4,
+  "fire_interval": 10,
+  "bolt_action_time": 30,
+  "weight": 2
 }

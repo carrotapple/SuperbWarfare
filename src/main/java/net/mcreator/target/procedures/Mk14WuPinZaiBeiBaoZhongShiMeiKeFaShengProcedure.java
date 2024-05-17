@@ -70,6 +70,5 @@ public class Mk14WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 GunReload.reload(entity, GunInfo.Type.RIFLE, true);
             }
         }
-        WeaponDrawProcedure.execute(entity, itemstack);
     }
 }

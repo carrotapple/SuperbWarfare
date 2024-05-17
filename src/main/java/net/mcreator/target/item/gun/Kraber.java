@@ -89,12 +89,12 @@ public class Kraber extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.kraber.draw"));
             }
 
-            if (stack.getOrCreateTag().getDouble("fireanim") > 30) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.kraber.fire"));
+            if (stack.getOrCreateTag().getDouble("bolt_action_anim") > 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.kraber.shift"));
             }
 
-            if (stack.getOrCreateTag().getDouble("fireanim") < 30 && stack.getOrCreateTag().getDouble("fireanim") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.kraber.shift"));
+            if (stack.getOrCreateTag().getDouble("fireanim") > 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.kraber.fire"));
             }
 
             if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 1) {

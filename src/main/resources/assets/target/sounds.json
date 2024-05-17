@@ -677,6 +677,14 @@
       }
     ]
   },
+  "kraber_bolt": {
+    "sounds": [
+      {
+        "name": "target:kraber/kraber_bolt",
+        "stream": false
+      }
+    ]
+  },
 
   "vector_fire_1p": {
     "sounds": [
@@ -913,6 +921,14 @@
       }
     ]
   },
+  "sentinel_bolt": {
+    "sounds": [
+      {
+        "name": "target:sentinel/sentinel_bolt",
+        "stream": false
+      }
+    ]
+  },
 
   "m_60_fire_1p": {
     "sounds": [
@@ -1056,6 +1072,14 @@
     "sounds": [
       {
         "name": "target:m_98b/m_98b_reload_empty",
+        "stream": false
+      }
+    ]
+  },
+  "m_98b_bolt": {
+    "sounds": [
+      {
+        "name": "target:m_98b/m_98b_bolt",
         "stream": false
       }
     ]
@@ -1423,14 +1447,6 @@
       },
       {
         "name": "target:bullet/16",
-        "stream": false
-      }
-    ]
-  },
-  "shift": {
-    "sounds": [
-      {
-        "name": "target:shift",
         "stream": false
       }
     ]

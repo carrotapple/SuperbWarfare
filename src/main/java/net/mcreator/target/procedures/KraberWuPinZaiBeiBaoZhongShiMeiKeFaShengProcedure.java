@@ -67,6 +67,5 @@ public class KraberWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 GunReload.reload(entity, GunInfo.Type.SNIPER, true);
             }
         }
-        WeapondrawhaveyProcedure.execute(entity, itemstack);
     }
 }

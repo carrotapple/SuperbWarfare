@@ -1,6 +1,8 @@
 package net.mcreator.target.procedures;
 
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.tools.GunInfo;
+import net.mcreator.target.tools.GunReload;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
@@ -42,28 +44,7 @@ public class AbekiriWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 itemstack.getOrCreateTag().putDouble("reloadtime", 0);
             }
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunAmmo >= ammo1) {
-                    {
-                        int _setval = (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunAmmo - ammo1;
-                        entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                            capability.shotgunAmmo = _setval;
-                            capability.syncPlayerVariables(entity);
-                        });
-                    }
-                    itemstack.getOrCreateTag().putInt("ammo", (itemstack.getOrCreateTag().getInt("ammo") + ammo1));
-                    itemstack.getOrCreateTag().putDouble("reloading", 0);
-                    itemstack.getOrCreateTag().putDouble("emptyreload", 0);
-                } else {
-                    {
-                        int _setval = itemstack.getOrCreateTag().getInt("ammo") + (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunAmmo;
-                        entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                            capability.shotgunAmmo = _setval;
-                            capability.syncPlayerVariables(entity);
-                        });
-                    }
-                    itemstack.getOrCreateTag().putInt("maxammo", 0);
-                    itemstack.getOrCreateTag().putDouble("reloading", 0);
-                }
+                GunReload.reload(entity, GunInfo.Type.SHOTGUN);
             }
         } else if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getInt("ammo") == 1) {
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 83) {
@@ -86,30 +67,8 @@ public class AbekiriWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 itemstack.getOrCreateTag().putDouble("reloadtime", 0);
             }
             if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunAmmo >= ammo1) {
-                    {
-                        int _setval = (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunAmmo - ammo1;
-                        entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                            capability.shotgunAmmo = _setval;
-                            capability.syncPlayerVariables(entity);
-                        });
-                    }
-                    itemstack.getOrCreateTag().putInt("ammo", (itemstack.getOrCreateTag().getInt("ammo") + ammo1));
-                    itemstack.getOrCreateTag().putDouble("reloading", 0);
-                    itemstack.getOrCreateTag().putDouble("emptyreload", 0);
-                } else {
-                    {
-                        int _setval = itemstack.getOrCreateTag().getInt("ammo") + (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunAmmo;
-                        entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                            capability.shotgunAmmo = _setval;
-                            capability.syncPlayerVariables(entity);
-                        });
-                    }
-                    itemstack.getOrCreateTag().putInt("maxammo", 0);
-                    itemstack.getOrCreateTag().putDouble("reloading", 0);
-                }
+                GunReload.reload(entity, GunInfo.Type.SHOTGUN);
             }
         }
-        WeaponDrawLightProcedure.execute(entity, itemstack);
     }
 }

@@ -1,5 +1,6 @@
 package net.mcreator.target.tools;
 
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
@@ -18,6 +19,12 @@ public class GunReload {
         int mag = tag.getInt("mag");
         int ammo = tag.getInt("ammo");
         int ammoToAdd = mag - ammo + (extraOne ? 1 : 0);
+        /**
+         * 空仓换弹的栓动武器应该在换单后取消待上膛标记
+         */
+        if (ammo ==0 && tag.getDouble("bolt_action_time") > 0) {
+            tag.putDouble("need_bolt_action", 0);
+        }
 
         int playerAmmo = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> switch (type) {
             case RIFLE -> c.rifleAmmo;

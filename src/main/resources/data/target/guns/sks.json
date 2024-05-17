@@ -9,5 +9,6 @@
   "velocity": 40,
   "mag": 20,
   "projectileamount": 1,
-  "fire_interval": 3
+  "fire_interval": 3,
+  "weight": 1
 }

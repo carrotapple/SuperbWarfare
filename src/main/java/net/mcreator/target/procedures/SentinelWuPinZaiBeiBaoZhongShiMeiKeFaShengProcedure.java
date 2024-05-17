@@ -76,7 +76,7 @@ public class SentinelWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
         if (itemstack.getOrCreateTag().getDouble("zoomfiring") > 0) {
             itemstack.getOrCreateTag().putDouble("zoomfiring", (itemstack.getOrCreateTag().getDouble("zoomfiring") - 1));
         }
-        WeaponDrawProcedure.execute(entity, itemstack);
+
         cid = itemstack.getOrCreateTag().getDouble("cid");
         if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("cid") != itemstack.getOrCreateTag().getDouble("cid")) {
             itemstack.getOrCreateTag().putDouble("charging", 0);

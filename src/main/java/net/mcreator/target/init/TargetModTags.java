@@ -16,7 +16,7 @@ public class TargetModTags {
         public static final TagKey<Item> SHOTGUN = tag("shotgun");
         public static final TagKey<Item> SNIPER_RIFLE = tag("sniper_rifle");
         public static final TagKey<Item> SMG = tag("smg");
-        public static final TagKey<Item> NORMAL_MAG_GUN = tag("normal_mag_gun");
+        public static final TagKey<Item> NORMAL_GUN = tag("normal_gun");
         public static final TagKey<Item> LEGENDARY_GUN = tag("legendary_gun");
         public static final TagKey<Item> SPECIAL_GUN = tag("special_gun");
 

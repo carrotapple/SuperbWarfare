@@ -71,6 +71,5 @@ public class M98bWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 GunReload.reload(entity, GunInfo.Type.SNIPER, true);
             }
         }
-        WeaponDrawProcedure.execute(entity, itemstack);
     }
 }

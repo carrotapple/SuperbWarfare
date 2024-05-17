@@ -70,6 +70,5 @@ public class M60WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 GunReload.reload(entity, GunInfo.Type.RIFLE);
             }
         }
-        WeapondrawhaveyProcedure.execute(entity, itemstack);
     }
 }

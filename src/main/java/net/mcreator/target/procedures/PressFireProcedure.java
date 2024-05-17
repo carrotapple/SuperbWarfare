@@ -7,16 +7,14 @@ import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
+import net.mcreator.target.event.GunEventHandler;
 
 public class PressFireProcedure {
     public static void execute(Player player) {
         TaserfireProcedure.execute(player);
         M79fireProcedure.execute(player);
-        M98bfireProcedure.execute(player);
         RpgFireProcedure.execute(player);
-        KraberfireProcedure.execute(player);
         MinigunfireProcedure.execute(player);
-        SentinelFireProcedure.execute(player);
         MarlinfireProcedure.execute(player);
         M870fireProcedure.execute(player);
         VectorFireProcedure.execute(player);
@@ -48,6 +46,15 @@ public class PressFireProcedure {
         });
         if (tag.getInt("ammo") == 0) {
             PlayerReloadProcedure.execute(player);
+        }
+        /**
+         * 栓动武器左键手动拉栓
+         */
+        if (mainHandItem.is(TargetModTags.Items.GUN) && tag.getDouble("bolt_action_time") > 0 && tag.getInt("ammo") > 0) {
+            if (!player.getCooldowns().isOnCooldown(mainHandItem.getItem()) && mainHandItem.getOrCreateTag().getDouble("need_bolt_action") == 1) {
+                mainHandItem.getOrCreateTag().putDouble("bolt_action_anim", mainHandItem.getOrCreateTag().getDouble("bolt_action_time"));
+                GunEventHandler.playGunBoltSounds(player);
+            }
         }
     }
 }

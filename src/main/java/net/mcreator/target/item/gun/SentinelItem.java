@@ -102,6 +102,14 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.draw"));
             }
 
+            if (stack.getOrCreateTag().getBoolean("zoom_fire") == true && stack.getOrCreateTag().getDouble("bolt_action_anim") > 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.shift2"));
+            }
+
+            if (stack.getOrCreateTag().getBoolean("zoom_fire") == false && stack.getOrCreateTag().getDouble("bolt_action_anim") > 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.shift"));
+            }
+
             if (stack.getOrCreateTag().getDouble("fireanim") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.fire"));
             }
@@ -112,14 +120,6 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
 
             if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload2"));
-            }
-
-            if (stack.getOrCreateTag().getDouble("firing") > 0 && stack.getOrCreateTag().getDouble("firing") < 23) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.shift"));
-            }
-
-            if (stack.getOrCreateTag().getDouble("zoomfiring") > 0 && stack.getOrCreateTag().getDouble("zoomfiring") < 23) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.shift2"));
             }
 
             if (stack.getOrCreateTag().getDouble("chargingtime") > 127 && stack.getOrCreateTag().getDouble("charging") == 1) {

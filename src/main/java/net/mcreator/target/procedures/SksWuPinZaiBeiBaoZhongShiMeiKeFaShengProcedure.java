@@ -72,6 +72,5 @@ public class SksWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 GunReload.reload(entity, GunInfo.Type.RIFLE, true);
             }
         }
-        WeaponDrawProcedure.execute(entity, itemstack);
     }
 }

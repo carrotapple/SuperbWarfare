@@ -53,6 +53,5 @@ public class TasercooldownProcedure {
                 }
             }
         }
-        WeaponDrawLightProcedure.execute(entity, itemstack);
     }
 }

@@ -61,6 +61,5 @@ public class RpkWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 GunReload.reload(entity, GunInfo.Type.RIFLE, true);
             }
         }
-        WeaponDrawProcedure.execute(entity, itemstack);
     }
 }

@@ -8,5 +8,6 @@
   "headshot": 3,
   "velocity": 50,
   "mag": 1,
-  "projectileamount": 1
+  "projectileamount": 1,
+  "weight": 1
 }

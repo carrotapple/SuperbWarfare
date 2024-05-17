@@ -6,5 +6,6 @@
   "recoily": 0.018,
   "damage": 150,
   "velocity": 5.75,
-  "mag": 1
+  "mag": 1,
+  "weight": 1
 }

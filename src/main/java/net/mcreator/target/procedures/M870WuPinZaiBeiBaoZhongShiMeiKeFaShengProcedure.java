@@ -94,6 +94,5 @@ public class M870WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
         if (itemstack.getOrCreateTag().getDouble("firing") > 0) {
             itemstack.getOrCreateTag().putDouble("firing", (itemstack.getOrCreateTag().getDouble("firing") - 1));
         }
-        WeaponDrawProcedure.execute(entity, itemstack);
     }
 }

@@ -1,11 +1,15 @@
 package net.mcreator.target.item.gun;
 
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
+import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.ItemNBTTool;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -31,6 +35,8 @@ public abstract class GunItem extends Item {
     @Override
     public void inventoryTick(ItemStack itemstack, Level level, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, level, entity, slot, selected);
+        Item mainHandItem = (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem();
+        CompoundTag tag = itemstack.getOrCreateTag();
 
         if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
             GunsTool.initGun(level, itemstack, this.getDescriptionId().substring(this.getDescriptionId().lastIndexOf('.') + 1));
@@ -38,6 +44,47 @@ public abstract class GunItem extends Item {
             ItemNBTTool.setBoolean(itemstack, "init", true);
         }
         GunsTool.pvpModeCheck(itemstack, level);
+
+        if (tag.getDouble("draw") == 1) {
+            tag.putDouble("draw", 0);
+            tag.putDouble("drawtime", 0);
+            entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.zooming = false;
+                capability.syncPlayerVariables(entity);
+            });
+
+            if (entity instanceof Player _player) {
+                if (tag.getDouble("weight") == 0) {
+                    _player.getCooldowns().addCooldown(itemstack.getItem(), 12);
+                } else if (tag.getDouble("weight") == 1) {
+                    _player.getCooldowns().addCooldown(itemstack.getItem(), 17);
+                } else if (tag.getDouble("weight") == 2) {
+                    _player.getCooldowns().addCooldown(itemstack.getItem(), 30);
+                }
+            }
+
+            if (itemstack.getItem() == TargetModItems.RPG.get() && tag.getInt("ammo") == 0) {
+                tag.putDouble("empty", 1);
+            }
+            if (itemstack.getItem() == TargetModItems.SKS.get() && tag.getInt("ammo") == 0) {
+                tag.putDouble("gj", 1);
+            }
+            if (itemstack.getItem() == TargetModItems.M_60.get() && tag.getInt("ammo") <= 5) {
+                tag.putDouble("empty", 1);
+            }
+        }
+
+        if (mainHandItem == itemstack.getItem()) {
+            if (tag.getDouble("drawtime") < 50) {
+                tag.putDouble("drawtime", (tag.getDouble("drawtime") + 1));
+            }
+        }
+        if (tag.getDouble("fireanim") > 0) {
+            tag.putDouble("fireanim", (tag.getDouble("fireanim") - 1));
+        }
+        if (tag.getDouble("flash_time") > 0) {
+            tag.putDouble("flash_time", (tag.getDouble("flash_time") - 1));
+        }
     }
 
     public Set<SoundEvent> getReloadSound() {

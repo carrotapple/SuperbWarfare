@@ -5,7 +5,6 @@ import com.google.common.collect.Multimap;
 import net.mcreator.target.client.renderer.item.BocekItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
-import net.mcreator.target.procedures.WeaponDrawProcedure;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.RarityTool;
 import net.mcreator.target.tools.TooltipTool;
@@ -165,7 +164,6 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
         if (tag.getDouble("arrowempty") > 0) {
             tag.putDouble("arrowempty", tag.getDouble("arrowempty") - 1);
         }
-        WeaponDrawProcedure.execute(entity, itemstack);
     }
 
     protected static boolean check(ItemStack stack) {

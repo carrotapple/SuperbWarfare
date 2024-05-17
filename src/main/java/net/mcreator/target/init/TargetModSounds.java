@@ -114,6 +114,7 @@ public class TargetModSounds {
     public static final RegistryObject<SoundEvent> KRABER_VERYFAR = REGISTRY.register("kraber_veryfar", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "kraber_veryfar")));
     public static final RegistryObject<SoundEvent> KRABER_RELOAD_NORMAL = REGISTRY.register("kraber_reload_normal", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "kraber_reload_normal")));
     public static final RegistryObject<SoundEvent> KRABER_RELOAD_EMPTY = REGISTRY.register("kraber_reload_empty", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "kraber_reload_empty")));
+    public static final RegistryObject<SoundEvent> KRABER_BOLT = REGISTRY.register("kraber_bolt", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "kraber_bolt")));
     public static final RegistryObject<SoundEvent> VECTOR_FIRE_1P = REGISTRY.register("vector_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "vector_fire_1p")));
     public static final RegistryObject<SoundEvent> VECTOR_FIRE_3P = REGISTRY.register("vector_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "vector_fire_3p")));
     public static final RegistryObject<SoundEvent> VECTOR_FAR = REGISTRY.register("vector_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "vector_far")));
@@ -143,6 +144,7 @@ public class TargetModSounds {
     public static final RegistryObject<SoundEvent> SENTINEL_RELOAD_NORMAL = REGISTRY.register("sentinel_reload_normal", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "sentinel_reload_normal")));
     public static final RegistryObject<SoundEvent> SENTINEL_RELOAD_EMPTY = REGISTRY.register("sentinel_reload_empty", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "sentinel_reload_empty")));
     public static final RegistryObject<SoundEvent> SENTINEL_CHARGE = REGISTRY.register("sentinel_charge", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "sentinel_charge")));
+    public static final RegistryObject<SoundEvent> SENTINEL_BOLT = REGISTRY.register("sentinel_bolt", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "sentinel_bolt")));
     public static final RegistryObject<SoundEvent> M_60_FIRE_1P = REGISTRY.register("m_60_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "m_60_fire_1p")));
     public static final RegistryObject<SoundEvent> M_60_FIRE_3P = REGISTRY.register("m_60_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "m_60_fire_3p")));
     public static final RegistryObject<SoundEvent> M_60_FAR = REGISTRY.register("m_60_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "m_60_far")));
@@ -162,6 +164,7 @@ public class TargetModSounds {
     public static final RegistryObject<SoundEvent> M_98B_VERYFAR = REGISTRY.register("m_98b_veryfar", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "m_98b_veryfar")));
     public static final RegistryObject<SoundEvent> M_98B_RELOAD_NORMAL = REGISTRY.register("m_98b_reload_normal", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "m_98b_reload_normal")));
     public static final RegistryObject<SoundEvent> M_98B_RELOAD_EMPTY = REGISTRY.register("m_98b_reload_empty", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "m_98b_reload_empty")));
+    public static final RegistryObject<SoundEvent> M_98B_BOLT = REGISTRY.register("m_98b_bolt", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "m_98b_bolt")));
     public static final RegistryObject<SoundEvent> MARLIN_FIRE_1P = REGISTRY.register("marlin_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "marlin_fire_1p")));
     public static final RegistryObject<SoundEvent> MARLIN_FIRE_3P = REGISTRY.register("marlin_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "marlin_fire_3p")));
     public static final RegistryObject<SoundEvent> MARLIN_FAR = REGISTRY.register("marlin_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "marlin_far")));

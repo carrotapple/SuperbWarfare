@@ -110,7 +110,7 @@ public class GunEventHandler {
 
     private static void handleGunFire(Player player) {
         ItemStack stack = player.getMainHandItem();
-        if (stack.is(TargetModTags.Items.NORMAL_MAG_GUN)) {
+        if (stack.is(TargetModTags.Items.NORMAL_GUN)) {
             double mode = stack.getOrCreateTag().getInt("firemode");
             if (player.getPersistentData().getDouble("firing") == 0 && player.getMainHandItem().getItem() == TargetModItems.DEVOTION.get()) {
                 stack.getOrCreateTag().putDouble("fire_increase", 0);
@@ -120,7 +120,10 @@ public class GunEventHandler {
                     && stack.getOrCreateTag().getDouble("reloading") == 0
                     && stack.getOrCreateTag().getInt("ammo") > 0
                     && !player.getCooldowns().isOnCooldown(stack.getItem())
-                    && mode != 1) {
+                    && mode != 1
+                    && stack.getOrCreateTag().getDouble("need_bolt_action") == 0) {
+
+                playGunSounds(player);
 
                 if (stack.getOrCreateTag().getInt("firemode") == 0) {
                     player.getPersistentData().putDouble("firing", 0);
@@ -135,10 +138,16 @@ public class GunEventHandler {
                 if (stack.getOrCreateTag().getInt("ammo") == 1) {
                     stack.getOrCreateTag().putDouble("gj", 1);
                 }
+                /**
+                 * 判断是否为栓动武器（bolt_action_time > 0），并在开火后给一个需要上膛的状态
+                 */
+                if (stack.getOrCreateTag().getDouble("bolt_action_time") > 0 && stack.getOrCreateTag().getInt("ammo") > 1) {
+                    stack.getOrCreateTag().putDouble("need_bolt_action", 1);
+                }
 
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
-                stack.getOrCreateTag().putDouble("firecooldown", 7);
-                stack.getOrCreateTag().putDouble("fireanim", 2);
+                stack.getOrCreateTag().putDouble("fireanim", stack.getOrCreateTag().getDouble("fire_interval"));
+                stack.getOrCreateTag().putDouble("flash_time", 2);
                 stack.getOrCreateTag().putDouble("empty", 1);
 
                 if (player.getMainHandItem().getItem() == TargetModItems.M_4.get() || player.getMainHandItem().getItem() == TargetModItems.HK_416.get()) {
@@ -164,13 +173,41 @@ public class GunEventHandler {
                     }
                 }
 
+                if (player.getMainHandItem().getItem() == TargetModItems.SENTINEL.get()) {
+                    if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+                        stack.getOrCreateTag().putBoolean("zoom_fire", true);
+                    } else {
+                        stack.getOrCreateTag().putBoolean("zoom_fire", false);
+                    }
+                    if (stack.getOrCreateTag().getDouble("power") > 20) {
+                        stack.getOrCreateTag().putDouble("power", (stack.getOrCreateTag().getDouble("power") - 20));
+                    } else {
+                        stack.getOrCreateTag().putDouble("power", 0);
+                    }
+                    stack.getOrCreateTag().putDouble("crot", 20);
+                }
+
                 int cooldown = (int) stack.getOrCreateTag().getDouble("fire_interval") + (int) stack.getOrCreateTag().getDouble("fire_sequence") - (int) stack.getOrCreateTag().getDouble("fire_increase");
                 player.getCooldowns().addCooldown(stack.getItem(), cooldown);
 
                 for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectileamount"); index0++) {
                     gunShoot(player);
                 }
-                playGunSounds(player);
+
+            }
+            /**
+             * 在开火动画的最后1tick，设置需要拉栓上膛的武器拉栓动画的倒计时为data里的拉栓时间
+             */
+            if (stack.getOrCreateTag().getDouble("fireanim") == 1 && stack.getOrCreateTag().getDouble("need_bolt_action") == 1) {
+                stack.getOrCreateTag().putDouble("bolt_action_anim", stack.getOrCreateTag().getDouble("bolt_action_time"));
+                player.getCooldowns().addCooldown(stack.getItem(), (int) stack.getOrCreateTag().getDouble("bolt_action_time"));
+                playGunBoltSounds(player);
+            }
+            if (stack.getOrCreateTag().getDouble("bolt_action_anim") > 0) {
+                stack.getOrCreateTag().putDouble("bolt_action_anim", stack.getOrCreateTag().getDouble("bolt_action_anim") -1);
+            }
+            if (stack.getOrCreateTag().getDouble("bolt_action_anim") == 1) {
+                stack.getOrCreateTag().putDouble("need_bolt_action", 0);
             }
         }
     }
@@ -188,26 +225,71 @@ public class GunEventHandler {
             String origin = stack.getItem().getDescriptionId();
             String name = origin.substring(origin.lastIndexOf(".") + 1);
 
-            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_fire_1p"));
-            if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
-                serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(sound1p),
-                        SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 2f, 1f, serverPlayer.level().random.nextLong()));
-            }
+            if (player.getMainHandItem().getItem() == TargetModItems.SENTINEL.get() && stack.getOrCreateTag().getDouble("power") > 0) {
+                SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_charge_fire_1p"));
+                if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
+                    serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(sound1p),
+                            SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 2f, 1f, serverPlayer.level().random.nextLong()));
+                }
 
-            SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_fire_3p"));
-            if (sound3p != null) {
-                player.playSound(sound3p, 4f, 1f);
-            }
+                SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "v_fire_3p"));
+                if (sound3p != null) {
+                    player.playSound(sound3p, 4f, 1f);
+                }
 
-            SoundEvent soundFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_far"));
-            if (soundFar != null) {
-                player.playSound(soundFar, 12f, 1f);
-            }
+                SoundEvent soundFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_charge_far"));
+                if (soundFar != null) {
+                    player.playSound(soundFar, 12f, 1f);
+                }
 
-            SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_veryfar"));
-            if (soundVeryFar != null) {
-                player.playSound(soundVeryFar, 24f, 1f);
+                SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_charge_veryfar"));
+                if (soundVeryFar != null) {
+                    player.playSound(soundVeryFar, 24f, 1f);
+
+                }
+
+            } else {
+                SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_fire_1p"));
+                if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
+                    serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(sound1p),
+                            SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 2f, 1f, serverPlayer.level().random.nextLong()));
+                }
+
+                SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_fire_3p"));
+                if (sound3p != null) {
+                    player.playSound(sound3p, 4f, 1f);
+                }
+
+                SoundEvent soundFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_far"));
+                if (soundFar != null) {
+                    player.playSound(soundFar, 12f, 1f);
+                }
+
+                SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_veryfar"));
+                if (soundVeryFar != null) {
+                    player.playSound(soundVeryFar, 24f, 1f);
+
+                }
+
             }
+        }
+    }
+
+    public static void playGunBoltSounds(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) {
+            return;
+        }
+
+        if (!player.level().isClientSide) {
+            String origin = stack.getItem().getDescriptionId();
+            String name = origin.substring(origin.lastIndexOf(".") + 1);
+
+                SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_bolt"));
+                if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
+                    serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(sound1p),
+                            SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 2f, 1f, serverPlayer.level().random.nextLong()));
+                }
         }
     }
 
@@ -233,8 +315,7 @@ public class GunEventHandler {
 
         if (!player.level().isClientSide()) {
             float headshot = (float) heldItem.getOrCreateTag().getDouble("headshot");
-            float damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("adddamage"))
-                    * (float) heldItem.getOrCreateTag().getDouble("damageadd");
+            float damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("adddamage")) * (float) heldItem.getOrCreateTag().getDouble("damageadd");
 
             ProjectileEntity projectile = new ProjectileEntity(player.level())
                     .shooter(player)

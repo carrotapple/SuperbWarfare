@@ -7,5 +7,6 @@
   "damage": 2,
   "headshot": 1.5,
   "velocity": 20,
-  "mag": 8
+  "mag": 8,
+  "weight": 1
 }

@@ -84,7 +84,8 @@ public class M98bItemModel extends GeoModel<M98bItem> {
             qiang.setScaleX(1);
             qiang.setScaleY(1);
         }
-        if (stack.getOrCreateTag().getDouble("fireanim") > 14) {
+
+        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
             flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
             flare.setScaleY((float) (1.0 + 0.5 * (Math.random() - 0.5)));
             flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));

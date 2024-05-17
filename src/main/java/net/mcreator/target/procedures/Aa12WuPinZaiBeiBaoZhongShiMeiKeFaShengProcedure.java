@@ -64,6 +64,5 @@ public class Aa12WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 GunReload.reload(entity, GunInfo.Type.SHOTGUN, true);
             }
         }
-        WeaponDrawProcedure.execute(entity, itemstack);
     }
 }

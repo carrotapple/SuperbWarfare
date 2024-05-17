@@ -6,6 +6,10 @@
   "recoily": 0.018,
   "damage": 25,
   "mag": 5,
+  "projectileamount": 1,
   "headshot": 2,
-  "velocity": 50
+  "velocity": 50,
+  "fire_interval": 2,
+  "bolt_action_time": 22,
+  "weight": 1
 }

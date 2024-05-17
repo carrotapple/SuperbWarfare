@@ -72,6 +72,5 @@ public class SvdWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 GunReload.reload(entity, GunInfo.Type.SNIPER, true);
             }
         }
-        WeaponDrawProcedure.execute(entity, itemstack);
     }
 }

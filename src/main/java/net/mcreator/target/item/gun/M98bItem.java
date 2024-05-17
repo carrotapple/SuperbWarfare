@@ -81,12 +81,12 @@ public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.draw"));
             }
 
-            if (stack.getOrCreateTag().getDouble("fireanim") > 16) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.fire"));
+            if (stack.getOrCreateTag().getDouble("bolt_action_anim") > 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.shift"));
             }
 
-            if (stack.getOrCreateTag().getDouble("fireanim") < 16 && stack.getOrCreateTag().getDouble("fireanim") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.shift"));
+            if (stack.getOrCreateTag().getDouble("fireanim") > 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.fire"));
             }
 
             if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 1) {

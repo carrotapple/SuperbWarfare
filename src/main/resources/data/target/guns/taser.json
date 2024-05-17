@@ -6,5 +6,6 @@
   "zoom": 1.25,
   "damage": 5,
   "velocity": 3,
-  "mag": 1
+  "mag": 1,
+  "weight": 0
 }

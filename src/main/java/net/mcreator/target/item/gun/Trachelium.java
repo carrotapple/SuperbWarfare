@@ -7,7 +7,6 @@ import net.mcreator.target.client.renderer.item.TracheliumItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.item.AnimatedItem;
-import net.mcreator.target.procedures.WeaponDrawLightProcedure;
 import net.mcreator.target.tools.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -194,7 +193,6 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
                 GunReload.reload(entity, GunInfo.Type.HANDGUN);
             }
         }
-        WeaponDrawLightProcedure.execute(entity, itemstack);
     }
 
     @Override

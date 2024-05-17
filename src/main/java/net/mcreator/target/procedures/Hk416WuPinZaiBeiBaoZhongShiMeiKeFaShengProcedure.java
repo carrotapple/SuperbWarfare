@@ -67,6 +67,5 @@ public class Hk416WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 GunReload.reload(entity, GunInfo.Type.RIFLE, true);
             }
         }
-        WeaponDrawProcedure.execute(entity, itemstack);
     }
 }
