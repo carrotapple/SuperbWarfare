@@ -55,7 +55,11 @@ public class Kraber extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(TargetModSounds.KRABER_RELOAD_EMPTY.get(), TargetModSounds.KRABER_RELOAD_NORMAL.get());
+        return Set.of(
+                TargetModSounds.KRABER_RELOAD_EMPTY.get(),
+                TargetModSounds.KRABER_RELOAD_NORMAL.get(),
+                TargetModSounds.KRABER_BOLT.get()
+        );
     }
 
     @Override

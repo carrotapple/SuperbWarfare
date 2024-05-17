@@ -180,7 +180,12 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(TargetModSounds.SENTINEL_RELOAD_EMPTY.get(), TargetModSounds.SENTINEL_RELOAD_NORMAL.get(), TargetModSounds.SENTINEL_CHARGE.get());
+        return Set.of(
+                TargetModSounds.SENTINEL_RELOAD_EMPTY.get(),
+                TargetModSounds.SENTINEL_RELOAD_NORMAL.get(),
+                TargetModSounds.SENTINEL_CHARGE.get(),
+                TargetModSounds.SENTINEL_BOLT.get()
+        );
     }
 
     @Override

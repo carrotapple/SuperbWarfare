@@ -169,7 +169,11 @@ public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(TargetModSounds.M_98B_RELOAD_EMPTY.get(), TargetModSounds.M_98B_RELOAD_NORMAL.get());
+        return Set.of(
+                TargetModSounds.M_98B_RELOAD_EMPTY.get(),
+                TargetModSounds.M_98B_RELOAD_NORMAL.get(),
+                TargetModSounds.M_98B_BOLT.get()
+        );
     }
 
     public static ItemStack getGunInstance() {
