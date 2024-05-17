@@ -121,16 +121,16 @@ public class LivingEntityEventHandler {
 
     private static void killIndication(Entity sourceEntity) {
         if (sourceEntity == null) return;
-            if (!sourceEntity.level().isClientSide() && sourceEntity.getServer() != null) {
+        if (!sourceEntity.level().isClientSide() && sourceEntity.getServer() != null) {
 
-                // TODO 修改为正确音效播放方法
-                sourceEntity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, sourceEntity.position(), sourceEntity.getRotationVector(), sourceEntity.level() instanceof ServerLevel ? (ServerLevel) sourceEntity.level() : null, 4,
-                        sourceEntity.getName().getString(), sourceEntity.getDisplayName(), sourceEntity.level().getServer(), sourceEntity), "playsound target:targetdown player @s ~ ~ ~ 100 1");
-            }
-            sourceEntity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.killIndicator = 40;
-                capability.syncPlayerVariables(sourceEntity);
-            });
+            // TODO 修改为正确音效播放方法
+            sourceEntity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, sourceEntity.position(), sourceEntity.getRotationVector(), sourceEntity.level() instanceof ServerLevel ? (ServerLevel) sourceEntity.level() : null, 4,
+                    sourceEntity.getName().getString(), sourceEntity.getDisplayName(), sourceEntity.level().getServer(), sourceEntity), "playsound target:targetdown player @s ~ ~ ~ 100 1");
+        }
+        sourceEntity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            capability.killIndicator = 40;
+            capability.syncPlayerVariables(sourceEntity);
+        });
     }
 
     private static void arrowDamageImmuneForMine(Event event, DamageSource damageSource, Entity sourceEntity) {
@@ -175,7 +175,7 @@ public class LivingEntityEventHandler {
             ItemStack oldStack = event.getFrom();
             ItemStack newStack = event.getTo();
 
-            if (oldStack.getItem() instanceof GunItem oldGun && player.level() instanceof ServerLevel serverLevel) {
+            if (player.level() instanceof ServerLevel serverLevel) {
                 var newTag = newStack.getTag();
                 var oldTag = oldStack.getTag();
 
@@ -184,10 +184,12 @@ public class LivingEntityEventHandler {
                         || !newTag.hasUUID("gun_uuid") || !oldTag.hasUUID("gun_uuid")
                         || !newTag.getUUID("gun_uuid").equals(oldTag.getUUID("gun_uuid"))
                 ) {
-                    stopGunReloadSound(serverLevel, oldGun);
-                    // TODO 添加一个原先物品不是枪也能触发切枪动画
                     if (newStack.getItem() instanceof GunItem) {
-                        newStack.getOrCreateTag().putDouble("draw", 1);
+                        newStack.getOrCreateTag().putBoolean("draw", true);
+                    }
+
+                    if (oldStack.getItem() instanceof GunItem oldGun) {
+                        stopGunReloadSound(serverLevel, oldGun);
                     }
 
                     player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
@@ -195,6 +197,7 @@ public class LivingEntityEventHandler {
                         capability.zooming = false;
                         capability.syncPlayerVariables(player);
                     });
+
                     player.getPersistentData().putDouble("zoompos", 0);
                     player.getPersistentData().putDouble("zoom_time", 0);
                     if (newStack.getOrCreateTag().getDouble("bolt_action_time") > 0) {

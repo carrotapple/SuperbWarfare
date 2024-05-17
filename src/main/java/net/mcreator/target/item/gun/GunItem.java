@@ -45,21 +45,23 @@ public abstract class GunItem extends Item {
         }
         GunsTool.pvpModeCheck(itemstack, level);
 
-        if (tag.getDouble("draw") == 1) {
-            tag.putDouble("draw", 0);
+        if (tag.getBoolean("draw")) {
+            tag.putBoolean("draw", false);
             tag.putDouble("drawtime", 0);
             entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.zooming = false;
                 capability.syncPlayerVariables(entity);
             });
 
-            if (entity instanceof Player _player) {
-                if (tag.getDouble("weight") == 0) {
-                    _player.getCooldowns().addCooldown(itemstack.getItem(), 12);
-                } else if (tag.getDouble("weight") == 1) {
-                    _player.getCooldowns().addCooldown(itemstack.getItem(), 17);
-                } else if (tag.getDouble("weight") == 2) {
-                    _player.getCooldowns().addCooldown(itemstack.getItem(), 30);
+            if (entity instanceof Player player) {
+                double weight = tag.getDouble("weight");
+
+                if (weight == 0) {
+                    player.getCooldowns().addCooldown(itemstack.getItem(), 12);
+                } else if (weight == 1) {
+                    player.getCooldowns().addCooldown(itemstack.getItem(), 17);
+                } else if (weight == 2) {
+                    player.getCooldowns().addCooldown(itemstack.getItem(), 30);
                 }
             }
 
@@ -99,7 +101,7 @@ public abstract class GunItem extends Item {
     @SubscribeEvent
     public static void onPickup(EntityItemPickupEvent event) {
         if (event.getItem().getItem().is(TargetModTags.Items.GUN)) {
-            event.getItem().getItem().getOrCreateTag().putDouble("draw", 1);
+            event.getItem().getItem().getOrCreateTag().putBoolean("draw", true);
         }
     }
 }
