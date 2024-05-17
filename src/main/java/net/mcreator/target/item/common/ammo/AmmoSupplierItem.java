@@ -30,12 +30,12 @@ public abstract class AmmoSupplierItem extends Item {
         stack.shrink(1);
 
         player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            var newAmmoCount = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> switch (this.type) {
-                case HANDGUN -> c.handgunAmmo;
-                case RIFLE -> c.rifleAmmo;
-                case SHOTGUN -> c.shotgunAmmo;
-                case SNIPER -> c.sniperAmmo;
-            }).orElse(0) + ammoToAdd;
+            var newAmmoCount = switch (this.type) {
+                case HANDGUN -> capability.handgunAmmo;
+                case RIFLE -> capability.rifleAmmo;
+                case SHOTGUN -> capability.shotgunAmmo;
+                case SNIPER -> capability.sniperAmmo;
+            } + ammoToAdd;
             switch (this.type) {
                 case HANDGUN -> capability.handgunAmmo = newAmmoCount;
                 case RIFLE -> capability.rifleAmmo = newAmmoCount;
