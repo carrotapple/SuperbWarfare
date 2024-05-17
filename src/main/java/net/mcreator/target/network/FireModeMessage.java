@@ -70,7 +70,7 @@ public class FireModeMessage {
         ItemStack mainHandItem = player.getMainHandItem();
         CompoundTag tag = mainHandItem.getOrCreateTag();
         Item item = mainHandItem.getItem();
-        int fireMode = (int) tag.getInt("fire_mode");
+        int fireMode = tag.getInt("fire_mode");
 
         if (item == TargetModItems.AK_47.get()
                 || item == TargetModItems.M_4.get()
@@ -86,7 +86,7 @@ public class FireModeMessage {
         if (item == TargetModItems.SENTINEL.get() && !(player.getCooldowns().isOnCooldown(item)) && tag.getDouble("charging") == 0) {
             tag.putDouble("charging", 1);
             tag.putDouble("cid", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-            tag.putDouble("chargingtime", 128);
+            tag.putDouble("charging_time", 128);
         }
     }
 }

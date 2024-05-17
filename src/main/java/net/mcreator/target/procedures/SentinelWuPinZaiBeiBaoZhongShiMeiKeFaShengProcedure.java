@@ -73,17 +73,17 @@ public class SentinelWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
         if (itemstack.getOrCreateTag().getDouble("firing") > 0) {
             itemstack.getOrCreateTag().putDouble("firing", (itemstack.getOrCreateTag().getDouble("firing") - 1));
         }
-        if (itemstack.getOrCreateTag().getDouble("zoom_firing") > 0) {
-            itemstack.getOrCreateTag().putDouble("zoom_firing", (itemstack.getOrCreateTag().getDouble("zoom_firing") - 1));
+        if (itemstack.getOrCreateTag().getDouble("zoom_speed") > 0) {
+            itemstack.getOrCreateTag().putDouble("zoom_speed", (itemstack.getOrCreateTag().getDouble("zoom_speed") - 1));
         }
 
         cid = itemstack.getOrCreateTag().getDouble("cid");
         if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("cid") != itemstack.getOrCreateTag().getDouble("cid")) {
             itemstack.getOrCreateTag().putDouble("charging", 0);
-            itemstack.getOrCreateTag().putDouble("chargingtime", 0);
+            itemstack.getOrCreateTag().putDouble("charging_time", 0);
         }
         if (itemstack.getOrCreateTag().getDouble("charging") == 1) {
-            if (itemstack.getOrCreateTag().getDouble("chargingtime") == 127) {
+            if (itemstack.getOrCreateTag().getDouble("charging_time") == 127) {
                 entity.getPersistentData().putDouble("cid", cid);
                 {
                     Entity _ent = entity;
@@ -95,17 +95,17 @@ public class SentinelWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
             }
             if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == itemstack.getItem()
                     && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("cid") == cid) {
-                if (itemstack.getOrCreateTag().getDouble("chargingtime") > 0) {
-                    itemstack.getOrCreateTag().putDouble("chargingtime", (itemstack.getOrCreateTag().getDouble("chargingtime") - 1));
+                if (itemstack.getOrCreateTag().getDouble("charging_time") > 0) {
+                    itemstack.getOrCreateTag().putDouble("charging_time", (itemstack.getOrCreateTag().getDouble("charging_time") - 1));
                 }
             } else {
                 itemstack.getOrCreateTag().putDouble("charging", 0);
-                itemstack.getOrCreateTag().putDouble("chargingtime", 0);
+                itemstack.getOrCreateTag().putDouble("charging_time", 0);
             }
-            if (itemstack.getOrCreateTag().getDouble("chargingtime") == 16 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("cid") == cid) {
+            if (itemstack.getOrCreateTag().getDouble("charging_time") == 16 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("cid") == cid) {
                 itemstack.getOrCreateTag().putDouble("power", 100);
             }
-            if (itemstack.getOrCreateTag().getDouble("chargingtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("cid") == cid) {
+            if (itemstack.getOrCreateTag().getDouble("charging_time") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("cid") == cid) {
                 itemstack.getOrCreateTag().putDouble("charging", 0);
             }
         }

@@ -77,7 +77,7 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
 
         if (this.animationProcedure.equals("empty")) {
             var tag = stack.getOrCreateTag();
-            if (tag.getDouble("drawtime") < 16) {
+            if (tag.getInt("draw_time") < 16) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.svd.draw"));
             }
 

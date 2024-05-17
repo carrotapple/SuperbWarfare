@@ -79,7 +79,7 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
         if (transformType != null && transformType.firstPerson()) {
             if (this.animationProcedure.equals("empty")) {
 
-                if (stack.getOrCreateTag().getDouble("drawtime") < 16) {
+                if (stack.getOrCreateTag().getInt("draw_time") < 16) {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.marlin.draw"));
                 }
 

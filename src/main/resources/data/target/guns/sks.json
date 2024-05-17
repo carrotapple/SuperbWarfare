@@ -1,14 +1,14 @@
 {
-  "zoomspeed": 1,
+  "zoom_speed": 1,
   "zoom": 1.25,
   "dev": 5,
-  "recoilx": 0.004,
-  "recoily": 0.015,
+  "recoil_x": 0.004,
+  "recoil_y": 0.015,
   "damage": 9.5,
   "headshot": 1.75,
   "velocity": 40,
   "mag": 20,
-  "projectileamount": 1,
+  "projectile_amount": 1,
   "fire_interval": 3,
   "weight": 1
 }

@@ -88,7 +88,7 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (this.animationProcedure.equals("empty")) {
 
-            if (stack.getOrCreateTag().getDouble("drawtime") < 11) {
+            if (stack.getOrCreateTag().getInt("draw_time") < 11) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.draw"));
             }
 

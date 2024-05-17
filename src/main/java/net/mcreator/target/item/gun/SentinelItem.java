@@ -98,7 +98,7 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
 
         if (this.animationProcedure.equals("empty")) {
 
-            if (stack.getOrCreateTag().getDouble("drawtime") < 16) {
+            if (stack.getOrCreateTag().getInt("draw_time") < 16) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.draw"));
             }
 
@@ -122,11 +122,11 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload2"));
             }
 
-            if (stack.getOrCreateTag().getDouble("chargingtime") > 127 && stack.getOrCreateTag().getDouble("charging") == 1) {
+            if (stack.getOrCreateTag().getDouble("charging_time") > 127 && stack.getOrCreateTag().getDouble("charging") == 1) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.chargep"));
             }
 
-            if (stack.getOrCreateTag().getDouble("chargingtime") < 127 && stack.getOrCreateTag().getDouble("chargingtime") > 0 && stack.getOrCreateTag().getDouble("charging") == 1) {
+            if (stack.getOrCreateTag().getDouble("charging_time") < 127 && stack.getOrCreateTag().getDouble("charging_time") > 0 && stack.getOrCreateTag().getDouble("charging") == 1) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.charge"));
             }
 

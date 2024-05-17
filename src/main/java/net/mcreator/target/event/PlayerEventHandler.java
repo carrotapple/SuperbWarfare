@@ -394,8 +394,8 @@ public class PlayerEventHandler {
         if (!player.getMainHandItem().is(TargetModTags.Items.GUN)) return;
 
         CompoundTag tag = player.getMainHandItem().getOrCreateTag();
-        float recoilX = (float) tag.getDouble("recoilx");
-        float recoilY = (float) tag.getDouble("recoily");
+        float recoilX = (float) tag.getDouble("recoil_x");
+        float recoilY = (float) tag.getDouble("recoil_y");
 
         var capability = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null);
         float recoilYaw = capability.map(c -> c.recoilHorizon).orElse(0d).floatValue();

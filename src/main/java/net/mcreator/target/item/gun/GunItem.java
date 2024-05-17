@@ -47,7 +47,7 @@ public abstract class GunItem extends Item {
 
         if (tag.getBoolean("draw")) {
             tag.putBoolean("draw", false);
-            tag.putDouble("drawtime", 0);
+            tag.putInt("draw_time", 0);
             entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.zooming = false;
                 capability.syncPlayerVariables(entity);
@@ -77,8 +77,8 @@ public abstract class GunItem extends Item {
         }
 
         if (mainHandItem == itemstack.getItem()) {
-            if (tag.getDouble("drawtime") < 50) {
-                tag.putDouble("drawtime", (tag.getDouble("drawtime") + 1));
+            if (tag.getInt("draw_time") < 50) {
+                tag.putInt("draw_time", (tag.getInt("draw_time") + 1));
             }
         }
         if (tag.getInt("fire_animation") > 0) {

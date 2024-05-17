@@ -1,12 +1,12 @@
 {
   "zoom": 1,
   "dev": 5,
-  "recoilx": 0.024,
-  "recoily": 0.005,
+  "recoil_x": 0.024,
+  "recoil_y": 0.005,
   "damage": 8,
   "headshot": 2,
   "velocity": 40,
-  "firemode": 2,
+  "fire_mode": 2,
   "fire_interval": 1,
   "weight": 2
 }

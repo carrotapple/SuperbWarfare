@@ -1,9 +1,9 @@
 {
-  "zoomspeed": 0.77,
+  "zoom_speed": 0.77,
   "zoom": 1.25,
   "dev": 5,
-  "recoilx": 0.008,
-  "recoily": 0.018,
+  "recoil_x": 0.008,
+  "recoil_y": 0.018,
   "damage": 150,
   "velocity": 5.75,
   "mag": 1,

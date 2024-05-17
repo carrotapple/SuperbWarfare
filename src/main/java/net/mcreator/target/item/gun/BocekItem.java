@@ -74,7 +74,7 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
             LocalPlayer player = Minecraft.getInstance().player;
             ItemStack stack = player.getMainHandItem();
 
-            if (stack.getOrCreateTag().getDouble("drawtime") < 16) {
+            if (stack.getOrCreateTag().getInt("draw_time") < 16) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.bocek.draw"));
             }
 

@@ -223,7 +223,7 @@ public class ClientEventHandler {
         if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
             if (entity.getPersistentData().getDouble("zoom_time") < 1) {
                 entity.getPersistentData().putDouble("zoom_time",
-                        (entity.getPersistentData().getDouble("zoom_time") + entity.getMainHandItem().getOrCreateTag().getDouble("zoom_firing") * 0.02 * times));
+                        (entity.getPersistentData().getDouble("zoom_time") + entity.getMainHandItem().getOrCreateTag().getDouble("zoom_speed") * 0.02 * times));
             } else {
                 entity.getPersistentData().putDouble("zoom_time", 1);
             }
@@ -253,8 +253,8 @@ public class ClientEventHandler {
         ItemStack stack = entity.getMainHandItem();
 
         float times = 45f / fps;
-        amplitude = 15000 * stack.getOrCreateTag().getDouble("recoily")
-                * stack.getOrCreateTag().getDouble("recoilx");
+        amplitude = 15000 * stack.getOrCreateTag().getDouble("recoil_y")
+                * stack.getOrCreateTag().getDouble("recoil_x");
         var data = entity.getPersistentData();
         if (entity.isShiftKeyDown() && entity.getBbHeight() >= 1 && data.getDouble("prone") == 0) {
             pose = 0.9;

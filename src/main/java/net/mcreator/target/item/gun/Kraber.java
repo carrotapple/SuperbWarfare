@@ -89,7 +89,7 @@ public class Kraber extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (this.animationProcedure.equals("empty")) {
 
-            if (stack.getOrCreateTag().getDouble("drawtime") < 29) {
+            if (stack.getOrCreateTag().getInt("draw_time") < 29) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.kraber.draw"));
             }
 

@@ -77,7 +77,7 @@ public class M4Item extends GunItem implements GeoItem, AnimatedItem {
 
         if (this.animationProcedure.equals("empty")) {
 
-            if (stack.getOrCreateTag().getDouble("drawtime") < 16) {
+            if (stack.getOrCreateTag().getInt("draw_time") < 16) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m4.draw"));
             }
 

@@ -190,7 +190,7 @@ public class GunEventHandler {
                 int cooldown = (int) stack.getOrCreateTag().getDouble("fire_interval") + (int) stack.getOrCreateTag().getDouble("fire_sequence") - (int) stack.getOrCreateTag().getDouble("fire_increase");
                 player.getCooldowns().addCooldown(stack.getItem(), cooldown);
 
-                for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectileamount"); index0++) {
+                for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {
                     gunShoot(player);
                 }
 

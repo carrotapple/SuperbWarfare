@@ -84,7 +84,7 @@ public class TooltipTool {
     public static void addSentinelTips(List<Component> tooltip, ItemStack stack) {
         tooltip.add(Component.literal(""));
 
-        boolean flag = ItemNBTTool.getDouble(stack, "chargingtime", 0) > 0;
+        boolean flag = ItemNBTTool.getDouble(stack, "charging_time", 0) > 0;
 
         if (flag) {
             double damage = (ItemNBTTool.getDouble(stack, "damage", 0) +
