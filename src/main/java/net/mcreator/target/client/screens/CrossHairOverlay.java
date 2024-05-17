@@ -110,7 +110,7 @@ public class CrossHairOverlay {
         if (player == null) return false;
 
         if (player.isSpectator()) return false;
-        if (!player.getMainHandItem().is(TargetModTags.Items.GUN) || !(player.getPersistentData().getDouble("zoom_time") < 7))
+        if (!player.getMainHandItem().is(TargetModTags.Items.GUN) || !(player.getPersistentData().getDouble("zoom_animation_time") < 7))
             return false;
 
         return !(player.getMainHandItem().getItem() == TargetModItems.M_79.get())

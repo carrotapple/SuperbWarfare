@@ -73,8 +73,8 @@ public class SentinelWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
         if (itemstack.getOrCreateTag().getDouble("firing") > 0) {
             itemstack.getOrCreateTag().putDouble("firing", (itemstack.getOrCreateTag().getDouble("firing") - 1));
         }
-        if (itemstack.getOrCreateTag().getDouble("zoom_speed") > 0) {
-            itemstack.getOrCreateTag().putDouble("zoom_speed", (itemstack.getOrCreateTag().getDouble("zoom_speed") - 1));
+        if (itemstack.getOrCreateTag().getDouble("zoom_firing") > 0) {
+            itemstack.getOrCreateTag().putDouble("zoom_firing", (itemstack.getOrCreateTag().getDouble("zoom_firing") - 1));
         }
 
         cid = itemstack.getOrCreateTag().getDouble("cid");

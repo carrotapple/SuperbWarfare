@@ -272,11 +272,11 @@ public class PlayerEventHandler {
                         capability.syncPlayerVariables(player);
                     });
 
-                    if (player.getPersistentData().getInt("zoom_time") < 10) {
-                        player.getPersistentData().putInt("zoom_time", player.getPersistentData().getInt("zoom_time") + 1);
+                    if (player.getPersistentData().getInt("zoom_animation_time") < 10) {
+                        player.getPersistentData().putInt("zoom_animation_time", player.getPersistentData().getInt("zoom_animation_time") + 1);
                     }
                 } else {
-                    player.getPersistentData().putInt("zoom_time", 0);
+                    player.getPersistentData().putInt("zoom_animation_time", 0);
                 }
             }
         }

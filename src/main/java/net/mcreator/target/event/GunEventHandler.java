@@ -72,7 +72,7 @@ public class GunEventHandler {
                 }
 
                 double zoom;
-                if (player.getPersistentData().getDouble("zoom_time") > 4) {
+                if (player.getPersistentData().getDouble("zoom_animation_time") > 4) {
                     if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
                         zoom = 0.0001;
                     } else if (stack.is(TargetModTags.Items.SHOTGUN)) {

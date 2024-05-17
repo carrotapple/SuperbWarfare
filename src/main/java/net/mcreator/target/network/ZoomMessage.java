@@ -58,7 +58,7 @@ public class ZoomMessage {
                 capability.zooming = false;
                 capability.syncPlayerVariables(entity);
             });
-            entity.getPersistentData().putDouble("zoom_time", 0);
+            entity.getPersistentData().putDouble("zoom_animation_time", 0);
 
         }
     }
