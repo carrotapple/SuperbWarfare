@@ -18,10 +18,10 @@ public class RpgWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
         if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") != tag.getDouble("id")) {
             tag.putBoolean("empty_reload", false);
             tag.putBoolean("reloading", false);
-            tag.putDouble("reloading_time", 0);
+            tag.putDouble("reload_time", 0);
         }
         if (tag.getBoolean("reloading")) {
-            if (tag.getDouble("reloading_time") == 91) {
+            if (tag.getDouble("reload_time") == 91) {
                 entity.getPersistentData().putDouble("id", id);
                 if (entity.getServer() != null) {
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
@@ -30,18 +30,18 @@ public class RpgWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
             }
             if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == itemstack.getItem()
                     && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                if (tag.getDouble("reloading_time") > 0) {
-                    tag.putDouble("reloading_time", (tag.getDouble("reloading_time") - 1));
+                if (tag.getDouble("reload_time") > 0) {
+                    tag.putDouble("reload_time", (tag.getDouble("reload_time") - 1));
                 }
             } else {
                 tag.putBoolean("reloading", false);
-                tag.putDouble("reloading_time", 0);
+                tag.putDouble("reload_time", 0);
                 tag.putBoolean("empty_reload", false);
             }
-            if (tag.getDouble("reloading_time") == 84) {
+            if (tag.getDouble("reload_time") == 84) {
                 tag.putDouble("empty", 0);
             }
-            if (tag.getDouble("reloading_time") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
+            if (tag.getDouble("reload_time") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
                 if (tag.getInt("maxammo") >= 0) {
                     tag.putInt("ammo", 1);
                     if (entity instanceof Player _player) {

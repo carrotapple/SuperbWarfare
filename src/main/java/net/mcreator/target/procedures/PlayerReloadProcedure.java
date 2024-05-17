@@ -25,7 +25,7 @@ public class PlayerReloadProcedure {
                         && tag.getInt("maxammo") > 0) {
                     tag.putBoolean("reloading", true);
                     tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                    tag.putDouble("reloading_time", 55);
+                    tag.putDouble("reload_time", 55);
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.TRACHELIUM.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
@@ -35,7 +35,7 @@ public class PlayerReloadProcedure {
                     tag.putBoolean("reloading", true);
                     tag.putDouble("empty_reload", 1);
                     tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                    tag.putDouble("reloading_time", 57);
+                    tag.putDouble("reload_time", 57);
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.HUNTING_RIFLE.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
@@ -43,7 +43,7 @@ public class PlayerReloadProcedure {
                         && tag.getInt("ammo") < 1
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperAmmo > 0) {
                     tag.putBoolean("reloading", true);
-                    tag.putDouble("reloading_time", 61);
+                    tag.putDouble("reload_time", 61);
                     tag.putDouble("empty_reload", 1);
                     tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                 }
@@ -55,7 +55,7 @@ public class PlayerReloadProcedure {
                     tag.putBoolean("reloading", true);
                     tag.putDouble("empty_reload", 1);
                     tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                    tag.putDouble("reloading_time", 86);
+                    tag.putDouble("reload_time", 86);
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.RPG.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
@@ -65,7 +65,7 @@ public class PlayerReloadProcedure {
                     tag.putBoolean("reloading", true);
                     tag.putDouble("empty_reload", 1);
                     tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                    tag.putDouble("reloading_time", 91);
+                    tag.putDouble("reload_time", 91);
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.ABEKIRI.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
@@ -76,12 +76,12 @@ public class PlayerReloadProcedure {
                         tag.putBoolean("reloading", true);
                         tag.putBoolean("empty_reload", false);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 83);
+                        tag.putDouble("reload_time", 83);
                     } else if (tag.getInt("ammo") == 0) {
                         tag.putBoolean("reloading", true);
                         tag.putDouble("empty_reload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 99);
+                        tag.putDouble("reload_time", 99);
                     }
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.M_98B.get()
@@ -93,12 +93,12 @@ public class PlayerReloadProcedure {
                         tag.putBoolean("reloading", true);
                         tag.putBoolean("empty_reload", false);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 57);
+                        tag.putDouble("reload_time", 57);
                     } else if (tag.getInt("ammo") == 0) {
                         tag.putBoolean("reloading", true);
                         tag.putDouble("empty_reload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 79);
+                        tag.putDouble("reload_time", 79);
                     }
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.KRABER.get()
@@ -110,12 +110,12 @@ public class PlayerReloadProcedure {
                         tag.putBoolean("reloading", true);
                         tag.putBoolean("empty_reload", false);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 65);
+                        tag.putDouble("reload_time", 65);
                     } else if (tag.getInt("ammo") == 0) {
                         tag.putBoolean("reloading", true);
                         tag.putDouble("empty_reload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 83);
+                        tag.putDouble("reload_time", 83);
                     }
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.VECTOR.get()
@@ -127,12 +127,12 @@ public class PlayerReloadProcedure {
                         tag.putBoolean("reloading", true);
                         tag.putBoolean("empty_reload", false);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 47);
+                        tag.putDouble("reload_time", 47);
                     } else if (tag.getInt("ammo") == 0) {
                         tag.putBoolean("reloading", true);
                         tag.putDouble("empty_reload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 61);
+                        tag.putDouble("reload_time", 61);
                     }
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.MK_14.get()
@@ -144,12 +144,12 @@ public class PlayerReloadProcedure {
                         tag.putBoolean("reloading", true);
                         tag.putBoolean("empty_reload", false);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 45);
+                        tag.putDouble("reload_time", 45);
                     } else if (tag.getInt("ammo") == 0) {
                         tag.putBoolean("reloading", true);
                         tag.putDouble("empty_reload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 55);
+                        tag.putDouble("reload_time", 55);
                     }
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.SKS.get()
@@ -161,12 +161,12 @@ public class PlayerReloadProcedure {
                         tag.putBoolean("reloading", true);
                         tag.putBoolean("empty_reload", false);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 41);
+                        tag.putDouble("reload_time", 41);
                     } else if (tag.getInt("ammo") == 0) {
                         tag.putBoolean("reloading", true);
                         tag.putDouble("empty_reload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 57);
+                        tag.putDouble("reload_time", 57);
                     }
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.AK_47.get()
@@ -178,12 +178,12 @@ public class PlayerReloadProcedure {
                         tag.putBoolean("reloading", true);
                         tag.putBoolean("empty_reload", false);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 41);
+                        tag.putDouble("reload_time", 41);
                     } else if (tag.getInt("ammo") == 0) {
                         tag.putBoolean("reloading", true);
                         tag.putDouble("empty_reload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 57);
+                        tag.putDouble("reload_time", 57);
                     }
                 }
                 if ((player.getMainHandItem().getItem() == TargetModItems.M_4.get()
@@ -196,12 +196,12 @@ public class PlayerReloadProcedure {
                         tag.putBoolean("reloading", true);
                         tag.putBoolean("empty_reload", false);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 41);
+                        tag.putDouble("reload_time", 41);
                     } else if (tag.getInt("ammo") == 0) {
                         tag.putBoolean("reloading", true);
                         tag.putDouble("empty_reload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 55);
+                        tag.putDouble("reload_time", 55);
                     }
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.AA_12.get()
@@ -213,12 +213,12 @@ public class PlayerReloadProcedure {
                         tag.putBoolean("reloading", true);
                         tag.putBoolean("empty_reload", false);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 44);
+                        tag.putDouble("reload_time", 44);
                     } else if (tag.getInt("ammo") == 0) {
                         tag.putBoolean("reloading", true);
                         tag.putDouble("empty_reload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 55);
+                        tag.putDouble("reload_time", 55);
                     }
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.DEVOTION.get()
@@ -230,12 +230,12 @@ public class PlayerReloadProcedure {
                         tag.putBoolean("reloading", true);
                         tag.putBoolean("empty_reload", false);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 51);
+                        tag.putDouble("reload_time", 51);
                     } else if (tag.getInt("ammo") == 0) {
                         tag.putBoolean("reloading", true);
                         tag.putDouble("empty_reload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 71);
+                        tag.putDouble("reload_time", 71);
                     }
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.RPK.get()
@@ -247,12 +247,12 @@ public class PlayerReloadProcedure {
                         tag.putBoolean("reloading", true);
                         tag.putBoolean("empty_reload", false);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 66);
+                        tag.putDouble("reload_time", 66);
                     } else if (tag.getInt("ammo") == 0) {
                         tag.putBoolean("reloading", true);
                         tag.putDouble("empty_reload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 83);
+                        tag.putDouble("reload_time", 83);
                     }
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.SENTINEL.get()
@@ -264,12 +264,12 @@ public class PlayerReloadProcedure {
                         tag.putBoolean("reloading", true);
                         tag.putBoolean("empty_reload", false);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 53);
+                        tag.putDouble("reload_time", 53);
                     } else if (tag.getInt("ammo") == 0) {
                         tag.putBoolean("reloading", true);
                         tag.putDouble("empty_reload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 73);
+                        tag.putDouble("reload_time", 73);
                     }
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.SVD.get()
@@ -281,12 +281,12 @@ public class PlayerReloadProcedure {
                         tag.putBoolean("reloading", true);
                         tag.putBoolean("empty_reload", false);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 55);
+                        tag.putDouble("reload_time", 55);
                     } else if (tag.getInt("ammo") == 0) {
                         tag.putBoolean("reloading", true);
                         tag.putDouble("empty_reload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 66);
+                        tag.putDouble("reload_time", 66);
                     }
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.M_60.get()
@@ -298,12 +298,12 @@ public class PlayerReloadProcedure {
                         tag.putBoolean("reloading", true);
                         tag.putBoolean("empty_reload", false);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 111);
+                        tag.putDouble("reload_time", 111);
                     } else if (tag.getInt("ammo") == 0) {
                         tag.putBoolean("reloading", true);
                         tag.putDouble("empty_reload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reloading_time", 129);
+                        tag.putDouble("reload_time", 129);
                     }
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.MARLIN.get()

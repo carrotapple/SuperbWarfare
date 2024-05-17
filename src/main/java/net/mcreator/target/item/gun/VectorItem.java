@@ -243,10 +243,10 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
         if (mainHandItem.getOrCreateTag().getDouble("id") != tag.getDouble("id")) {
             tag.putBoolean("empty_reload", false);
             tag.putBoolean("reloading", false);
-            tag.putDouble("reloading_time", 0);
+            tag.putDouble("reload_time", 0);
         }
         if (tag.getBoolean("reloading") && tag.getInt("ammo") == 0) {
-            if (tag.getDouble("reloading_time") == 61) {
+            if (tag.getDouble("reload_time") == 61) {
                 entity.getPersistentData().putDouble("id", id);
                 if (entity instanceof ServerPlayer serverPlayer) {
                     serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("target:vector_reload_empty"))),
@@ -256,18 +256,18 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
             }
             if (mainHandItem.getItem() == itemStack.getItem()
                     && mainHandItem.getOrCreateTag().getDouble("id") == id
-                    && tag.getDouble("reloading_time") > 0) {
-                tag.putDouble("reloading_time", tag.getDouble("reloading_time") - 1);
+                    && tag.getDouble("reload_time") > 0) {
+                tag.putDouble("reload_time", tag.getDouble("reload_time") - 1);
             } else {
                 tag.putBoolean("reloading", false);
                 tag.putBoolean("empty_reload", false);
-                tag.putDouble("reloading_time", 0);
+                tag.putDouble("reload_time", 0);
             }
-            if (tag.getDouble("reloading_time") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
+            if (tag.getDouble("reload_time") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
                 GunReload.reload(entity, GunInfo.Type.HANDGUN);
             }
         } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
-            if (tag.getDouble("reloading_time") == 47) {
+            if (tag.getDouble("reload_time") == 47) {
                 entity.getPersistentData().putDouble("id", id);
                 if (entity instanceof ServerPlayer serverPlayer) {
                     serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("target:vector_reload_normal"))),
@@ -277,14 +277,14 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
             }
             if (mainHandItem.getItem() == itemStack.getItem()
                     && mainHandItem.getOrCreateTag().getDouble("id") == id
-                    && tag.getDouble("reloading_time") > 0) {
-                tag.putDouble("reloading_time", (tag.getDouble("reloading_time") - 1));
+                    && tag.getDouble("reload_time") > 0) {
+                tag.putDouble("reload_time", (tag.getDouble("reload_time") - 1));
             } else {
                 tag.putBoolean("reloading", false);
                 tag.putBoolean("empty_reload", false);
-                tag.putDouble("reloading_time", 0);
+                tag.putDouble("reload_time", 0);
             }
-            if (tag.getDouble("reloading_time") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
+            if (tag.getDouble("reload_time") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
                 GunReload.reload(entity, GunInfo.Type.HANDGUN, true);
             }
         }

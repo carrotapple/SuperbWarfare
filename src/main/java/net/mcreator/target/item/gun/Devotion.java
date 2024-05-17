@@ -172,10 +172,10 @@ public class Devotion extends GunItem implements GeoItem, AnimatedItem {
         if (mainHandItemTag.getDouble("id") != itemTag.getDouble("id")) {
             itemTag.putBoolean("empty_reload", false);
             itemTag.putBoolean("reloading", false);
-            itemTag.putDouble("reloading_time", 0);
+            itemTag.putDouble("reload_time", 0);
         }
         if (itemTag.getBoolean("reloading") && itemTag.getInt("ammo") == 0) {
-            if (itemTag.getDouble("reloading_time") == 71) {
+            if (itemTag.getDouble("reload_time") == 71) {
                 entity.getPersistentData().putDouble("id", id);
                 if (!entity.level().isClientSide() && entity.getServer() != null) {
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
@@ -184,19 +184,19 @@ public class Devotion extends GunItem implements GeoItem, AnimatedItem {
             }
             if (mainHandItem.getItem() == itemstack.getItem()
                     && mainHandItemTag.getDouble("id") == id) {
-                if (itemTag.getDouble("reloading_time") > 0) {
-                    itemTag.putDouble("reloading_time", itemTag.getDouble("reloading_time") - 1);
+                if (itemTag.getDouble("reload_time") > 0) {
+                    itemTag.putDouble("reload_time", itemTag.getDouble("reload_time") - 1);
                 }
             } else {
                 itemTag.putBoolean("reloading", false);
                 itemTag.putBoolean("empty_reload", false);
-                itemTag.putDouble("reloading_time", 0);
+                itemTag.putDouble("reload_time", 0);
             }
-            if (itemTag.getDouble("reloading_time") == 1 && mainHandItemTag.getDouble("id") == id) {
+            if (itemTag.getDouble("reload_time") == 1 && mainHandItemTag.getDouble("id") == id) {
                 GunReload.reload(entity, GunInfo.Type.RIFLE);
             }
         } else if (itemTag.getBoolean("reloading") && itemTag.getInt("ammo") > 0) {
-            if (itemTag.getDouble("reloading_time") == 51) {
+            if (itemTag.getDouble("reload_time") == 51) {
                 entity.getPersistentData().putDouble("id", id);
                 if (!entity.level().isClientSide() && entity.getServer() != null) {
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
@@ -205,15 +205,15 @@ public class Devotion extends GunItem implements GeoItem, AnimatedItem {
             }
             if (mainHandItem.getItem() == itemstack.getItem()
                     && mainHandItemTag.getDouble("id") == id) {
-                if (itemTag.getDouble("reloading_time") > 0) {
-                    itemTag.putDouble("reloading_time", (itemTag.getDouble("reloading_time") - 1));
+                if (itemTag.getDouble("reload_time") > 0) {
+                    itemTag.putDouble("reload_time", (itemTag.getDouble("reload_time") - 1));
                 }
             } else {
                 itemTag.putBoolean("reloading", false);
                 itemTag.putBoolean("empty_reload", false);
-                itemTag.putDouble("reloading_time", 0);
+                itemTag.putDouble("reload_time", 0);
             }
-            if (itemTag.getDouble("reloading_time") == 1 && mainHandItemTag.getDouble("id") == id) {
+            if (itemTag.getDouble("reload_time") == 1 && mainHandItemTag.getDouble("id") == id) {
                 GunReload.reload(entity, GunInfo.Type.RIFLE, true);
             }
         }
