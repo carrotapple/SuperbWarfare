@@ -1,6 +1,5 @@
 package net.mcreator.target.tools;
 
-import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
@@ -46,7 +45,7 @@ public class GunReload {
         });
         tag.putInt("ammo", ammo + Math.min(ammoToAdd, playerAmmo));
 
-        tag.putDouble("reloading", 0);
-        tag.putDouble("emptyreload", 0);
+        tag.putBoolean("reloading", false);
+        tag.putBoolean("empty_reload", false);
     }
 }

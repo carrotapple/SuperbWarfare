@@ -45,7 +45,7 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         Player player = Minecraft.getInstance().player;
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.getOrCreateTag().getDouble("arrowempty") > 0) {
+        if (stack.getOrCreateTag().getInt("arrow_empty") > 0) {
             arrow.setScaleX(0);
             arrow.setScaleY(0);
             arrow.setScaleZ(0);
@@ -96,10 +96,10 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         }
 
         double p = 0;
-        p = player.getPersistentData().getDouble("zoompos");
+        p = player.getPersistentData().getDouble("zoom_pos");
 
         double zp = 0;
-        zp = player.getPersistentData().getDouble("zoomposz");
+        zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         shen.setPosX(3.08f * (float) p);
 
@@ -113,7 +113,7 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         double FireRotX = 0;
 
         double fp = 0;
-        fp = player.getPersistentData().getDouble("firepos");
+        fp = player.getPersistentData().getDouble("fire_pos");
 
         fire.setPosZ(4f * (float) fp);
 
@@ -144,7 +144,7 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         yaw = player.getPersistentData().getDouble("yaw");
 
         double pit = 0;
-        pit = player.getPersistentData().getDouble("gunpitch");
+        pit = player.getPersistentData().getDouble("gun_pitch");
 
         double vy = 0;
         vy = player.getPersistentData().getDouble("vy");

@@ -21,7 +21,7 @@ public class TaserfireProcedure {
         if (entity == null) return;
         if (entity instanceof Player player && !player.isSpectator()) {
             ItemStack usehand = player.getMainHandItem();
-            if (usehand.getItem() == TargetModItems.TASER.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !(entity instanceof Player _plrCldCheck4 && _plrCldCheck4.getCooldowns().isOnCooldown(usehand.getItem()))
+            if (usehand.getItem() == TargetModItems.TASER.get() && !usehand.getOrCreateTag().getBoolean("reloading") && !(entity instanceof Player _plrCldCheck4 && _plrCldCheck4.getCooldowns().isOnCooldown(usehand.getItem()))
                     && usehand.getOrCreateTag().getInt("ammo") > 0) {
 
                 entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
@@ -68,7 +68,7 @@ public class TaserfireProcedure {
                             (float) ((LivingEntity) entity).getAttribute(TargetModAttributes.SPREAD.get()).getBaseValue());
                     projectileLevel.addFreshEntity(_entityToSpawn);
                 }
-                usehand.getOrCreateTag().putDouble("fireanim", 4);
+                usehand.getOrCreateTag().putInt("fire_animation", 4);
                 usehand.getOrCreateTag().putInt("ammo", (usehand.getOrCreateTag().getInt("ammo") - 1));
             }
         }

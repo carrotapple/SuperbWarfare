@@ -44,7 +44,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public class Minigun extends GunItem implements GeoItem, AnimatedItem {
-    private static final String TAG_HEAT = "heatbar";
+    private static final String TAG_HEAT = "heat_bar";
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;

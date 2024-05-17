@@ -83,11 +83,11 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.marlin.draw"));
                 }
 
-                if (stack.getOrCreateTag().getDouble("fireanim") > 0 && stack.getOrCreateTag().getDouble("animindex") == 0) {
+                if (stack.getOrCreateTag().getInt("fire_animation") > 0 && stack.getOrCreateTag().getDouble("animindex") == 0) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.fire"));
                 }
 
-                if (stack.getOrCreateTag().getDouble("fireanim") > 0 && stack.getOrCreateTag().getDouble("animindex") == 1) {
+                if (stack.getOrCreateTag().getInt("fire_animation") > 0 && stack.getOrCreateTag().getDouble("animindex") == 1) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.fire2"));
                 }
 
@@ -99,15 +99,15 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.shift2"));
                 }
 
-                if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("prepare") > 0) {
+                if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getDouble("prepare") > 0) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.prepare"));
                 }
 
-                if (stack.getOrCreateTag().getDouble("loadindex") == 0 && stack.getOrCreateTag().getDouble("loading") > 0) {
+                if (!stack.getOrCreateTag().getBoolean("load_index") && stack.getOrCreateTag().getDouble("loading") > 0) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.iterativeload"));
                 }
 
-                if (stack.getOrCreateTag().getDouble("loadindex") == 1 && stack.getOrCreateTag().getDouble("loading") > 0) {
+                if (stack.getOrCreateTag().getBoolean("load_index") && stack.getOrCreateTag().getDouble("loading") > 0) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.iterativeload2"));
                 }
 

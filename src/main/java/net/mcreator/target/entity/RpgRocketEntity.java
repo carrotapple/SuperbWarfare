@@ -95,7 +95,7 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
                         living.getName().getString(), living.getDisplayName(), living.level().getServer(), living), "playsound target:indication voice @a ~ ~ ~ 1 1");
             }
         }
-        if (this.getPersistentData().getDouble("time") > 0) {
+        if (this.getPersistentData().getInt("time") > 0) {
             if (this.level() instanceof ServerLevel level) {
                 level.explode(this, this.getX(), this.getY(), this.getZ(), 4, Level.ExplosionInteraction.NONE);
 
@@ -134,9 +134,8 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
                     if (headshot) {
                         if (this.getOwner() instanceof LivingEntity living) {
                             setBaseDamage(getBaseDamage() * 5);
-                            double _setval = 25;
                             living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                                capability.headIndicator = _setval;
+                                capability.headIndicator = 25;
                                 capability.syncPlayerVariables(living);
                             });
                             if (!living.level().isClientSide() && living.getServer() != null) {
@@ -161,7 +160,7 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
 
-        if (this.getPersistentData().getDouble("time") > 0) {
+        if (this.getPersistentData().getInt("time") > 0) {
             if (this.level() instanceof ServerLevel level) {
                 level.explode(this, this.getX(), this.getY(), this.getZ(), 6, Level.ExplosionInteraction.NONE);
             }
@@ -171,8 +170,8 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
     public void tick() {
         super.tick();
 
-        this.getPersistentData().putDouble("time", (1 + this.getPersistentData().getDouble("time")));
-        double life = this.getPersistentData().getDouble("time");
+        this.getPersistentData().putInt("time", (1 + this.getPersistentData().getInt("time")));
+        double life = this.getPersistentData().getInt("time");
         if (life == 4) {
             if (!this.level().isClientSide() && this.getServer() != null) {
                 this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,

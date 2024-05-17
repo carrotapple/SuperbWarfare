@@ -150,8 +150,8 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
     public void baseTick() {
         super.baseTick();
 
-        this.getPersistentData().putDouble("findtarget", this.getPersistentData().getDouble("findtarget") + 1);
-        double target = this.getPersistentData().getDouble("findtarget");
+        this.getPersistentData().putInt("find_target", this.getPersistentData().getInt("find_target") + 1);
+        double target = this.getPersistentData().getInt("find_target");
         if (target == 1) {
             final Vec3 center = new Vec3(this.getX(), this.getY(), this.getZ());
             this.level().getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(1024 / 2d), e -> true)
@@ -160,7 +160,7 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
                     .filter(e -> e instanceof Player player && !player.isCreative())
                     .forEach(e -> this.setTarget((LivingEntity) e));
         } else if (target >= 100) {
-            this.getPersistentData().putDouble("findtarget", 0);
+            this.getPersistentData().putInt("find_target", 0);
         }
 
         this.refreshDimensions();

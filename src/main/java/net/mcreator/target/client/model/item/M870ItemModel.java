@@ -35,7 +35,7 @@ public class M870ItemModel extends GeoModel<M870Item> {
         Player player = Minecraft.getInstance().player;
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.getOrCreateTag().getDouble("reloading") == 1) {
+        if (stack.getOrCreateTag().getBoolean("reloading")) {
             if (stack.getOrCreateTag().getDouble("prepare") == 0) {
                 if (stack.getOrCreateTag().getDouble("loading") > 10 || stack.getOrCreateTag().getDouble("loading") < 2) {
                     shell.setScaleX(0);
@@ -46,10 +46,10 @@ public class M870ItemModel extends GeoModel<M870Item> {
         }
 
         double p = 0;
-        p = player.getPersistentData().getDouble("zoompos");
+        p = player.getPersistentData().getDouble("zoom_pos");
 
         double zp = 0;
-        zp = player.getPersistentData().getDouble("zoomposz");
+        zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(5.22f * (float) p);
 
@@ -62,7 +62,7 @@ public class M870ItemModel extends GeoModel<M870Item> {
         gun.setScaleZ(1f - (0.2f * (float) p));
 
         double fp = 0;
-        fp = player.getPersistentData().getDouble("firepos");
+        fp = player.getPersistentData().getDouble("fire_pos");
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
             shen.setPosZ(3f * (float) fp);
@@ -90,7 +90,7 @@ public class M870ItemModel extends GeoModel<M870Item> {
 
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
 
-        if (stack.getOrCreateTag().getDouble("fireanim") > 0) {
+        if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
             flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
             flare.setScaleY((float) (1.0 + 0.5 * (Math.random() - 0.5)));
             flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
@@ -119,7 +119,7 @@ public class M870ItemModel extends GeoModel<M870Item> {
         yaw = player.getPersistentData().getDouble("yaw");
 
         double pit = 0;
-        pit = player.getPersistentData().getDouble("gunpitch");
+        pit = player.getPersistentData().getDouble("gun_pitch");
 
         double vy = 0;
         vy = player.getPersistentData().getDouble("vy");

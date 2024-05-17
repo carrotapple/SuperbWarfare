@@ -86,15 +86,15 @@ public class SksItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sks.draw"));
             }
 
-            if (stack.getOrCreateTag().getDouble("fireanim") > 0) {
+            if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sks.fire"));
             }
 
-            if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 1) {
+            if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sks.reload"));
             }
 
-            if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 0) {
+            if (stack.getOrCreateTag().getBoolean("reloading") && !stack.getOrCreateTag().getBoolean("empty_reload")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sks.reload2"));
             }
 

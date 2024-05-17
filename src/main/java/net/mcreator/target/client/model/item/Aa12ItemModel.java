@@ -34,10 +34,10 @@ public class Aa12ItemModel extends GeoModel<Aa12Item> {
         ItemStack stack = player.getMainHandItem();
 
         double p = 0;
-        p = player.getPersistentData().getDouble("zoompos");
+        p = player.getPersistentData().getDouble("zoom_pos");
 
         double zp = 0;
-        zp = player.getPersistentData().getDouble("zoomposz");
+        zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(8.863f * (float) p);
 
@@ -50,7 +50,7 @@ public class Aa12ItemModel extends GeoModel<Aa12Item> {
         gun.setScaleZ(1f - (0.4f * (float) p));
 
         double fp = 0;
-        fp = player.getPersistentData().getDouble("firepos");
+        fp = player.getPersistentData().getDouble("fire_pos");
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
             shen.setPosZ(5f * (float) fp);
@@ -101,7 +101,7 @@ public class Aa12ItemModel extends GeoModel<Aa12Item> {
         yaw = player.getPersistentData().getDouble("yaw");
 
         double pit = 0;
-        pit = player.getPersistentData().getDouble("gunpitch");
+        pit = player.getPersistentData().getDouble("gun_pitch");
 
         double vy = 0;
         vy = player.getPersistentData().getDouble("vy");

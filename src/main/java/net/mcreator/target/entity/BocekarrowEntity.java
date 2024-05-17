@@ -83,9 +83,8 @@ public class BocekarrowEntity extends AbstractArrow implements ItemSupplier {
     protected void onHitEntity(EntityHitResult result) {
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
-            double _setval = 25;
             living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.hitIndicator = _setval;
+                capability.hitIndicator = 25;
                 capability.syncPlayerVariables(living);
             });
             if (!living.level().isClientSide() && living.getServer() != null) {
@@ -119,9 +118,8 @@ public class BocekarrowEntity extends AbstractArrow implements ItemSupplier {
                     if (headshot) {
                         if (this.getOwner() instanceof LivingEntity living) {
                             setBaseDamage(getBaseDamage() * 2);
-                            double _setval = 25;
                             living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                                capability.headIndicator = _setval;
+                                capability.headIndicator = 25;
                                 capability.syncPlayerVariables(living);
                             });
                             if (!living.level().isClientSide() && living.getServer() != null) {

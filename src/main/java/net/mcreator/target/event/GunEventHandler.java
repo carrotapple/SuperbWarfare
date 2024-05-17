@@ -60,7 +60,7 @@ public class GunEventHandler {
                 double sneaking = player.isShiftKeyDown() ? (-0.25) * basic : 0;
                 double prone = player.getPersistentData().getDouble("prone") > 0 ? (-0.5) * basic : 0;
                 double jump = player.onGround() ? 0 : 1.5 * basic;
-                double fire = stack.getOrCreateTag().getDouble("fireanim") > 0 ? 0.5 * basic : 0;
+                double fire = stack.getOrCreateTag().getInt("fire_animation") > 0 ? 0.5 * basic : 0;
                 double ride = player.isPassenger() ? (-0.5) * basic : 0;
 
                 double walk;
@@ -111,13 +111,13 @@ public class GunEventHandler {
     private static void handleGunFire(Player player) {
         ItemStack stack = player.getMainHandItem();
         if (stack.is(TargetModTags.Items.NORMAL_GUN)) {
-            double mode = stack.getOrCreateTag().getInt("firemode");
-            if (player.getPersistentData().getDouble("firing") == 0 && player.getMainHandItem().getItem() == TargetModItems.DEVOTION.get()) {
+            double mode = stack.getOrCreateTag().getInt("fire_mode");
+            if (!player.getPersistentData().getBoolean("firing") && player.getMainHandItem().getItem() == TargetModItems.DEVOTION.get()) {
                 stack.getOrCreateTag().putDouble("fire_increase", 0);
             }
 
-            if (player.getPersistentData().getDouble("firing") == 1
-                    && stack.getOrCreateTag().getDouble("reloading") == 0
+            if (player.getPersistentData().getBoolean("firing")
+                    && !stack.getOrCreateTag().getBoolean("reloading")
                     && stack.getOrCreateTag().getInt("ammo") > 0
                     && !player.getCooldowns().isOnCooldown(stack.getItem())
                     && mode != 1
@@ -125,8 +125,8 @@ public class GunEventHandler {
 
                 playGunSounds(player);
 
-                if (stack.getOrCreateTag().getInt("firemode") == 0) {
-                    player.getPersistentData().putDouble("firing", 0);
+                if (stack.getOrCreateTag().getInt("fire_mode") == 0) {
+                    player.getPersistentData().putBoolean("firing", false);
                 }
 
                 if (stack.getOrCreateTag().getDouble("animindex") == 1) {
@@ -146,7 +146,7 @@ public class GunEventHandler {
                 }
 
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
-                stack.getOrCreateTag().putDouble("fireanim", stack.getOrCreateTag().getDouble("fire_interval"));
+                stack.getOrCreateTag().putInt("fire_animation", stack.getOrCreateTag().getInt("fire_interval"));
                 stack.getOrCreateTag().putDouble("flash_time", 2);
                 stack.getOrCreateTag().putDouble("empty", 1);
 
@@ -198,13 +198,13 @@ public class GunEventHandler {
             /**
              * 在开火动画的最后1tick，设置需要拉栓上膛的武器拉栓动画的倒计时为data里的拉栓时间
              */
-            if (stack.getOrCreateTag().getDouble("fireanim") == 1 && stack.getOrCreateTag().getDouble("need_bolt_action") == 1) {
+            if (stack.getOrCreateTag().getInt("fire_animation") == 1 && stack.getOrCreateTag().getDouble("need_bolt_action") == 1) {
                 stack.getOrCreateTag().putDouble("bolt_action_anim", stack.getOrCreateTag().getDouble("bolt_action_time"));
                 player.getCooldowns().addCooldown(stack.getItem(), (int) stack.getOrCreateTag().getDouble("bolt_action_time"));
                 playGunBoltSounds(player);
             }
             if (stack.getOrCreateTag().getDouble("bolt_action_anim") > 0) {
-                stack.getOrCreateTag().putDouble("bolt_action_anim", stack.getOrCreateTag().getDouble("bolt_action_anim") -1);
+                stack.getOrCreateTag().putDouble("bolt_action_anim", stack.getOrCreateTag().getDouble("bolt_action_anim") - 1);
             }
             if (stack.getOrCreateTag().getDouble("bolt_action_anim") == 1) {
                 stack.getOrCreateTag().putDouble("need_bolt_action", 0);
@@ -285,11 +285,11 @@ public class GunEventHandler {
             String origin = stack.getItem().getDescriptionId();
             String name = origin.substring(origin.lastIndexOf(".") + 1);
 
-                SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_bolt"));
-                if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(sound1p),
-                            SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 2f, 1f, serverPlayer.level().random.nextLong()));
-                }
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_bolt"));
+            if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
+                serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(sound1p),
+                        SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 2f, 1f, serverPlayer.level().random.nextLong()));
+            }
         }
     }
 

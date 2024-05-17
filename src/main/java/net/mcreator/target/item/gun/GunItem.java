@@ -81,8 +81,8 @@ public abstract class GunItem extends Item {
                 tag.putDouble("drawtime", (tag.getDouble("drawtime") + 1));
             }
         }
-        if (tag.getDouble("fireanim") > 0) {
-            tag.putDouble("fireanim", (tag.getDouble("fireanim") - 1));
+        if (tag.getInt("fire_animation") > 0) {
+            tag.putInt("fire_animation", (tag.getInt("fire_animation") - 1));
         }
         if (tag.getDouble("flash_time") > 0) {
             tag.putDouble("flash_time", (tag.getDouble("flash_time") - 1));

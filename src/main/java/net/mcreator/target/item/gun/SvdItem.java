@@ -76,20 +76,20 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
 
         if (this.animationProcedure.equals("empty")) {
-
-            if (stack.getOrCreateTag().getDouble("drawtime") < 16) {
+            var tag = stack.getOrCreateTag();
+            if (tag.getDouble("drawtime") < 16) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.svd.draw"));
             }
 
-            if (stack.getOrCreateTag().getDouble("fireanim") > 0) {
+            if (tag.getInt("fire_animation") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.svd.fire"));
             }
 
-            if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 1) {
+            if (tag.getBoolean("reloading") && tag.getBoolean("empty_reload")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.svd.reload"));
             }
 
-            if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 0) {
+            if (tag.getBoolean("reloading") && !tag.getBoolean("empty_reload")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.svd.reload2"));
             }
 

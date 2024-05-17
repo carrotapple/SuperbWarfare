@@ -41,20 +41,20 @@ public class ClientEventHandler {
             }
             float times = 90f / fps;
             if (entity.getPersistentData().getDouble("move") < 0) {
-                entity.getPersistentData().putDouble("move", ((entity.getPersistentData().getDouble("move") + 1 * times * Math.pow(entity.getPersistentData().getDouble("move"), 2) * (1 - 1 * entity.getPersistentData().getDouble("zoomtime")))
-                        * (1 - 1 * entity.getPersistentData().getDouble("zoomtime"))));
+                entity.getPersistentData().putDouble("move", ((entity.getPersistentData().getDouble("move") + 1 * times * Math.pow(entity.getPersistentData().getDouble("move"), 2) * (1 - 1 * entity.getPersistentData().getDouble("zoom_time")))
+                        * (1 - 1 * entity.getPersistentData().getDouble("zoom_time"))));
             } else {
-                entity.getPersistentData().putDouble("move", ((entity.getPersistentData().getDouble("move") - 1 * times * Math.pow(entity.getPersistentData().getDouble("move"), 2) * (1 - 1 * entity.getPersistentData().getDouble("zoomtime")))
-                        * (1 - 1 * entity.getPersistentData().getDouble("zoomtime"))));
+                entity.getPersistentData().putDouble("move", ((entity.getPersistentData().getDouble("move") - 1 * times * Math.pow(entity.getPersistentData().getDouble("move"), 2) * (1 - 1 * entity.getPersistentData().getDouble("zoom_time")))
+                        * (1 - 1 * entity.getPersistentData().getDouble("zoom_time"))));
             }
             if (entity.getPersistentData().getDouble("move_right") == 1) {
                 entity.getPersistentData().putDouble("move",
-                        ((entity.getPersistentData().getDouble("move") + Math.pow(Math.abs(entity.getPersistentData().getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * entity.getPersistentData().getDouble("zoomtime")))
-                                * (1 - 0.1 * entity.getPersistentData().getDouble("zoomtime"))));
+                        ((entity.getPersistentData().getDouble("move") + Math.pow(Math.abs(entity.getPersistentData().getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * entity.getPersistentData().getDouble("zoom_time")))
+                                * (1 - 0.1 * entity.getPersistentData().getDouble("zoom_time"))));
             } else if (entity.getPersistentData().getDouble("move_left") == 1) {
                 entity.getPersistentData().putDouble("move",
-                        ((entity.getPersistentData().getDouble("move") - Math.pow(Math.abs(entity.getPersistentData().getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * entity.getPersistentData().getDouble("zoomtime")))
-                                * (1 - 0.1 * entity.getPersistentData().getDouble("zoomtime"))));
+                        ((entity.getPersistentData().getDouble("move") - Math.pow(Math.abs(entity.getPersistentData().getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * entity.getPersistentData().getDouble("zoom_time")))
+                                * (1 - 0.1 * entity.getPersistentData().getDouble("zoom_time"))));
             }
             if (entity.getPersistentData().getDouble("turnr") == 1) {
                 entity.getPersistentData().putDouble("turntimeyaw", (entity.getPersistentData().getDouble("turntimeyaw") + 0.08 * times * Math.pow(entity.getPersistentData().getDouble("amplitudeyaw"), 2)));
@@ -90,7 +90,7 @@ public class ClientEventHandler {
             } else {
                 entity.getPersistentData().putDouble("amplitudeyaw", (entity.getPersistentData().getDouble("amplitudeyaw") + 0.01 * Math.pow(entity.getPersistentData().getDouble("amplitudeyaw"), 2)));
             }
-            entity.getPersistentData().putDouble("yaw", (0.04 * Math.tan(0.25 * Math.PI * entity.getPersistentData().getDouble("turntimeyaw")) * (1 - 1 * entity.getPersistentData().getDouble("zoomtime"))));
+            entity.getPersistentData().putDouble("yaw", (0.04 * Math.tan(0.25 * Math.PI * entity.getPersistentData().getDouble("turntimeyaw")) * (1 - 1 * entity.getPersistentData().getDouble("zoom_time"))));
             if (entity.getPersistentData().getDouble("turnu") == 1) {
                 entity.getPersistentData().putDouble("turntimepitch", (entity.getPersistentData().getDouble("turntimepitch") + 0.02 * times));
             }
@@ -125,9 +125,9 @@ public class ClientEventHandler {
             } else {
                 entity.getPersistentData().putDouble("amplitudepitch", (entity.getPersistentData().getDouble("amplitudepitch") + 0.01 * Math.pow(entity.getPersistentData().getDouble("amplitudepitch"), 2)));
             }
-            entity.getPersistentData().putDouble("gunpitch",
-                    ((0.15 * entity.getPersistentData().getDouble("amplitudepitch") * Math.tan(0.25 * Math.PI * entity.getPersistentData().getDouble("turntimepitch")) * (1 - 0.8 * entity.getPersistentData().getDouble("zoomtime"))
-                            - 0.05 * entity.getPersistentData().getDouble("vy")) * (1 - 1 * entity.getPersistentData().getDouble("zoomtime"))));
+            entity.getPersistentData().putDouble("gun_pitch",
+                    ((0.15 * entity.getPersistentData().getDouble("amplitudepitch") * Math.tan(0.25 * Math.PI * entity.getPersistentData().getDouble("turntimepitch")) * (1 - 0.8 * entity.getPersistentData().getDouble("zoom_time"))
+                            - 0.05 * entity.getPersistentData().getDouble("vy")) * (1 - 1 * entity.getPersistentData().getDouble("zoom_time"))));
             if (entity.getPersistentData().getDouble("firetime") == 0) {
                 entity.getPersistentData().putDouble("rottime", (entity.getPersistentData().getDouble("rottime") + 1));
                 if (entity.getPersistentData().getDouble("rottime") >= 3) {
@@ -199,10 +199,10 @@ public class ClientEventHandler {
             if (-0.8 < entity.getDeltaMovement().y() + 0.078 && entity.getDeltaMovement().y() + 0.078 < 0.8) {
                 if (entity.getPersistentData().getDouble("vy") < entity.getDeltaMovement().y() + 0.078) {
                     entity.getPersistentData().putDouble("vy",
-                            ((entity.getPersistentData().getDouble("vy") + 2 * Math.pow((entity.getDeltaMovement().y() + 0.078) - entity.getPersistentData().getDouble("vy"), 2)) * (1 - 1 * entity.getPersistentData().getDouble("zoomtime"))));
+                            ((entity.getPersistentData().getDouble("vy") + 2 * Math.pow((entity.getDeltaMovement().y() + 0.078) - entity.getPersistentData().getDouble("vy"), 2)) * (1 - 1 * entity.getPersistentData().getDouble("zoom_time"))));
                 } else {
                     entity.getPersistentData().putDouble("vy",
-                            ((entity.getPersistentData().getDouble("vy") - 2 * Math.pow((entity.getDeltaMovement().y() + 0.078) - entity.getPersistentData().getDouble("vy"), 2)) * (1 - 1 * entity.getPersistentData().getDouble("zoomtime"))));
+                            ((entity.getPersistentData().getDouble("vy") - 2 * Math.pow((entity.getDeltaMovement().y() + 0.078) - entity.getPersistentData().getDouble("vy"), 2)) * (1 - 1 * entity.getPersistentData().getDouble("zoom_time"))));
                 }
             }
             if (entity.getPersistentData().getDouble("vy") > 0.8) {
@@ -221,21 +221,21 @@ public class ClientEventHandler {
         }
         float times = 110f / fps;
         if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-            if (entity.getPersistentData().getDouble("zoomtime") < 1) {
-                entity.getPersistentData().putDouble("zoomtime",
-                        (entity.getPersistentData().getDouble("zoomtime") + entity.getMainHandItem().getOrCreateTag().getDouble("zoomspeed") * 0.02 * times));
+            if (entity.getPersistentData().getDouble("zoom_time") < 1) {
+                entity.getPersistentData().putDouble("zoom_time",
+                        (entity.getPersistentData().getDouble("zoom_time") + entity.getMainHandItem().getOrCreateTag().getDouble("zoom_firing") * 0.02 * times));
             } else {
-                entity.getPersistentData().putDouble("zoomtime", 1);
+                entity.getPersistentData().putDouble("zoom_time", 1);
             }
         } else {
-            if (entity.getPersistentData().getDouble("zoomtime") > 0) {
-                entity.getPersistentData().putDouble("zoomtime", (entity.getPersistentData().getDouble("zoomtime") - 0.02 * times));
+            if (entity.getPersistentData().getDouble("zoom_time") > 0) {
+                entity.getPersistentData().putDouble("zoom_time", (entity.getPersistentData().getDouble("zoom_time") - 0.02 * times));
             } else {
-                entity.getPersistentData().putDouble("zoomtime", 0);
+                entity.getPersistentData().putDouble("zoom_time", 0);
             }
         }
-        entity.getPersistentData().putDouble("zoompos", (0.5 * Math.cos(Math.PI * Math.pow(Math.pow(entity.getPersistentData().getDouble("zoomtime"), 2) - 1, 2)) + 0.5));
-        entity.getPersistentData().putDouble("zoomposz", (-Math.pow(2 * entity.getPersistentData().getDouble("zoomtime") - 1, 2) + 1));
+        entity.getPersistentData().putDouble("zoom_pos", (0.5 * Math.cos(Math.PI * Math.pow(Math.pow(entity.getPersistentData().getDouble("zoom_time"), 2) - 1, 2)) + 0.5));
+        entity.getPersistentData().putDouble("zoom_pos_z", (-Math.pow(2 * entity.getPersistentData().getDouble("zoom_time") - 1, 2) + 1));
     }
 
     private static void handleWeaponFire(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
@@ -255,9 +255,10 @@ public class ClientEventHandler {
         float times = 45f / fps;
         amplitude = 15000 * stack.getOrCreateTag().getDouble("recoily")
                 * stack.getOrCreateTag().getDouble("recoilx");
-        if (entity.isShiftKeyDown() && entity.getBbHeight() >= 1 && entity.getPersistentData().getDouble("prone") == 0) {
+        var data = entity.getPersistentData();
+        if (entity.isShiftKeyDown() && entity.getBbHeight() >= 1 && data.getDouble("prone") == 0) {
             pose = 0.9;
-        } else if (entity.getPersistentData().getDouble("prone") > 0) {
+        } else if (data.getDouble("prone") > 0) {
             if (stack.getOrCreateTag().getDouble("bipod") == 1) {
                 pose = 0.75;
             } else {
@@ -267,54 +268,55 @@ public class ClientEventHandler {
             pose = 1;
         }
 
-        if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing > 0) {
-            entity.getPersistentData().putDouble("firetime", 0.2);
-            if (0.3 > entity.getPersistentData().getDouble("firepos2")) {
-                entity.getPersistentData().putDouble("firepos2", (entity.getPersistentData().getDouble("firepos2") + 0.04 * times));
+        var capability = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null);
+        if (capability.orElse(new TargetModVariables.PlayerVariables()).firing > 0) {
+            data.putDouble("firetime", 0.2);
+            if (0.3 > data.getDouble("firepos2")) {
+                data.putDouble("firepos2", (data.getDouble("firepos2") + 0.04 * times));
             }
         }
-        if (0 < entity.getPersistentData().getDouble("firepos2")) {
-            entity.getPersistentData().putDouble("firepos2", (entity.getPersistentData().getDouble("firepos2") - 0.02 * times));
+        if (0 < data.getDouble("firepos2")) {
+            data.putDouble("firepos2", (data.getDouble("firepos2") - 0.02 * times));
         } else {
-            entity.getPersistentData().putDouble("firepos2", 0);
+            data.putDouble("firepos2", 0);
         }
-        if (0 < entity.getPersistentData().getDouble("firetime")) {
-            entity.getPersistentData().putDouble("firetime", (entity.getPersistentData().getDouble("firetime") + 0.075 * times));
+        if (0 < data.getDouble("firetime")) {
+            data.putDouble("firetime", (data.getDouble("firetime") + 0.075 * times));
         }
-        if (0 < entity.getPersistentData().getDouble("firetime") && entity.getPersistentData().getDouble("firetime") < 0.2) {
-            entity.getPersistentData().putDouble("firepos",
-                    (pose * ((-18.34) * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) + 8.58 * entity.getPersistentData().getDouble("firetime") + entity.getPersistentData().getDouble("firepos2"))));
-            if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == 1) {
-                event.setYaw((float) (yaw - 0.2 * amplitude * ((-18.34) * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) + 8.58 * entity.getPersistentData().getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
-                event.setPitch((float) (pitch + 0.2 * amplitude * ((-18.34) * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) + 8.58 * entity.getPersistentData().getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
-                event.setRoll((float) (roll + amplitude * ((-18.34) * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) + 8.58 * entity.getPersistentData().getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
-            } else if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == -1) {
-                event.setYaw((float) (yaw - 0.2 * amplitude * ((-18.34) * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) + 8.58 * entity.getPersistentData().getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
-                event.setPitch((float) (pitch + 0.2 * amplitude * ((-18.34) * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) + 8.58 * entity.getPersistentData().getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
-                event.setRoll((float) (roll - amplitude * ((-18.34) * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) + 8.58 * entity.getPersistentData().getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
+        if (0 < data.getDouble("firetime") && data.getDouble("firetime") < 0.2) {
+            data.putDouble("fire_pos",
+                    (pose * ((-18.34) * Math.pow(data.getDouble("firetime"), 2) + 8.58 * data.getDouble("firetime") + data.getDouble("firepos2"))));
+            if ((capability.orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == 1) {
+                event.setYaw((float) (yaw - 0.2 * amplitude * ((-18.34) * Math.pow(data.getDouble("firetime"), 2) + 8.58 * data.getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
+                event.setPitch((float) (pitch + 0.2 * amplitude * ((-18.34) * Math.pow(data.getDouble("firetime"), 2) + 8.58 * data.getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
+                event.setRoll((float) (roll + amplitude * ((-18.34) * Math.pow(data.getDouble("firetime"), 2) + 8.58 * data.getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
+            } else if ((capability.orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == -1) {
+                event.setYaw((float) (yaw - 0.2 * amplitude * ((-18.34) * Math.pow(data.getDouble("firetime"), 2) + 8.58 * data.getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
+                event.setPitch((float) (pitch + 0.2 * amplitude * ((-18.34) * Math.pow(data.getDouble("firetime"), 2) + 8.58 * data.getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
+                event.setRoll((float) (roll - amplitude * ((-18.34) * Math.pow(data.getDouble("firetime"), 2) + 8.58 * data.getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
             }
         }
-        if (0.2 <= entity.getPersistentData().getDouble("firetime") && entity.getPersistentData().getDouble("firetime") < 1) {
-            entity.getPersistentData().putDouble("firepos",
-                    (pose * (3.34 * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) - 5.5 * entity.getPersistentData().getDouble("firetime") + 2.167 + entity.getPersistentData().getDouble("firepos2"))));
-            if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == 1) {
-                event.setYaw((float) (yaw - 0.2 * amplitude * (3.34 * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) - 5.5 * entity.getPersistentData().getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
-                event.setPitch((float) (pitch + 0.2 * amplitude * (3.34 * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) - 5.5 * entity.getPersistentData().getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
-                event.setRoll((float) (roll + amplitude * (3.34 * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) - 5.5 * entity.getPersistentData().getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
-            } else if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == -1) {
-                event.setYaw((float) (yaw + 0.2 * amplitude * (3.34 * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) - 5.5 * entity.getPersistentData().getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
-                event.setPitch((float) (pitch - 0.2 * amplitude * (3.34 * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) - 5.5 * entity.getPersistentData().getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
-                event.setRoll((float) (roll - amplitude * (3.34 * Math.pow(entity.getPersistentData().getDouble("firetime"), 2) - 5.5 * entity.getPersistentData().getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
+        if (0.2 <= data.getDouble("firetime") && data.getDouble("firetime") < 1) {
+            data.putDouble("fire_pos",
+                    (pose * (3.34 * Math.pow(data.getDouble("firetime"), 2) - 5.5 * data.getDouble("firetime") + 2.167 + data.getDouble("firepos2"))));
+            if ((capability.orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == 1) {
+                event.setYaw((float) (yaw - 0.2 * amplitude * (3.34 * Math.pow(data.getDouble("firetime"), 2) - 5.5 * data.getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
+                event.setPitch((float) (pitch + 0.2 * amplitude * (3.34 * Math.pow(data.getDouble("firetime"), 2) - 5.5 * data.getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
+                event.setRoll((float) (roll + amplitude * (3.34 * Math.pow(data.getDouble("firetime"), 2) - 5.5 * data.getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
+            } else if ((capability.orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == -1) {
+                event.setYaw((float) (yaw + 0.2 * amplitude * (3.34 * Math.pow(data.getDouble("firetime"), 2) - 5.5 * data.getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
+                event.setPitch((float) (pitch - 0.2 * amplitude * (3.34 * Math.pow(data.getDouble("firetime"), 2) - 5.5 * data.getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
+                event.setRoll((float) (roll - amplitude * (3.34 * Math.pow(data.getDouble("firetime"), 2) - 5.5 * data.getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
             }
         }
-        if (0 <= entity.getPersistentData().getDouble("firetime") && entity.getPersistentData().getDouble("firetime") <= 0.25) {
-            entity.getPersistentData().putDouble("boltpos", (-Math.pow(8 * entity.getPersistentData().getDouble("firetime") - 1, 2) + 1));
+        if (0 <= data.getDouble("firetime") && data.getDouble("firetime") <= 0.25) {
+            data.putDouble("boltpos", (-Math.pow(8 * data.getDouble("firetime") - 1, 2) + 1));
         }
-        if (0.25 < entity.getPersistentData().getDouble("firetime") && entity.getPersistentData().getDouble("firetime") < 1) {
-            entity.getPersistentData().putDouble("boltpos", 0);
+        if (0.25 < data.getDouble("firetime") && data.getDouble("firetime") < 1) {
+            data.putDouble("boltpos", 0);
         }
-        if (entity.getPersistentData().getDouble("firetime") >= 1) {
-            entity.getPersistentData().putDouble("firetime", 0);
+        if (data.getDouble("firetime") >= 1) {
+            data.putDouble("firetime", 0);
         }
     }
 

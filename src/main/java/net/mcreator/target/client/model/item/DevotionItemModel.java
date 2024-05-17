@@ -38,10 +38,10 @@ public class DevotionItemModel extends GeoModel<Devotion> {
         ItemStack stack = player.getMainHandItem();
 
         double p = 0;
-        p = player.getPersistentData().getDouble("zoompos");
+        p = player.getPersistentData().getDouble("zoom_pos");
 
         double zp = 0;
-        zp = player.getPersistentData().getDouble("zoomposz");
+        zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(2.19f * (float) p);
 
@@ -57,7 +57,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
         CoreGeoBone number = getAnimationProcessor().getBone("number");
 
         double fp = 0;
-        fp = player.getPersistentData().getDouble("firepos");
+        fp = player.getPersistentData().getDouble("fire_pos");
 
         double bp = 0;
         bp = player.getPersistentData().getDouble("boltpos");
@@ -645,7 +645,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
         yaw = player.getPersistentData().getDouble("yaw");
 
         double pit = 0;
-        pit = player.getPersistentData().getDouble("gunpitch");
+        pit = player.getPersistentData().getDouble("gun_pitch");
 
         double vy = 0;
         vy = player.getPersistentData().getDouble("vy");

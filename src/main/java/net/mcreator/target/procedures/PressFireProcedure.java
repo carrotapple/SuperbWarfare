@@ -1,5 +1,6 @@
 package net.mcreator.target.procedures;
 
+import net.mcreator.target.event.GunEventHandler;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
@@ -7,7 +8,6 @@ import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
-import net.mcreator.target.event.GunEventHandler;
 
 public class PressFireProcedure {
     public static void execute(Player player) {
@@ -18,7 +18,7 @@ public class PressFireProcedure {
         MarlinfireProcedure.execute(player);
         M870fireProcedure.execute(player);
         VectorFireProcedure.execute(player);
-        player.getPersistentData().putDouble("firing", 1);
+        player.getPersistentData().putBoolean("firing", true);
 
         var mainHandItem = player.getMainHandItem();
         var tag = mainHandItem.getOrCreateTag();
@@ -27,7 +27,7 @@ public class PressFireProcedure {
                 && !(mainHandItem.getItem() == TargetModItems.BOCEK.get())
                 && !(mainHandItem.getItem() == TargetModItems.MINIGUN.get())
                 && tag.getInt("ammo") == 0
-                && tag.getDouble("reloading") != 1) {
+                && !tag.getBoolean("reloading")) {
             if (!player.level().isClientSide() && player.getServer() != null) {
                 player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
                         player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:triggerclick player @s ~ ~ ~ 10 1");

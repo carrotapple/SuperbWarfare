@@ -221,12 +221,12 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
         var y = this.getY();
         var z = this.getZ();
 
-        if (data.getDouble("claymore") > 0) {
-            data.putDouble("claymore", data.getDouble("claymore") - 1);
+        if (data.getInt("claymore") > 0) {
+            data.putInt("claymore", data.getInt("claymore") - 1);
         }
 
-        data.putDouble("life", data.getDouble("life") + 1);
-        if (data.getDouble("life") >= 12000) {
+        data.putInt("life", data.getInt("life") + 1);
+        if (data.getInt("life") >= 12000) {
             if (!this.level().isClientSide()) this.discard();
         }
         if (data.getDouble("def") >= 100) {
@@ -250,10 +250,10 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
         }
         this.removeAllEffects();
         this.clearFire();
-        if (data.getDouble("trigger") <= 60) {
-            data.putDouble("trigger", data.getDouble("trigger") + 1);
+        if (data.getInt("trigger") <= 60) {
+            data.putInt("trigger", data.getInt("trigger") + 1);
         }
-        if (data.getDouble("trigger") >= 40) {
+        if (data.getInt("trigger") >= 40) {
             final Vec3 center = new Vec3(x + 1.5 * this.getLookAngle().x, y + 1.5 * this.getLookAngle().y, z + 1.5 * this.getLookAngle().z);
             for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(2.5 / 2d), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
                 var condition = this.getOwner() != target
@@ -272,7 +272,7 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
                     }
                     this.discard();
                 }
-                target.getPersistentData().putDouble("claymore", 5);
+                target.getPersistentData().putInt("claymore", 5);
                 TargetMod.queueServerWork(1, () -> {
                     if (!level.isClientSide())
                         level.explode(this.getOwner(), target.getX(), target.getY(), target.getZ(), 6.5f, Level.ExplosionInteraction.NONE);

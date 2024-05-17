@@ -4,13 +4,12 @@ import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModMobEffects;
+import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -74,6 +73,35 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
         entity.setArrowCount(entity.getArrowCount() - 1);
     }
 
+    public static TaserBulletProjectileEntity shoot(Level world, LivingEntity entity, RandomSource random, float power, double damage, int knockback) {
+        TaserBulletProjectileEntity taserBullet = new TaserBulletProjectileEntity(TargetModEntities.TASER_BULLET_PROJECTILE.get(), entity, world);
+        taserBullet.shoot(entity.getViewVector(1).x, entity.getViewVector(1).y, entity.getViewVector(1).z, power * 2, 0);
+        taserBullet.setSilent(true);
+        taserBullet.setCritArrow(false);
+        taserBullet.setBaseDamage(damage);
+        taserBullet.setKnockback(knockback);
+        world.addFreshEntity(taserBullet);
+        return taserBullet;
+    }
+
+    public static TaserBulletProjectileEntity shoot(LivingEntity entity, LivingEntity target) {
+        TaserBulletProjectileEntity taserBullet = new TaserBulletProjectileEntity(TargetModEntities.TASER_BULLET_PROJECTILE.get(), entity, entity.level());
+        double dx = target.getX() - entity.getX();
+        double dy = target.getY() + target.getEyeHeight() - 1.1;
+        double dz = target.getZ() - entity.getZ();
+        taserBullet.shoot(dx, dy - taserBullet.getY() + Math.hypot(dx, dz) * 0.2F, dz, 1f * 2, 12.0F);
+        taserBullet.setSilent(true);
+        taserBullet.setBaseDamage(5);
+        taserBullet.setKnockback(5);
+        taserBullet.setCritArrow(false);
+        entity.level().addFreshEntity(taserBullet);
+        return taserBullet;
+    }
+
+    public static TaserBulletProjectileEntity shoot(Level world, LivingEntity entity, RandomSource source) {
+        return shoot(world, entity, source, 1f, 5, 5);
+    }
+
     @Override
     protected void onHitEntity(EntityHitResult result) {
         Entity entity = result.getEntity();
@@ -83,9 +111,8 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
                 capability.syncPlayerVariables(living);
             });
 
-            if (!living.level().isClientSide() && living.getServer() != null) {
-                living.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, living.position(), living.getRotationVector(), living.level() instanceof ServerLevel ? (ServerLevel) living.level() : null, 4,
-                        living.getName().getString(), living.getDisplayName(), living.level().getServer(), living), "playsound target:indication voice @a ~ ~ ~ 1 1");
+            if (!living.level().isClientSide()) {
+                living.level().playSound(null, living.blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
             }
         }
         if (entity instanceof LivingEntity) {
@@ -111,17 +138,14 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
                     if (headshotHitPos.isPresent() && (hitPos == null || headshotHitPos.get().distanceTo(hitPos) < 0.55)) {
                         headshot = true;
                     }
-                    if (headshot) {
-                        if (this.getOwner() instanceof LivingEntity living) {
-                            setBaseDamage(getBaseDamage() * 1.5f);
-                            living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                                capability.headIndicator = 25;
-                                capability.syncPlayerVariables(living);
-                            });
-                            if (!living.level().isClientSide() && living.getServer() != null) {
-                                living.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, living.position(), living.getRotationVector(), living.level() instanceof ServerLevel ? (ServerLevel) living.level() : null, 4,
-                                        living.getName().getString(), living.getDisplayName(), living.level().getServer(), living), "playsound target:headshot voice @a ~ ~ ~ 1 1");
-                            }
+                    if (headshot && this.getOwner() instanceof LivingEntity living) {
+                        setBaseDamage(getBaseDamage() * 1.5f);
+                        living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                            capability.headIndicator = 25;
+                            capability.syncPlayerVariables(living);
+                        });
+                        if (!living.level().isClientSide()) {
+                            living.level().playSound(null, living.blockPosition(), TargetModSounds.HEADSHOT.get(), SoundSource.VOICE, 1, 1);
                         }
                     }
                 }
@@ -131,7 +155,7 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
 
         if (this.getOwner() instanceof LivingEntity source) {
             CompoundTag tag = source.getMainHandItem().getOrCreateTag();
-            tag.putDouble("hitcount", tag.getDouble("hitcount") + 1);
+            tag.putInt("hit_count", tag.getInt("hit_count") + 1);
         }
 
         if (entity instanceof Player player && !player.isCreative()) {
@@ -146,42 +170,13 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
     public void tick() {
         super.tick();
 
-        this.getPersistentData().putDouble("live", (this.getPersistentData().getDouble("live") + 1));
-        if (this.getPersistentData().getDouble("live") == 5) {
+        this.getPersistentData().putInt("live", this.getPersistentData().getInt("live") + 1);
+        if (this.getPersistentData().getInt("live") == 5) {
             this.setDeltaMovement(new Vec3(0, 0, 0));
         }
 
         if (this.tickCount > 200) {
             this.discard();
         }
-    }
-
-    public static TaserBulletProjectileEntity shoot(Level world, LivingEntity entity, RandomSource source) {
-        return shoot(world, entity, source, 1f, 5, 5);
-    }
-
-    public static TaserBulletProjectileEntity shoot(Level world, LivingEntity entity, RandomSource random, float power, double damage, int knockback) {
-        TaserBulletProjectileEntity entityarrow = new TaserBulletProjectileEntity(TargetModEntities.TASER_BULLET_PROJECTILE.get(), entity, world);
-        entityarrow.shoot(entity.getViewVector(1).x, entity.getViewVector(1).y, entity.getViewVector(1).z, power * 2, 0);
-        entityarrow.setSilent(true);
-        entityarrow.setCritArrow(false);
-        entityarrow.setBaseDamage(damage);
-        entityarrow.setKnockback(knockback);
-        world.addFreshEntity(entityarrow);
-        return entityarrow;
-    }
-
-    public static TaserBulletProjectileEntity shoot(LivingEntity entity, LivingEntity target) {
-        TaserBulletProjectileEntity entityarrow = new TaserBulletProjectileEntity(TargetModEntities.TASER_BULLET_PROJECTILE.get(), entity, entity.level());
-        double dx = target.getX() - entity.getX();
-        double dy = target.getY() + target.getEyeHeight() - 1.1;
-        double dz = target.getZ() - entity.getZ();
-        entityarrow.shoot(dx, dy - entityarrow.getY() + Math.hypot(dx, dz) * 0.2F, dz, 1f * 2, 12.0F);
-        entityarrow.setSilent(true);
-        entityarrow.setBaseDamage(5);
-        entityarrow.setKnockback(5);
-        entityarrow.setCritArrow(false);
-        entity.level().addFreshEntity(entityarrow);
-        return entityarrow;
     }
 }

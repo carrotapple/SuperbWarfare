@@ -11,7 +11,7 @@ public class MinigunfireProcedure {
         if (entity instanceof Player player && !player.isSpectator()) {
             ItemStack usehand = player.getMainHandItem();
             if (usehand.getItem() == TargetModItems.MINIGUN.get()) {
-                entity.getPersistentData().putDouble("minifiring", 1);
+                entity.getPersistentData().putDouble("mini_firing", 1);
             }
         }
     }

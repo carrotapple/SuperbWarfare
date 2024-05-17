@@ -198,7 +198,7 @@ public class LivingEntityEventHandler {
                         capability.syncPlayerVariables(player);
                     });
 
-                    player.getPersistentData().putDouble("zoompos", 0);
+                    player.getPersistentData().putDouble("zoom_pos", 0);
                     player.getPersistentData().putDouble("zoom_time", 0);
                     if (newStack.getOrCreateTag().getDouble("bolt_action_time") > 0) {
                         newStack.getOrCreateTag().putDouble("bolt_action_anim", 0);

@@ -101,7 +101,7 @@ public class PlayerEventHandler {
      * 判断玩家是否在奔跑
      */
     private static void handlePlayerSprint(Player player) {
-        if (player.getMainHandItem().getOrCreateTag().getDouble("fireanim") > 0) {
+        if (player.getMainHandItem().getOrCreateTag().getInt("fire_animation") > 0) {
             player.getPersistentData().putDouble("noRun", 20);
         }
 
@@ -124,17 +124,18 @@ public class PlayerEventHandler {
     private static void handleWeaponLevel(Player player) {
         ItemStack stack = player.getMainHandItem();
         if (stack.is(TargetModTags.Items.GUN)) {
-            if (stack.getOrCreateTag().getDouble("level") == 0) {
-                stack.getOrCreateTag().putDouble("exp2", 20);
+            var tag = stack.getOrCreateTag();
+            if (tag.getInt("level") == 0) {
+                tag.putDouble("exp2", 20);
             } else {
-                stack.getOrCreateTag().putDouble("exp2", (stack.getOrCreateTag().getDouble("exp1") + stack.getOrCreateTag().getDouble("level") * 500));
+                tag.putDouble("exp2", (tag.getDouble("exp1") + tag.getInt("level") * 500));
             }
-            if (stack.getOrCreateTag().getDouble("damagetotal") >= stack.getOrCreateTag().getDouble("exp2")) {
-                stack.getOrCreateTag().putDouble("exp1", (stack.getOrCreateTag().getDouble("exp2")));
-                stack.getOrCreateTag().putDouble("level", (stack.getOrCreateTag().getDouble("level") + 1));
+            if (tag.getDouble("damagetotal") >= tag.getDouble("exp2")) {
+                tag.putDouble("exp1", (tag.getDouble("exp2")));
+                tag.putInt("level", tag.getInt("level") + 1);
             }
-            stack.getOrCreateTag().putDouble("damagenow", (stack.getOrCreateTag().getDouble("damagetotal") - stack.getOrCreateTag().getDouble("exp1")));
-            stack.getOrCreateTag().putDouble("damageneed", (stack.getOrCreateTag().getDouble("exp2") - stack.getOrCreateTag().getDouble("exp1")));
+            tag.putDouble("damagenow", (tag.getDouble("damagetotal") - tag.getDouble("exp1")));
+            tag.putDouble("damageneed", (tag.getDouble("exp2") - tag.getDouble("exp1")));
         }
     }
 
@@ -149,9 +150,10 @@ public class PlayerEventHandler {
                 if (player == null)
                     return;
                 double pose;
-                if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && player.getPersistentData().getDouble("prone") == 0) {
+                var data = player.getPersistentData();
+                if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && data.getDouble("prone") == 0) {
                     pose = 0.85;
-                } else if (player.getPersistentData().getDouble("prone") > 0) {
+                } else if (data.getDouble("prone") > 0) {
                     if (player.getMainHandItem().getOrCreateTag().getDouble("bipod") == 1) {
                         pose = 0;
                     } else {
@@ -160,9 +162,9 @@ public class PlayerEventHandler {
                 } else {
                     pose = 1;
                 }
-                player.getPersistentData().putDouble("time", (player.getPersistentData().getDouble("time") + 0.015));
-                player.getPersistentData().putDouble("x", (pose * (-0.008) * Math.sin(1 * player.getPersistentData().getDouble("time")) * (1 - 0.9 * player.getPersistentData().getDouble("zoomtime"))));
-                player.getPersistentData().putDouble("y", (pose * 0.125 * Math.sin(player.getPersistentData().getDouble("time") - 1.585) * (1 - 0.9 * player.getPersistentData().getDouble("zoomtime"))));
+                data.putDouble("time", (data.getDouble("time") + 0.015));
+                data.putDouble("x", (pose * -0.008 * Math.sin(data.getDouble("time")) * (1 - 0.9 * data.getDouble("zoom_time"))));
+                data.putDouble("y", (pose * 0.125 * Math.sin(data.getDouble("time") - 1.585) * (1 - 0.9 * data.getDouble("zoom_time"))));
 
                 recoilTimer[0]++;
                 try {
@@ -180,7 +182,7 @@ public class PlayerEventHandler {
     public static String handleAmmoCount(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        String firemode = switch (stack.getOrCreateTag().getInt("firemode")) {
+        String firemode = switch (stack.getOrCreateTag().getInt("fire_mode")) {
             case 0 -> "Semi";
             case 1 -> "Burst";
             case 2 -> "Auto";
@@ -261,7 +263,7 @@ public class PlayerEventHandler {
     private static void handlePrepareZoom(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.is(TargetModTags.Items.GUN) && stack.getOrCreateTag().getDouble("reloading") != 1 && !player.isSpectator()) {
+        if (stack.is(TargetModTags.Items.GUN) && !stack.getOrCreateTag().getBoolean("reloading") && !player.isSpectator()) {
             if (player.getMainHandItem().getItem() != TargetModItems.MINIGUN.get()) {
                 if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zoom) {
                     player.setSprinting(false);
@@ -270,11 +272,11 @@ public class PlayerEventHandler {
                         capability.syncPlayerVariables(player);
                     });
 
-                    if (player.getPersistentData().getDouble("zoom_time") < 10) {
-                        player.getPersistentData().putDouble("zoom_time", (player.getPersistentData().getDouble("zoom_time") + 1));
+                    if (player.getPersistentData().getInt("zoom_time") < 10) {
+                        player.getPersistentData().putInt("zoom_time", player.getPersistentData().getInt("zoom_time") + 1);
                     }
                 } else {
-                    player.getPersistentData().putDouble("zoom_time", 0);
+                    player.getPersistentData().putInt("zoom_time", 0);
                 }
             }
         }
@@ -332,13 +334,9 @@ public class PlayerEventHandler {
                 if (player == null) return;
 
                 player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    var headIndicator = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.headIndicator).orElse(0d);
-                    var hitIndicator = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.hitIndicator).orElse(0d);
-                    var killIndicator = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.killIndicator).orElse(0d);
-
-                    capability.headIndicator = Math.max(0, headIndicator - 1);
-                    capability.hitIndicator = Math.max(0, hitIndicator - 1);
-                    capability.killIndicator = Math.max(0, killIndicator - 1);
+                    capability.headIndicator = Math.max(0, capability.headIndicator - 1);
+                    capability.hitIndicator = Math.max(0, capability.hitIndicator - 1);
+                    capability.killIndicator = Math.max(0, capability.killIndicator - 1);
 
                     capability.syncPlayerVariables(player);
                 });

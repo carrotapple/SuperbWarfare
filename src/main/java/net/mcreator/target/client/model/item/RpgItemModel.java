@@ -41,7 +41,7 @@ public class RpgItemModel extends GeoModel<RpgItem> {
         }
 
         double fp = 0;
-        fp = player.getPersistentData().getDouble("firepos");
+        fp = player.getPersistentData().getDouble("fire_pos");
 
         shen.setPosZ((float) fp);
 
@@ -54,10 +54,10 @@ public class RpgItemModel extends GeoModel<RpgItem> {
         }
 
         double p = 0;
-        p = player.getPersistentData().getDouble("zoompos");
+        p = player.getPersistentData().getDouble("zoom_pos");
 
         double zp = 0;
-        zp = player.getPersistentData().getDouble("zoomposz");
+        zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(0.91f * (float) p);
 
@@ -69,7 +69,7 @@ public class RpgItemModel extends GeoModel<RpgItem> {
 
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
 
-        if (stack.getOrCreateTag().getDouble("fireanim") > 0) {
+        if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
             flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
             flare.setScaleY((float) (1.0 + 0.5 * (Math.random() - 0.5)));
             flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
@@ -98,7 +98,7 @@ public class RpgItemModel extends GeoModel<RpgItem> {
         yaw = player.getPersistentData().getDouble("yaw");
 
         double pit = 0;
-        pit = player.getPersistentData().getDouble("gunpitch");
+        pit = player.getPersistentData().getDouble("gun_pitch");
 
         double vy = 0;
         vy = player.getPersistentData().getDouble("vy");

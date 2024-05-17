@@ -21,7 +21,7 @@ public class RenderHandler {
 
         ItemStack stack = player.getMainHandItem();
 
-        double p = player.getPersistentData().getDouble("zoompos");
+        double p = player.getPersistentData().getDouble("zoom_pos");
         double zoom = stack.getOrCreateTag().getDouble("zoom");
 
         if (stack.is(TargetModTags.Items.GUN)) {

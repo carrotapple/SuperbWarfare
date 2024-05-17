@@ -45,10 +45,10 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         }
 
         double p = 0;
-        p = player.getPersistentData().getDouble("zoompos");
+        p = player.getPersistentData().getDouble("zoom_pos");
 
         double zp = 0;
-        zp = player.getPersistentData().getDouble("zoomposz");
+        zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(2.52f * (float) p);
 
@@ -84,7 +84,7 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
 
         double fp = 0;
-        fp = player.getPersistentData().getDouble("firepos");
+        fp = player.getPersistentData().getDouble("fire_pos");
 
         shen.setPosZ(1.8f * (float) fp);
 
@@ -137,7 +137,7 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         yaw = player.getPersistentData().getDouble("yaw");
 
         double pit = 0;
-        pit = player.getPersistentData().getDouble("gunpitch");
+        pit = player.getPersistentData().getDouble("gun_pitch");
 
         double vy = 0;
         vy = player.getPersistentData().getDouble("vy");

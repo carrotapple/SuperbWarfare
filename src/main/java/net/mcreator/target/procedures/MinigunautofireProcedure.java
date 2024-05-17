@@ -25,7 +25,7 @@ public class MinigunautofireProcedure {
         ItemStack usehand;
         usehand = player.getMainHandItem();
         if (usehand.getItem() == TargetModItems.MINIGUN.get()) {
-            if (player.getPersistentData().getDouble("minifiring") == 1 && !player.isSprinting()) {
+            if (player.getPersistentData().getDouble("mini_firing") == 1 && !player.isSprinting()) {
                 if (usehand.getOrCreateTag().getDouble("rot") < 10) {
                     usehand.getOrCreateTag().putDouble("rot", (usehand.getOrCreateTag().getDouble("rot") + 1));
                 }
@@ -77,7 +77,7 @@ public class MinigunautofireProcedure {
                 capability.syncPlayerVariables(player);
             });
 
-            usehand.getOrCreateTag().putDouble("fireanim", 2);
+            usehand.getOrCreateTag().putInt("fire_animation", 2);
         }
     }
 }

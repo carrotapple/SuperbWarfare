@@ -92,8 +92,8 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
         ItemStack mainHandItem = player.getMainHandItem();
         CompoundTag tag = mainHandItem.getOrCreateTag();
         if (mainHandItem.is(TargetModTags.Items.GUN)) {
-            if (tag.getInt("firemode") == 1) {
-                player.getPersistentData().putDouble("firing", 0);
+            if (tag.getInt("fire_mode") == 1) {
+                player.getPersistentData().putBoolean("firing", false);
             }
             if (tag.getInt("ammo") == 0) {
                 tag.putDouble("burst", 0);
@@ -101,14 +101,14 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
         }
         Item item = mainHandItem.getItem();
         if (item == TargetModItems.VECTOR.get()
-                && tag.getDouble("reloading") == 0
+                && !tag.getBoolean("reloading")
                 && tag.getInt("ammo") > 0
                 && !player.getCooldowns().isOnCooldown(item)
                 && tag.getDouble("burst") > 0
         ) {
             player.getCooldowns().addCooldown(item, tag.getDouble("burst") == 1 ? 5 : 1);
             tag.putDouble("burst", tag.getDouble("burst") - 1);
-            tag.putDouble("fireanim", 2);
+            tag.putInt("fire_animation", 2);
             tag.putInt("ammo", (tag.getInt("ammo") - 1));
 
             GunsTool.spawnBullet(player);
@@ -168,27 +168,27 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.vec.draw"));
             }
 
-            if (stack.getOrCreateTag().getDouble("fireanim") > 0) {
+            if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.fire"));
             }
 
-            if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 1) {
+            if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload"));
             }
 
-            if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 0) {
+            if (stack.getOrCreateTag().getBoolean("reloading") && !stack.getOrCreateTag().getBoolean("empty_reload")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload2"));
             }
 
-            if (stack.getOrCreateTag().getInt("firemode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
+            if (stack.getOrCreateTag().getInt("fire_mode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.changefirerate3"));
             }
 
-            if (stack.getOrCreateTag().getInt("firemode") == 1 && stack.getOrCreateTag().getDouble("cg") > 0) {
+            if (stack.getOrCreateTag().getInt("fire_mode") == 1 && stack.getOrCreateTag().getDouble("cg") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.changefirerate2"));
             }
 
-            if (stack.getOrCreateTag().getInt("firemode") == 2 && stack.getOrCreateTag().getDouble("cg") > 0) {
+            if (stack.getOrCreateTag().getInt("fire_mode") == 2 && stack.getOrCreateTag().getDouble("cg") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.changefirerate"));
             }
 
@@ -241,12 +241,12 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
         double id = tag.getDouble("id");
         var mainHandItem = entity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
         if (mainHandItem.getOrCreateTag().getDouble("id") != tag.getDouble("id")) {
-            tag.putDouble("emptyreload", 0);
-            tag.putDouble("reloading", 0);
-            tag.putDouble("reloadtime", 0);
+            tag.putBoolean("empty_reload", false);
+            tag.putBoolean("reloading", false);
+            tag.putDouble("reloading_time", 0);
         }
-        if (tag.getDouble("reloading") == 1 && tag.getInt("ammo") == 0) {
-            if (tag.getDouble("reloadtime") == 61) {
+        if (tag.getBoolean("reloading") && tag.getInt("ammo") == 0) {
+            if (tag.getDouble("reloading_time") == 61) {
                 entity.getPersistentData().putDouble("id", id);
                 if (entity instanceof ServerPlayer serverPlayer) {
                     serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("target:vector_reload_empty"))),
@@ -256,18 +256,18 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
             }
             if (mainHandItem.getItem() == itemStack.getItem()
                     && mainHandItem.getOrCreateTag().getDouble("id") == id
-                    && tag.getDouble("reloadtime") > 0) {
-                tag.putDouble("reloadtime", tag.getDouble("reloadtime") - 1);
+                    && tag.getDouble("reloading_time") > 0) {
+                tag.putDouble("reloading_time", tag.getDouble("reloading_time") - 1);
             } else {
-                tag.putDouble("reloading", 0);
-                tag.putDouble("emptyreload", 0);
-                tag.putDouble("reloadtime", 0);
+                tag.putBoolean("reloading", false);
+                tag.putBoolean("empty_reload", false);
+                tag.putDouble("reloading_time", 0);
             }
-            if (tag.getDouble("reloadtime") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
+            if (tag.getDouble("reloading_time") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
                 GunReload.reload(entity, GunInfo.Type.HANDGUN);
             }
-        } else if (tag.getDouble("reloading") == 1 && tag.getInt("ammo") > 0) {
-            if (tag.getDouble("reloadtime") == 47) {
+        } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
+            if (tag.getDouble("reloading_time") == 47) {
                 entity.getPersistentData().putDouble("id", id);
                 if (entity instanceof ServerPlayer serverPlayer) {
                     serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("target:vector_reload_normal"))),
@@ -277,14 +277,14 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
             }
             if (mainHandItem.getItem() == itemStack.getItem()
                     && mainHandItem.getOrCreateTag().getDouble("id") == id
-                    && tag.getDouble("reloadtime") > 0) {
-                tag.putDouble("reloadtime", (tag.getDouble("reloadtime") - 1));
+                    && tag.getDouble("reloading_time") > 0) {
+                tag.putDouble("reloading_time", (tag.getDouble("reloading_time") - 1));
             } else {
-                tag.putDouble("reloading", 0);
-                tag.putDouble("emptyreload", 0);
-                tag.putDouble("reloadtime", 0);
+                tag.putBoolean("reloading", false);
+                tag.putBoolean("empty_reload", false);
+                tag.putDouble("reloading_time", 0);
             }
-            if (tag.getDouble("reloadtime") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
+            if (tag.getDouble("reloading_time") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
                 GunReload.reload(entity, GunInfo.Type.HANDGUN, true);
             }
         }

@@ -1,6 +1,5 @@
 package net.mcreator.target.procedures;
 
-import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.GunInfo;
 import net.mcreator.target.tools.GunReload;
 import net.minecraft.commands.CommandSource;
@@ -19,12 +18,12 @@ public class AbekiriWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
         id = itemstack.getOrCreateTag().getDouble("id");
         ammo1 = 2 - itemstack.getOrCreateTag().getInt("ammo");
         if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") != itemstack.getOrCreateTag().getDouble("id")) {
-            itemstack.getOrCreateTag().putDouble("emptyreload", 0);
-            itemstack.getOrCreateTag().putDouble("reloading", 0);
-            itemstack.getOrCreateTag().putDouble("reloadtime", 0);
+            itemstack.getOrCreateTag().putBoolean("empty_reload", false);
+            itemstack.getOrCreateTag().putBoolean("reloading", false);
+            itemstack.getOrCreateTag().putDouble("reloading_time", 0);
         }
-        if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getInt("ammo") == 0) {
-            if (itemstack.getOrCreateTag().getDouble("reloadtime") == 99) {
+        if (itemstack.getOrCreateTag().getBoolean("reloading") && itemstack.getOrCreateTag().getInt("ammo") == 0) {
+            if (itemstack.getOrCreateTag().getDouble("reloading_time") == 99) {
                 entity.getPersistentData().putDouble("id", id);
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
@@ -35,19 +34,19 @@ public class AbekiriWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
             }
             if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == itemstack.getItem()
                     && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                if (itemstack.getOrCreateTag().getDouble("reloadtime") > 0) {
-                    itemstack.getOrCreateTag().putDouble("reloadtime", (itemstack.getOrCreateTag().getDouble("reloadtime") - 1));
+                if (itemstack.getOrCreateTag().getDouble("reloading_time") > 0) {
+                    itemstack.getOrCreateTag().putDouble("reloading_time", (itemstack.getOrCreateTag().getDouble("reloading_time") - 1));
                 }
             } else {
-                itemstack.getOrCreateTag().putDouble("reloading", 0);
-                itemstack.getOrCreateTag().putDouble("emptyreload", 0);
-                itemstack.getOrCreateTag().putDouble("reloadtime", 0);
+                itemstack.getOrCreateTag().putBoolean("reloading", false);
+                itemstack.getOrCreateTag().putBoolean("empty_reload", false);
+                itemstack.getOrCreateTag().putDouble("reloading_time", 0);
             }
-            if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
+            if (itemstack.getOrCreateTag().getDouble("reloading_time") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
                 GunReload.reload(entity, GunInfo.Type.SHOTGUN);
             }
-        } else if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getInt("ammo") == 1) {
-            if (itemstack.getOrCreateTag().getDouble("reloadtime") == 83) {
+        } else if (itemstack.getOrCreateTag().getBoolean("reloading") && itemstack.getOrCreateTag().getInt("ammo") == 1) {
+            if (itemstack.getOrCreateTag().getDouble("reloading_time") == 83) {
                 entity.getPersistentData().putDouble("id", id);
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
@@ -58,15 +57,15 @@ public class AbekiriWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
             }
             if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == itemstack.getItem()
                     && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                if (itemstack.getOrCreateTag().getDouble("reloadtime") > 0) {
-                    itemstack.getOrCreateTag().putDouble("reloadtime", (itemstack.getOrCreateTag().getDouble("reloadtime") - 1));
+                if (itemstack.getOrCreateTag().getDouble("reloading_time") > 0) {
+                    itemstack.getOrCreateTag().putDouble("reloading_time", (itemstack.getOrCreateTag().getDouble("reloading_time") - 1));
                 }
             } else {
-                itemstack.getOrCreateTag().putDouble("reloading", 0);
-                itemstack.getOrCreateTag().putDouble("emptyreload", 0);
-                itemstack.getOrCreateTag().putDouble("reloadtime", 0);
+                itemstack.getOrCreateTag().putBoolean("reloading", false);
+                itemstack.getOrCreateTag().putBoolean("empty_reload", false);
+                itemstack.getOrCreateTag().putDouble("reloading_time", 0);
             }
-            if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
+            if (itemstack.getOrCreateTag().getDouble("reloading_time") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
                 GunReload.reload(entity, GunInfo.Type.SHOTGUN);
             }
         }

@@ -16,12 +16,12 @@ public class RpgWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
         CompoundTag tag = itemstack.getOrCreateTag();
         double id = tag.getDouble("id");
         if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") != tag.getDouble("id")) {
-            tag.putDouble("emptyreload", 0);
-            tag.putDouble("reloading", 0);
-            tag.putDouble("reloadtime", 0);
+            tag.putBoolean("empty_reload", false);
+            tag.putBoolean("reloading", false);
+            tag.putDouble("reloading_time", 0);
         }
-        if (tag.getDouble("reloading") == 1) {
-            if (tag.getDouble("reloadtime") == 91) {
+        if (tag.getBoolean("reloading")) {
+            if (tag.getDouble("reloading_time") == 91) {
                 entity.getPersistentData().putDouble("id", id);
                 if (entity.getServer() != null) {
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
@@ -30,25 +30,25 @@ public class RpgWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
             }
             if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == itemstack.getItem()
                     && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                if (tag.getDouble("reloadtime") > 0) {
-                    tag.putDouble("reloadtime", (tag.getDouble("reloadtime") - 1));
+                if (tag.getDouble("reloading_time") > 0) {
+                    tag.putDouble("reloading_time", (tag.getDouble("reloading_time") - 1));
                 }
             } else {
-                tag.putDouble("reloading", 0);
-                tag.putDouble("reloadtime", 0);
-                tag.putDouble("emptyreload", 0);
+                tag.putBoolean("reloading", false);
+                tag.putDouble("reloading_time", 0);
+                tag.putBoolean("empty_reload", false);
             }
-            if (tag.getDouble("reloadtime") == 84) {
+            if (tag.getDouble("reloading_time") == 84) {
                 tag.putDouble("empty", 0);
             }
-            if (tag.getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
+            if (tag.getDouble("reloading_time") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
                 if (tag.getInt("maxammo") >= 0) {
                     tag.putInt("ammo", 1);
                     if (entity instanceof Player _player) {
                         _player.getInventory().clearOrCountMatchingItems(p -> TargetModItems.ROCKET.get() == p.getItem(), 1, _player.inventoryMenu.getCraftSlots());
                     }
-                    tag.putDouble("reloading", 0);
-                    tag.putDouble("emptyreload", 0);
+                    tag.putBoolean("reloading", false);
+                    tag.putBoolean("empty_reload", false);
                 }
             }
         }

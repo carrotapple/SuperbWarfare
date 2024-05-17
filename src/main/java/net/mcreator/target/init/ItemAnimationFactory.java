@@ -26,9 +26,9 @@ public class ItemAnimationFactory {
     }
 
     private static void setAnimationState(ItemStack itemStack, boolean isClientSide) {
-        if (!itemStack.getOrCreateTag().getString("geckoAnim").isEmpty() && !(itemStack.getItem() instanceof ArmorItem)) {
-            String animation = itemStack.getOrCreateTag().getString("geckoAnim");
-            itemStack.getOrCreateTag().putString("geckoAnim", "");
+        if (!itemStack.getOrCreateTag().getString("gecko_animation").isEmpty() && !(itemStack.getItem() instanceof ArmorItem)) {
+            String animation = itemStack.getOrCreateTag().getString("gecko_animation");
+            itemStack.getOrCreateTag().putString("gecko_animation", "");
 
             if (itemStack.getItem() instanceof AnimatedItem animatable && isClientSide) {
                 animatable.setAnimationProcedure(animation);

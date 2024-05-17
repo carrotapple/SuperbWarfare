@@ -40,10 +40,10 @@ public class RpkItemModel extends GeoModel<RpkItem> {
         ItemStack stack = player.getMainHandItem();
 
         double p = 0;
-        p = player.getPersistentData().getDouble("zoompos");
+        p = player.getPersistentData().getDouble("zoom_pos");
 
         double zp = 0;
-        zp = player.getPersistentData().getDouble("zoomposz");
+        zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(1.69f * (float) p);
 
@@ -82,7 +82,7 @@ public class RpkItemModel extends GeoModel<RpkItem> {
         }
 
         double fp = 0;
-        fp = player.getPersistentData().getDouble("firepos");
+        fp = player.getPersistentData().getDouble("fire_pos");
 
         shen.setPosZ((float) fp);
 
@@ -129,7 +129,7 @@ public class RpkItemModel extends GeoModel<RpkItem> {
         yaw = player.getPersistentData().getDouble("yaw");
 
         double pit = 0;
-        pit = player.getPersistentData().getDouble("gunpitch");
+        pit = player.getPersistentData().getDouble("gun_pitch");
 
         double vy = 0;
         vy = player.getPersistentData().getDouble("vy");

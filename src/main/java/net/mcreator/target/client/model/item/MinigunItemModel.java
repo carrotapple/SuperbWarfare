@@ -48,7 +48,7 @@ public class MinigunItemModel extends GeoModel<Minigun> {
 
 
         double fp = 0;
-        fp = player.getPersistentData().getDouble("firepos");
+        fp = player.getPersistentData().getDouble("fire_pos");
 
         shen.setPosZ((float) fp);
 
@@ -60,7 +60,7 @@ public class MinigunItemModel extends GeoModel<Minigun> {
             shen.setRotZ(-0.003f * (float) fp);
         }
 
-        if (stack.getOrCreateTag().getDouble("fireanim") > 0) {
+        if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
             flare.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
             flare.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
             flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
@@ -90,7 +90,7 @@ public class MinigunItemModel extends GeoModel<Minigun> {
         yaw = player.getPersistentData().getDouble("yaw");
 
         double pit = 0;
-        pit = player.getPersistentData().getDouble("gunpitch");
+        pit = player.getPersistentData().getDouble("gun_pitch");
 
         double vy = 0;
         vy = player.getPersistentData().getDouble("vy");

@@ -53,9 +53,9 @@ public class FireMessage {
         if (type == 0) {
             PressFireProcedure.execute(player);
         } else if (type == 1) {
-            player.getPersistentData().putDouble("firing", 0);
-            player.getPersistentData().putDouble("minifiring", 0);
-            player.getPersistentData().putDouble("minigunfiring", 0);
+            player.getPersistentData().putBoolean("firing", false);
+            player.getPersistentData().putDouble("mini_firing", 0);
+            player.getPersistentData().putDouble("minigun_firing", 0);
             player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.bowPullHold = false;
                 capability.syncPlayerVariables(player);
@@ -86,7 +86,7 @@ public class FireMessage {
             if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
                 Level level = player.level();
                 if (!level.isClientSide()) {
-                    float damage = (float) (0.02 * stack.getOrCreateTag().getDouble("damage") * (1 + 0.05 * stack.getOrCreateTag().getDouble("level")));
+                    float damage = (float) (0.02 * stack.getOrCreateTag().getDouble("damage") * (1 + 0.05 * stack.getOrCreateTag().getInt("level")));
 
                     BocekarrowEntity arrow = new BocekarrowEntity(TargetModEntities.BOCEKARROW.get(), level);
                     arrow.setOwner(player);
@@ -128,9 +128,9 @@ public class FireMessage {
             });
 
             player.getCooldowns().addCooldown(player.getMainHandItem().getItem(), 7);
-            player.getMainHandItem().getOrCreateTag().putDouble("arrowempty", 7);
+            player.getMainHandItem().getOrCreateTag().putInt("arrow_empty", 7);
             player.getMainHandItem().getOrCreateTag().putDouble("power", 0);
-            stack.getOrCreateTag().putDouble("fireanim", 2);
+            stack.getOrCreateTag().putInt("fire_animation", 2);
 
             if (!player.isCreative()) {
                 player.getInventory().clearOrCountMatchingItems(p -> Items.ARROW == p.getItem(), 1, player.inventoryMenu.getCraftSlots());

@@ -13,7 +13,7 @@ public class VectorFireProcedure {
         if (mainHandItem.getItem() != TargetModItems.VECTOR.get()) return;
 
         CompoundTag tag = mainHandItem.getOrCreateTag();
-        if (tag.getInt("firemode") == 1 && tag.getDouble("burst") == 0) {
+        if (tag.getInt("fire_mode") == 1 && tag.getDouble("burst") == 0) {
             tag.putDouble("burst", 3);
         }
     }

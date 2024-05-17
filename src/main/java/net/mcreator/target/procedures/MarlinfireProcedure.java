@@ -14,10 +14,10 @@ public class MarlinfireProcedure {
         if (player.isSpectator()) return;
 
         ItemStack usehand = player.getMainHandItem();
-        if (usehand.getOrCreateTag().getDouble("reloading") == 1 && usehand.getOrCreateTag().getDouble("prepare") == 0 && usehand.getOrCreateTag().getInt("ammo") > 0) {
+        if (usehand.getOrCreateTag().getBoolean("reloading") && usehand.getOrCreateTag().getDouble("prepare") == 0 && usehand.getOrCreateTag().getInt("ammo") > 0) {
             usehand.getOrCreateTag().putDouble("forcestop", 1);
         }
-        if (usehand.getItem() == TargetModItems.MARLIN.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !player.getCooldowns().isOnCooldown(usehand.getItem())
+        if (usehand.getItem() == TargetModItems.MARLIN.get() && !usehand.getOrCreateTag().getBoolean("reloading") && !player.getCooldowns().isOnCooldown(usehand.getItem())
                 && usehand.getOrCreateTag().getInt("ammo") > 0) {
             if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
                 player.getCooldowns().addCooldown(usehand.getItem(), 15);
@@ -46,7 +46,7 @@ public class MarlinfireProcedure {
             } else {
                 usehand.getOrCreateTag().putDouble("animindex", 1);
             }
-            usehand.getOrCreateTag().putDouble("fireanim", 2);
+            usehand.getOrCreateTag().putInt("fire_animation", 2);
         }
     }
 }

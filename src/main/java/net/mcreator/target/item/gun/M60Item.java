@@ -81,27 +81,27 @@ public class M60Item extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m60.draw"));
             }
 
-            if (stack.getOrCreateTag().getDouble("fireanim") > 0 && stack.getOrCreateTag().getDouble("animindex") == 0) {
+            if (stack.getOrCreateTag().getInt("fire_animation") > 0 && stack.getOrCreateTag().getDouble("animindex") == 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m60.fire"));
             }
 
-            if (stack.getOrCreateTag().getDouble("fireanim") > 0 && stack.getOrCreateTag().getDouble("animindex") == 1) {
+            if (stack.getOrCreateTag().getInt("fire_animation") > 0 && stack.getOrCreateTag().getDouble("animindex") == 1) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m60.fire2"));
             }
 
-            if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 1) {
+            if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m60.reload"));
             }
 
-            if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 0) {
+            if (stack.getOrCreateTag().getBoolean("reloading") && !stack.getOrCreateTag().getBoolean("empty_reload")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m60.reload2"));
             }
 
-            if (stack.getOrCreateTag().getInt("firemode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
+            if (stack.getOrCreateTag().getInt("fire_mode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m60.changefirerate2"));
             }
 
-            if (stack.getOrCreateTag().getInt("firemode") == 2 && stack.getOrCreateTag().getDouble("cg") > 0) {
+            if (stack.getOrCreateTag().getInt("fire_mode") == 2 && stack.getOrCreateTag().getDouble("cg") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m60.changefirerate"));
             }
 

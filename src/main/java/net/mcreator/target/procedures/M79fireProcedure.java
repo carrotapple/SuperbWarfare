@@ -21,7 +21,7 @@ public class M79fireProcedure {
         if (entity == null) return;
         if (entity instanceof Player player && !player.isSpectator()) {
             ItemStack usehand = player.getMainHandItem();
-            if (usehand.getItem() == TargetModItems.M_79.get() && usehand.getOrCreateTag().getDouble("reloading") == 0 && !(entity instanceof Player _plrCldCheck4 && _plrCldCheck4.getCooldowns().isOnCooldown(usehand.getItem()))
+            if (usehand.getItem() == TargetModItems.M_79.get() && !usehand.getOrCreateTag().getBoolean("reloading") && !(entity instanceof Player _plrCldCheck4 && _plrCldCheck4.getCooldowns().isOnCooldown(usehand.getItem()))
                     && usehand.getOrCreateTag().getInt("ammo") > 0) {
                 entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                     capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
@@ -41,7 +41,7 @@ public class M79fireProcedure {
                             entityToSpawn.setSilent(true);
                             return entityToSpawn;
                         }
-                    }.getArrow(projectileLevel, entity, (float) ((usehand.getOrCreateTag().getDouble("damage") / usehand.getOrCreateTag().getDouble("velocity")) * (1 + 0.05 * usehand.getOrCreateTag().getDouble("level"))), 0);
+                    }.getArrow(projectileLevel, entity, (float) ((usehand.getOrCreateTag().getDouble("damage") / usehand.getOrCreateTag().getDouble("velocity")) * (1 + 0.05 * usehand.getOrCreateTag().getInt("level"))), 0);
                     _entityToSpawn.setPos(entity.getX(), entity.getEyeY() - 0.1, entity.getZ());
                     _entityToSpawn.shoot(entity.getLookAngle().x, entity.getLookAngle().y, entity.getLookAngle().z, (float) usehand.getOrCreateTag().getDouble("velocity"),
                             (float) ((LivingEntity) entity).getAttribute(TargetModAttributes.SPREAD.get()).getBaseValue());
@@ -67,7 +67,7 @@ public class M79fireProcedure {
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
                             entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m_79_veryfar player @a ~ ~ ~ 12 1");
                 }
-                usehand.getOrCreateTag().putDouble("fireanim", 2);
+                usehand.getOrCreateTag().putInt("fire_animation", 2);
                 usehand.getOrCreateTag().putInt("ammo", (usehand.getOrCreateTag().getInt("ammo") - 1));
             }
         }

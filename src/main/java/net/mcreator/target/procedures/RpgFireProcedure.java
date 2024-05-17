@@ -25,7 +25,7 @@ public class RpgFireProcedure {
         ItemStack mainHandItem = player.getMainHandItem();
         CompoundTag tag = mainHandItem.getOrCreateTag();
 
-        if (mainHandItem.getItem() == TargetModItems.RPG.get() && tag.getDouble("reloading") == 0 && !player.getCooldowns().isOnCooldown(mainHandItem.getItem())
+        if (mainHandItem.getItem() == TargetModItems.RPG.get() && !tag.getBoolean("reloading") && !player.getCooldowns().isOnCooldown(mainHandItem.getItem())
                 && tag.getInt("ammo") > 0) {
             player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
@@ -60,7 +60,7 @@ public class RpgFireProcedure {
                 player.level().playSound(null, player.blockPosition(), TargetModSounds.RPG_FAR.get(), SoundSource.PLAYERS, 8, 1);
                 player.level().playSound(null, player.blockPosition(), TargetModSounds.RPG_VERYFAR.get(), SoundSource.PLAYERS, 16, 1);
             }
-            tag.putDouble("fireanim", 2);
+            tag.putInt("fire_animation", 2);
             tag.putInt("ammo", tag.getInt("ammo") - 1);
         }
     }
@@ -75,7 +75,7 @@ public class RpgFireProcedure {
                 entityToSpawn.setSilent(true);
                 return entityToSpawn;
             }
-        }.getArrow(projectileLevel, player, (float) ((tag.getDouble("damage") / tag.getDouble("velocity")) * (1 + 0.05 * tag.getDouble("level"))), 0);
+        }.getArrow(projectileLevel, player, (float) ((tag.getDouble("damage") / tag.getDouble("velocity")) * (1 + 0.05 * tag.getInt("level"))), 0);
     }
 
 }

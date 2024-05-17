@@ -17,12 +17,12 @@ public class SentinelWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
         double cid = 0;
         id = itemstack.getOrCreateTag().getDouble("id");
         if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") != itemstack.getOrCreateTag().getDouble("id")) {
-            itemstack.getOrCreateTag().putDouble("emptyreload", 0);
-            itemstack.getOrCreateTag().putDouble("reloading", 0);
-            itemstack.getOrCreateTag().putDouble("reloadtime", 0);
+            itemstack.getOrCreateTag().putBoolean("empty_reload", false);
+            itemstack.getOrCreateTag().putBoolean("reloading", false);
+            itemstack.getOrCreateTag().putDouble("reloading_time", 0);
         }
-        if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getInt("ammo") == 0) {
-            if (itemstack.getOrCreateTag().getDouble("reloadtime") == 73) {
+        if (itemstack.getOrCreateTag().getBoolean("reloading") && itemstack.getOrCreateTag().getInt("ammo") == 0) {
+            if (itemstack.getOrCreateTag().getDouble("reloading_time") == 73) {
                 entity.getPersistentData().putDouble("id", id);
                 {
                     Entity _ent = entity;
@@ -34,19 +34,19 @@ public class SentinelWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
             }
             if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == itemstack.getItem()
                     && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                if (itemstack.getOrCreateTag().getDouble("reloadtime") > 0) {
-                    itemstack.getOrCreateTag().putDouble("reloadtime", (itemstack.getOrCreateTag().getDouble("reloadtime") - 1));
+                if (itemstack.getOrCreateTag().getDouble("reloading_time") > 0) {
+                    itemstack.getOrCreateTag().putDouble("reloading_time", (itemstack.getOrCreateTag().getDouble("reloading_time") - 1));
                 }
             } else {
-                itemstack.getOrCreateTag().putDouble("reloading", 0);
-                itemstack.getOrCreateTag().putDouble("emptyreload", 0);
-                itemstack.getOrCreateTag().putDouble("reloadtime", 0);
+                itemstack.getOrCreateTag().putBoolean("reloading", false);
+                itemstack.getOrCreateTag().putBoolean("empty_reload", false);
+                itemstack.getOrCreateTag().putDouble("reloading_time", 0);
             }
-            if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
+            if (itemstack.getOrCreateTag().getDouble("reloading_time") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
                 GunReload.reload(entity, GunInfo.Type.SNIPER);
             }
-        } else if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && itemstack.getOrCreateTag().getInt("ammo") > 0) {
-            if (itemstack.getOrCreateTag().getDouble("reloadtime") == 53) {
+        } else if (itemstack.getOrCreateTag().getBoolean("reloading") && itemstack.getOrCreateTag().getInt("ammo") > 0) {
+            if (itemstack.getOrCreateTag().getDouble("reloading_time") == 53) {
                 entity.getPersistentData().putDouble("id", id);
                 {
                     Entity _ent = entity;
@@ -58,23 +58,23 @@ public class SentinelWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
             }
             if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == itemstack.getItem()
                     && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                if (itemstack.getOrCreateTag().getDouble("reloadtime") > 0) {
-                    itemstack.getOrCreateTag().putDouble("reloadtime", (itemstack.getOrCreateTag().getDouble("reloadtime") - 1));
+                if (itemstack.getOrCreateTag().getDouble("reloading_time") > 0) {
+                    itemstack.getOrCreateTag().putDouble("reloading_time", (itemstack.getOrCreateTag().getDouble("reloading_time") - 1));
                 }
             } else {
-                itemstack.getOrCreateTag().putDouble("reloading", 0);
-                itemstack.getOrCreateTag().putDouble("emptyreload", 0);
-                itemstack.getOrCreateTag().putDouble("reloadtime", 0);
+                itemstack.getOrCreateTag().putBoolean("reloading", false);
+                itemstack.getOrCreateTag().putBoolean("empty_reload", false);
+                itemstack.getOrCreateTag().putDouble("reloading_time", 0);
             }
-            if (itemstack.getOrCreateTag().getDouble("reloadtime") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
+            if (itemstack.getOrCreateTag().getDouble("reloading_time") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
                 GunReload.reload(entity, GunInfo.Type.SNIPER, true);
             }
         }
         if (itemstack.getOrCreateTag().getDouble("firing") > 0) {
             itemstack.getOrCreateTag().putDouble("firing", (itemstack.getOrCreateTag().getDouble("firing") - 1));
         }
-        if (itemstack.getOrCreateTag().getDouble("zoomfiring") > 0) {
-            itemstack.getOrCreateTag().putDouble("zoomfiring", (itemstack.getOrCreateTag().getDouble("zoomfiring") - 1));
+        if (itemstack.getOrCreateTag().getDouble("zoom_firing") > 0) {
+            itemstack.getOrCreateTag().putDouble("zoom_firing", (itemstack.getOrCreateTag().getDouble("zoom_firing") - 1));
         }
 
         cid = itemstack.getOrCreateTag().getDouble("cid");

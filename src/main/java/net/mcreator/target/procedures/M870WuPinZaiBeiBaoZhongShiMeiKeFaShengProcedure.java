@@ -19,12 +19,12 @@ public class M870WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
         ammo1 = 8 - itemstack.getOrCreateTag().getInt("ammo");
         if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") != itemstack.getOrCreateTag().getDouble("id")) {
             itemstack.getOrCreateTag().putDouble("finish", 0);
-            itemstack.getOrCreateTag().putDouble("reloading", 0);
+            itemstack.getOrCreateTag().putBoolean("reloading", false);
             itemstack.getOrCreateTag().putDouble("prepare", 0);
             itemstack.getOrCreateTag().putDouble("loading", 0);
             itemstack.getOrCreateTag().putDouble("forcestop", 0);
             itemstack.getOrCreateTag().putDouble("stop", 0);
-            itemstack.getOrCreateTag().putDouble("emptyreload", 0);
+            itemstack.getOrCreateTag().putBoolean("empty_reload", false);
         }
         if (itemstack.getOrCreateTag().getDouble("prepare") > 0) {
             itemstack.getOrCreateTag().putDouble("prepare", (itemstack.getOrCreateTag().getDouble("prepare") - 1));
@@ -36,10 +36,10 @@ public class M870WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
             itemstack.getOrCreateTag().putDouble("finish", (itemstack.getOrCreateTag().getDouble("finish") - 1));
         }
         if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") != itemstack.getOrCreateTag().getDouble("id")) {
-            itemstack.getOrCreateTag().putDouble("reloading", 0);
+            itemstack.getOrCreateTag().putBoolean("reloading", false);
         }
-        if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-            if (itemstack.getOrCreateTag().getDouble("prepare") == 10 && itemstack.getOrCreateTag().getDouble("emptyreload") == 1) {
+        if (itemstack.getOrCreateTag().getBoolean("reloading") && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
+            if (itemstack.getOrCreateTag().getDouble("prepare") == 10 && itemstack.getOrCreateTag().getBoolean("empty_reload")) {
                 itemstack.getOrCreateTag().putInt("ammo", (itemstack.getOrCreateTag().getInt("ammo") + 1));
                 {
                     int _setval = (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunAmmo - 1;
@@ -63,10 +63,10 @@ public class M870WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                                     entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m_870_reloadloop player @s ~ ~ ~ 100 1");
                         }
                     }
-                    if (itemstack.getOrCreateTag().getDouble("loadindex") == 0) {
-                        itemstack.getOrCreateTag().putDouble("loadindex", 1);
+                    if (itemstack.getOrCreateTag().getBoolean("load_index")) {
+                        itemstack.getOrCreateTag().putBoolean("load_index", true);
                     } else {
-                        itemstack.getOrCreateTag().putDouble("loadindex", 0);
+                        itemstack.getOrCreateTag().putBoolean("load_index", false);
                     }
                 }
             }
@@ -87,8 +87,8 @@ public class M870WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 itemstack.getOrCreateTag().putDouble("finish", 12);
                 if (entity instanceof Player _player)
                     _player.getCooldowns().addCooldown(itemstack.getItem(), 12);
-                itemstack.getOrCreateTag().putDouble("reloading", 0);
-                itemstack.getOrCreateTag().putDouble("emptyreload", 0);
+                itemstack.getOrCreateTag().putBoolean("reloading", false);
+                itemstack.getOrCreateTag().putBoolean("empty_reload", false);
             }
         }
         if (itemstack.getOrCreateTag().getDouble("firing") > 0) {

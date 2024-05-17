@@ -46,10 +46,10 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
         }
 
         double p = 0;
-        p = player.getPersistentData().getDouble("zoompos");
+        p = player.getPersistentData().getDouble("zoom_pos");
 
         double zp = 0;
-        zp = player.getPersistentData().getDouble("zoomposz");
+        zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(6.372f * (float) p);
 
@@ -66,7 +66,7 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
 
         double fp = 0;
-        fp = player.getPersistentData().getDouble("firepos");
+        fp = player.getPersistentData().getDouble("fire_pos");
 
         shen.setPosZ(3f * (float) fp);
 
@@ -130,7 +130,7 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
         yaw = player.getPersistentData().getDouble("yaw");
 
         double pit = 0;
-        pit = player.getPersistentData().getDouble("gunpitch");
+        pit = player.getPersistentData().getDouble("gun_pitch");
 
         double vy = 0;
         vy = player.getPersistentData().getDouble("vy");

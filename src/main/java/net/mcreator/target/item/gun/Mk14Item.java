@@ -81,23 +81,23 @@ public class Mk14Item extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.model.draw"));
             }
 
-            if (stack.getOrCreateTag().getDouble("fireanim") > 0) {
+            if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.model.fire"));
             }
 
-            if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 1) {
+            if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.model.reloadempty"));
             }
 
-            if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("emptyreload") == 0) {
+            if (stack.getOrCreateTag().getBoolean("reloading") && !stack.getOrCreateTag().getBoolean("empty_reload")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.model.reload"));
             }
 
-            if (stack.getOrCreateTag().getInt("firemode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
+            if (stack.getOrCreateTag().getInt("fire_mode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.model.changefirerate2"));
             }
 
-            if (stack.getOrCreateTag().getInt("firemode") == 2 && stack.getOrCreateTag().getDouble("cg") > 0) {
+            if (stack.getOrCreateTag().getInt("fire_mode") == 2 && stack.getOrCreateTag().getDouble("cg") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.model.changefirerate"));
             }
 

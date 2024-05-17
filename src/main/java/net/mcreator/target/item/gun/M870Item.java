@@ -88,19 +88,19 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.shift"));
                 }
 
-                if (stack.getOrCreateTag().getDouble("emptyreload") == 1 && stack.getOrCreateTag().getDouble("prepare") > 0) {
+                if (stack.getOrCreateTag().getBoolean("empty_reload") && stack.getOrCreateTag().getDouble("prepare") > 0) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.preparealt"));
                 }
 
-                if (stack.getOrCreateTag().getDouble("reloading") == 1 && stack.getOrCreateTag().getDouble("prepare") > 0) {
+                if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getDouble("prepare") > 0) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.prepare"));
                 }
 
-                if (stack.getOrCreateTag().getDouble("loadindex") == 0 && stack.getOrCreateTag().getDouble("loading") > 0) {
+                if (!stack.getOrCreateTag().getBoolean("load_index") && stack.getOrCreateTag().getDouble("loading") > 0) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.iterativeload"));
                 }
 
-                if (stack.getOrCreateTag().getDouble("loadindex") == 1 && stack.getOrCreateTag().getDouble("loading") > 0) {
+                if (stack.getOrCreateTag().getBoolean("load_index") && stack.getOrCreateTag().getDouble("loading") > 0) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.iterativeload2"));
                 }
 

@@ -17,7 +17,7 @@ public class MarlinWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
         itemstack.getOrCreateTag().getInt("ammo");
         if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") != itemstack.getOrCreateTag().getDouble("id")) {
             itemstack.getOrCreateTag().putDouble("finish", 0);
-            itemstack.getOrCreateTag().putDouble("reloading", 0);
+            itemstack.getOrCreateTag().putBoolean("reloading", false);
             itemstack.getOrCreateTag().putDouble("prepare", 0);
             itemstack.getOrCreateTag().putDouble("loading", 0);
             itemstack.getOrCreateTag().putDouble("forcestop", 0);
@@ -33,9 +33,9 @@ public class MarlinWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
             itemstack.getOrCreateTag().putDouble("finish", (itemstack.getOrCreateTag().getDouble("finish") - 1));
         }
         if ((entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") != itemstack.getOrCreateTag().getDouble("id")) {
-            itemstack.getOrCreateTag().putDouble("reloading", 0);
+            itemstack.getOrCreateTag().putBoolean("reloading", false);
         }
-        if (itemstack.getOrCreateTag().getDouble("reloading") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
+        if (itemstack.getOrCreateTag().getBoolean("reloading") && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
             if (itemstack.getOrCreateTag().getDouble("prepare") == 0 && itemstack.getOrCreateTag().getDouble("loading") == 0
                     && !(itemstack.getOrCreateTag().getInt("ammo") >= 8 || (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo == 0)) {
                 if (itemstack.getOrCreateTag().getDouble("forcestop") == 1) {
@@ -50,10 +50,10 @@ public class MarlinWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                                     entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:marlin_loop player @s ~ ~ ~ 100 1");
                         }
                     }
-                    if (itemstack.getOrCreateTag().getDouble("loadindex") == 0) {
-                        itemstack.getOrCreateTag().putDouble("loadindex", 1);
+                    if (itemstack.getOrCreateTag().getBoolean("load_index")) {
+                        itemstack.getOrCreateTag().putBoolean("load_index", true);
                     } else {
-                        itemstack.getOrCreateTag().putDouble("loadindex", 0);
+                        itemstack.getOrCreateTag().putBoolean("load_index", false);
                     }
                 }
             }
@@ -74,7 +74,7 @@ public class MarlinWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 itemstack.getOrCreateTag().putDouble("finish", 19);
                 if (entity instanceof Player _player)
                     _player.getCooldowns().addCooldown(itemstack.getItem(), 19);
-                itemstack.getOrCreateTag().putDouble("reloading", 0);
+                itemstack.getOrCreateTag().putBoolean("reloading", false);
                 {
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
                         entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,

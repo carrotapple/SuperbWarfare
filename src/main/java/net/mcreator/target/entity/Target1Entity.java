@@ -169,6 +169,27 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
             this.setTexture(compound.getString("Texture"));
     }
 
+    @SubscribeEvent
+    public static void onTarget1Down(LivingDeathEvent event) {
+        if (event.getEntity() == null) return;
+
+        var entity = event.getEntity();
+        var sourceEntity = event.getSource().getEntity();
+
+        if (entity == null || sourceEntity == null) return;
+
+        if (entity instanceof Target1Entity target1) {
+            target1.setHealth(target1.getMaxHealth());
+
+            sourceEntity.level().playLocalSound(sourceEntity.blockPosition(), TargetModSounds.TARGETDOWN.get(), SoundSource.PLAYERS, 100, 1, false);
+
+            if (sourceEntity instanceof Player player)
+                player.displayClientMessage(Component.literal(("Target Down " + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceEntity.position()))) + "M")), true);
+            entity.getPersistentData().putDouble("target_down", 201);
+            event.setCanceled(true);
+        }
+    }
+
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         InteractionResult result = InteractionResult.sidedSuccess(this.level().isClientSide());
@@ -191,7 +212,7 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
                 this.yRotO = this.getYRot();
                 this.xRotO = this.getXRot();
 
-                this.getPersistentData().putDouble("targetdown", 0);
+                this.getPersistentData().putDouble("target_down", 0);
             }
         }
 
@@ -212,12 +233,12 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
         Runnable recoilRunnable = () -> {
             while (recoilTimer[0] < recoilDuration) {
 
-                if (this.getPersistentData().getDouble("targetdown") > -1) {
-                    this.getPersistentData().putDouble("targetdown", (this.getPersistentData().getDouble("targetdown") - 1));
+                if (this.getPersistentData().getDouble("target_down") > -1) {
+                    this.getPersistentData().putDouble("target_down", this.getPersistentData().getDouble("target_down") - 1);
                 }
-                if (this.getPersistentData().getDouble("targetdown") > 195) {
+                if (this.getPersistentData().getDouble("target_down") > 195) {
                     this.setYRot(this.getYRot());
-                    this.setXRot((float) ((201 - this.getPersistentData().getDouble("targetdown")) * (-18)));
+                    this.setXRot((float) (201 - this.getPersistentData().getDouble("target_down")) * -18);
                     this.setYBodyRot(this.getYRot());
                     this.setYHeadRot(this.getYRot());
                     this.yRotO = this.getYRot();
@@ -225,9 +246,9 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
                     this.yBodyRotO = this.getYRot();
                     this.yHeadRotO = this.getYRot();
                 }
-                if (this.getPersistentData().getDouble("targetdown") < 20 && this.getPersistentData().getDouble("targetdown") > -1) {
+                if (this.getPersistentData().getDouble("target_down") < 20 && this.getPersistentData().getDouble("target_down") > -1) {
                     this.setYRot(this.getYRot());
-                    this.setXRot((float) (-90 + (20 - this.getPersistentData().getDouble("targetdown")) * 4.5f));
+                    this.setXRot((float) (-90 + 20 - this.getPersistentData().getDouble("target_down")) * 4.5f);
                     this.setYBodyRot(this.getYRot());
                     this.setYHeadRot(this.getYRot());
                     this.yRotO = this.getYRot();
@@ -248,18 +269,6 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
         recoilThread.start();
 
         this.refreshDimensions();
-    }
-
-    @Override
-    public EntityDimensions getDimensions(Pose p_33597_) {
-        float num;
-        if (this.getPersistentData().getDouble("targetdown") > 0) {
-            num = 0.1f;
-        } else {
-            num = 1f;
-        }
-
-        return super.getDimensions(p_33597_).scale(num);
     }
 
 
@@ -359,24 +368,15 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
         return this.cache;
     }
 
-    @SubscribeEvent
-    public static void onTarget1Down(LivingDeathEvent event) {
-        if (event.getEntity() == null) return;
-
-        var entity = event.getEntity();
-        var sourceEntity = event.getSource().getEntity();
-
-        if (entity == null || sourceEntity == null) return;
-
-        if (entity instanceof Target1Entity target1) {
-            target1.setHealth(target1.getMaxHealth());
-
-            sourceEntity.level().playLocalSound(sourceEntity.blockPosition(), TargetModSounds.TARGETDOWN.get(), SoundSource.PLAYERS, 100, 1, false);
-
-            if (sourceEntity instanceof Player player)
-                player.displayClientMessage(Component.literal(("Target Down " + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceEntity.position()))) + "M")), true);
-            entity.getPersistentData().putDouble("targetdown", 201);
-            event.setCanceled(true);
+    @Override
+    public EntityDimensions getDimensions(Pose p_33597_) {
+        float num;
+        if (this.getPersistentData().getDouble("target_down") > 0) {
+            num = 0.1f;
+        } else {
+            num = 1f;
         }
+
+        return super.getDimensions(p_33597_).scale(num);
     }
 }

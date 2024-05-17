@@ -3,13 +3,14 @@ package net.mcreator.target.entity;
 import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
 import net.mcreator.target.init.TargetModEntities;
+import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -76,9 +77,8 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
         final Vec3 position = this.position();
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
-            double _setval = 25;
             living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.hitIndicator = _setval;
+                capability.hitIndicator = 25;
                 capability.syncPlayerVariables(living);
             });
             if (!living.level().isClientSide() && living.getServer() != null) {
@@ -87,7 +87,7 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
             }
         }
 
-        if (this.getPersistentData().getDouble("baoxian") > 0) {
+        if (this.getPersistentData().getInt("fuse") > 0) {
 
             if (this.level() instanceof ServerLevel level) {
                 level.explode(this, (this.getX()), (this.getY()), (this.getZ()), 5.5f, Level.ExplosionInteraction.NONE);
@@ -125,14 +125,12 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
                     if (headshot) {
                         if (this.getOwner() instanceof LivingEntity living) {
                             setBaseDamage(getBaseDamage() * 2);
-                            double _setval = 25;
                             living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                                capability.headIndicator = _setval;
+                                capability.headIndicator = 25;
                                 capability.syncPlayerVariables(living);
                             });
-                            if (!living.level().isClientSide() && living.getServer() != null) {
-                                living.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, living.position(), living.getRotationVector(), living.level() instanceof ServerLevel ? (ServerLevel) living.level() : null, 4,
-                                        living.getName().getString(), living.getDisplayName(), living.level().getServer(), living), "playsound target:headshot voice @a ~ ~ ~ 1 1");
+                            if (!living.level().isClientSide()) {
+                                living.level().playSound(null, living.getX(), living.getY(), living.getZ(), TargetModSounds.HEADSHOT.get(), SoundSource.VOICE, 1f, 1f);
                             }
                         }
                     }
@@ -146,7 +144,7 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
     @Override
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
-        if (this.getPersistentData().getDouble("baoxian") > 0) {
+        if (this.getPersistentData().getInt("fuse") > 0) {
             if (this.level() instanceof ServerLevel level) {
                 this.level().explode(this, this.getX(), this.getY(), this.getZ(), 5.5f, Level.ExplosionInteraction.NONE);
             }
@@ -157,7 +155,7 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
     public void tick() {
         super.tick();
 
-        this.getPersistentData().putDouble("baoxian", (this.getPersistentData().getDouble("baoxian") + 1));
+        this.getPersistentData().putInt("fuse", this.getPersistentData().getInt("fuse") + 1);
 
         // TODO 修改为正确的粒子效果添加
         if (!this.level().isClientSide() && this.getServer() != null) {

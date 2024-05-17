@@ -84,7 +84,7 @@ public class GunRecycleGuiButtonMessage {
             }
 
             // 高等级额外奖励
-            double level = gun.getOrCreateTag().getDouble("level");
+            int level = gun.getOrCreateTag().getInt("level");
             if (level >= 10) {
                 var soulSteelNuggetCount = 0;
 

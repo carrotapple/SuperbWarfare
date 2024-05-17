@@ -78,10 +78,10 @@ public class M60ItemModel extends GeoModel<M60Item> {
         }
 
         double p = 0;
-        p = player.getPersistentData().getDouble("zoompos");
+        p = player.getPersistentData().getDouble("zoom_pos");
 
         double zp = 0;
-        zp = player.getPersistentData().getDouble("zoomposz");
+        zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(3.69f * (float) p);
 
@@ -92,7 +92,7 @@ public class M60ItemModel extends GeoModel<M60Item> {
         gun.setRotZ(-0.087f * (float) p + (float) (0.05f * zp));
 
         double fp = 0;
-        fp = player.getPersistentData().getDouble("firepos");
+        fp = player.getPersistentData().getDouble("fire_pos");
 
         shen.setPosZ(1.25f * (float) fp);
 
@@ -141,7 +141,7 @@ public class M60ItemModel extends GeoModel<M60Item> {
         yaw = player.getPersistentData().getDouble("yaw");
 
         double pit = 0;
-        pit = player.getPersistentData().getDouble("gunpitch");
+        pit = player.getPersistentData().getDouble("gun_pitch");
 
         double vy = 0;
         vy = player.getPersistentData().getDouble("vy");

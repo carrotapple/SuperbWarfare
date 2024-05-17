@@ -88,11 +88,11 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.taser.draw"));
             }
 
-            if (stack.getOrCreateTag().getDouble("fireanim") > 1) {
+            if (stack.getOrCreateTag().getInt("fire_animation") > 1) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.taser.fire"));
             }
 
-            if (stack.getOrCreateTag().getDouble("reloading") == 1) {
+            if (stack.getOrCreateTag().getBoolean("reloading")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.taser.reload"));
             }
 

@@ -161,8 +161,8 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
 
         // TODO 合并至GunReload
         CompoundTag tag = itemstack.getOrCreateTag();
-        if (tag.getDouble("arrowempty") > 0) {
-            tag.putDouble("arrowempty", tag.getDouble("arrowempty") - 1);
+        if (tag.getInt("arrow_empty") > 0) {
+            tag.putInt("arrow_empty", tag.getInt("arrow_empty") - 1);
         }
     }
 
