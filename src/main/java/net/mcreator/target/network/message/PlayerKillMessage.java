@@ -15,21 +15,25 @@ import java.util.function.Supplier;
 public class PlayerKillMessage {
     public final int attackerId;
     public final int targetId;
+    public final boolean headshot;
 
-    public PlayerKillMessage(int attackerId, int targetId) {
+    public PlayerKillMessage(int attackerId, int targetId, boolean headshot) {
         this.attackerId = attackerId;
         this.targetId = targetId;
+        this.headshot = headshot;
     }
 
     public static void encode(PlayerKillMessage message, FriendlyByteBuf buffer) {
         buffer.writeInt(message.attackerId);
         buffer.writeInt(message.targetId);
+        buffer.writeBoolean(message.headshot);
     }
 
     public static PlayerKillMessage decode(FriendlyByteBuf buffer) {
         int attackerId = buffer.readInt();
         int targetId = buffer.readInt();
-        return new PlayerKillMessage(attackerId, targetId);
+        boolean headshot = buffer.readBoolean();
+        return new PlayerKillMessage(attackerId, targetId, headshot);
     }
 
     public static void handler(PlayerKillMessage message, Supplier<NetworkEvent.Context> ctx) {
@@ -40,7 +44,7 @@ public class PlayerKillMessage {
                 Entity target = level.getEntity(message.targetId);
 
                 if (player != null && target != null) {
-                    DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handlePlayerKillMessage(player, target, ctx));
+                    DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handlePlayerKillMessage(player, target, message.headshot, ctx));
                 }
             }
         });

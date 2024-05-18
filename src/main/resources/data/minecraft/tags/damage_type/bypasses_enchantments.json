@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "target:gunfire"
+    "target:gunfire",
+    "target:gunfire_headshot"
   ]
 }

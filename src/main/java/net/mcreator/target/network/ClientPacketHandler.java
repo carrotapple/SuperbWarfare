@@ -1,7 +1,9 @@
 package net.mcreator.target.network;
 
+import net.mcreator.target.event.KillMessageHandler;
 import net.mcreator.target.network.message.GunsDataMessage;
 import net.mcreator.target.tools.GunsTool;
+import net.mcreator.target.tools.PlayerKillRecord;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.LogicalSide;
@@ -17,9 +19,9 @@ public class ClientPacketHandler {
         }
     }
 
-    public static void handlePlayerKillMessage(Player attacker, Entity target, Supplier<NetworkEvent.Context> ctx) {
+    public static void handlePlayerKillMessage(Player attacker, Entity target, boolean headshot, Supplier<NetworkEvent.Context> ctx) {
         if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
-            System.out.println(attacker + " killed " + target);
+            KillMessageHandler.QUEUE.offer(new PlayerKillRecord(attacker, target, attacker.getMainHandItem(), headshot));
         }
     }
 }

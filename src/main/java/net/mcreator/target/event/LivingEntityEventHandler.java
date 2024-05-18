@@ -73,7 +73,7 @@ public class LivingEntityEventHandler {
             stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
         }
 
-        if (damagesource.is(TargetModDamageTypes.GUNFIRE)) {
+        if (damagesource.is(TargetModDamageTypes.GUN_FIRE)) {
             double distance = entity.position().distanceTo(sourceentity.position());
 
             if (stack.is(TargetModTags.Items.SHOTGUN) || stack.getItem() == TargetModItems.BOCEK.get()) {
@@ -225,8 +225,10 @@ public class LivingEntityEventHandler {
         DamageSource source = event.getSource();
 
         if (source.getDirectEntity() instanceof ServerPlayer player) {
-            if (source.is(TargetModDamageTypes.GUNFIRE)) {
-                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new PlayerKillMessage(player.getId(), entity.getId()));
+            if (source.is(TargetModDamageTypes.GUN_FIRE)) {
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new PlayerKillMessage(player.getId(), entity.getId(), false));
+            } else if (source.is(TargetModDamageTypes.GUN_FIRE_HEADSHOT)) {
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new PlayerKillMessage(player.getId(), entity.getId(), true));
             }
         }
     }
