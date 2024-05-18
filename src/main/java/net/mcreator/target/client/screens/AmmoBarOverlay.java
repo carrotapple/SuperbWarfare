@@ -2,7 +2,9 @@ package net.mcreator.target.client.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.TargetModKeyMappings;
 import net.mcreator.target.init.TargetModTags;
+import net.mcreator.target.item.gun.GunItem;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.FireMode;
 import net.minecraft.client.Minecraft;
@@ -28,29 +30,52 @@ public class AmmoBarOverlay {
         }
 
         ItemStack stack = player.getMainHandItem();
-        if (stack.is(TargetModTags.Items.GUN)) {
+        if (stack.getItem() instanceof GunItem gunItem) {
             PoseStack poseStack = event.getGuiGraphics().pose();
+
+            // 渲染图标
+            event.getGuiGraphics().blit(gunItem.getGunIcon(),
+                    w / 2 + 100,
+                    h - 40,
+                    0,
+                    0,
+                    64,
+                    16,
+                    64,
+                    16);
 
             FireMode mode = getFireMode(stack);
 
+            // 渲染开火模式切换按键
+            event.getGuiGraphics().drawString(
+                    Minecraft.getInstance().font,
+                    "[" + TargetModKeyMappings.FIREMODE.getKey().getDisplayName().getString() + "]",
+                    w / 2 + 125,
+                    h - 18,
+                    0xFFFFFF,
+                    true
+            );
+
+            // 渲染当前弹药量
             poseStack.pushPose();
             poseStack.scale(1.5f, 1.5f, 1f);
 
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     getGunAmmoCount(player) + "",
-                    w / 3f + 117,
-                    h / 1.5f - 28,
+                    w / 3f + 112,
+                    h / 1.5f - 31,
                     0xFFFFFF,
                     true
             );
             poseStack.popPose();
 
+            // 渲染备弹量
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     getPlayerAmmoCount(player),
-                    w / 2 + 180,
-                    h - 30,
+                    w / 2 + 170,
+                    h - 35,
                     0xCCCCCC,
                     true
             );
@@ -83,12 +108,10 @@ public class AmmoBarOverlay {
     public static String getPlayerAmmoCount(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.getItem() == TargetModItems.BOCEK.get()) {
-            return "";
-        }
         if (stack.getItem() == TargetModItems.MINIGUN.get()) {
             return "";
         }
+
         if (stack.is(TargetModTags.Items.RIFLE)) {
             return "" + (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo;
         }

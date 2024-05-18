@@ -1,5 +1,6 @@
 package net.mcreator.target.item.gun;
 
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
@@ -7,6 +8,7 @@ import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.ItemNBTTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -91,6 +93,10 @@ public abstract class GunItem extends Item {
 
     public Set<SoundEvent> getReloadSound() {
         return Set.of();
+    }
+
+    public ResourceLocation getGunIcon() {
+        return new ResourceLocation(TargetMod.MODID, "textures/gun_icon/default.png");
     }
 
     @Override
