@@ -248,7 +248,7 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
                 }
                 if (this.getPersistentData().getDouble("target_down") < 20 && this.getPersistentData().getDouble("target_down") > -1) {
                     this.setYRot(this.getYRot());
-                    this.setXRot((float) (-90 + 20 - this.getPersistentData().getDouble("target_down")) * 4.5f);
+                    this.setXRot((float) (-90 + 20 - this.getPersistentData().getDouble("target_down")) * 5.14f);
                     this.setYBodyRot(this.getYRot());
                     this.setYHeadRot(this.getYRot());
                     this.yRotO = this.getYRot();

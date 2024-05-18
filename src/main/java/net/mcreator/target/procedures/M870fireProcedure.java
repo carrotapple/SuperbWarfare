@@ -22,7 +22,6 @@ public class M870fireProcedure {
                 GunsTool.spawnBullet(player);
             }
             player.getCooldowns().addCooldown(usehand.getItem(), 13);
-            usehand.getOrCreateTag().putDouble("recoil", 1);
             usehand.getOrCreateTag().putDouble("firing", 13);
 
             if (!player.level().isClientSide() && player.getServer() != null) {

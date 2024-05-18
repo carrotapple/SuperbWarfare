@@ -147,6 +147,7 @@ public class GunEventHandler {
 
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
                 stack.getOrCreateTag().putInt("fire_animation", stack.getOrCreateTag().getInt("fire_interval"));
+                player.getPersistentData().putInt("noRun_time", stack.getOrCreateTag().getInt("fire_interval") + 2);
                 stack.getOrCreateTag().putDouble("flash_time", 2);
                 stack.getOrCreateTag().putDouble("empty", 1);
 

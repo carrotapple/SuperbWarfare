@@ -96,14 +96,27 @@ public class M98bItemModel extends GeoModel<M98bItem> {
         }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
+        CoreGeoBone zhunxing = getAnimationProcessor().getBone("shi");
+
+        float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
+        float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
 
         double y = 0;
         double x = 0;
         y = player.getPersistentData().getDouble("y");
         x = player.getPersistentData().getDouble("x");
 
-        root.setPosY((float) y);
+        root.setPosX(PosX);
+
+        root.setPosY((float) y + PosY);
+
         root.setRotX((float) x);
+
+        root.setRotZ(0.1f * PosX);
+
+        zhunxing.setPosX(75 * PosX);
+
+        zhunxing.setPosY(75 * PosY);
 
         CoreGeoBone move = getAnimationProcessor().getBone("move");
 

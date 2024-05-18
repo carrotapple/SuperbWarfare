@@ -20,7 +20,7 @@ public class GameRendererMixin {
         Player player = mc.player;
         if (player != null) {
             ItemStack stack = player.getMainHandItem();
-            if (stack.is(TargetModTags.Items.GUN) && stack.getOrCreateTag().getBoolean("aiming")) {
+            if (stack.is(TargetModTags.Items.GUN)) {
                 ci.cancel();
             }
         }

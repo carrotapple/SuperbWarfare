@@ -81,13 +81,21 @@ public class M4ItemModel extends GeoModel<M4Item> {
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
+        float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
+        float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
+
         double y = 0;
         double x = 0;
         y = player.getPersistentData().getDouble("y");
         x = player.getPersistentData().getDouble("x");
 
-        root.setPosY((float) y);
+        root.setPosX(PosX);
+
+        root.setPosY((float) y + PosY);
+
         root.setRotX((float) x);
+
+        root.setRotZ(0.1f * PosX);
 
         CoreGeoBone move = getAnimationProcessor().getBone("move");
 

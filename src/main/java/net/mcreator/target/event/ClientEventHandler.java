@@ -39,177 +39,237 @@ public class ClientEventHandler {
             if (fps <= 0) {
                 fps = 1f;
             }
+
             float times = 90f / fps;
-            if (entity.getPersistentData().getDouble("move") < 0) {
-                entity.getPersistentData().putDouble("move", ((entity.getPersistentData().getDouble("move") + 1 * times * Math.pow(entity.getPersistentData().getDouble("move"), 2) * (1 - 1 * entity.getPersistentData().getDouble("zoom_time")))
-                        * (1 - 1 * entity.getPersistentData().getDouble("zoom_time"))));
+            var data = entity.getPersistentData();
+            double move_speed = (float) entity.getDeltaMovement().horizontalDistanceSqr();
+            double on_ground;
+            if (entity.onGround()) {
+                on_ground = 2.4;
             } else {
-                entity.getPersistentData().putDouble("move", ((entity.getPersistentData().getDouble("move") - 1 * times * Math.pow(entity.getPersistentData().getDouble("move"), 2) * (1 - 1 * entity.getPersistentData().getDouble("zoom_time")))
-                        * (1 - 1 * entity.getPersistentData().getDouble("zoom_time"))));
+                on_ground = 0.1;
             }
-            if (entity.getPersistentData().getDouble("move_right") == 1) {
-                entity.getPersistentData().putDouble("move",
-                        ((entity.getPersistentData().getDouble("move") + Math.pow(Math.abs(entity.getPersistentData().getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * entity.getPersistentData().getDouble("zoom_time")))
-                                * (1 - 0.1 * entity.getPersistentData().getDouble("zoom_time"))));
-            } else if (entity.getPersistentData().getDouble("move_left") == 1) {
-                entity.getPersistentData().putDouble("move",
-                        ((entity.getPersistentData().getDouble("move") - Math.pow(Math.abs(entity.getPersistentData().getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * entity.getPersistentData().getDouble("zoom_time")))
-                                * (1 - 0.1 * entity.getPersistentData().getDouble("zoom_time"))));
-            }
-            if (entity.getPersistentData().getDouble("turnr") == 1) {
-                entity.getPersistentData().putDouble("turntimeyaw", (entity.getPersistentData().getDouble("turntimeyaw") + 0.08 * times * Math.pow(entity.getPersistentData().getDouble("amplitudeyaw"), 2)));
-            }
-            if (entity.getPersistentData().getDouble("turnl") == 1) {
-                entity.getPersistentData().putDouble("turntimeyaw", (entity.getPersistentData().getDouble("turntimeyaw") - 0.08 * times * Math.pow(entity.getPersistentData().getDouble("amplitudeyaw"), 2)));
-            }
-            if (entity.getPersistentData().getDouble("turntimeyaw") > 1) {
-                entity.getPersistentData().putDouble("turntimeyaw", 1);
-            }
-            if (entity.getPersistentData().getDouble("turntimeyaw") < -1) {
-                entity.getPersistentData().putDouble("turntimeyaw", (-1));
-            }
-            if (entity.getPersistentData().getDouble("turntimeyaw") >= 0) {
-                if (entity.getPersistentData().getDouble("turnr") == 0) {
-                    entity.getPersistentData().putDouble("turntimeyaw", (entity.getPersistentData().getDouble("turntimeyaw") - 0.02 * times));
+
+            if (data.getDouble("move_left") == 1
+                || data.getDouble("move_right") == 1
+                || data.getDouble("move_forward") == 1
+                || data.getDouble("move_backward") == 1) {
+
+                if (data.getDouble("gun_moveY_time") < 1.25) {
+                    data.putDouble("gun_moveY_time", data.getDouble("gun_moveY_time") + on_ground * times * move_speed);
+                } else {
+                    data.putDouble("gun_moveY_time", 0.25);
                 }
-            }
-            if (entity.getPersistentData().getDouble("turntimeyaw") < 0) {
-                if (entity.getPersistentData().getDouble("turnl") == 0) {
-                    entity.getPersistentData().putDouble("turntimeyaw", (entity.getPersistentData().getDouble("turntimeyaw") + 0.02 * times));
+
+                if (data.getDouble("gun_moveX_time") < 2) {
+                    data.putDouble("gun_moveX_time", data.getDouble("gun_moveX_time") + on_ground * times * move_speed);
+                } else {
+                    data.putDouble("gun_moveX_time", 0);
                 }
-            }
-            if (entity.getPersistentData().getDouble("amplitudeyaw") < Math.abs(entity.getPersistentData().getDouble("r1") - entity.getPersistentData().getDouble("r2"))) {
-                entity.getPersistentData().putDouble("amplitudeyaw", (entity.getPersistentData().getDouble("amplitudeyaw")
-                        + 0.005 * Math.sin(0.5 * Math.PI * (Math.abs(entity.getPersistentData().getDouble("r1") - entity.getPersistentData().getDouble("r2")) - entity.getPersistentData().getDouble("amplitudeyaw")))));
+
+                data.putDouble("gun_move_posY", 0.135 * Math.sin(2 * Math.PI * (data.getDouble("gun_moveY_time") - 0.25)) * (1 - 0.75 * data.getDouble("zoom_time")));
+
+                data.putDouble("gun_move_posX", 0.2 * Math.sin(1 * Math.PI * data.getDouble("gun_moveX_time")) * (1 - 0.75 * data.getDouble("zoom_time")));
+
             } else {
-                entity.getPersistentData().putDouble("amplitudeyaw", (entity.getPersistentData().getDouble("amplitudeyaw")
-                        - 0.005 * Math.sin(0.5 * Math.PI * (Math.abs(entity.getPersistentData().getDouble("r1") - entity.getPersistentData().getDouble("r2")) - entity.getPersistentData().getDouble("amplitudeyaw")))));
+                if (data.getDouble("gun_moveY_time") > 0.25) {
+                    data.putDouble("gun_moveY_time", data.getDouble("gun_moveY_time") - 0.5 * times);
+                } else {
+                    data.putDouble("gun_moveY_time", 0.25);
+                }
+
+                if (data.getDouble("gun_moveX_time") > 0) {
+                    data.putDouble("gun_moveX_time", data.getDouble("gun_moveX_time") - 0.5 * times);
+                } else {
+                    data.putDouble("gun_moveX_time", 0);
+                }
+
+                if (data.getDouble("gun_move_posX") > 0) {
+                    data.putDouble("gun_move_posX", data.getDouble("gun_move_posX") - 4 * (Math.pow(data.getDouble("gun_move_posX"), 2) * times) * (1 - 0.5 * data.getDouble("zoom_time")));
+                } else {
+                    data.putDouble("gun_move_posX", data.getDouble("gun_move_posX") + 4 * (Math.pow(data.getDouble("gun_move_posX"), 2) * times) * (1 - 0.5 * data.getDouble("zoom_time")));
+                }
+
+                if (data.getDouble("gun_move_posY") > 0) {
+                    data.putDouble("gun_move_posY", data.getDouble("gun_move_posY") - 4 * (Math.pow(data.getDouble("gun_move_posY"), 2) * times) * (1 - 0.5 * data.getDouble("zoom_time")));
+                } else {
+                    data.putDouble("gun_move_posY", data.getDouble("gun_move_posY") + 4 * (Math.pow(data.getDouble("gun_move_posY"), 2) * times) * (1 - 0.5 * data.getDouble("zoom_time")));
+                }
+
             }
-            if (entity.getPersistentData().getDouble("amplitudeyaw") > 0) {
-                entity.getPersistentData().putDouble("amplitudeyaw", (entity.getPersistentData().getDouble("amplitudeyaw") - 0.01 * Math.pow(entity.getPersistentData().getDouble("amplitudeyaw"), 2)));
+
+            if (data.getDouble("move") < 0) {
+                data.putDouble("move", ((data.getDouble("move") + 1 * times * Math.pow(data.getDouble("move"), 2) * (1 - 0.6 * data.getDouble("zoom_time")))
+                        * (1 - 1 * data.getDouble("zoom_time"))));
             } else {
-                entity.getPersistentData().putDouble("amplitudeyaw", (entity.getPersistentData().getDouble("amplitudeyaw") + 0.01 * Math.pow(entity.getPersistentData().getDouble("amplitudeyaw"), 2)));
+                data.putDouble("move", ((data.getDouble("move") - 1 * times * Math.pow(data.getDouble("move"), 2) * (1 - 0.6 * data.getDouble("zoom_time")))
+                        * (1 - 1 * data.getDouble("zoom_time"))));
             }
-            entity.getPersistentData().putDouble("yaw", (0.04 * Math.tan(0.25 * Math.PI * entity.getPersistentData().getDouble("turntimeyaw")) * (1 - 1 * entity.getPersistentData().getDouble("zoom_time"))));
-            if (entity.getPersistentData().getDouble("turnu") == 1) {
-                entity.getPersistentData().putDouble("turntimepitch", (entity.getPersistentData().getDouble("turntimepitch") + 0.02 * times));
+            if (data.getDouble("move_right") == 1) {
+                data.putDouble("move",
+                        ((data.getDouble("move") + Math.pow(Math.abs(data.getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * data.getDouble("zoom_time")))
+                                * (1 - 0.1 * data.getDouble("zoom_time"))));
+            } else if (data.getDouble("move_left") == 1) {
+                data.putDouble("move",
+                        ((data.getDouble("move") - Math.pow(Math.abs(data.getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * data.getDouble("zoom_time")))
+                                * (1 - 0.1 * data.getDouble("zoom_time"))));
             }
-            if (entity.getPersistentData().getDouble("turnd") == 1) {
-                entity.getPersistentData().putDouble("turntimepitch", (entity.getPersistentData().getDouble("turntimepitch") - 0.02 * times));
+            if (data.getDouble("turnr") == 1) {
+                data.putDouble("turntimeyaw", (data.getDouble("turntimeyaw") + 0.08 * times * Math.pow(data.getDouble("amplitudeyaw"), 2)));
             }
-            if (entity.getPersistentData().getDouble("turntimepitch") > 1) {
-                entity.getPersistentData().putDouble("turntimepitch", 1);
+            if (data.getDouble("turnl") == 1) {
+                data.putDouble("turntimeyaw", (data.getDouble("turntimeyaw") - 0.08 * times * Math.pow(data.getDouble("amplitudeyaw"), 2)));
             }
-            if (entity.getPersistentData().getDouble("turntimepitch") < -1) {
-                entity.getPersistentData().putDouble("turntimepitch", (-1));
+            if (data.getDouble("turntimeyaw") > 1) {
+                data.putDouble("turntimeyaw", 1);
             }
-            if (entity.getPersistentData().getDouble("turntimepitch") >= 0) {
-                if (entity.getPersistentData().getDouble("turnu") == 0) {
-                    entity.getPersistentData().putDouble("turntimepitch", (entity.getPersistentData().getDouble("turntimepitch") - 0.04 * times));
+            if (data.getDouble("turntimeyaw") < -1) {
+                data.putDouble("turntimeyaw", (-1));
+            }
+            if (data.getDouble("turntimeyaw") >= 0) {
+                if (data.getDouble("turnr") == 0) {
+                    data.putDouble("turntimeyaw", (data.getDouble("turntimeyaw") - 0.02 * times));
                 }
             }
-            if (entity.getPersistentData().getDouble("turntimepitch") < 0) {
-                if (entity.getPersistentData().getDouble("turnd") == 0) {
-                    entity.getPersistentData().putDouble("turntimepitch", (entity.getPersistentData().getDouble("turntimepitch") + 0.04 * times));
+            if (data.getDouble("turntimeyaw") < 0) {
+                if (data.getDouble("turnl") == 0) {
+                    data.putDouble("turntimeyaw", (data.getDouble("turntimeyaw") + 0.02 * times));
                 }
             }
-            if (entity.getPersistentData().getDouble("amplitudepitch") < Math.abs(entity.getPersistentData().getDouble("p1") - entity.getPersistentData().getDouble("p2"))) {
-                entity.getPersistentData().putDouble("amplitudepitch", (entity.getPersistentData().getDouble("amplitudepitch")
-                        + 0.00001 * Math.pow(Math.abs(entity.getPersistentData().getDouble("p1") - entity.getPersistentData().getDouble("p2")) - entity.getPersistentData().getDouble("amplitudepitch"), 2)));
+            if (data.getDouble("amplitudeyaw") < Math.abs(data.getDouble("r1") - data.getDouble("r2"))) {
+                data.putDouble("amplitudeyaw", (data.getDouble("amplitudeyaw")
+                        + 0.005 * Math.sin(0.5 * Math.PI * (Math.abs(data.getDouble("r1") - data.getDouble("r2")) - data.getDouble("amplitudeyaw")))));
             } else {
-                entity.getPersistentData().putDouble("amplitudepitch", (entity.getPersistentData().getDouble("amplitudepitch")
-                        - 0.00001 * Math.pow(Math.abs(entity.getPersistentData().getDouble("p1") - entity.getPersistentData().getDouble("p2")) - entity.getPersistentData().getDouble("amplitudepitch"), 2)));
+                data.putDouble("amplitudeyaw", (data.getDouble("amplitudeyaw")
+                        - 0.005 * Math.sin(0.5 * Math.PI * (Math.abs(data.getDouble("r1") - data.getDouble("r2")) - data.getDouble("amplitudeyaw")))));
             }
-            if (entity.getPersistentData().getDouble("amplitudepitch") > 0) {
-                entity.getPersistentData().putDouble("amplitudepitch", (entity.getPersistentData().getDouble("amplitudepitch") - 0.01 * Math.pow(entity.getPersistentData().getDouble("amplitudepitch"), 2)));
+            if (data.getDouble("amplitudeyaw") > 0) {
+                data.putDouble("amplitudeyaw", (data.getDouble("amplitudeyaw") - 0.01 * Math.pow(data.getDouble("amplitudeyaw"), 2)));
             } else {
-                entity.getPersistentData().putDouble("amplitudepitch", (entity.getPersistentData().getDouble("amplitudepitch") + 0.01 * Math.pow(entity.getPersistentData().getDouble("amplitudepitch"), 2)));
+                data.putDouble("amplitudeyaw", (data.getDouble("amplitudeyaw") + 0.01 * Math.pow(data.getDouble("amplitudeyaw"), 2)));
             }
-            entity.getPersistentData().putDouble("gun_pitch",
-                    ((0.15 * entity.getPersistentData().getDouble("amplitudepitch") * Math.tan(0.25 * Math.PI * entity.getPersistentData().getDouble("turntimepitch")) * (1 - 0.8 * entity.getPersistentData().getDouble("zoom_time"))
-                            - 0.05 * entity.getPersistentData().getDouble("vy")) * (1 - 1 * entity.getPersistentData().getDouble("zoom_time"))));
-            if (entity.getPersistentData().getDouble("firetime") == 0) {
-                entity.getPersistentData().putDouble("rottime", (entity.getPersistentData().getDouble("rottime") + 1));
-                if (entity.getPersistentData().getDouble("rottime") >= 3) {
-                    entity.getPersistentData().putDouble("rottime", 0);
+            data.putDouble("yaw", (0.04 * Math.tan(0.25 * Math.PI * data.getDouble("turntimeyaw")) * (1 - 1 * data.getDouble("zoom_time"))));
+            if (data.getDouble("turnu") == 1) {
+                data.putDouble("turntimepitch", (data.getDouble("turntimepitch") + 0.02 * times));
+            }
+            if (data.getDouble("turnd") == 1) {
+                data.putDouble("turntimepitch", (data.getDouble("turntimepitch") - 0.02 * times));
+            }
+            if (data.getDouble("turntimepitch") > 1) {
+                data.putDouble("turntimepitch", 1);
+            }
+            if (data.getDouble("turntimepitch") < -1) {
+                data.putDouble("turntimepitch", (-1));
+            }
+            if (data.getDouble("turntimepitch") >= 0) {
+                if (data.getDouble("turnu") == 0) {
+                    data.putDouble("turntimepitch", (data.getDouble("turntimepitch") - 0.04 * times));
                 }
-                if (entity.getPersistentData().getDouble("rottime") == 1) {
-                    entity.getPersistentData().putDouble("r1", (entity.getYRot()));
-                    entity.getPersistentData().putDouble("p1", (entity.getXRot()));
+            }
+            if (data.getDouble("turntimepitch") < 0) {
+                if (data.getDouble("turnd") == 0) {
+                    data.putDouble("turntimepitch", (data.getDouble("turntimepitch") + 0.04 * times));
                 }
-                if (entity.getPersistentData().getDouble("rottime") == 2) {
-                    entity.getPersistentData().putDouble("r2", (entity.getYRot()));
-                    entity.getPersistentData().putDouble("p2", (entity.getXRot()));
+            }
+            if (data.getDouble("amplitudepitch") < Math.abs(data.getDouble("p1") - data.getDouble("p2"))) {
+                data.putDouble("amplitudepitch", (data.getDouble("amplitudepitch")
+                        + 0.00001 * Math.pow(Math.abs(data.getDouble("p1") - data.getDouble("p2")) - data.getDouble("amplitudepitch"), 2)));
+            } else {
+                data.putDouble("amplitudepitch", (data.getDouble("amplitudepitch")
+                        - 0.00001 * Math.pow(Math.abs(data.getDouble("p1") - data.getDouble("p2")) - data.getDouble("amplitudepitch"), 2)));
+            }
+            if (data.getDouble("amplitudepitch") > 0) {
+                data.putDouble("amplitudepitch", (data.getDouble("amplitudepitch") - 0.01 * Math.pow(data.getDouble("amplitudepitch"), 2)));
+            } else {
+                data.putDouble("amplitudepitch", (data.getDouble("amplitudepitch") + 0.01 * Math.pow(data.getDouble("amplitudepitch"), 2)));
+            }
+            data.putDouble("gun_pitch",
+                    ((0.15 * data.getDouble("amplitudepitch") * Math.tan(0.25 * Math.PI * data.getDouble("turntimepitch")) * (1 - 0.8 * data.getDouble("zoom_time"))
+                            - 0.05 * data.getDouble("vy")) * (1 - 1 * data.getDouble("zoom_time"))));
+            if (data.getDouble("firetime") == 0) {
+                data.putDouble("rottime", (data.getDouble("rottime") + 1));
+                if (data.getDouble("rottime") >= 3) {
+                    data.putDouble("rottime", 0);
                 }
-                if (0 > entity.getPersistentData().getDouble("r1") - entity.getPersistentData().getDouble("r2")) {
-                    entity.getPersistentData().putDouble("rot", (entity.getPersistentData().getDouble("rot") - 0.01));
-                } else if (0 < entity.getPersistentData().getDouble("r1") - entity.getPersistentData().getDouble("r2")) {
-                    entity.getPersistentData().putDouble("rot", (entity.getPersistentData().getDouble("rot") + 0.01));
-                } else if (0 == entity.getPersistentData().getDouble("r1") - entity.getPersistentData().getDouble("r2")) {
-                    entity.getPersistentData().putDouble("rot", 0);
+                if (data.getDouble("rottime") == 1) {
+                    data.putDouble("r1", (entity.getYRot()));
+                    data.putDouble("p1", (entity.getXRot()));
                 }
-                if (0 > entity.getPersistentData().getDouble("p1") - entity.getPersistentData().getDouble("p2")) {
-                    entity.getPersistentData().putDouble("pit", (entity.getPersistentData().getDouble("pit") - 0.01));
-                } else if (0 < entity.getPersistentData().getDouble("p1") - entity.getPersistentData().getDouble("p2")) {
-                    entity.getPersistentData().putDouble("pit", (entity.getPersistentData().getDouble("pit") + 0.01));
-                } else if (0 == entity.getPersistentData().getDouble("p1") - entity.getPersistentData().getDouble("p2")) {
-                    entity.getPersistentData().putDouble("pit", 0);
+                if (data.getDouble("rottime") == 2) {
+                    data.putDouble("r2", (entity.getYRot()));
+                    data.putDouble("p2", (entity.getXRot()));
                 }
-                if (entity.getPersistentData().getDouble("rot") < 0) {
-                    entity.getPersistentData().putDouble("rot", (entity.getPersistentData().getDouble("rot") + 2 * times * Math.pow(entity.getPersistentData().getDouble("rot"), 2)));
-                    if (entity.getPersistentData().getDouble("rot") < -0.04) {
-                        entity.getPersistentData().putDouble("turnr", 1);
-                        entity.getPersistentData().putDouble("turnl", 0);
+                if (0 > data.getDouble("r1") - data.getDouble("r2")) {
+                    data.putDouble("rot", (data.getDouble("rot") - 0.01));
+                } else if (0 < data.getDouble("r1") - data.getDouble("r2")) {
+                    data.putDouble("rot", (data.getDouble("rot") + 0.01));
+                } else if (0 == data.getDouble("r1") - data.getDouble("r2")) {
+                    data.putDouble("rot", 0);
+                }
+                if (0 > data.getDouble("p1") - data.getDouble("p2")) {
+                    data.putDouble("pit", (data.getDouble("pit") - 0.01));
+                } else if (0 < data.getDouble("p1") - data.getDouble("p2")) {
+                    data.putDouble("pit", (data.getDouble("pit") + 0.01));
+                } else if (0 == data.getDouble("p1") - data.getDouble("p2")) {
+                    data.putDouble("pit", 0);
+                }
+                if (data.getDouble("rot") < 0) {
+                    data.putDouble("rot", (data.getDouble("rot") + 2 * times * Math.pow(data.getDouble("rot"), 2)));
+                    if (data.getDouble("rot") < -0.04) {
+                        data.putDouble("turnr", 1);
+                        data.putDouble("turnl", 0);
                     }
-                } else if (entity.getPersistentData().getDouble("rot") > 0) {
-                    entity.getPersistentData().putDouble("rot", (entity.getPersistentData().getDouble("rot") - 2 * times * Math.pow(entity.getPersistentData().getDouble("rot"), 2)));
-                    if (entity.getPersistentData().getDouble("rot") > 0.04) {
-                        entity.getPersistentData().putDouble("turnl", 1);
-                        entity.getPersistentData().putDouble("turnr", 0);
+                } else if (data.getDouble("rot") > 0) {
+                    data.putDouble("rot", (data.getDouble("rot") - 2 * times * Math.pow(data.getDouble("rot"), 2)));
+                    if (data.getDouble("rot") > 0.04) {
+                        data.putDouble("turnl", 1);
+                        data.putDouble("turnr", 0);
                     }
                 } else {
-                    entity.getPersistentData().putDouble("rot", 0);
-                    entity.getPersistentData().putDouble("turnl", 0);
-                    entity.getPersistentData().putDouble("turnr", 0);
+                    data.putDouble("rot", 0);
+                    data.putDouble("turnl", 0);
+                    data.putDouble("turnr", 0);
                 }
-                if (entity.getPersistentData().getDouble("pit") < 0) {
-                    entity.getPersistentData().putDouble("pit", (entity.getPersistentData().getDouble("pit") + 2 * times * Math.pow(entity.getPersistentData().getDouble("pit"), 2)));
-                    if (entity.getPersistentData().getDouble("pit") < -0.034) {
-                        entity.getPersistentData().putDouble("turnu", 1);
-                        entity.getPersistentData().putDouble("turnd", 0);
+                if (data.getDouble("pit") < 0) {
+                    data.putDouble("pit", (data.getDouble("pit") + 2 * times * Math.pow(data.getDouble("pit"), 2)));
+                    if (data.getDouble("pit") < -0.034) {
+                        data.putDouble("turnu", 1);
+                        data.putDouble("turnd", 0);
                     }
-                } else if (entity.getPersistentData().getDouble("pit") > 0) {
-                    entity.getPersistentData().putDouble("pit", (entity.getPersistentData().getDouble("pit") - 2 * times * Math.pow(entity.getPersistentData().getDouble("pit"), 2)));
-                    if (entity.getPersistentData().getDouble("pit") > 0.034) {
-                        entity.getPersistentData().putDouble("turnd", 1);
-                        entity.getPersistentData().putDouble("turnu", 0);
+                } else if (data.getDouble("pit") > 0) {
+                    data.putDouble("pit", (data.getDouble("pit") - 2 * times * Math.pow(data.getDouble("pit"), 2)));
+                    if (data.getDouble("pit") > 0.034) {
+                        data.putDouble("turnd", 1);
+                        data.putDouble("turnu", 0);
                     }
                 } else {
-                    entity.getPersistentData().putDouble("pit", 0);
-                    entity.getPersistentData().putDouble("turnd", 0);
-                    entity.getPersistentData().putDouble("turnu", 0);
+                    data.putDouble("pit", 0);
+                    data.putDouble("turnd", 0);
+                    data.putDouble("turnu", 0);
                 }
             } else {
-                entity.getPersistentData().putDouble("pit", 0);
-                entity.getPersistentData().putDouble("turnl", 0);
-                entity.getPersistentData().putDouble("turnr", 0);
-                entity.getPersistentData().putDouble("turnd", 0);
-                entity.getPersistentData().putDouble("turnu", 0);
+                data.putDouble("pit", 0);
+                data.putDouble("turnl", 0);
+                data.putDouble("turnr", 0);
+                data.putDouble("turnd", 0);
+                data.putDouble("turnu", 0);
             }
-            if (-0.8 < entity.getDeltaMovement().y() + 0.078 && entity.getDeltaMovement().y() + 0.078 < 0.8) {
-                if (entity.getPersistentData().getDouble("vy") < entity.getDeltaMovement().y() + 0.078) {
-                    entity.getPersistentData().putDouble("vy",
-                            ((entity.getPersistentData().getDouble("vy") + 2 * Math.pow((entity.getDeltaMovement().y() + 0.078) - entity.getPersistentData().getDouble("vy"), 2)) * (1 - 1 * entity.getPersistentData().getDouble("zoom_time"))));
+            double velocity = entity.getDeltaMovement().y();
+
+            if (-0.8 < velocity + 0.078 && velocity + 0.078 < 0.8) {
+                if (data.getDouble("vy") < entity.getDeltaMovement().y() + 0.078) {
+                    data.putDouble("vy",
+                            ((data.getDouble("vy") + 0.5 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.4 * data.getDouble("zoom_time"))));
                 } else {
-                    entity.getPersistentData().putDouble("vy",
-                            ((entity.getPersistentData().getDouble("vy") - 2 * Math.pow((entity.getDeltaMovement().y() + 0.078) - entity.getPersistentData().getDouble("vy"), 2)) * (1 - 1 * entity.getPersistentData().getDouble("zoom_time"))));
+                    data.putDouble("vy",
+                            ((data.getDouble("vy") - 0.5 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.4 * data.getDouble("zoom_time"))));
                 }
             }
-            if (entity.getPersistentData().getDouble("vy") > 0.8) {
-                entity.getPersistentData().putDouble("vy", 0.8);
+            if (data.getDouble("vy") > 0.8) {
+                data.putDouble("vy", 0.8);
             }
-            if (entity.getPersistentData().getDouble("vy") < -0.8) {
-                entity.getPersistentData().putDouble("vy", (-0.8));
+            if (data.getDouble("vy") < -0.8) {
+                data.putDouble("vy", (-0.8));
             }
         }
     }
@@ -220,22 +280,24 @@ public class ClientEventHandler {
             fps = 1f;
         }
         float times = 110f / fps;
+        var data = entity.getPersistentData();
+
         if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-            if (entity.getPersistentData().getDouble("zoom_time") < 1) {
-                entity.getPersistentData().putDouble("zoom_time",
-                        (entity.getPersistentData().getDouble("zoom_time") + entity.getMainHandItem().getOrCreateTag().getDouble("zoom_speed") * 0.02 * times));
+            if (data.getDouble("zoom_time") < 1) {
+                data.putDouble("zoom_time",
+                        (data.getDouble("zoom_time") + entity.getMainHandItem().getOrCreateTag().getDouble("zoom_speed") * 0.02 * times));
             } else {
-                entity.getPersistentData().putDouble("zoom_time", 1);
+                data.putDouble("zoom_time", 1);
             }
         } else {
-            if (entity.getPersistentData().getDouble("zoom_time") > 0) {
-                entity.getPersistentData().putDouble("zoom_time", (entity.getPersistentData().getDouble("zoom_time") - 0.02 * times));
+            if (data.getDouble("zoom_time") > 0) {
+                data.putDouble("zoom_time", (data.getDouble("zoom_time") - 0.02 * times));
             } else {
-                entity.getPersistentData().putDouble("zoom_time", 0);
+                data.putDouble("zoom_time", 0);
             }
         }
-        entity.getPersistentData().putDouble("zoom_pos", (0.5 * Math.cos(Math.PI * Math.pow(Math.pow(entity.getPersistentData().getDouble("zoom_time"), 2) - 1, 2)) + 0.5));
-        entity.getPersistentData().putDouble("zoom_pos_z", (-Math.pow(2 * entity.getPersistentData().getDouble("zoom_time") - 1, 2) + 1));
+        data.putDouble("zoom_pos", (0.5 * Math.cos(Math.PI * Math.pow(Math.pow(data.getDouble("zoom_time"), 2) - 1, 2)) + 0.5));
+        data.putDouble("zoom_pos_z", (-Math.pow(2 * data.getDouble("zoom_time") - 1, 2) + 1));
     }
 
     private static void handleWeaponFire(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
