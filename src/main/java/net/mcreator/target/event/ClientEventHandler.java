@@ -85,15 +85,15 @@ public class ClientEventHandler {
                 }
 
                 if (data.getDouble("gun_move_posX") > 0) {
-                    data.putDouble("gun_move_posX", data.getDouble("gun_move_posX") - 4 * (Math.pow(data.getDouble("gun_move_posX"), 2) * times) * (1 - 0.5 * data.getDouble("zoom_time")));
+                    data.putDouble("gun_move_posX", data.getDouble("gun_move_posX") - 1.5 * (Math.pow(data.getDouble("gun_move_posX"), 2) * times) * (1 - 0.5 * data.getDouble("zoom_time")));
                 } else {
-                    data.putDouble("gun_move_posX", data.getDouble("gun_move_posX") + 4 * (Math.pow(data.getDouble("gun_move_posX"), 2) * times) * (1 - 0.5 * data.getDouble("zoom_time")));
+                    data.putDouble("gun_move_posX", data.getDouble("gun_move_posX") + 1.5 * (Math.pow(data.getDouble("gun_move_posX"), 2) * times) * (1 - 0.5 * data.getDouble("zoom_time")));
                 }
 
                 if (data.getDouble("gun_move_posY") > 0) {
-                    data.putDouble("gun_move_posY", data.getDouble("gun_move_posY") - 4 * (Math.pow(data.getDouble("gun_move_posY"), 2) * times) * (1 - 0.5 * data.getDouble("zoom_time")));
+                    data.putDouble("gun_move_posY", data.getDouble("gun_move_posY") - 1.5 * (Math.pow(data.getDouble("gun_move_posY"), 2) * times) * (1 - 0.5 * data.getDouble("zoom_time")));
                 } else {
-                    data.putDouble("gun_move_posY", data.getDouble("gun_move_posY") + 4 * (Math.pow(data.getDouble("gun_move_posY"), 2) * times) * (1 - 0.5 * data.getDouble("zoom_time")));
+                    data.putDouble("gun_move_posY", data.getDouble("gun_move_posY") + 1.5 * (Math.pow(data.getDouble("gun_move_posY"), 2) * times) * (1 - 0.5 * data.getDouble("zoom_time")));
                 }
 
             }
