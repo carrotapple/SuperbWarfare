@@ -101,7 +101,7 @@ public class AmmoBarOverlay {
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     getGunAmmoCount(player) + "",
-                    w / 1.5f - 62 / 1.5f,
+                    w / 1.5f - 62 / 1.5f + 1,
                     h / 1.5f - 31,
                     0xFFFFFF,
                     true
