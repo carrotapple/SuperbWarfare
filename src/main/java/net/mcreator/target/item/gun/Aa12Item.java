@@ -197,4 +197,9 @@ public class Aa12Item extends GunItem implements GeoItem, AnimatedItem {
     public ResourceLocation getGunIcon() {
         return new ResourceLocation(TargetMod.MODID, "textures/gun_icon/aa_12.png");
     }
+
+    @Override
+    public String getGunDisplayName() {
+        return "AA-12";
+    }
 }

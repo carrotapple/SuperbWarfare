@@ -117,10 +117,35 @@ public class AmmoBarOverlay {
                     0xCCCCCC,
                     true
             );
+
+            poseStack.pushPose();
+            poseStack.scale(0.9f, 0.9f, 1f);
+
+            // 渲染物品名称
+            event.getGuiGraphics().drawString(
+                    Minecraft.getInstance().font,
+                    centerString(gunItem.getGunDisplayName(), 20),
+                    w / 2 + 140,
+                    h - 38,
+                    0xFFFFFF,
+                    true
+            );
+
+            // 渲染弹药类型
+            event.getGuiGraphics().drawString(
+                    Minecraft.getInstance().font,
+                    centerString(getGunAmmoType(stack), 20),
+                    w / 2 + 140,
+                    h - 30,
+                    0xC8A679,
+                    true
+            );
+
+            poseStack.popPose();
         }
     }
 
-    public static ResourceLocation getFireMode(ItemStack stack) {
+    private static ResourceLocation getFireMode(ItemStack stack) {
         return switch (stack.getOrCreateTag().getInt("fire_mode")) {
             case 1 -> BURST;
             case 2 -> AUTO;
@@ -128,7 +153,7 @@ public class AmmoBarOverlay {
         };
     }
 
-    public static int getGunAmmoCount(Player player) {
+    private static int getGunAmmoCount(Player player) {
         ItemStack stack = player.getMainHandItem();
 
         if (stack.getItem() == TargetModItems.BOCEK.get() || stack.getItem() == TargetModItems.M_79.get()
@@ -142,7 +167,7 @@ public class AmmoBarOverlay {
         return stack.getOrCreateTag().getInt("ammo");
     }
 
-    public static String getPlayerAmmoCount(Player player) {
+    private static String getPlayerAmmoCount(Player player) {
         ItemStack stack = player.getMainHandItem();
 
         if (stack.getItem() == TargetModItems.MINIGUN.get()) {
@@ -163,4 +188,43 @@ public class AmmoBarOverlay {
         }
         return "";
     }
+
+    private static String getGunAmmoType(ItemStack stack) {
+        if (stack.getItem() == TargetModItems.BOCEK.get()) {
+            return "Arrow";
+        }
+
+        if (stack.getItem() == TargetModItems.MINIGUN.get()) {
+            return "Rifle Ammo";
+        }
+
+        if (stack.is(TargetModTags.Items.RIFLE)) {
+            return "Rifle Ammo";
+        }
+        if (stack.is(TargetModTags.Items.HANDGUN) || stack.is(TargetModTags.Items.SMG)) {
+            return "Handgun Ammo";
+        }
+        if (stack.is(TargetModTags.Items.SHOTGUN)) {
+            return "Shotgun Ammo";
+        }
+        if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
+            return "Sniper Ammo";
+        }
+        return "";
+    }
+
+    private static String centerString(String string, int length) {
+        int spaceBefore = (length - string.length()) / 2;
+        int spaceAfter = length - string.length() - spaceBefore;
+
+        return String.join("",
+                repeatChar(spaceBefore),
+                string,
+                repeatChar(spaceAfter));
+    }
+
+    private static String repeatChar(int count) {
+        return new String(new char[count]).replace('\0', ' ');
+    }
+
 }

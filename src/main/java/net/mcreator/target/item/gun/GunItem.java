@@ -99,6 +99,10 @@ public abstract class GunItem extends Item {
         return new ResourceLocation(TargetMod.MODID, "textures/gun_icon/default.png");
     }
 
+    public String getGunDisplayName() {
+        return "";
+    }
+
     @Override
     public boolean isFoil(ItemStack stack) {
         return stack.getOrCreateTag().getBoolean("beast");
