@@ -11,13 +11,16 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.ViewportEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT)
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
 
     @SubscribeEvent
@@ -51,9 +54,9 @@ public class ClientEventHandler {
             }
 
             if ((data.getDouble("move_left") == 1
-                || data.getDouble("move_right") == 1
-                || data.getDouble("move_forward") == 1
-                || data.getDouble("move_backward") == 1) && data.getDouble("firetime") == 0) {
+                    || data.getDouble("move_right") == 1
+                    || data.getDouble("move_forward") == 1
+                    || data.getDouble("move_backward") == 1) && data.getDouble("firetime") == 0) {
 
                 if (data.getDouble("gun_moveY_time") < 1.25) {
                     data.putDouble("gun_moveY_time", data.getDouble("gun_moveY_time") + on_ground * times * move_speed);
@@ -417,4 +420,34 @@ public class ClientEventHandler {
         persistentData.putDouble("bowpos", (0.5 * Math.cos(Math.PI * Math.pow(Math.pow(persistentData.getDouble("bowtime"), 2) - 1, 2)) + 0.5));
     }
 
+    @SubscribeEvent
+    public static void onFovUpdate(ViewportEvent.ComputeFov event) {
+        if (!event.usedConfiguredFov()) return;
+
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+
+        ItemStack stack = player.getMainHandItem();
+
+        double p = player.getPersistentData().getDouble("zoom_pos");
+        double zoom = stack.getOrCreateTag().getDouble("zoom");
+
+        if (stack.is(TargetModTags.Items.GUN)) {
+            event.setFOV(event.getFOV() / (1.0 + p * (zoom - 1)));
+            player.getPersistentData().putDouble("fov", event.getFOV());
+        }
+    }
+
+    @SubscribeEvent
+    public static void handleRenderCrossHair(RenderGuiOverlayEvent.Pre event) {
+        if (event.getOverlay() != VanillaGuiOverlay.CROSSHAIR.type()) return;
+
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return;
+        if (!mc.options.getCameraType().isFirstPerson()) return;
+
+        if (mc.player.getMainHandItem().is(TargetModTags.Items.GUN)) {
+            event.setCanceled(true);
+        }
+    }
 }
