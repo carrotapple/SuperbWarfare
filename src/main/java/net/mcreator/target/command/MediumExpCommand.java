@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.Mod;
 public class MediumExpCommand {
     @SubscribeEvent
     public static void registerCommand(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("target:mediumexp")
+        event.getDispatcher().register(Commands.literal("target:mediumexp").requires(s -> s.hasPermission(4))
                 .executes(arguments -> {
                     Level world = arguments.getSource().getUnsidedLevel();
                     double x = arguments.getSource().getPosition().x();
