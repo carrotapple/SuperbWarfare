@@ -41,7 +41,7 @@ public class M79WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 itemstack.getOrCreateTag().putBoolean("empty_reload", false);
             }
             if (itemstack.getOrCreateTag().getDouble("reload_time") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                if (itemstack.getOrCreateTag().getInt("maxammo") >= ammo1) {
+                if (itemstack.getOrCreateTag().getInt("max_ammo") >= ammo1) {
                     itemstack.getOrCreateTag().putInt("ammo", (itemstack.getOrCreateTag().getInt("ammo") + ammo1));
                     if (entity instanceof Player _player) {
                         ItemStack _stktoremove = new ItemStack(TargetModItems.GRENADE_40MM.get());
@@ -50,7 +50,7 @@ public class M79WuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                     itemstack.getOrCreateTag().putBoolean("reloading", false);
                     itemstack.getOrCreateTag().putBoolean("empty_reload", false);
                 } else {
-                    itemstack.getOrCreateTag().putInt("ammo", (itemstack.getOrCreateTag().getInt("ammo") + itemstack.getOrCreateTag().getInt("maxammo")));
+                    itemstack.getOrCreateTag().putInt("ammo", (itemstack.getOrCreateTag().getInt("ammo") + itemstack.getOrCreateTag().getInt("max_ammo")));
                     if (entity instanceof Player _player) {
                         ItemStack _stktoremove = new ItemStack(TargetModItems.GRENADE_40MM.get());
                         _player.getInventory().clearOrCountMatchingItems(p -> _stktoremove.getItem() == p.getItem(), 1, _player.inventoryMenu.getCraftSlots());

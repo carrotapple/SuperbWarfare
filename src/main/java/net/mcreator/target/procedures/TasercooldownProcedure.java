@@ -42,7 +42,7 @@ public class TasercooldownProcedure {
                 itemstack.getOrCreateTag().putBoolean("empty_reload", false);
             }
             if (itemstack.getOrCreateTag().getDouble("reload_time") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                if (itemstack.getOrCreateTag().getInt("maxammo") >= 1) {
+                if (itemstack.getOrCreateTag().getInt("max_ammo") >= 1) {
                     itemstack.getOrCreateTag().putInt("ammo", 1);
                     if (entity instanceof Player _player) {
                         ItemStack _stktoremove = new ItemStack(TargetModItems.TASER_ELECTRODE.get());

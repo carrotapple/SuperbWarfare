@@ -174,7 +174,7 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
         if (entity instanceof Player player) {
-            itemstack.getOrCreateTag().putInt("maxammo", getAmmoCount(player));
+            itemstack.getOrCreateTag().putInt("max_ammo", getAmmoCount(player));
         }
         RpgWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
     }

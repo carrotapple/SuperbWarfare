@@ -22,7 +22,7 @@ public class PlayerReloadProcedure {
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && !tag.getBoolean("reloading")
                         && tag.getInt("ammo") < 1
-                        && tag.getInt("maxammo") > 0) {
+                        && tag.getInt("max_ammo") > 0) {
                     tag.putBoolean("reloading", true);
                     tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
                     tag.putDouble("reload_time", 55);
@@ -51,7 +51,7 @@ public class PlayerReloadProcedure {
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && !tag.getBoolean("reloading")
                         && tag.getInt("ammo") < 1
-                        && tag.getInt("maxammo") > 0) {
+                        && tag.getInt("max_ammo") > 0) {
                     tag.putBoolean("reloading", true);
                     tag.putDouble("empty_reload", 1);
                     tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
@@ -61,7 +61,7 @@ public class PlayerReloadProcedure {
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && !tag.getBoolean("reloading")
                         && tag.getInt("ammo") < 1
-                        && tag.getInt("maxammo") > 0) {
+                        && tag.getInt("max_ammo") > 0) {
                     tag.putBoolean("reloading", true);
                     tag.putDouble("empty_reload", 1);
                     tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));

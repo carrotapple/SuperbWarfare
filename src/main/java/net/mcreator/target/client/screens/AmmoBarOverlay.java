@@ -158,7 +158,7 @@ public class AmmoBarOverlay {
 
         if (stack.getItem() == TargetModItems.BOCEK.get() || stack.getItem() == TargetModItems.M_79.get()
                 || stack.getItem() == TargetModItems.RPG.get() || stack.getItem() == TargetModItems.TASER.get()) {
-            return stack.getOrCreateTag().getInt("maxammo");
+            return stack.getOrCreateTag().getInt("max_ammo");
         }
         if (stack.getItem() == TargetModItems.MINIGUN.get()) {
             return (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo;

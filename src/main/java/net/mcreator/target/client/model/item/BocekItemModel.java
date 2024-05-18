@@ -51,7 +51,7 @@ public class BocekItemModel extends GeoModel<BocekItem> {
             arrow.setScaleZ(0);
         }
 
-        if (stack.getOrCreateTag().getInt("maxammo") == 0) {
+        if (stack.getOrCreateTag().getInt("max_ammo") == 0) {
             jian.setScaleX(0);
             jian.setScaleY(0);
             jian.setScaleZ(0);

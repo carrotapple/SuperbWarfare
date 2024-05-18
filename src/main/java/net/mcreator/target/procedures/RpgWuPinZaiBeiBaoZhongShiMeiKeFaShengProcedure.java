@@ -42,7 +42,7 @@ public class RpgWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure {
                 tag.putDouble("empty", 0);
             }
             if (tag.getDouble("reload_time") == 1 && (entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getOrCreateTag().getDouble("id") == id) {
-                if (tag.getInt("maxammo") >= 0) {
+                if (tag.getInt("max_ammo") >= 0) {
                     tag.putInt("ammo", 1);
                     if (entity instanceof Player _player) {
                         _player.getInventory().clearOrCountMatchingItems(p -> TargetModItems.ROCKET.get() == p.getItem(), 1, _player.inventoryMenu.getCraftSlots());
