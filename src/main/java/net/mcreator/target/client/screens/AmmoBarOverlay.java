@@ -1,13 +1,14 @@
 package net.mcreator.target.client.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModKeyMappings;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.GunItem;
 import net.mcreator.target.network.TargetModVariables;
-import net.mcreator.target.tools.FireMode;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,6 +19,11 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class AmmoBarOverlay {
+    private static final ResourceLocation BUTTON = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/fire_mode/button.png");
+    private static final ResourceLocation LINE = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/fire_mode/line.png");
+    private static final ResourceLocation SEMI = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/fire_mode/semi.png");
+    private static final ResourceLocation BURST = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/fire_mode/burst.png");
+    private static final ResourceLocation AUTO = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/fire_mode/auto.png");
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
@@ -35,7 +41,7 @@ public class AmmoBarOverlay {
 
             // 渲染图标
             event.getGuiGraphics().blit(gunItem.getGunIcon(),
-                    w / 2 + 100,
+                    w / 2 + 95,
                     h - 40,
                     0,
                     0,
@@ -44,17 +50,49 @@ public class AmmoBarOverlay {
                     64,
                     16);
 
-            FireMode mode = getFireMode(stack);
-
             // 渲染开火模式切换按键
+            event.getGuiGraphics().blit(BUTTON,
+                    w / 2 + 118,
+                    h - 18,
+                    0,
+                    0,
+                    10,
+                    10,
+                    10,
+                    10);
+
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
-                    "[" + TargetModKeyMappings.FIREMODE.getKey().getDisplayName().getString() + "]",
-                    w / 2 + 125,
+                    TargetModKeyMappings.FIREMODE.getKey().getDisplayName().getString(),
+                    w / 2 + 121,
                     h - 18,
-                    0xFFFFFF,
-                    true
+                    0x050505,
+                    false
             );
+
+            // 渲染开火模式
+            ResourceLocation fireMode = getFireMode(stack);
+
+            event.getGuiGraphics().blit(fireMode,
+                    w / 2 + 135,
+                    h - 17,
+                    0,
+                    0,
+                    8,
+                    8,
+                    8,
+                    8);
+
+            event.getGuiGraphics().blit(LINE,
+                    w / 2 + 135,
+                    h - 12,
+                    0,
+                    0,
+                    8,
+                    8,
+                    8,
+                    8);
+
 
             // 渲染当前弹药量
             poseStack.pushPose();
@@ -82,12 +120,11 @@ public class AmmoBarOverlay {
         }
     }
 
-    public static FireMode getFireMode(ItemStack stack) {
+    public static ResourceLocation getFireMode(ItemStack stack) {
         return switch (stack.getOrCreateTag().getInt("fire_mode")) {
-            case 0 -> FireMode.SEMI;
-            case 1 -> FireMode.BURST;
-            case 2 -> FireMode.AUTO;
-            default -> FireMode.OTHER;
+            case 1 -> BURST;
+            case 2 -> AUTO;
+            default -> SEMI;
         };
     }
 
