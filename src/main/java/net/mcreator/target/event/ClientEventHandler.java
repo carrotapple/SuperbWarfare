@@ -50,10 +50,10 @@ public class ClientEventHandler {
                 on_ground = 0.1;
             }
 
-            if (data.getDouble("move_left") == 1
+            if ((data.getDouble("move_left") == 1
                 || data.getDouble("move_right") == 1
                 || data.getDouble("move_forward") == 1
-                || data.getDouble("move_backward") == 1) {
+                || data.getDouble("move_backward") == 1) && data.getDouble("firetime") == 0) {
 
                 if (data.getDouble("gun_moveY_time") < 1.25) {
                     data.putDouble("gun_moveY_time", data.getDouble("gun_moveY_time") + on_ground * times * move_speed);
