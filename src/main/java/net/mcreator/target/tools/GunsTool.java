@@ -5,7 +5,7 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.entity.ProjectileEntity;
 import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModItems;
-import net.mcreator.target.network.GunsDataMessage;
+import net.mcreator.target.network.message.GunsDataMessage;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;

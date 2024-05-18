@@ -2,7 +2,7 @@ package net.mcreator.target.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.network.MortarGUIButtonMessage;
+import net.mcreator.target.network.message.MortarGUIButtonMessage;
 import net.mcreator.target.tools.TraceTool;
 import net.mcreator.target.world.inventory.MortarGUIMenu;
 import net.minecraft.client.gui.GuiGraphics;

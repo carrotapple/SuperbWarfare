@@ -2,7 +2,7 @@ package net.mcreator.target.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.network.GunRecycleGuiButtonMessage;
+import net.mcreator.target.network.message.GunRecycleGuiButtonMessage;
 import net.mcreator.target.world.inventory.GunRecycleGuiMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;

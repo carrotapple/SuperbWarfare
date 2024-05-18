@@ -1,5 +1,6 @@
 package net.mcreator.target.event;
 
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.entity.BocekarrowEntity;
 import net.mcreator.target.entity.Target1Entity;
 import net.mcreator.target.init.TargetModDamageTypes;
@@ -7,6 +8,7 @@ import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.GunItem;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.network.message.PlayerKillMessage;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.registries.Registries;
@@ -14,6 +16,7 @@ import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -30,6 +33,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
 
 @Mod.EventBusSubscriber
 public class LivingEntityEventHandler {
@@ -213,5 +217,17 @@ public class LivingEntityEventHandler {
             var clientboundstopsoundpacket = new ClientboundStopSoundPacket(sound.getLocation(), SoundSource.PLAYERS);
             server.players().forEach(p -> p.connection.send(clientboundstopsoundpacket));
         });
+    }
+
+    @SubscribeEvent
+    public static void handlePlayerKillEntity(LivingDeathEvent event) {
+        LivingEntity entity = event.getEntity();
+        DamageSource source = event.getSource();
+
+        if (source.getDirectEntity() instanceof ServerPlayer player) {
+            if (source.is(TargetModDamageTypes.GUNFIRE)) {
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new PlayerKillMessage(player.getId(), entity.getId()));
+            }
+        }
     }
 }

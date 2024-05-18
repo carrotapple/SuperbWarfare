@@ -1,5 +1,6 @@
-package net.mcreator.target.network;
+package net.mcreator.target.network.message;
 
+import net.mcreator.target.network.ClientPacketHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
@@ -31,6 +32,5 @@ public class GunsDataMessage {
         ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleGunsDataMessage(message, ctx)));
         ctx.get().setPacketHandled(true);
     }
-
 
 }

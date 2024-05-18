@@ -1,6 +1,7 @@
-package net.mcreator.target.network;
+package net.mcreator.target.network.message;
 
 import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.sounds.SoundSource;

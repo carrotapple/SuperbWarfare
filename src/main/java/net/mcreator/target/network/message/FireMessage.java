@@ -1,8 +1,9 @@
-package net.mcreator.target.network;
+package net.mcreator.target.network.message;
 
 import net.mcreator.target.entity.BocekarrowEntity;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.procedures.PressFireProcedure;
 import net.mcreator.target.tools.GunsTool;
 import net.minecraft.commands.CommandSource;

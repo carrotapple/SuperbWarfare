@@ -1,4 +1,4 @@
-package net.mcreator.target.network;
+package net.mcreator.target.network.message;
 
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;

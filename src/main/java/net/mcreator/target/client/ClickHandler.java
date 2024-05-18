@@ -3,7 +3,7 @@ package net.mcreator.target.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.init.TargetModTags;
-import net.mcreator.target.network.FireMessage;
+import net.mcreator.target.network.message.FireMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;

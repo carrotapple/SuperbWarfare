@@ -1,7 +1,7 @@
 package net.mcreator.target;
 
 import net.mcreator.target.init.*;
-import net.mcreator.target.network.*;
+import net.mcreator.target.network.message.*;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -88,5 +88,6 @@ public class TargetMod {
         addNetworkMessage(FireModeMessage.class, FireModeMessage::buffer, FireModeMessage::new, FireModeMessage::handler);
         addNetworkMessage(GunRecycleGuiButtonMessage.class, GunRecycleGuiButtonMessage::buffer, GunRecycleGuiButtonMessage::new, GunRecycleGuiButtonMessage::handler);
         addNetworkMessage(ReloadMessage.class, ReloadMessage::buffer, ReloadMessage::new, ReloadMessage::handler);
+        addNetworkMessage(PlayerKillMessage.class, PlayerKillMessage::encode, PlayerKillMessage::decode, PlayerKillMessage::handler, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
     }
 }

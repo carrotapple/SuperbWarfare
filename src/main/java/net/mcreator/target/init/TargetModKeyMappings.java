@@ -2,10 +2,10 @@ package net.mcreator.target.init;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.network.DoubleJumpMessage;
-import net.mcreator.target.network.FireModeMessage;
-import net.mcreator.target.network.ReloadMessage;
-import net.mcreator.target.network.ZoomMessage;
+import net.mcreator.target.network.message.DoubleJumpMessage;
+import net.mcreator.target.network.message.FireModeMessage;
+import net.mcreator.target.network.message.ReloadMessage;
+import net.mcreator.target.network.message.ZoomMessage;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;

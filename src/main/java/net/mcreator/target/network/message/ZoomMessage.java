@@ -1,5 +1,6 @@
-package net.mcreator.target.network;
+package net.mcreator.target.network.message;
 
+import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
