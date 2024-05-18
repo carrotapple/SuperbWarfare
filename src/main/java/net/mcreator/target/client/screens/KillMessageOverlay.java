@@ -51,7 +51,7 @@ public class KillMessageOverlay {
         event.getGuiGraphics().drawString(
                 Minecraft.getInstance().font,
                 attackerName,
-                w - 2 * targetNameWidth - 36 - attackerNameWidth,
+                w - targetNameWidth - 50 - attackerNameWidth,
                 h,
                 record.attacker.getTeamColor(),
                 false
@@ -61,14 +61,15 @@ public class KillMessageOverlay {
             ResourceLocation resourceLocation = gunItem.getGunIcon();
 
             event.getGuiGraphics().blit(resourceLocation,
-                    w - 2 * targetNameWidth - 30,
+                    w - targetNameWidth - 46,
                     h,
                     0,
                     0,
                     32,
                     8,
                     -32,
-                    8);
+                    8
+            );
         }
 
         event.getGuiGraphics().drawString(

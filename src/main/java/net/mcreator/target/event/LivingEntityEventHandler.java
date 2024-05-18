@@ -225,6 +225,7 @@ public class LivingEntityEventHandler {
         DamageSource source = event.getSource();
 
         if (source.getDirectEntity() instanceof ServerPlayer player) {
+            // TODO 修改发包
             if (source.is(TargetModDamageTypes.GUN_FIRE)) {
                 TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new PlayerKillMessage(player.getId(), entity.getId(), false));
             } else if (source.is(TargetModDamageTypes.GUN_FIRE_HEADSHOT)) {
