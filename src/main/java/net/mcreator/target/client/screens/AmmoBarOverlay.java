@@ -41,7 +41,7 @@ public class AmmoBarOverlay {
 
             // 渲染图标
             event.getGuiGraphics().blit(gunItem.getGunIcon(),
-                    w / 2 + 95,
+                    w - 135,
                     h - 40,
                     0,
                     0,
@@ -52,8 +52,8 @@ public class AmmoBarOverlay {
 
             // 渲染开火模式切换按键
             event.getGuiGraphics().blit(BUTTON,
-                    w / 2 + 118,
-                    h - 18,
+                    w - 115,
+                    h - 20,
                     0,
                     0,
                     10,
@@ -64,8 +64,8 @@ public class AmmoBarOverlay {
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     TargetModKeyMappings.FIREMODE.getKey().getDisplayName().getString(),
-                    w / 2 + 121,
-                    h - 18,
+                    w - 111.5f,
+                    h - 20,
                     0x050505,
                     false
             );
@@ -74,8 +74,8 @@ public class AmmoBarOverlay {
             ResourceLocation fireMode = getFireMode(stack);
 
             event.getGuiGraphics().blit(fireMode,
-                    w / 2 + 135,
-                    h - 17,
+                    w - 100,
+                    h - 19,
                     0,
                     0,
                     8,
@@ -84,8 +84,8 @@ public class AmmoBarOverlay {
                     8);
 
             event.getGuiGraphics().blit(LINE,
-                    w / 2 + 135,
-                    h - 12,
+                    w - 100,
+                    h - 14,
                     0,
                     0,
                     8,
@@ -101,7 +101,7 @@ public class AmmoBarOverlay {
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     getGunAmmoCount(player) + "",
-                    w / 3f + 112,
+                    w / 1.5f - 62 / 1.5f,
                     h / 1.5f - 31,
                     0xFFFFFF,
                     true
@@ -112,7 +112,7 @@ public class AmmoBarOverlay {
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     getPlayerAmmoCount(player),
-                    w / 2 + 170,
+                    w - 60,
                     h - 35,
                     0xCCCCCC,
                     true
@@ -125,7 +125,7 @@ public class AmmoBarOverlay {
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     centerString(gunItem.getGunDisplayName(), 20),
-                    w / 2 + 138,
+                    w / 0.9f - 128 / 0.9f,
                     h - 34,
                     0xFFFFFF,
                     true
@@ -135,7 +135,7 @@ public class AmmoBarOverlay {
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     centerString(getGunAmmoType(stack), 20),
-                    w / 2 + 138,
+                    w / 0.9f - 128 / 0.9f,
                     h - 26,
                     0xC8A679,
                     true

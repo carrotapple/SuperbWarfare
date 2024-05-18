@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
@@ -208,5 +209,15 @@ public class HuntingRifle extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public void setAnimationProcedure(String procedure) {
         this.animationProcedure = procedure;
+    }
+
+    @Override
+    public ResourceLocation getGunIcon() {
+        return new ResourceLocation(TargetMod.MODID, "textures/gun_icon/hunting_rifle_icon.png");
+    }
+
+    @Override
+    public String getGunDisplayName() {
+        return "Hunting Rifle";
     }
 }
