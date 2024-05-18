@@ -190,6 +190,6 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public String getGunDisplayName() {
-        return "Bocek";
+        return "   Bocek";
     }
 }

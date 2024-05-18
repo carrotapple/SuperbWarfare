@@ -188,6 +188,6 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public String getGunDisplayName() {
-        return "SVD";
+        return "   SVD";
     }
 }

@@ -195,6 +195,6 @@ public class RpkItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public String getGunDisplayName() {
-        return "RPK";
+        return "   RPK";
     }
 }

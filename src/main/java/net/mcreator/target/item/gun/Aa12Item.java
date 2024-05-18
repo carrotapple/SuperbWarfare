@@ -200,6 +200,6 @@ public class Aa12Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public String getGunDisplayName() {
-        return "AA-12";
+        return "    AA-12";
     }
 }

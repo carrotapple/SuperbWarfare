@@ -187,6 +187,6 @@ public class SksItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public String getGunDisplayName() {
-        return "SKS";
+        return "   SKS";
     }
 }

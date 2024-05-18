@@ -218,6 +218,6 @@ public class HuntingRifle extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public String getGunDisplayName() {
-        return "Hunting Rifle";
+        return " Hunting Rifle";
     }
 }

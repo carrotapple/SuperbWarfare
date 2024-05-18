@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class AmmoBarOverlay {
-    private static final ResourceLocation BUTTON = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/fire_mode/button.png");
+//    private static final ResourceLocation BUTTON = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/fire_mode/button.png");
     private static final ResourceLocation LINE = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/fire_mode/line.png");
     private static final ResourceLocation SEMI = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/fire_mode/semi.png");
     private static final ResourceLocation BURST = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/fire_mode/burst.png");
@@ -51,22 +51,22 @@ public class AmmoBarOverlay {
                     16);
 
             // 渲染开火模式切换按键
-            event.getGuiGraphics().blit(BUTTON,
-                    w - 115,
-                    h - 20,
-                    0,
-                    0,
-                    10,
-                    10,
-                    10,
-                    10);
+//            event.getGuiGraphics().blit(BUTTON,
+//                    w - 115,
+//                    h - 20,
+//                    0,
+//                    0,
+//                    10,
+//                    10,
+//                    10,
+//                    10);
 
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
-                    TargetModKeyMappings.FIREMODE.getKey().getDisplayName().getString(),
+                    "[" + TargetModKeyMappings.FIREMODE.getKey().getDisplayName().getString() + "]",
                     w - 111.5f,
                     h - 20,
-                    0x050505,
+                    0xFFFFFF,
                     false
             );
 
@@ -74,8 +74,8 @@ public class AmmoBarOverlay {
             ResourceLocation fireMode = getFireMode(stack);
 
             event.getGuiGraphics().blit(fireMode,
-                    w - 100,
-                    h - 19,
+                    w - 95,
+                    h - 21,
                     0,
                     0,
                     8,
@@ -84,8 +84,8 @@ public class AmmoBarOverlay {
                     8);
 
             event.getGuiGraphics().blit(LINE,
-                    w - 100,
-                    h - 14,
+                    w - 95,
+                    h - 16,
                     0,
                     0,
                     8,
@@ -101,8 +101,8 @@ public class AmmoBarOverlay {
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     getGunAmmoCount(player) + "",
-                    w / 1.5f - 62 / 1.5f + 1,
-                    h / 1.5f - 31,
+                    w / 1.5f - 64 / 1.5f + 1,
+                    h / 1.5f - 32,
                     0xFFFFFF,
                     true
             );
@@ -112,21 +112,21 @@ public class AmmoBarOverlay {
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     getPlayerAmmoCount(player),
-                    w - 60,
+                    w - 64,
                     h - 35,
                     0xCCCCCC,
                     true
             );
 
             poseStack.pushPose();
-            poseStack.scale(0.9f, 0.9f, 1f);
+            poseStack.scale(0.9f, 1f, 1f);
 
             // 渲染物品名称
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     centerString(gunItem.getGunDisplayName(), 20),
-                    w / 0.9f - 128 / 0.9f,
-                    h - 34,
+                    w / 0.9f - 144 / 0.9f,
+                    h - 60,
                     0xFFFFFF,
                     true
             );
@@ -135,8 +135,8 @@ public class AmmoBarOverlay {
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     centerString(getGunAmmoType(stack), 20),
-                    w / 0.9f - 128 / 0.9f,
-                    h - 26,
+                    w / 0.9f - 144 / 0.9f,
+                    h - 51,
                     0xC8A679,
                     true
             );
@@ -156,10 +156,6 @@ public class AmmoBarOverlay {
     private static int getGunAmmoCount(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.getItem() == TargetModItems.BOCEK.get() || stack.getItem() == TargetModItems.M_79.get()
-                || stack.getItem() == TargetModItems.RPG.get() || stack.getItem() == TargetModItems.TASER.get()) {
-            return stack.getOrCreateTag().getInt("max_ammo");
-        }
         if (stack.getItem() == TargetModItems.MINIGUN.get()) {
             return (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo;
         }
@@ -172,6 +168,11 @@ public class AmmoBarOverlay {
 
         if (stack.getItem() == TargetModItems.MINIGUN.get()) {
             return "";
+        }
+
+        if (stack.getItem() == TargetModItems.BOCEK.get() || stack.getItem() == TargetModItems.M_79.get()
+                || stack.getItem() == TargetModItems.RPG.get() || stack.getItem() == TargetModItems.TASER.get()) {
+            return "" + stack.getOrCreateTag().getInt("max_ammo");
         }
 
         if (stack.is(TargetModTags.Items.RIFLE)) {
@@ -191,7 +192,19 @@ public class AmmoBarOverlay {
 
     private static String getGunAmmoType(ItemStack stack) {
         if (stack.getItem() == TargetModItems.BOCEK.get()) {
-            return "Arrow";
+            return "   Arrow";
+        }
+
+        if (stack.getItem() == TargetModItems.M_79.get()) {
+            return "40mm Grenade";
+        }
+
+        if (stack.getItem() == TargetModItems.RPG.get()) {
+            return "Yassin105 TBG";
+        }
+
+        if (stack.getItem() == TargetModItems.TASER.get()) {
+            return "Electrode Rod";
         }
 
         if (stack.getItem() == TargetModItems.MINIGUN.get()) {
@@ -199,7 +212,7 @@ public class AmmoBarOverlay {
         }
 
         if (stack.is(TargetModTags.Items.RIFLE)) {
-            return "Rifle Ammo";
+            return "  Rifle Ammo";
         }
         if (stack.is(TargetModTags.Items.HANDGUN) || stack.is(TargetModTags.Items.SMG)) {
             return "Handgun Ammo";

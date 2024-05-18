@@ -195,6 +195,6 @@ public class M4Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public String getGunDisplayName() {
-        return "M4A1";
+        return "  M4A1";
     }
 }

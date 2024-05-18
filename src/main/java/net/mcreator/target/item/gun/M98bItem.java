@@ -195,6 +195,6 @@ public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public String getGunDisplayName() {
-        return "M98-B";
+        return " M98-B";
     }
 }
