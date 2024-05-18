@@ -96,7 +96,7 @@ public abstract class GunItem extends Item {
     }
 
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(TargetMod.MODID, "textures/gun_icon/default.png");
+        return new ResourceLocation(TargetMod.MODID, "textures/gun_icon/default_icon.png");
     }
 
     public String getGunDisplayName() {
