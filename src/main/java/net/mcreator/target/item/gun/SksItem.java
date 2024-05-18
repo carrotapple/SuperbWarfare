@@ -15,6 +15,7 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -177,5 +178,15 @@ public class SksItem extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public void setAnimationProcedure(String procedure) {
         this.animationProcedure = procedure;
+    }
+
+    @Override
+    public ResourceLocation getGunIcon() {
+        return new ResourceLocation(TargetMod.MODID, "textures/gun_icon/sks_icon.png");
+    }
+
+    @Override
+    public String getGunDisplayName() {
+        return "SKS";
     }
 }

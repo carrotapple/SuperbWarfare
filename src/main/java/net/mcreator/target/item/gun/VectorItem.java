@@ -289,4 +289,13 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
             }
         }
     }
+    @Override
+    public ResourceLocation getGunIcon() {
+        return new ResourceLocation(TargetMod.MODID, "textures/gun_icon/vector_icon.png");
+    }
+
+    @Override
+    public String getGunDisplayName() {
+        return "VECTOR";
+    }
 }

@@ -16,6 +16,7 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -194,5 +195,15 @@ public class Minigun extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public void setAnimationProcedure(String procedure) {
         this.animationProcedure = procedure;
+    }
+
+    @Override
+    public ResourceLocation getGunIcon() {
+        return new ResourceLocation(TargetMod.MODID, "textures/gun_icon/minigun_icon.png");
+    }
+
+    @Override
+    public String getGunDisplayName() {
+        return "M134 MINIGUN";
     }
 }
