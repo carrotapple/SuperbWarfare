@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class AmmoBarOverlay {
-//    private static final ResourceLocation BUTTON = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/fire_mode/button.png");
+    //    private static final ResourceLocation BUTTON = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/fire_mode/button.png");
     private static final ResourceLocation LINE = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/fire_mode/line.png");
     private static final ResourceLocation SEMI = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/fire_mode/semi.png");
     private static final ResourceLocation BURST = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/fire_mode/burst.png");
@@ -101,8 +101,8 @@ public class AmmoBarOverlay {
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     getGunAmmoCount(player) + "",
-                    w / 1.5f - 64 / 1.5f + 1,
-                    h / 1.5f - 32,
+                    w / 1.5f - 64 / 1.5f,
+                    h / 1.5f - 48 / 1.5f,
                     0xFFFFFF,
                     true
             );
@@ -119,14 +119,14 @@ public class AmmoBarOverlay {
             );
 
             poseStack.pushPose();
-            poseStack.scale(0.9f, 1f, 1f);
+            poseStack.scale(0.9f, 0.9f, 1f);
 
             // 渲染物品名称
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     centerString(gunItem.getGunDisplayName(), 20),
                     w / 0.9f - 144 / 0.9f,
-                    h - 60,
+                    h / 0.9f - 60 / 0.9f,
                     0xFFFFFF,
                     true
             );
@@ -136,7 +136,7 @@ public class AmmoBarOverlay {
                     Minecraft.getInstance().font,
                     centerString(getGunAmmoType(stack), 20),
                     w / 0.9f - 144 / 0.9f,
-                    h - 51,
+                    h / 0.9f - 51 / 0.9f,
                     0xC8A679,
                     true
             );
