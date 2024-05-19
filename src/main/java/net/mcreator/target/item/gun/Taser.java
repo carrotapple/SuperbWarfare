@@ -7,15 +7,17 @@ import net.mcreator.target.client.renderer.item.TaserItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.item.AnimatedItem;
-import net.mcreator.target.procedures.TasercooldownProcedure;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -79,7 +81,7 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState event) {
+    private PlayState idlePredicate(AnimationState<Taser> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         ItemStack stack = player.getMainHandItem();
 
@@ -106,7 +108,7 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState event) {
+    private PlayState procedurePredicate(AnimationState<Taser> event) {
         if (transformType != null && transformType.firstPerson()) {
             if (!(this.animationProcedure.equals("empty")) && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
@@ -121,9 +123,9 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        AnimationController procedureController = new AnimationController(this, "procedureController", 0, this::procedurePredicate);
+        AnimationController<Taser> procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
         data.add(procedureController);
-        AnimationController idleController = new AnimationController(this, "idleController", 3, this::idlePredicate);
+        AnimationController<Taser> idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
     }
 
@@ -171,12 +173,52 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemstack, world, entity, slot, selected);
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
+
         if (entity instanceof Player player) {
-            itemstack.getOrCreateTag().putInt("max_ammo", getAmmoCount(player));
+            stack.getOrCreateTag().putInt("max_ammo", getAmmoCount(player));
+
+            ItemStack heldItem = player.getMainHandItem();
+
+            double id = stack.getOrCreateTag().getDouble("id");
+            if (heldItem.getOrCreateTag().getDouble("id") != stack.getOrCreateTag().getDouble("id")) {
+                stack.getOrCreateTag().putBoolean("empty_reload", false);
+                stack.getOrCreateTag().putBoolean("reloading", false);
+                stack.getOrCreateTag().putDouble("reload_time", 0);
+            }
+
+            if (stack.getOrCreateTag().getBoolean("reloading")) {
+                if (stack.getOrCreateTag().getDouble("reload_time") == 55) {
+                    player.getPersistentData().putDouble("id", id);
+
+                    // TODO 修改音效播放
+                    if (!player.level().isClientSide() && player.getServer() != null) {
+                        player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), player.level() instanceof ServerLevel ? (ServerLevel) player.level() : null, 4,
+                                player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:taser_reload player @s ~ ~ ~ 100 1");
+                    }
+                }
+                if (heldItem.getItem() == stack.getItem() && heldItem.getOrCreateTag().getDouble("id") == id) {
+                    if (stack.getOrCreateTag().getDouble("reload_time") > 0) {
+                        stack.getOrCreateTag().putDouble("reload_time", (stack.getOrCreateTag().getDouble("reload_time") - 1));
+                    }
+                } else {
+                    stack.getOrCreateTag().putBoolean("reloading", false);
+                    stack.getOrCreateTag().putDouble("reload_time", 0);
+                    stack.getOrCreateTag().putBoolean("empty_reload", false);
+                }
+
+                if (stack.getOrCreateTag().getDouble("reload_time") == 1 && heldItem.getOrCreateTag().getDouble("id") == id) {
+                    if (stack.getOrCreateTag().getInt("max_ammo") >= 1) {
+                        stack.getOrCreateTag().putInt("ammo", 1);
+
+                        player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == TargetModItems.TASER_ELECTRODE.get(), 1, player.inventoryMenu.getCraftSlots());
+                        stack.getOrCreateTag().putBoolean("reloading", false);
+                        stack.getOrCreateTag().putBoolean("empty_reload", false);
+                    }
+                }
+            }
         }
-        TasercooldownProcedure.execute(entity, itemstack);
     }
 
     protected static boolean check(ItemStack stack) {
