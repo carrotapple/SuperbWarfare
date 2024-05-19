@@ -48,7 +48,11 @@ public class ClientEventHandler {
             double move_speed = (float) entity.getDeltaMovement().horizontalDistanceSqr();
             double on_ground;
             if (entity.onGround()) {
-                on_ground = 2.4;
+                if (entity.isSprinting()) {
+                    on_ground = 1.2;
+                } else {
+                    on_ground = 2.4;
+                }
             } else {
                 on_ground = 0.001;
             }
