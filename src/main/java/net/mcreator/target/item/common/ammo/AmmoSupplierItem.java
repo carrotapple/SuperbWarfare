@@ -47,7 +47,7 @@ public abstract class AmmoSupplierItem extends Item {
 
         if (!level.isClientSide()) {
             player.displayClientMessage(Component.translatable("item.target.ammo_supplier.supply", Component.translatable(this.type.translatableKey).getString(), ammoToAdd), false);
-            level.playSound(null, player.blockPosition(), TargetModSounds.BULLETSUPPLY.get(), SoundSource.PLAYERS, 1, 1);
+            level.playSound(null, player.blockPosition(), TargetModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 1, 1);
         }
         return InteractionResultHolder.consume(stack);
     }

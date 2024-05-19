@@ -161,7 +161,7 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(TargetModSounds.M_870_PREPAREALT.get(), TargetModSounds.M_870_RELOADLOOP.get());
+        return Set.of(TargetModSounds.M_870_PREPARE_ALT.get(), TargetModSounds.M_870_RELOAD_LOOP.get());
     }
 
     @Override

@@ -1,7 +1,3 @@
-
-/*
- *	MCreator note: This file will be REGENERATED on each build.
- */
 package net.mcreator.target.init;
 
 import net.mcreator.target.TargetMod;
@@ -13,5 +9,6 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class TargetModMobEffects {
     public static final DeferredRegister<MobEffect> REGISTRY = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, TargetMod.MODID);
+
     public static final RegistryObject<MobEffect> SHOCK = REGISTRY.register("shock", ShockMobEffect::new);
 }

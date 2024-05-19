@@ -168,7 +168,7 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
         if (entity instanceof Target1Entity target1) {
             target1.setHealth(target1.getMaxHealth());
 
-            sourceEntity.level().playLocalSound(sourceEntity.blockPosition(), TargetModSounds.TARGETDOWN.get(), SoundSource.PLAYERS, 100, 1, false);
+            sourceEntity.level().playLocalSound(sourceEntity.blockPosition(), TargetModSounds.TARGET_DOWN.get(), SoundSource.PLAYERS, 100, 1, false);
 
             if (sourceEntity instanceof Player player)
                 player.displayClientMessage(Component.literal(("Target Down " + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceEntity.position()))) + "M")), true);

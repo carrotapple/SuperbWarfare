@@ -1,4 +1,3 @@
-
 package net.mcreator.target.init;
 
 import net.mcreator.target.TargetMod;
@@ -17,6 +16,7 @@ import net.minecraftforge.registries.RegistryObject;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class TargetModAttributes {
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, TargetMod.MODID);
+
     public static final RegistryObject<Attribute> MORTAR_PITCH = ATTRIBUTES.register("mortar_pitch", () -> (new RangedAttribute("attribute." + TargetMod.MODID + ".mortar_pitch", 70, 20, 89)).setSyncable(true));
     public static final RegistryObject<Attribute> SPREAD = ATTRIBUTES.register("spread", () -> (new RangedAttribute("attribute." + TargetMod.MODID + ".spread", 0, 0, 1024)).setSyncable(true));
 

@@ -57,7 +57,7 @@ public class CreativeAmmoBox extends Item {
 
         if (!level.isClientSide()) {
             player.displayClientMessage(Component.translatable("item.target.ammo_supplier.creative"), false);
-            level.playSound(null, player.blockPosition(), TargetModSounds.BULLETSUPPLY.get(), SoundSource.VOICE, 1, 1);
+            level.playSound(null, player.blockPosition(), TargetModSounds.BULLET_SUPPLY.get(), SoundSource.VOICE, 1, 1);
         }
         return InteractionResultHolder.consume(stack);
     }

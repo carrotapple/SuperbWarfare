@@ -190,8 +190,8 @@
 
   "key.categories.target": "TARGET",
   "key.target.reload": "Reload",
-  "key.target.doublejumpinput": "Double Jump",
-  "key.target.firemode": "Fire Mode",
+  "key.target.double_jump": "Double Jump",
+  "key.target.fire_mode": "Fire Mode",
   "key.target.zoom": "Zoom",
 
   "effect.target.shock": "Shock",

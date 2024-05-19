@@ -1,7 +1,3 @@
-
-/*
- *    MCreator note: This file will be REGENERATED on each build.
- */
 package net.mcreator.target.init;
 
 import net.mcreator.target.TargetMod;
@@ -13,6 +9,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class TargetModBlocks {
     public static final DeferredRegister<Block> REGISTRY = DeferredRegister.create(ForgeRegistries.BLOCKS, TargetMod.MODID);
+
     public static final RegistryObject<Block> SANDBAG = REGISTRY.register("sandbag", SandbagBlock::new);
     public static final RegistryObject<Block> BARBED_WIRE = REGISTRY.register("barbed_wire", BarbedWireBlock::new);
     public static final RegistryObject<Block> JUMPPAD_BLOCK = REGISTRY.register("jumppad_block", JumppadBlockBlock::new);

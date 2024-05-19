@@ -190,8 +190,8 @@
 
   "key.categories.target": "TARGET",
   "key.target.reload": "装填子弹",
-  "key.target.doublejumpinput": "二段跳",
-  "key.target.firemode": "开火模式",
+  "key.target.double_jump": "二段跳",
+  "key.target.fire_mode": "开火模式",
   "key.target.zoom": "缩放",
 
   "effect.target.shock": "麻痹",

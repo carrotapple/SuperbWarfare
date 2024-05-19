@@ -63,7 +63,7 @@ public class AmmoBarOverlay {
 
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
-                    "[" + TargetModKeyMappings.FIREMODE.getKey().getDisplayName().getString() + "]",
+                    "[" + TargetModKeyMappings.FIRE_MODE.getKey().getDisplayName().getString() + "]",
                     w - 111.5f,
                     h - 20,
                     0xFFFFFF,

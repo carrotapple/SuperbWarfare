@@ -1,5 +1,4 @@
 package net.mcreator.target.headshot;
-//import com.mrcrayfish.guns.Config;
 
 import net.mcreator.target.init.TargetModEntities;
 import net.minecraft.util.Mth;
@@ -19,8 +18,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.WeakHashMap;
-
-//TODO retrieve this data from a datapack
 
 /**
  * Author: MrCrayfish
@@ -103,9 +100,6 @@ public class BoundingBoxManager {
 
     @SubscribeEvent(receiveCanceled = true)
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
-//        if(!Config.COMMON.gameplay.improvedHitboxes.get())
-//            return;
-
         if (event.side == LogicalSide.SERVER && event.phase == TickEvent.Phase.END) {
             if (event.player.isSpectator()) {
                 playerBoxes.remove(event.player);

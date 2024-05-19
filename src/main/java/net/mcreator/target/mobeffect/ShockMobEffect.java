@@ -19,11 +19,6 @@ public class ShockMobEffect extends MobEffect {
     }
 
     @Override
-    public String getDescriptionId() {
-        return "effect.target.shock";
-    }
-
-    @Override
     public void addAttributeModifiers(LivingEntity entity, AttributeMap attributeMap, int amplifier) {
         if (!entity.level().isClientSide()) {
             entity.level().playSound(null, BlockPos.containing(entity.getX(), entity.getY(), entity.getZ()), TargetModSounds.SHOCK.get(), SoundSource.HOSTILE, 1, 1);

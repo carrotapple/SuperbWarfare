@@ -58,7 +58,7 @@ public class FireModeMessage {
         };
 
         if (player instanceof ServerPlayer serverPlayer) {
-            serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(TargetModSounds.FIRERATE.get()),
+            serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(TargetModSounds.FIRE_RATE.get()),
                     SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1f, 1f, serverPlayer.level().random.nextLong()));
         }
 

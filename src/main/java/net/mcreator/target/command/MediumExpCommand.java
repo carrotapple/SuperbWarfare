@@ -5,7 +5,6 @@ import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -28,13 +27,13 @@ public class MediumExpCommand {
                     double z = arguments.getSource().getPosition().z();
 
                     if (!world.isClientSide()) {
-                        world.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXP.get(), SoundSource.BLOCKS, 8, 1);
-                        world.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPFAR.get(), SoundSource.BLOCKS, 16, 1);
-                        world.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPVERYFAR.get(), SoundSource.BLOCKS, 32, 1);
+                        world.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION.get(), SoundSource.BLOCKS, 8, 1);
+                        world.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION_FAR.get(), SoundSource.BLOCKS, 16, 1);
+                        world.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION_VERY_FAR.get(), SoundSource.BLOCKS, 32, 1);
                     } else {
-                        world.playLocalSound(x, (y + 1), z, TargetModSounds.EXP.get(), SoundSource.BLOCKS, 24, 1, false);
-                        world.playLocalSound(x, (y + 1), z, TargetModSounds.EXPFAR.get(), SoundSource.BLOCKS, 24, 1, false);
-                        world.playLocalSound(x, (y + 1), z, TargetModSounds.EXPVERYFAR.get(), SoundSource.BLOCKS, 64, 1, false);
+                        world.playLocalSound(x, (y + 1), z, TargetModSounds.EXPLOSION.get(), SoundSource.BLOCKS, 24, 1, false);
+                        world.playLocalSound(x, (y + 1), z, TargetModSounds.EXPLOSION_FAR.get(), SoundSource.BLOCKS, 24, 1, false);
+                        world.playLocalSound(x, (y + 1), z, TargetModSounds.EXPLOSION_VERY_FAR.get(), SoundSource.BLOCKS, 64, 1, false);
                     }
 
                     if (world instanceof ServerLevel server) {
