@@ -180,8 +180,8 @@ public class HuntingRifle extends GunItem implements GeoItem, AnimatedItem {
             if (itemTag.getDouble("reload_time") == 61) {
                 entity.getPersistentData().putDouble("id", id);
                 if (!entity.level().isClientSide() && entity.getServer() != null) {
-                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:hunting_rifle_reload player @s ~ ~ ~ 100 1");
+                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
+                            entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:hunting_rifle_reload player @s ~ ~ ~ 100 1");
                 }
             }
             if (mainHandItem.getItem() == itemstack.getItem()

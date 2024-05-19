@@ -5,10 +5,7 @@ import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,7 +20,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
-import net.minecraftforge.registries.ForgeRegistries;
 
 @OnlyIn(value = Dist.CLIENT, _interface = ItemSupplier.class)
 public class MortarShellEntity extends AbstractArrow implements ItemSupplier {
@@ -75,8 +71,8 @@ public class MortarShellEntity extends AbstractArrow implements ItemSupplier {
         if (this.level() instanceof ServerLevel level) {
             level.explode(this, (this.getX()), (this.getY()), (this.getZ()), 10, Level.ExplosionInteraction.NONE);
             if (!entity.level().isClientSide() && entity.getServer() != null) {
-                entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                        entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "target:mediumexp");
+                entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
+                        entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "target:mediumexp");
             }
         }
         this.discard();

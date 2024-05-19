@@ -316,8 +316,8 @@ public class PlayerReloadProcedure {
                     player.getCooldowns().addCooldown(player.getMainHandItem().getItem(), 5);
                     tag.putDouble("prepare", 5);
                     if (!entity.level().isClientSide() && entity.getServer() != null) {
-                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:marlin_start player @s ~ ~ ~ 100 1");
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:marlin_start player @s ~ ~ ~ 100 1");
                     }
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.M_870.get()
@@ -333,8 +333,8 @@ public class PlayerReloadProcedure {
                         tag.putDouble("prepare", 36);
 
                         if (!entity.level().isClientSide() && entity.getServer() != null) {
-                            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                                    entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m_870_preparealt player @s ~ ~ ~ 100 1");
+                            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
+                                    entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:m_870_preparealt player @s ~ ~ ~ 100 1");
                         }
                     } else {
                         tag.putBoolean("reloading", true);

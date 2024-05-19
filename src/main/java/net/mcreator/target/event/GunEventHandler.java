@@ -308,7 +308,7 @@ public class GunEventHandler {
 
         if (!player.level().isClientSide()) {
             float headshot = (float) heldItem.getOrCreateTag().getDouble("headshot");
-            float damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("adddamage")) * (float) heldItem.getOrCreateTag().getDouble("damageadd");
+            float damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("add_damage")) * (float) heldItem.getOrCreateTag().getDouble("damageadd");
 
             ProjectileEntity projectile = new ProjectileEntity(player.level())
                     .shooter(player)

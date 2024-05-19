@@ -15,7 +15,7 @@ public class MarlinfireProcedure {
 
         ItemStack usehand = player.getMainHandItem();
         if (usehand.getOrCreateTag().getBoolean("reloading") && usehand.getOrCreateTag().getDouble("prepare") == 0 && usehand.getOrCreateTag().getInt("ammo") > 0) {
-            usehand.getOrCreateTag().putDouble("forcestop", 1);
+            usehand.getOrCreateTag().putDouble("force_stop", 1);
         }
         if (usehand.getItem() == TargetModItems.MARLIN.get() && !usehand.getOrCreateTag().getBoolean("reloading") && !player.getCooldowns().isOnCooldown(usehand.getItem())
                 && usehand.getOrCreateTag().getInt("ammo") > 0) {

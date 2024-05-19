@@ -5,8 +5,8 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.entity.ProjectileEntity;
 import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModItems;
-import net.mcreator.target.network.message.GunsDataMessage;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.network.message.GunsDataMessage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -120,7 +120,7 @@ public class GunsTool {
             damage = 0.008333333 * tag.getDouble("damage") * tag.getDouble("speed") * tag.getDouble("damageadd");
             projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, velocity, 2.5f);
         } else {
-            damage = (tag.getDouble("damage") + tag.getDouble("adddamage")) * tag.getDouble("damageadd");
+            damage = tag.getDouble("damage") + tag.getDouble("add_damage") * tag.getDouble("damageadd");
 
             projectile.shoot(player.getLookAngle().x,
                     player.getLookAngle().y,

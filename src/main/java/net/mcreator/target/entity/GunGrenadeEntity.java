@@ -92,8 +92,8 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
             if (this.level() instanceof ServerLevel level) {
                 level.explode(this, (this.getX()), (this.getY()), (this.getZ()), 5.5f, Level.ExplosionInteraction.NONE);
                 if (!entity.level().isClientSide() && entity.getServer() != null) {
-                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "target:mediumexp");
+                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
+                            entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "target:mediumexp");
                 }
                 this.discard();
             }

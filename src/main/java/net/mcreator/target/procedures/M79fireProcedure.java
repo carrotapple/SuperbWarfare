@@ -50,22 +50,22 @@ public class M79fireProcedure {
 
                 if (!entity.level().isClientSide() && entity.getServer() != null) {
                     entity.getServer().getCommands().performPrefixedCommand(
-                            new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4, entity.getName().getString(), entity.getDisplayName(),
-                                    entity.level().getServer(), entity),
+                            new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4, entity.getName().getString(), entity.getDisplayName(),
+                                    entity.getServer(), entity),
                             ("particle minecraft:cloud" + (" " + (entity.getX() + 1.8 * entity.getLookAngle().x)) + (" " + (entity.getY() + entity.getBbHeight() - 0.1 + 1.8 * entity.getLookAngle().y))
                                     + (" " + (entity.getZ() + 1.8 * entity.getLookAngle().z)) + " 0.1 0.1 0.1 0.002 4 force @s"));
                 }
                 player.getCooldowns().addCooldown(usehand.getItem(), 15);
 
                 if (!entity.level().isClientSide() && entity.getServer() != null) {
-                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m_79_fire_1p player @s ~ ~ ~ 2 1");
-                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m_79_fire_3p player @a ~ ~ ~ 4 1");
-                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m_79_far player @s ~ ~ ~ 6 1");
-                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:m_79_veryfar player @a ~ ~ ~ 12 1");
+                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
+                            entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:m_79_fire_1p player @s ~ ~ ~ 2 1");
+                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
+                            entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:m_79_fire_3p player @a ~ ~ ~ 4 1");
+                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
+                            entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:m_79_far player @s ~ ~ ~ 6 1");
+                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
+                            entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:m_79_veryfar player @a ~ ~ ~ 12 1");
                 }
                 usehand.getOrCreateTag().putInt("fire_animation", 2);
                 usehand.getOrCreateTag().putInt("ammo", (usehand.getOrCreateTag().getInt("ammo") - 1));

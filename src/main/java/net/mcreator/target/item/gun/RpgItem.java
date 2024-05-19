@@ -7,15 +7,17 @@ import net.mcreator.target.client.renderer.item.RpgItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.item.AnimatedItem;
-import net.mcreator.target.procedures.RpgWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -78,16 +80,16 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
 
         if (this.animationProcedure.equals("empty")) {
-
-            if (stack.getOrCreateTag().getInt("draw_time") < 16) {
+            var tag = stack.getOrCreateTag();
+            if (tag.getInt("draw_time") < 16) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.rpg.draw"));
             }
 
-            if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
+            if (tag.getInt("fire_animation") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.rpg.fire"));
             }
 
-            if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
+            if (tag.getBoolean("reloading") && tag.getBoolean("empty_reload")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.rpg.reload"));
             }
 
@@ -117,9 +119,9 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        AnimationController procedureController = new AnimationController(this, "procedureController", 0, this::procedurePredicate);
+        var procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
         data.add(procedureController);
-        AnimationController idleController = new AnimationController(this, "idleController", 4, this::idlePredicate);
+        var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
         data.add(idleController);
     }
 
@@ -172,12 +174,51 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemstack, world, entity, slot, selected);
+    public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(itemStack, world, entity, slot, selected);
+
         if (entity instanceof Player player) {
-            itemstack.getOrCreateTag().putInt("max_ammo", getAmmoCount(player));
+            var tag = itemStack.getOrCreateTag();
+            tag.putInt("max_ammo", getAmmoCount(player));
+
+            double id = tag.getDouble("id");
+            if (player.getMainHandItem().getOrCreateTag().getDouble("id") != tag.getDouble("id")) {
+                tag.putBoolean("empty_reload", false);
+                tag.putBoolean("reloading", false);
+                tag.putDouble("reload_time", 0);
+            }
+            if (tag.getBoolean("reloading")) {
+                if (tag.getDouble("reload_time") == 91) {
+                    entity.getPersistentData().putDouble("id", id);
+                    if (entity.getServer() != null) {
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:rpg_reload player @s ~ ~ ~ 100 1");
+                    }
+                }
+                if (player.getMainHandItem().getItem() == itemStack.getItem()
+                        && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
+                    if (tag.getDouble("reload_time") > 0) {
+                        tag.putDouble("reload_time", tag.getDouble("reload_time") - 1);
+                    }
+                } else {
+                    tag.putBoolean("reloading", false);
+                    tag.putDouble("reload_time", 0);
+                    tag.putBoolean("empty_reload", false);
+                }
+                if (tag.getDouble("reload_time") == 84) {
+                    tag.putDouble("empty", 0);
+                }
+                if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
+                    if (tag.getInt("max_ammo") >= 0) {
+                        tag.putInt("ammo", 1);
+                        player.getInventory().clearOrCountMatchingItems(p -> TargetModItems.ROCKET.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
+
+                        tag.putBoolean("reloading", false);
+                        tag.putBoolean("empty_reload", false);
+                    }
+                }
+            }
         }
-        RpgWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
     }
 
     protected static boolean check(ItemStack stack) {

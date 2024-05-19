@@ -20,7 +20,7 @@ public class TooltipTool {
         tooltip.add(Component.literal(""));
 
         double damage = (ItemNBTTool.getDouble(stack, "damage", 0) +
-                ItemNBTTool.getDouble(stack, "adddamage", 0))
+                ItemNBTTool.getDouble(stack, "add_damage", 0))
                 * ItemNBTTool.getDouble(stack, "damageadd", 1);
 
         tooltip.add(Component.translatable("des.target.tips.damage").withStyle(ChatFormatting.GRAY)
@@ -34,7 +34,7 @@ public class TooltipTool {
         tooltip.add(Component.literal(""));
 
         double damage = (ItemNBTTool.getDouble(stack, "damage", 0) +
-                ItemNBTTool.getDouble(stack, "adddamage", 0))
+                ItemNBTTool.getDouble(stack, "add_damage", 0))
                 * ItemNBTTool.getDouble(stack, "damageadd", 1);
 
         tooltip.add(Component.translatable("des.target.tips.damage").withStyle(ChatFormatting.GRAY)
@@ -88,7 +88,7 @@ public class TooltipTool {
 
         if (flag) {
             double damage = (ItemNBTTool.getDouble(stack, "damage", 0) +
-                    ItemNBTTool.getDouble(stack, "adddamage", 0))
+                    ItemNBTTool.getDouble(stack, "add_damage", 0))
                     * ItemNBTTool.getDouble(stack, "damageadd", 1);
 
             tooltip.add(Component.translatable("des.target.tips.damage").withStyle(ChatFormatting.GRAY)

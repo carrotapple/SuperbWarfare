@@ -7,16 +7,16 @@ import net.mcreator.target.client.renderer.item.KraberItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.item.AnimatedItem;
-import net.mcreator.target.procedures.KraberWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure;
-import net.mcreator.target.tools.GunsTool;
-import net.mcreator.target.tools.RarityTool;
-import net.mcreator.target.tools.TooltipTool;
+import net.mcreator.target.tools.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -25,6 +25,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -164,9 +165,63 @@ public class Kraber extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemstack, world, entity, slot, selected);
-        KraberWuPinZaiBeiBaoZhongShiMeiKeFaShengProcedure.execute(entity, itemstack);
+    public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(itemStack, world, entity, slot, selected);
+
+        if (entity instanceof Player player) {
+            var tag = itemStack.getOrCreateTag();
+            double id = tag.getDouble("id");
+            if (player.getMainHandItem().getOrCreateTag().getDouble("id") != tag.getDouble("id")) {
+                tag.putBoolean("empty_reload", false);
+                tag.putBoolean("reloading", false);
+                tag.putDouble("reload_time", 0);
+            }
+            if (tag.getBoolean("reloading") && tag.getInt("ammo") == 0) {
+                if (tag.getDouble("reload_time") == 83) {
+                    entity.getPersistentData().putDouble("id", id);
+                    if (!entity.level().isClientSide() && entity.getServer() != null) {
+                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
+                                entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:kraber_reload_empty player @s ~ ~ ~ 100 1");
+                    }
+                }
+                if (player.getMainHandItem().getItem() == itemStack.getItem()
+                        && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
+                    if (tag.getDouble("reload_time") > 0) {
+                        tag.putDouble("reload_time", (tag.getDouble("reload_time") - 1));
+                    }
+                } else {
+                    tag.putBoolean("empty_reload", false);
+                    tag.putBoolean("reloading", false);
+                    tag.putDouble("reload_time", 0);
+                }
+                if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
+                    GunReload.reload(entity, GunInfo.Type.SNIPER);
+                }
+            } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
+                if (tag.getDouble("reload_time") == 65) {
+                    entity.getPersistentData().putDouble("id", id);
+                    {
+                        if (!entity.level().isClientSide() && entity.getServer() != null) {
+                            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
+                                    entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:kraber_reload_normal player @s ~ ~ ~ 100 1");
+                        }
+                    }
+                }
+                if (player.getMainHandItem().getItem() == itemStack.getItem()
+                        && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
+                    if (tag.getDouble("reload_time") > 0) {
+                        tag.putDouble("reload_time", (tag.getDouble("reload_time") - 1));
+                    }
+                } else {
+                    tag.putBoolean("reloading", false);
+                    tag.putBoolean("empty_reload", false);
+                    tag.putDouble("reload_time", 0);
+                }
+                if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
+                    GunReload.reload(entity, GunInfo.Type.SNIPER, true);
+                }
+            }
+        }
     }
 
     @Override
