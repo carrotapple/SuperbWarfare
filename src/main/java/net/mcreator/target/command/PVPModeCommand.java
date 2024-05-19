@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 public class PVPModeCommand {
     @SubscribeEvent
     public static void registerCommand(RegisterCommandsEvent event) {
-        event.getDispatcher().register(Commands.literal("pvpmode").requires(s -> s.hasPermission(4)).executes(arguments -> {
+        event.getDispatcher().register(Commands.literal("target:pvpmode").requires(s -> s.hasPermission(4)).executes(arguments -> {
             Level world = arguments.getSource().getUnsidedLevel();
             Entity entity = arguments.getSource().getEntity();
             if (entity == null && world instanceof ServerLevel server) {
