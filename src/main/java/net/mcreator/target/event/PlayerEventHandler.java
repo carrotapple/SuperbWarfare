@@ -54,6 +54,7 @@ public class PlayerEventHandler {
         }
 
         if (event.phase == TickEvent.Phase.END) {
+            handleAiming(player);
             handlePlayerProne(player);
             handlePlayerSprint(player);
             handleWeaponLevel(player);
@@ -69,6 +70,17 @@ public class PlayerEventHandler {
             handleBocekPulling(player);
             handleGunRecoil(player);
             handleMiniGunFire(player);
+        }
+    }
+
+    /**
+     * 判断玩家是否瞄准
+     */
+    private static void handleAiming(Player player) {
+        ItemStack itemstack = player.getMainHandItem();
+
+        if (itemstack.is(TargetModTags.Items.GUN)) {
+            itemstack.getOrCreateTag().putBoolean("aiming", player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables()).zooming);
         }
     }
 
