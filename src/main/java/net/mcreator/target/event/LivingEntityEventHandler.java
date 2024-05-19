@@ -62,7 +62,7 @@ public class LivingEntityEventHandler {
 
         double damage = amount;
         ItemStack stack = sourceentity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
-        if (damagesource.is(TargetModDamageTypes.ARROW_IN_BRAIN) || damagesource.is(TargetModDamageTypes.ARROW_IN_BRAIN_HEADSHOT)) {
+        if (damagesource.is(TargetModDamageTypes.ARROW_IN_KNEE) || damagesource.is(TargetModDamageTypes.ARROW_IN_BRAIN)) {
             stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
         }
         if ((damagesource.is(DamageTypes.EXPLOSION) || damagesource.is(DamageTypes.PLAYER_EXPLOSION) || damagesource.is(DamageTypes.ARROW))
@@ -218,9 +218,9 @@ public class LivingEntityEventHandler {
         }
 
         if (source.getDirectEntity() instanceof ServerPlayer player) {
-            if (source.is(TargetModDamageTypes.GUN_FIRE) || source.is(TargetModDamageTypes.ARROW_IN_BRAIN)) {
+            if (source.is(TargetModDamageTypes.GUN_FIRE) || source.is(TargetModDamageTypes.ARROW_IN_KNEE)) {
                 TargetMod.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerKillMessage(player.getId(), entity.getId(), false));
-            } else if (source.is(TargetModDamageTypes.GUN_FIRE_HEADSHOT) || source.is(TargetModDamageTypes.ARROW_IN_BRAIN_HEADSHOT)) {
+            } else if (source.is(TargetModDamageTypes.GUN_FIRE_HEADSHOT) || source.is(TargetModDamageTypes.ARROW_IN_BRAIN)) {
                 TargetMod.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerKillMessage(player.getId(), entity.getId(), true));
             }
         }
