@@ -50,7 +50,7 @@ public class ClientEventHandler {
             if (entity.onGround()) {
                 on_ground = 2.4;
             } else {
-                on_ground = 0.1;
+                on_ground = 0.001;
             }
 
             if ((data.getDouble("move_left") == 1
@@ -70,7 +70,7 @@ public class ClientEventHandler {
                     data.putDouble("gun_moveX_time", 0);
                 }
 
-                data.putDouble("gun_move_posY", 0.135 * Math.sin(2 * Math.PI * (data.getDouble("gun_moveY_time") - 0.25)) * (1 - 0.75 * data.getDouble("zoom_time")));
+                data.putDouble("gun_move_posY", -0.135 * Math.sin(2 * Math.PI * (data.getDouble("gun_moveY_time") - 0.25)) * (1 - 0.75 * data.getDouble("zoom_time")));
 
                 data.putDouble("gun_move_posX", 0.2 * Math.sin(1 * Math.PI * data.getDouble("gun_moveX_time")) * (1 - 0.75 * data.getDouble("zoom_time")));
 
