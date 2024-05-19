@@ -2,6 +2,8 @@ package net.mcreator.target.tools;
 
 import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -29,5 +31,13 @@ public class SoundTool {
     public static void playLocalSound(ServerPlayer player, SoundEvent sound, SoundSource source, float volume, float pitch) {
         player.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(sound),
                 source, player.getX(), player.getY(), player.getZ(), volume, pitch, player.level().random.nextLong()));
+    }
+
+    public static void stopSound(ServerPlayer player, ResourceLocation sound) {
+        stopSound(player, sound, SoundSource.PLAYERS);
+    }
+
+    public static void stopSound(ServerPlayer player, ResourceLocation sound, SoundSource source) {
+        player.connection.send(new ClientboundStopSoundPacket(sound, source));
     }
 }

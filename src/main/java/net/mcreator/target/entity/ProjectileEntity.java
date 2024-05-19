@@ -5,6 +5,7 @@ import net.mcreator.target.headshot.IHeadshotBox;
 import net.mcreator.target.init.*;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.ExtendedEntityRayTraceResult;
+import net.mcreator.target.tools.ParticleTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -258,11 +259,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     protected void onHitBlock(Vec3 location) {
         if (this.level() instanceof ServerLevel serverLevel) {
             if (this.beast) {
-                serverLevel.sendParticles(ParticleTypes.END_ROD, location.x, location.y, location.z, 15, 0.1, 0.1, 0.1, 0.05);
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.END_ROD, location.x, location.y, location.z, 15, 0.1, 0.1, 0.1, 0.05, true);
             } else {
-                serverLevel.sendParticles(TargetModParticleTypes.BULLET_HOLE.get(), location.x, location.y, location.z, 1, 0, 0, 0, 0);
-                serverLevel.sendParticles(ParticleTypes.SMOKE, location.x, location.y, location.z, 3, 0, 0.1, 0, 0.01);
-                serverLevel.sendParticles(TargetModParticleTypes.BULLET_HOLE.get(), location.x, location.y, location.z, 1, 0, 0, 0, 0);
+                ParticleTool.sendParticle(serverLevel, TargetModParticleTypes.BULLET_HOLE.get(), location.x, location.y, location.z, 1, 0, 0, 0, 0, true);
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, location.x, location.y, location.z, 3, 0, 0.1, 0, 0.01, true);
 
                 this.discard();
             }

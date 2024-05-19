@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -173,11 +174,7 @@ public class GunEventHandler {
                 }
 
                 if (player.getMainHandItem().getItem() == TargetModItems.SENTINEL.get()) {
-                    if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-                        stack.getOrCreateTag().putBoolean("zoom_fire", true);
-                    } else {
-                        stack.getOrCreateTag().putBoolean("zoom_fire", false);
-                    }
+                    stack.getOrCreateTag().putBoolean("zoom_fire", (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming);
                     if (stack.getOrCreateTag().getDouble("power") > 20) {
                         stack.getOrCreateTag().putDouble("power", (stack.getOrCreateTag().getDouble("power") - 20));
                     } else {
@@ -232,7 +229,7 @@ public class GunEventHandler {
 
                 SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "v_fire_3p"));
                 if (sound3p != null) {
-                    player.playSound(sound3p, 4f, 1f);
+                    player.level().playSound(null, player.getOnPos(), sound3p, SoundSource.PLAYERS, 4f, 1f);
                 }
 
                 SoundEvent soundFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_charge_far"));
@@ -252,7 +249,7 @@ public class GunEventHandler {
 
                 SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_fire_3p"));
                 if (sound3p != null) {
-                    player.playSound(sound3p, 4f, 1f);
+                    player.level().playSound(null, player.getOnPos(), sound3p, SoundSource.PLAYERS, 4f, 1f);
                 }
 
                 SoundEvent soundFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_far"));
