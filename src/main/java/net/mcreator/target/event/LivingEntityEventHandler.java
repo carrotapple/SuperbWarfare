@@ -1,7 +1,6 @@
 package net.mcreator.target.event;
 
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.entity.BocekarrowEntity;
 import net.mcreator.target.entity.Target1Entity;
 import net.mcreator.target.init.TargetModDamageTypes;
 import net.mcreator.target.init.TargetModItems;
@@ -49,7 +48,6 @@ public class LivingEntityEventHandler {
     public static void onEntityAttacked(LivingAttackEvent event) {
         if (event == null || event.getEntity() == null) return;
         arrowDamageImmuneForMine(event, event.getSource(), event.getSource().getEntity());
-        arrowDamage(event, event.getEntity().level(), event.getSource(), event.getEntity(), event.getSource().getDirectEntity(), event.getSource().getEntity(), event.getAmount());
         claymoreDamage(event, event.getEntity().level(), event.getSource(), event.getEntity(), event.getSource().getEntity(), event.getAmount());
     }
 
@@ -111,15 +109,6 @@ public class LivingEntityEventHandler {
                 event.setCanceled(true);
             }
             entity.hurt(TargetModDamageTypes.causeMineDamage(world.registryAccess(), sourceentity), (float) amount);
-        }
-    }
-
-    // TODO 把伤害逻辑移植到箭类中
-    private static void arrowDamage(LivingAttackEvent event, LevelAccessor world, DamageSource damagesource, Entity entity, Entity immediatesourceentity, Entity sourceentity, double amount) {
-        if (damagesource == null || entity == null || immediatesourceentity == null || sourceentity == null) return;
-        if (damagesource.is(DamageTypes.ARROW) && immediatesourceentity instanceof BocekarrowEntity) {
-            event.setCanceled(true);
-            entity.hurt(TargetModDamageTypes.causeArrowInBrainDamage(world.registryAccess(), sourceentity), (float) amount);
         }
     }
 

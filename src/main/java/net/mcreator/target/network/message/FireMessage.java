@@ -1,6 +1,6 @@
 package net.mcreator.target.network.message;
 
-import net.mcreator.target.entity.BocekarrowEntity;
+import net.mcreator.target.entity.BocekArrowEntity;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.network.TargetModVariables;
@@ -89,7 +89,7 @@ public class FireMessage {
                 if (!level.isClientSide()) {
                     float damage = (float) (0.02 * stack.getOrCreateTag().getDouble("damage") * (1 + 0.05 * stack.getOrCreateTag().getInt("level")));
 
-                    BocekarrowEntity arrow = new BocekarrowEntity(TargetModEntities.BOCEKARROW.get(), level);
+                    BocekArrowEntity arrow = new BocekArrowEntity(TargetModEntities.BOCEK_ARROW.get(), level);
                     arrow.setOwner(player);
                     arrow.setBaseDamage(damage);
                     arrow.setKnockback(0);
