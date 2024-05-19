@@ -4,6 +4,7 @@ import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.tools.GunsTool;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
@@ -67,6 +68,7 @@ public class PlayerEventHandler {
             handleRenderDamageIndicator(player);
             handleBocekPulling(player);
             handleGunRecoil(player);
+            handleMiniGunFire(player);
         }
     }
 
@@ -435,5 +437,71 @@ public class PlayerEventHandler {
         };
         Thread recoilThread = new Thread(recoilRunnable);
         recoilThread.start();
+    }
+
+    private static void handleMiniGunFire(Player player) {
+        ItemStack stack = player.getMainHandItem();
+
+        if (stack.getItem() != TargetModItems.MINIGUN.get()) {
+            return;
+        }
+
+
+        if (player.getPersistentData().getDouble("mini_firing") == 1 && !player.isSprinting()) {
+            if (stack.getOrCreateTag().getDouble("rot") < 10) {
+                stack.getOrCreateTag().putDouble("rot", (stack.getOrCreateTag().getDouble("rot") + 1));
+            }
+            if (!player.level().isClientSide() && player.getServer() != null) {
+                player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
+                        player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:minigun_rot player @s ~ ~ ~ 2 1");
+            }
+        } else if (stack.getOrCreateTag().getDouble("rot") > 0) {
+            stack.getOrCreateTag().putDouble("rot", (stack.getOrCreateTag().getDouble("rot") - 0.5));
+        }
+
+        if (stack.getOrCreateTag().getDouble("overheat") == 0
+                && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo > 0
+                && !(player.getCooldowns().isOnCooldown(stack.getItem())) && stack.getOrCreateTag().getDouble("rot") >= 10) {
+            stack.getOrCreateTag().putDouble("heat", (stack.getOrCreateTag().getDouble("heat") + 1));
+            if (stack.getOrCreateTag().getDouble("heat") >= 50.5) {
+                stack.getOrCreateTag().putDouble("overheat", 40);
+                player.getCooldowns().addCooldown(stack.getItem(), 40);
+                if (!player.level().isClientSide() && player.getServer() != null) {
+                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
+                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:minigun_overheat player @s ~ ~ ~ 2 1");
+                }
+            }
+
+            if (!player.level().isClientSide() && player.getServer() != null) {
+                if (stack.getOrCreateTag().getDouble("heat") <= 40) {
+                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
+                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:minigun_fire_1p player @s ~ ~ ~ 2 1");
+                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
+                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:minigun_fire_3p player @a ~ ~ ~ 4 1");
+                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
+                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:minigun_far player @a ~ ~ ~ 12 1");
+                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
+                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:minigun_veryfar player @a ~ ~ ~ 24 1");
+                } else {
+                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
+                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), ("playsound target:minigun_fire_1p player @s ~ ~ ~ 2 " + (1 - 0.025 * Math.abs(40 - stack.getOrCreateTag().getDouble("heat")))));
+                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
+                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), ("playsound target:minigun_fire_3p player @a ~ ~ ~ 4 " + (1 - 0.025 * Math.abs(40 - stack.getOrCreateTag().getDouble("heat")))));
+                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
+                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), ("playsound target:minigun_far player @a ~ ~ ~ 12 " + (1 - 0.025 * Math.abs(40 - stack.getOrCreateTag().getDouble("heat")))));
+                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
+                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), ("playsound target:minigun_veryfar player @a ~ ~ ~ 24 " + (1 - 0.025 * Math.abs(40 - stack.getOrCreateTag().getDouble("heat")))));
+                }
+            }
+
+            GunsTool.spawnBullet(player);
+
+            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.rifleAmmo = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables()).rifleAmmo - 1;
+                capability.syncPlayerVariables(player);
+            });
+
+            stack.getOrCreateTag().putInt("fire_animation", 2);
+        }
     }
 }
