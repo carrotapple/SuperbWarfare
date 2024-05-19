@@ -4,12 +4,12 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.entity.Target1Entity;
 import net.mcreator.target.init.TargetModDamageTypes;
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.GunItem;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.network.message.PlayerKillMessage;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
+import net.mcreator.target.tools.SoundTool;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceKey;
@@ -118,13 +118,14 @@ public class LivingEntityEventHandler {
     }
 
     private static void killIndication(Entity sourceEntity) {
-        if (sourceEntity == null) return;
-        if (!sourceEntity.level().isClientSide() && sourceEntity.getServer() != null) {
-
-            // TODO 修改为正确音效播放方法
-            sourceEntity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, sourceEntity.position(), sourceEntity.getRotationVector(), sourceEntity.level() instanceof ServerLevel ? (ServerLevel) sourceEntity.level() : null, 4,
-                    sourceEntity.getName().getString(), sourceEntity.getDisplayName(), sourceEntity.level().getServer(), sourceEntity), "playsound target:targetdown player @s ~ ~ ~ 100 1");
+        if (sourceEntity == null) {
+            return;
         }
+
+        if (!sourceEntity.level().isClientSide() && sourceEntity instanceof ServerPlayer player) {
+            SoundTool.playLocalSound(player, TargetModSounds.TARGET_DOWN.get(), 100f, 1f);
+        }
+
         sourceEntity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
             capability.killIndicator = 40;
             capability.syncPlayerVariables(sourceEntity);
@@ -132,17 +133,20 @@ public class LivingEntityEventHandler {
     }
 
     private static void renderDamageIndicator(LivingHurtEvent event) {
-        if (event == null || event.getEntity() == null) return;
+        if (event == null || event.getEntity() == null) {
+            return;
+        }
+
         var damagesource = event.getSource();
         var sourceEntity = event.getEntity();
 
-        if (damagesource == null || sourceEntity == null) return;
+        if (damagesource == null || sourceEntity == null) {
+            return;
+        }
 
         if (sourceEntity instanceof Player && (damagesource.is(DamageTypes.EXPLOSION) || damagesource.is(DamageTypes.PLAYER_EXPLOSION) || damagesource.is(ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("target:mine"))))) {
-            if (sourceEntity.getServer() != null) {
-                // TODO 修改为正确的音效播放方法
-                sourceEntity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, sourceEntity.position(), sourceEntity.getRotationVector(), sourceEntity.level() instanceof ServerLevel ? (ServerLevel) sourceEntity.level() : null, 4,
-                        sourceEntity.getName().getString(), sourceEntity.getDisplayName(), sourceEntity.level().getServer(), sourceEntity), "playsound target:indication voice @a ~ ~ ~ 1 1");
+            if (sourceEntity.getServer() != null && sourceEntity instanceof ServerPlayer player) {
+                SoundTool.playLocalSound(player, TargetModSounds.INDICATION.get(), 1f, 1f);
             }
             sourceEntity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.hitIndicator = 25;
