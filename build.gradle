@@ -4,7 +4,16 @@ plugins {
     id 'org.spongepowered.mixin' version '0.7.+'
 }
 
-version = '0.0.8-SNAPSHOT'
+def getGitCommitHash() {
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
+version = '0.0.8-SNAPSHOT-' + getGitCommitHash()
 group = 'com.Atsushio.target'
 archivesBaseName = 'target'
 
