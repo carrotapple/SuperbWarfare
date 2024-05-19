@@ -30,6 +30,7 @@ import net.minecraftforge.network.PlayMessages;
 
 import java.util.Optional;
 
+// TODO 父类改为Projectile
 @OnlyIn(value = Dist.CLIENT, _interface = ItemSupplier.class)
 public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
     public static final ItemStack PROJECTILE_ITEM = new ItemStack(Blocks.AIR);

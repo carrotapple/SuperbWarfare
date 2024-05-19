@@ -5,8 +5,8 @@ import net.mcreator.target.headshot.IHeadshotBox;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
+import net.mcreator.target.tools.ParticleTool;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
@@ -31,6 +31,7 @@ import net.minecraftforge.network.PlayMessages;
 
 import java.util.Optional;
 
+// TODO 父类改为Projectile
 @OnlyIn(value = Dist.CLIENT, _interface = ItemSupplier.class)
 public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
     public static final ItemStack PROJECTILE_ITEM = new ItemStack(Blocks.AIR);
@@ -100,9 +101,8 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
             if (this.level() instanceof ServerLevel level) {
                 level.explode(this, this.getX(), this.getY(), this.getZ(), 4, Level.ExplosionInteraction.NONE);
 
-                if (!entity.level().isClientSide() && entity.getServer() != null) {
-                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "target:mediumexp");
+                if (!entity.level().isClientSide()) {
+                    ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
                 }
 
                 this.discard();
@@ -174,33 +174,28 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
         this.getPersistentData().putInt("time", (1 + this.getPersistentData().getInt("time")));
         double life = this.getPersistentData().getInt("time");
         if (life == 4) {
-            if (!this.level().isClientSide() && this.getServer() != null) {
-                this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
-                        this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "particle minecraft:campfire_cosy_smoke ~ ~ ~ 0.8 0.8 0.8 0.01 50 force");
+            if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(), 50, 0.8, 0.8, 0.8, 0.01, true);
             }
         }
         if (life >= 4) {
             this.setDeltaMovement(new Vec3((1.04 * this.getDeltaMovement().x()), (1.04 * this.getDeltaMovement().y() - 0.02), (1.04 * this.getDeltaMovement().z())));
 
-            if (!this.level().isClientSide() && this.getServer() != null) {
-                this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
-                        this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "particle minecraft:smoke ~ ~ ~ 0 0 0 0 2 force");
-                this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
-                        this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "particle minecraft:campfire_cosy_smoke ~ ~ ~ 0 0 0 0 2 force");
+            if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, this.getX(), this.getY(), this.getZ(), 2, 0, 0, 0, 0, true);
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(), 2, 0, 0, 0, 0, true);
             }
         }
         if (life >= 90) {
-            if (!this.level().isClientSide() && this.getServer() != null) {
-                this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
-                        this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "target:mediumexp");
+            if (!this.level().isClientSide()) {
+                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
             }
             if (!this.level().isClientSide())
                 this.discard();
         }
         if (this.inGround) {
-            if (!this.level().isClientSide() && this.getServer() != null) {
-                this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
-                        this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "target:mediumexp");
+            if (!this.level().isClientSide()) {
+                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
             }
             this.discard();
         }

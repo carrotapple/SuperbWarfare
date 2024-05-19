@@ -3,8 +3,7 @@ package net.mcreator.target.entity;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
+import net.mcreator.target.tools.ParticleTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -129,11 +128,9 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
         super.die(source);
 
         if (level() instanceof ServerLevel server) {
-            server.explode(null, this.getX(), this.getY(), this.getZ(), 6.5f, Level.ExplosionInteraction.NONE);
             server.explode(this, this.getX(), this.getY(), this.getZ(), 6.5f, Level.ExplosionInteraction.NONE);
 
-            this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
-                    this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "target:mediumexp");
+            ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
             this.discard();
         }
     }
@@ -247,9 +244,8 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
                 if (!condition) continue;
 
                 if (!level.isClientSide()) {
-                    if (!this.level().isClientSide() && this.getServer() != null) {
-                        this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
-                                this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "target:mediumexp");
+                    if (!this.level().isClientSide()) {
+                        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
                     }
                     this.discard();
                 }
