@@ -141,9 +141,9 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        AnimationController procedureController = new AnimationController(this, "procedureController", 0, this::procedurePredicate);
+        var procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
         data.add(procedureController);
-        AnimationController idleController = new AnimationController(this, "idleController", 4, this::idlePredicate);
+        var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
         data.add(idleController);
     }
 
@@ -186,7 +186,7 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
             }
             if (tag.getBoolean("reloading") && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
                 if (tag.getDouble("prepare") == 10 && tag.getBoolean("empty_reload")) {
-                    tag.putInt("ammo", (tag.getInt("ammo") + 1));
+                    tag.putInt("ammo", tag.getInt("ammo") + 1);
                     entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                         capability.shotgunAmmo = capability.shotgunAmmo - 1;
                         capability.syncPlayerVariables(entity);
@@ -214,7 +214,7 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
                         capability.syncPlayerVariables(entity);
                     });
                 }
-                if ((tag.getInt("ammo") >= 8 || (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunAmmo == 0)
+                if ((tag.getInt("ammo") >= 8 || entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.shotgunAmmo).orElse(0) == 0)
                         && tag.getDouble("loading") == 0 || tag.getDouble("stop") == 1) {
                     tag.putDouble("force_stop", 0);
                     tag.putDouble("stop", 0);

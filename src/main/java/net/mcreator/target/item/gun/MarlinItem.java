@@ -148,9 +148,9 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        AnimationController procedureController = new AnimationController(this, "procedureController", 0, this::procedurePredicate);
+        var procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
         data.add(procedureController);
-        AnimationController idleController = new AnimationController(this, "idleController", 4, this::idlePredicate);
+        var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
         data.add(idleController);
     }
 
@@ -193,7 +193,7 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
             }
             if (tag.getBoolean("reloading") && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
                 if (tag.getDouble("prepare") == 0 && tag.getDouble("loading") == 0
-                        && !(tag.getInt("ammo") >= 8 || (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo == 0)) {
+                        && !(tag.getInt("ammo") >= 8 || entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.rifleAmmo).orElse(0) == 0)) {
                     if (tag.getDouble("force_stop") == 1) {
                         tag.putDouble("stop", 1);
                     } else {
@@ -207,9 +207,9 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
                     }
                 }
                 if (tag.getDouble("loading") == 9) {
-                    tag.putInt("ammo", (tag.getInt("ammo") + 1));
+                    tag.putInt("ammo", tag.getInt("ammo") + 1);
                     entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                        capability.rifleAmmo = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.rifleAmmo).orElse(0) - 1;
+                        capability.rifleAmmo = capability.rifleAmmo - 1;
                         capability.syncPlayerVariables(entity);
                     });
                 }
@@ -227,7 +227,7 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
                 }
             }
             if (tag.getDouble("firing") > 0) {
-                tag.putDouble("firing", (tag.getDouble("firing") - 1));
+                tag.putDouble("firing", tag.getDouble("firing") - 1);
             }
         }
     }
