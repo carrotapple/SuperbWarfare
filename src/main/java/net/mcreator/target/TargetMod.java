@@ -15,6 +15,8 @@ import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -26,6 +28,8 @@ import java.util.function.Supplier;
 public class TargetMod {
     public static final String MODID = "target";
     public static final String ATTRIBUTE_MODIFIER = "target_attribute_modifier";
+
+    public static final Logger LOGGER = LogManager.getLogger(TargetMod.class);
 
     public TargetMod() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
