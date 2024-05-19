@@ -31,7 +31,7 @@ public class WelcomeProcedure {
         Logger logger = null;
         if ((logger == null ? logger = TargetMod.LOGGER : LogManager.getLogger(TargetMod.class)) instanceof Logger) {
             {
-                Logger _lgr = (Logger) logger;
+                Logger _lgr = ((Logger) (logger == null ? logger = TargetMod.LOGGER : LogManager.getLogger(TargetMod.class)));
                 _lgr.info("This Mod is made by MCreator!");
             }
         }
