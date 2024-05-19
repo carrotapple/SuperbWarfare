@@ -38,7 +38,9 @@ import net.minecraftforge.network.PacketDistributor;
 public class LivingEntityEventHandler {
     @SubscribeEvent
     public static void onEntityAttacked(LivingHurtEvent event) {
-        if (event == null || event.getEntity() == null) return;
+        if (event == null || event.getEntity() == null) {
+            return;
+        }
         renderDamageIndicator(event);
         target1DamageImmune(event, event.getEntity());
         reduceBulletDamage(event, event.getSource(), event.getEntity(), event.getSource().getEntity(), event.getAmount());
@@ -46,14 +48,17 @@ public class LivingEntityEventHandler {
 
     @SubscribeEvent
     public static void onEntityAttacked(LivingAttackEvent event) {
-        if (event == null || event.getEntity() == null) return;
-        arrowDamageImmuneForMine(event, event.getSource(), event.getSource().getEntity());
+        if (event == null || event.getEntity() == null) {
+            return;
+        }
         claymoreDamage(event, event.getEntity().level(), event.getSource(), event.getEntity(), event.getSource().getEntity(), event.getAmount());
     }
 
     @SubscribeEvent
     public static void onEntityDeath(LivingDeathEvent event) {
-        if (event == null || event.getEntity() == null) return;
+        if (event == null || event.getEntity() == null) {
+            return;
+        }
         killIndication(event.getSource().getEntity());
     }
 
@@ -124,15 +129,6 @@ public class LivingEntityEventHandler {
             capability.killIndicator = 40;
             capability.syncPlayerVariables(sourceEntity);
         });
-    }
-
-    private static void arrowDamageImmuneForMine(Event event, DamageSource damageSource, Entity sourceEntity) {
-        if (damageSource == null || sourceEntity == null) return;
-        if (sourceEntity instanceof Player player && (!sourceEntity.isAlive() || player.isSpectator())
-                && (damageSource.is(ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("target:arrow_in_brain")))
-                || damageSource.is(ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("target:mine")))
-                || damageSource.is(DamageTypes.ARROW))
-        ) event.setCanceled(true);
     }
 
     private static void renderDamageIndicator(LivingHurtEvent event) {

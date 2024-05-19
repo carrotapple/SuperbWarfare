@@ -5,6 +5,7 @@ import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -35,7 +36,10 @@ public class MediumExpCommand {
                         world.playLocalSound(x, (y + 1), z, TargetModSounds.EXPFAR.get(), SoundSource.BLOCKS, 24, 1, false);
                         world.playLocalSound(x, (y + 1), z, TargetModSounds.EXPVERYFAR.get(), SoundSource.BLOCKS, 64, 1, false);
                     }
+
                     if (world instanceof ServerLevel server) {
+//                        server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 80, 0.4, 1, 0.4, 0.02);
+
                         server.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, new Vec3(x, (y + 1), z), Vec2.ZERO, server, 4, "", Component.literal(""), server.getServer(), null).withSuppressedOutput(),
                                 "particle minecraft:campfire_cosy_smoke ~ ~ ~ 0.4 1 0.4 0.02 80 force");
                         server.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, new Vec3(x, (y + 1), z), Vec2.ZERO, server, 4, "", Component.literal(""), server.getServer(), null).withSuppressedOutput(),

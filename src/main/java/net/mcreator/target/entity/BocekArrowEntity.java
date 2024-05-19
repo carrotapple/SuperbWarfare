@@ -4,6 +4,7 @@ import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
 import net.mcreator.target.init.TargetModDamageTypes;
 import net.mcreator.target.init.TargetModEntities;
+import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
@@ -89,8 +90,7 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
                 capability.syncPlayerVariables(living);
             });
             if (!living.level().isClientSide() && living.getServer() != null) {
-                living.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, living.position(), living.getRotationVector(), living.level() instanceof ServerLevel ? (ServerLevel) living.level() : null, 4,
-                        living.getName().getString(), living.getDisplayName(), living.level().getServer(), living), "playsound target:indication voice @a ~ ~ ~ 1 1");
+                living.playSound(TargetModSounds.INDICATION.get());
             }
         }
 
