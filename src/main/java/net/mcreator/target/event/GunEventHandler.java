@@ -6,15 +6,13 @@ import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.tools.SoundTool;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.core.Holder;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -229,8 +227,7 @@ public class GunEventHandler {
             if (player.getMainHandItem().getItem() == TargetModItems.SENTINEL.get() && stack.getOrCreateTag().getDouble("power") > 0) {
                 SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_charge_fire_1p"));
                 if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(sound1p),
-                            SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 2f, 1f, serverPlayer.level().random.nextLong()));
+                    SoundTool.playLocalSound(serverPlayer, sound1p, 2f, 1f);
                 }
 
                 SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "v_fire_3p"));
@@ -246,14 +243,11 @@ public class GunEventHandler {
                 SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_charge_veryfar"));
                 if (soundVeryFar != null) {
                     player.playSound(soundVeryFar, 24f, 1f);
-
                 }
-
             } else {
                 SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_fire_1p"));
                 if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(sound1p),
-                            SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 2f, 1f, serverPlayer.level().random.nextLong()));
+                    SoundTool.playLocalSound(serverPlayer, sound1p, 2f, 1f);
                 }
 
                 SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_fire_3p"));
@@ -269,7 +263,6 @@ public class GunEventHandler {
                 SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_veryfar"));
                 if (soundVeryFar != null) {
                     player.playSound(soundVeryFar, 24f, 1f);
-
                 }
 
             }
@@ -288,8 +281,7 @@ public class GunEventHandler {
 
             SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_bolt"));
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
-                serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(sound1p),
-                        SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 2f, 1f, serverPlayer.level().random.nextLong()));
+                SoundTool.playLocalSound(serverPlayer, sound1p, 2f, 1f);
             }
         }
     }
