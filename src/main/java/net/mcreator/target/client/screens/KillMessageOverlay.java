@@ -86,13 +86,13 @@ public class KillMessageOverlay {
         if (record.headshot) {
             event.getGuiGraphics().blit(HEADSHOT,
                     w - targetNameWidth - 65 - attackerNameWidth,
-                    h,
+                    h - 2,
                     0,
                     0,
-                    8,
-                    8,
-                    8,
-                    8
+                    12,
+                    12,
+                    12,
+                    12
             );
         }
     }

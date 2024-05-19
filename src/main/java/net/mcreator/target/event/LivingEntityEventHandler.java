@@ -64,7 +64,7 @@ public class LivingEntityEventHandler {
 
         double damage = amount;
         ItemStack stack = sourceentity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
-        if (damagesource.is(TargetModDamageTypes.ARROW_IN_BRAIN)) {
+        if (damagesource.is(TargetModDamageTypes.ARROW_IN_BRAIN) || damagesource.is(TargetModDamageTypes.ARROW_IN_BRAIN_HEADSHOT)) {
             stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
         }
         if ((damagesource.is(DamageTypes.EXPLOSION) || damagesource.is(DamageTypes.PLAYER_EXPLOSION) || damagesource.is(DamageTypes.ARROW))
@@ -73,7 +73,7 @@ public class LivingEntityEventHandler {
             stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
         }
 
-        if (damagesource.is(TargetModDamageTypes.GUN_FIRE)) {
+        if (damagesource.is(TargetModDamageTypes.GUN_FIRE) || damagesource.is(TargetModDamageTypes.GUN_FIRE_HEADSHOT)) {
             double distance = entity.position().distanceTo(sourceentity.position());
 
             if (stack.is(TargetModTags.Items.SHOTGUN) || stack.getItem() == TargetModItems.BOCEK.get()) {
