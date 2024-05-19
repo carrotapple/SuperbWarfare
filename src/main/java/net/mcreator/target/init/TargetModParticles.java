@@ -11,8 +11,8 @@ import net.minecraftforge.fml.common.Mod;
 public class TargetModParticles {
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
-        event.registerSpriteSet(TargetModParticleTypes.FIRESTAR.get(), FireStarParticle::provider);
-        event.registerSpriteSet(TargetModParticleTypes.BULLTHOLE.get(), BulletHoleParticle::provider);
+        event.registerSpriteSet(TargetModParticleTypes.FIRE_STAR.get(), FireStarParticle::provider);
+        event.registerSpriteSet(TargetModParticleTypes.BULLET_HOLE.get(), BulletHoleParticle::provider);
     }
 }
 

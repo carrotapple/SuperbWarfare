@@ -43,7 +43,7 @@ public class MediumExpCommand {
                         server.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, new Vec3(x, (y + 1), z), Vec2.ZERO, server, 4, "", Component.literal(""), server.getServer(), null).withSuppressedOutput(),
                                 "particle minecraft:campfire_cosy_smoke ~ ~ ~ 2 0.001 2 0.01 80 force");
                         server.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, new Vec3(x, (y + 1), z), Vec2.ZERO, server, 4, "", Component.literal(""), server.getServer(), null).withSuppressedOutput(),
-                                "particle target:firestar ~ ~ ~ 0 0 0 0.2 80 force");
+                                "particle target:fire_star ~ ~ ~ 0 0 0 0.2 80 force");
                     }
                     return 0;
                 }));

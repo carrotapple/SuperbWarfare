@@ -9,7 +9,8 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class TargetModParticleTypes {
     public static final DeferredRegister<ParticleType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, TargetMod.MODID);
-    public static final RegistryObject<SimpleParticleType> FIRESTAR = REGISTRY.register("firestar", () -> new SimpleParticleType(false));
-    public static final RegistryObject<SimpleParticleType> BULLTHOLE = REGISTRY.register("bullthole", () -> new SimpleParticleType(false));
+
+    public static final RegistryObject<SimpleParticleType> FIRE_STAR = REGISTRY.register("fire_star", () -> new SimpleParticleType(false));
+    public static final RegistryObject<SimpleParticleType> BULLET_HOLE = REGISTRY.register("bullet_hole", () -> new SimpleParticleType(false));
 }
 

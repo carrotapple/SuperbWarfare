@@ -8,14 +8,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class BulletHoleParticle extends TextureSheetParticle {
-    public static BulltholeParticleProvider provider(SpriteSet spriteSet) {
-        return new BulltholeParticleProvider(spriteSet);
+    public static BulletholeParticleProvider provider(SpriteSet spriteSet) {
+        return new BulletholeParticleProvider(spriteSet);
     }
 
-    public static class BulltholeParticleProvider implements ParticleProvider<SimpleParticleType> {
+    public static class BulletholeParticleProvider implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet spriteSet;
 
-        public BulltholeParticleProvider(SpriteSet spriteSet) {
+        public BulletholeParticleProvider(SpriteSet spriteSet) {
             this.spriteSet = spriteSet;
         }
 

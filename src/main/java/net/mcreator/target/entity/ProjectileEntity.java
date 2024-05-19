@@ -263,9 +263,9 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             if (this.beast) {
                 serverLevel.sendParticles(ParticleTypes.END_ROD, location.x, location.y, location.z, 15, 0.1, 0.1, 0.1, 0.05);
             } else {
-                serverLevel.sendParticles(TargetModParticleTypes.BULLTHOLE.get(), location.x, location.y, location.z, 1, 0, 0, 0, 0);
+                serverLevel.sendParticles(TargetModParticleTypes.BULLET_HOLE.get(), location.x, location.y, location.z, 1, 0, 0, 0, 0);
                 serverLevel.sendParticles(ParticleTypes.SMOKE, location.x, location.y, location.z, 3, 0, 0.1, 0, 0.01);
-                serverLevel.sendParticles(TargetModParticleTypes.BULLTHOLE.get(), location.x, location.y, location.z, 1, 0, 0, 0, 0);
+                serverLevel.sendParticles(TargetModParticleTypes.BULLET_HOLE.get(), location.x, location.y, location.z, 1, 0, 0, 0, 0);
 
                 this.discard();
             }
