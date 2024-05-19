@@ -50,10 +50,12 @@ public class KillMessageOverlay {
         int attackerNameWidth = font.width(attackerName);
         int targetNameWidth = font.width(targetName);
 
+        int nameW = record.headshot ? w - targetNameWidth - 68 - attackerNameWidth : w - targetNameWidth - 50 - attackerNameWidth;
+
         event.getGuiGraphics().drawString(
                 Minecraft.getInstance().font,
                 attackerName,
-                w - targetNameWidth - 50 - attackerNameWidth,
+                nameW,
                 h,
                 record.attacker.getTeamColor(),
                 false
@@ -62,8 +64,10 @@ public class KillMessageOverlay {
         if (record.stack.getItem() instanceof GunItem gunItem) {
             ResourceLocation resourceLocation = gunItem.getGunIcon();
 
+            int gunIconW = record.headshot ? w - targetNameWidth - 64 : w - targetNameWidth - 46;
+
             event.getGuiGraphics().blit(resourceLocation,
-                    w - targetNameWidth - 46,
+                    gunIconW,
                     h,
                     0,
                     0,
@@ -71,6 +75,19 @@ public class KillMessageOverlay {
                     8,
                     -32,
                     8
+            );
+        }
+
+        if (record.headshot) {
+            event.getGuiGraphics().blit(HEADSHOT,
+                    w - targetNameWidth - 28,
+                    h - 2,
+                    0,
+                    0,
+                    12,
+                    12,
+                    12,
+                    12
             );
         }
 
@@ -82,18 +99,5 @@ public class KillMessageOverlay {
                 record.target.getTeamColor(),
                 false
         );
-
-        if (record.headshot) {
-            event.getGuiGraphics().blit(HEADSHOT,
-                    w - targetNameWidth - 65 - attackerNameWidth,
-                    h - 2,
-                    0,
-                    0,
-                    12,
-                    12,
-                    12,
-                    12
-            );
-        }
     }
 }
