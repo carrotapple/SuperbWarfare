@@ -1,8 +1,8 @@
 package net.mcreator.target.entity;
 
 import net.mcreator.target.init.TargetModEntities;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
+import net.mcreator.target.tools.ParticleTool;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
@@ -71,8 +71,7 @@ public class MortarShellEntity extends AbstractArrow implements ItemSupplier {
         if (this.level() instanceof ServerLevel level) {
             level.explode(this, (this.getX()), (this.getY()), (this.getZ()), 10, Level.ExplosionInteraction.NONE);
             if (!entity.level().isClientSide() && entity.getServer() != null) {
-                entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
-                        entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "target:mediumexp");
+                ParticleTool.spawnMediumExplosionParticles(level, entity.position());
             }
         }
         this.discard();
@@ -81,23 +80,21 @@ public class MortarShellEntity extends AbstractArrow implements ItemSupplier {
     @Override
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
-            if (this.level() instanceof ServerLevel level) {
-                level.explode(this, this.getX(), this.getY(), this.getZ(), 10, Level.ExplosionInteraction.NONE);
+        if (this.level() instanceof ServerLevel level) {
+            level.explode(this, this.getX(), this.getY(), this.getZ(), 10, Level.ExplosionInteraction.NONE);
         }
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (this.getServer() != null) {
-            // TODO 修改为正确的粒子效果播放方法
-            this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
-                    this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "particle minecraft:campfire_cosy_smoke ~ ~ ~ 0 0 0 0 2 force");
+        if (this.level() instanceof ServerLevel serverLevel) {
+            ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(),
+                    2, 0, 0, 0, 0.02, true);
         }
         if (this.inGround) {
             if (!this.level().isClientSide() && this.getServer() != null) {
-                this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
-                        this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "target:mediumexp");
+                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
             }
             this.discard();
         }
