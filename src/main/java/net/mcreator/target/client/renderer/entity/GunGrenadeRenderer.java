@@ -14,12 +14,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class GunGrenadeRenderer extends EntityRenderer<GunGrenadeEntity> {
-    private static final ResourceLocation texture = new ResourceLocation("target:textures/entities/grenade.png");
-    private final ModelGrenade model;
+    private static final ResourceLocation texture = new ResourceLocation("target:textures/entity/grenade.png");
+    private final ModelGrenade<GunGrenadeEntity> model;
 
     public GunGrenadeRenderer(EntityRendererProvider.Context context) {
         super(context);
-        model = new ModelGrenade(context.bakeLayer(ModelGrenade.LAYER_LOCATION));
+        model = new ModelGrenade<>(context.bakeLayer(ModelGrenade.LAYER_LOCATION));
     }
 
     @Override

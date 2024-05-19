@@ -19,7 +19,7 @@ public class TargetModEntityRenderers {
         event.registerEntityRenderer(TargetModEntities.TARGET.get(), TargetRenderer::new);
         event.registerEntityRenderer(TargetModEntities.RPG_ROCKET.get(), RpgRocketRenderer::new);
         event.registerEntityRenderer(TargetModEntities.MORTAR_SHELL.get(), MortarShellRenderer::new);
-        event.registerEntityRenderer(TargetModEntities.BOCEK_ARROW.get(), BocekarrowRenderer::new);
+        event.registerEntityRenderer(TargetModEntities.BOCEK_ARROW.get(), BocekArrowRenderer::new);
         event.registerEntityRenderer(TargetModEntities.PROJECTILE.get(), ProjectileRenderer::new);
     }
 }

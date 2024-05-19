@@ -22,7 +22,7 @@ public class SenpaiModel extends GeoModel<SenpaiEntity> {
 
     @Override
     public ResourceLocation getTextureResource(SenpaiEntity entity) {
-        return new ResourceLocation("target", "textures/entities/" + entity.getTexture() + ".png");
+        return new ResourceLocation("target", "textures/entity/senpai.png");
     }
 
     @Override

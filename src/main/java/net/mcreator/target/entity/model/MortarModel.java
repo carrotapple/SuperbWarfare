@@ -22,7 +22,7 @@ public class MortarModel extends GeoModel<MortarEntity> {
 
     @Override
     public ResourceLocation getTextureResource(MortarEntity entity) {
-        return new ResourceLocation("target", "textures/entities/" + entity.getTexture() + ".png");
+        return new ResourceLocation("target", "textures/entity/mortar.png");
     }
 
     @Override

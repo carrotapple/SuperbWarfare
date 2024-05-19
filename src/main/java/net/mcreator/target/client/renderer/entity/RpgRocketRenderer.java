@@ -14,12 +14,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class RpgRocketRenderer extends EntityRenderer<RpgRocketEntity> {
-    private static final ResourceLocation texture = new ResourceLocation("target:textures/entities/rocket.png");
-    private final ModelRPGRocket model;
+    private static final ResourceLocation texture = new ResourceLocation("target:textures/entity/rocket.png");
+    private final ModelRPGRocket<RpgRocketEntity> model;
 
     public RpgRocketRenderer(EntityRendererProvider.Context context) {
         super(context);
-        model = new ModelRPGRocket(context.bakeLayer(ModelRPGRocket.LAYER_LOCATION));
+        model = new ModelRPGRocket<>(context.bakeLayer(ModelRPGRocket.LAYER_LOCATION));
     }
 
     @Override

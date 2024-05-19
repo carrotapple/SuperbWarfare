@@ -17,7 +17,7 @@ public class TargetModel extends GeoModel<TargetEntity> {
 
     @Override
     public ResourceLocation getTextureResource(TargetEntity entity) {
-        return new ResourceLocation("target", "textures/entities/" + entity.getTexture() + ".png");
+        return new ResourceLocation("target", "textures/entity/target.png");
     }
 
 }

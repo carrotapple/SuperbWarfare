@@ -56,11 +56,8 @@ import java.util.Comparator;
 public class ClaymoreEntity extends TamableAnimal implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.STRING);
-    public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private boolean swinging;
-    private boolean lastloop;
-    private long lastSwing;
+
     public String animationProcedure = "empty";
 
     public ClaymoreEntity(PlayMessages.SpawnEntity packet, Level world) {
@@ -79,15 +76,6 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
         super.defineSynchedData();
         this.entityData.define(SHOOT, false);
         this.entityData.define(ANIMATION, "undefined");
-        this.entityData.define(TEXTURE, "claymore");
-    }
-
-    public void setTexture(String texture) {
-        this.entityData.set(TEXTURE, texture);
-    }
-
-    public String getTexture() {
-        return this.entityData.get(TEXTURE);
     }
 
     @Override
@@ -108,7 +96,7 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
 
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
-        return false;
+        return super.removeWhenFarAway(distanceToClosestPlayer);
     }
 
     @Override
@@ -153,14 +141,11 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        compound.putString("Texture", this.getTexture());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.contains("Texture"))
-            this.setTexture(compound.getString("Texture"));
     }
 
     @Override
@@ -396,7 +381,8 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
 
         if (entity instanceof ClaymoreEntity tamEnt && tamEnt.getOwner() == sourceentity) {
             if (tamEnt.getOwner() instanceof Player player && player.isCreative()) {
-                if (entity instanceof ClaymoreEntity claymore && damagesource.is(ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("target:deleted_mod_element")))) {
+                ClaymoreEntity claymore = (ClaymoreEntity) entity;
+                if (damagesource.is(ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("target:deleted_mod_element")))) {
                     entity.setYRot(sourceentity.getYRot());
                     entity.setXRot(entity.getXRot());
                     entity.setYBodyRot(entity.getYRot());

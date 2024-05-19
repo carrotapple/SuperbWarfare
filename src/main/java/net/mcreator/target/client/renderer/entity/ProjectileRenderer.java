@@ -15,12 +15,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class ProjectileRenderer extends EntityRenderer<ProjectileEntity> {
-    private static final ResourceLocation texture = new ResourceLocation("target:textures/entities/bullet_tex.png");
-    private final ModelBullet model;
+    private static final ResourceLocation texture = new ResourceLocation("target:textures/entity/bullet_tex.png");
+    private final ModelBullet<ProjectileEntity> model;
 
     public ProjectileRenderer(EntityRendererProvider.Context context) {
         super(context);
-        model = new ModelBullet(context.bakeLayer(ModelBullet.LAYER_LOCATION));
+        model = new ModelBullet<>(context.bakeLayer(ModelBullet.LAYER_LOCATION));
     }
 
     protected int getBlockLightLevel(ProjectileEntity pEntity, BlockPos pPos) {

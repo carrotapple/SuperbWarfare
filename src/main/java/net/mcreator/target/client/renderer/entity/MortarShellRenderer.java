@@ -14,12 +14,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class MortarShellRenderer extends EntityRenderer<MortarShellEntity> {
-    private static final ResourceLocation texture = new ResourceLocation("target:textures/entities/mortar_shell.png");
-    private final ModelMortarShell model;
+    private static final ResourceLocation texture = new ResourceLocation("target:textures/entity/mortar_shell.png");
+    private final ModelMortarShell<MortarShellEntity> model;
 
     public MortarShellRenderer(EntityRendererProvider.Context context) {
         super(context);
-        model = new ModelMortarShell(context.bakeLayer(ModelMortarShell.LAYER_LOCATION));
+        model = new ModelMortarShell<>(context.bakeLayer(ModelMortarShell.LAYER_LOCATION));
     }
 
     @Override

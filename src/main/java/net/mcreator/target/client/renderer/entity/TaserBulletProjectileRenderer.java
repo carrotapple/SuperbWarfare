@@ -14,12 +14,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class TaserBulletProjectileRenderer extends EntityRenderer<TaserBulletProjectileEntity> {
-    private static final ResourceLocation texture = new ResourceLocation("target:textures/entities/taser_rod.png");
-    private final ModelTaserRod model;
+    private static final ResourceLocation texture = new ResourceLocation("target:textures/entity/taser_rod.png");
+    private final ModelTaserRod<TaserBulletProjectileEntity> model;
 
     public TaserBulletProjectileRenderer(EntityRendererProvider.Context context) {
         super(context);
-        model = new ModelTaserRod(context.bakeLayer(ModelTaserRod.LAYER_LOCATION));
+        model = new ModelTaserRod<>(context.bakeLayer(ModelTaserRod.LAYER_LOCATION));
     }
 
     @Override

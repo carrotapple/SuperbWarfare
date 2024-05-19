@@ -13,13 +13,13 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
-public class BocekarrowRenderer extends EntityRenderer<BocekArrowEntity> {
-    private static final ResourceLocation texture = new ResourceLocation("target:textures/entities/bocekarrow.png");
-    private final ModelBocekArrow model;
+public class BocekArrowRenderer extends EntityRenderer<BocekArrowEntity> {
+    private static final ResourceLocation texture = new ResourceLocation("target:textures/entity/bocek_arrow.png");
+    private final ModelBocekArrow<BocekArrowEntity> model;
 
-    public BocekarrowRenderer(EntityRendererProvider.Context context) {
+    public BocekArrowRenderer(EntityRendererProvider.Context context) {
         super(context);
-        model = new ModelBocekArrow(context.bakeLayer(ModelBocekArrow.LAYER_LOCATION));
+        model = new ModelBocekArrow<>(context.bakeLayer(ModelBocekArrow.LAYER_LOCATION));
     }
 
     @Override

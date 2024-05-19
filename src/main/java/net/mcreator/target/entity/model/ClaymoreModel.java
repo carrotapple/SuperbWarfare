@@ -17,7 +17,7 @@ public class ClaymoreModel extends GeoModel<ClaymoreEntity> {
 
     @Override
     public ResourceLocation getTextureResource(ClaymoreEntity entity) {
-        return new ResourceLocation("target", "textures/entities/" + entity.getTexture() + ".png");
+        return new ResourceLocation("target", "textures/entity/claymore.png");
     }
 
 }

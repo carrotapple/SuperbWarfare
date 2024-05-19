@@ -1,6 +1,7 @@
 package net.mcreator.target.entity;
 
 import net.mcreator.target.init.TargetModEntities;
+import net.mcreator.target.init.TargetModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -49,11 +50,8 @@ import java.util.Comparator;
 public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(SenpaiEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(SenpaiEntity.class, EntityDataSerializers.STRING);
-    public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(SenpaiEntity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private boolean swinging;
-    private boolean lastloop;
-    private long lastSwing;
+
     public String animationProcedure = "empty";
 
     public SenpaiEntity(PlayMessages.SpawnEntity packet, Level world) {
@@ -71,15 +69,6 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
         super.defineSynchedData();
         this.entityData.define(SHOOT, false);
         this.entityData.define(ANIMATION, "undefined");
-        this.entityData.define(TEXTURE, "senpai");
-    }
-
-    public void setTexture(String texture) {
-        this.entityData.set(TEXTURE, texture);
-    }
-
-    public String getTexture() {
-        return this.entityData.get(TEXTURE);
     }
 
     @Override
@@ -100,7 +89,7 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
         this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(4, new FloatGoal(this));
         this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.8));
-        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal(this, Player.class, false, false));
+        this.targetSelector.addGoal(6, new NearestAttackableTargetGoal<>(this, Player.class, false, false));
     }
 
     @Override
@@ -120,7 +109,7 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
 
     @Override
     public void playStepSound(BlockPos pos, BlockState blockIn) {
-        this.playSound(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("target:step")), 0.15f, 1);
+        this.playSound(TargetModSounds.STEP.get(), 0.15f, 1);
     }
 
     @Override
@@ -136,14 +125,11 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        compound.putString("Texture", this.getTexture());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.contains("Texture"))
-            this.setTexture(compound.getString("Texture"));
     }
 
     @Override
