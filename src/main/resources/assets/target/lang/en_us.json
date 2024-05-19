@@ -157,8 +157,11 @@
   "death.attack.gunfire_headshot.entity": "%1$s was headshot by %2$s",
   "death.attack.gunfire_headshot.item": "%1$s was headshot by %2$s using %3$s",
   "death.attack.arrow_in_brain": "%2$s's arrow shot into %1$s's brain",
-  "death.attack.arrow_in_brain.item": "An arrow shot into %1$s's brain,murderer is %2$s used %3$s",
   "death.attack.arrow_in_brain.entity": "An arrow shot into %1$s's brain whilst trying to escape %2$s",
+  "death.attack.arrow_in_brain.item": "%2$s used %3$s to make an arrow shot into %1$s's brain",
+  "death.attack.arrow_in_brain_headshot": "%1$s was headshot by an arrow from %2$s",
+  "death.attack.arrow_in_brain_headshot.entity": "%1$s was headshot by an arrow while escaping from %2$s",
+  "death.attack.arrow_in_brain_headshot.item": "%2$s used %3$s to let %1$s be headshot by an arrow",
   "death.attack.beast_gun": "%1$s was killed by %2$s using BEAST guns",
 
   "Shell Estimated Range": "Estimated Range:",

@@ -1,5 +1,6 @@
 package net.mcreator.target.client.screens;
 
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.event.KillMessageHandler;
 import net.mcreator.target.item.gun.GunItem;
 import net.mcreator.target.tools.PlayerKillRecord;
@@ -15,6 +16,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class KillMessageOverlay {
+    private static final ResourceLocation HEADSHOT = new ResourceLocation(TargetMod.MODID, "textures/screens/headshot.png");
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
@@ -80,5 +82,18 @@ public class KillMessageOverlay {
                 record.target.getTeamColor(),
                 false
         );
+
+        if (record.headshot) {
+            event.getGuiGraphics().blit(HEADSHOT,
+                    w - targetNameWidth - 65 - attackerNameWidth,
+                    h,
+                    0,
+                    0,
+                    8,
+                    8,
+                    8,
+                    8
+            );
+        }
     }
 }

@@ -19,6 +19,7 @@ public class TargetModDamageTypes {
     public static final ResourceKey<DamageType> GUN_FIRE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(TargetMod.MODID, "gunfire"));
     public static final ResourceKey<DamageType> GUN_FIRE_HEADSHOT = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(TargetMod.MODID, "gunfire_headshot"));
     public static final ResourceKey<DamageType> ARROW_IN_BRAIN = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(TargetMod.MODID, "arrow_in_brain"));
+    public static final ResourceKey<DamageType> ARROW_IN_BRAIN_HEADSHOT = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(TargetMod.MODID, "arrow_in_brain_headshot"));
     public static final ResourceKey<DamageType> MINE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(TargetMod.MODID, "mine"));
 
 
@@ -32,6 +33,10 @@ public class TargetModDamageTypes {
 
     public static DamageSource causeArrowInBrainDamage(RegistryAccess registryAccess, @Nullable Entity entity) {
         return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(ARROW_IN_BRAIN), entity);
+    }
+
+    public static DamageSource causeArrowInBrainHeadshotDamage(RegistryAccess registryAccess, @Nullable Entity entity) {
+        return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(ARROW_IN_BRAIN_HEADSHOT), entity);
     }
 
     public static DamageSource causeMineDamage(RegistryAccess registryAccess, @Nullable Entity entity) {

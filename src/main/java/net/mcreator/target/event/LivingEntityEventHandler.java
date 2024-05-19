@@ -224,12 +224,15 @@ public class LivingEntityEventHandler {
         LivingEntity entity = event.getEntity();
         DamageSource source = event.getSource();
 
+        if (!TargetModVariables.MapVariables.get(entity.level()).pvpMode) {
+            return;
+        }
+
         if (source.getDirectEntity() instanceof ServerPlayer player) {
-            // TODO 修改发包
-            if (source.is(TargetModDamageTypes.GUN_FIRE)) {
-                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new PlayerKillMessage(player.getId(), entity.getId(), false));
-            } else if (source.is(TargetModDamageTypes.GUN_FIRE_HEADSHOT)) {
-                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new PlayerKillMessage(player.getId(), entity.getId(), true));
+            if (source.is(TargetModDamageTypes.GUN_FIRE) || source.is(TargetModDamageTypes.ARROW_IN_BRAIN)) {
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerKillMessage(player.getId(), entity.getId(), false));
+            } else if (source.is(TargetModDamageTypes.GUN_FIRE_HEADSHOT) || source.is(TargetModDamageTypes.ARROW_IN_BRAIN_HEADSHOT)) {
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerKillMessage(player.getId(), entity.getId(), true));
             }
         }
     }
