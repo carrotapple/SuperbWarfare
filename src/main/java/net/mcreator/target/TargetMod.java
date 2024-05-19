@@ -34,7 +34,6 @@ public class TargetMod {
         TargetModBlocks.REGISTRY.register(bus);
         TargetModItems.register(bus);
         TargetModEntities.REGISTRY.register(bus);
-        TargetCustomModEntities.ENTITY_TYPES.register(bus);
         TargetModTabs.TABS.register(bus);
         TargetModMobEffects.REGISTRY.register(bus);
         TargetModParticleTypes.REGISTRY.register(bus);

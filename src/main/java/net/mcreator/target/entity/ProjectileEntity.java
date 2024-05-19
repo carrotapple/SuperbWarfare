@@ -2,10 +2,7 @@ package net.mcreator.target.entity;
 
 import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
-import net.mcreator.target.init.TargetCustomModEntities;
-import net.mcreator.target.init.TargetModDamageTypes;
-import net.mcreator.target.init.TargetModParticleTypes;
-import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.init.*;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.ExtendedEntityRayTraceResult;
 import net.minecraft.core.BlockPos;
@@ -58,7 +55,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     }
 
     public ProjectileEntity(Level level) {
-        super(TargetCustomModEntities.PROJECTILE.get(), level);
+        super(TargetModEntities.PROJECTILE.get(), level);
     }
 
     public ProjectileEntity shooter(LivingEntity shooter) {
