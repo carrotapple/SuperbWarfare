@@ -5,12 +5,11 @@ import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.GunsTool;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
+import net.mcreator.target.tools.SoundTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -362,11 +361,8 @@ public class PlayerEventHandler {
                 });
             }
             if (tag.getDouble("power") == 1) {
-                if (!player.level().isClientSide() && player.getServer() != null) {
-                    // TODO 修改为正确的音效播放
-                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), player.level() instanceof ServerLevel ? (ServerLevel) player.level() : null, 4,
-                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:bocek_pull_1p player @s ~ ~ ~ 2 1");
-
+                if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
+                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.BOCEK_PULL_1P.get(), 2f, 1f);
                     player.level().playSound(null, player.blockPosition(), TargetModSounds.BOCEK_PULL_3P.get(), SoundSource.PLAYERS, 0.5f, 1);
                 }
             }
@@ -463,9 +459,8 @@ public class PlayerEventHandler {
             if (stack.getOrCreateTag().getDouble("rot") < 10) {
                 stack.getOrCreateTag().putDouble("rot", (stack.getOrCreateTag().getDouble("rot") + 1));
             }
-            if (!player.level().isClientSide() && player.getServer() != null) {
-                player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                        player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:minigun_rot player @s ~ ~ ~ 2 1");
+            if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
+                SoundTool.playLocalSound(serverPlayer, TargetModSounds.MINIGUN_ROT.get(), 2f, 1f);
             }
         } else if (stack.getOrCreateTag().getDouble("rot") > 0) {
             stack.getOrCreateTag().putDouble("rot", (stack.getOrCreateTag().getDouble("rot") - 0.5));
@@ -478,31 +473,24 @@ public class PlayerEventHandler {
             if (stack.getOrCreateTag().getDouble("heat") >= 50.5) {
                 stack.getOrCreateTag().putDouble("overheat", 40);
                 player.getCooldowns().addCooldown(stack.getItem(), 40);
-                if (!player.level().isClientSide() && player.getServer() != null) {
-                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:minigun_overheat player @s ~ ~ ~ 2 1");
+                if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
+                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.MINIGUN_OVERHEAT.get(), 2f, 1f);
                 }
             }
 
-            if (!player.level().isClientSide() && player.getServer() != null) {
+            if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
                 if (stack.getOrCreateTag().getDouble("heat") <= 40) {
-                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:minigun_fire_1p player @s ~ ~ ~ 2 1");
-                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:minigun_fire_3p player @a ~ ~ ~ 4 1");
-                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:minigun_far player @a ~ ~ ~ 12 1");
-                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:minigun_veryfar player @a ~ ~ ~ 24 1");
+                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.MINIGUN_FIRE_1P.get(), 2f, 1f);
+                    player.playSound(TargetModSounds.MINIGUN_FIRE_3P.get(), 4f, 1f);
+                    player.playSound(TargetModSounds.MINIGUN_FAR.get(), 12f, 1f);
+                    player.playSound(TargetModSounds.MINIGUN_VERYFAR.get(), 24f, 1f);
                 } else {
-                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), ("playsound target:minigun_fire_1p player @s ~ ~ ~ 2 " + (1 - 0.025 * Math.abs(40 - stack.getOrCreateTag().getDouble("heat")))));
-                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), ("playsound target:minigun_fire_3p player @a ~ ~ ~ 4 " + (1 - 0.025 * Math.abs(40 - stack.getOrCreateTag().getDouble("heat")))));
-                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), ("playsound target:minigun_far player @a ~ ~ ~ 12 " + (1 - 0.025 * Math.abs(40 - stack.getOrCreateTag().getDouble("heat")))));
-                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), ("playsound target:minigun_veryfar player @a ~ ~ ~ 24 " + (1 - 0.025 * Math.abs(40 - stack.getOrCreateTag().getDouble("heat")))));
+                    float pitch = (float) (1 - 0.025 * Math.abs(40 - stack.getOrCreateTag().getDouble("heat")));
+
+                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.MINIGUN_FIRE_1P.get(), 2f, pitch);
+                    player.playSound(TargetModSounds.MINIGUN_FIRE_3P.get(), 4f, pitch);
+                    player.playSound(TargetModSounds.MINIGUN_FAR.get(), 12f, pitch);
+                    player.playSound(TargetModSounds.MINIGUN_VERYFAR.get(), 24f, pitch);
                 }
             }
 

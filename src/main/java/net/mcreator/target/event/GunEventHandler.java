@@ -136,8 +136,8 @@ public class GunEventHandler {
                 if (stack.getOrCreateTag().getInt("ammo") == 1) {
                     stack.getOrCreateTag().putDouble("gj", 1);
                 }
-                /**
-                 * 判断是否为栓动武器（bolt_action_time > 0），并在开火后给一个需要上膛的状态
+                /*
+                  判断是否为栓动武器（bolt_action_time > 0），并在开火后给一个需要上膛的状态
                  */
                 if (stack.getOrCreateTag().getDouble("bolt_action_time") > 0 && stack.getOrCreateTag().getInt("ammo") > 1) {
                     stack.getOrCreateTag().putDouble("need_bolt_action", 1);
@@ -194,8 +194,8 @@ public class GunEventHandler {
                 }
 
             }
-            /**
-             * 在开火动画的最后1tick，设置需要拉栓上膛的武器拉栓动画的倒计时为data里的拉栓时间
+            /*
+              在开火动画的最后1tick，设置需要拉栓上膛的武器拉栓动画的倒计时为data里的拉栓时间
              */
             if (stack.getOrCreateTag().getInt("fire_animation") == 1 && stack.getOrCreateTag().getDouble("need_bolt_action") == 1) {
                 stack.getOrCreateTag().putDouble("bolt_action_anim", stack.getOrCreateTag().getDouble("bolt_action_time"));
