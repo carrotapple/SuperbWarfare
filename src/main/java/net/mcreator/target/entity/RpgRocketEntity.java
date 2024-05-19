@@ -3,12 +3,14 @@ package net.mcreator.target.entity;
 import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
 import net.mcreator.target.init.TargetModEntities;
+import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -91,8 +93,7 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
                 capability.syncPlayerVariables(living);
             });
             if (!living.level().isClientSide() && living.getServer() != null) {
-                living.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, living.position(), living.getRotationVector(), living.level() instanceof ServerLevel ? (ServerLevel) living.level() : null, 4,
-                        living.getName().getString(), living.getDisplayName(), living.level().getServer(), living), "playsound target:indication voice @a ~ ~ ~ 1 1");
+                living.level().playSound(null, living.blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
             }
         }
         if (this.getPersistentData().getInt("time") > 0) {
@@ -124,7 +125,7 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
                 if (box != null) {
                     box = box.move(boundingBox.getCenter().x, boundingBox.minY, boundingBox.getCenter().z);
                     Optional<Vec3> headshotHitPos = box.clip(startVec, endVec);
-                    if (!headshotHitPos.isPresent()) {
+                    if (headshotHitPos.isEmpty()) {
                         box = box.inflate(0.2, 0.2, 0.2);
                         headshotHitPos = box.clip(startVec, endVec);
                     }
@@ -139,8 +140,7 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
                                 capability.syncPlayerVariables(living);
                             });
                             if (!living.level().isClientSide() && living.getServer() != null) {
-                                living.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, living.position(), living.getRotationVector(), living.level() instanceof ServerLevel ? (ServerLevel) living.level() : null, 4,
-                                        living.getName().getString(), living.getDisplayName(), living.level().getServer(), living), "playsound target:headshot voice @a ~ ~ ~ 1 1");
+                                living.playSound(TargetModSounds.HEADSHOT.get(), 1, 1);
                             }
                         }
                     }
@@ -166,6 +166,7 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
             }
         }
     }
+
     @Override
     public void tick() {
         super.tick();

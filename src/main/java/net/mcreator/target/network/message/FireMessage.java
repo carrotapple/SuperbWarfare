@@ -3,9 +3,11 @@ package net.mcreator.target.network.message;
 import net.mcreator.target.entity.BocekArrowEntity;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.procedures.PressFireProcedure;
 import net.mcreator.target.tools.GunsTool;
+import net.mcreator.target.tools.SoundTool;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.FriendlyByteBuf;
@@ -102,11 +104,9 @@ public class FireMessage {
                     level.addFreshEntity(arrow);
                 }
 
-                if (!player.level().isClientSide() && player.getServer() != null) {
-                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:bocek_zoom_fire_1p player @s ~ ~ ~ 10 1");
-                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:bocek_zoom_fire_3p player @a ~ ~ ~ 2 1");
+                if (!player.level().isClientSide()) {
+                    SoundTool.playLocalSound(player, TargetModSounds.BOCEK_ZOOM_FIRE_1P.get(), 10, 1);
+                    player.playSound(TargetModSounds.BOCEK_ZOOM_FIRE_3P.get(), 2, 1);
                 }
             } else {
                 for (int index0 = 0; index0 < 10; index0++) {
@@ -114,10 +114,8 @@ public class FireMessage {
                 }
 
                 if (!player.level().isClientSide() && player.getServer() != null) {
-                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:bocek_shatter_cap_fire_1p player @s ~ ~ ~ 10 1");
-                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:bocek_shatter_cap_fire_3p player @a ~ ~ ~ 2 1");
+                    SoundTool.playLocalSound(player, TargetModSounds.BOCEK_SHATTER_CAP_FIRE_1P.get(), 10, 1);
+                    player.playSound(TargetModSounds.BOCEK_SHATTER_CAP_FIRE_3P.get(), 2, 1);
                 }
             }
 

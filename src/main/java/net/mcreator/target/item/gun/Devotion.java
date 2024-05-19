@@ -7,19 +7,14 @@ import net.mcreator.target.client.renderer.item.DevotionItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.item.AnimatedItem;
-import net.mcreator.target.tools.GunInfo;
-import net.mcreator.target.tools.GunReload;
-import net.mcreator.target.tools.GunsTool;
-import net.mcreator.target.tools.TooltipTool;
+import net.mcreator.target.tools.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -178,9 +173,8 @@ public class Devotion extends GunItem implements GeoItem, AnimatedItem {
         if (itemTag.getBoolean("reloading") && itemTag.getInt("ammo") == 0) {
             if (itemTag.getDouble("reload_time") == 71) {
                 entity.getPersistentData().putDouble("id", id);
-                if (!entity.level().isClientSide() && entity.getServer() != null) {
-                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:devotion_reload_empty player @s ~ ~ ~ 100 1");
+                if (entity instanceof ServerPlayer player) {
+                    SoundTool.playLocalSound(player, TargetModSounds.DEVOTION_RELOAD_EMPTY.get(), 100, 1);
                 }
             }
             if (mainHandItem.getItem() == itemstack.getItem()
@@ -199,9 +193,8 @@ public class Devotion extends GunItem implements GeoItem, AnimatedItem {
         } else if (itemTag.getBoolean("reloading") && itemTag.getInt("ammo") > 0) {
             if (itemTag.getDouble("reload_time") == 51) {
                 entity.getPersistentData().putDouble("id", id);
-                if (!entity.level().isClientSide() && entity.getServer() != null) {
-                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:devotion_reload_normal player @s ~ ~ ~ 100 1");
+                if (entity instanceof ServerPlayer player) {
+                    SoundTool.playLocalSound(player, TargetModSounds.DEVOTION_RELOAD_NORMAL.get(), 100, 1);
                 }
             }
             if (mainHandItem.getItem() == itemstack.getItem()

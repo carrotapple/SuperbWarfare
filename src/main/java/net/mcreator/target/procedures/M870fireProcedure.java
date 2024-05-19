@@ -1,10 +1,9 @@
 package net.mcreator.target.procedures;
 
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.tools.GunsTool;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.server.level.ServerLevel;
+import net.mcreator.target.tools.SoundTool;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -24,15 +23,11 @@ public class M870fireProcedure {
             player.getCooldowns().addCooldown(usehand.getItem(), 13);
             usehand.getOrCreateTag().putDouble("firing", 13);
 
-            if (!player.level().isClientSide() && player.getServer() != null) {
-                player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                        player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:m_870_fire_1p player @s ~ ~ ~ 2 1");
-                player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                        player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:m_870_fire_3p player @a ~ ~ ~ 4 1");
-                player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                        player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:m_870_far player @s ~ ~ ~ 12 1");
-                player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                        player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:m_870_veryfar player @a ~ ~ ~ 24 1");
+            if (!player.level().isClientSide()) {
+                SoundTool.playLocalSound(player, TargetModSounds.M_870_FIRE_1P.get(), 2, 1);
+                SoundTool.playLocalSound(player, TargetModSounds.M_870_FIRE_3P.get(), 4, 1);
+                SoundTool.playLocalSound(player, TargetModSounds.M_870_FAR.get(), 12, 1);
+                SoundTool.playLocalSound(player, TargetModSounds.M_870_VERYFAR.get(), 24, 1);
             }
             usehand.getOrCreateTag().putInt("ammo", (usehand.getOrCreateTag().getInt("ammo") - 1));
             usehand.getOrCreateTag().putInt("fire_animation", 2);

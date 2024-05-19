@@ -215,10 +215,6 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
             if (!this.level().isClientSide()) this.discard();
         }
         if (data.getDouble("def") >= 100) {
-            if (!this.level().isClientSide() && this.getServer() != null) {
-                this.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, this.position(), this.getRotationVector(), this.level() instanceof ServerLevel ? (ServerLevel) this.level() : null, 4,
-                        this.getName().getString(), this.getDisplayName(), this.level().getServer(), this), "playsound minecraft:item.shield.break player @p ~ ~ ~ 1 1");
-            }
             if (!this.level().isClientSide()) this.discard();
 
             if (!level.isClientSide()) {

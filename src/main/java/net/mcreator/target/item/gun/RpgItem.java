@@ -8,16 +8,14 @@ import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.tools.GunsTool;
+import net.mcreator.target.tools.SoundTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -191,8 +189,7 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
                 if (tag.getDouble("reload_time") == 91) {
                     entity.getPersistentData().putDouble("id", id);
                     if (entity.getServer() != null) {
-                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:rpg_reload player @s ~ ~ ~ 100 1");
+                        SoundTool.playLocalSound(player, TargetModSounds.RPG_RELOAD.get(), 100, 1);
                     }
                 }
                 if (player.getMainHandItem().getItem() == itemStack.getItem()

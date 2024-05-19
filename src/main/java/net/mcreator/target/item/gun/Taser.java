@@ -8,16 +8,14 @@ import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.tools.GunsTool;
+import net.mcreator.target.tools.SoundTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -192,10 +190,8 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
                 if (stack.getOrCreateTag().getDouble("reload_time") == 55) {
                     player.getPersistentData().putDouble("id", id);
 
-                    // TODO 修改音效播放
-                    if (!player.level().isClientSide() && player.getServer() != null) {
-                        player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), player.level() instanceof ServerLevel ? (ServerLevel) player.level() : null, 4,
-                                player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:taser_reload player @s ~ ~ ~ 100 1");
+                    if (!player.level().isClientSide()) {
+                        SoundTool.playLocalSound(player, TargetModSounds.TASER_RELOAD.get(), 100, 1);
                     }
                 }
                 if (heldItem.getItem() == stack.getItem() && heldItem.getOrCreateTag().getDouble("id") == id) {

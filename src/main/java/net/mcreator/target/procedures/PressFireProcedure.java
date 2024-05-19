@@ -2,11 +2,10 @@ package net.mcreator.target.procedures;
 
 import net.mcreator.target.event.GunEventHandler;
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.server.level.ServerLevel;
+import net.mcreator.target.tools.SoundTool;
 import net.minecraft.world.entity.player.Player;
 
 public class PressFireProcedure {
@@ -28,9 +27,8 @@ public class PressFireProcedure {
                 && !(mainHandItem.getItem() == TargetModItems.MINIGUN.get())
                 && tag.getInt("ammo") == 0
                 && !tag.getBoolean("reloading")) {
-            if (!player.level().isClientSide() && player.getServer() != null) {
-                player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                        player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:triggerclick player @s ~ ~ ~ 10 1");
+            if (!player.level().isClientSide()) {
+                SoundTool.playLocalSound(player, TargetModSounds.TRIGGER_CLICK.get(), 10, 1);
             }
         }
 
@@ -38,9 +36,8 @@ public class PressFireProcedure {
             player.getPersistentData().putDouble("mini_firing", 1);
 
             if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo == 0) {
-                if (!player.level().isClientSide() && player.getServer() != null) {
-                    player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                            player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "playsound target:triggerclick player @s ~ ~ ~ 10 1");
+                if (!player.level().isClientSide()) {
+                    SoundTool.playLocalSound(player, TargetModSounds.TRIGGER_CLICK.get(), 10, 1);
                 }
             }
         }

@@ -13,12 +13,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -175,9 +173,8 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
         if (itemTag.getBoolean("reloading")) {
             if (itemTag.getDouble("reload_time") == 57) {
                 entity.getPersistentData().putDouble("id", id);
-                if (!entity.level().isClientSide() && entity.getServer() != null) {
-                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:trachelium_reload player @s ~ ~ ~ 100 1");
+                if (entity instanceof ServerPlayer serverPlayer) {
+                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.TRACHELIUM_RELOAD.get(), 100, 1);
                 }
             }
             if (mainHandItem.getItem() == itemstack.getItem()

@@ -123,6 +123,7 @@ public class Rocket extends Item implements GeoItem, AnimatedItem {
             level.explode(null, sourceentity.getX(), sourceentity.getY() + 1, sourceentity.getZ(), 6, Level.ExplosionInteraction.NONE);
 
             if (!sourceentity.level().isClientSide() && sourceentity.getServer() != null) {
+                // TODO what the hell is this?
                 sourceentity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, sourceentity.position(), sourceentity.getRotationVector(), sourceentity.level() instanceof ServerLevel ? (ServerLevel) sourceentity.level() : null, 4,
                         sourceentity.getName().getString(), sourceentity.getDisplayName(), sourceentity.getServer(), sourceentity), "playsound target:target:mediumexp");
             }

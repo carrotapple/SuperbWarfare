@@ -12,11 +12,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -103,11 +101,11 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.draw"));
             }
 
-            if (stack.getOrCreateTag().getBoolean("zoom_fire") == true && stack.getOrCreateTag().getDouble("bolt_action_anim") > 0) {
+            if (stack.getOrCreateTag().getBoolean("zoom_fire") && stack.getOrCreateTag().getDouble("bolt_action_anim") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.shift2"));
             }
 
-            if (stack.getOrCreateTag().getBoolean("zoom_fire") == false && stack.getOrCreateTag().getDouble("bolt_action_anim") > 0) {
+            if (!stack.getOrCreateTag().getBoolean("zoom_fire") && stack.getOrCreateTag().getDouble("bolt_action_anim") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.shift"));
             }
 
@@ -188,9 +186,8 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
             if (tag.getBoolean("reloading") && tag.getInt("ammo") == 0) {
                 if (tag.getDouble("reload_time") == 73) {
                     entity.getPersistentData().putDouble("id", id);
-                    if (!entity.level().isClientSide() && entity.getServer() != null) {
-                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:sentinel_reload_empty player @s ~ ~ ~ 100 1");
+                    if (entity instanceof ServerPlayer serverPlayer) {
+                        SoundTool.playLocalSound(serverPlayer, TargetModSounds.SENTINEL_RELOAD_EMPTY.get(), 100, 1);
                     }
                 }
                 if (player.getMainHandItem().getItem() == itemStack.getItem()
@@ -209,9 +206,8 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
             } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
                 if (tag.getDouble("reload_time") == 53) {
                     entity.getPersistentData().putDouble("id", id);
-                    if (!entity.level().isClientSide() && entity.getServer() != null) {
-                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:sentinel_reload_normal player @s ~ ~ ~ 100 1");
+                    if (entity instanceof ServerPlayer serverPlayer) {
+                        SoundTool.playLocalSound(serverPlayer, TargetModSounds.SENTINEL_RELOAD_NORMAL.get(), 100, 1);
                     }
                 }
                 if (player.getMainHandItem().getItem() == itemStack.getItem()
@@ -243,9 +239,8 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
             if (tag.getDouble("charging") == 1) {
                 if (tag.getDouble("charging_time") == 127) {
                     entity.getPersistentData().putDouble("cid", cid);
-                    if (!entity.level().isClientSide() && entity.getServer() != null) {
-                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:sentinel_charge player @s ~ ~ ~ 100 1");
+                    if (entity instanceof ServerPlayer serverPlayer) {
+                        SoundTool.playLocalSound(serverPlayer, TargetModSounds.SENTINEL_CHARGE.get(), 100, 1);
                     }
                 }
                 if (player.getMainHandItem().getItem() == itemStack.getItem()

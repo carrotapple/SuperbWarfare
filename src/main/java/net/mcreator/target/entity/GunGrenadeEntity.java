@@ -74,7 +74,6 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        final Vec3 position = this.position();
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
             living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
@@ -82,8 +81,7 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
                 capability.syncPlayerVariables(living);
             });
             if (!living.level().isClientSide() && living.getServer() != null) {
-                living.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, living.position(), living.getRotationVector(), living.level() instanceof ServerLevel ? (ServerLevel) living.level() : null, 4,
-                        living.getName().getString(), living.getDisplayName(), living.level().getServer(), living), "playsound target:indication voice @a ~ ~ ~ 1 1");
+                living.level().playSound(null, living.blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
             }
         }
 
@@ -115,7 +113,7 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
                 if (box != null) {
                     box = box.move(boundingBox.getCenter().x, boundingBox.minY, boundingBox.getCenter().z);
                     Optional<Vec3> headshotHitPos = box.clip(startVec, endVec);
-                    if (!headshotHitPos.isPresent()) {
+                    if (headshotHitPos.isEmpty()) {
                         box = box.inflate(0.2, 0.2, 0.2);
                         headshotHitPos = box.clip(startVec, endVec);
                     }
@@ -145,7 +143,7 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
         if (this.getPersistentData().getInt("fuse") > 0) {
-            if (this.level() instanceof ServerLevel level) {
+            if (this.level() instanceof ServerLevel) {
                 this.level().explode(this, this.getX(), this.getY(), this.getZ(), 5.5f, Level.ExplosionInteraction.NONE);
             }
         }

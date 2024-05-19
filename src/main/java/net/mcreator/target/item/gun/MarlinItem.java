@@ -9,16 +9,15 @@ import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.GunsTool;
+import net.mcreator.target.tools.SoundTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -170,7 +169,6 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
         if (entity instanceof Player player) {
             var tag = itemstack.getOrCreateTag();
             double id = tag.getDouble("id");
-            tag.getInt("ammo");
             if (player.getMainHandItem().getOrCreateTag().getDouble("id") != tag.getDouble("id")) {
                 tag.putDouble("finish", 0);
                 tag.putBoolean("reloading", false);
@@ -199,9 +197,8 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
                     } else {
                         tag.putDouble("loading", 16);
                         player.getCooldowns().addCooldown(itemstack.getItem(), 16);
-                        if (!entity.level().isClientSide() && entity.getServer() != null) {
-                            entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
-                                    entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:marlin_loop player @s ~ ~ ~ 100 1");
+                        if (entity instanceof ServerPlayer serverPlayer) {
+                            SoundTool.playLocalSound(serverPlayer, TargetModSounds.MARLIN_LOOP.get(), 100, 1);
                         }
                         tag.putBoolean("load_index", tag.getBoolean("load_index"));
                     }
@@ -220,9 +217,8 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
                     tag.putDouble("finish", 19);
                     player.getCooldowns().addCooldown(itemstack.getItem(), 19);
                     tag.putBoolean("reloading", false);
-                    if (!entity.level().isClientSide() && entity.getServer() != null) {
-                        entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
-                                entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:marlin_end player @s ~ ~ ~ 100 1");
+                    if (entity instanceof ServerPlayer serverPlayer) {
+                        SoundTool.playLocalSound(serverPlayer, TargetModSounds.MARLIN_END.get(), 100, 1);
                     }
                 }
             }

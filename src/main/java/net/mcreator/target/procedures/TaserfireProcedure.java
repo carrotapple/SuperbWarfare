@@ -4,10 +4,13 @@ import net.mcreator.target.entity.TaserBulletProjectileEntity;
 import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.tools.SoundTool;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -32,15 +35,11 @@ public class TaserfireProcedure {
                 });
                 player.getCooldowns().addCooldown(usehand.getItem(), 5);
 
-                if (!entity.level().isClientSide() && entity.getServer() != null) {
-                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), (ServerLevel) entity.level(), 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.getServer(), entity), "playsound target:taser_fire_1p player @s ~ ~ ~ 1 1");
-                }
-                if (!entity.level().isClientSide() && entity.getServer() != null) {
-                    entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
-                            entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "playsound target:taser_fire_3p player @a ~ ~ ~ 1 1");
-                }
-                if (!entity.level().isClientSide() && entity.getServer() != null) {
+                if (entity instanceof ServerPlayer serverPlayer) {
+                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.TASER_FIRE_1P.get(), 1, 1);
+                    serverPlayer.playSound(TargetModSounds.TASER_FIRE_3P.get(), 1, 1);
+
+                    // TODO 重写stopsound
                     entity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, entity.position(), entity.getRotationVector(), entity.level() instanceof ServerLevel ? (ServerLevel) entity.level() : null, 4,
                             entity.getName().getString(), entity.getDisplayName(), entity.level().getServer(), entity), "stopsound @s player target:taser_fire_3p");
                 }
