@@ -3,19 +3,15 @@ package net.mcreator.target.client.model.item;
 import net.mcreator.target.item.gun.AK47Item;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.ViewportEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class AK47ItemModel extends GeoModel<AK47Item> {
+
     @Override
     public ResourceLocation getAnimationResource(AK47Item animatable) {
         return new ResourceLocation("target", "animations/ak.animation.json");
@@ -39,13 +35,16 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         CoreGeoBone shuan = getAnimationProcessor().getBone("shuan");
 
         Player player = Minecraft.getInstance().player;
+
+        if (player == null) {
+            return;
+        }
+
         ItemStack stack = player.getMainHandItem();
 
-        double p = 0;
-        p = player.getPersistentData().getDouble("zoom_pos");
+        double p = player.getPersistentData().getDouble("zoom_pos");
 
-        double zp = 0;
-        zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(2.11f * (float) p);
 
@@ -69,8 +68,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
             holo.setScaleY(0);
         }
 
-        double fp = 0;
-        fp = player.getPersistentData().getDouble("fire_pos");
+        double fp = player.getPersistentData().getDouble("fire_pos");
 
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
@@ -105,13 +103,11 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
-        float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
-        float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
+        float PosX = (float) player.getPersistentData().getDouble("gun_move_posX");
+        float PosY = (float) player.getPersistentData().getDouble("gun_move_posY");
 
-        double y = 0;
-        double x = 0;
-        y = player.getPersistentData().getDouble("y");
-        x = player.getPersistentData().getDouble("x");
+        double y = player.getPersistentData().getDouble("y");
+        double x = player.getPersistentData().getDouble("x");
 
         root.setPosX(PosX);
 
@@ -123,17 +119,13 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
 
         CoreGeoBone move = getAnimationProcessor().getBone("move");
 
-        double m = 0;
-        m = player.getPersistentData().getDouble("move");
+        double m = player.getPersistentData().getDouble("move");
 
-        double yaw = 0;
-        yaw = player.getPersistentData().getDouble("yaw");
+        double yaw = player.getPersistentData().getDouble("yaw");
 
-        double pit = 0;
-        pit = player.getPersistentData().getDouble("gun_pitch");
+        double pit = player.getPersistentData().getDouble("gun_pitch");
 
-        double vy = 0;
-        vy = player.getPersistentData().getDouble("vy");
+        double vy = player.getPersistentData().getDouble("vy");
 
         move.setPosY(-0.95f * (float) vy);
 
