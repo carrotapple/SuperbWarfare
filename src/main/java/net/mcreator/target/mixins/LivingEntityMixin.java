@@ -22,7 +22,8 @@ public class LivingEntityMixin {
 
     @ModifyArg(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;knockback(DDD)V"), index = 0)
     private double modifyApplyKnockbackArgs(double original) {
-        if (this.target$source.is(TargetModDamageTypes.GUN_FIRE)) {
+        if (this.target$source.is(TargetModDamageTypes.GUN_FIRE) || this.target$source.is(TargetModDamageTypes.GUN_FIRE_HEADSHOT)
+                || this.target$source.is(TargetModDamageTypes.ARROW_IN_KNEE) || this.target$source.is(TargetModDamageTypes.ARROW_IN_BRAIN)) {
             return 0.1 * original;
         }
         return original;
