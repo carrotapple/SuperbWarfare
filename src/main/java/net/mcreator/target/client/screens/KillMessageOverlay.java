@@ -7,6 +7,7 @@ import net.mcreator.target.tools.PlayerKillRecord;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiEvent;
@@ -17,6 +18,10 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class KillMessageOverlay {
     private static final ResourceLocation HEADSHOT = new ResourceLocation(TargetMod.MODID, "textures/screens/headshot.png");
+
+    private static final ResourceLocation KNIFE = new ResourceLocation(TargetMod.MODID, "textures/screens/knife.png");
+    private static final ResourceLocation EXPLOSION = new ResourceLocation(TargetMod.MODID, "textures/screens/explosion.png");
+    private static final ResourceLocation CLAYMORE = new ResourceLocation(TargetMod.MODID, "textures/screens/claymore.png");
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
@@ -44,10 +49,7 @@ public class KillMessageOverlay {
 
         Font font = Minecraft.getInstance().font;
 
-        String attackerName = record.attacker.getDisplayName().getString();
         String targetName = record.target.getDisplayName().getString();
-
-        int attackerNameWidth = font.width(attackerName);
         int targetNameWidth = font.width(targetName);
 
         // 击杀提示是右对齐的，这里从右向左渲染
@@ -76,12 +78,27 @@ public class KillMessageOverlay {
             );
         }
 
+        // 如果是爆炸伤害，则渲染爆炸图标
+        boolean explosion = false;
+        if (record.damageType == DamageTypes.EXPLOSION || record.damageType == DamageTypes.PLAYER_EXPLOSION) {
+            explosion = true;
+            int explosionW = w - targetNameWidth - 26;
+            event.getGuiGraphics().blit(EXPLOSION,
+                    explosionW,
+                    h - 2,
+                    0,
+                    0,
+                    12,
+                    12,
+                    12,
+                    12
+            );
+        }
+
         // 如果是枪械击杀，则渲染枪械图标
         if (record.stack.getItem() instanceof GunItem gunItem) {
             ResourceLocation resourceLocation = gunItem.getGunIcon();
-
-            int gunIconW = record.headshot ? w - targetNameWidth - 64 : w - targetNameWidth - 46;
-
+            int gunIconW = (record.headshot || explosion) ? w - targetNameWidth - 64 : w - targetNameWidth - 46;
             event.getGuiGraphics().blit(resourceLocation,
                     gunIconW,
                     h,
@@ -95,7 +112,9 @@ public class KillMessageOverlay {
         }
 
         // 渲染击杀者名称
-        int nameW = record.headshot ? w - targetNameWidth - 68 - attackerNameWidth : w - targetNameWidth - 50 - attackerNameWidth;
+        String attackerName = record.attacker.getDisplayName().getString();
+        int attackerNameWidth = font.width(attackerName);
+        int nameW = (record.headshot || explosion) ? w - targetNameWidth - 68 - attackerNameWidth : w - targetNameWidth - 50 - attackerNameWidth;
 
         event.getGuiGraphics().drawString(
                 Minecraft.getInstance().font,

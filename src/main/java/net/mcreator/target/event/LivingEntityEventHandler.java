@@ -24,6 +24,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -220,11 +221,19 @@ public class LivingEntityEventHandler {
 
         ResourceKey<DamageType> damageTypeResourceKey = source.typeHolder().unwrapKey().isPresent() ? source.typeHolder().unwrapKey().get() : DamageTypes.GENERIC;
 
+        ServerPlayer attacker = null;
         if (source.getDirectEntity() instanceof ServerPlayer player) {
+            attacker = player;
+        }
+        if (source.getDirectEntity() instanceof Projectile projectile && projectile.getOwner() instanceof ServerPlayer player) {
+            attacker = player;
+        }
+
+        if (attacker != null) {
             if (source.is(TargetModDamageTypes.GUN_FIRE_HEADSHOT) || source.is(TargetModDamageTypes.ARROW_IN_BRAIN)) {
-                TargetMod.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(player.getId(), entity.getId(), true, damageTypeResourceKey));
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(attacker.getId(), entity.getId(), true, damageTypeResourceKey));
             } else {
-                TargetMod.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(player.getId(), entity.getId(), false, damageTypeResourceKey));
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(attacker.getId(), entity.getId(), false, damageTypeResourceKey));
             }
         }
     }
