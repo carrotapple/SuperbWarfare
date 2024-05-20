@@ -23,7 +23,7 @@ public class MouseHandlerMixin {
 
         if (mc.player != null && !mc.player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
 
-            Player player = Minecraft.getInstance().player;
+            Player player = mc.player;
             ItemStack stack = mc.player.getMainHandItem();
 
             float fov = ((float) player.getPersistentData().getDouble("fov"));
