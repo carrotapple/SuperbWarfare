@@ -2,6 +2,7 @@ package net.mcreator.target.client.screens;
 
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.event.KillMessageHandler;
+import net.mcreator.target.init.TargetModDamageTypes;
 import net.mcreator.target.item.gun.GunItem;
 import net.mcreator.target.tools.PlayerKillRecord;
 import net.minecraft.client.Minecraft;
@@ -14,14 +15,16 @@ import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.Nullable;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class KillMessageOverlay {
-    private static final ResourceLocation HEADSHOT = new ResourceLocation(TargetMod.MODID, "textures/screens/headshot.png");
+    private static final ResourceLocation HEADSHOT = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/headshot.png");
 
-    private static final ResourceLocation KNIFE = new ResourceLocation(TargetMod.MODID, "textures/screens/knife.png");
-    private static final ResourceLocation EXPLOSION = new ResourceLocation(TargetMod.MODID, "textures/screens/explosion.png");
-    private static final ResourceLocation CLAYMORE = new ResourceLocation(TargetMod.MODID, "textures/screens/claymore.png");
+    private static final ResourceLocation KNIFE = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/knife.png");
+    private static final ResourceLocation EXPLOSION = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/explosion.png");
+    private static final ResourceLocation CLAYMORE = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/claymore.png");
+    private static final ResourceLocation GENERIC = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/generic.png");
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
@@ -64,10 +67,14 @@ public class KillMessageOverlay {
                 false
         );
 
-        // 渲染爆头图标
-        if (record.headshot) {
-            event.getGuiGraphics().blit(HEADSHOT,
-                    w - targetNameWidth - 28,
+        // 第一个图标：爆头/爆炸/近战等图标
+        int icon1W = w - targetNameWidth - 28;
+
+        ResourceLocation icon1 = getIcon1(record);
+
+        if (icon1 != null) {
+            event.getGuiGraphics().blit(icon1,
+                    icon1W,
                     h - 2,
                     0,
                     0,
@@ -78,27 +85,11 @@ public class KillMessageOverlay {
             );
         }
 
-        // 如果是爆炸伤害，则渲染爆炸图标
-        boolean explosion = false;
-        if (record.damageType == DamageTypes.EXPLOSION || record.damageType == DamageTypes.PLAYER_EXPLOSION) {
-            explosion = true;
-            int explosionW = w - targetNameWidth - 26;
-            event.getGuiGraphics().blit(EXPLOSION,
-                    explosionW,
-                    h - 2,
-                    0,
-                    0,
-                    12,
-                    12,
-                    12,
-                    12
-            );
-        }
-
+        boolean isGun = record.stack.getItem() instanceof GunItem;
         // 如果是枪械击杀，则渲染枪械图标
         if (record.stack.getItem() instanceof GunItem gunItem) {
             ResourceLocation resourceLocation = gunItem.getGunIcon();
-            int gunIconW = (record.headshot || explosion) ? w - targetNameWidth - 64 : w - targetNameWidth - 46;
+            int gunIconW = icon1 != null ? w - targetNameWidth - 64 : w - targetNameWidth - 46;
             event.getGuiGraphics().blit(resourceLocation,
                     gunIconW,
                     h,
@@ -114,7 +105,13 @@ public class KillMessageOverlay {
         // 渲染击杀者名称
         String attackerName = record.attacker.getDisplayName().getString();
         int attackerNameWidth = font.width(attackerName);
-        int nameW = (record.headshot || explosion) ? w - targetNameWidth - 68 - attackerNameWidth : w - targetNameWidth - 50 - attackerNameWidth;
+        int nameW = w - targetNameWidth - 16 - attackerNameWidth;
+        if (isGun) {
+            nameW -= 32;
+        }
+        if (icon1 != null) {
+            nameW -= 18;
+        }
 
         event.getGuiGraphics().drawString(
                 Minecraft.getInstance().font,
@@ -125,5 +122,29 @@ public class KillMessageOverlay {
                 false
         );
 
+    }
+
+    @Nullable
+    private static ResourceLocation getIcon1(PlayerKillRecord record) {
+        ResourceLocation icon1;
+        // 渲染爆头图标
+        if (record.headshot) {
+            icon1 = HEADSHOT;
+        } else {
+            if (record.damageType == TargetModDamageTypes.GUN_FIRE || record.damageType == TargetModDamageTypes.GUN_FIRE_HEADSHOT
+                    || record.damageType == TargetModDamageTypes.ARROW_IN_KNEE || record.damageType == TargetModDamageTypes.ARROW_IN_BRAIN) {
+                icon1 = null;
+            } else {
+                // 如果是其他伤害，则渲染对应图标
+                if (record.damageType == DamageTypes.EXPLOSION || record.damageType == DamageTypes.PLAYER_EXPLOSION) {
+                    icon1 = EXPLOSION;
+                } else if (record.damageType == DamageTypes.PLAYER_ATTACK) {
+                    icon1 = KNIFE;
+                } else {
+                    icon1 = GENERIC;
+                }
+            }
+        }
+        return icon1;
     }
 }
