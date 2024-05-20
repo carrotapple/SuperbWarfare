@@ -3,6 +3,7 @@ package net.mcreator.target.event;
 import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.client.model.item.*;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -455,3 +456,5 @@ public class ClientEventHandler {
         }
     }
 }
+
+

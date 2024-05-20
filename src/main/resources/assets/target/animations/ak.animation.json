@@ -352,6 +352,7 @@
 			"override_previous_animation": true
 		},
 		"animation.ak47.reload": {
+			"loop": "hold_on_last_frame",
 			"animation_length": 2.9,
 			"override_previous_animation": true,
 			"bones": {
@@ -371,7 +372,7 @@
 							"easing": "easeInOutSine"
 						},
 						"0.4": {
-							"vector": [-0.00638, -0.05195, -0.49863],
+							"vector": [3.99362, -0.05195, -0.49863],
 							"easing": "easeOutSine"
 						},
 						"0.6": {
@@ -436,7 +437,7 @@
 							"easing": "easeInSine"
 						},
 						"0.4": {
-							"vector": [0, -0.29, 0.22]
+							"vector": [0, -0.59, 0.22]
 						},
 						"0.5": {
 							"vector": [0, 0, -0.1],
@@ -457,7 +458,7 @@
 							"vector": [0, -0.4, 0.3]
 						},
 						"1.3": {
-							"vector": [0, 0.1, 0.3]
+							"vector": [0, 0.3, 0.3]
 						},
 						"1.5": {
 							"vector": [0, -0.3, 0.3],
@@ -610,7 +611,7 @@
 							"vector": [-9, 0, 0]
 						},
 						"0.6": {
-							"vector": [-12.62765, -2.62403, -2.08221]
+							"vector": [19.37235, -2.62403, -2.08221]
 						},
 						"1.1": {
 							"vector": [-12.62765, -2.62403, -2.08221]
@@ -636,7 +637,7 @@
 							"vector": [0, 0, 0]
 						},
 						"0.6": {
-							"vector": [0, -9.27, -0.9]
+							"vector": [0, -11.07, 3.1]
 						},
 						"1.1": {
 							"vector": [0, -9.27, -0.9]
@@ -669,6 +670,55 @@
 						},
 						"2.8": {
 							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"camera": {
+					"rotation": {
+						"0.3": {
+							"vector": [0, 0, 0]
+						},
+						"0.4": {
+							"vector": [1, 0, 2],
+							"easing": "easeInElastic"
+						},
+						"0.5": {
+							"vector": [-1, 0, -2],
+							"easing": "easeInElastic"
+						},
+						"0.7": {
+							"vector": [0, 0, 0],
+							"easing": "easeOutBack"
+						},
+						"1.1": {
+							"vector": [0, 0, 0]
+						},
+						"1.3": {
+							"vector": [0, 0, 1],
+							"easing": "easeInElastic"
+						},
+						"1.4": {
+							"vector": [-1, 0, -2],
+							"easing": "easeInElastic"
+						},
+						"1.6": {
+							"vector": [0, 0, 0],
+							"easing": "easeOutBack"
+						},
+						"1.9": {
+							"vector": [0, 0, 0]
+						},
+						"2.0": {
+							"vector": [0, 2, 1],
+							"easing": "easeInElastic"
+						},
+						"2.1": {
+							"vector": [-1, -1, -2],
+							"easing": "easeInElastic"
+						},
+						"2.3": {
+							"vector": [0, 0, 0],
+							"easing": "easeOutBack"
 						}
 					}
 				}

@@ -3,14 +3,26 @@ package net.mcreator.target.client.model.item;
 import net.mcreator.target.item.gun.AK47Item;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.event.ViewportEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class AK47ItemModel extends GeoModel<AK47Item> {
+
+    static float camera_pitch;
+
+    static float camera_yaw;
+
+    static float camera_roll;
+
     @Override
     public ResourceLocation getAnimationResource(AK47Item animatable) {
         return new ResourceLocation("target", "animations/ak.animation.json");
@@ -139,6 +151,25 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         move.setRotZ(3.7f * (float) yaw + 2.7f * (float) m);
 
         move.setRotY(1.9f * (float) yaw - (float) m);
+
+        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+
+        float camera_pitch = camera.getRotX();
+        
+        float camera_yaw = camera.getRotY();
+
+        float camera_roll = camera.getRotZ();
+    }
+    @SubscribeEvent
+    public static void computeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
+
+        double view_pitch = event.getPitch();
+        double view_yaw = event.getYaw();
+        double view_roll = event.getRoll();
+// TODO 让下面仨等于上面仨
+        event.setPitch((float) view_pitch + camera_pitch);
+        event.setYaw((float) view_yaw + camera_yaw);
+        event.setRoll((float) view_roll + camera_roll);
 
     }
 }
