@@ -2,54 +2,41 @@ package net.mcreator.target.entity;
 
 import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
-import net.mcreator.target.init.TargetModEntities;
-import net.mcreator.target.init.TargetModMobEffects;
-import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.init.*;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.ItemSupplier;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PlayMessages;
 
 import java.util.Optional;
 
-// TODO 父类改为Projectile
-@OnlyIn(value = Dist.CLIENT, _interface = ItemSupplier.class)
-public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSupplier {
-    public static final ItemStack PROJECTILE_ITEM = new ItemStack(Blocks.AIR);
-
-    public TaserBulletProjectileEntity(PlayMessages.SpawnEntity packet, Level world) {
-        super(TargetModEntities.TASER_BULLET_PROJECTILE.get(), world);
-    }
+public class TaserBulletProjectileEntity extends ThrowableItemProjectile {
+    private float damage = 5f;
 
     public TaserBulletProjectileEntity(EntityType<? extends TaserBulletProjectileEntity> type, Level world) {
         super(type, world);
     }
 
-    public TaserBulletProjectileEntity(EntityType<? extends TaserBulletProjectileEntity> type, double x, double y, double z, Level world) {
-        super(type, x, y, z, world);
-    }
-
     public TaserBulletProjectileEntity(EntityType<? extends TaserBulletProjectileEntity> type, LivingEntity entity, Level world) {
         super(type, entity, world);
+    }
+
+    public TaserBulletProjectileEntity(LivingEntity entity, Level level, float damage) {
+        super(TargetModEntities.TASER_BULLET_PROJECTILE.get(), entity, level);
+        this.damage = damage;
     }
 
     @Override
@@ -58,49 +45,8 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public ItemStack getItem() {
-        return PROJECTILE_ITEM;
-    }
-
-    @Override
-    protected ItemStack getPickupItem() {
-        return PROJECTILE_ITEM;
-    }
-
-    @Override
-    protected void doPostHurtEffects(LivingEntity entity) {
-        super.doPostHurtEffects(entity);
-        entity.setArrowCount(entity.getArrowCount() - 1);
-    }
-
-    public static TaserBulletProjectileEntity shoot(Level world, LivingEntity entity, RandomSource random, float power, double damage, int knockback) {
-        TaserBulletProjectileEntity taserBullet = new TaserBulletProjectileEntity(TargetModEntities.TASER_BULLET_PROJECTILE.get(), entity, world);
-        taserBullet.shoot(entity.getViewVector(1).x, entity.getViewVector(1).y, entity.getViewVector(1).z, power * 2, 0);
-        taserBullet.setSilent(true);
-        taserBullet.setCritArrow(false);
-        taserBullet.setBaseDamage(damage);
-        taserBullet.setKnockback(knockback);
-        world.addFreshEntity(taserBullet);
-        return taserBullet;
-    }
-
-    public static TaserBulletProjectileEntity shoot(LivingEntity entity, LivingEntity target) {
-        TaserBulletProjectileEntity taserBullet = new TaserBulletProjectileEntity(TargetModEntities.TASER_BULLET_PROJECTILE.get(), entity, entity.level());
-        double dx = target.getX() - entity.getX();
-        double dy = target.getY() + target.getEyeHeight() - 1.1;
-        double dz = target.getZ() - entity.getZ();
-        taserBullet.shoot(dx, dy - taserBullet.getY() + Math.hypot(dx, dz) * 0.2F, dz, 1f * 2, 12.0F);
-        taserBullet.setSilent(true);
-        taserBullet.setBaseDamage(5);
-        taserBullet.setKnockback(5);
-        taserBullet.setCritArrow(false);
-        entity.level().addFreshEntity(taserBullet);
-        return taserBullet;
-    }
-
-    public static TaserBulletProjectileEntity shoot(Level world, LivingEntity entity, RandomSource source) {
-        return shoot(world, entity, source, 1f, 5, 5);
+    protected Item getDefaultItem() {
+        return TargetModItems.TASER_ELECTRODE.get();
     }
 
     @Override
@@ -140,7 +86,6 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
                         headshot = true;
                     }
                     if (headshot && this.getOwner() instanceof LivingEntity living) {
-                        setBaseDamage(getBaseDamage() * 1.5f);
                         living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                             capability.headIndicator = 25;
                             capability.syncPlayerVariables(living);
@@ -152,7 +97,6 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
                 }
             }
         }
-        super.onHitEntity(result);
 
         if (this.getOwner() instanceof LivingEntity source) {
             CompoundTag tag = source.getMainHandItem().getOrCreateTag();
@@ -160,8 +104,15 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
         }
 
         if (entity instanceof Player player && !player.isCreative()) {
-            if (!player.level().isClientSide())
+            if (!player.level().isClientSide()) {
                 player.addEffect(new MobEffectInstance(TargetModMobEffects.SHOCK.get(), 100, 0));
+            }
+        }
+
+        if (headshot) {
+            entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this.getOwner()), this.damage * 1.5f);
+        } else {
+            entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this.getOwner()), this.damage);
         }
 
         this.discard();
@@ -171,8 +122,7 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
     public void tick() {
         super.tick();
 
-        this.getPersistentData().putInt("live", this.getPersistentData().getInt("live") + 1);
-        if (this.getPersistentData().getInt("live") == 5) {
+        if (this.tickCount == 5) {
             this.setDeltaMovement(new Vec3(0, 0, 0));
         }
 
