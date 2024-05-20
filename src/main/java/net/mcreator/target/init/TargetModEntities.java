@@ -34,7 +34,7 @@ public class TargetModEntities {
     public static final RegistryObject<EntityType<TargetEntity>> TARGET = register("target",
             EntityType.Builder.<TargetEntity>of(TargetEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(TargetEntity::new).fireImmune().sized(0.875f, 2f));
     public static final RegistryObject<EntityType<RpgRocketEntity>> RPG_ROCKET = register("projectile_rpg_rocket",
-            EntityType.Builder.<RpgRocketEntity>of(RpgRocketEntity::new, MobCategory.MISC).setCustomClientFactory(RpgRocketEntity::new).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.5f, 0.5f));
+            EntityType.Builder.<RpgRocketEntity>of(RpgRocketEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<MortarShellEntity>> MORTAR_SHELL = register("projectile_mortar_shell",
             EntityType.Builder.<MortarShellEntity>of(MortarShellEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<BocekArrowEntity>> BOCEK_ARROW = register("projectile_bocekarrow",
@@ -49,13 +49,7 @@ public class TargetModEntities {
 
     @SubscribeEvent
     public static void init(FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {
-            Target1Entity.init();
-            MortarEntity.init();
-            SenpaiEntity.init();
-            ClaymoreEntity.init();
-            TargetEntity.init();
-        });
+        event.enqueueWork(SenpaiEntity::init);
     }
 
     @SubscribeEvent

@@ -2,7 +2,9 @@ package net.mcreator.target.entity;
 
 import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
+import net.mcreator.target.init.TargetModDamageTypes;
 import net.mcreator.target.init.TargetModEntities;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.ParticleTool;
@@ -11,45 +13,34 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.ItemSupplier;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PlayMessages;
 
 import java.util.Optional;
 
-// TODO 父类改为Projectile
-@OnlyIn(value = Dist.CLIENT, _interface = ItemSupplier.class)
-public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
-    public static final ItemStack PROJECTILE_ITEM = new ItemStack(Blocks.AIR);
-
-    public RpgRocketEntity(PlayMessages.SpawnEntity packet, Level world) {
-        super(TargetModEntities.RPG_ROCKET.get(), world);
-    }
+public class RpgRocketEntity extends ThrowableItemProjectile {
+    private float damage = 150f;
 
     public RpgRocketEntity(EntityType<? extends RpgRocketEntity> type, Level world) {
         super(type, world);
     }
 
-    public RpgRocketEntity(EntityType<? extends RpgRocketEntity> type, double x, double y, double z, Level world) {
-        super(type, x, y, z, world);
-    }
-
     public RpgRocketEntity(EntityType<? extends RpgRocketEntity> type, LivingEntity entity, Level world) {
         super(type, entity, world);
+    }
+
+    public RpgRocketEntity(LivingEntity entity, Level level, float damage) {
+        super(TargetModEntities.RPG_ROCKET.get(), entity, level);
+        this.damage = damage;
     }
 
     @Override
@@ -58,31 +49,8 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public ItemStack getItem() {
-        return PROJECTILE_ITEM;
-    }
-
-    @Override
-    protected ItemStack getPickupItem() {
-        return PROJECTILE_ITEM;
-    }
-
-    @Override
-    protected void doPostHurtEffects(LivingEntity entity) {
-        super.doPostHurtEffects(entity);
-        entity.setArrowCount(entity.getArrowCount() - 1);
-    }
-
-    public static RpgRocketEntity shoot(Level world, LivingEntity entity, RandomSource random, float power, double damage, int knockback) {
-        RpgRocketEntity entityArrow = new RpgRocketEntity(TargetModEntities.RPG_ROCKET.get(), entity, world);
-        entityArrow.shoot(entity.getViewVector(1).x, entity.getViewVector(1).y, entity.getViewVector(1).z, power * 2, 0);
-        entityArrow.setSilent(true);
-        entityArrow.setCritArrow(false);
-        entityArrow.setBaseDamage(damage);
-        entityArrow.setKnockback(knockback);
-        world.addFreshEntity(entityArrow);
-        return entityArrow;
+    protected Item getDefaultItem() {
+        return TargetModItems.ROCKET.get();
     }
 
     @Override
@@ -104,7 +72,6 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
                 if (!entity.level().isClientSide()) {
                     ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
                 }
-
                 this.discard();
             }
         }
@@ -112,6 +79,7 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
         if (entity instanceof LivingEntity) {
             entity.invulnerableTime = 0;
         }
+
         AABB boundingBox = entity.getBoundingBox();
         Vec3 startVec = this.position();
         Vec3 endVec = startVec.add(this.getDeltaMovement());
@@ -134,7 +102,6 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
                     }
                     if (headshot) {
                         if (this.getOwner() instanceof LivingEntity living) {
-                            setBaseDamage(getBaseDamage() * 5);
                             living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                                 capability.headIndicator = 25;
                                 capability.syncPlayerVariables(living);
@@ -147,7 +114,13 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
                 }
             }
         }
-        super.onHitEntity(result);
+
+        if (headshot) {
+            entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this.getOwner()), this.damage * 5f);
+        } else {
+            entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this.getOwner()), this.damage);
+        }
+
         this.discard();
     }
 
@@ -163,22 +136,23 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
         if (this.getPersistentData().getInt("time") > 0) {
             if (this.level() instanceof ServerLevel level) {
                 level.explode(this, this.getX(), this.getY(), this.getZ(), 6, Level.ExplosionInteraction.NONE);
+                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
             }
         }
+
+        this.discard();
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        this.getPersistentData().putInt("time", (1 + this.getPersistentData().getInt("time")));
-        double life = this.getPersistentData().getInt("time");
-        if (life == 4) {
+        if (this.tickCount == 4) {
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(), 50, 0.8, 0.8, 0.8, 0.01, true);
             }
         }
-        if (life >= 4) {
+        if (this.tickCount > 4) {
             this.setDeltaMovement(new Vec3((1.04 * this.getDeltaMovement().x()), (1.04 * this.getDeltaMovement().y() - 0.02), (1.04 * this.getDeltaMovement().z())));
 
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
@@ -186,20 +160,11 @@ public class RpgRocketEntity extends AbstractArrow implements ItemSupplier {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(), 2, 0, 0, 0, 0, true);
             }
         }
-        if (life >= 90) {
+
+        if (this.tickCount >= 90) {
             if (!this.level().isClientSide()) {
                 ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
             }
-            if (!this.level().isClientSide())
-                this.discard();
-        }
-        if (this.inGround) {
-            if (!this.level().isClientSide()) {
-                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-            }
-            this.discard();
-        }
-        if (this.tickCount > 100) {
             this.discard();
         }
     }
