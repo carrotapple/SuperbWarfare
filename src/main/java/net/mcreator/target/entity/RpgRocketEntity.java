@@ -133,11 +133,9 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
 
-        if (this.getPersistentData().getInt("time") > 0) {
-            if (this.level() instanceof ServerLevel level) {
-                level.explode(this, this.getX(), this.getY(), this.getZ(), 6, Level.ExplosionInteraction.NONE);
-                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-            }
+        if (this.level() instanceof ServerLevel level) {
+            level.explode(this, this.getX(), this.getY(), this.getZ(), 6, Level.ExplosionInteraction.NONE);
+            ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
         }
 
         this.discard();
