@@ -2,7 +2,6 @@ package net.mcreator.target.procedures;
 
 import net.mcreator.target.entity.GunGrenadeEntity;
 import net.mcreator.target.init.TargetModAttributes;
-import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
@@ -14,18 +13,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+// TODO 内联这个类
 public class M79fireProcedure {
     public static void execute(Entity entity) {
         if (entity == null) return;
         if (entity instanceof Player player && !player.isSpectator()) {
-            ItemStack usehand = player.getMainHandItem();
-            if (usehand.getItem() == TargetModItems.M_79.get() && !usehand.getOrCreateTag().getBoolean("reloading") && !(entity instanceof Player _plrCldCheck4 && _plrCldCheck4.getCooldowns().isOnCooldown(usehand.getItem()))
-                    && usehand.getOrCreateTag().getInt("ammo") > 0) {
+            ItemStack stack = player.getMainHandItem();
+            if (stack.getItem() == TargetModItems.M_79.get() && !stack.getOrCreateTag().getBoolean("reloading") && !(entity instanceof Player _plrCldCheck4 && _plrCldCheck4.getCooldowns().isOnCooldown(stack.getItem()))
+                    && stack.getOrCreateTag().getInt("ammo") > 0) {
                 entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                     capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
                     capability.recoil = 0.1;
@@ -33,22 +31,14 @@ public class M79fireProcedure {
                     capability.syncPlayerVariables(entity);
                 });
 
-                Level projectileLevel = entity.level();
-                if (!projectileLevel.isClientSide()) {
-                    Projectile _entityToSpawn = new Object() {
-                        public Projectile getArrow(Level level, Entity shooter, float damage, int knockback) {
-                            AbstractArrow entityToSpawn = new GunGrenadeEntity(TargetModEntities.GUN_GRENADE.get(), level);
-                            entityToSpawn.setOwner(shooter);
-                            entityToSpawn.setBaseDamage(damage);
-                            entityToSpawn.setKnockback(knockback);
-                            entityToSpawn.setSilent(true);
-                            return entityToSpawn;
-                        }
-                    }.getArrow(projectileLevel, entity, (float) ((usehand.getOrCreateTag().getDouble("damage") / usehand.getOrCreateTag().getDouble("velocity")) * (1 + 0.05 * usehand.getOrCreateTag().getInt("level"))), 0);
-                    _entityToSpawn.setPos(entity.getX(), entity.getEyeY() - 0.1, entity.getZ());
-                    _entityToSpawn.shoot(entity.getLookAngle().x, entity.getLookAngle().y, entity.getLookAngle().z, (float) usehand.getOrCreateTag().getDouble("velocity"),
+                Level level = entity.level();
+                if (!level.isClientSide()) {
+                    GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, level, (float) stack.getOrCreateTag().getDouble("damage"));
+
+                    gunGrenadeEntity.setPos(entity.getX(), entity.getEyeY() - 0.1, entity.getZ());
+                    gunGrenadeEntity.shoot(entity.getLookAngle().x, entity.getLookAngle().y, entity.getLookAngle().z, (float) stack.getOrCreateTag().getDouble("velocity"),
                             (float) ((LivingEntity) entity).getAttribute(TargetModAttributes.SPREAD.get()).getBaseValue());
-                    projectileLevel.addFreshEntity(_entityToSpawn);
+                    level.addFreshEntity(gunGrenadeEntity);
                 }
 
                 if (!entity.level().isClientSide() && entity.getServer() != null) {
@@ -58,7 +48,7 @@ public class M79fireProcedure {
                             ("particle minecraft:cloud" + (" " + (entity.getX() + 1.8 * entity.getLookAngle().x)) + (" " + (entity.getY() + entity.getBbHeight() - 0.1 + 1.8 * entity.getLookAngle().y))
                                     + (" " + (entity.getZ() + 1.8 * entity.getLookAngle().z)) + " 0.1 0.1 0.1 0.002 4 force @s"));
                 }
-                player.getCooldowns().addCooldown(usehand.getItem(), 15);
+                player.getCooldowns().addCooldown(stack.getItem(), 15);
 
                 if (entity instanceof ServerPlayer) {
                     SoundTool.playLocalSound(player, TargetModSounds.M_79_FIRE_1P.get(), 2, 1);
@@ -66,8 +56,8 @@ public class M79fireProcedure {
                     SoundTool.playLocalSound(player, TargetModSounds.M_79_FAR.get(), 6, 1);
                     SoundTool.playLocalSound(player, TargetModSounds.M_79_VERYFAR.get(), 12, 1);
                 }
-                usehand.getOrCreateTag().putInt("fire_animation", 2);
-                usehand.getOrCreateTag().putInt("ammo", (usehand.getOrCreateTag().getInt("ammo") - 1));
+                stack.getOrCreateTag().putInt("fire_animation", 2);
+                stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
             }
         }
     }

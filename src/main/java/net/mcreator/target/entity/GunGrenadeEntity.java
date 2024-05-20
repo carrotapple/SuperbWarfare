@@ -2,7 +2,9 @@ package net.mcreator.target.entity;
 
 import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
+import net.mcreator.target.init.TargetModDamageTypes;
 import net.mcreator.target.init.TargetModEntities;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.ParticleTool;
@@ -14,41 +16,31 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.ItemSupplier;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PlayMessages;
 
 import java.util.Optional;
 
-// TODO 父类改为Projectile
-@OnlyIn(value = Dist.CLIENT, _interface = ItemSupplier.class)
-public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
-    public static final ItemStack PROJECTILE_ITEM = new ItemStack(Blocks.AIR);
-
-    public GunGrenadeEntity(PlayMessages.SpawnEntity packet, Level world) {
-        super(TargetModEntities.GUN_GRENADE.get(), world);
-    }
+public class GunGrenadeEntity extends ThrowableItemProjectile {
+    private float damage = 5f;
 
     public GunGrenadeEntity(EntityType<? extends GunGrenadeEntity> type, Level world) {
         super(type, world);
     }
 
-    public GunGrenadeEntity(EntityType<? extends GunGrenadeEntity> type, double x, double y, double z, Level world) {
-        super(type, x, y, z, world);
-    }
-
     public GunGrenadeEntity(EntityType<? extends GunGrenadeEntity> type, LivingEntity entity, Level world) {
         super(type, entity, world);
+    }
+
+    public GunGrenadeEntity(LivingEntity entity, Level level, float damage) {
+        super(TargetModEntities.GUN_GRENADE.get(), entity, level);
+        this.damage = damage;
     }
 
     @Override
@@ -57,20 +49,8 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public ItemStack getItem() {
-        return PROJECTILE_ITEM;
-    }
-
-    @Override
-    protected ItemStack getPickupItem() {
-        return PROJECTILE_ITEM;
-    }
-
-    @Override
-    protected void doPostHurtEffects(LivingEntity entity) {
-        super.doPostHurtEffects(entity);
-        entity.setArrowCount(entity.getArrowCount() - 1);
+    protected Item getDefaultItem() {
+        return TargetModItems.GRENADE_40MM.get();
     }
 
     @Override
@@ -87,7 +67,6 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
         }
 
         if (this.getPersistentData().getInt("fuse") > 0) {
-
             if (this.level() instanceof ServerLevel level) {
                 level.explode(this, (this.getX()), (this.getY()), (this.getZ()), 5.5f, Level.ExplosionInteraction.NONE);
                 if (!entity.level().isClientSide()) {
@@ -100,6 +79,7 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
         if (entity instanceof LivingEntity) {
             entity.invulnerableTime = 0;
         }
+
         AABB boundingBox = entity.getBoundingBox();
         Vec3 startVec = this.position();
         Vec3 endVec = startVec.add(this.getDeltaMovement());
@@ -122,7 +102,6 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
                     }
                     if (headshot) {
                         if (this.getOwner() instanceof LivingEntity living) {
-                            setBaseDamage(getBaseDamage() * 2);
                             living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                                 capability.headIndicator = 25;
                                 capability.syncPlayerVariables(living);
@@ -135,7 +114,13 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
                 }
             }
         }
-        super.onHitEntity(result);
+
+        if (headshot) {
+            entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this.getOwner()), this.damage * 2f);
+        } else {
+            entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this.getOwner()), this.damage);
+        }
+
         this.discard();
     }
 
@@ -145,8 +130,11 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
         if (this.getPersistentData().getInt("fuse") > 0) {
             if (this.level() instanceof ServerLevel) {
                 this.level().explode(this, this.getX(), this.getY(), this.getZ(), 5.5f, Level.ExplosionInteraction.NONE);
+                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
             }
         }
+
+        this.discard();
     }
 
     @Override
@@ -159,12 +147,7 @@ public class GunGrenadeEntity extends AbstractArrow implements ItemSupplier {
             ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(),
                     1, 0, 0, 0, 0.02, true);
         }
-        if (this.inGround) {
-            if (!this.level().isClientSide()) {
-                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-            }
-            this.discard();
-        }
+
         if (this.tickCount > 200) {
             this.discard();
         }
