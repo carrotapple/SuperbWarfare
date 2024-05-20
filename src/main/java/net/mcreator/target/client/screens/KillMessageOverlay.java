@@ -50,17 +50,33 @@ public class KillMessageOverlay {
         int attackerNameWidth = font.width(attackerName);
         int targetNameWidth = font.width(targetName);
 
-        int nameW = record.headshot ? w - targetNameWidth - 68 - attackerNameWidth : w - targetNameWidth - 50 - attackerNameWidth;
+        // 击杀提示是右对齐的，这里从右向左渲染
 
+        // 渲染被击杀者名称
         event.getGuiGraphics().drawString(
                 Minecraft.getInstance().font,
-                attackerName,
-                nameW,
+                targetName,
+                w - targetNameWidth - 10f,
                 h,
-                record.attacker.getTeamColor(),
+                record.target.getTeamColor(),
                 false
         );
 
+        // 渲染爆头图标
+        if (record.headshot) {
+            event.getGuiGraphics().blit(HEADSHOT,
+                    w - targetNameWidth - 28,
+                    h - 2,
+                    0,
+                    0,
+                    12,
+                    12,
+                    12,
+                    12
+            );
+        }
+
+        // 如果是枪械击杀，则渲染枪械图标
         if (record.stack.getItem() instanceof GunItem gunItem) {
             ResourceLocation resourceLocation = gunItem.getGunIcon();
 
@@ -78,26 +94,17 @@ public class KillMessageOverlay {
             );
         }
 
-        if (record.headshot) {
-            event.getGuiGraphics().blit(HEADSHOT,
-                    w - targetNameWidth - 28,
-                    h - 2,
-                    0,
-                    0,
-                    12,
-                    12,
-                    12,
-                    12
-            );
-        }
+        // 渲染击杀者名称
+        int nameW = record.headshot ? w - targetNameWidth - 68 - attackerNameWidth : w - targetNameWidth - 50 - attackerNameWidth;
 
         event.getGuiGraphics().drawString(
                 Minecraft.getInstance().font,
-                targetName,
-                w - targetNameWidth - 10f,
+                attackerName,
+                nameW,
                 h,
-                record.target.getTeamColor(),
+                record.attacker.getTeamColor(),
                 false
         );
+
     }
 }

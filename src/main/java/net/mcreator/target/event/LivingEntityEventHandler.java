@@ -8,7 +8,7 @@ import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.GunItem;
 import net.mcreator.target.network.TargetModVariables;
-import net.mcreator.target.network.message.PlayerKillMessage;
+import net.mcreator.target.network.message.PlayerGunKillMessage;
 import net.mcreator.target.tools.SoundTool;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
@@ -18,6 +18,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -217,11 +218,13 @@ public class LivingEntityEventHandler {
             return;
         }
 
+        ResourceKey<DamageType> damageTypeResourceKey = source.typeHolder().unwrapKey().isPresent() ? source.typeHolder().unwrapKey().get() : DamageTypes.GENERIC;
+
         if (source.getDirectEntity() instanceof ServerPlayer player) {
-            if (source.is(TargetModDamageTypes.GUN_FIRE) || source.is(TargetModDamageTypes.ARROW_IN_KNEE)) {
-                TargetMod.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerKillMessage(player.getId(), entity.getId(), false));
-            } else if (source.is(TargetModDamageTypes.GUN_FIRE_HEADSHOT) || source.is(TargetModDamageTypes.ARROW_IN_BRAIN)) {
-                TargetMod.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerKillMessage(player.getId(), entity.getId(), true));
+            if (source.is(TargetModDamageTypes.GUN_FIRE_HEADSHOT) || source.is(TargetModDamageTypes.ARROW_IN_BRAIN)) {
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(player.getId(), entity.getId(), true, damageTypeResourceKey));
+            } else {
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(player.getId(), entity.getId(), false, damageTypeResourceKey));
             }
         }
     }

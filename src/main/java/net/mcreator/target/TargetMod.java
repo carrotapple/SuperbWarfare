@@ -91,6 +91,6 @@ public class TargetMod {
         addNetworkMessage(FireModeMessage.class, FireModeMessage::buffer, FireModeMessage::new, FireModeMessage::handler);
         addNetworkMessage(GunRecycleGuiButtonMessage.class, GunRecycleGuiButtonMessage::buffer, GunRecycleGuiButtonMessage::new, GunRecycleGuiButtonMessage::handler);
         addNetworkMessage(ReloadMessage.class, ReloadMessage::buffer, ReloadMessage::new, ReloadMessage::handler);
-        addNetworkMessage(PlayerKillMessage.class, PlayerKillMessage::encode, PlayerKillMessage::decode, PlayerKillMessage::handler, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        addNetworkMessage(PlayerGunKillMessage.class, PlayerGunKillMessage::encode, PlayerGunKillMessage::decode, PlayerGunKillMessage::handler, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
     }
 }
