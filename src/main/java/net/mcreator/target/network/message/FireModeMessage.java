@@ -2,6 +2,7 @@ package net.mcreator.target.network.message;
 
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.init.TargetModTags;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -48,21 +49,12 @@ public class FireModeMessage {
         }
     }
 
-    private static void setFireMode(Player player, CompoundTag tag, int mode) {
-        if (player.getServer() == null) return;
-        var text = switch (mode) {
-            case 0 -> "Semi";
-            case 1 -> "Burst";
-            case 2 -> "Auto";
-            default -> "";
-        };
+    private static void setFireMode(Player player, CompoundTag tag) {
 
         if (player instanceof ServerPlayer serverPlayer) {
             serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(TargetModSounds.FIRE_RATE.get()),
                     SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1f, 1f, serverPlayer.level().random.nextLong()));
         }
-
-        tag.putInt("fire_mode", mode);
         tag.putDouble("cg", 10);
     }
 
@@ -72,17 +64,56 @@ public class FireModeMessage {
         Item item = mainHandItem.getItem();
         int fireMode = tag.getInt("fire_mode");
 
-        if (item == TargetModItems.AK_47.get()
-                || item == TargetModItems.M_4.get()
-                || item == TargetModItems.AA_12.get()
-                || item == TargetModItems.HK_416.get()
-                || item == TargetModItems.RPK.get()
-                || item == TargetModItems.MK_14.get()) {
-            setFireMode(player, tag, fireMode == 0 ? 2 : 0);
+        if (mainHandItem.is(TargetModTags.Items.GUN)) {
+            if (tag.getInt("fire_mode") == 0) {
+                if (tag.getDouble("burst") == 1) {
+                    tag.putInt("fire_mode", 1);
+                    setFireMode(player, tag);
+                    return;
+                }
+                if (tag.getDouble("auto") == 1) {
+                    tag.putInt("fire_mode", 2);
+                    setFireMode(player, tag);
+                    return;
+                }
+            }
+            if (tag.getInt("fire_mode") == 1) {
+                if (tag.getDouble("auto") == 1) {
+                    tag.putInt("fire_mode", 2);
+                    setFireMode(player, tag);
+                    return;
+                }
+                if (tag.getDouble("semi") == 1) {
+                    tag.putInt("fire_mode", 0);
+                    setFireMode(player, tag);
+                    return;
+                }
+            }
+            if (tag.getInt("fire_mode") == 2) {
+                if (tag.getDouble("semi") == 1) {
+                    tag.putInt("fire_mode", 0);
+                    setFireMode(player, tag);
+                    return;
+                }
+                if (tag.getDouble("burst") == 1) {
+                    tag.putInt("fire_mode", 1);
+                    setFireMode(player, tag);
+                    return;
+                }
+            }
         }
-        if (item == TargetModItems.VECTOR.get()) {
-            setFireMode(player, tag, (fireMode + 1) % 3);
-        }
+
+//        if (item == TargetModItems.AK_47.get()
+//                || item == TargetModItems.M_4.get()
+//                || item == TargetModItems.AA_12.get()
+//                || item == TargetModItems.HK_416.get()
+//                || item == TargetModItems.RPK.get()
+//                || item == TargetModItems.MK_14.get()) {
+//            setFireMode(player, tag, fireMode == 0 ? 2 : 0);
+//        }
+//        if (item == TargetModItems.VECTOR.get()) {
+//            setFireMode(player, tag, (fireMode + 1) % 3);
+//        }
         if (item == TargetModItems.SENTINEL.get() && !(player.getCooldowns().isOnCooldown(item)) && tag.getDouble("charging") == 0) {
             tag.putDouble("charging", 1);
             tag.putDouble("cid", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));

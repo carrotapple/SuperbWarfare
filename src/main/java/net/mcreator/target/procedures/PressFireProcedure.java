@@ -10,17 +10,25 @@ import net.minecraft.world.entity.player.Player;
 
 public class PressFireProcedure {
     public static void execute(Player player) {
+        var mainHandItem = player.getMainHandItem();
+        var tag = mainHandItem.getOrCreateTag();
+
         TaserfireProcedure.execute(player);
         M79fireProcedure.execute(player);
         RpgFireProcedure.execute(player);
-
         MarlinfireProcedure.execute(player);
         M870fireProcedure.execute(player);
-        VectorFireProcedure.execute(player);
-        player.getPersistentData().putBoolean("firing", true);
 
-        var mainHandItem = player.getMainHandItem();
-        var tag = mainHandItem.getOrCreateTag();
+        if (mainHandItem.is(TargetModTags.Items.GUN)) {
+
+            if (tag.getInt("fire_mode") == 1) {
+                player.getPersistentData().putBoolean("firing", false);
+                tag.putInt("burst_fire", (int) tag.getDouble("burst_size"));
+            } else {
+                player.getPersistentData().putBoolean("firing", true);
+            }
+        }
+
 
         if (mainHandItem.is(TargetModTags.Items.GUN)
                 && !(mainHandItem.getItem() == TargetModItems.BOCEK.get())

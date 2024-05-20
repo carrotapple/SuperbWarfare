@@ -111,21 +111,33 @@ public class GunEventHandler {
         ItemStack stack = player.getMainHandItem();
         if (stack.is(TargetModTags.Items.NORMAL_GUN)) {
             double mode = stack.getOrCreateTag().getInt("fire_mode");
+
+            int interval = stack.getOrCreateTag().getInt("fire_interval");
+
             if (!player.getPersistentData().getBoolean("firing") && player.getMainHandItem().getItem() == TargetModItems.DEVOTION.get()) {
                 stack.getOrCreateTag().putDouble("fire_increase", 0);
             }
 
-            if (player.getPersistentData().getBoolean("firing")
+            if (stack.getOrCreateTag().getInt("ammo") == 0) {
+                stack.getOrCreateTag().putInt("burst_fire", 0);
+            }
+
+            if ((player.getPersistentData().getBoolean("firing") || stack.getOrCreateTag().getInt("burst_fire") > 0)
                     && !stack.getOrCreateTag().getBoolean("reloading")
                     && stack.getOrCreateTag().getInt("ammo") > 0
                     && !player.getCooldowns().isOnCooldown(stack.getItem())
-                    && mode != 1
                     && stack.getOrCreateTag().getDouble("need_bolt_action") == 0) {
 
                 playGunSounds(player);
 
-                if (stack.getOrCreateTag().getInt("fire_mode") == 0) {
+                if (mode == 0) {
                     player.getPersistentData().putBoolean("firing", false);
+                }
+
+                int burst_cooldown = 0;
+                if (mode == 1) {
+                    stack.getOrCreateTag().putInt("burst_fire", (stack.getOrCreateTag().getInt("burst_fire") - 1));
+                    burst_cooldown = stack.getOrCreateTag().getInt("burst_fire") == 0 ? interval + 4 : 0;
                 }
 
                 if (stack.getOrCreateTag().getDouble("animindex") == 1) {
@@ -145,8 +157,8 @@ public class GunEventHandler {
                 }
 
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
-                stack.getOrCreateTag().putInt("fire_animation", stack.getOrCreateTag().getInt("fire_interval"));
-                player.getPersistentData().putInt("noRun_time", stack.getOrCreateTag().getInt("fire_interval") + 2);
+                stack.getOrCreateTag().putInt("fire_animation", interval);
+                player.getPersistentData().putInt("noRun_time", interval + 2);
                 stack.getOrCreateTag().putDouble("flash_time", 2);
                 stack.getOrCreateTag().putDouble("empty", 1);
 
@@ -183,7 +195,7 @@ public class GunEventHandler {
                     stack.getOrCreateTag().putDouble("crot", 20);
                 }
 
-                int cooldown = (int) stack.getOrCreateTag().getDouble("fire_interval") + (int) stack.getOrCreateTag().getDouble("fire_sequence") - (int) stack.getOrCreateTag().getDouble("fire_increase");
+                int cooldown = interval + (int) stack.getOrCreateTag().getDouble("fire_sequence") - (int) stack.getOrCreateTag().getDouble("fire_increase") + burst_cooldown;
                 player.getCooldowns().addCooldown(stack.getItem(), cooldown);
 
                 for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {

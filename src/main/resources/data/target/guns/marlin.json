@@ -8,5 +8,10 @@
   "headshot": 2.5,
   "velocity": 27,
   "mag": 8,
-  "weight": 1
+  "weight": 1,
+  "fire_mode": 0,
+  "semi": 1,
+  "burst": 0,
+  "auto": 0,
+  "burst_size": 1
 }

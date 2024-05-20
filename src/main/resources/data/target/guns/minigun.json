@@ -6,7 +6,11 @@
   "damage": 8,
   "headshot": 2,
   "velocity": 40,
-  "fire_mode": 2,
   "fire_interval": 1,
-  "weight": 2
+  "weight": 2,
+  "fire_mode": 2,
+  "semi": 0,
+  "burst": 0,
+  "auto": 1,
+  "burst_size": 1
 }

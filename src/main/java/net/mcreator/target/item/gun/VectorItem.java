@@ -84,42 +84,6 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    @SubscribeEvent
-    public static void handleBurstFire(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
-
-        var player = event.player;
-        ItemStack mainHandItem = player.getMainHandItem();
-        CompoundTag tag = mainHandItem.getOrCreateTag();
-        if (mainHandItem.is(TargetModTags.Items.GUN)) {
-            if (tag.getInt("fire_mode") == 1) {
-                player.getPersistentData().putBoolean("firing", false);
-            }
-            if (tag.getInt("ammo") == 0) {
-                tag.putDouble("burst", 0);
-            }
-        }
-        Item item = mainHandItem.getItem();
-        if (item == TargetModItems.VECTOR.get()
-                && !tag.getBoolean("reloading")
-                && tag.getInt("ammo") > 0
-                && !player.getCooldowns().isOnCooldown(item)
-                && tag.getDouble("burst") > 0
-        ) {
-            player.getCooldowns().addCooldown(item, tag.getDouble("burst") == 1 ? 5 : 1);
-            tag.putDouble("burst", tag.getDouble("burst") - 1);
-            tag.putInt("fire_animation", 2);
-            tag.putInt("ammo", (tag.getInt("ammo") - 1));
-
-            GunsTool.spawnBullet(player);
-
-            player.level().playSound(null, player.blockPosition(), TargetModSounds.VECTOR_FIRE_1P.get(), SoundSource.PLAYERS, 2, 1);
-            player.level().playSound(null, player.blockPosition(), TargetModSounds.VECTOR_FIRE_1P.get(), SoundSource.PLAYERS, 4, 1);
-            player.level().playSound(null, player.blockPosition(), TargetModSounds.VECTOR_FAR.get(), SoundSource.PLAYERS, 6, 1);
-            player.level().playSound(null, player.blockPosition(), TargetModSounds.VECTOR_VERYFAR.get(), SoundSource.PLAYERS, 12, 1);
-        }
-    }
-
     private PlayState procedurePredicate(AnimationState<VectorItem> event) {
         if (transformType != null && transformType.firstPerson()) {
             if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
