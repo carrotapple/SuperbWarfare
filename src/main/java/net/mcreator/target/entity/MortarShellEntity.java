@@ -1,6 +1,6 @@
 package net.mcreator.target.entity;
 
-import net.mcreator.target.init.TargetModEntities;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.tools.ParticleTool;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
@@ -9,26 +9,15 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.ItemSupplier;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PlayMessages;
 
-// TODO 父类改为Projectile
-@OnlyIn(value = Dist.CLIENT, _interface = ItemSupplier.class)
-public class MortarShellEntity extends AbstractArrow implements ItemSupplier {
-    public static final ItemStack PROJECTILE_ITEM = new ItemStack(Blocks.AIR);
-
-    public MortarShellEntity(PlayMessages.SpawnEntity packet, Level world) {
-        super(TargetModEntities.MORTAR_SHELL.get(), world);
-    }
+public class MortarShellEntity extends ThrowableItemProjectile {
+    private float damage = 100f;
 
     public MortarShellEntity(EntityType<? extends MortarShellEntity> type, Level world) {
         super(type, world);
@@ -42,32 +31,27 @@ public class MortarShellEntity extends AbstractArrow implements ItemSupplier {
         super(type, entity, world);
     }
 
+    public MortarShellEntity(EntityType<? extends MortarShellEntity> type, LivingEntity entity, Level world, float damage) {
+        super(type, entity, world);
+        this.damage = damage;
+    }
+
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public ItemStack getItem() {
-        return PROJECTILE_ITEM;
+    protected Item getDefaultItem() {
+        return TargetModItems.MORTAR_SHELLS.get();
     }
 
-    @Override
-    protected ItemStack getPickupItem() {
-        return PROJECTILE_ITEM;
-    }
-
-    @Override
-    protected void doPostHurtEffects(LivingEntity entity) {
-        super.doPostHurtEffects(entity);
-        entity.setArrowCount(entity.getArrowCount() - 1);
-    }
 
     @Override
     public void onHitEntity(EntityHitResult entityHitResult) {
-        super.onHitEntity(entityHitResult);
         Entity entity = entityHitResult.getEntity();
+
+        entity.hurt(this.level().damageSources().thrown(this, this.getOwner()), this.damage);
 
         if (this.level() instanceof ServerLevel level) {
             level.explode(this, (this.getX()), (this.getY()), (this.getZ()), 10, Level.ExplosionInteraction.NONE);
@@ -81,9 +65,11 @@ public class MortarShellEntity extends AbstractArrow implements ItemSupplier {
     @Override
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
-        if (this.level() instanceof ServerLevel level) {
+        if (!this.level().isClientSide() && this.level() instanceof ServerLevel level) {
             level.explode(this, this.getX(), this.getY(), this.getZ(), 10, Level.ExplosionInteraction.NONE);
+            ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
         }
+        this.discard();
     }
 
     @Override
@@ -93,10 +79,8 @@ public class MortarShellEntity extends AbstractArrow implements ItemSupplier {
             ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(),
                     2, 0, 0, 0, 0.02, true);
         }
-        if (this.inGround) {
-            if (!this.level().isClientSide() && this.getServer() != null) {
-                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-            }
+        if (this.tickCount >= 600) {
+            this.level().explode(this, this.getX(), this.getY(), this.getZ(), 10, Level.ExplosionInteraction.NONE);
             this.discard();
         }
     }

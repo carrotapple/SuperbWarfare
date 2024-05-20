@@ -34,7 +34,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -202,11 +201,7 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
             TargetMod.queueServerWork(20, () -> {
                 Level level = this.level();
                 if (level instanceof ServerLevel server) {
-                    AbstractArrow entityToSpawn = new MortarShellEntity(TargetModEntities.MORTAR_SHELL.get(), level);
-                    entityToSpawn.setOwner(player);
-                    entityToSpawn.setBaseDamage(100);
-                    entityToSpawn.setKnockback(0);
-                    entityToSpawn.setSilent(true);
+                    MortarShellEntity entityToSpawn = new MortarShellEntity(TargetModEntities.MORTAR_SHELL.get(), player, level);
                     entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
                     entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 8, (float) 0.5);
                     level.addFreshEntity(entityToSpawn);
