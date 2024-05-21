@@ -13,6 +13,7 @@ import java.util.Queue;
 public class KillMessageHandler {
 
     public static Queue<PlayerKillRecord> QUEUE = new ArrayDeque<>();
+    public static final int MAX_SIZE = 10;
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {

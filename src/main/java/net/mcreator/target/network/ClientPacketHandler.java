@@ -23,6 +23,9 @@ public class ClientPacketHandler {
 
     public static void handlePlayerKillMessage(Player attacker, Entity target, boolean headshot, ResourceKey<DamageType> damageType, Supplier<NetworkEvent.Context> ctx) {
         if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+            if (KillMessageHandler.QUEUE.size() >= KillMessageHandler.MAX_SIZE) {
+                KillMessageHandler.QUEUE.poll();
+            }
             KillMessageHandler.QUEUE.offer(new PlayerKillRecord(attacker, target, attacker.getMainHandItem(), headshot, damageType));
         }
     }
