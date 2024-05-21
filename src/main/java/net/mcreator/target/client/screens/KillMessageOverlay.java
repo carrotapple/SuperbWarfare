@@ -29,6 +29,7 @@ public class KillMessageOverlay {
     private static final ResourceLocation EXPLOSION = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/explosion.png");
     private static final ResourceLocation CLAYMORE = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/claymore.png");
     private static final ResourceLocation GENERIC = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/generic.png");
+    private static final ResourceLocation BEAST = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/beast.png");
 
     private static final ResourceLocation WORLD_PEACE_STAFF = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/compat/world_peace_staff.png");
 
@@ -187,9 +188,12 @@ public class KillMessageOverlay {
                     icon = EXPLOSION;
                 } else if (record.damageType == DamageTypes.PLAYER_ATTACK) {
                     icon = KNIFE;
+                } else if (record.damageType == TargetModDamageTypes.BEAST) {
+                    icon = BEAST;
                 } else if (record.damageType == TargetModDamageTypes.MINE) {
                     icon = CLAYMORE;
                 } else {
+
                     icon = GENERIC;
                 }
             }

@@ -21,6 +21,7 @@ public class TargetModDamageTypes {
     public static final ResourceKey<DamageType> ARROW_IN_KNEE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(TargetMod.MODID, "arrow_in_knee"));
     public static final ResourceKey<DamageType> ARROW_IN_BRAIN = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(TargetMod.MODID, "arrow_in_brain"));
     public static final ResourceKey<DamageType> MINE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(TargetMod.MODID, "mine"));
+    public static final ResourceKey<DamageType> BEAST = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(TargetMod.MODID, "beast"));
 
 
     public static DamageSource causeGunFireDamage(RegistryAccess registryAccess, @Nullable Entity entity) {

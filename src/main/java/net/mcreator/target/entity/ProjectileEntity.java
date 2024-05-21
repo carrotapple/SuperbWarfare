@@ -1,9 +1,14 @@
 package net.mcreator.target.entity;
 
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
-import net.mcreator.target.init.*;
+import net.mcreator.target.init.TargetModDamageTypes;
+import net.mcreator.target.init.TargetModEntities;
+import net.mcreator.target.init.TargetModParticleTypes;
+import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.network.message.PlayerGunKillMessage;
 import net.mcreator.target.tools.ExtendedEntityRayTraceResult;
 import net.mcreator.target.tools.ParticleTool;
 import net.minecraft.core.BlockPos;
@@ -32,6 +37,7 @@ import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.entity.PartEntity;
+import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -306,6 +312,19 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
         if (beast && entity instanceof LivingEntity living) {
             if (living.isDeadOrDying()) return;
+
+            if (this.shooter instanceof ServerPlayer player) {
+                player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    capability.hitIndicator = 25;
+                    capability.syncPlayerVariables(living);
+                });
+                var holder = Holder.direct(TargetModSounds.INDICATION.get());
+                player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
+                ((ServerLevel) this.level()).sendParticles(ParticleTypes.DAMAGE_INDICATOR, living.getX(), living.getY() + .5, living.getZ(), 1000, .4, .7, .4, 0);
+
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(player.getId(), living.getId(), false, TargetModDamageTypes.BEAST));
+            }
+
             if (living instanceof ServerPlayer victim) {
                 living.setHealth(0);
                 living.level().players().forEach(
@@ -321,16 +340,6 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 living.level().broadcastEntityEvent(living, (byte) 60);
                 living.remove(Entity.RemovalReason.KILLED);
                 living.gameEvent(GameEvent.ENTITY_DIE);
-            }
-
-            if (this.shooter instanceof ServerPlayer player) {
-                player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.hitIndicator = 25;
-                    capability.syncPlayerVariables(living);
-                });
-                var holder = Holder.direct(TargetModSounds.INDICATION.get());
-                player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
-                ((ServerLevel) this.level()).sendParticles(ParticleTypes.DAMAGE_INDICATOR, living.getX(), living.getY() + .5, living.getZ(), 1000, .4, .7, .4, 0);
             }
 
             return;
