@@ -87,9 +87,15 @@ public class KillMessageOverlay {
                 GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE
         );
 
-        float alpha = (100 - record.tick) / 100f;
+        float alpha = (100 - record.tick - event.getPartialTick()) / 100f;
         // TODO 实现图标半透明渲染
+        // 时间越久图片越透明
         gui.setColor(1, 1, 1, alpha);
+
+        // 3s后开始消失
+        if (record.tick >= 60) {
+            gui.pose().translate((-60 + record.tick + event.getPartialTick()) * 2.5, 0, 0);
+        }
 
         // 击杀提示是右对齐的，这里从右向左渲染
 
