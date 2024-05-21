@@ -1,5 +1,7 @@
 package net.mcreator.target.client.screens;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.event.KillMessageHandler;
 import net.mcreator.target.init.TargetModDamageTypes;
@@ -74,10 +76,25 @@ public class KillMessageOverlay {
 
         int targetNameWidth = font.width(targetName.get());
 
+        var gui = event.getGuiGraphics();
+        gui.pose().pushPose();
+
+        RenderSystem.disableDepthTest();
+        RenderSystem.depthMask(false);
+        RenderSystem.enableBlend();
+        RenderSystem.blendFuncSeparate(
+                GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE,
+                GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE
+        );
+
+        float alpha = (100 - record.tick) / 100f;
+        // TODO 实现图标半透明渲染
+        gui.setColor(1, 1, 1, alpha);
+
         // 击杀提示是右对齐的，这里从右向左渲染
 
         // 渲染被击杀者名称
-        event.getGuiGraphics().drawString(
+        gui.drawString(
                 Minecraft.getInstance().font,
                 targetName.get(),
                 w - targetNameWidth - 10f,
@@ -92,7 +109,7 @@ public class KillMessageOverlay {
         ResourceLocation damageTypeIcon = getDamageTypeIcon(record);
 
         if (damageTypeIcon != null) {
-            event.getGuiGraphics().blit(damageTypeIcon,
+            gui.blit(damageTypeIcon,
                     damageTypeIconW,
                     h - 2,
                     0,
@@ -112,7 +129,7 @@ public class KillMessageOverlay {
 
             ResourceLocation resourceLocation = gunItem.getGunIcon();
 
-            event.getGuiGraphics().blit(resourceLocation,
+            gui.blit(resourceLocation,
                     itemIconW,
                     h,
                     0,
@@ -128,7 +145,7 @@ public class KillMessageOverlay {
         if (record.stack.getItem().getDescriptionId().equals("item.dreamaticvoyage.world_peace_staff")) {
             renderItem = true;
 
-            event.getGuiGraphics().blit(WORLD_PEACE_STAFF,
+            gui.blit(WORLD_PEACE_STAFF,
                     itemIconW,
                     h,
                     0,
@@ -161,7 +178,7 @@ public class KillMessageOverlay {
             nameW -= 18;
         }
 
-        event.getGuiGraphics().drawString(
+        gui.drawString(
                 Minecraft.getInstance().font,
                 attackerName.get(),
                 nameW,
@@ -170,6 +187,12 @@ public class KillMessageOverlay {
                 false
         );
 
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.disableBlend();
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
+
+        gui.pose().popPose();
     }
 
     @Nullable
@@ -193,7 +216,6 @@ public class KillMessageOverlay {
                 } else if (record.damageType == TargetModDamageTypes.MINE) {
                     icon = CLAYMORE;
                 } else {
-
                     icon = GENERIC;
                 }
             }
