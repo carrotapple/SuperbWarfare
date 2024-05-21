@@ -12,6 +12,8 @@ public class PlayerKillRecord {
     public ItemStack stack;
     public boolean headshot;
     public int tick;
+    public boolean freeze;
+    public boolean fastRemove;
     public ResourceKey<DamageType> damageType;
 
     public PlayerKillRecord(Player attacker, Entity target, ItemStack stack, boolean headshot, ResourceKey<DamageType> damageType) {

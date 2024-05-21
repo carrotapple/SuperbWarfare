@@ -54,10 +54,29 @@ public class KillMessageOverlay {
         }
 
         float totalTop = 5;
-        for (PlayerKillRecord record : KillMessageHandler.QUEUE) {
-            totalTop = renderKillMessages(record, event, totalTop);
+
+        var arr = KillMessageHandler.QUEUE.toArray(new PlayerKillRecord[0]);
+        var record = arr[0];
+
+        if (record.freeze) {
+            for (var playerKillRecord : arr) {
+                playerKillRecord.freeze = false;
+            }
         }
 
+        if (record.tick >= 80) {
+            if (arr.length > 1 && record.tick - arr[1].tick < (record.fastRemove ? 2 : 20)) {
+                arr[1].fastRemove = true;
+                record.fastRemove = true;
+                for (int j = 1; j < arr.length; j++) {
+                    arr[j].freeze = true;
+                }
+            }
+        }
+
+        for (PlayerKillRecord r : KillMessageHandler.QUEUE) {
+            totalTop = renderKillMessages(r, event, totalTop);
+        }
     }
 
     private static float renderKillMessages(PlayerKillRecord record, RenderGuiEvent.Pre event, float baseTop) {
@@ -101,7 +120,8 @@ public class KillMessageOverlay {
 
         // 4s后开始消失
         if (record.tick >= 80) {
-            float rate = (float) Math.pow((record.tick + event.getPartialTick() - 80) / 20, 5);
+            int animationTickCount = record.fastRemove ? 2 : 20;
+            float rate = (float) Math.pow((record.tick + event.getPartialTick() - 80) / animationTickCount, 5);
             gui.pose().translate(rate * 100, 0, 0);
             gui.setColor(1, 1, 1, 1 - rate);
             baseTop += 10 * (1 - rate);
