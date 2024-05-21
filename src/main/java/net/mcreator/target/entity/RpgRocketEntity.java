@@ -65,15 +65,14 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
                 living.level().playSound(null, living.blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
             }
         }
-        if (this.getPersistentData().getInt("time") > 0) {
-            if (this.level() instanceof ServerLevel level) {
-                level.explode(this, this.getX(), this.getY(), this.getZ(), 4, Level.ExplosionInteraction.NONE);
 
-                if (!entity.level().isClientSide()) {
-                    ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-                }
-                this.discard();
+        if (this.level() instanceof ServerLevel level) {
+            level.explode(this, this.getX(), this.getY(), this.getZ(), 4, Level.ExplosionInteraction.NONE);
+
+            if (!entity.level().isClientSide()) {
+                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
             }
+            this.discard();
         }
 
         if (entity instanceof LivingEntity) {
