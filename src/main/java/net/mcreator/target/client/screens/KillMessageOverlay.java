@@ -10,6 +10,8 @@ import net.mcreator.target.item.gun.GunItem;
 import net.mcreator.target.tools.PlayerKillRecord;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.player.Player;
@@ -32,6 +34,8 @@ public class KillMessageOverlay {
     private static final ResourceLocation CLAYMORE = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/claymore.png");
     private static final ResourceLocation GENERIC = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/generic.png");
     private static final ResourceLocation BEAST = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/beast.png");
+    private static final ResourceLocation BLEEDING = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/bleeding.png");
+    private static final ResourceLocation BLOOD_CRYSTAL = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/blood_crystal.png");
 
     private static final ResourceLocation WORLD_PEACE_STAFF = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/compat/world_peace_staff.png");
 
@@ -221,6 +225,10 @@ public class KillMessageOverlay {
                     icon = BEAST;
                 } else if (record.damageType == TargetModDamageTypes.MINE) {
                     icon = CLAYMORE;
+                } else if (record.damageType == ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("dreamaticvoyage", "dmv_bleeding"))) {
+                    icon = BLEEDING;
+                } else if (record.damageType == ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("dreamaticvoyage", "blood_crystal"))) {
+                    icon = BLOOD_CRYSTAL;
                 } else {
                     icon = GENERIC;
                 }
