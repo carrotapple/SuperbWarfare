@@ -119,6 +119,8 @@
   "item.target.mortar_deployer": "Mortar",
   "item.target.claymore_mine": "Claymore",
   "item.target.fusee": "Fusee",
+  "item.target.dog_tag": "Dog Tag",
+  "curios.identifier.dog_tag": "Dog Tag",
 
   "attribute.target.spread": "Spread",
 

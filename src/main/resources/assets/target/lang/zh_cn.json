@@ -119,6 +119,8 @@
   "item.target.mortar_deployer": "迫击炮",
   "item.target.claymore_mine": "阔剑地雷",
   "item.target.fusee": "引信",
+  "item.target.dog_tag": "狗牌",
+  "curios.identifier.dog_tag": "狗牌",
 
   "attribute.target.spread": "散布",
 
