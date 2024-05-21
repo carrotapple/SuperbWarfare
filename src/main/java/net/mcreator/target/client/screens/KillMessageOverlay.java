@@ -26,6 +26,8 @@ public class KillMessageOverlay {
     private static final ResourceLocation CLAYMORE = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/claymore.png");
     private static final ResourceLocation GENERIC = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/generic.png");
 
+    private static final ResourceLocation WORLD_PEACE_STAFF = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/compat/world_peace_staff.png");
+
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
         Player player = Minecraft.getInstance().player;
@@ -86,14 +88,15 @@ public class KillMessageOverlay {
         }
 
         boolean renderItem = false;
+        int itemIconW = damageTypeIcon != null ? w - targetNameWidth - 64 : w - targetNameWidth - 46;
         // 如果是枪械击杀，则渲染枪械图标
         if (record.stack.getItem() instanceof GunItem gunItem) {
             renderItem = true;
 
             ResourceLocation resourceLocation = gunItem.getGunIcon();
-            int gunIconW = damageTypeIcon != null ? w - targetNameWidth - 64 : w - targetNameWidth - 46;
+
             event.getGuiGraphics().blit(resourceLocation,
-                    gunIconW,
+                    itemIconW,
                     h,
                     0,
                     0,
@@ -105,7 +108,20 @@ public class KillMessageOverlay {
         }
 
         // TODO 如果是特殊武器击杀，则渲染对应图标
+        if (record.stack.getItem().getDescriptionId().equals("item.dreamaticvoyage.world_peace_staff")) {
+            renderItem = true;
 
+            event.getGuiGraphics().blit(WORLD_PEACE_STAFF,
+                    itemIconW,
+                    h,
+                    0,
+                    0,
+                    32,
+                    8,
+                    32,
+                    8
+            );
+        }
 
         // 渲染击杀者名称
         String attackerName = record.attacker.getDisplayName().getString();
