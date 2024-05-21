@@ -3,6 +3,7 @@ package net.mcreator.target.client.screens;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.event.KillMessageHandler;
 import net.mcreator.target.init.TargetModDamageTypes;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.gun.GunItem;
 import net.mcreator.target.tools.PlayerKillRecord;
 import net.minecraft.client.Minecraft;
@@ -16,6 +17,9 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
+import top.theillusivec4.curios.api.CuriosApi;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class KillMessageOverlay {
@@ -54,15 +58,27 @@ public class KillMessageOverlay {
 
         Font font = Minecraft.getInstance().font;
 
-        String targetName = record.target.getDisplayName().getString();
-        int targetNameWidth = font.width(targetName);
+        AtomicReference<String> targetName = new AtomicReference<>(record.target.getDisplayName().getString());
+        if (record.target instanceof Player targetPlayer) {
+            CuriosApi.getCuriosInventory(targetPlayer).ifPresent(
+                    c -> c.findFirstCurio(TargetModItems.DOG_TAG.get()).ifPresent(
+                            s -> {
+                                if (s.stack().hasCustomHoverName()) {
+                                    targetName.set(s.stack().getHoverName().getString());
+                                }
+                            }
+                    )
+            );
+        }
+
+        int targetNameWidth = font.width(targetName.get());
 
         // 击杀提示是右对齐的，这里从右向左渲染
 
         // 渲染被击杀者名称
         event.getGuiGraphics().drawString(
                 Minecraft.getInstance().font,
-                targetName,
+                targetName.get(),
                 w - targetNameWidth - 10f,
                 h,
                 record.target.getTeamColor(),
@@ -124,8 +140,18 @@ public class KillMessageOverlay {
         }
 
         // 渲染击杀者名称
-        String attackerName = record.attacker.getDisplayName().getString();
-        int attackerNameWidth = font.width(attackerName);
+        AtomicReference<String> attackerName = new AtomicReference<>(record.attacker.getDisplayName().getString());
+        CuriosApi.getCuriosInventory(record.attacker).ifPresent(
+                c -> c.findFirstCurio(TargetModItems.DOG_TAG.get()).ifPresent(
+                        s -> {
+                            if (s.stack().hasCustomHoverName()) {
+                                attackerName.set(s.stack().getHoverName().getString());
+                            }
+                        }
+                )
+        );
+
+        int attackerNameWidth = font.width(attackerName.get());
         int nameW = w - targetNameWidth - 16 - attackerNameWidth;
         if (renderItem) {
             nameW -= 32;
@@ -136,7 +162,7 @@ public class KillMessageOverlay {
 
         event.getGuiGraphics().drawString(
                 Minecraft.getInstance().font,
-                attackerName,
+                attackerName.get(),
                 nameW,
                 h,
                 record.attacker.getTeamColor(),
