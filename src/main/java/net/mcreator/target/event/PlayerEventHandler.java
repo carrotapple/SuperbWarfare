@@ -56,7 +56,6 @@ public class PlayerEventHandler {
             handlePlayerProne(player);
             handlePlayerSprint(player);
             handleWeaponLevel(player);
-            handleWeaponSway(player);
             handleAmmoCount(player);
             handleFireTime(player);
             handleGround(player);
@@ -150,46 +149,6 @@ public class PlayerEventHandler {
         }
     }
 
-    private static void handleWeaponSway(Player player) {
-        double[] recoilTimer = {0};
-        double totalTime = 10;
-        int sleepTime = 2;
-        double recoilDuration = totalTime / sleepTime;
-
-        Runnable recoilRunnable = () -> {
-            while (recoilTimer[0] < recoilDuration) {
-                if (player == null)
-                    return;
-                double pose;
-                var data = player.getPersistentData();
-                if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && data.getDouble("prone") == 0) {
-                    pose = 0.85;
-                } else if (data.getDouble("prone") > 0) {
-                    if (player.getMainHandItem().getOrCreateTag().getDouble("bipod") == 1) {
-                        pose = 0;
-                    } else {
-                        pose = 0.25;
-                    }
-                } else {
-                    pose = 1;
-                }
-                data.putDouble("time", (data.getDouble("time") + 0.015));
-                data.putDouble("x", (pose * -0.008 * Math.sin(data.getDouble("time")) * (1 - 0.9 * data.getDouble("zoom_time"))));
-                data.putDouble("y", (pose * 0.125 * Math.sin(data.getDouble("time") - 1.585) * (1 - 0.9 * data.getDouble("zoom_time"))));
-
-                recoilTimer[0]++;
-                try {
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        Thread recoilThread = new Thread(recoilRunnable);
-        recoilThread.start();
-    }
-
     public static void handleAmmoCount(Player player) {
         ItemStack stack = player.getMainHandItem();
 
@@ -212,31 +171,15 @@ public class PlayerEventHandler {
     }
 
     private static void handleFireTime(Player player) {
-        double[] recoilTimer = {0};
-        double totalTime = 50;
-        int sleepTime = 2;
-        double recoilDuration = totalTime / sleepTime;
-        Runnable recoilRunnable = () -> {
-            while (recoilTimer[0] < recoilDuration) {
-                if (player == null) {
-                    return;
-                }
-                if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing > 0) {
-                    player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                        capability.firing = (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing - 0.05;
-                        capability.syncPlayerVariables(player);
-                    });
-                }
-                recoilTimer[0]++;
-                try {
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        Thread recoilThread = new Thread(recoilRunnable);
-        recoilThread.start();
+         if (player == null) {
+             return;
+         }
+         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing > 0) {
+             player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                 capability.firing = (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing - 0.5;
+                 capability.syncPlayerVariables(player);
+             });
+         }
     }
 
     private static void handleGround(Player player) {
@@ -313,32 +256,14 @@ public class PlayerEventHandler {
 
 
     private static void handleRenderDamageIndicator(Player player) {
-        double[] recoilTimer = {0};
-        double totalTime = 10;
-        int sleepTime = 2;
-        double recoilDuration = totalTime / sleepTime;
-        Runnable recoilRunnable = () -> {
-            while (recoilTimer[0] < recoilDuration) {
-                if (player == null) return;
-
-                player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.headIndicator = Math.max(0, capability.headIndicator - 1);
-                    capability.hitIndicator = Math.max(0, capability.hitIndicator - 1);
-                    capability.killIndicator = Math.max(0, capability.killIndicator - 1);
-
-                    capability.syncPlayerVariables(player);
-                });
-
-                recoilTimer[0]++;
-                try {
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        Thread recoilThread = new Thread(recoilRunnable);
-        recoilThread.start();
+        if (player == null)
+            return;
+        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            capability.headIndicator = Math.max(0, capability.headIndicator - 5);
+            capability.hitIndicator = Math.max(0, capability.hitIndicator - 5);
+            capability.killIndicator = Math.max(0, capability.killIndicator - 5);
+            capability.syncPlayerVariables(player);
+        });
     }
 
     private static void handleBocekPulling(Player player) {
@@ -386,7 +311,7 @@ public class PlayerEventHandler {
         float recoilYaw = capability.map(c -> c.recoilHorizon).orElse(0d).floatValue();
 
         double[] recoilTimer = {0};
-        double totalTime = 100;
+        double totalTime = 10;
         int sleepTime = 2;
         double recoilDuration = totalTime / sleepTime;
 
@@ -414,15 +339,15 @@ public class PlayerEventHandler {
                 if (recoil >= 1) recoil = 0d;
 
                 if (recoil > 0) {
-                    recoil += 0.0025;
+                    recoil += 0.02;
 
                     double sinRes = Math.sin(2 * Math.PI * (1.03f * recoil - 0.032047110911)) + 0.2;
 
-                    float newPitch = ((float) (player.getXRot() - 1.5f * recoilY * ry * sinRes));
+                    float newPitch = ((float) (player.getXRot() - 15f * recoilY * ry * sinRes));
                     player.setXRot(newPitch);
                     player.xRotO = player.getXRot();
 
-                    float newYaw = ((float) (player.getYRot() - 1.0f * recoilYaw * recoilX * rx * sinRes));
+                    float newYaw = ((float) (player.getYRot() - 10f * recoilYaw * recoilX * rx * sinRes));
                     player.setYRot(newYaw);
                     player.yRotO = player.getYRot();
                 }

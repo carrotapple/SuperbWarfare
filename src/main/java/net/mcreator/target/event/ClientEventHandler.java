@@ -28,11 +28,39 @@ public class ClientEventHandler {
         ClientLevel level = Minecraft.getInstance().level;
         Entity entity = event.getCamera().getEntity();
         if (level != null && entity instanceof LivingEntity living) {
+            handleWeaponSway(living);
             handleWeaponMove(living);
             handleWeaponZoom(living);
             handleWeaponFire(event, living);
             handleShockCamera(event, living);
             handleBowPullAnimation(living);
+        }
+    }
+    private static void handleWeaponSway(LivingEntity entity) {
+        if (entity.getMainHandItem().is(TargetModTags.Items.GUN)) {
+            float fps = Minecraft.getInstance().getFps();
+            if (fps <= 0) {
+                fps = 1f;
+            }
+            float times = 90f / fps;
+            double pose;
+            var data = entity.getPersistentData();
+
+            if (entity.isShiftKeyDown() && entity.getBbHeight() >= 1 && data.getDouble("prone") == 0) {
+                pose = 0.85;
+            } else if (data.getDouble("prone") > 0) {
+                if (entity.getMainHandItem().getOrCreateTag().getDouble("bipod") == 1) {
+                    pose = 0;
+                } else {
+                    pose = 0.25;
+                }
+            } else {
+                pose = 1;
+            }
+
+            data.putDouble("sway_time", data.getDouble("sway_time") + 0.015 * times);
+            data.putDouble("x", (pose * -0.008 * Math.sin(data.getDouble("sway_time")) * (1 - 0.9 * data.getDouble("zoom_time"))));
+            data.putDouble("y", (pose * 0.125 * Math.sin(data.getDouble("sway_time") - 1.585) * (1 - 0.9 * data.getDouble("zoom_time"))));
         }
     }
 
