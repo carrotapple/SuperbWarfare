@@ -47,6 +47,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
 
+// TODO 重置生物
 public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(SenpaiEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(SenpaiEntity.class, EntityDataSerializers.STRING);

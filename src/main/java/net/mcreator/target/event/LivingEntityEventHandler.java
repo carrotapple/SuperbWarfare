@@ -1,7 +1,6 @@
 package net.mcreator.target.event;
 
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.entity.Target1Entity;
 import net.mcreator.target.init.TargetModDamageTypes;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
@@ -26,12 +25,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
@@ -39,12 +36,12 @@ import net.minecraftforge.network.PacketDistributor;
 @Mod.EventBusSubscriber
 public class LivingEntityEventHandler {
     @SubscribeEvent
-    public static void onEntityAttacked(LivingHurtEvent event) {
+    public static void onEntityHurt(LivingHurtEvent event) {
         if (event == null || event.getEntity() == null) {
             return;
         }
+
         renderDamageIndicator(event);
-        target1DamageImmune(event, event.getEntity());
         reduceBulletDamage(event, event.getSource(), event.getEntity(), event.getSource().getEntity(), event.getAmount());
     }
 
@@ -53,7 +50,8 @@ public class LivingEntityEventHandler {
         if (event == null || event.getEntity() == null) {
             return;
         }
-        claymoreDamage(event, event.getEntity().level(), event.getSource(), event.getEntity(), event.getSource().getEntity(), event.getAmount());
+
+        claymoreDamage(event);
     }
 
     @SubscribeEvent
@@ -61,11 +59,15 @@ public class LivingEntityEventHandler {
         if (event == null || event.getEntity() == null) {
             return;
         }
+
         killIndication(event.getSource().getEntity());
+        handlePlayerKillEntity(event);
     }
 
     private static void reduceBulletDamage(LivingHurtEvent event, DamageSource damagesource, LivingEntity entity, Entity sourceentity, double amount) {
-        if (damagesource == null || entity == null || sourceentity == null) return;
+        if (damagesource == null || entity == null || sourceentity == null) {
+            return;
+        }
 
         double damage = amount;
         ItemStack stack = sourceentity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
@@ -101,21 +103,18 @@ public class LivingEntityEventHandler {
         return amount / (1 + rate * Math.max(0, distance - minDistance));
     }
 
-    private static void target1DamageImmune(Event event, Entity entity) {
-        if (entity == null) return;
-        if (entity instanceof Target1Entity && entity.getPersistentData().getDouble("targetdown") > 0) {
-            event.setCanceled(true);
-        }
-    }
+    private static void claymoreDamage(LivingAttackEvent event) {
+        LivingEntity entity = event.getEntity();
+        DamageSource source = event.getSource();
+        Entity sourceentity = source.getDirectEntity();
 
-    private static void claymoreDamage(LivingAttackEvent event, LevelAccessor world, DamageSource damagesource, Entity entity, Entity sourceentity, double amount) {
-        if (damagesource == null || entity == null || sourceentity == null)
+        if (event.getEntity() == null || entity == null || sourceentity == null) {
             return;
-        if ((damagesource.is(DamageTypes.EXPLOSION) || damagesource.is(DamageTypes.PLAYER_EXPLOSION)) && entity.getPersistentData().getDouble("claymore") > 0) {
-            if (event != null && event.isCancelable()) {
-                event.setCanceled(true);
-            }
-            entity.hurt(TargetModDamageTypes.causeMineDamage(world.registryAccess(), sourceentity), (float) amount);
+        }
+
+        if ((source.is(DamageTypes.EXPLOSION) || source.is(DamageTypes.PLAYER_EXPLOSION)) && entity.getPersistentData().getDouble("claymore") > 0) {
+            event.setCanceled(true);
+            entity.hurt(TargetModDamageTypes.causeMineDamage(entity.level().registryAccess(), sourceentity), event.getAmount());
         }
     }
 
@@ -210,8 +209,7 @@ public class LivingEntityEventHandler {
         });
     }
 
-    @SubscribeEvent
-    public static void handlePlayerKillEntity(LivingDeathEvent event) {
+    private static void handlePlayerKillEntity(LivingDeathEvent event) {
         LivingEntity entity = event.getEntity();
         DamageSource source = event.getSource();
 

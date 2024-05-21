@@ -4,7 +4,6 @@ import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
-import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.SoundTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -445,6 +444,5 @@ public class PlayerEventHandler {
         Thread recoilThread = new Thread(recoilRunnable);
         recoilThread.start();
     }
-
 
 }

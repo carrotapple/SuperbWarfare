@@ -3,7 +3,6 @@ package net.mcreator.target.event;
 import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
-import net.mcreator.target.client.model.item.*;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -427,10 +426,14 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public static void onFovUpdate(ViewportEvent.ComputeFov event) {
-        if (!event.usedConfiguredFov()) return;
+        if (!event.usedConfiguredFov()) {
+            return;
+        }
 
         Player player = Minecraft.getInstance().player;
-        if (player == null) return;
+        if (player == null) {
+            return;
+        }
 
         ItemStack stack = player.getMainHandItem();
 
@@ -445,11 +448,18 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public static void handleRenderCrossHair(RenderGuiOverlayEvent.Pre event) {
-        if (event.getOverlay() != VanillaGuiOverlay.CROSSHAIR.type()) return;
+        if (event.getOverlay() != VanillaGuiOverlay.CROSSHAIR.type()) {
+            return;
+        }
 
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null) return;
-        if (!mc.options.getCameraType().isFirstPerson()) return;
+        if (mc.player == null) {
+            return;
+        }
+
+        if (!mc.options.getCameraType().isFirstPerson()) {
+            return;
+        }
 
         if (mc.player.getMainHandItem().is(TargetModTags.Items.GUN)) {
             event.setCanceled(true);

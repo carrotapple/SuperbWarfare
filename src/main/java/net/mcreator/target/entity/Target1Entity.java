@@ -49,6 +49,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import javax.annotation.Nullable;
 import java.text.DecimalFormat;
 
+// TODO 重置靶子
 @Mod.EventBusSubscriber
 public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(Target1Entity.class, EntityDataSerializers.BOOLEAN);
@@ -109,6 +110,10 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
             this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), TargetModSounds.HIT.get(), SoundSource.BLOCKS, 2, 1, false);
         }
 
+        if (this.getPersistentData().getDouble("targetdown") > 0) {
+            return false;
+        }
+
         if (source.is(DamageTypes.IN_FIRE))
             return false;
         if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
@@ -129,6 +134,7 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
             return false;
         if (source.is(DamageTypes.WITHER_SKULL))
             return false;
+
         return super.hurt(source, amount);
     }
 

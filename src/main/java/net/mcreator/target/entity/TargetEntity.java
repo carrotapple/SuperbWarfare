@@ -33,6 +33,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+// TODO 重置靶子
 public class TargetEntity extends PathfinderMob implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(TargetEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(TargetEntity.class, EntityDataSerializers.STRING);
