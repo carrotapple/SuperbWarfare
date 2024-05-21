@@ -92,13 +92,17 @@ public class KillMessageOverlay {
         );
 
         // TODO 实现图标半透明渲染
-        // TODO 实现入场效果
-        // TODO 实现非线性动画
+
+        // 入场效果
+        if (record.tick < 3) {
+            gui.pose().translate((3 - record.tick - event.getPartialTick()) * 33, 0, 0);
+        }
+
         // 4s后开始消失
         if (record.tick >= 80) {
-            gui.pose().translate((-80 + record.tick + event.getPartialTick()) * 5, 0, 0);
-            // 时间越久图片越透明
-            gui.setColor(1, 1, 1, (100 - (-80 + record.tick + event.getPartialTick()) * 5f) / 100f);
+            double rate = Math.pow((record.tick + event.getPartialTick() - 80) / 20, 5);
+            gui.pose().translate(rate * 100, 0, 0);
+            gui.setColor(1, 1, 1, (float) (1 - rate));
         }
 
         // 击杀提示是右对齐的，这里从右向左渲染
@@ -202,6 +206,7 @@ public class KillMessageOverlay {
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
 
+        gui.setColor(1, 1, 1, 1);
         gui.pose().popPose();
     }
 
