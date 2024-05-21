@@ -1,18 +1,18 @@
 {
   "variants": {
     "facing=north": {
-      "model": "target:block/jumppad_block"
+      "model": "target:block/jump_pad"
     },
     "facing=east": {
-      "model": "target:block/jumppad_block",
+      "model": "target:block/jump_pad",
       "y": 90
     },
     "facing=south": {
-      "model": "target:block/jumppad_block",
+      "model": "target:block/jump_pad",
       "y": 180
     },
     "facing=west": {
-      "model": "target:block/jumppad_block",
+      "model": "target:block/jump_pad",
       "y": 270
     }
   }

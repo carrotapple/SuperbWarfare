@@ -1,5 +1,5 @@
 {
-  "parent": "target:block/jumppad_block",
+  "parent": "target:block/jump_pad",
   "display": {
     "thirdperson": {
       "rotation": [

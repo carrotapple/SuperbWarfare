@@ -80,7 +80,7 @@ public class TargetModItems {
     public static final RegistryObject<Item> SANDBAG = block(TargetModBlocks.SANDBAG);
     public static final RegistryObject<Item> BARBED_WIRE = block(TargetModBlocks.BARBED_WIRE);
     public static final RegistryObject<Item> CLAYMORE_MINE = ITEMS.register("claymore_mine", ClaymoreMine::new);
-    public static final RegistryObject<Item> JUMPPAD_BLOCK = block(TargetModBlocks.JUMPPAD_BLOCK);
+    public static final RegistryObject<Item> JUMP_PAD = block(TargetModBlocks.JUMP_PAD);
     public static final RegistryObject<Item> LIGHT_SABER = ITEMS.register("light_saber", LightSaber::new);
     public static final RegistryObject<Item> HAMMER = ITEMS.register("hammer", Hammer::new);
     public static final RegistryObject<Item> MORTAR_DEPLOYER = ITEMS.register("mortar_deployer", MortarDeployer::new);
