@@ -39,8 +39,8 @@ public class ClientEventHandler {
     private static void handleWeaponSway(LivingEntity entity) {
         if (entity.getMainHandItem().is(TargetModTags.Items.GUN)) {
             float fps = Minecraft.getInstance().getFps();
-            if (fps <= 0) {
-                fps = 1f;
+            if (fps <= 30) {
+                fps = 30f;
             }
             float times = 90f / fps;
             double pose;
@@ -67,8 +67,8 @@ public class ClientEventHandler {
     private static void handleWeaponMove(LivingEntity entity) {
         if (entity.getMainHandItem().is(TargetModTags.Items.GUN)) {
             float fps = Minecraft.getInstance().getFps();
-            if (fps <= 0) {
-                fps = 1f;
+            if (fps <= 30) {
+                fps = 30f;
             }
 
             float times = 90f / fps;
