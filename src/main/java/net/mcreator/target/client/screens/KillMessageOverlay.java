@@ -68,13 +68,13 @@ public class KillMessageOverlay {
         );
 
         // 第一个图标：爆头/爆炸/近战等图标
-        int icon1W = w - targetNameWidth - 28;
+        int damageTypeIconW = w - targetNameWidth - 28;
 
-        ResourceLocation icon1 = getIcon1(record);
+        ResourceLocation damageTypeIcon = getDamageTypeIcon(record);
 
-        if (icon1 != null) {
-            event.getGuiGraphics().blit(icon1,
-                    icon1W,
+        if (damageTypeIcon != null) {
+            event.getGuiGraphics().blit(damageTypeIcon,
+                    damageTypeIconW,
                     h - 2,
                     0,
                     0,
@@ -85,11 +85,13 @@ public class KillMessageOverlay {
             );
         }
 
-        boolean isGun = record.stack.getItem() instanceof GunItem;
+        boolean renderItem = false;
         // 如果是枪械击杀，则渲染枪械图标
         if (record.stack.getItem() instanceof GunItem gunItem) {
+            renderItem = true;
+
             ResourceLocation resourceLocation = gunItem.getGunIcon();
-            int gunIconW = icon1 != null ? w - targetNameWidth - 64 : w - targetNameWidth - 46;
+            int gunIconW = damageTypeIcon != null ? w - targetNameWidth - 64 : w - targetNameWidth - 46;
             event.getGuiGraphics().blit(resourceLocation,
                     gunIconW,
                     h,
@@ -102,14 +104,17 @@ public class KillMessageOverlay {
             );
         }
 
+        // TODO 如果是特殊武器击杀，则渲染对应图标
+
+
         // 渲染击杀者名称
         String attackerName = record.attacker.getDisplayName().getString();
         int attackerNameWidth = font.width(attackerName);
         int nameW = w - targetNameWidth - 16 - attackerNameWidth;
-        if (isGun) {
+        if (renderItem) {
             nameW -= 32;
         }
-        if (icon1 != null) {
+        if (damageTypeIcon != null) {
             nameW -= 18;
         }
 
@@ -125,26 +130,26 @@ public class KillMessageOverlay {
     }
 
     @Nullable
-    private static ResourceLocation getIcon1(PlayerKillRecord record) {
-        ResourceLocation icon1;
+    private static ResourceLocation getDamageTypeIcon(PlayerKillRecord record) {
+        ResourceLocation icon;
         // 渲染爆头图标
         if (record.headshot) {
-            icon1 = HEADSHOT;
+            icon = HEADSHOT;
         } else {
             if (record.damageType == TargetModDamageTypes.GUN_FIRE || record.damageType == TargetModDamageTypes.GUN_FIRE_HEADSHOT
                     || record.damageType == TargetModDamageTypes.ARROW_IN_KNEE || record.damageType == TargetModDamageTypes.ARROW_IN_BRAIN) {
-                icon1 = null;
+                icon = null;
             } else {
                 // 如果是其他伤害，则渲染对应图标
                 if (record.damageType == DamageTypes.EXPLOSION || record.damageType == DamageTypes.PLAYER_EXPLOSION) {
-                    icon1 = EXPLOSION;
+                    icon = EXPLOSION;
                 } else if (record.damageType == DamageTypes.PLAYER_ATTACK) {
-                    icon1 = KNIFE;
+                    icon = KNIFE;
                 } else {
-                    icon1 = GENERIC;
+                    icon = GENERIC;
                 }
             }
         }
-        return icon1;
+        return icon;
     }
 }
