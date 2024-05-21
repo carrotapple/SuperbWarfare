@@ -15,8 +15,13 @@ public class ParticleTool {
     public static <T extends ParticleOptions> void sendParticle(ServerLevel level, T particle, double x, double y, double z, int count,
                                                                 double xOffset, double yOffset, double zOffset, double speed, boolean force) {
         for (ServerPlayer serverPlayer : level.players()) {
-            level.sendParticles(serverPlayer, particle, force, x, y, z, count, xOffset, yOffset, zOffset, speed);
+            sendParticle(level, particle, x, y, z, count, xOffset, yOffset, zOffset, speed, force, serverPlayer);
         }
+    }
+
+    public static <T extends ParticleOptions> void sendParticle(ServerLevel level, T particle, double x, double y, double z, int count,
+                                                                double xOffset, double yOffset, double zOffset, double speed, boolean force, ServerPlayer viewer) {
+        level.sendParticles(viewer, particle, force, x, y, z, count, xOffset, yOffset, zOffset, speed);
     }
 
     public static void spawnMediumExplosionParticles(Level level, Vec3 pos) {

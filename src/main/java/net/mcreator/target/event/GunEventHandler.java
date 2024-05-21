@@ -7,10 +7,9 @@ import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
-import net.mcreator.target.tools.GunsTool;
+import net.mcreator.target.tools.ParticleTool;
 import net.mcreator.target.tools.SoundTool;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -109,8 +108,9 @@ public class GunEventHandler {
         Thread recoilThread = new Thread(recoilRunnable);
         recoilThread.start();
     }
-    /*
-      通用的武器开火流程
+
+    /**
+     * 通用的武器开火流程
      */
     private static void handleGunFire(Player player) {
         ItemStack stack = player.getMainHandItem();
@@ -154,6 +154,7 @@ public class GunEventHandler {
                 if (stack.getOrCreateTag().getInt("ammo") == 1) {
                     stack.getOrCreateTag().putDouble("gj", 1);
                 }
+
                 /*
                   判断是否为栓动武器（bolt_action_time > 0），并在开火后给一个需要上膛的状态
                  */
@@ -181,12 +182,9 @@ public class GunEventHandler {
 
                 if (player.getMainHandItem().getItem() == TargetModItems.ABEKIRI.get()) {
                     stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(InteractionHand.MAIN_HAND));
-                    if (!player.level().isClientSide() && player.getServer() != null) {
-                        player.getServer().getCommands().performPrefixedCommand(
-                                new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), player.level() instanceof ServerLevel ? (ServerLevel) player.level() : null, 4, player.getName().getString(), player.getDisplayName(),
-                                        player.level().getServer(), player),
-                                ("particle minecraft:cloud" + (" " + (player.getX() + 1.8 * player.getLookAngle().x)) + (" " + (player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y))
-                                        + (" " + (player.getZ() + 1.8 * player.getLookAngle().z)) + " 0.4 0.4 0.4 0.005 30 force @s"));
+                    if (player instanceof ServerPlayer serverPlayer && player.level() instanceof ServerLevel serverLevel) {
+                        ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, player.getX() + 1.8 * player.getLookAngle().x, player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y,
+                                player.getZ() + 1.8 * player.getLookAngle().z, 30, 0.4, 0.4, 0.4, 0.005, true, serverPlayer);
                     }
                 }
 
@@ -207,7 +205,6 @@ public class GunEventHandler {
                         stack.getOrCreateTag().putDouble("marlin_animation_time", 15);
                         stack.getOrCreateTag().putDouble("fastfiring", 0);
                     } else {
-                        zoom_add_cooldown = 0;
                         stack.getOrCreateTag().putDouble("marlin_animation_time", 10);
                         stack.getOrCreateTag().putDouble("fastfiring", 1);
                     }
@@ -219,8 +216,8 @@ public class GunEventHandler {
                 for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {
                     gunShoot(player);
                 }
-
             }
+
             /*
               在开火动画的最后1tick，设置需要拉栓上膛的武器拉栓动画的倒计时为data里的拉栓时间
              */
@@ -237,8 +234,9 @@ public class GunEventHandler {
             }
         }
     }
-    /*
-      加特林开火流程
+
+    /**
+     * 加特林开火流程
      */
     private static void handleMiniGunFire(Player player) {
         ItemStack stack = player.getMainHandItem();
