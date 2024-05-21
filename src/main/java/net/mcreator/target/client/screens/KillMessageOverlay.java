@@ -25,6 +25,8 @@ import top.theillusivec4.curios.api.CuriosApi;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import static net.mcreator.target.tools.RenderTool.preciseBlit;
+
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class KillMessageOverlay {
     private static final ResourceLocation HEADSHOT = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/headshot.png");
@@ -51,17 +53,16 @@ public class KillMessageOverlay {
             return;
         }
 
-        int index = 0;
+        float totalTop = 5;
         for (PlayerKillRecord record : KillMessageHandler.QUEUE) {
-            renderKillMessages(record, event, index);
-            index++;
+            totalTop = renderKillMessages(record, event, totalTop);
         }
 
     }
 
-    private static void renderKillMessages(PlayerKillRecord record, RenderGuiEvent.Pre event, int index) {
+    private static float renderKillMessages(PlayerKillRecord record, RenderGuiEvent.Pre event, float baseTop) {
         int w = event.getWindow().getGuiScaledWidth();
-        int h = 10 + index * 10;
+        float top = baseTop;
 
         Font font = Minecraft.getInstance().font;
 
@@ -100,9 +101,12 @@ public class KillMessageOverlay {
 
         // 4s后开始消失
         if (record.tick >= 80) {
-            double rate = Math.pow((record.tick + event.getPartialTick() - 80) / 20, 5);
+            float rate = (float) Math.pow((record.tick + event.getPartialTick() - 80) / 20, 5);
             gui.pose().translate(rate * 100, 0, 0);
-            gui.setColor(1, 1, 1, (float) (1 - rate));
+            gui.setColor(1, 1, 1, 1 - rate);
+            baseTop += 10 * (1 - rate);
+        } else {
+            baseTop += 10;
         }
 
         // 击杀提示是右对齐的，这里从右向左渲染
@@ -112,7 +116,7 @@ public class KillMessageOverlay {
                 Minecraft.getInstance().font,
                 targetName.get(),
                 w - targetNameWidth - 10f,
-                h,
+                top,
                 record.target.getTeamColor(),
                 false
         );
@@ -123,9 +127,10 @@ public class KillMessageOverlay {
         ResourceLocation damageTypeIcon = getDamageTypeIcon(record);
 
         if (damageTypeIcon != null) {
-            gui.blit(damageTypeIcon,
+            preciseBlit(gui,
+                    damageTypeIcon,
                     damageTypeIconW,
-                    h - 2,
+                    top - 2,
                     0,
                     0,
                     12,
@@ -143,9 +148,10 @@ public class KillMessageOverlay {
 
             ResourceLocation resourceLocation = gunItem.getGunIcon();
 
-            gui.blit(resourceLocation,
+            preciseBlit(gui,
+                    resourceLocation,
                     itemIconW,
-                    h,
+                    top,
                     0,
                     0,
                     32,
@@ -159,9 +165,10 @@ public class KillMessageOverlay {
         if (record.stack.getItem().getDescriptionId().equals("item.dreamaticvoyage.world_peace_staff")) {
             renderItem = true;
 
-            gui.blit(WORLD_PEACE_STAFF,
+            preciseBlit(gui,
+                    WORLD_PEACE_STAFF,
                     itemIconW,
-                    h,
+                    top,
                     0,
                     0,
                     32,
@@ -196,7 +203,7 @@ public class KillMessageOverlay {
                 Minecraft.getInstance().font,
                 attackerName.get(),
                 nameW,
-                h,
+                top,
                 record.attacker.getTeamColor(),
                 false
         );
@@ -208,6 +215,8 @@ public class KillMessageOverlay {
 
         gui.setColor(1, 1, 1, 1);
         gui.pose().popPose();
+
+        return baseTop;
     }
 
     @Nullable

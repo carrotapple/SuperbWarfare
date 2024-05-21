@@ -2,14 +2,12 @@ package net.mcreator.target.client.screens;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
 import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +16,8 @@ import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.joml.Matrix4f;
+
+import static net.mcreator.target.tools.RenderTool.preciseBlit;
 
 @Mod.EventBusSubscriber({Dist.CLIENT})
 public class CrossHairOverlay {
@@ -82,28 +81,6 @@ public class CrossHairOverlay {
         RenderSystem.enableDepthTest();
         RenderSystem.disableBlend();
         RenderSystem.setShaderColor(1, 1, 1, 1);
-    }
-
-    private static void preciseBlit(GuiGraphics gui, ResourceLocation pAtlasLocation, float pX, float pY, float pUOffset, float pVOffset, float pWidth, float pHeight, float pTextureWidth, float pTextureHeight) {
-        float pX2 = pX + pWidth;
-        float pY2 = pY + pHeight;
-        float pBlitOffset = 0;
-
-        float pMinU = pUOffset / pTextureWidth;
-        float pMaxU = (pUOffset + pWidth) / pTextureWidth;
-        float pMinV = pVOffset / pTextureHeight;
-        float pMaxV = (pVOffset + pHeight) / pTextureHeight;
-
-        RenderSystem.setShaderTexture(0, pAtlasLocation);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        Matrix4f matrix4f = gui.pose().last().pose();
-        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        bufferbuilder.vertex(matrix4f, pX, pY, pBlitOffset).uv(pMinU, pMinV).endVertex();
-        bufferbuilder.vertex(matrix4f, pX, pY2, pBlitOffset).uv(pMinU, pMaxV).endVertex();
-        bufferbuilder.vertex(matrix4f, pX2, pY2, pBlitOffset).uv(pMaxU, pMaxV).endVertex();
-        bufferbuilder.vertex(matrix4f, pX2, pY, pBlitOffset).uv(pMaxU, pMinV).endVertex();
-        BufferUploader.drawWithShader(bufferbuilder.end());
     }
 
     private static boolean shouldRenderCrosshair(Player player) {
