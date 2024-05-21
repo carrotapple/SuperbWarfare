@@ -58,7 +58,7 @@ public class PressFireProcedure {
         }
 
         // 栓动武器左键手动拉栓
-        if (mainHandItem.is(TargetModTags.Items.GUN) && tag.getDouble("bolt_action_time") > 0 && tag.getInt("ammo") > 0) {
+        if (mainHandItem.is(TargetModTags.Items.GUN) && tag.getDouble("bolt_action_time") > 0 && tag.getInt("ammo") > 0 && tag.getDouble("bolt_action_anim") == 0) {
             if (!player.getCooldowns().isOnCooldown(mainHandItem.getItem()) && mainHandItem.getOrCreateTag().getDouble("need_bolt_action") == 1) {
                 mainHandItem.getOrCreateTag().putDouble("bolt_action_anim", mainHandItem.getOrCreateTag().getDouble("bolt_action_time"));
                 GunEventHandler.playGunBoltSounds(player);
