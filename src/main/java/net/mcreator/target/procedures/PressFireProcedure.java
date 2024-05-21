@@ -16,16 +16,16 @@ public class PressFireProcedure {
         TaserfireProcedure.execute(player);
         M79fireProcedure.execute(player);
         RpgFireProcedure.execute(player);
-        MarlinfireProcedure.execute(player);
-        M870fireProcedure.execute(player);
 
         if (mainHandItem.is(TargetModTags.Items.GUN)) {
-
             if (tag.getInt("fire_mode") == 1) {
                 player.getPersistentData().putBoolean("firing", false);
                 tag.putInt("burst_fire", (int) tag.getDouble("burst_size"));
             } else {
                 player.getPersistentData().putBoolean("firing", true);
+            }
+            if (tag.getDouble("force_stop_reloading") == 1 && tag.getBoolean("reloading") && tag.getDouble("prepare") == 0 && tag.getInt("ammo") > 0) {
+                tag.putDouble("force_stop", 1);
             }
         }
 
@@ -41,8 +41,6 @@ public class PressFireProcedure {
         }
 
         if (mainHandItem.getItem() == TargetModItems.MINIGUN.get()) {
-            player.getPersistentData().putDouble("mini_firing", 1);
-
             if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo == 0) {
                 if (!player.level().isClientSide()) {
                     SoundTool.playLocalSound(player, TargetModSounds.TRIGGER_CLICK.get(), 10, 1);

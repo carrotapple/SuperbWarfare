@@ -17,6 +17,8 @@
     "target:hunting_rifle",
     "target:kraber",
     "target:m_98b",
-    "target:sentinel"
+    "target:sentinel",
+    "target:m_870",
+    "target:marlin"
   ]
 }

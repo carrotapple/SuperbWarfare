@@ -4,8 +4,10 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.entity.ProjectileEntity;
 import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.SoundTool;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
@@ -36,6 +38,7 @@ public class GunEventHandler {
         if (event.phase == TickEvent.Phase.END) {
             handleGunsDev(player);
             handleGunFire(player);
+            handleMiniGunFire(player);
         }
     }
 
@@ -106,7 +109,9 @@ public class GunEventHandler {
         Thread recoilThread = new Thread(recoilRunnable);
         recoilThread.start();
     }
-
+    /*
+      通用的武器开火流程
+     */
     private static void handleGunFire(Player player) {
         ItemStack stack = player.getMainHandItem();
         if (stack.is(TargetModTags.Items.NORMAL_GUN)) {
@@ -195,7 +200,20 @@ public class GunEventHandler {
                     stack.getOrCreateTag().putDouble("crot", 20);
                 }
 
-                int cooldown = interval + (int) stack.getOrCreateTag().getDouble("fire_sequence") - (int) stack.getOrCreateTag().getDouble("fire_increase") + burst_cooldown;
+                int zoom_add_cooldown = 0;
+                if (player.getMainHandItem().getItem() == TargetModItems.MARLIN.get()) {
+                    if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+                        zoom_add_cooldown = 5;
+                        stack.getOrCreateTag().putDouble("marlin_animation_time", 15);
+                        stack.getOrCreateTag().putDouble("fastfiring", 0);
+                    } else {
+                        zoom_add_cooldown = 0;
+                        stack.getOrCreateTag().putDouble("marlin_animation_time", 10);
+                        stack.getOrCreateTag().putDouble("fastfiring", 1);
+                    }
+                }
+
+                int cooldown = interval + (int) stack.getOrCreateTag().getDouble("fire_sequence") - (int) stack.getOrCreateTag().getDouble("fire_increase") + burst_cooldown + zoom_add_cooldown;
                 player.getCooldowns().addCooldown(stack.getItem(), cooldown);
 
                 for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {
@@ -217,6 +235,68 @@ public class GunEventHandler {
             if (stack.getOrCreateTag().getDouble("bolt_action_anim") == 1) {
                 stack.getOrCreateTag().putDouble("need_bolt_action", 0);
             }
+        }
+    }
+    /*
+      加特林开火流程
+     */
+    private static void handleMiniGunFire(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        var tag = stack.getOrCreateTag();
+
+        if (stack.getItem() != TargetModItems.MINIGUN.get()) {
+            return;
+        }
+
+        if (player.getPersistentData().getBoolean("firing") && !player.isSprinting()) {
+            if (tag.getDouble("minigun_rotation") < 10) {
+                tag.putDouble("minigun_rotation", (tag.getDouble("minigun_rotation") + 1));
+            }
+            if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
+                SoundTool.playLocalSound(serverPlayer, TargetModSounds.MINIGUN_ROT.get(), 2f, 1f);
+            }
+        } else if (tag.getDouble("minigun_rotation") > 0) {
+            tag.putDouble("minigun_rotation", (tag.getDouble("minigun_rotation") - 0.5));
+        }
+
+        if (tag.getDouble("overheat") == 0
+                && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo > 0
+                && !(player.getCooldowns().isOnCooldown(stack.getItem())) && tag.getDouble("minigun_rotation") >= 10) {
+            tag.putDouble("heat", (tag.getDouble("heat") + 1));
+            if (tag.getDouble("heat") >= 50.5) {
+                tag.putDouble("overheat", 40);
+                player.getCooldowns().addCooldown(stack.getItem(), 40);
+                if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
+                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.MINIGUN_OVERHEAT.get(), 2f, 1f);
+                }
+            }
+
+            if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
+                if (tag.getDouble("heat") <= 40) {
+                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.MINIGUN_FIRE_1P.get(), 2f, 1f);
+                    player.playSound(TargetModSounds.MINIGUN_FIRE_3P.get(), 4f, 1f);
+                    player.playSound(TargetModSounds.MINIGUN_FAR.get(), 12f, 1f);
+                    player.playSound(TargetModSounds.MINIGUN_VERYFAR.get(), 24f, 1f);
+                } else {
+                    float pitch = (float) (1 - 0.025 * Math.abs(40 - tag.getDouble("heat")));
+
+                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.MINIGUN_FIRE_1P.get(), 2f, pitch);
+                    player.playSound(TargetModSounds.MINIGUN_FIRE_3P.get(), 4f, pitch);
+                    player.playSound(TargetModSounds.MINIGUN_FAR.get(), 12f, pitch);
+                    player.playSound(TargetModSounds.MINIGUN_VERYFAR.get(), 24f, pitch);
+                }
+            }
+
+            for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {
+                gunShoot(player);
+            }
+
+            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.rifleAmmo = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables()).rifleAmmo - 1;
+                capability.syncPlayerVariables(player);
+            });
+
+            tag.putInt("fire_animation", 2);
         }
     }
 
@@ -297,19 +377,8 @@ public class GunEventHandler {
 
     public static void gunShoot(Player player) {
         ItemStack heldItem = player.getMainHandItem();
-        if (Math.random() < 0.5) {
-            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.recoilHorizon = -1;
-                capability.syncPlayerVariables(player);
-            });
-        } else {
-            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.recoilHorizon = 1;
-                capability.syncPlayerVariables(player);
-            });
-        }
-
         player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
             capability.recoil = 0.1;
             capability.firing = 1;
             capability.syncPlayerVariables(player);

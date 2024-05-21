@@ -6,7 +6,6 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.MinigunItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
-import net.mcreator.target.procedures.MiniguninbackpackProcedure;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.ItemNBTTool;
 import net.mcreator.target.tools.RarityTool;
@@ -183,7 +182,19 @@ public class Minigun extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
-        MiniguninbackpackProcedure.execute(entity, itemstack);
+        if (entity == null)
+            return;
+        if (itemstack.getOrCreateTag().getDouble("heat") > 0) {
+            itemstack.getOrCreateTag().putDouble("heat", (itemstack.getOrCreateTag().getDouble("heat") - 0.5));
+        }
+        if (itemstack.getOrCreateTag().getDouble("heat") == 0) {
+            itemstack.getOrCreateTag().putDouble("heat_bar", 51);
+        } else {
+            itemstack.getOrCreateTag().putDouble("heat_bar", (itemstack.getOrCreateTag().getDouble("heat")));
+        }
+        if (itemstack.getOrCreateTag().getDouble("overheat") > 0) {
+            itemstack.getOrCreateTag().putDouble("overheat", (itemstack.getOrCreateTag().getDouble("overheat") - 1));
+        }
     }
 
     public static ItemStack getGunInstance() {

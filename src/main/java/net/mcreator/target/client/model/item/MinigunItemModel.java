@@ -41,10 +41,8 @@ public class MinigunItemModel extends GeoModel<Minigun> {
         }
         float times = 250f / fps;
 
-        double RotZ = 0;
-        RotZ = stack.getOrCreateTag().getDouble("rot");
 
-        gun.setRotZ((float) (gun.getRotZ() + times * -0.008f * RotZ));
+        gun.setRotZ((float) (gun.getRotZ() + times * -0.008f * stack.getOrCreateTag().getDouble("minigun_rotation")));
 
 
         double fp = 0;

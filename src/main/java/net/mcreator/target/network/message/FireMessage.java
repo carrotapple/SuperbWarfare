@@ -57,7 +57,6 @@ public class FireMessage {
             PressFireProcedure.execute(player);
         } else if (type == 1) {
             player.getPersistentData().putBoolean("firing", false);
-            player.getPersistentData().putDouble("mini_firing", 0);
             player.getPersistentData().putDouble("minigun_firing", 0);
             player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.bowPullHold = false;

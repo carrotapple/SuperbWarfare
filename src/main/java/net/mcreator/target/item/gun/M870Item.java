@@ -88,7 +88,7 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m870.draw"));
                 }
 
-                if (stack.getOrCreateTag().getDouble("firing") > 0 && stack.getOrCreateTag().getDouble("firing") < 15) {
+                if (stack.getOrCreateTag().getDouble("fire_animation") > 0 && stack.getOrCreateTag().getDouble("fire_animation") < 15) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.shift"));
                 }
 
@@ -100,11 +100,11 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.prepare"));
                 }
 
-                if (!stack.getOrCreateTag().getBoolean("load_index") && stack.getOrCreateTag().getDouble("loading") > 0) {
+                if (stack.getOrCreateTag().getDouble("load_index") == 0 && stack.getOrCreateTag().getDouble("loading") > 0) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.iterativeload"));
                 }
 
-                if (stack.getOrCreateTag().getBoolean("load_index") && stack.getOrCreateTag().getDouble("loading") > 0) {
+                if (stack.getOrCreateTag().getDouble("load_index") == 1 && stack.getOrCreateTag().getDouble("loading") > 0) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.iterativeload2"));
                 }
 
@@ -202,7 +202,11 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
                         if (entity instanceof ServerPlayer serverPlayer) {
                             SoundTool.playLocalSound(serverPlayer, TargetModSounds.M_870_RELOAD_LOOP.get(), 100, 1);
                         }
-                        tag.putBoolean("load_index", tag.getBoolean("load_index"));
+                        if (tag.getDouble("load_index") == 1) {
+                            tag.putDouble("load_index", 0);
+                        } else {
+                            tag.putDouble("load_index", 1);
+                        }
                     }
                 }
                 if (tag.getDouble("loading") == 9) {
@@ -221,9 +225,6 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
                     tag.putBoolean("reloading", false);
                     tag.putBoolean("empty_reload", false);
                 }
-            }
-            if (tag.getDouble("firing") > 0) {
-                tag.putDouble("firing", tag.getDouble("firing") - 1);
             }
         }
     }

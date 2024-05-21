@@ -68,7 +68,6 @@ public class PlayerEventHandler {
             handleRenderDamageIndicator(player);
             handleBocekPulling(player);
             handleGunRecoil(player);
-            handleMiniGunFire(player);
         }
     }
 
@@ -447,61 +446,5 @@ public class PlayerEventHandler {
         recoilThread.start();
     }
 
-    private static void handleMiniGunFire(Player player) {
-        ItemStack stack = player.getMainHandItem();
 
-        if (stack.getItem() != TargetModItems.MINIGUN.get()) {
-            return;
-        }
-
-
-        if (player.getPersistentData().getDouble("mini_firing") == 1 && !player.isSprinting()) {
-            if (stack.getOrCreateTag().getDouble("rot") < 10) {
-                stack.getOrCreateTag().putDouble("rot", (stack.getOrCreateTag().getDouble("rot") + 1));
-            }
-            if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
-                SoundTool.playLocalSound(serverPlayer, TargetModSounds.MINIGUN_ROT.get(), 2f, 1f);
-            }
-        } else if (stack.getOrCreateTag().getDouble("rot") > 0) {
-            stack.getOrCreateTag().putDouble("rot", (stack.getOrCreateTag().getDouble("rot") - 0.5));
-        }
-
-        if (stack.getOrCreateTag().getDouble("overheat") == 0
-                && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo > 0
-                && !(player.getCooldowns().isOnCooldown(stack.getItem())) && stack.getOrCreateTag().getDouble("rot") >= 10) {
-            stack.getOrCreateTag().putDouble("heat", (stack.getOrCreateTag().getDouble("heat") + 1));
-            if (stack.getOrCreateTag().getDouble("heat") >= 50.5) {
-                stack.getOrCreateTag().putDouble("overheat", 40);
-                player.getCooldowns().addCooldown(stack.getItem(), 40);
-                if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.MINIGUN_OVERHEAT.get(), 2f, 1f);
-                }
-            }
-
-            if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
-                if (stack.getOrCreateTag().getDouble("heat") <= 40) {
-                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.MINIGUN_FIRE_1P.get(), 2f, 1f);
-                    player.playSound(TargetModSounds.MINIGUN_FIRE_3P.get(), 4f, 1f);
-                    player.playSound(TargetModSounds.MINIGUN_FAR.get(), 12f, 1f);
-                    player.playSound(TargetModSounds.MINIGUN_VERYFAR.get(), 24f, 1f);
-                } else {
-                    float pitch = (float) (1 - 0.025 * Math.abs(40 - stack.getOrCreateTag().getDouble("heat")));
-
-                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.MINIGUN_FIRE_1P.get(), 2f, pitch);
-                    player.playSound(TargetModSounds.MINIGUN_FIRE_3P.get(), 4f, pitch);
-                    player.playSound(TargetModSounds.MINIGUN_FAR.get(), 12f, pitch);
-                    player.playSound(TargetModSounds.MINIGUN_VERYFAR.get(), 24f, pitch);
-                }
-            }
-
-            GunsTool.spawnBullet(player);
-
-            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.rifleAmmo = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables()).rifleAmmo - 1;
-                capability.syncPlayerVariables(player);
-            });
-
-            stack.getOrCreateTag().putInt("fire_animation", 2);
-        }
-    }
 }

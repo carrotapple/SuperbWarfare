@@ -87,19 +87,19 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.marlin.draw"));
                 }
 
-                if (stack.getOrCreateTag().getInt("fire_animation") > 0 && stack.getOrCreateTag().getDouble("animindex") == 0) {
+                if (stack.getOrCreateTag().getInt("flash_time") > 0 && stack.getOrCreateTag().getDouble("animindex") == 0) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.fire"));
                 }
 
-                if (stack.getOrCreateTag().getInt("fire_animation") > 0 && stack.getOrCreateTag().getDouble("animindex") == 1) {
+                if (stack.getOrCreateTag().getInt("flash_time") > 0 && stack.getOrCreateTag().getDouble("animindex") == 1) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.fire2"));
                 }
 
-                if (stack.getOrCreateTag().getDouble("firing") > 0 && stack.getOrCreateTag().getDouble("firing") < 15 && stack.getOrCreateTag().getDouble("fastfiring") == 0) {
+                if (stack.getOrCreateTag().getDouble("marlin_animation_time") > 0 && stack.getOrCreateTag().getDouble("fastfiring") == 0) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.shift"));
                 }
 
-                if (stack.getOrCreateTag().getDouble("firing") > 0 && stack.getOrCreateTag().getDouble("firing") < 10 && stack.getOrCreateTag().getDouble("fastfiring") == 1) {
+                if (stack.getOrCreateTag().getDouble("marlin_animation_time") > 0 && stack.getOrCreateTag().getDouble("fastfiring") == 1) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.shift2"));
                 }
 
@@ -107,11 +107,11 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.prepare"));
                 }
 
-                if (!stack.getOrCreateTag().getBoolean("load_index") && stack.getOrCreateTag().getDouble("loading") > 0) {
+                if (stack.getOrCreateTag().getDouble("load_index") == 0 && stack.getOrCreateTag().getDouble("loading") > 0) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.iterativeload"));
                 }
 
-                if (stack.getOrCreateTag().getBoolean("load_index") && stack.getOrCreateTag().getDouble("loading") > 0) {
+                if (stack.getOrCreateTag().getDouble("load_index") == 1 && stack.getOrCreateTag().getDouble("loading") > 0) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.iterativeload2"));
                 }
 
@@ -177,6 +177,9 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
                 tag.putDouble("force_stop", 0);
                 tag.putDouble("stop", 0);
             }
+            if (tag.getDouble("marlin_animation_time") > 0) {
+                tag.putDouble("marlin_animation_time", tag.getDouble("marlin_animation_time") - 1);
+            }
             if (tag.getDouble("prepare") > 0) {
                 tag.putDouble("prepare", tag.getDouble("prepare") - 1);
             }
@@ -200,7 +203,11 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
                         if (entity instanceof ServerPlayer serverPlayer) {
                             SoundTool.playLocalSound(serverPlayer, TargetModSounds.MARLIN_LOOP.get(), 100, 1);
                         }
-                        tag.putBoolean("load_index", tag.getBoolean("load_index"));
+                        if (tag.getDouble("load_index") == 1) {
+                            tag.putDouble("load_index", 0);
+                        } else {
+                            tag.putDouble("load_index", 1);
+                        }
                     }
                 }
                 if (tag.getDouble("loading") == 9) {
@@ -221,9 +228,6 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
                         SoundTool.playLocalSound(serverPlayer, TargetModSounds.MARLIN_END.get(), 100, 1);
                     }
                 }
-            }
-            if (tag.getDouble("firing") > 0) {
-                tag.putDouble("firing", tag.getDouble("firing") - 1);
             }
         }
     }
