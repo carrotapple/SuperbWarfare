@@ -146,10 +146,6 @@
   "item.target.galena": "粗方铅矿",
   "item.target.scheelite": "白钨矿",
 
-  "death.attack.mine.item": "%1$s踩到了%2$s的阔剑地雷",
-  "death.attack.mine": "%1$s踩到了%2$s的阔剑地雷",
-  "death.attack.mine.player": "%1$s在逃离%2$s的时候踩到了阔剑地雷",
-
   "death.attack.gunfire": "%1$s被%2$s射爆了",
   "death.attack.gunfire.entity": "%1$s被%2$s射爆了",
   "death.attack.gunfire.item": "%1$s被%2$s用%3$s射爆了",
@@ -163,6 +159,9 @@
   "death.attack.arrow_in_brain.entity": "%1$s在逃离%2$s的时候脑子进矢了",
   "death.attack.arrow_in_brain.item": "%2$s用%3$s让%1$s的脑子进矢了",
   "death.attack.beast_gun": "%1$s被%2$s用BEAST枪械臭炸了",
+  "death.attack.mine": "%1$s不慎踩到了阔剑地雷",
+  "death.attack.mine.entity": "%1$s踩到了%2$s的阔剑地雷",
+  "death.attack.mine.item": "%1$s踩到了%2$s的阔剑地雷",
 
   "Shell Estimated Range": "炮弹预估射程:",
   "gui.target.mortar_gui.label_proc_range": "预估射程:",

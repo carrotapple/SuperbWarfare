@@ -145,6 +145,8 @@ public class KillMessageOverlay {
                     icon = EXPLOSION;
                 } else if (record.damageType == DamageTypes.PLAYER_ATTACK) {
                     icon = KNIFE;
+                } else if (record.damageType == TargetModDamageTypes.MINE) {
+                    icon = CLAYMORE;
                 } else {
                     icon = GENERIC;
                 }

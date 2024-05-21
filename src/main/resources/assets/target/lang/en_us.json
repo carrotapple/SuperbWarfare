@@ -146,10 +146,6 @@
   "item.target.galena": "Raw Galena",
   "item.target.scheelite": "Raw Galena",
 
-  "death.attack.mine.item": "%1$s step on %2$s's Claymore",
-  "death.attack.mine": "%1$s step on %2$s's Claymore",
-  "death.attack.mine.player": "%1$s step on %2$s's Claymore",
-
   "death.attack.gunfire": "%1$s was shoot by %2$s",
   "death.attack.gunfire.entity": "%1$s was shoot by %2$s",
   "death.attack.gunfire.item": "%1$s was shoot by %2$s using %3$s",
@@ -163,6 +159,9 @@
   "death.attack.arrow_in_brain.entity": "An arrow shot into %1$s's brain whilst trying to escape %2$s",
   "death.attack.arrow_in_brain.item": "%2$s used %3$s to make an arrow shot into %1$s's brain",
   "death.attack.beast_gun": "%1$s was killed by %2$s using BEAST guns",
+  "death.attack.mine": "%1$s不慎踩到了阔剑地雷",
+  "death.attack.mine.entity": "%1$s step on %2$s's Claymore",
+  "death.attack.mine.item": "%1$s踩到了%2$s的阔剑地雷",
 
   "Shell Estimated Range": "Estimated Range:",
   "gui.target.mortar_gui.label_proc_range": "Estimated Range:",

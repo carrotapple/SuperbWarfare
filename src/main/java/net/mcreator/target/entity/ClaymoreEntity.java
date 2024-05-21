@@ -203,14 +203,10 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
         var y = this.getY();
         var z = this.getZ();
 
-        if (data.getInt("claymore") > 0) {
-            data.putInt("claymore", data.getInt("claymore") - 1);
-        }
-
-        data.putInt("life", data.getInt("life") + 1);
-        if (data.getInt("life") >= 12000) {
+        if (this.tickCount >= 12000) {
             if (!this.level().isClientSide()) this.discard();
         }
+
         if (data.getDouble("def") >= 100) {
             if (!this.level().isClientSide()) this.discard();
 
@@ -226,11 +222,14 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
                 server.addFreshEntity(entityToSpawn);
             }
         }
+
         this.removeAllEffects();
         this.clearFire();
+
         if (data.getInt("trigger") <= 60) {
             data.putInt("trigger", data.getInt("trigger") + 1);
         }
+
         if (data.getInt("trigger") >= 40) {
             final Vec3 center = new Vec3(x + 1.5 * this.getLookAngle().x, y + 1.5 * this.getLookAngle().y, z + 1.5 * this.getLookAngle().z);
             for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(2.5 / 2d), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
@@ -249,10 +248,10 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
                     }
                     this.discard();
                 }
-                target.getPersistentData().putInt("claymore", 5);
+
                 TargetMod.queueServerWork(1, () -> {
                     if (!level.isClientSide())
-                        level.explode(this.getOwner(), target.getX(), target.getY(), target.getZ(), 6.5f, Level.ExplosionInteraction.NONE);
+                        level.explode(this, target.getX(), target.getY(), target.getZ(), 6.5f, Level.ExplosionInteraction.NONE);
                 });
             }
         }
@@ -311,14 +310,14 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1);
     }
 
-    private PlayState movementPredicate(AnimationState event) {
+    private PlayState movementPredicate(AnimationState<ClaymoreEntity> event) {
         if (this.animationProcedure.equals("empty")) {
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.claymore.idle"));
         }
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState event) {
+    private PlayState procedurePredicate(AnimationState<ClaymoreEntity> event) {
         if (!animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
             event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
             if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
@@ -336,7 +335,6 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
         ++this.deathTime;
         if (this.deathTime == 1) {
             this.remove(ClaymoreEntity.RemovalReason.KILLED);
-            this.dropExperience();
         }
     }
 

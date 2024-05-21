@@ -1,6 +1,7 @@
 package net.mcreator.target.event;
 
 import net.mcreator.target.TargetMod;
+import net.mcreator.target.entity.ClaymoreEntity;
 import net.mcreator.target.init.TargetModDamageTypes;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
@@ -34,7 +35,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
 @Mod.EventBusSubscriber
-public class LivingEntityEventHandler {
+public class LivingEventHandler {
     @SubscribeEvent
     public static void onEntityHurt(LivingHurtEvent event) {
         if (event == null || event.getEntity() == null) {
@@ -106,15 +107,15 @@ public class LivingEntityEventHandler {
     private static void claymoreDamage(LivingAttackEvent event) {
         LivingEntity entity = event.getEntity();
         DamageSource source = event.getSource();
-        Entity sourceentity = source.getDirectEntity();
+        Entity sourceentity = source.getEntity();
 
         if (event.getEntity() == null || entity == null || sourceentity == null) {
             return;
         }
 
-        if ((source.is(DamageTypes.EXPLOSION) || source.is(DamageTypes.PLAYER_EXPLOSION)) && entity.getPersistentData().getDouble("claymore") > 0) {
+        if ((source.is(DamageTypes.EXPLOSION) || source.is(DamageTypes.PLAYER_EXPLOSION)) && sourceentity instanceof ClaymoreEntity claymore) {
             event.setCanceled(true);
-            entity.hurt(TargetModDamageTypes.causeMineDamage(entity.level().registryAccess(), sourceentity), event.getAmount());
+            entity.hurt(TargetModDamageTypes.causeMineDamage(entity.level().registryAccess(), claymore.getOwner()), event.getAmount());
         }
     }
 
