@@ -33,6 +33,7 @@ public class ClientEventHandler {
             handleWeaponZoom(living);
             handleWeaponFire(event, living);
             handleShockCamera(event, living);
+            PlayerCameraShake(event, living);
             handleBowPullAnimation(living);
         }
     }
@@ -423,6 +424,20 @@ public class ClientEventHandler {
             event.setPitch(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot());
             event.setRoll((float) Mth.nextDouble(RandomSource.create(), 8, 12));
         }
+    }
+
+    private static void PlayerCameraShake(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
+        var data = entity.getPersistentData();
+        double yaw = event.getYaw();
+        double pitch = event.getPitch();
+        double roll = event.getRoll();
+
+        event.setPitch((float) (pitch + data.getDouble("camera_rot_x")));
+
+        event.setYaw((float) (yaw + data.getDouble("camera_rot_y")));
+
+        event.setRoll((float) (roll + data.getDouble("camera_rot_z")));
+
     }
 
     private static void handleBowPullAnimation(LivingEntity entity) {

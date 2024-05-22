@@ -1,14 +1,22 @@
 package net.mcreator.target.client.model.item;
 
+import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.item.gun.AK47Item;
 import net.mcreator.target.network.TargetModVariables;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.event.ViewportEvent;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
+import net.minecraft.network.chat.Component;
+
 
 public class AK47ItemModel extends GeoModel<AK47Item> {
 
@@ -136,5 +144,13 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         move.setRotZ(3.7f * (float) yaw + 2.7f * (float) m);
 
         move.setRotY(1.9f * (float) yaw - (float) m);
+
+        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+
+        player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
+
+        player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
+
+        player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }
