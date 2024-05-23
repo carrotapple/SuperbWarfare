@@ -54,21 +54,20 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
 
         double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-        gun.setPosX(2.11f * (float) p);
+        gun.setPosX(1.96f * (float) p);
 
-        gun.setPosY(0.89f * (float) p - (float) (0.6f * zp));
+        gun.setPosY(0.25f * (float) p - (float) (0.6f * zp));
 
-        gun.setPosZ(4.4f * (float) p + (float) (0.5f * zp));
+        gun.setPosZ(2.5f * (float) p + (float) (0.5f * zp));
 
         gun.setScaleZ(1f - (0.2f * (float) p));
 
         scope.setScaleZ(1f - (0.4f * (float) p));
 
-        gun.setRotZ(-0.087f * (float) p + (float) (0.05f * zp));
 
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
-        if (gun.getPosY() > 0.5) {
+        if (gun.getPosX() > 1.8) {
             holo.setScaleX(1);
             holo.setScaleY(1);
         } else {
