@@ -259,7 +259,7 @@ public class KillMessageOverlay {
                     icon = BEAST;
                 } else if (record.damageType == TargetModDamageTypes.MINE) {
                     icon = CLAYMORE;
-                } else if (record.damageType == ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("dreamaticvoyage", "dmv_bleeding"))) {
+                } else if (record.damageType == ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("dreamaticvoyage", "bleeding"))) {
                     icon = BLEEDING;
                 } else if (record.damageType == ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("dreamaticvoyage", "blood_crystal"))) {
                     icon = BLOOD_CRYSTAL;
