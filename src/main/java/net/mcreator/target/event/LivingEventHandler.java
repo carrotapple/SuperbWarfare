@@ -8,12 +8,11 @@ import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.GunItem;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.network.message.ClientIndicatorMessage;
 import net.mcreator.target.network.message.PlayerGunKillMessage;
 import net.mcreator.target.tools.SoundTool;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -126,12 +125,9 @@ public class LivingEventHandler {
 
         if (!sourceEntity.level().isClientSide() && sourceEntity instanceof ServerPlayer player) {
             SoundTool.playLocalSound(player, TargetModSounds.TARGET_DOWN.get(), 100f, 1f);
-        }
 
-        sourceEntity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            capability.killIndicator = 40;
-            capability.syncPlayerVariables(sourceEntity);
-        });
+            TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(2, 8));
+        }
     }
 
     private static void renderDamageIndicator(LivingHurtEvent event) {
@@ -140,20 +136,16 @@ public class LivingEventHandler {
         }
 
         var damagesource = event.getSource();
-        var sourceEntity = event.getEntity();
+        var sourceEntity = damagesource.getDirectEntity();
 
-        if (damagesource == null || sourceEntity == null) {
+        if (sourceEntity == null) {
             return;
         }
 
-        if (sourceEntity instanceof Player && (damagesource.is(DamageTypes.EXPLOSION) || damagesource.is(DamageTypes.PLAYER_EXPLOSION) || damagesource.is(ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("target:mine"))))) {
-            if (sourceEntity.getServer() != null && sourceEntity instanceof ServerPlayer player) {
-                SoundTool.playLocalSound(player, TargetModSounds.INDICATION.get(), 1f, 1f);
-            }
-            sourceEntity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.hitIndicator = 25;
-                capability.syncPlayerVariables(sourceEntity);
-            });
+        if (sourceEntity instanceof ServerPlayer player && (damagesource.is(DamageTypes.EXPLOSION) || damagesource.is(DamageTypes.PLAYER_EXPLOSION) || damagesource.is(TargetModDamageTypes.MINE))) {
+            SoundTool.playLocalSound(player, TargetModSounds.INDICATION.get(), 1f, 1f);
+
+            TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
         }
     }
 

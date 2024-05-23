@@ -1,17 +1,19 @@
 package net.mcreator.target.entity;
 
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
 import net.mcreator.target.init.TargetModDamageTypes;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
-import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.network.message.ClientIndicatorMessage;
 import net.mcreator.target.tools.ParticleTool;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -24,6 +26,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.Optional;
 
@@ -57,12 +60,10 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
     protected void onHitEntity(EntityHitResult result) {
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
-            living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.hitIndicator = 25;
-                capability.syncPlayerVariables(living);
-            });
-            if (!living.level().isClientSide() && living.getServer() != null) {
+            if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
                 living.level().playSound(null, living.blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
+
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
             }
         }
 
@@ -101,12 +102,10 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
                     }
                     if (headshot) {
                         if (this.getOwner() instanceof LivingEntity living) {
-                            living.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                                capability.headIndicator = 25;
-                                capability.syncPlayerVariables(living);
-                            });
-                            if (!living.level().isClientSide() && living.getServer() != null) {
+                            if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
                                 living.playSound(TargetModSounds.HEADSHOT.get(), 1, 1);
+
+                                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(1, 5));
                             }
                         }
                     }

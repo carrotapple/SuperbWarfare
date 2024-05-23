@@ -90,9 +90,9 @@ public class TargetModVariables {
             clone.bowPullHold = original.bowPullHold;
             clone.bowPull = original.bowPull;
             clone.playerDoubleJump = original.playerDoubleJump;
-            clone.hitIndicator = original.hitIndicator;
-            clone.headIndicator = original.headIndicator;
-            clone.killIndicator = original.killIndicator;
+//            clone.hitIndicator = original.hitIndicator;
+//            clone.headIndicator = original.headIndicator;
+//            clone.killIndicator = original.killIndicator;
 
             if (event.getEntity().level().isClientSide()) return;
 
@@ -280,9 +280,9 @@ public class TargetModVariables {
         public boolean bowPullHold = false;
         public boolean bowPull = false;
         public boolean playerDoubleJump = false;
-        public int hitIndicator = 0;
-        public int headIndicator = 0;
-        public int killIndicator = 0;
+//        public int hitIndicator = 0;
+//        public int headIndicator = 0;
+//        public int killIndicator = 0;
 
         public void syncPlayerVariables(Entity entity) {
             if (entity instanceof ServerPlayer)
@@ -305,9 +305,9 @@ public class TargetModVariables {
             nbt.putBoolean("bow_pull_hold", bowPullHold);
             nbt.putBoolean("bow_pull", bowPull);
             nbt.putBoolean("player_double_jump", playerDoubleJump);
-            nbt.putInt("hit_indicator", hitIndicator);
-            nbt.putInt("head_indicator", headIndicator);
-            nbt.putInt("kill_indicator", killIndicator);
+//            nbt.putInt("hit_indicator", hitIndicator);
+//            nbt.putInt("head_indicator", headIndicator);
+//            nbt.putInt("kill_indicator", killIndicator);
             return nbt;
         }
 
@@ -327,9 +327,9 @@ public class TargetModVariables {
             bowPullHold = nbt.getBoolean("bow_pull_hold");
             bowPull = nbt.getBoolean("bow_pull");
             playerDoubleJump = nbt.getBoolean("player_double_jump");
-            hitIndicator = nbt.getInt("hit_indicator");
-            headIndicator = nbt.getInt("head_indicator");
-            killIndicator = nbt.getInt("kill_indicator");
+//            hitIndicator = nbt.getInt("hit_indicator");
+//            headIndicator = nbt.getInt("head_indicator");
+//            killIndicator = nbt.getInt("kill_indicator");
         }
     }
 
@@ -386,9 +386,9 @@ public class TargetModVariables {
                 variables.bowPullHold = message.data.bowPullHold;
                 variables.bowPull = message.data.bowPull;
                 variables.playerDoubleJump = message.data.playerDoubleJump;
-                variables.hitIndicator = message.data.hitIndicator;
-                variables.headIndicator = message.data.headIndicator;
-                variables.killIndicator = message.data.killIndicator;
+//                variables.hitIndicator = message.data.hitIndicator;
+//                variables.headIndicator = message.data.headIndicator;
+//                variables.killIndicator = message.data.killIndicator;
             });
         }
     }

@@ -1,6 +1,8 @@
 package net.mcreator.target.network;
 
+import net.mcreator.target.client.screens.CrossHairOverlay;
 import net.mcreator.target.event.KillMessageHandler;
+import net.mcreator.target.network.message.ClientIndicatorMessage;
 import net.mcreator.target.network.message.GunsDataMessage;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.PlayerKillRecord;
@@ -27,6 +29,16 @@ public class ClientPacketHandler {
                 KillMessageHandler.QUEUE.poll();
             }
             KillMessageHandler.QUEUE.offer(new PlayerKillRecord(attacker, target, attacker.getMainHandItem(), headshot, damageType));
+        }
+    }
+
+    public static void handleClientIndicatorMessage(ClientIndicatorMessage message, Supplier<NetworkEvent.Context> ctx) {
+        if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+            switch (message.type) {
+                case 1 -> CrossHairOverlay.HEAD_INDICATOR = message.value;
+                case 2 -> CrossHairOverlay.KILL_INDICATOR = message.value;
+                default -> CrossHairOverlay.HIT_INDICATOR = message.value;
+            }
         }
     }
 }

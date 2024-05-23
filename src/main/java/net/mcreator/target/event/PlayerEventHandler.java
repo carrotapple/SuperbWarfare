@@ -63,7 +63,6 @@ public class PlayerEventHandler {
             handleSpecialWeaponAmmo(player);
             handleChangeFireRate(player);
             handleDistantRange(player);
-            handleRenderDamageIndicator(player);
             handleBocekPulling(player);
             handleGunRecoil(player);
         }
@@ -171,15 +170,15 @@ public class PlayerEventHandler {
     }
 
     private static void handleFireTime(Player player) {
-         if (player == null) {
-             return;
-         }
-         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing > 0) {
-             player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                 capability.firing = (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing - 0.5;
-                 capability.syncPlayerVariables(player);
-             });
-         }
+        if (player == null) {
+            return;
+        }
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing > 0) {
+            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.firing = (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing - 0.5;
+                capability.syncPlayerVariables(player);
+            });
+        }
     }
 
     private static void handleGround(Player player) {
@@ -252,18 +251,6 @@ public class PlayerEventHandler {
                     player.displayClientMessage(Component.literal("---M"), true);
             }
         }
-    }
-
-
-    private static void handleRenderDamageIndicator(Player player) {
-        if (player == null)
-            return;
-        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            capability.headIndicator = Math.max(0, capability.headIndicator - 5);
-            capability.hitIndicator = Math.max(0, capability.hitIndicator - 5);
-            capability.killIndicator = Math.max(0, capability.killIndicator - 5);
-            capability.syncPlayerVariables(player);
-        });
     }
 
     private static void handleBocekPulling(Player player) {

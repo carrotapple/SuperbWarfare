@@ -33,10 +33,11 @@ public class ClientEventHandler {
             handleWeaponZoom(living);
             handleWeaponFire(event, living);
             handleShockCamera(event, living);
-            PlayerCameraShake(event, living);
+            handlePlayerCameraShake(event, living);
             handleBowPullAnimation(living);
         }
     }
+
     private static void handleWeaponSway(LivingEntity entity) {
         if (entity.getMainHandItem().is(TargetModTags.Items.GUN)) {
             float fps = Minecraft.getInstance().getFps();
@@ -426,7 +427,7 @@ public class ClientEventHandler {
         }
     }
 
-    private static void PlayerCameraShake(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
+    private static void handlePlayerCameraShake(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
         var data = entity.getPersistentData();
         double yaw = event.getYaw();
         double pitch = event.getPitch();

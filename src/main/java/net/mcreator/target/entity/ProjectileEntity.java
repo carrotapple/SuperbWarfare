@@ -7,7 +7,7 @@ import net.mcreator.target.init.TargetModDamageTypes;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModParticleTypes;
 import net.mcreator.target.init.TargetModSounds;
-import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.network.message.ClientIndicatorMessage;
 import net.mcreator.target.network.message.PlayerGunKillMessage;
 import net.mcreator.target.tools.ExtendedEntityRayTraceResult;
 import net.mcreator.target.tools.ParticleTool;
@@ -314,10 +314,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             if (living.isDeadOrDying()) return;
 
             if (this.shooter instanceof ServerPlayer player) {
-                player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.hitIndicator = 25;
-                    capability.syncPlayerVariables(living);
-                });
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
                 var holder = Holder.direct(TargetModSounds.INDICATION.get());
                 player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
                 ((ServerLevel) this.level()).sendParticles(ParticleTypes.DAMAGE_INDICATOR, living.getX(), living.getY() + .5, living.getZ(), 1000, .4, .7, .4, 0);
@@ -349,25 +346,17 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
                 var holder = Holder.direct(TargetModSounds.HEADSHOT.get());
                 player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
+
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(1, 5));
             }
-
-            shooter.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.headIndicator = 25;
-                capability.syncPlayerVariables(shooter);
-            });
-
             entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this.shooter), this.damage * this.headShot);
         } else {
             if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
                 var holder = Holder.direct(TargetModSounds.INDICATION.get());
                 player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
+
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
             }
-
-            shooter.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.hitIndicator = 25;
-                capability.syncPlayerVariables(shooter);
-            });
-
             entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this.shooter), this.damage);
         }
         this.discard();
