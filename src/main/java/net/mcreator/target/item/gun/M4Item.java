@@ -87,11 +87,11 @@ public class M4Item extends GunItem implements GeoItem, AnimatedItem {
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m4.reload"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m4.reload_empty"));
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading") && !stack.getOrCreateTag().getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m4.reload2"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m4.reload_normal"));
             }
 
             if (stack.getOrCreateTag().getInt("fire_mode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
@@ -179,7 +179,7 @@ public class M4Item extends GunItem implements GeoItem, AnimatedItem {
                 tag.putDouble("reload_time", 0);
             }
             if (tag.getBoolean("reloading") && tag.getInt("ammo") == 0) {
-                if (tag.getDouble("reload_time") == 55) {
+                if (tag.getDouble("reload_time") == 61) {
                     if (entity instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, TargetModSounds.M_4_RELOAD_EMPTY.get(), 100, 1);
                     }
@@ -199,7 +199,7 @@ public class M4Item extends GunItem implements GeoItem, AnimatedItem {
                     GunReload.reload(entity, GunInfo.Type.RIFLE);
                 }
             } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
-                if (tag.getDouble("reload_time") == 41) {
+                if (tag.getDouble("reload_time") == 53) {
                     if (entity instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, TargetModSounds.M_4_RELOAD_NORMAL.get(), 100, 1);
                     }

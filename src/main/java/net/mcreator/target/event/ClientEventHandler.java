@@ -79,9 +79,9 @@ public class ClientEventHandler {
             double on_ground;
             if (entity.onGround()) {
                 if (entity.isSprinting()) {
-                    on_ground = 1.2;
+                    on_ground = 1.0;
                 } else {
-                    on_ground = 2.4;
+                    on_ground = 2.0;
                 }
             } else {
                 on_ground = 0.001;
