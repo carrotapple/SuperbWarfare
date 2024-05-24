@@ -13,7 +13,6 @@ import net.mcreator.target.network.message.PlayerGunKillMessage;
 import net.mcreator.target.tools.SoundTool;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -155,14 +154,14 @@ public class LivingEventHandler {
     @SubscribeEvent
     public static void handleChangeSlot(LivingEquipmentChangeEvent event) {
         if (event.getEntity() instanceof Player player && event.getSlot() == EquipmentSlot.MAINHAND) {
-            if (player.level().isClientSide || player.level().getServer() == null) {
+            if (player.level().isClientSide) {
                 return;
             }
 
             ItemStack oldStack = event.getFrom();
             ItemStack newStack = event.getTo();
 
-            if (player.level() instanceof ServerLevel serverLevel) {
+            if (player instanceof ServerPlayer serverPlayer) {
                 var newTag = newStack.getTag();
                 var oldTag = oldStack.getTag();
 
@@ -176,7 +175,7 @@ public class LivingEventHandler {
                     }
 
                     if (oldStack.getItem() instanceof GunItem oldGun) {
-                        stopGunReloadSound(serverLevel, oldGun);
+                        stopGunReloadSound(serverPlayer, oldGun);
                     }
 
                     player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
@@ -195,10 +194,10 @@ public class LivingEventHandler {
         }
     }
 
-    private static void stopGunReloadSound(ServerLevel server, GunItem gun) {
+    private static void stopGunReloadSound(ServerPlayer player, GunItem gun) {
         gun.getReloadSound().forEach(sound -> {
             var clientboundstopsoundpacket = new ClientboundStopSoundPacket(sound.getLocation(), SoundSource.PLAYERS);
-            server.players().forEach(p -> p.connection.send(clientboundstopsoundpacket));
+            player.connection.send(clientboundstopsoundpacket);
         });
     }
 
