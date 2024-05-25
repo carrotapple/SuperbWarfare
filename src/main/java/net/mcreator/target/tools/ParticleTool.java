@@ -2,6 +2,7 @@ package net.mcreator.target.tools;
 
 import net.mcreator.target.init.TargetModParticleTypes;
 import net.mcreator.target.init.TargetModSounds;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -30,16 +31,28 @@ public class ParticleTool {
         double z = pos.z;
 
         if (!level.isClientSide()) {
-            level.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION.get(), SoundSource.BLOCKS, 8, 1);
+            if ((level.getBlockState(BlockPos.containing(x, y, z))).getBlock() == Blocks.WATER) {
+                level.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION_WATER.get(), SoundSource.BLOCKS, 3, 1);
+            }
+            level.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION_CLOSE.get(), SoundSource.BLOCKS, 8, 1);
             level.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION_FAR.get(), SoundSource.BLOCKS, 16, 1);
             level.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION_VERY_FAR.get(), SoundSource.BLOCKS, 32, 1);
-        } else {
-            level.playLocalSound(x, (y + 1), z, TargetModSounds.EXPLOSION.get(), SoundSource.BLOCKS, 24, 1, false);
+            } else {
+            if ((level.getBlockState(BlockPos.containing(x, y, z))).getBlock() == Blocks.WATER) {
+                level.playLocalSound(x, (y + 1), z, TargetModSounds.EXPLOSION_WATER.get(), SoundSource.BLOCKS, 3, 1, false);
+            }
+            level.playLocalSound(x, (y + 1), z, TargetModSounds.EXPLOSION_CLOSE.get(), SoundSource.BLOCKS, 24, 1, false);
             level.playLocalSound(x, (y + 1), z, TargetModSounds.EXPLOSION_FAR.get(), SoundSource.BLOCKS, 24, 1, false);
             level.playLocalSound(x, (y + 1), z, TargetModSounds.EXPLOSION_VERY_FAR.get(), SoundSource.BLOCKS, 64, 1, false);
         }
 
         if (level instanceof ServerLevel serverLevel) {
+            if ((level.getBlockState(BlockPos.containing(x, y, z))).getBlock() == Blocks.WATER) {
+                sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 3, z, 200, 1, 3, 1, 0.01, true);
+                sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 3, z, 300, 2, 1, 2, 0.01, true);
+                sendParticle(serverLevel, ParticleTypes.FALLING_WATER, x, y + 3, z, 600, 1.5, 4, 1.5, 1, true);
+                sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, x, y, z, 1000, 3, 0.5, 3, 0.1, true);
+            }
             sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 80, 0.4, 1, 0.4, 0.02, true);
             sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, x, y + 1, z, 80, 0.4, 1, 0.4, 0.02, true);
             sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 80, 2, 0.001, 2, 0.01, true);

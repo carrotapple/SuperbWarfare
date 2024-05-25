@@ -1,5 +1,6 @@
 package net.mcreator.target.event;
 
+import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
@@ -28,6 +29,7 @@ public class ClientEventHandler {
         ClientLevel level = Minecraft.getInstance().level;
         Entity entity = event.getCamera().getEntity();
         if (level != null && entity instanceof LivingEntity living) {
+            handleWeaponCrosshair(living);
             handleWeaponSway(living);
             handleWeaponMove(living);
             handleWeaponZoom(living);
@@ -35,6 +37,24 @@ public class ClientEventHandler {
             handleShockCamera(event, living);
             handlePlayerCameraShake(event, living);
             handleBowPullAnimation(living);
+        }
+    }
+
+    private static void handleWeaponCrosshair(LivingEntity entity) {
+        if (entity.getMainHandItem().is(TargetModTags.Items.GUN)) {
+            float fps = Minecraft.getInstance().getFps();
+            if (fps <= 30) {
+                fps = 30f;
+            }
+            float times = 90f / fps;
+            var data = entity.getPersistentData();
+            double spread = entity.getAttribute(TargetModAttributes.SPREAD.get()).getBaseValue();
+
+            if (data.getDouble("crosshair") > spread){
+                data.putDouble("crosshair",data.getDouble("crosshair") - 0.05 *Math.pow(spread - data.getDouble("crosshair"), 2) * times);
+            } else {
+                data.putDouble("crosshair",data.getDouble("crosshair") + 0.05 *Math.pow(spread - data.getDouble("crosshair"), 2) * times);
+            }
         }
     }
 

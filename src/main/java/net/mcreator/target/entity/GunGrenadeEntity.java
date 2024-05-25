@@ -69,7 +69,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
 
         if (this.getPersistentData().getInt("fuse") > 0) {
             if (this.level() instanceof ServerLevel level) {
-                level.explode(this, (this.getX()), (this.getY()), (this.getZ()), 5.5f, Level.ExplosionInteraction.NONE);
+                level.explode(this, (this.getX()), (this.getY()), (this.getZ()), 4.5f, Level.ExplosionInteraction.NONE);
                 if (!entity.level().isClientSide()) {
                     ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
                 }
@@ -128,7 +128,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         super.onHitBlock(blockHitResult);
         if (this.getPersistentData().getInt("fuse") > 0) {
             if (this.level() instanceof ServerLevel) {
-                this.level().explode(this, this.getX(), this.getY(), this.getZ(), 5.5f, Level.ExplosionInteraction.NONE);
+                this.level().explode(this, this.getX(), this.getY(), this.getZ(), 4.5f, Level.ExplosionInteraction.NONE);
                 ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
             }
         }
@@ -147,7 +147,11 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
                     1, 0, 0, 0, 0.02, true);
         }
 
-        if (this.tickCount > 200) {
+        if (this.tickCount > 200 || this.isInWater()) {
+            if (this.level() instanceof ServerLevel) {
+                this.level().explode(this, this.getX(), this.getY(), this.getZ(), 4.5f, Level.ExplosionInteraction.NONE);
+                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+            }
             this.discard();
         }
     }

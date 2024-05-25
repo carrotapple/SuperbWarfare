@@ -1287,46 +1287,62 @@
       }
     ]
   },
-  "exp": {
+  "explosion_close": {
     "sounds": [
       {
-        "name": "target:explosion/exp",
+        "name": "target:explosion/explosion_close",
         "stream": false
       },
       {
-        "name": "target:explosion/exp2",
+        "name": "target:explosion/explosion_close2",
         "stream": false
       },
       {
-        "name": "target:explosion/exp3",
+        "name": "target:explosion/explosion_close3",
         "stream": false
       }
     ]
   },
-  "expfar": {
+  "explosion_far": {
     "sounds": [
       {
-        "name": "target:explosion/far",
+        "name": "target:explosion/explosion_far",
         "stream": false
       },
       {
-        "name": "target:explosion/far2",
+        "name": "target:explosion/explosion_far2",
         "stream": false
       },
       {
-        "name": "target:explosion/far3",
+        "name": "target:explosion/explosion_far3",
         "stream": false
       }
     ]
   },
-  "expveryfar": {
+  "explosion_very_far": {
     "sounds": [
       {
-        "name": "target:explosion/veryfar",
+        "name": "target:explosion/explosion_very_far",
         "stream": false
       },
       {
-        "name": "target:explosion/veryfar2",
+        "name": "target:explosion/explosion_very_far2",
+        "stream": false
+      }
+    ]
+  },
+  "explosion_water": {
+    "sounds": [
+      {
+        "name": "target:explosion/explosion_water",
+        "stream": false
+      },
+      {
+        "name": "target:explosion/explosion_water2",
+        "stream": false
+      },
+      {
+        "name": "target:explosion/explosion_water3",
         "stream": false
       }
     ]

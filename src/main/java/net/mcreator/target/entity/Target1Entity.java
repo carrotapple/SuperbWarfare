@@ -4,6 +4,7 @@ import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.tools.SoundTool;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -104,14 +105,15 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
+
+        if (this.getPersistentData().getDouble("target_down") > 0) {
+            return false;
+        }
+
         if (!this.level().isClientSide()) {
             this.level().playSound(null, BlockPos.containing(this.getX(), this.getY(), this.getZ()), TargetModSounds.HIT.get(), SoundSource.BLOCKS, 2, 1);
         } else {
             this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), TargetModSounds.HIT.get(), SoundSource.BLOCKS, 2, 1, false);
-        }
-
-        if (this.getPersistentData().getDouble("targetdown") > 0) {
-            return false;
         }
 
         if (source.is(DamageTypes.IN_FIRE))
@@ -164,8 +166,7 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
 
     @SubscribeEvent
     public static void onTarget1Down(LivingDeathEvent event) {
-        if (event.getEntity() == null) return;
-
+        event.setCanceled(true);
         var entity = event.getEntity();
         var sourceEntity = event.getSource().getEntity();
 
@@ -174,12 +175,11 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
         if (entity instanceof Target1Entity target1) {
             target1.setHealth(target1.getMaxHealth());
 
-            sourceEntity.level().playLocalSound(sourceEntity.blockPosition(), TargetModSounds.TARGET_DOWN.get(), SoundSource.PLAYERS, 100, 1, false);
-
-            if (sourceEntity instanceof Player player)
+            if (sourceEntity instanceof Player player) {
                 player.displayClientMessage(Component.literal(("Target Down " + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceEntity.position()))) + "M")), true);
-            entity.getPersistentData().putDouble("target_down", 201);
-            event.setCanceled(true);
+                SoundTool.playLocalSound(player, TargetModSounds.TARGET_DOWN.get(), 100, 1);
+                entity.getPersistentData().putDouble("target_down", 100);
+            }
         }
     }
 
@@ -215,53 +215,29 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
     @Override
     public void baseTick() {
         super.baseTick();
-
-        this.setCustomName(Component.literal("HP:" + new DecimalFormat("##.##").format(this.getHealth()) + "/"
-                + new DecimalFormat("##.##").format(this.getMaxHealth())));
-
-        double[] recoilTimer = {0};
-        double totalTime = 6;
-        int sleepTime = 2;
-        double recoilDuration = totalTime / sleepTime;
-        Runnable recoilRunnable = () -> {
-            while (recoilTimer[0] < recoilDuration) {
-
-                if (this.getPersistentData().getDouble("target_down") > -1) {
-                    this.getPersistentData().putDouble("target_down", this.getPersistentData().getDouble("target_down") - 1);
-                }
-                if (this.getPersistentData().getDouble("target_down") > 195) {
-                    this.setYRot(this.getYRot());
-                    this.setXRot((float) (201 - this.getPersistentData().getDouble("target_down")) * -18);
-                    this.setYBodyRot(this.getYRot());
-                    this.setYHeadRot(this.getYRot());
-                    this.yRotO = this.getYRot();
-                    this.xRotO = this.getXRot();
-                    this.yBodyRotO = this.getYRot();
-                    this.yHeadRotO = this.getYRot();
-                }
-                if (this.getPersistentData().getDouble("target_down") < 20 && this.getPersistentData().getDouble("target_down") > -1) {
-                    this.setYRot(this.getYRot());
-                    this.setXRot((float) (-90 + 20 - this.getPersistentData().getDouble("target_down")) * 5.14f);
-                    this.setYBodyRot(this.getYRot());
-                    this.setYHeadRot(this.getYRot());
-                    this.yRotO = this.getYRot();
-                    this.xRotO = this.getXRot();
-                    this.yBodyRotO = this.getYRot();
-                    this.yHeadRotO = this.getYRot();
-                }
-
-                recoilTimer[0]++;
-                try {
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        Thread recoilThread = new Thread(recoilRunnable);
-        recoilThread.start();
-
-        this.refreshDimensions();
+        if (this.getPersistentData().getDouble("target_down") > 0) {
+            this.getPersistentData().putDouble("target_down", this.getPersistentData().getDouble("target_down") - 1);
+        }
+        if (this.getPersistentData().getDouble("target_down") >= 98) {
+            this.setYRot(this.getYRot());
+            this.setXRot((float) (100 - this.getPersistentData().getDouble("target_down")) * -45f);
+            this.setYBodyRot(this.getYRot());
+            this.setYHeadRot(this.getYRot());
+            this.yRotO = this.getYRot();
+            this.xRotO = this.getXRot();
+            this.yBodyRotO = this.getYRot();
+            this.yHeadRotO = this.getYRot();
+        }
+        if (this.getPersistentData().getDouble("target_down") <= 5 && this.getPersistentData().getDouble("target_down") > 0) {
+            this.setYRot(this.getYRot());
+            this.setXRot((float) (-90 + (5 - this.getPersistentData().getDouble("target_down")) * 18f * 1.25f));
+            this.setYBodyRot(this.getYRot());
+            this.setYHeadRot(this.getYRot());
+            this.yRotO = this.getYRot();
+            this.xRotO = this.getXRot();
+            this.yBodyRotO = this.getYRot();
+            this.yHeadRotO = this.getYRot();
+        }
     }
 
 
@@ -331,9 +307,9 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
     @Override
     protected void tickDeath() {
         ++this.deathTime;
-        if (this.deathTime == 100) {
-            this.remove(Target1Entity.RemovalReason.KILLED);
-            this.dropExperience();
+        if (this.deathTime == 114514) {
+//            this.remove(Target1Entity.RemovalReason.KILLED);
+//            this.dropExperience();
         }
     }
 

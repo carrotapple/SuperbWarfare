@@ -92,44 +92,5 @@ public class GunsTool {
         initJsonData(event.getServer().getResourceManager());
     }
 
-    public static void spawnBullet(Player player) {
-        ItemStack heldItem = player.getMainHandItem();
-        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
-            capability.recoil = 0.1;
-            capability.firing = 1;
-            capability.syncPlayerVariables(player);
-        });
 
-        if (player.level().isClientSide()) return;
-
-        CompoundTag tag = heldItem.getOrCreateTag();
-        double damage;
-        float headshot = (float) tag.getDouble("headshot");
-        float velocity = 4 * (float) tag.getDouble("speed");
-
-        var projectile = new ProjectileEntity(player.level())
-                .shooter(player)
-                .headShot(headshot);
-        if (tag.getBoolean("beast")) {
-            projectile.beast();
-        }
-        projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
-
-        if (heldItem.getItem() == TargetModItems.BOCEK.get()) {
-            damage = 0.008333333 * tag.getDouble("damage") * tag.getDouble("speed") * tag.getDouble("damageadd");
-            projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, velocity, 2.5f);
-        } else {
-            damage = tag.getDouble("damage") + tag.getDouble("add_damage") * tag.getDouble("damageadd");
-
-            projectile.shoot(player.getLookAngle().x,
-                    player.getLookAngle().y,
-                    player.getLookAngle().z,
-                    (float) tag.getDouble("velocity"),
-                    (float) player.getAttribute(TargetModAttributes.SPREAD.get()).getBaseValue());
-        }
-
-        projectile.damage((float) damage);
-        player.level().addFreshEntity(projectile);
-    }
 }

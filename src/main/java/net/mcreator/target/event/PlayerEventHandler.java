@@ -173,12 +173,7 @@ public class PlayerEventHandler {
         if (player == null) {
             return;
         }
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing > 0) {
-            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.firing = (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing - 0.5;
-                capability.syncPlayerVariables(player);
-            });
-        }
+
     }
 
     private static void handleGround(Player player) {
@@ -294,16 +289,28 @@ public class PlayerEventHandler {
         float recoilX = (float) tag.getDouble("recoil_x");
         float recoilY = (float) tag.getDouble("recoil_y");
 
-        var capability = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null);
-        float recoilYaw = capability.map(c -> c.recoilHorizon).orElse(0d).floatValue();
+        float recoilYaw = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.recoilHorizon).orElse(0d).floatValue();
 
         double[] recoilTimer = {0};
-        double totalTime = 10;
+        double totalTime = 20;
         int sleepTime = 2;
         double recoilDuration = totalTime / sleepTime;
 
         Runnable recoilRunnable = () -> {
             while (recoilTimer[0] < recoilDuration) {
+
+                if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing > 0) {
+                    player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        capability.firing = (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing - 0.1;
+                        capability.syncPlayerVariables(player);
+                    });
+                } else {
+                    player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        capability.firing = 0;
+                        capability.syncPlayerVariables(player);
+                    });
+                }
+
                 float rx, ry;
                 if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && player.getPersistentData().getDouble("prone") == 0) {
                     rx = 0.7f;
@@ -321,26 +328,26 @@ public class PlayerEventHandler {
                     ry = 1f;
                 }
 
-                double recoil = capability.map(c -> c.recoil).orElse(0d);
+                double recoil = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.recoil).orElse(0d);
 
                 if (recoil >= 1) recoil = 0d;
 
                 if (recoil > 0) {
-                    recoil += 0.02;
+                    recoil += 0.01;
 
                     double sinRes = Math.sin(2 * Math.PI * (1.03f * recoil - 0.032047110911)) + 0.2;
 
-                    float newPitch = ((float) (player.getXRot() - 15f * recoilY * ry * sinRes));
+                    float newPitch = ((float) (player.getXRot() - 7.5f * recoilY * ry * sinRes));
                     player.setXRot(newPitch);
                     player.xRotO = player.getXRot();
 
-                    float newYaw = ((float) (player.getYRot() - 10f * recoilYaw * recoilX * rx * sinRes));
+                    float newYaw = ((float) (player.getYRot() - 5f * recoilYaw * recoilX * rx * sinRes));
                     player.setYRot(newYaw);
                     player.yRotO = player.getYRot();
                 }
 
                 double finalRecoil = recoil;
-                capability.ifPresent(c -> {
+                player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(c -> {
                     c.recoil = finalRecoil;
                     c.syncPlayerVariables(player);
                 });

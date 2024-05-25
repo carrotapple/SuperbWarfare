@@ -35,7 +35,7 @@ public class CrossHairOverlay {
             return;
         }
 
-        double spread = entity.getAttribute(TargetModAttributes.SPREAD.get()).getBaseValue();
+        double spread = entity.getPersistentData().getDouble("crosshair");
 
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);

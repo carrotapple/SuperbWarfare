@@ -68,7 +68,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
         }
 
         if (this.level() instanceof ServerLevel level) {
-            level.explode(this, this.getX(), this.getY(), this.getZ(), 4, Level.ExplosionInteraction.NONE);
+            level.explode(this, this.getX(), this.getY(), this.getZ(), 5, Level.ExplosionInteraction.NONE);
 
             if (!entity.level().isClientSide()) {
                 ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
@@ -132,7 +132,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
         super.onHitBlock(blockHitResult);
 
         if (this.level() instanceof ServerLevel level) {
-            level.explode(this, this.getX(), this.getY(), this.getZ(), 6, Level.ExplosionInteraction.NONE);
+            level.explode(this, this.getX(), this.getY(), this.getZ(), 5, Level.ExplosionInteraction.NONE);
             ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
         }
 
@@ -157,8 +157,9 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
             }
         }
 
-        if (this.tickCount >= 90) {
-            if (!this.level().isClientSide()) {
+        if (this.tickCount > 100 || this.isInWater()) {
+            if (this.level() instanceof ServerLevel) {
+                this.level().explode(this, this.getX(), this.getY(), this.getZ(), 5f, Level.ExplosionInteraction.NONE);
                 ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
             }
             this.discard();

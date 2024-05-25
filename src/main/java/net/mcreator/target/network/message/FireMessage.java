@@ -1,6 +1,8 @@
 package net.mcreator.target.network.message;
 
 import net.mcreator.target.entity.BocekArrowEntity;
+import net.mcreator.target.entity.ProjectileEntity;
+import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
@@ -10,6 +12,7 @@ import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.SoundTool;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
@@ -109,7 +112,7 @@ public class FireMessage {
                 }
             } else {
                 for (int index0 = 0; index0 < 10; index0++) {
-                    GunsTool.spawnBullet(player);
+                    spawnBullet(player);
                 }
 
                 if (!player.level().isClientSide() && player.getServer() != null) {
@@ -134,5 +137,35 @@ public class FireMessage {
                 player.getInventory().clearOrCountMatchingItems(p -> Items.ARROW == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
             }
         }
+    }
+
+    public static void spawnBullet(Player player) {
+        ItemStack heldItem = player.getMainHandItem();
+        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
+            capability.recoil = 0.1;
+            capability.firing = 1;
+            capability.syncPlayerVariables(player);
+        });
+
+        if (player.level().isClientSide()) return;
+
+        CompoundTag tag = heldItem.getOrCreateTag();
+        double damage;
+        float headshot = (float) tag.getDouble("headshot");
+        float velocity = 4 * (float) tag.getDouble("speed");
+
+        var projectile = new ProjectileEntity(player.level())
+                .shooter(player)
+                .headShot(headshot);
+        if (tag.getBoolean("beast")) {
+            projectile.beast();
+        }
+        projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
+
+        damage = 0.008333333 * tag.getDouble("damage") * tag.getDouble("speed") * tag.getDouble("damageadd");
+        projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, velocity, 2.5f);
+        projectile.damage((float) damage);
+        player.level().addFreshEntity(projectile);
     }
 }

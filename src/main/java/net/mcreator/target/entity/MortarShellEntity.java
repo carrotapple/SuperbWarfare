@@ -54,7 +54,7 @@ public class MortarShellEntity extends ThrowableItemProjectile {
         entity.hurt(this.level().damageSources().thrown(this, this.getOwner()), this.damage);
 
         if (this.level() instanceof ServerLevel level) {
-            level.explode(this, (this.getX()), (this.getY()), (this.getZ()), 10, Level.ExplosionInteraction.NONE);
+            level.explode(this, (this.getX()), (this.getY()), (this.getZ()), 11, Level.ExplosionInteraction.NONE);
             if (!entity.level().isClientSide() && entity.getServer() != null) {
                 ParticleTool.spawnMediumExplosionParticles(level, entity.position());
             }
@@ -66,7 +66,7 @@ public class MortarShellEntity extends ThrowableItemProjectile {
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
         if (!this.level().isClientSide() && this.level() instanceof ServerLevel level) {
-            level.explode(this, this.getX(), this.getY(), this.getZ(), 10, Level.ExplosionInteraction.NONE);
+            level.explode(this, this.getX(), this.getY(), this.getZ(), 11, Level.ExplosionInteraction.NONE);
             ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
         }
         this.discard();
@@ -79,8 +79,11 @@ public class MortarShellEntity extends ThrowableItemProjectile {
             ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(),
                     2, 0, 0, 0, 0.02, true);
         }
-        if (this.tickCount >= 600) {
-            this.level().explode(this, this.getX(), this.getY(), this.getZ(), 10, Level.ExplosionInteraction.NONE);
+        if (this.tickCount > 600 || this.isInWater()) {
+            if (this.level() instanceof ServerLevel) {
+                this.level().explode(this, this.getX(), this.getY(), this.getZ(), 11f, Level.ExplosionInteraction.NONE);
+                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+            }
             this.discard();
         }
     }

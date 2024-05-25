@@ -2,15 +2,14 @@ package net.mcreator.target.event;
 
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.entity.ClaymoreEntity;
-import net.mcreator.target.init.TargetModDamageTypes;
-import net.mcreator.target.init.TargetModItems;
-import net.mcreator.target.init.TargetModSounds;
-import net.mcreator.target.init.TargetModTags;
+import net.mcreator.target.entity.Target1Entity;
+import net.mcreator.target.init.*;
 import net.mcreator.target.item.gun.GunItem;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.network.message.ClientIndicatorMessage;
 import net.mcreator.target.network.message.PlayerGunKillMessage;
 import net.mcreator.target.tools.SoundTool;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
@@ -95,6 +94,10 @@ public class LivingEventHandler {
             }
             event.setAmount((float) damage);
             stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
+
+            if (entity instanceof Target1Entity && sourceentity instanceof Player player) {
+                player.displayClientMessage(Component.literal("Damage:" + new java.text.DecimalFormat("##.#").format(damage) + " Distance:" + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceentity.position()))) + "M"), false);
+            }
         }
     }
 
