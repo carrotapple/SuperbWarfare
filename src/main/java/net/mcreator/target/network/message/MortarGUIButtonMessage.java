@@ -54,7 +54,7 @@ public class MortarGUIButtonMessage {
         context.setPacketHandled(true);
     }
 
-    private static void handleButtonAction(Player player, int buttonID) {
+    public static void handleButtonAction(Player player, int buttonID) {
         Entity looking = TraceTool.findLookingEntity(player, 6);
         if (looking == null) return;
         if (looking instanceof LivingEntity living) {

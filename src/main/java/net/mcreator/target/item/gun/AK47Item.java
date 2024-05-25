@@ -91,11 +91,11 @@ public class AK47Item extends GunItem implements GeoItem, AnimatedItem {
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_empty"));
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading") && !stack.getOrCreateTag().getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload2"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_normal"));
             }
 
             if (stack.getOrCreateTag().getInt("fire_mode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
@@ -183,7 +183,7 @@ public class AK47Item extends GunItem implements GeoItem, AnimatedItem {
                 tag.putDouble("reload_time", 0);
             }
             if (tag.getBoolean("reloading") && tag.getInt("ammo") == 0) {
-                if (tag.getDouble("reload_time") == 57) {
+                if (tag.getDouble("reload_time") == 66) {
                     entity.getPersistentData().putDouble("id", id);
                     if (!entity.level().isClientSide()) {
                         SoundTool.playLocalSound(player, TargetModSounds.AK_47_RELOAD_EMPTY.get(), 100, 1);
@@ -203,7 +203,7 @@ public class AK47Item extends GunItem implements GeoItem, AnimatedItem {
                     GunReload.reload(entity, GunInfo.Type.RIFLE);
                 }
             } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
-                if (tag.getDouble("reload_time") == 41) {
+                if (tag.getDouble("reload_time") == 51) {
                     entity.getPersistentData().putDouble("id", id);
                     if (!entity.level().isClientSide()) {
                         SoundTool.playLocalSound(player, TargetModSounds.AK_47_RELOAD_NORMAL.get(), 100, 1);
