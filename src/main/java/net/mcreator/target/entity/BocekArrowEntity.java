@@ -10,10 +10,7 @@ import net.mcreator.target.network.message.ClientIndicatorMessage;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,17 +27,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.PlayMessages;
 
 import java.util.Optional;
 
 @OnlyIn(value = Dist.CLIENT, _interface = ItemSupplier.class)
 public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
     public static final ItemStack PROJECTILE_ITEM = new ItemStack(Items.ARROW);
-
-    public BocekArrowEntity(PlayMessages.SpawnEntity packet, Level world) {
-        super(TargetModEntities.BOCEK_ARROW.get(), world);
-    }
 
     public BocekArrowEntity(EntityType<? extends BocekArrowEntity> type, Level world) {
         super(type, world);
@@ -50,8 +42,8 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
         super(type, x, y, z, world);
     }
 
-    public BocekArrowEntity(EntityType<? extends BocekArrowEntity> type, LivingEntity entity, Level world) {
-        super(type, entity, world);
+    public BocekArrowEntity(LivingEntity entity, Level level) {
+        super(TargetModEntities.BOCEK_ARROW.get(), entity, level);
     }
 
     @Override
@@ -170,34 +162,4 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
         }
     }
 
-    public static BocekArrowEntity shoot(Level world, LivingEntity entity, RandomSource source) {
-        return shoot(world, entity, source, 1f, 5, 0);
-    }
-
-    public static BocekArrowEntity shoot(Level world, LivingEntity entity, RandomSource random, float power, double damage, int knockback) {
-        BocekArrowEntity bocekArrowEntity = new BocekArrowEntity(TargetModEntities.BOCEK_ARROW.get(), entity, world);
-        bocekArrowEntity.shoot(entity.getViewVector(1).x, entity.getViewVector(1).y, entity.getViewVector(1).z, power * 2, 0);
-        bocekArrowEntity.setSilent(true);
-        bocekArrowEntity.setCritArrow(false);
-        bocekArrowEntity.setBaseDamage(damage);
-        bocekArrowEntity.setKnockback(knockback);
-        world.addFreshEntity(bocekArrowEntity);
-        world.playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1, 1f / (random.nextFloat() * 0.5f + 1) + (power / 2));
-        return bocekArrowEntity;
-    }
-
-    public static BocekArrowEntity shoot(LivingEntity entity, LivingEntity target) {
-        BocekArrowEntity bocekArrowEntity = new BocekArrowEntity(TargetModEntities.BOCEK_ARROW.get(), entity, entity.level());
-        double dx = target.getX() - entity.getX();
-        double dy = target.getY() + target.getEyeHeight() - 1.1;
-        double dz = target.getZ() - entity.getZ();
-        bocekArrowEntity.shoot(dx, dy - bocekArrowEntity.getY() + Math.hypot(dx, dz) * 0.2F, dz, 1f * 2, 12.0F);
-        bocekArrowEntity.setSilent(true);
-        bocekArrowEntity.setBaseDamage(5);
-        bocekArrowEntity.setKnockback(5);
-        bocekArrowEntity.setCritArrow(false);
-        entity.level().addFreshEntity(bocekArrowEntity);
-        entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1, 1f / (RandomSource.create().nextFloat() * 0.5f + 1));
-        return bocekArrowEntity;
-    }
 }

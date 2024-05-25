@@ -2,19 +2,15 @@ package net.mcreator.target.network.message;
 
 import net.mcreator.target.entity.BocekArrowEntity;
 import net.mcreator.target.entity.ProjectileEntity;
-import net.mcreator.target.init.TargetModAttributes;
-import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.procedures.PressFireProcedure;
-import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.SoundTool;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
@@ -52,7 +48,7 @@ public class FireMessage {
     public static void pressAction(Player player, int type) {
         Level world = player.level();
 
-        if (!world.hasChunkAt(player.blockPosition())) {
+        if (!world.isLoaded(player.blockPosition())) {
             return;
         }
 
@@ -79,11 +75,9 @@ public class FireMessage {
 
         double power = stack.getOrCreateTag().getDouble("power");
 
-        if (!player.level().isClientSide() && player.getServer() != null) {
-            player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                    player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "stopsound @a player target:bocek_pull_1p");
-            player.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4,
-                    player.getName().getString(), player.getDisplayName(), player.level().getServer(), player), "stopsound @a player target:bocek_pull_3p");
+        if (player instanceof ServerPlayer serverPlayer) {
+            SoundTool.stopSound(serverPlayer, TargetModSounds.BOCEK_PULL_1P.getId(), SoundSource.PLAYERS);
+            SoundTool.stopSound(serverPlayer, TargetModSounds.BOCEK_PULL_3P.getId(), SoundSource.PLAYERS);
         }
 
         if (stack.getOrCreateTag().getDouble("power") >= 6) {
@@ -93,8 +87,7 @@ public class FireMessage {
                 if (!level.isClientSide()) {
                     float damage = (float) (0.02 * stack.getOrCreateTag().getDouble("damage") * (1 + 0.05 * stack.getOrCreateTag().getInt("level")));
 
-                    BocekArrowEntity arrow = new BocekArrowEntity(TargetModEntities.BOCEK_ARROW.get(), level);
-                    arrow.setOwner(player);
+                    BocekArrowEntity arrow = new BocekArrowEntity(player, level);
                     arrow.setBaseDamage(damage);
                     arrow.setKnockback(0);
                     arrow.setSilent(true);
@@ -139,7 +132,7 @@ public class FireMessage {
         }
     }
 
-    public static void spawnBullet(Player player) {
+    private static void spawnBullet(Player player) {
         ItemStack heldItem = player.getMainHandItem();
         player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
             capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
@@ -168,4 +161,5 @@ public class FireMessage {
         projectile.damage((float) damage);
         player.level().addFreshEntity(projectile);
     }
+
 }

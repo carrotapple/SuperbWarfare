@@ -57,7 +57,6 @@ public class PlayerEventHandler {
             handlePlayerSprint(player);
             handleWeaponLevel(player);
             handleAmmoCount(player);
-            handleFireTime(player);
             handleGround(player);
             handlePrepareZoom(player);
             handleSpecialWeaponAmmo(player);
@@ -167,13 +166,6 @@ public class PlayerEventHandler {
             stack.getOrCreateTag().putInt("max_ammo",
                     ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperAmmo));
         }
-    }
-
-    private static void handleFireTime(Player player) {
-        if (player == null) {
-            return;
-        }
-
     }
 
     private static void handleGround(Player player) {

@@ -2,15 +2,10 @@ package net.mcreator.target.tools;
 
 import com.google.gson.stream.JsonReader;
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.entity.ProjectileEntity;
-import net.mcreator.target.init.TargetModAttributes;
-import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.network.message.GunsDataMessage;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -91,6 +86,5 @@ public class GunsTool {
     public static void serverStarted(ServerStartedEvent event) {
         initJsonData(event.getServer().getResourceManager());
     }
-
 
 }

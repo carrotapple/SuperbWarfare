@@ -37,7 +37,7 @@ public class ParticleTool {
             level.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION_CLOSE.get(), SoundSource.BLOCKS, 8, 1);
             level.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION_FAR.get(), SoundSource.BLOCKS, 16, 1);
             level.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION_VERY_FAR.get(), SoundSource.BLOCKS, 32, 1);
-            } else {
+        } else {
             if ((level.getBlockState(BlockPos.containing(x, y, z))).getBlock() == Blocks.WATER) {
                 level.playLocalSound(x, (y + 1), z, TargetModSounds.EXPLOSION_WATER.get(), SoundSource.BLOCKS, 3, 1, false);
             }

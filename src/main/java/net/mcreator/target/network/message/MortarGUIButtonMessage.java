@@ -7,7 +7,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -40,22 +39,19 @@ public class MortarGUIButtonMessage {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
             Player entity = context.getSender();
+
+            if (entity == null) return;
+
             int buttonID = message.buttonID;
             int x = message.x;
             int y = message.y;
             int z = message.z;
-            handleButtonAction(entity, buttonID, x, y, z);
+
+            if (!entity.level().isLoaded(new BlockPos(x, y, z))) return;
+
+            handleButtonAction(entity, buttonID);
         });
         context.setPacketHandled(true);
-    }
-
-    public static void handleButtonAction(Player entity, int buttonID, int x, int y, int z) {
-        Level world = entity.level();
-        // security measure to prevent arbitrary chunk generation
-        if (!world.hasChunkAt(new BlockPos(x, y, z)))
-            return;
-
-        handleButtonAction(entity, buttonID);
     }
 
     private static void handleButtonAction(Player player, int buttonID) {

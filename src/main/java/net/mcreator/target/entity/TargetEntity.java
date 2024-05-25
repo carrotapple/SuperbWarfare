@@ -211,10 +211,6 @@ public class TargetEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     @Override
     protected void tickDeath() {
         ++this.deathTime;
-        if (this.deathTime == 20) {
-            this.remove(TargetEntity.RemovalReason.KILLED);
-            this.dropExperience();
-        }
     }
 
     @Override

@@ -38,7 +38,7 @@ public class TargetModEntities {
     public static final RegistryObject<EntityType<MortarShellEntity>> MORTAR_SHELL = register("projectile_mortar_shell",
             EntityType.Builder.<MortarShellEntity>of(MortarShellEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<BocekArrowEntity>> BOCEK_ARROW = register("projectile_bocekarrow",
-            EntityType.Builder.<BocekArrowEntity>of(BocekArrowEntity::new, MobCategory.MISC).setCustomClientFactory(BocekArrowEntity::new).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.5f, 0.5f));
+            EntityType.Builder.<BocekArrowEntity>of(BocekArrowEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<ProjectileEntity>> PROJECTILE = register("projectile",
             EntityType.Builder.<ProjectileEntity>of(ProjectileEntity::new, MobCategory.MISC).setTrackingRange(512).sized(0.5f, 0.5f));
 

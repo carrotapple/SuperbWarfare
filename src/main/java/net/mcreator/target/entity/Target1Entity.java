@@ -166,13 +166,14 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
 
     @SubscribeEvent
     public static void onTarget1Down(LivingDeathEvent event) {
-        event.setCanceled(true);
         var entity = event.getEntity();
         var sourceEntity = event.getSource().getEntity();
 
         if (entity == null || sourceEntity == null) return;
 
         if (entity instanceof Target1Entity target1) {
+            event.setCanceled(true);
+
             target1.setHealth(target1.getMaxHealth());
 
             if (sourceEntity instanceof Player player) {
@@ -307,10 +308,6 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
     @Override
     protected void tickDeath() {
         ++this.deathTime;
-        if (this.deathTime == 114514) {
-//            this.remove(Target1Entity.RemovalReason.KILLED);
-//            this.dropExperience();
-        }
     }
 
     public String getSyncedAnimation() {
