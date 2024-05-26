@@ -92,11 +92,11 @@ public class SksItem extends GunItem implements GeoItem, AnimatedItem {
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sks.reload"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sks.reload_empty"));
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading") && !stack.getOrCreateTag().getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sks.reload2"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sks.reload_normal"));
             }
 
             if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
@@ -175,7 +175,7 @@ public class SksItem extends GunItem implements GeoItem, AnimatedItem {
                 tag.putDouble("reload_time", 0);
             }
             if (tag.getBoolean("reloading") && tag.getInt("ammo") == 0) {
-                if (tag.getDouble("reload_time") == 57) {
+                if (tag.getDouble("reload_time") == 72) {
                     entity.getPersistentData().putDouble("id", id);
                     if (entity instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, TargetModSounds.SKS_RELOAD_EMPTY.get(), 100, 1);
@@ -198,7 +198,7 @@ public class SksItem extends GunItem implements GeoItem, AnimatedItem {
                     GunReload.reload(entity, GunInfo.Type.RIFLE);
                 }
             } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
-                if (tag.getDouble("reload_time") == 41) {
+                if (tag.getDouble("reload_time") == 51) {
                     entity.getPersistentData().putDouble("id", id);
                     if (entity instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, TargetModSounds.SKS_RELOAD_NORMAL.get(), 100, 1);
