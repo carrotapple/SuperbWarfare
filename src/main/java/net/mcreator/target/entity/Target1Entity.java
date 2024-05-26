@@ -308,6 +308,9 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
     @Override
     protected void tickDeath() {
         ++this.deathTime;
+        if (this.deathTime >= 100) {
+            this.remove(Target1Entity.RemovalReason.KILLED);
+        }
     }
 
     public String getSyncedAnimation() {

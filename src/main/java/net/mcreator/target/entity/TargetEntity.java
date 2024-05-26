@@ -211,6 +211,9 @@ public class TargetEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     @Override
     protected void tickDeath() {
         ++this.deathTime;
+        if (this.deathTime >= 20) {
+            this.remove(Target1Entity.RemovalReason.KILLED);
+        }
     }
 
     @Override
