@@ -4,6 +4,7 @@ import net.mcreator.target.item.gun.MarlinItem;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
@@ -40,9 +41,9 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
         double zp = 0;
         zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-        gun.setPosX(5.235f * (float) p);
+        gun.setPosX(1.712f * (float) p);
 
-        gun.setPosY(2.73f * (float) p - (float) (0.7f * zp));
+        gun.setPosY(1.06f * (float) p - (float) (0.7f * zp));
 
         gun.setPosZ(1.5f * (float) p + (float) (0.9f * zp));
 
@@ -101,7 +102,7 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
 
         root.setPosX(PosX);
 
-        root.setPosY((float) y + 2.5f * PosY);
+        root.setPosY((float) y + PosY);
 
         root.setRotX((float) x);
 
@@ -130,5 +131,13 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
         move.setRotZ(3.7f * (float) yaw + 2.7f * (float) m);
 
         move.setRotY(1.9f * (float) yaw - 1.7f * (float) m);
+
+        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+
+        player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
+
+        player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
+
+        player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

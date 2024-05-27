@@ -277,6 +277,6 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public String getGunDisplayName() {
-        return " MARLIN-1895";
+        return " MARLIN-1894";
     }
 }

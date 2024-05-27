@@ -82,15 +82,15 @@ public class LivingEventHandler {
             double distance = entity.position().distanceTo(sourceentity.position());
 
             if (stack.is(TargetModTags.Items.SHOTGUN) || stack.getItem() == TargetModItems.BOCEK.get()) {
-                damage = reduceDamageByDistance(amount, distance, 0.05, 20);
+                damage = reduceDamageByDistance(amount, distance, 0.03, 25);
             } else if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
                 damage = reduceDamageByDistance(amount, distance, 0.001, 200);
             } else if (stack.is(TargetModTags.Items.HANDGUN)) {
-                damage = reduceDamageByDistance(amount, distance, 0.04, 40);
+                damage = reduceDamageByDistance(amount, distance, 0.03, 50);
             } else if (stack.is(TargetModTags.Items.SMG)) {
                 damage = reduceDamageByDistance(amount, distance, 0.03, 50);
             } else if (stack.is(TargetModTags.Items.RIFLE)) {
-                damage = reduceDamageByDistance(amount, distance, 0.005, 100);
+                damage = reduceDamageByDistance(amount, distance, 0.0025, 150);
             }
             event.setAmount((float) damage);
             stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);

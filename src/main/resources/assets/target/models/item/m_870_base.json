@@ -1,5 +1,5 @@
 {
-  "parent": "target:displaysettings/marlin.item",
+  "parent": "target:displaysettings/m870.item",
   "textures": {
     "layer0": "target:item/m870"
   }
