@@ -327,13 +327,20 @@ public class PlayerEventHandler {
                 if (recoil > 0) {
                     recoil += 0.01;
 
-                    double sinRes = Math.sin(2 * Math.PI * (1.03f * recoil - 0.032047110911)) + 0.2;
+                    double sinRes = 0;
+
+                    if (0 < recoil && recoil < 0.2) {
+                        sinRes = (-18.34) * Math.pow(recoil, 2) + 8.58 * recoil;
+                    }
+                    if (0.2 <= recoil && recoil < 1) {
+                        sinRes = 2.6 * Math.pow(recoil, 2) - 5.5 * recoil + 2.167;
+                    }
 
                     float newPitch = ((float) (player.getXRot() - 7.5f * recoilY * ry * sinRes));
                     player.setXRot(newPitch);
                     player.xRotO = player.getXRot();
 
-                    float newYaw = ((float) (player.getYRot() - 5f * recoilYaw * recoilX * rx * sinRes));
+                    float newYaw = ((float) (player.getYRot() - 7.5f * recoilYaw * recoilX * rx * sinRes));
                     player.setYRot(newYaw);
                     player.yRotO = player.getYRot();
                 }

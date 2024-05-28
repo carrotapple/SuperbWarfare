@@ -87,11 +87,11 @@ public class Devotion extends GunItem implements GeoItem, AnimatedItem {
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.devotion.reload"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.devotion.reload_empty"));
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading") && !stack.getOrCreateTag().getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.devotion.reload2"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.devotion.reload_normal"));
             }
 
             if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
@@ -171,7 +171,7 @@ public class Devotion extends GunItem implements GeoItem, AnimatedItem {
             itemTag.putDouble("reload_time", 0);
         }
         if (itemTag.getBoolean("reloading") && itemTag.getInt("ammo") == 0) {
-            if (itemTag.getDouble("reload_time") == 71) {
+            if (itemTag.getDouble("reload_time") == 92) {
                 entity.getPersistentData().putDouble("id", id);
                 if (entity instanceof ServerPlayer player) {
                     SoundTool.playLocalSound(player, TargetModSounds.DEVOTION_RELOAD_EMPTY.get(), 100, 1);
@@ -191,7 +191,7 @@ public class Devotion extends GunItem implements GeoItem, AnimatedItem {
                 GunReload.reload(entity, GunInfo.Type.RIFLE);
             }
         } else if (itemTag.getBoolean("reloading") && itemTag.getInt("ammo") > 0) {
-            if (itemTag.getDouble("reload_time") == 51) {
+            if (itemTag.getDouble("reload_time") == 70) {
                 entity.getPersistentData().putDouble("id", id);
                 if (entity instanceof ServerPlayer player) {
                     SoundTool.playLocalSound(player, TargetModSounds.DEVOTION_RELOAD_NORMAL.get(), 100, 1);

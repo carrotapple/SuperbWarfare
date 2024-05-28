@@ -356,7 +356,22 @@ public class GunEventHandler {
     public static void gunShoot(Player player) {
         ItemStack heldItem = player.getMainHandItem();
         player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
+            if (Math.random() < 0.2) {
+                capability.recoilHorizon = -1;
+            }
+            if (Math.random() >= 0.2 && Math.random() < 0.4) {
+                capability.recoilHorizon = -0.5;
+            }
+            if (Math.random() >= 0.4 && Math.random() < 0.6) {
+                capability.recoilHorizon = 0;
+            }
+            if (Math.random() >= 0.6 && Math.random() < 0.8) {
+                capability.recoilHorizon = 0.5;
+            }
+            if (Math.random() > 0.8) {
+                capability.recoilHorizon = 1;
+            }
+
             capability.recoil = 0.1;
             capability.firing = 1;
             capability.syncPlayerVariables(player);

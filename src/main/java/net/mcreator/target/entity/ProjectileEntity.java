@@ -243,6 +243,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             this.setPosRaw(this.getX() + vec.x, this.getY() + vec.y, this.getZ() + vec.z);
         }
 
+        this.setDeltaMovement(new Vec3((this.getDeltaMovement().x()), (this.getDeltaMovement().y() - 0.1), (this.getDeltaMovement().z())));
+
         this.tickCount++;
         if (this.tickCount > 30) {
             this.discard();

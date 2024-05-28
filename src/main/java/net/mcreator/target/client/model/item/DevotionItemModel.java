@@ -4,6 +4,7 @@ import net.mcreator.target.item.gun.Devotion;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
@@ -672,5 +673,13 @@ public class DevotionItemModel extends GeoModel<Devotion> {
             l.setRotX(1.5f);
             r.setRotX(1.5f);
         }
+
+        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+
+        player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
+
+        player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
+
+        player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }
