@@ -191,7 +191,7 @@ public class Abekiri extends GunItem implements GeoItem, AnimatedItem {
                     tag.putDouble("reload_time", 0);
                 }
                 if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    GunReload.reload(entity, GunInfo.Type.SHOTGUN);
+                    GunsTool.reload(entity, GunInfo.Type.SHOTGUN);
                 }
             } else if (tag.getBoolean("reloading") && tag.getInt("ammo") == 1) {
                 if (tag.getDouble("reload_time") == 83) {
@@ -211,7 +211,7 @@ public class Abekiri extends GunItem implements GeoItem, AnimatedItem {
                     tag.putDouble("reload_time", 0);
                 }
                 if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    GunReload.reload(entity, GunInfo.Type.SHOTGUN);
+                    GunsTool.reload(entity, GunInfo.Type.SHOTGUN);
                 }
             }
         }

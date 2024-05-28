@@ -188,7 +188,7 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
                 itemTag.putDouble("reload_time", 0);
             }
             if (itemTag.getDouble("reload_time") == 1 && mainHandItemTag.getDouble("id") == id) {
-                GunReload.reload(entity, GunInfo.Type.HANDGUN);
+                GunsTool.reload(entity, GunInfo.Type.HANDGUN);
             }
         }
     }

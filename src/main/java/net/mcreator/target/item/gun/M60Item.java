@@ -181,7 +181,7 @@ public class M60Item extends GunItem implements GeoItem, AnimatedItem {
                     tag.putDouble("reload_time", 0);
                 }
                 if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    GunReload.reload(entity, GunInfo.Type.RIFLE);
+                    GunsTool.reload(entity, GunInfo.Type.RIFLE);
                 }
             } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
                 if (tag.getDouble("reload_time") == 111) {
@@ -201,7 +201,7 @@ public class M60Item extends GunItem implements GeoItem, AnimatedItem {
                     tag.putDouble("reload_time", 0);
                 }
                 if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    GunReload.reload(entity, GunInfo.Type.RIFLE);
+                    GunsTool.reload(entity, GunInfo.Type.RIFLE);
                 }
             }
         }

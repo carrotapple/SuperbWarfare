@@ -6,10 +6,8 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.VectorItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
-import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.tools.GunInfo;
-import net.mcreator.target.tools.GunReload;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
@@ -34,8 +32,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -228,7 +224,7 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
                 tag.putDouble("reload_time", 0);
             }
             if (tag.getDouble("reload_time") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
-                GunReload.reload(entity, GunInfo.Type.HANDGUN);
+                GunsTool.reload(entity, GunInfo.Type.HANDGUN);
             }
         } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
             if (tag.getDouble("reload_time") == 47) {
@@ -249,7 +245,7 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
                 tag.putDouble("reload_time", 0);
             }
             if (tag.getDouble("reload_time") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
-                GunReload.reload(entity, GunInfo.Type.HANDGUN, true);
+                GunsTool.reload(entity, GunInfo.Type.HANDGUN, true);
             }
         }
     }

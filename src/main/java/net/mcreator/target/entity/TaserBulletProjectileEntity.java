@@ -23,6 +23,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.PlayMessages;
 
 import java.util.Optional;
 
@@ -40,6 +41,10 @@ public class TaserBulletProjectileEntity extends ThrowableItemProjectile {
     public TaserBulletProjectileEntity(LivingEntity entity, Level level, float damage) {
         super(TargetModEntities.TASER_BULLET_PROJECTILE.get(), entity, level);
         this.damage = damage;
+    }
+
+    public TaserBulletProjectileEntity(PlayMessages.SpawnEntity packet, Level level) {
+        this(TargetModEntities.TASER_BULLET_PROJECTILE.get(), level);
     }
 
     @Override

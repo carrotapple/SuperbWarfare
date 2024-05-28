@@ -27,6 +27,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.PlayMessages;
 
 import java.util.Optional;
 
@@ -44,6 +45,10 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
     public RpgRocketEntity(LivingEntity entity, Level level, float damage) {
         super(TargetModEntities.RPG_ROCKET.get(), entity, level);
         this.damage = damage;
+    }
+
+    public RpgRocketEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
+        this(TargetModEntities.RPG_ROCKET.get(), level);
     }
 
     @Override

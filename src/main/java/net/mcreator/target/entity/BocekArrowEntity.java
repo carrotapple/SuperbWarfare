@@ -27,6 +27,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.PlayMessages;
 
 import java.util.Optional;
 
@@ -44,6 +45,10 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
 
     public BocekArrowEntity(LivingEntity entity, Level level) {
         super(TargetModEntities.BOCEK_ARROW.get(), entity, level);
+    }
+
+    public BocekArrowEntity(PlayMessages.SpawnEntity packet, Level world) {
+        super(TargetModEntities.BOCEK_ARROW.get(), world);
     }
 
     @Override

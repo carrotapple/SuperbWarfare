@@ -43,12 +43,11 @@ public class Hammer extends SwordItem {
 
     @Override
     public ItemStack getCraftingRemainingItem(ItemStack itemstack) {
-        ItemStack retval = new ItemStack(this);
-        retval.setDamageValue(itemstack.getDamageValue() + 1);
-        if (retval.getDamageValue() >= retval.getMaxDamage()) {
+        itemstack.setDamageValue(itemstack.getDamageValue() + 1);
+        if (itemstack.getDamageValue() >= itemstack.getMaxDamage()) {
             return ItemStack.EMPTY;
         }
-        return retval;
+        return itemstack;
     }
 
     @Override

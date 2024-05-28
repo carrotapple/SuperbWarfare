@@ -27,6 +27,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.PlayMessages;
 
 import java.util.Optional;
 
@@ -44,6 +45,10 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
     public GunGrenadeEntity(LivingEntity entity, Level level, float damage) {
         super(TargetModEntities.GUN_GRENADE.get(), entity, level);
         this.damage = damage;
+    }
+
+    public GunGrenadeEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
+        this(TargetModEntities.GUN_GRENADE.get(), level);
     }
 
     @Override

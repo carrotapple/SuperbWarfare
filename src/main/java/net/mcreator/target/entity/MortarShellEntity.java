@@ -1,5 +1,6 @@
 package net.mcreator.target.entity;
 
+import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.tools.ParticleTool;
 import net.minecraft.core.particles.ParticleTypes;
@@ -15,6 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
 
 public class MortarShellEntity extends ThrowableItemProjectile {
     private float damage = 100f;
@@ -34,6 +36,10 @@ public class MortarShellEntity extends ThrowableItemProjectile {
     public MortarShellEntity(EntityType<? extends MortarShellEntity> type, LivingEntity entity, Level world, float damage) {
         super(type, entity, world);
         this.damage = damage;
+    }
+
+    public MortarShellEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
+        this(TargetModEntities.MORTAR_SHELL.get(), level);
     }
 
     @Override

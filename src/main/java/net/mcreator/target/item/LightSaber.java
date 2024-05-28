@@ -54,7 +54,7 @@ public class LightSaber extends SwordItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState event) {
+    private PlayState idlePredicate(AnimationState<LightSaber> event) {
         if (transformType != null && transformType.firstPerson()) {
             if (this.animationProcedure.equals("empty")) {
                 event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.lightsaber.idle"));
@@ -64,7 +64,7 @@ public class LightSaber extends SwordItem implements GeoItem, AnimatedItem {
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState event) {
+    private PlayState procedurePredicate(AnimationState<LightSaber> event) {
         if (transformType != null && transformType.firstPerson()) {
             if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
@@ -122,5 +122,10 @@ public class LightSaber extends SwordItem implements GeoItem, AnimatedItem {
     @Override
     public void setAnimationProcedure(String procedure) {
         this.animationProcedure = procedure;
+    }
+
+    @Override
+    public boolean isDamageable(ItemStack stack) {
+        return false;
     }
 }

@@ -38,6 +38,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.entity.PartEntity;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.PlayMessages;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -63,6 +64,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     public ProjectileEntity(Level level) {
         super(TargetModEntities.PROJECTILE.get(), level);
+    }
+
+    public ProjectileEntity(PlayMessages.SpawnEntity packet, Level world) {
+        super(TargetModEntities.PROJECTILE.get(), world);
     }
 
     public ProjectileEntity shooter(LivingEntity shooter) {

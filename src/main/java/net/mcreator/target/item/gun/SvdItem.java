@@ -169,7 +169,7 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
                     tag.putDouble("gj", 0);
                 }
                 if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    GunReload.reload(entity, GunInfo.Type.SNIPER);
+                    GunsTool.reload(entity, GunInfo.Type.SNIPER);
                 }
             } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
                 if (tag.getDouble("reload_time") == 55) {
@@ -189,7 +189,7 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
                     tag.putDouble("reload_time", 0);
                 }
                 if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    GunReload.reload(entity, GunInfo.Type.SNIPER, true);
+                    GunsTool.reload(entity, GunInfo.Type.SNIPER, true);
                 }
             }
         }

@@ -188,7 +188,7 @@ public class Devotion extends GunItem implements GeoItem, AnimatedItem {
                 itemTag.putDouble("reload_time", 0);
             }
             if (itemTag.getDouble("reload_time") == 1 && mainHandItemTag.getDouble("id") == id) {
-                GunReload.reload(entity, GunInfo.Type.RIFLE);
+                GunsTool.reload(entity, GunInfo.Type.RIFLE);
             }
         } else if (itemTag.getBoolean("reloading") && itemTag.getInt("ammo") > 0) {
             if (itemTag.getDouble("reload_time") == 70) {
@@ -208,7 +208,7 @@ public class Devotion extends GunItem implements GeoItem, AnimatedItem {
                 itemTag.putDouble("reload_time", 0);
             }
             if (itemTag.getDouble("reload_time") == 1 && mainHandItemTag.getDouble("id") == id) {
-                GunReload.reload(entity, GunInfo.Type.RIFLE, true);
+                GunsTool.reload(entity, GunInfo.Type.RIFLE, true);
             }
         }
     }
