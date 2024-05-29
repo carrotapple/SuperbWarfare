@@ -87,11 +87,11 @@ public class RpkItem extends GunItem implements GeoItem, AnimatedItem {
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_empty"));
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading") && !stack.getOrCreateTag().getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload2"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_normal"));
             }
 
             if (stack.getOrCreateTag().getInt("fire_mode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
@@ -179,7 +179,7 @@ public class RpkItem extends GunItem implements GeoItem, AnimatedItem {
                 tag.putDouble("reload_time", 0);
             }
             if (tag.getBoolean("reloading") && tag.getInt("ammo") == 0) {
-                if (tag.getDouble("reload_time") == 83) {
+                if (tag.getDouble("reload_time") == 92) {
                     entity.getPersistentData().putDouble("id", id);
                     if (entity instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, TargetModSounds.RPK_RELOAD_EMPTY.get(), 100, 1);
@@ -199,7 +199,7 @@ public class RpkItem extends GunItem implements GeoItem, AnimatedItem {
                     GunsTool.reload(entity, GunInfo.Type.RIFLE);
                 }
             } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
-                if (tag.getDouble("reload_time") == 66) {
+                if (tag.getDouble("reload_time") == 70) {
                     entity.getPersistentData().putDouble("id", id);
                     if (entity instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, TargetModSounds.RPK_RELOAD_NORMAL.get(), 100, 1);

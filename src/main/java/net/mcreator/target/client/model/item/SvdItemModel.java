@@ -37,9 +37,13 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         CoreGeoBone bt1 = getAnimationProcessor().getBone("bullton1");
         CoreGeoBone bt2 = getAnimationProcessor().getBone("bullton2");
         CoreGeoBone shuan = getAnimationProcessor().getBone("shuan");
+        CoreGeoBone glass = getAnimationProcessor().getBone("glass");
 
         Player player = Minecraft.getInstance().player;
         ItemStack stack = player.getMainHandItem();
+
+        double vy = 0;
+        vy = player.getPersistentData().getDouble("vy");
 
         if (stack.getOrCreateTag().getDouble("gj") == 1) {
             bolt.setPosZ(3.25f);
@@ -80,6 +84,8 @@ public class SvdItemModel extends GeoModel<SvdItem> {
             holo.setScaleY(0);
             sight.setScaleX(1f);
             sight.setScaleY(1f);
+            glass.setScaleX(0);
+            glass.setScaleY(0);
         }
 
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
@@ -108,6 +114,10 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         }
 
         shuan.setPosZ(2.4f * (float) fp);
+
+        holo.setPosY(1.1f * (float) fp);
+
+        holo.setRotZ(-0.04f * (float) fp);
 
         if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
             flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
@@ -148,9 +158,6 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         double pit = 0;
         pit = player.getPersistentData().getDouble("gun_pitch");
 
-        double vy = 0;
-        vy = player.getPersistentData().getDouble("vy");
-
         move.setPosY(-1 * (float) vy);
 
         move.setPosX(9.3f * (float) m);
@@ -160,6 +167,10 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         move.setRotZ(3.7f * (float) yaw + 2.7f * (float) m);
 
         move.setRotY(1.9f * (float) yaw - 1.7f * (float) m);
+
+        glass.setPosX(0.25f * -PosX);
+
+        glass.setPosY(0.2f * (float) fp + 0.5f * (float) vy + (float) y + PosY);
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
 

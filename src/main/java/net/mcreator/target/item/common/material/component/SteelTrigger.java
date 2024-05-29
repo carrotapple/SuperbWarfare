@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SteelTrigger extends Item {
     public SteelTrigger() {
-        super(new Item.Properties().stacksTo(64).rarity(Rarity.UNCOMMON));
+        super(new Item.Properties().stacksTo(64).rarity(Rarity.RARE));
     }
 
     @Override

@@ -37,7 +37,7 @@ public class Rocket extends Item implements GeoItem, AnimatedItem {
     public static ItemDisplayContext transformType;
 
     public Rocket() {
-        super(new Item.Properties().stacksTo(4).rarity(Rarity.COMMON));
+        super(new Item.Properties().stacksTo(16).rarity(Rarity.COMMON));
     }
 
     @Override

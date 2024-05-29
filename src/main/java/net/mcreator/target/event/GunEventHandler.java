@@ -87,6 +87,13 @@ public class GunEventHandler {
             player.getAttribute(TargetModAttributes.SPREAD.get())
                     .setBaseValue(player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) - 0.125 * Math.pow(index - player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()), 2));
         }
+
+        if (player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) > 15) {
+            player.getAttribute(TargetModAttributes.SPREAD.get()).setBaseValue(15);
+        }
+        if (player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) < 0) {
+            player.getAttribute(TargetModAttributes.SPREAD.get()).setBaseValue(0);
+        }
     }
 
     /**
@@ -390,8 +397,8 @@ public class GunEventHandler {
                 projectile.beast();
             }
 
-            projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
-            projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, 1 * (float) heldItem.getOrCreateTag().getDouble("velocity"),
+            projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.2 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
+            projectile.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.003f , player.getLookAngle().z, 1 * (float) heldItem.getOrCreateTag().getDouble("velocity"),
                     (float) player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()));
             player.level().addFreshEntity(projectile);
         }

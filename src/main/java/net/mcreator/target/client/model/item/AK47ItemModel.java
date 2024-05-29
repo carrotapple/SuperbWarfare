@@ -79,15 +79,21 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
 
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-            shen.setPosZ(0.5f * (float) fp);
+            shen.setPosZ(0.8f * (float) fp);
         } else {
-            shen.setPosZ((float) fp);
+            shen.setPosZ(1.11f * (float) fp);
+        }
+
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+            shen.setPosY(0.01f * (float) fp);
+        } else {
+            shen.setPosY(0.1f * (float) fp);
         }
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
             shen.setRotX(0.003f * (float) fp);
         } else {
-            shen.setRotX(0.02f * (float) fp);
+            shen.setRotX(0.025f * (float) fp);
         }
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == 1) {

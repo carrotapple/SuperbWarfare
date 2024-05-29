@@ -333,7 +333,7 @@ public class PlayerEventHandler {
                         sinRes = (-18.34) * Math.pow(recoil, 2) + 8.58 * recoil;
                     }
                     if (0.2 <= recoil && recoil < 1) {
-                        sinRes = 2.6 * Math.pow(recoil, 2) - 5.5 * recoil + 2.167;
+                        sinRes = 2.7 * Math.pow(recoil, 2) - 5.5 * recoil + 2.167;
                     }
 
                     float newPitch = ((float) (player.getXRot() - 7.5f * recoilY * ry * sinRes));

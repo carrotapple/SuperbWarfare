@@ -31,6 +31,7 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
     public void setCustomAnimations(MarlinItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
+        CoreGeoBone jichui = getAnimationProcessor().getBone("jichui");
 
         Player player = Minecraft.getInstance().player;
         ItemStack stack = player.getMainHandItem();
@@ -55,9 +56,9 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
         fp = player.getPersistentData().getDouble("fire_pos");
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-            shen.setPosZ(3f * (float) fp);
+            shen.setPosZ(1.5f * (float) fp);
         } else {
-            shen.setPosZ(4f * (float) fp);
+            shen.setPosZ(2f * (float) fp);
         }
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
@@ -79,6 +80,10 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
         }
 
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
+
+        if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
+            jichui.setRotX(-0.52f);
+        }
 
         if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
             flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
