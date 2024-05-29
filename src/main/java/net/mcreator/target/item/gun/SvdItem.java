@@ -86,12 +86,12 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.svd.fire"));
             }
 
-            if (tag.getBoolean("reloading") && tag.getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.svd.reload"));
+            if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.svd.reload_empty"));
             }
 
-            if (tag.getBoolean("reloading") && !tag.getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.svd.reload2"));
+            if (stack.getOrCreateTag().getBoolean("reloading") && !stack.getOrCreateTag().getBoolean("empty_reload")) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.svd.reload_normal"));
             }
 
             if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
@@ -149,7 +149,7 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
                 tag.putDouble("reload_time", 0);
             }
             if (tag.getBoolean("reloading") && tag.getInt("ammo") == 0) {
-                if (tag.getDouble("reload_time") == 66) {
+                if (tag.getDouble("reload_time") == 67) {
                     entity.getPersistentData().putDouble("id", id);
                     if (entity instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, TargetModSounds.SVD_RELOAD_EMPTY.get(), 100, 1);
@@ -172,7 +172,7 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
                     GunsTool.reload(entity, GunInfo.Type.SNIPER);
                 }
             } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
-                if (tag.getDouble("reload_time") == 55) {
+                if (tag.getDouble("reload_time") == 53) {
                     entity.getPersistentData().putDouble("id", id);
                     if (entity instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, TargetModSounds.SVD_RELOAD_NORMAL.get(), 100, 1);

@@ -55,11 +55,11 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         double zp = 0;
         zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-        gun.setPosX(2.52f * (float) p);
+        gun.setPosX(2.02f * (float) p);
 
-        gun.setPosY(0.25f * (float) p - (float) (0.6f * zp));
+        gun.setPosY(0.85f * (float) p - (float) (0.6f * zp));
 
-        gun.setPosZ(13.4f * (float) p + (float) (0.5f * zp));
+        gun.setPosZ(13.2f * (float) p + (float) (0.5f * zp));
 
         gun.setRotZ((float) (0.05f * zp));
 

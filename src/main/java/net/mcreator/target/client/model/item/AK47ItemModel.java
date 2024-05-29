@@ -54,11 +54,11 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
 
         double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-        gun.setPosX(1.96f * (float) p);
+        gun.setPosX(1.97f * (float) p);
 
-        gun.setPosY(0.25f * (float) p - (float) (0.6f * zp));
+        gun.setPosY(0.011f * (float) p - (float) (0.2f * zp));
 
-        gun.setPosZ(2.5f * (float) p + (float) (0.5f * zp));
+        gun.setPosZ(3.8f * (float) p + (float) (0.5f * zp));
 
         gun.setScaleZ(1f - (0.2f * (float) p));
 
@@ -79,15 +79,15 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
 
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-            shen.setPosZ(0.8f * (float) fp);
+            shen.setPosZ(0.4f * (float) fp);
         } else {
-            shen.setPosZ(1.11f * (float) fp);
+            shen.setPosZ(1.01f * (float) fp);
         }
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
             shen.setPosY(0.01f * (float) fp);
         } else {
-            shen.setPosY(0.1f * (float) fp);
+            shen.setPosY(0.07f * (float) fp);
         }
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
