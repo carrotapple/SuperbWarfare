@@ -18,24 +18,28 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
  */
 @Mixin(MouseHandler.class)
 public class MouseHandlerMixin {
+
     @ModifyVariable(method = "turnPlayer()V", at = @At(value = "STORE", opcode = Opcodes.DSTORE), ordinal = 2)
     private double sensitivity(double original) {
         float additionalAdsSensitivity = 1.0F;
         Minecraft mc = Minecraft.getInstance();
         Player player = Minecraft.getInstance().player;
+
+        if (player == null) {
+            return original;
+        }
+
         ItemStack stack = mc.player.getMainHandItem();
 
         boolean flag = false;
         float sens = 0.01f;
-        float fov = (float)player.getPersistentData().getDouble("fov");
+        float fov = (float) player.getPersistentData().getDouble("fov");
 
-        float original_fov = 60;
+        float original_fov = mc.options.fov().get();
 
         if (mc.player != null && !mc.player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
-
             if (stack.is(TargetModTags.Items.GUN) && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-
-                additionalAdsSensitivity =  Mth.clamp(1.5F * fov / original_fov, 0.25F, 0.8F);
+                additionalAdsSensitivity = Mth.clamp(1.5F * fov / original_fov, 0.25F, 0.8F);
 
                 flag = true;
             }
