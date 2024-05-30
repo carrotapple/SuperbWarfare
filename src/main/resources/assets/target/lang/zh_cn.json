@@ -197,6 +197,8 @@
 
   "effect.target.shock": "麻痹",
 
+  "des.target.sensitivity": "当前枪械的灵敏度为：%1$s",
+
   "commands.ammo.get": "当前%s弹药数量: %s",
   "commands.ammo.set": "为%3$s位玩家的%1$s弹药数量设置为%2$s",
   "commands.ammo.add": "为%3$s位玩家添加了%2$s发%1$s弹药",

@@ -197,6 +197,8 @@
 
   "effect.target.shock": "Shock",
 
+  "des.target.sensitivity": "Current Sensitivity of This Gun: %1$s",
+
   "commands.ammo.get": "Current %s ammo: %s",
   "commands.ammo.set": "Set %s ammo to %s for %s players",
   "commands.ammo.add": "Added %s ammo of amount %s for %s players",
