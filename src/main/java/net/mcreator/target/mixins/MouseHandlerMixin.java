@@ -1,6 +1,7 @@
 package net.mcreator.target.mixins;
 
 import net.mcreator.target.init.TargetModTags;
+import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
@@ -12,28 +13,33 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+/**
+ * Author: MrCrayfish
+ */
 @Mixin(MouseHandler.class)
 public class MouseHandlerMixin {
     @ModifyVariable(method = "turnPlayer()V", at = @At(value = "STORE", opcode = Opcodes.DSTORE), ordinal = 2)
     private double sensitivity(double original) {
         float additionalAdsSensitivity = 1.0F;
         Minecraft mc = Minecraft.getInstance();
-        int flag = 0;
-        float sens = 0.13f;
+        Player player = Minecraft.getInstance().player;
+        ItemStack stack = mc.player.getMainHandItem();
+
+        boolean flag = false;
+        float sens = 0.01f;
+        float fov = (float)player.getPersistentData().getDouble("fov");
+
+        float original_fov = 60;
 
         if (mc.player != null && !mc.player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
 
-            Player player = mc.player;
-            ItemStack stack = mc.player.getMainHandItem();
+            if (stack.is(TargetModTags.Items.GUN) && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
 
-            float fov = ((float) player.getPersistentData().getDouble("fov"));
+                additionalAdsSensitivity =  Mth.clamp(1.5F * fov / original_fov, 0.25F, 0.8F);
 
-            if (stack.is(TargetModTags.Items.GUN)) {
-                float modifier = 1.5f * fov / 90;
-                additionalAdsSensitivity = Mth.clamp(1.0F - (1.0F / modifier) / 10F, 0.0F, 1.0F);
-                flag = 1;
+                flag = true;
             }
         }
-        return original * additionalAdsSensitivity * (1.0 - sens * flag);
+        return original * additionalAdsSensitivity * (1.0 - sens * (flag ? 1 : 0));
     }
 }
