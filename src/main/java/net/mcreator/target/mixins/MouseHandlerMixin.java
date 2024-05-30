@@ -24,22 +24,22 @@ public class MouseHandlerMixin {
         float additionalAdsSensitivity = 1.0F;
         Minecraft mc = Minecraft.getInstance();
         Player player = Minecraft.getInstance().player;
+        ItemStack stack = mc.player.getMainHandItem();
 
         if (player == null) {
             return original;
         }
 
-        ItemStack stack = mc.player.getMainHandItem();
-
         boolean flag = false;
-        float sens = 0.01f;
+        float sens = 0.2f;
         float fov = (float) player.getPersistentData().getDouble("fov");
+        float custom_sens = (float) stack.getOrCreateTag().getInt("sensitivity");
 
         float original_fov = mc.options.fov().get();
 
         if (mc.player != null && !mc.player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
             if (stack.is(TargetModTags.Items.GUN) && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-                additionalAdsSensitivity = Mth.clamp(1.5F * fov / original_fov, 0.25F, 0.8F);
+                additionalAdsSensitivity = (float) Mth.clamp((1 + 0.1f * custom_sens) * (1.25F * fov / original_fov) * (1 + 0.05f * Math.pow((original_fov / fov), 2)), 0.125F, 2F);
 
                 flag = true;
             }
