@@ -2,7 +2,6 @@ package net.mcreator.target.client.screens;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
 import net.minecraft.client.CameraType;

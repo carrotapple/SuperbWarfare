@@ -1,22 +1,20 @@
 package net.mcreator.target.item.common.ammo;
 
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.target.client.renderer.item.RocketItemRenderer;
-import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.item.AnimatedItem;
+import net.mcreator.target.tools.ParticleTool;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -28,7 +26,6 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class Rocket extends Item implements GeoItem, AnimatedItem {
@@ -37,7 +34,7 @@ public class Rocket extends Item implements GeoItem, AnimatedItem {
     public static ItemDisplayContext transformType;
 
     public Rocket() {
-        super(new Item.Properties().stacksTo(16).rarity(Rarity.COMMON));
+        super(new Item.Properties().stacksTo(16));
     }
 
     @Override
@@ -57,7 +54,7 @@ public class Rocket extends Item implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState event) {
+    private PlayState idlePredicate(AnimationState<Rocket> event) {
         if (transformType != null && transformType.firstPerson()) {
             if (this.animationProcedure.equals("empty")) {
                 event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.rpg.idle"));
@@ -67,7 +64,7 @@ public class Rocket extends Item implements GeoItem, AnimatedItem {
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState event) {
+    private PlayState procedurePredicate(AnimationState<Rocket> event) {
         if (transformType != null && transformType.firstPerson()) {
             if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
@@ -96,43 +93,30 @@ public class Rocket extends Item implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
-        if (equipmentSlot == EquipmentSlot.MAINHAND) {
-            ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-            builder.putAll(super.getDefaultAttributeModifiers(equipmentSlot));
-            builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Item modifier", 6d, AttributeModifier.Operation.ADDITION));
-            builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Item modifier", -2.4, AttributeModifier.Operation.ADDITION));
-            return builder.build();
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+        Multimap<Attribute, AttributeModifier> map = super.getAttributeModifiers(slot, stack);
+        if (slot == EquipmentSlot.MAINHAND) {
+            map = HashMultimap.create(map);
+            map.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Item modifier", 6d, AttributeModifier.Operation.ADDITION));
+            map.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Item modifier", -2.4, AttributeModifier.Operation.ADDITION));
         }
-        return super.getDefaultAttributeModifiers(equipmentSlot);
+        return map;
     }
 
     @Override
-    public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
-        super.appendHoverText(itemstack, world, list, flag);
-    }
+    public boolean hurtEnemy(ItemStack stack, LivingEntity entity, LivingEntity source) {
+        if (entity.level() instanceof ServerLevel level && Math.random() < 0.25) {
+            level.explode(source, source.getX(), source.getY() + 1, source.getZ(), 6, Level.ExplosionInteraction.NONE);
+            level.explode(null, source.getX(), source.getY() + 1, source.getZ(), 6, Level.ExplosionInteraction.NONE);
 
-    @Override
-    public boolean hurtEnemy(ItemStack itemstack, LivingEntity entity, LivingEntity sourceentity) {
-        boolean retval = super.hurtEnemy(itemstack, entity, sourceentity);
-
-        if (Math.random() >= 0.25) return retval;
-
-        if (entity.level() instanceof ServerLevel level) {
-            level.explode(sourceentity, sourceentity.getX(), sourceentity.getY() + 1, sourceentity.getZ(), 6, Level.ExplosionInteraction.NONE);
-            level.explode(null, sourceentity.getX(), sourceentity.getY() + 1, sourceentity.getZ(), 6, Level.ExplosionInteraction.NONE);
-
-            if (!sourceentity.level().isClientSide() && sourceentity.getServer() != null) {
-                // TODO what the hell is this?
-                sourceentity.getServer().getCommands().performPrefixedCommand(new CommandSourceStack(CommandSource.NULL, sourceentity.position(), sourceentity.getRotationVector(), sourceentity.level() instanceof ServerLevel ? (ServerLevel) sourceentity.level() : null, 4,
-                        sourceentity.getName().getString(), sourceentity.getDisplayName(), sourceentity.getServer(), sourceentity), "playsound target:target:mediumexp");
+            if (!source.level().isClientSide() && source.getServer() != null) {
+                ParticleTool.spawnMediumExplosionParticles(source.level(), source.getPosition(0));
             }
-        }
-        if (sourceentity instanceof Player player) {
-            player.getInventory().clearOrCountMatchingItems(p -> TargetModItems.ROCKET.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
+
+            stack.shrink(1);
         }
 
-        return retval;
+        return super.hurtEnemy(stack, entity, source);
     }
 
     @Override
