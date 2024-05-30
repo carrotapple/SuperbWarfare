@@ -1,5 +1,6 @@
 package net.mcreator.target.event;
 
+import net.mcreator.target.entity.Target1Entity;
 import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModTags;
@@ -8,6 +9,7 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -55,6 +57,11 @@ public class ClientEventHandler {
             } else {
                 data.putDouble("crosshair", data.getDouble("crosshair") + 0.05 * Math.pow(spread - data.getDouble("crosshair"), 2) * times);
             }
+        }
+        if (entity instanceof Player player) {
+            ItemStack stack = player.getMainHandItem();
+            var tag = stack.getOrCreateTag();
+            player.displayClientMessage(Component.literal("Sen: " + tag.getDouble("sensitivity")), true);
         }
     }
 

@@ -6,6 +6,7 @@ import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.message.FireMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -67,9 +68,25 @@ public class ClickHandler {
 
     @SubscribeEvent
     public static void onKeyPressed(InputEvent.Key event) {
+        Player player = Minecraft.getInstance().player;
+        ItemStack stack = player.getMainHandItem();
+        int button = event.getKey();
+        var tag = stack.getOrCreateTag();
+
         if (notInGame()) return;
         if (event.getAction() != InputConstants.PRESS) return;
         setKeyState(event.getKey(), 1);
+
+
+        if (stack.is(TargetModTags.Items.GUN)){
+            if (button == GLFW.GLFW_KEY_PAGE_UP) {
+                TargetMod.PACKET_HANDLER.sendToServer(new FireMessage(0));
+                tag.putDouble("sensitivity", tag.getDouble("sensitivity") + 1);
+            }
+            if (button == GLFW.GLFW_KEY_PAGE_DOWN) {
+                tag.putDouble("sensitivity", tag.getDouble("sensitivity") - 1);
+            }
+        }
     }
 
     @SubscribeEvent
