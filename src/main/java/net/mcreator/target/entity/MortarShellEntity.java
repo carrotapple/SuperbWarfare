@@ -93,4 +93,9 @@ public class MortarShellEntity extends ThrowableItemProjectile {
             this.discard();
         }
     }
+
+    @Override
+    protected float getGravity() {
+        return 0.05F;
+    }
 }
