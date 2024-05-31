@@ -38,7 +38,7 @@ public class MouseHandlerMixin {
         float original_fov = mc.options.fov().get();
 
         if (mc.player != null && !mc.player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
-            if (stack.is(TargetModTags.Items.GUN) && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+            if (stack.is(TargetModTags.Items.GUN)) {
                 additionalAdsSensitivity = (float) Mth.clamp((1 + 0.1f * custom_sens) * (1.25F * fov / original_fov) * (1 + 0.05f * Math.pow((original_fov / fov), 2)), 0.125F, 2F);
 
                 flag = true;
