@@ -119,9 +119,9 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
         }
 
         if (headshot) {
-            entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this.getOwner()), this.damage * 5f);
+            entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 5f);
         } else {
-            entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this.getOwner()), this.damage);
+            entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
         }
 
         this.discard();

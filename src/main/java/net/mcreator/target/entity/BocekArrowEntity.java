@@ -136,9 +136,9 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
 
         boolean hurt;
         if (headshot) {
-            hurt = entity.hurt(TargetModDamageTypes.causeArrowInBrainDamage(this.level().registryAccess(), this.getOwner()), (float) i * 2);
+            hurt = entity.hurt(TargetModDamageTypes.causeArrowInBrainDamage(this.level().registryAccess(), this, this.getOwner()), (float) i * 2);
         } else {
-            hurt = entity.hurt(TargetModDamageTypes.causeArrowInKneeDamage(this.level().registryAccess(), this.getOwner()), (float) i);
+            hurt = entity.hurt(TargetModDamageTypes.causeArrowInKneeDamage(this.level().registryAccess(), this, this.getOwner()), (float) i);
         }
 
         if (!hurt) {

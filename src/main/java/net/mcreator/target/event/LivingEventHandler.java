@@ -215,7 +215,7 @@ public class LivingEventHandler {
         ResourceKey<DamageType> damageTypeResourceKey = source.typeHolder().unwrapKey().isPresent() ? source.typeHolder().unwrapKey().get() : DamageTypes.GENERIC;
 
         ServerPlayer attacker = null;
-        if (source.getDirectEntity() instanceof ServerPlayer player) {
+        if (source.getEntity() instanceof ServerPlayer player) {
             attacker = player;
         }
         if (source.getDirectEntity() instanceof Projectile projectile && projectile.getOwner() instanceof ServerPlayer player) {

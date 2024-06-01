@@ -120,9 +120,9 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         }
 
         if (headshot) {
-            entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this.getOwner()), this.damage * 2f);
+            entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 2f);
         } else {
-            entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this.getOwner()), this.damage);
+            entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
         }
 
         this.discard();

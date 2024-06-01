@@ -358,7 +358,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
                 TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(1, 5));
             }
-            entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this.shooter), this.damage * this.headShot);
+            entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.headShot);
         } else {
             if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
                 var holder = Holder.direct(TargetModSounds.INDICATION.get());
@@ -366,7 +366,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
                 TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
             }
-            entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this.shooter), this.damage);
+            entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage);
         }
         this.discard();
     }
