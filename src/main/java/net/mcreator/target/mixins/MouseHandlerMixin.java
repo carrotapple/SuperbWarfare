@@ -24,11 +24,12 @@ public class MouseHandlerMixin {
         float additionalAdsSensitivity = 1.0F;
         Minecraft mc = Minecraft.getInstance();
         Player player = Minecraft.getInstance().player;
-        ItemStack stack = mc.player.getMainHandItem();
 
         if (player == null) {
             return original;
         }
+
+        ItemStack stack = mc.player.getMainHandItem();
 
         boolean flag = false;
         float sens = 0.2f;
@@ -37,11 +38,16 @@ public class MouseHandlerMixin {
 
         float original_fov = mc.options.fov().get();
 
-        if (mc.player != null && !mc.player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
+        if (!player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
             if (stack.is(TargetModTags.Items.GUN)) {
-                additionalAdsSensitivity = (float) Mth.clamp((1 + 0.1f * custom_sens) * (1.25F * fov / original_fov) * (1 + 0.05f * Math.pow((original_fov / fov), 2)), 0.125F, 2F);
-
+                if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+                    additionalAdsSensitivity = (float) Mth.clamp((1 + 0.1f * custom_sens) * (1.25F * fov / original_fov) * (1 + 0.05f * Math.pow((original_fov / fov), 2)), 0.125F, 2F);
+                } else {
+                    additionalAdsSensitivity = Mth.clamp((1 + 0.1f * custom_sens) * 1.25F, 0.125F, 2F);
+                }
                 flag = true;
+            } else {
+                return original;
             }
         }
         return original * additionalAdsSensitivity * (1.0 - sens * (flag ? 1 : 0));
