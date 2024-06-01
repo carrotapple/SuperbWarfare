@@ -190,7 +190,7 @@ public class PlayerEventHandler {
                     });
 
                     if (player.getPersistentData().getInt("zoom_animation_time") < 10) {
-                        player.getPersistentData().putInt("zoom_animation_time", player.getPersistentData().getInt("zoom_animation_time") + 1);
+                        player.getPersistentData().putInt("zoom_animation_time", player.getPersistentData().getInt("zoom_animation_time") + 2);
                     }
                 } else {
                     player.getPersistentData().putInt("zoom_animation_time", 0);
@@ -329,11 +329,11 @@ public class PlayerEventHandler {
 
                     double sinRes = 0;
 
-                    if (0 < recoil && recoil < 0.2) {
+                    if (0 < recoil && recoil < 0.454) {
                         sinRes = (-18.34) * Math.pow(recoil, 2) + 8.58 * recoil;
                     }
-                    if (0.2 <= recoil && recoil < 1) {
-                        sinRes = 2.7 * Math.pow(recoil, 2) - 5.5 * recoil + 2.167;
+                    if (0.454 <= recoil && recoil < 1) {
+                        sinRes = 3.9 * Math.pow(recoil, 2) - 6.5 * recoil + 2.167;
                     }
 
                     float newPitch = ((float) (player.getXRot() - 7.5f * recoilY * ry * sinRes));

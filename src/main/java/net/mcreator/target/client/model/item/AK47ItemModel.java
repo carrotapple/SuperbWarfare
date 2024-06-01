@@ -79,27 +79,20 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
 
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-            shen.setPosZ(0.4f * (float) fp);
-        } else {
-            shen.setPosZ(1.01f * (float) fp);
-        }
-
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
             shen.setPosY(0.01f * (float) fp);
-        } else {
-            shen.setPosY(0.07f * (float) fp);
-        }
-
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+            shen.setPosZ(0.4f * (float) fp);
             shen.setRotX(0.003f * (float) fp);
         } else {
+            shen.setPosY(0.07f * (float) fp);
+            shen.setPosZ(1.01f * (float) fp);
             shen.setRotX(0.025f * (float) fp);
+            shen.setRotZ(-0.04f * (float) fp);
         }
 
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == 1) {
-            shen.setRotZ(0.003f * (float) fp);
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+            shen.setRotY(0.003f * (float) fp);
         } else {
-            shen.setRotZ(-0.003f * (float) fp);
+            shen.setRotY(-0.003f * (float) fp);
         }
 
         shuan.setPosZ(2.4f * (float) fp);
