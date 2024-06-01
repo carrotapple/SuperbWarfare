@@ -1,6 +1,7 @@
 package net.mcreator.target.client.model.item;
 
 import net.mcreator.target.item.gun.RpgItem;
+import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -41,17 +42,28 @@ public class RpgItemModel extends GeoModel<RpgItem> {
             rocket.setScaleZ(0);
         }
 
-        double fp = 0;
-        fp = player.getPersistentData().getDouble("fire_pos");
+        double fp = player.getPersistentData().getDouble("fire_pos");
+        double fr = player.getPersistentData().getDouble("fire_rot");
 
-        shen.setPosZ((float) fp);
-
-        shen.setRotX(0.05f * (float) fp);
-
-        if (Math.random() < 0.5) {
-            shen.setRotZ(0.01f * (float) fp);
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+            shen.setPosY(0.02f * (float) (fp + 2 * fr));
+            shen.setPosZ(1.6f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.003f * (float) (fp + fr));
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+                shen.setRotY(0.015f * (float) fr);
+            } else {
+                shen.setRotY(-0.015f * (float) fr);
+            }
         } else {
-            shen.setRotZ(-0.01f * (float) fp);
+            shen.setPosY(0.04f * (float) (fp + 2 * fr));
+            shen.setPosZ(1.8f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.07f * (float) (0.18f * fp + fr));
+            shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+                shen.setRotY(0.03f * (float) fr);
+            } else {
+                shen.setRotY(-0.03f * (float) fr);
+            }
         }
 
         double p = 0;

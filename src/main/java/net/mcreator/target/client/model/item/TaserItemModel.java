@@ -1,6 +1,7 @@
 package net.mcreator.target.client.model.item;
 
 import net.mcreator.target.item.gun.Taser;
+import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -31,12 +32,29 @@ public class TaserItemModel extends GeoModel<Taser> {
 
         Player player = Minecraft.getInstance().player;
 
-        double fp = 0;
-        fp = player.getPersistentData().getDouble("fire_pos");
+        double fp = player.getPersistentData().getDouble("fire_pos");
+        double fr = player.getPersistentData().getDouble("fire_rot");
 
-        shen.setPosZ(0.75f * (float) fp);
-
-        shen.setRotX(0.02f * (float) fp);
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+            shen.setPosY(0.02f * (float) (fp + 2 * fr));
+            shen.setPosZ(0.5f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.02f * (float) (fp + fr));
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+                shen.setRotY(0.0025f * (float) fr);
+            } else {
+                shen.setRotY(-0.0025f * (float) fr);
+            }
+        } else {
+            shen.setPosY(0.03f * (float) (fp + 2 * fr));
+            shen.setPosZ(0.7f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.03f * (float) (0.18f * fp + fr));
+            shen.setRotZ(-0.001f * (float) (fp + 1.3 * fr));
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+                shen.setRotY(0.0045f * (float) fr);
+            } else {
+                shen.setRotY(-0.0045f * (float) fr);
+            }
+        }
 
         double p = 0;
         p = player.getPersistentData().getDouble("zoom_pos");

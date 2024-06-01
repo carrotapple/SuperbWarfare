@@ -57,30 +57,33 @@ public class DevotionItemModel extends GeoModel<Devotion> {
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone number = getAnimationProcessor().getBone("number");
 
-        double fp = 0;
-        fp = player.getPersistentData().getDouble("fire_pos");
-
         double bp = 0;
         bp = player.getPersistentData().getDouble("boltpos");
 
         bolt.setPosZ(-2f * (float) bp);
 
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-            shen.setPosZ(0.4f * (float) fp);
-        } else {
-            shen.setPosZ(0.75f * (float) fp);
-        }
+        double fp = player.getPersistentData().getDouble("fire_pos");
+        double fr = player.getPersistentData().getDouble("fire_rot");
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-            shen.setRotX(0.002f * (float) fp);
+            shen.setPosY(-0.01f * (float) (fp + 2 * fr));
+            shen.setPosZ(0.4f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.003f * (float) (fp + fr));
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+                shen.setRotY(0.015f * (float) fr);
+            } else {
+                shen.setRotY(-0.015f * (float) fr);
+            }
         } else {
-            shen.setRotX(0.02f * (float) fp);
-        }
-
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == 1) {
-            shen.setRotZ(0.002f * (float) fp);
-        } else {
-            shen.setRotZ(-0.002f * (float) fp);
+            shen.setPosY(-0.03f * (float) (fp + 2 * fr));
+            shen.setPosZ(0.75f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.02f * (float) (0.18f * fp + fr));
+            shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+                shen.setRotY(0.03f * (float) fr);
+            } else {
+                shen.setRotY(-0.03f * (float) fr);
+            }
         }
 
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");

@@ -112,17 +112,28 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         double FirePosZ = 0;
         double FireRotX = 0;
 
-        double fp = 0;
-        fp = player.getPersistentData().getDouble("fire_pos");
+        double fp = player.getPersistentData().getDouble("fire_pos");
+        double fr = player.getPersistentData().getDouble("fire_rot");
 
-        fire.setPosZ(4f * (float) fp);
-
-        fire.setRotX(0.02f * (float) fp);
-
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == 1) {
-            fire.setRotZ(0.003f * (float) fp);
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+            fire.setPosY(-0.01f * (float) (fp + 2 * fr));
+            fire.setPosZ(3f * (float) (fp + 0.54f * fr));
+            fire.setRotX(0.003f * (float) (fp + fr));
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+                fire.setRotY(0.015f * (float) fr);
+            } else {
+                fire.setRotY(-0.015f * (float) fr);
+            }
         } else {
-            fire.setRotZ(-0.003f * (float) fp);
+            fire.setPosY(-0.03f * (float) (fp + 2 * fr));
+            fire.setPosZ(4f * (float) (fp + 0.54f * fr));
+            fire.setRotX(0.07f * (float) (0.18f * fp + fr));
+            fire.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+                fire.setRotY(0.03f * (float) fr);
+            } else {
+                fire.setRotY(-0.03f * (float) fr);
+            }
         }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");

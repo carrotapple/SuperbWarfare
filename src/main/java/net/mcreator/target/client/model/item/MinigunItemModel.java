@@ -45,17 +45,28 @@ public class MinigunItemModel extends GeoModel<Minigun> {
         gun.setRotZ((float) (gun.getRotZ() + times * -0.008f * stack.getOrCreateTag().getDouble("minigun_rotation")));
 
 
-        double fp = 0;
-        fp = player.getPersistentData().getDouble("fire_pos");
+        double fp = player.getPersistentData().getDouble("fire_pos");
+        double fr = player.getPersistentData().getDouble("fire_rot");
 
-        shen.setPosZ((float) fp);
-
-        shen.setRotX(0.02f * (float) fp);
-
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == 1) {
-            shen.setRotZ(0.003f * (float) fp);
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+            shen.setPosY(0.02f * (float) (fp + 2 * fr));
+            shen.setPosZ(0.6f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.003f * (float) (fp + fr));
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+                shen.setRotY(0.015f * (float) fr);
+            } else {
+                shen.setRotY(-0.015f * (float) fr);
+            }
         } else {
-            shen.setRotZ(-0.003f * (float) fp);
+            shen.setPosY(0.04f * (float) (fp + 2 * fr));
+            shen.setPosZ(1.2f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.03f * (float) (0.18f * fp + fr));
+            shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+                shen.setRotY(0.045f * (float) fr);
+            } else {
+                shen.setRotY(-0.045f * (float) fr);
+            }
         }
 
         if (stack.getOrCreateTag().getInt("fire_animation") > 0) {

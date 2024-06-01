@@ -61,17 +61,28 @@ public class M79ItemModel extends GeoModel<M79Item> {
             flare.setRotZ(0);
         }
 
-        double fp = 0;
-        fp = player.getPersistentData().getDouble("fire_pos");
+        double fp = player.getPersistentData().getDouble("fire_pos");
+        double fr = player.getPersistentData().getDouble("fire_rot");
 
-        shen.setPosZ(4f * (float) fp);
-
-        shen.setRotX(0.1f * (float) fp);
-
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == 1) {
-            shen.setRotZ(0.003f * (float) fp);
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+            shen.setPosY(0.4f * (float) (fp + 2 * fr));
+            shen.setPosZ(3.6f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.1f * (float) (fp + fr));
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+                shen.setRotY(0.025f * (float) fr);
+            } else {
+                shen.setRotY(-0.025f * (float) fr);
+            }
         } else {
-            shen.setRotZ(-0.003f * (float) fp);
+            shen.setPosY(0.7f * (float) (fp + 2 * fr));
+            shen.setPosZ(4.2f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.1f * (float) (0.18f * fp + fr));
+            shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+                shen.setRotY(0.045f * (float) fr);
+            } else {
+                shen.setRotY(-0.045f * (float) fr);
+            }
         }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");

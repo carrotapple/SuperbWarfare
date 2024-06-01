@@ -91,23 +91,28 @@ public class M60ItemModel extends GeoModel<M60Item> {
 
         gun.setRotZ(-0.087f * (float) p + (float) (0.05f * zp));
 
-        double fp = 0;
-        fp = player.getPersistentData().getDouble("fire_pos");
-
-        shen.setPosZ(1.25f * (float) fp);
+        double fp = player.getPersistentData().getDouble("fire_pos");
+        double fr = player.getPersistentData().getDouble("fire_rot");
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-            shen.setRotX(0.008f * (float) fp);
+            shen.setPosY(-0.01f * (float) (fp + 2 * fr));
+            shen.setPosZ(0.2f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.003f * (float) (fp + fr));
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+                shen.setRotY(0.015f * (float) fr);
+            } else {
+                shen.setRotY(-0.015f * (float) fr);
+            }
         } else {
-            shen.setRotX(0.02f * (float) fp);
-        }
-
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == 1) {
-            shen.setRotZ(0.003f * (float) fp);
-            tiba.setRotZ(-0.2f * (float) fp);
-        } else {
-            shen.setRotZ(-0.003f * (float) fp);
-            tiba.setRotZ(-0.25f * (float) fp);
+            shen.setPosY(-0.03f * (float) (fp + 2 * fr));
+            shen.setPosZ(0.8f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.04f * (float) (0.18f * fp + fr));
+            shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+                shen.setRotY(0.03f * (float) fr);
+            } else {
+                shen.setRotY(-0.03f * (float) fr);
+            }
         }
 
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");

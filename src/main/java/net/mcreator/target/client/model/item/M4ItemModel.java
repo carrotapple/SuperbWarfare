@@ -45,27 +45,34 @@ public class M4ItemModel extends GeoModel<M4Item> {
 
         gun.setPosY(0.65f * (float) p - (float) (0.2f * zp));
 
-        gun.setPosZ((float) p + (float) (0.6f * zp));
+        gun.setPosZ(3f * (float) p + (float) (0.2f * zp));
 
         gun.setScaleZ(1f - (0.2f * (float) p));
 
         gun.setRotZ((float) (0.05f * zp));
 
-        double fp = 0;
-        fp = player.getPersistentData().getDouble("fire_pos");
-
-        shen.setPosZ(0.85f * (float) fp);
+        double fp = player.getPersistentData().getDouble("fire_pos");
+        double fr = player.getPersistentData().getDouble("fire_rot");
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-            shen.setRotX(0.002f * (float) fp);
+            shen.setPosY(0.02f * (float) (fp + 2 * fr));
+            shen.setPosZ(0.6f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.003f * (float) (fp + fr));
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+                shen.setRotY(0.015f * (float) fr);
+            } else {
+                shen.setRotY(-0.015f * (float) fr);
+            }
         } else {
-            shen.setRotX(0.02f * (float) fp);
-        }
-
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon == 1) {
-            shen.setRotZ(0.003f * (float) fp);
-        } else {
-            shen.setRotZ(-0.003f * (float) fp);
+            shen.setPosY(0.04f * (float) (fp + 2 * fr));
+            shen.setPosZ(1.2f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.03f * (float) (0.18f * fp + fr));
+            shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+                shen.setRotY(0.045f * (float) fr);
+            } else {
+                shen.setRotY(-0.045f * (float) fr);
+            }
         }
 
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
