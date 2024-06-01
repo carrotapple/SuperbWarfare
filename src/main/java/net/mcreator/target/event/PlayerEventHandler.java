@@ -190,7 +190,7 @@ public class PlayerEventHandler {
                     });
 
                     if (player.getPersistentData().getInt("zoom_animation_time") < 10) {
-                        player.getPersistentData().putInt("zoom_animation_time", player.getPersistentData().getInt("zoom_animation_time") + 2);
+                        player.getPersistentData().putInt("zoom_animation_time", player.getPersistentData().getInt("zoom_animation_time") + 1);
                     }
                 } else {
                     player.getPersistentData().putInt("zoom_animation_time", 0);

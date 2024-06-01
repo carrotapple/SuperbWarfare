@@ -342,13 +342,13 @@ public class ClientEventHandler {
         if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
             if (data.getDouble("zoom_time") < 1) {
                 data.putDouble("zoom_time",
-                        (data.getDouble("zoom_time") + entity.getMainHandItem().getOrCreateTag().getDouble("zoom_speed") * 0.03 * times));
+                        (data.getDouble("zoom_time") + entity.getMainHandItem().getOrCreateTag().getDouble("zoom_speed") * 0.02 * times));
             } else {
                 data.putDouble("zoom_time", 1);
             }
         } else {
             if (data.getDouble("zoom_time") > 0) {
-                data.putDouble("zoom_time", (data.getDouble("zoom_time") - 0.04 * times));
+                data.putDouble("zoom_time", (data.getDouble("zoom_time") - 0.02 * times));
             } else {
                 data.putDouble("zoom_time", 0);
             }
