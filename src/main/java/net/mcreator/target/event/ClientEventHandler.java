@@ -430,13 +430,13 @@ public class ClientEventHandler {
             }
         }
 
-        if (0 < data.getDouble("fire_rotx_time") && data.getDouble("fire_rotx_time") < 2) {
-            data.putDouble("fire_rotx_time", (data.getDouble("fire_rotx_time") + 0.1 * (2.3 - data.getDouble("fire_rotx_time")) * times));
+        if (0 < data.getDouble("fire_rotx_time") && data.getDouble("fire_rotx_time") < 1.8) {
+            data.putDouble("fire_rotx_time", (data.getDouble("fire_rotx_time") + 0.1 * (1.9 - data.getDouble("fire_rotx_time")) * times));
         }
 
-        if (0 < data.getDouble("fire_rotx_time") && data.getDouble("fire_rotx_time") < 2) {
+        if (0 < data.getDouble("fire_rotx_time") && data.getDouble("fire_rotx_time") < 1.8) {
             data.putDouble("fire_rot",
-                    (pose * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (2.5 - data.getDouble("fire_rotx_time"))));
+                    (pose * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2))));
         }
         if (0 <= data.getDouble("firetime") && data.getDouble("firetime") <= 0.25) {
             data.putDouble("boltpos", (-Math.pow(8 * data.getDouble("firetime") - 1, 2) + 1));
@@ -447,7 +447,7 @@ public class ClientEventHandler {
         if (data.getDouble("firetime") >= 1) {
             data.putDouble("firetime", 0);
         }
-        if (data.getDouble("fire_rotx_time") >= 2) {
+        if (data.getDouble("fire_rotx_time") >= 1.8) {
             data.putDouble("fire_rotx_time", 0);
         }
     }
