@@ -2,6 +2,7 @@ package net.mcreator.target.entity;
 
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.api.entity.ITargetEntity;
+import net.mcreator.target.tools.HitboxHelper;
 import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
 import net.mcreator.target.init.TargetModDamageTypes;
@@ -154,8 +155,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         // hitbox 延迟补偿。只有射击者是玩家（且被击中者也是玩家）才进行此类延迟补偿计算
         if (entity instanceof ServerPlayer player && this.shooter instanceof ServerPlayer serverPlayerOwner) {
             int ping = Mth.floor((serverPlayerOwner.latency / 1000.0) * 20.0 + 0.5);
-            boundingBox = BoundingBoxManager.getBoundingBox(player, ping);
-            velocity = BoundingBoxManager.getVelocity(player, ping);
+            boundingBox = HitboxHelper.getBoundingBox(player, ping);
+            velocity = HitboxHelper.getVelocity(player, ping);
         }
         // 应用蹲伏导致的 hitbox 变形
         boundingBox = boundingBox.expandTowards(0, expandHeight, 0);

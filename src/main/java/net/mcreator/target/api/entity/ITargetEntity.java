@@ -5,6 +5,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.EntityHitResult;
 
+//from TACZ
+
 /**
  * 用于进行一些并非 {@link LivingEntity} 但是可被子弹击中的特殊实体的处理
  */
