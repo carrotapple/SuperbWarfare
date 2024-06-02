@@ -116,6 +116,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
 
         float PosX = (float) player.getPersistentData().getDouble("gun_move_posX");
         float PosY = (float) player.getPersistentData().getDouble("gun_move_posY");
+        float RotZ = (float) player.getPersistentData().getDouble("gun_move_rotZ");
 
         double y = player.getPersistentData().getDouble("y");
         double x = player.getPersistentData().getDouble("x");
@@ -126,7 +127,9 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
 
         root.setRotX((float) x);
 
-        root.setRotZ(0.1f * PosX);
+        root.setRotY(0.2f * PosX);
+
+        root.setRotZ(0.2f * PosX + RotZ);
 
         CoreGeoBone move = getAnimationProcessor().getBone("move");
 

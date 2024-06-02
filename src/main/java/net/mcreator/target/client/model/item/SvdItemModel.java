@@ -144,7 +144,11 @@ public class SvdItemModel extends GeoModel<SvdItem> {
 
         root.setRotX((float) x);
 
-        root.setRotZ(0.1f * PosX);
+        float RotZ = (float) player.getPersistentData().getDouble("gun_move_rotZ");
+
+        root.setRotY(0.2f * PosX);
+
+        root.setRotZ(0.2f * PosX + RotZ);
 
         CoreGeoBone move = getAnimationProcessor().getBone("move");
 

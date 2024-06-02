@@ -115,7 +115,11 @@ public class M98bItemModel extends GeoModel<M98bItem> {
 
         root.setRotX((float) x);
 
-        root.setRotZ(0.1f * PosX);
+        float RotZ = (float) player.getPersistentData().getDouble("gun_move_rotZ");
+
+        root.setRotY(0.2f * PosX);
+
+        root.setRotZ(0.2f * PosX + RotZ);
 
         zhunxing.setPosX(75 * PosX);
 
