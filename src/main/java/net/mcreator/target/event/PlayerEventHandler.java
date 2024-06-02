@@ -10,6 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -325,12 +326,12 @@ public class PlayerEventHandler {
                 if (recoil >= 2) recoil = 0d;
 
                 if (0 < recoil && recoil < 2) {
-                    recoil = recoil + 0.013 * (2.1 - recoil);
+                    recoil = recoil + 0.017 * (2.1 - recoil);
 
                     double sinRes = 0;
-                    sinRes = 0.35 * Math.sin(Math.PI * (1.5 * recoil)) * (3 - Math.pow(recoil , 2)) + 0.046;
+                    sinRes = 0.35 * Math.sin(Math.PI * (1.5 * recoil)) * (3 - Math.pow(recoil , 2)) + 0.044;
 
-                    float newPitch = ((float) (player.getXRot() - 7.5f * recoilY * ry * sinRes));
+                    float newPitch = ((float) (player.getXRot() - 7.5f * recoilY * ry * (sinRes + Mth.clamp(0.75 - recoil,0,0.5))));
                     player.setXRot(newPitch);
                     player.xRotO = player.getXRot();
 

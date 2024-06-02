@@ -424,11 +424,11 @@ public class ClientEventHandler {
                     (pose * (4.34 * Math.pow(data.getDouble("firetime"), 2) - 6.5 * data.getDouble("firetime") + 2.167 + data.getDouble("firepos2"))));
         }
 
-        if (0 < data.getDouble("fire_rotx_time") && data.getDouble("fire_rotx_time") < 1.8) {
+        if (0 < data.getDouble("fire_rotx_time") && data.getDouble("fire_rotx_time") < 1.732) {
             data.putDouble("fire_rotx_time", (data.getDouble("fire_rotx_time") + 0.12 * (1.9 - data.getDouble("fire_rotx_time")) * times));
         }
 
-        if (0 < data.getDouble("fire_rotx_time") && data.getDouble("fire_rotx_time") < 1.8) {
+        if (0 < data.getDouble("fire_rotx_time") && data.getDouble("fire_rotx_time") < 1.732) {
             data.putDouble("fire_rot",
                     (pose * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2))));
             if ((capability.orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
@@ -450,8 +450,9 @@ public class ClientEventHandler {
         if (data.getDouble("firetime") >= 1) {
             data.putDouble("firetime", 0);
         }
-        if (data.getDouble("fire_rotx_time") >= 1.8) {
+        if (data.getDouble("fire_rotx_time") >= 1.732) {
             data.putDouble("fire_rotx_time", 0);
+            data.putDouble("fire_rot", 0);
         }
     }
 
