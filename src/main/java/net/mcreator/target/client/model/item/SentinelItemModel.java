@@ -70,6 +70,7 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
 
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
         if (gun.getPosX() > 1.8) {
+            holo.setPosY(0.09f);
             holo.setScaleX(1);
             holo.setScaleY(1);
         } else {

@@ -299,22 +299,22 @@ public class GunEventHandler {
             String name = origin.substring(origin.lastIndexOf(".") + 1);
 
             if (player.getMainHandItem().getItem() == TargetModItems.SENTINEL.get() && stack.getOrCreateTag().getDouble("power") > 0) {
-                SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_charge_fire_1p"));
+                SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, "sentinel_charge_fire_1p"));
                 if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                     SoundTool.playLocalSound(serverPlayer, sound1p, 2f, 1f);
                 }
 
-                SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "v_fire_3p"));
+                SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, "sentinel_charge_fire_3p"));
                 if (sound3p != null) {
                     player.level().playSound(null, player.getOnPos(), sound3p, SoundSource.PLAYERS, 4f, 1f);
                 }
 
-                SoundEvent soundFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_charge_far"));
+                SoundEvent soundFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, "sentinel_charge_far"));
                 if (soundFar != null) {
                     player.playSound(soundFar, 12f, 1f);
                 }
 
-                SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_charge_veryfar"));
+                SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, "sentinel_charge_veryfar"));
                 if (soundVeryFar != null) {
                     player.playSound(soundVeryFar, 24f, 1f);
                 }

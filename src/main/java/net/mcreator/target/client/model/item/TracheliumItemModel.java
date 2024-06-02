@@ -53,12 +53,12 @@ public class TracheliumItemModel extends GeoModel<Trachelium> {
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
 
-        shen.setPosX(-0.2f * (float) (fp + 2 * fr));
-        shen.setPosY(0.2f * (float) (fp + 2 * fr));
+        shen.setPosX(-0.4f * (float) (fp + 2 * fr));
+        shen.setPosY(0.4f * (float) (fp + 2 * fr));
         shen.setPosZ(4.2f * (float) (1.3 * fp + 0.54f * fr));
-        shen.setRotX(0.25f * (float) (1.28f * fp + fr));
+        shen.setRotX(0.125f * (float) (1.28f * fp + fr));
+        shen.setRotY(0.15f * (float) fr);
         shen.setRotZ(-0.1f * (float) (fp + 1.3 * fr));
-        shen.setRotY(-0.15f * (float) fr);
 
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
 

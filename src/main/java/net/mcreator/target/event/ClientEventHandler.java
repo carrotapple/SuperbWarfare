@@ -389,54 +389,45 @@ public class ClientEventHandler {
 
         var capability = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null);
         if (capability.orElse(new TargetModVariables.PlayerVariables()).firing > 0) {
-            data.putDouble("firetime", 0.2);
-            data.putDouble("fire_rotx_time", 0.2);
-            if (0.3 > data.getDouble("firepos2")) {
+            data.putDouble("firetime", 0.02);
+            data.putDouble("fire_rotx_time", 0.02);
+            if (data.getDouble("firepos2") < 0.6) {
                 data.putDouble("firepos2", (data.getDouble("firepos2") + 0.04 * times));
             }
         }
         if (0 < data.getDouble("firepos2")) {
-            data.putDouble("firepos2", (data.getDouble("firepos2") - 0.02 * times));
+            data.putDouble("firepos2", (data.getDouble("firepos2") - 0.01 * times));
         } else {
             data.putDouble("firepos2", 0);
         }
         if (0 < data.getDouble("firetime")) {
-            data.putDouble("firetime", (data.getDouble("firetime") + 0.075 * times));
+            data.putDouble("firetime", (data.getDouble("firetime") + 0.12 * (1.1 - data.getDouble("firetime")) * times));
         }
         if (0 < data.getDouble("firetime") && data.getDouble("firetime") < 0.454) {
             data.putDouble("fire_pos",
                     (pose * ((-18.34) * Math.pow(data.getDouble("firetime"), 2) + 8.58 * data.getDouble("firetime") + data.getDouble("firepos2"))));
-            if ((capability.orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                event.setYaw((float) (yaw - 0.2 * amplitude * ((-18.34) * Math.pow(data.getDouble("firetime"), 2) + 8.58 * data.getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
-                event.setPitch((float) (pitch + 0.2 * amplitude * ((-18.34) * Math.pow(data.getDouble("firetime"), 2) + 8.58 * data.getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
-                event.setRoll((float) (roll + amplitude * ((-18.34) * Math.pow(data.getDouble("firetime"), 2) + 8.58 * data.getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
-            } else if ((capability.orElse(new TargetModVariables.PlayerVariables())).recoilHorizon <= 0) {
-                event.setYaw((float) (yaw - 0.2 * amplitude * ((-18.34) * Math.pow(data.getDouble("firetime"), 2) + 8.58 * data.getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
-                event.setPitch((float) (pitch + 0.2 * amplitude * ((-18.34) * Math.pow(data.getDouble("firetime"), 2) + 8.58 * data.getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
-                event.setRoll((float) (roll - amplitude * ((-18.34) * Math.pow(data.getDouble("firetime"), 2) + 8.58 * data.getDouble("firetime") + 0.7 * (2 * Math.random() - 1))));
-            }
         }
         if (0.454 <= data.getDouble("firetime") && data.getDouble("firetime") < 1) {
             data.putDouble("fire_pos",
                     (pose * (4.34 * Math.pow(data.getDouble("firetime"), 2) - 6.5 * data.getDouble("firetime") + 2.167 + data.getDouble("firepos2"))));
-            if ((capability.orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                event.setYaw((float) (yaw - 0.2 * amplitude * (4.34 * Math.pow(data.getDouble("firetime"), 2) - 5.5 * data.getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
-                event.setPitch((float) (pitch + 0.2 * amplitude * (4.34 * Math.pow(data.getDouble("firetime"), 2) - 5.5 * data.getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
-                event.setRoll((float) (roll + amplitude * (4.34 * Math.pow(data.getDouble("firetime"), 2) - 5.5 * data.getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
-            } else if ((capability.orElse(new TargetModVariables.PlayerVariables())).recoilHorizon <= 0) {
-                event.setYaw((float) (yaw + 0.2 * amplitude * (4.34 * Math.pow(data.getDouble("firetime"), 2) - 5.5 * data.getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
-                event.setPitch((float) (pitch - 0.2 * amplitude * (4.34 * Math.pow(data.getDouble("firetime"), 2) - 5.5 * data.getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
-                event.setRoll((float) (roll - amplitude * (4.34 * Math.pow(data.getDouble("firetime"), 2) - 5.5 * data.getDouble("firetime") + 2.167 + 0.7 * (2 * Math.random() - 1))));
-            }
         }
 
         if (0 < data.getDouble("fire_rotx_time") && data.getDouble("fire_rotx_time") < 1.8) {
-            data.putDouble("fire_rotx_time", (data.getDouble("fire_rotx_time") + 0.1 * (1.9 - data.getDouble("fire_rotx_time")) * times));
+            data.putDouble("fire_rotx_time", (data.getDouble("fire_rotx_time") + 0.12 * (1.9 - data.getDouble("fire_rotx_time")) * times));
         }
 
         if (0 < data.getDouble("fire_rotx_time") && data.getDouble("fire_rotx_time") < 1.8) {
             data.putDouble("fire_rot",
                     (pose * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2))));
+            if ((capability.orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+                event.setYaw((float) (yaw - 1.3 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2)) + 1 * Mth.clamp(0.3 - data.getDouble("fire_rotx_time"),0,1) * (2 * Math.random() - 1)));
+                event.setPitch((float) (pitch + 1.3 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2)) + 1 * Mth.clamp(0.3 - data.getDouble("fire_rotx_time"),0,1) * (2 * Math.random() - 1)));
+                event.setRoll((float) (roll + 4.2 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2)) + 3 * Mth.clamp(0.5 - data.getDouble("fire_rotx_time"),0,0.5) * (2 * Math.random() - 1)));
+            } else if ((capability.orElse(new TargetModVariables.PlayerVariables())).recoilHorizon <= 0) {
+                event.setYaw((float) (yaw + 1.3 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2)) + 1 * Mth.clamp(0.3 - data.getDouble("fire_rotx_time"),0,1) * (2 * Math.random() - 1)));
+                event.setPitch((float) (pitch - 1.3 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2)) + 1 * Mth.clamp(0.3 - data.getDouble("fire_rotx_time"),0,1) * (2 * Math.random() - 1)));
+                event.setRoll((float) (roll - 4.2 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2)) + 3 * Mth.clamp(0.5 - data.getDouble("fire_rotx_time"),0,0.5) * (2 * Math.random() - 1)));
+            }
         }
         if (0 <= data.getDouble("firetime") && data.getDouble("firetime") <= 0.25) {
             data.putDouble("boltpos", (-Math.pow(8 * data.getDouble("firetime") - 1, 2) + 1));
