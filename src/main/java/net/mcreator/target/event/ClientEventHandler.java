@@ -424,6 +424,8 @@ public class ClientEventHandler {
                     (pose * (4.34 * Math.pow(data.getDouble("firetime"), 2) - 6.5 * data.getDouble("firetime") + 2.167 + data.getDouble("firepos2"))));
         }
 
+
+
         if (0 < data.getDouble("fire_rotx_time") && data.getDouble("fire_rotx_time") < 1.732) {
             data.putDouble("fire_rotx_time", (data.getDouble("fire_rotx_time") + 0.12 * (1.9 - data.getDouble("fire_rotx_time")) * times));
         }

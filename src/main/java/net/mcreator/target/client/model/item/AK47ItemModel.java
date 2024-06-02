@@ -83,6 +83,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
             shen.setPosY(-0.01f * (float) (fp + 2 * fr));
             shen.setPosZ(0.2f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.003f * (float) (fp + fr));
+            shen.setRotZ(0f);
             if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
                 shen.setRotY(0.015f * (float) fr);
             } else {

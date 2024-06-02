@@ -119,6 +119,7 @@ public class BocekItemModel extends GeoModel<BocekItem> {
             fire.setPosY(-0.01f * (float) (fp + 2 * fr));
             fire.setPosZ(3f * (float) (fp + 0.54f * fr));
             fire.setRotX(0.003f * (float) (fp + fr));
+            fire.setRotZ(0f);
             if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
                 fire.setRotY(0.015f * (float) fr);
             } else {

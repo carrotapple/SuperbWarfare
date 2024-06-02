@@ -58,6 +58,7 @@ public class M4ItemModel extends GeoModel<M4Item> {
             shen.setPosY(0.02f * (float) (fp + 2 * fr));
             shen.setPosZ(0.6f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.003f * (float) (fp + fr));
+            shen.setRotZ(0f);
             if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
                 shen.setRotY(0.015f * (float) fr);
             } else {
