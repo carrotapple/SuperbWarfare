@@ -26,6 +26,12 @@ public class BoundingBoxManager {
     private static final Map<EntityType<?>, IHeadshotBox<?>> headshotBoxes = new HashMap<>();
     private static final WeakHashMap<Player, LinkedList<AABB>> playerBoxes = new WeakHashMap<>();
 
+    private static final WeakHashMap<Player, LinkedList<Vec3>> PLAYER_POSITION = new WeakHashMap<>();
+    // 玩家命中箱缓存表
+    private static final WeakHashMap<Player, LinkedList<AABB>> PLAYER_HITBOXES = new WeakHashMap<>();
+    // 玩家速度缓存表
+    private static final WeakHashMap<Player, LinkedList<Vec3>> PLAYER_VELOCITY = new WeakHashMap<>();
+
     static {
         /* Player */
         registerHeadshotBox(EntityType.PLAYER, (entity) -> {
@@ -118,6 +124,16 @@ public class BoundingBoxManager {
         playerBoxes.remove(event.getEntity());
     }
 
+    public static Vec3 getPlayerVelocity(Player entity) {
+        LinkedList<Vec3> positions = PLAYER_POSITION.computeIfAbsent(entity, player -> new LinkedList<>());
+        if (positions.size() > 1) {
+            Vec3 currPos = positions.getFirst();
+            Vec3 prevPos = positions.getLast();
+            return new Vec3(currPos.x - prevPos.x, currPos.y - prevPos.y, currPos.z - prevPos.z);
+        }
+        return new Vec3(0, 0, 0);
+    }
+
     public static AABB getBoundingBox(Player entity, int ping) {
         if (playerBoxes.containsKey(entity)) {
             LinkedList<AABB> boxes = playerBoxes.get(entity);
@@ -125,5 +141,14 @@ public class BoundingBoxManager {
             return boxes.get(index);
         }
         return entity.getBoundingBox();
+    }
+
+    public static Vec3 getVelocity(Player entity, int ping) {
+        if (PLAYER_VELOCITY.containsKey(entity)) {
+            LinkedList<Vec3> velocities = PLAYER_VELOCITY.get(entity);
+            int index = Mth.clamp(ping, 0, velocities.size() - 1);
+            return velocities.get(index);
+        }
+        return getPlayerVelocity(entity);
     }
 }

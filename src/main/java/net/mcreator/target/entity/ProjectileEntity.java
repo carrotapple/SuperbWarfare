@@ -1,6 +1,7 @@
 package net.mcreator.target.entity;
 
 import net.mcreator.target.TargetMod;
+import net.mcreator.target.api.entity.ITargetEntity;
 import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
 import net.mcreator.target.init.TargetModDamageTypes;
@@ -19,6 +20,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -39,6 +41,7 @@ import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.entity.PartEntity;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -147,51 +150,43 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     private EntityResult getHitResult(Entity entity, Vec3 startVec, Vec3 endVec) {
         double expandHeight = entity instanceof Player && !entity.isCrouching() ? 0.0625 : 0.0;
         AABB boundingBox = entity.getBoundingBox();
-
-        // 延迟补偿
-        if (entity instanceof ServerPlayer && this.shooter != null) {
-            int ping = (int) Math.floor((((ServerPlayer) this.shooter).latency / 1000.0) * 20.0 + 4.0);
-            boundingBox = BoundingBoxManager.getBoundingBox((Player) entity, ping);
+        Vec3 velocity = new Vec3(entity.getX() - entity.xOld, entity.getY() - entity.yOld, entity.getZ() - entity.zOld);
+        // hitbox 延迟补偿。只有射击者是玩家（且被击中者也是玩家）才进行此类延迟补偿计算
+        if (entity instanceof ServerPlayer player && this.shooter instanceof ServerPlayer serverPlayerOwner) {
+            int ping = Mth.floor((serverPlayerOwner.latency / 1000.0) * 20.0 + 0.5);
+            boundingBox = BoundingBoxManager.getBoundingBox(player, ping);
+            velocity = BoundingBoxManager.getVelocity(player, ping);
         }
+        // 应用蹲伏导致的 hitbox 变形
         boundingBox = boundingBox.expandTowards(0, expandHeight, 0);
-
-        if (this.beast) {
-            boundingBox = boundingBox.inflate(3);
-        }
-
-        Vec3 hitPos = boundingBox.clip(startVec, endVec).orElse(null);
-        Vec3 grownHitPos = boundingBox.inflate(0.35, 0.2, 0.35).clip(startVec, endVec).orElse(null);
-        if (hitPos == null && grownHitPos != null) {
-            HitResult result = rayTraceBlocks(this.level(), new ClipContext(startVec, grownHitPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this), IGNORE_LEAVES);
-            if (result.getType() == HitResult.Type.BLOCK) {
-                return null;
+        // 根据速度一定程度地扩展 hitbox
+        boundingBox = boundingBox.expandTowards(velocity.x, velocity.y, velocity.z);
+        // 玩家 hitbox 修正，可以通过 Config 调整
+        double playerHitboxOffset = 3;
+        if (entity instanceof ServerPlayer) {
+            if (entity.getVehicle() != null) {
+                boundingBox = boundingBox.move(velocity.multiply(playerHitboxOffset / 2, playerHitboxOffset / 2, playerHitboxOffset / 2));
             }
-            hitPos = grownHitPos;
+            boundingBox = boundingBox.move(velocity.multiply(playerHitboxOffset, playerHitboxOffset, playerHitboxOffset));
         }
+        // 给所有实体统一应用的 Hitbox 偏移，其数值为实验得出的定值。
+        if (entity.getVehicle() != null || entity instanceof ITargetEntity) {
+            boundingBox = boundingBox.move(velocity.multiply(-2.5, -2.5, -2.5));
+        }
+        boundingBox = boundingBox.move(velocity.multiply(-5, -5, -5));
+        // 计算射线与实体 boundingBox 的交点
+        Vec3 hitPos = boundingBox.clip(startVec, endVec).orElse(null);
 
         /* Check for headshot */
-        boolean headshot = false;
-        if (entity instanceof LivingEntity) {
-            IHeadshotBox<LivingEntity> headshotBox = (IHeadshotBox<LivingEntity>) BoundingBoxManager.getHeadshotBoxes(entity.getType());
-            if (headshotBox != null) {
-                AABB box = headshotBox.getHeadshotBox((LivingEntity) entity);
-                if (box != null) {
-                    box = box.move(boundingBox.getCenter().x, boundingBox.minY, boundingBox.getCenter().z);
-                    Optional<Vec3> headshotHitPos = box.clip(startVec, endVec);
-                    if (headshotHitPos.isEmpty()) {
-                        box = box.inflate(0.2, 0.2, 0.2);
-                        headshotHitPos = box.clip(startVec, endVec);
-                    }
-                    if (headshotHitPos.isPresent() && (hitPos == null || headshotHitPos.get().distanceTo(hitPos) < 0.55)) {
-                        hitPos = headshotHitPos.get();
-                        headshot = true;
-                    }
-                }
-            }
-        }
 
         if (hitPos == null) {
             return null;
+        }
+        Vec3 hitBoxPos = hitPos.subtract(entity.position());
+        boolean headshot = false;
+        float eyeHeight = entity.getEyeHeight();
+        if ((eyeHeight - 0.35) < hitBoxPos.y && hitBoxPos.y < (eyeHeight + 0.35)) {
+            headshot = true;
         }
 
         return new EntityResult(entity, hitPos, headshot);
