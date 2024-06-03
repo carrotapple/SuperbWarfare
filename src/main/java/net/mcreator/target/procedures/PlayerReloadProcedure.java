@@ -35,7 +35,7 @@ public class PlayerReloadProcedure {
                     tag.putBoolean("reloading", true);
                     tag.putDouble("empty_reload", 1);
                     tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                    tag.putDouble("reload_time", 57);
+                    tag.putDouble("reload_time", 62);
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.HUNTING_RIFLE.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))

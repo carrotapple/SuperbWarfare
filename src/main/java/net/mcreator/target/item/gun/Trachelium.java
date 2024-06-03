@@ -171,7 +171,7 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
             itemTag.putDouble("reload_time", 0);
         }
         if (itemTag.getBoolean("reloading")) {
-            if (itemTag.getDouble("reload_time") == 57) {
+            if (itemTag.getDouble("reload_time") == 62) {
                 entity.getPersistentData().putDouble("id", id);
                 if (entity instanceof ServerPlayer serverPlayer) {
                     SoundTool.playLocalSound(serverPlayer, TargetModSounds.TRACHELIUM_RELOAD.get(), 100, 1);

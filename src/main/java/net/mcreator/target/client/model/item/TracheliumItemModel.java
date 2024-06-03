@@ -4,6 +4,7 @@ import net.mcreator.target.item.gun.Trachelium;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
@@ -53,11 +54,11 @@ public class TracheliumItemModel extends GeoModel<Trachelium> {
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
 
-        shen.setPosX(-0.4f * (float) (fp + 2 * fr));
-        shen.setPosY(0.4f * (float) (fp + 2 * fr));
+        shen.setPosX(-0.4f * (float) (fp + 0.2 * fr));
+        shen.setPosY(0.6f * (float) (fp + 2 * fr));
         shen.setPosZ(4.2f * (float) (1.3 * fp + 0.54f * fr));
-        shen.setRotX(0.125f * (float) (1.28f * fp + fr));
-        shen.setRotY(0.15f * (float) fr);
+        shen.setRotX(0.18f * (float) (1.28f * fp + fr));
+        shen.setRotY(0.12f * (float) fr);
         shen.setRotZ(-0.1f * (float) (fp + 1.3 * fr));
 
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
@@ -118,5 +119,12 @@ public class TracheliumItemModel extends GeoModel<Trachelium> {
 
         move.setRotY(1.9f * (float) yaw - 1.7f * (float) m);
 
+        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+
+        player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
+
+        player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
+
+        player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }
