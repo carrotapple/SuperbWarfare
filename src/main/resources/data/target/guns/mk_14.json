@@ -1,5 +1,5 @@
 {
-  "zoom_speed": 0.9,
+  "zoom_speed": 0.85,
   "zoom": 4,
   "dev": 6,
   "bipod": 1,
@@ -7,7 +7,7 @@
   "recoil_y": 0.014,
   "damage": 12,
   "headshot": 2.5,
-  "velocity": 45,
+  "velocity": 42.5,
   "mag": 20,
   "projectile_amount": 1,
   "fire_interval": 2,

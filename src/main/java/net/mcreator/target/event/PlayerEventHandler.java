@@ -329,9 +329,9 @@ public class PlayerEventHandler {
                     recoil = recoil + 0.017 * (2.1 - recoil);
 
                     double sinRes = 0;
-                    sinRes = 0.35 * Math.sin(Math.PI * (1.5 * recoil)) * (3 - Math.pow(recoil , 2)) + 0.044;
+                    sinRes = 0.35 * Math.sin(Math.PI * (1.5 * recoil)) * (3 - Math.pow(recoil , 2)) + 0.054;
 
-                    float newPitch = ((float) (player.getXRot() - 7.5f * recoilY * ry * (sinRes + Mth.clamp(0.75 - recoil,0,0.5))));
+                    float newPitch = ((float) (player.getXRot() - 7.5f * recoilY * ry * (sinRes + Mth.clamp(0.75 - recoil,0,0.7))));
                     player.setXRot(newPitch);
                     player.xRotO = player.getXRot();
 

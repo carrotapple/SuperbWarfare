@@ -6,7 +6,7 @@
   "recoil_y": 0.026,
   "damage": 2.5,
   "headshot": 1.5,
-  "velocity": 15,
+  "velocity": 12,
   "mag": 2,
   "projectile_amount": 8,
   "fire_interval": 2,
