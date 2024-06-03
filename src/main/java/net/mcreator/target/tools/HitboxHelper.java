@@ -8,7 +8,9 @@ import net.minecraft.world.phys.Vec3;
 import java.util.LinkedList;
 import java.util.WeakHashMap;
 
-//from TACZ
+/**
+ * From TAC-Z
+ */
 public final class HitboxHelper {
     // 玩家位置缓存表
     private static final WeakHashMap<Player, LinkedList<Vec3>> PLAYER_POSITION = new WeakHashMap<>();
@@ -17,7 +19,7 @@ public final class HitboxHelper {
     // 玩家速度缓存表
     private static final WeakHashMap<Player, LinkedList<Vec3>> PLAYER_VELOCITY = new WeakHashMap<>();
     // 命中箱缓存 Tick 上限
-    private static final int SAVE_TICK = Mth.floor(1000 / 1000 * 20 + 0.5);
+    private static final int SAVE_TICK = Mth.floor(20 + 0.5);
 
     public static void onPlayerTick(Player player) {
         if (player.isSpectator()) {
