@@ -160,18 +160,21 @@ public class AmmoBarOverlay {
             return (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo;
         }
 
+        if (stack.getItem() == TargetModItems.BOCEK.get()) {
+            return stack.getOrCreateTag().getInt("max_ammo");
+        }
+
         return stack.getOrCreateTag().getInt("ammo");
     }
 
     private static String getPlayerAmmoCount(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.getItem() == TargetModItems.MINIGUN.get()) {
+        if (stack.getItem() == TargetModItems.MINIGUN.get() || stack.getItem() == TargetModItems.BOCEK.get()) {
             return "";
         }
 
-        if (stack.getItem() == TargetModItems.BOCEK.get() || stack.getItem() == TargetModItems.M_79.get()
-                || stack.getItem() == TargetModItems.RPG.get() || stack.getItem() == TargetModItems.TASER.get()) {
+        if (stack.getItem() == TargetModItems.M_79.get() || stack.getItem() == TargetModItems.RPG.get() || stack.getItem() == TargetModItems.TASER.get()) {
             return "" + stack.getOrCreateTag().getInt("max_ammo");
         }
 

@@ -73,6 +73,11 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
     }
 
     @Override
+    protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
+        return 1.75F;
+    }
+
+    @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
@@ -141,7 +146,7 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
         double target = this.getPersistentData().getInt("find_target");
         if (target == 1) {
             final Vec3 center = new Vec3(this.getX(), this.getY(), this.getZ());
-            this.level().getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(1024 / 2d), e -> true)
+            this.level().getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(256 / 2d), e -> true)
                     .stream()
                     .sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center)))
                     .filter(e -> e instanceof Player player && !player.isCreative())

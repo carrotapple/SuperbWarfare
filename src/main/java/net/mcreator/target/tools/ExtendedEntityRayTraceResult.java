@@ -8,13 +8,18 @@ import net.minecraft.world.phys.EntityHitResult;
  */
 public class ExtendedEntityRayTraceResult extends EntityHitResult {
     private final boolean headshot;
+    private final boolean legshot;
 
     public ExtendedEntityRayTraceResult(ProjectileEntity.EntityResult result) {
         super(result.getEntity(), result.getHitPos());
         this.headshot = result.isHeadshot();
+        this.legshot = result.isLegshot();
     }
 
     public boolean isHeadshot() {
         return this.headshot;
+    }
+    public boolean isLegshot() {
+        return this.legshot;
     }
 }

@@ -54,6 +54,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     protected int shooterId;
     private float damage = 1f;
     private float headShot = 1f;
+    private float legShot = 0.4f;
     private boolean beast = false;
 
     public ProjectileEntity(EntityType<? extends ProjectileEntity> p_i50159_1_, Level p_i50159_2_) {
@@ -83,6 +84,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         return this;
     }
 
+    public ProjectileEntity legShot(float legShot) {
+        this.legShot = legShot;
+        return this;
+    }
+
     public ProjectileEntity beast() {
         this.beast = true;
         return this;
@@ -93,6 +99,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         Vec3 hitVec = null;
         Entity hitEntity = null;
         boolean headshot = false;
+        boolean legshot = false;
         List<Entity> entities = this.level()
                 .getEntities(this,
                         this.getBoundingBox()
@@ -118,9 +125,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 hitEntity = entity;
                 closestDistance = distanceToHit;
                 headshot = result.isHeadshot();
+                legshot = result.isLegshot();
             }
         }
-        return hitEntity != null ? new EntityResult(hitEntity, hitVec, headshot) : null;
+        return hitEntity != null ? new EntityResult(hitEntity, hitVec, headshot, legshot) : null;
     }
 
     @Nullable
@@ -180,12 +188,17 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         }
         Vec3 hitBoxPos = hitPos.subtract(entity.position());
         boolean headshot = false;
+        boolean legshot = false;
         float eyeHeight = entity.getEyeHeight();
-        if ((eyeHeight - 0.35) < hitBoxPos.y && hitBoxPos.y < (eyeHeight + 0.35)) {
+        float BodyHeight = entity.getBbHeight();
+        if ((eyeHeight - 0.3) < hitBoxPos.y && hitBoxPos.y < (eyeHeight + 0.4)) {
             headshot = true;
         }
+        if (hitBoxPos.y < (0.33 * BodyHeight)) {
+            legshot = true;
+        }
 
-        return new EntityResult(entity, hitPos, headshot);
+        return new EntityResult(entity, hitPos, headshot, legshot);
     }
 
     @Override
@@ -298,12 +311,12 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 }
             }
 
-            this.onHitEntity(entity, entityHitResult.isHeadshot());
+            this.onHitEntity(entity, entityHitResult.isHeadshot(), entityHitResult.isLegshot());
             entity.invulnerableTime = 0;
         }
     }
 
-    protected void onHitEntity(Entity entity, boolean headshot) {
+    protected void onHitEntity(Entity entity, boolean headshot, boolean legshot) {
         if (entity == null) return;
 
         if (entity instanceof PartEntity<?> part) {
@@ -350,7 +363,16 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(1, 5));
             }
             entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.headShot);
-        } else {
+        } else if (legshot) {
+            if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
+                var holder = Holder.direct(TargetModSounds.INDICATION.get());
+                player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
+
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
+            }
+            entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.legShot);
+        }
+        else {
             if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
                 var holder = Holder.direct(TargetModSounds.INDICATION.get());
                 player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
@@ -492,11 +514,13 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         private final Entity entity;
         private final Vec3 hitVec;
         private final boolean headshot;
+        private final boolean legshot;
 
-        public EntityResult(Entity entity, Vec3 hitVec, boolean headshot) {
+        public EntityResult(Entity entity, Vec3 hitVec, boolean headshot, boolean legshot) {
             this.entity = entity;
             this.hitVec = hitVec;
             this.headshot = headshot;
+            this.legshot = legshot;
         }
 
         /**
@@ -518,6 +542,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
          */
         public boolean isHeadshot() {
             return this.headshot;
+        }
+
+        public boolean isLegshot() {
+            return this.legshot;
         }
     }
 }

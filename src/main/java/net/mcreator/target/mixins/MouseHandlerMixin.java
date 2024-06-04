@@ -41,7 +41,7 @@ public class MouseHandlerMixin {
         if (!player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
             if (stack.is(TargetModTags.Items.GUN)) {
                 if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-                    additionalAdsSensitivity = (float) Mth.clamp((1 + 0.1f * custom_sens) * (1.25F * fov / original_fov) * (1 + 0.05f * Math.pow((original_fov / fov), 2)), 0.125F, 2F);
+                    additionalAdsSensitivity = (float) Mth.clamp((1 + 0.1f * custom_sens) * (1.25F * fov / original_fov) * (1 + 0.2f * Math.pow((original_fov / fov), 1.25)), 0.125F, 2F);
                 } else {
                     additionalAdsSensitivity = Mth.clamp((1 + 0.1f * custom_sens) * 1.25F, 0.125F, 2F);
                 }

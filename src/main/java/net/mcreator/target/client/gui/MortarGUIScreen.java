@@ -21,12 +21,12 @@ public class MortarGUIScreen extends AbstractContainerScreen<MortarGUIMenu> {
     private final static HashMap<String, Object> GUI_STATE = MortarGUIMenu.GUI_STATE;
     private final int x, y, z;
     private final Player entity;
-    Button button_zeng_da_yang_jiao;
-    Button button_empty;
-    Button button_10;
-    Button button_101;
-    Button button_05;
-    Button button_051;
+    Button button_angle_add_1;
+    Button button_angle_reduce_1;
+    Button button_angle_add_10;
+    Button button_angle_reduce_10;
+    Button button_angle_reduce_05;
+    Button button_angle_add_05;
 
     public MortarGUIScreen(MortarGUIMenu container, Inventory inventory, Component text) {
         super(container, inventory, text);
@@ -97,41 +97,41 @@ public class MortarGUIScreen extends AbstractContainerScreen<MortarGUIMenu> {
     @Override
     public void init() {
         super.init();
-        button_zeng_da_yang_jiao = Button.builder(Component.translatable("gui.target.mortar_gui.button_zeng_da_yang_jiao"), e -> {
+        button_angle_add_1 = Button.builder(Component.translatable("gui.target.mortar_gui.button_angle_add_1"), e -> {
             TargetMod.PACKET_HANDLER.sendToServer(new MortarGUIButtonMessage(0, x, y, z));
             MortarGUIButtonMessage.handleButtonAction(entity, 0);
         }).bounds(this.leftPos + 42, this.topPos + 124, 29, 20).build();
-        GUI_STATE.put("button:button_zeng_da_yang_jiao", button_zeng_da_yang_jiao);
-        this.addRenderableWidget(button_zeng_da_yang_jiao);
-        button_empty = Button.builder(Component.translatable("gui.target.mortar_gui.button_empty"), e -> {
+        GUI_STATE.put("button:button_angle_add_1", button_angle_add_1);
+        this.addRenderableWidget(button_angle_add_1);
+        button_angle_reduce_1 = Button.builder(Component.translatable("gui.target.mortar_gui.button_angle_reduce_1"), e -> {
             TargetMod.PACKET_HANDLER.sendToServer(new MortarGUIButtonMessage(1, x, y, z));
             MortarGUIButtonMessage.handleButtonAction(entity, 1);
         }).bounds(this.leftPos - 73, this.topPos + 124, 30, 20).build();
-        GUI_STATE.put("button:button_empty", button_empty);
-        this.addRenderableWidget(button_empty);
-        button_10 = Button.builder(Component.translatable("gui.target.mortar_gui.button_10"), e -> {
+        GUI_STATE.put("button:button_angle_reduce_1", button_angle_reduce_1);
+        this.addRenderableWidget(button_angle_reduce_1);
+        button_angle_add_10 = Button.builder(Component.translatable("gui.target.mortar_gui.button_angle_add_10"), e -> {
             TargetMod.PACKET_HANDLER.sendToServer(new MortarGUIButtonMessage(2, x, y, z));
             MortarGUIButtonMessage.handleButtonAction(entity, 2);
         }).bounds(this.leftPos + 43, this.topPos + 151, 28, 20).build();
-        GUI_STATE.put("button:button_10", button_10);
-        this.addRenderableWidget(button_10);
-        button_101 = Button.builder(Component.translatable("gui.target.mortar_gui.button_101"), e -> {
+        GUI_STATE.put("button:button_angle_add_10", button_angle_add_10);
+        this.addRenderableWidget(button_angle_add_10);
+        button_angle_reduce_10 = Button.builder(Component.translatable("gui.target.mortar_gui.button_angle_reduce_10"), e -> {
             TargetMod.PACKET_HANDLER.sendToServer(new MortarGUIButtonMessage(3, x, y, z));
             MortarGUIButtonMessage.handleButtonAction(entity, 3);
         }).bounds(this.leftPos - 73, this.topPos + 151, 30, 20).build();
-        GUI_STATE.put("button:button_101", button_101);
-        this.addRenderableWidget(button_101);
-        button_05 = Button.builder(Component.translatable("gui.target.mortar_gui.button_05"), e -> {
+        GUI_STATE.put("button:button_angle_reduce_10", button_angle_reduce_10);
+        this.addRenderableWidget(button_angle_reduce_10);
+        button_angle_reduce_05 = Button.builder(Component.translatable("gui.target.mortar_gui.button_angle_reduce_05"), e -> {
             TargetMod.PACKET_HANDLER.sendToServer(new MortarGUIButtonMessage(4, x, y, z));
             MortarGUIButtonMessage.handleButtonAction(entity, 4);
         }).bounds(this.leftPos - 73, this.topPos + 97, 30, 20).build();
-        GUI_STATE.put("button:button_05", button_05);
-        this.addRenderableWidget(button_05);
-        button_051 = Button.builder(Component.translatable("gui.target.mortar_gui.button_051"), e -> {
+        GUI_STATE.put("button:button_angle_reduce_05", button_angle_reduce_05);
+        this.addRenderableWidget(button_angle_reduce_05);
+        button_angle_add_05 = Button.builder(Component.translatable("gui.target.mortar_gui.button_angle_add_05"), e -> {
             TargetMod.PACKET_HANDLER.sendToServer(new MortarGUIButtonMessage(5, x, y, z));
             MortarGUIButtonMessage.handleButtonAction(entity, 5);
         }).bounds(this.leftPos + 42, this.topPos + 97, 29, 20).build();
-        GUI_STATE.put("button:button_051", button_051);
-        this.addRenderableWidget(button_051);
+        GUI_STATE.put("button:button_angle_add_05", button_angle_add_05);
+        this.addRenderableWidget(button_angle_add_05);
     }
 }

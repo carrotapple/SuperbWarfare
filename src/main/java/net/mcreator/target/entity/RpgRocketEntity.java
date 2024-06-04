@@ -72,13 +72,15 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
             }
         }
 
-        if (this.level() instanceof ServerLevel level) {
-            level.explode(this, this.getX(), this.getY(), this.getZ(), 5, Level.ExplosionInteraction.NONE);
+        if (this.tickCount > 2) {
+            if (this.level() instanceof ServerLevel level) {
+                level.explode(this, this.getX(), this.getY(), this.getZ(), 5, Level.ExplosionInteraction.NONE);
 
-            if (!entity.level().isClientSide()) {
-                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+                if (!entity.level().isClientSide()) {
+                    ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+                }
+                this.discard();
             }
-            this.discard();
         }
 
         if (entity instanceof LivingEntity) {
@@ -136,9 +138,11 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
 
-        if (this.level() instanceof ServerLevel level) {
-            level.explode(this, this.getX(), this.getY(), this.getZ(), 5, Level.ExplosionInteraction.NONE);
-            ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+        if (this.tickCount > 2) {
+            if (this.level() instanceof ServerLevel level) {
+                level.explode(this, this.getX(), this.getY(), this.getZ(), 5, Level.ExplosionInteraction.NONE);
+                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+            }
         }
 
         this.discard();
@@ -148,12 +152,12 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
     public void tick() {
         super.tick();
 
-        if (this.tickCount == 4) {
+        if (this.tickCount == 2) {
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(), 50, 0.8, 0.8, 0.8, 0.01, true);
             }
         }
-        if (this.tickCount > 4) {
+        if (this.tickCount > 2) {
             this.setDeltaMovement(new Vec3((1.04 * this.getDeltaMovement().x()), (1.04 * this.getDeltaMovement().y() - 0.02), (1.04 * this.getDeltaMovement().z())));
 
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {

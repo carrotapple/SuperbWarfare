@@ -207,30 +207,10 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
             if (!this.level().isClientSide()) this.discard();
         }
 
-        if (data.getDouble("def") >= 100) {
-            if (!this.level().isClientSide()) this.discard();
-
-            if (!level.isClientSide()) {
-                level.playSound(null, BlockPos.containing(x, y, z), SoundEvents.SHIELD_BREAK, SoundSource.PLAYERS, 1, 1);
-            } else {
-                level.playLocalSound(x, y, z, SoundEvents.SHIELD_BREAK, SoundSource.PLAYERS, 1, 1, false);
-            }
-
-            if (level instanceof ServerLevel server) {
-                ItemEntity entityToSpawn = new ItemEntity(server, x, y, z, new ItemStack(TargetModItems.CLAYMORE_MINE.get()));
-                entityToSpawn.setPickUpDelay(10);
-                server.addFreshEntity(entityToSpawn);
-            }
-        }
-
         this.removeAllEffects();
         this.clearFire();
 
-        if (data.getInt("trigger") <= 60) {
-            data.putInt("trigger", data.getInt("trigger") + 1);
-        }
-
-        if (data.getInt("trigger") >= 40) {
+        if (this.tickCount >= 40) {
             final Vec3 center = new Vec3(x + 1.5 * this.getLookAngle().x, y + 1.5 * this.getLookAngle().y, z + 1.5 * this.getLookAngle().z);
             for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(2.5 / 2d), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
                 var condition = this.getOwner() != target
