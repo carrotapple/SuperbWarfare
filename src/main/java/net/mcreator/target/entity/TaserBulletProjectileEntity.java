@@ -100,7 +100,7 @@ public class TaserBulletProjectileEntity extends ThrowableItemProjectile {
                     }
                 }
             }
-
+        }
 
         if (entity instanceof LivingEntity living) {
             if (living instanceof Player player && player.isCreative()){
