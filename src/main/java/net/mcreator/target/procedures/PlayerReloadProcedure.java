@@ -213,12 +213,12 @@ public class PlayerReloadProcedure {
                         tag.putBoolean("reloading", true);
                         tag.putBoolean("empty_reload", false);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reload_time", 44);
+                        tag.putDouble("reload_time", 61);
                     } else if (tag.getInt("ammo") == 0) {
                         tag.putBoolean("reloading", true);
                         tag.putDouble("empty_reload", 1);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reload_time", 55);
+                        tag.putDouble("reload_time", 82);
                     }
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.DEVOTION.get()

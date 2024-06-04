@@ -4,6 +4,7 @@ import net.mcreator.target.item.gun.Aa12Item;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
@@ -39,11 +40,11 @@ public class Aa12ItemModel extends GeoModel<Aa12Item> {
         double zp = 0;
         zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-        gun.setPosX(8.863f * (float) p);
+        gun.setPosX(3.48f * (float) p);
 
-        gun.setPosY(-0.88f * (float) p - (float) (1.2f * zp));
+        gun.setPosY(-0.92f * (float) p - (float) (0.2f * zp));
 
-        gun.setPosZ((float) p + (float) (3.3f * zp));
+        gun.setPosZ(0.1f * (float) p + (float) (0.3f * zp));
 
         gun.setRotZ((float) (0.02f * zp));
 
@@ -54,7 +55,7 @@ public class Aa12ItemModel extends GeoModel<Aa12Item> {
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
             shen.setPosY(0.02f * (float) (fp + 2 * fr));
-            shen.setPosZ(5f * (float) (fp + 0.54f * fr));
+            shen.setPosZ(1.3f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.003f * (float) (fp + fr));
             shen.setRotZ(0f);
             if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
@@ -64,7 +65,7 @@ public class Aa12ItemModel extends GeoModel<Aa12Item> {
             }
         } else {
             shen.setPosY(0.08f * (float) (fp + 2 * fr));
-            shen.setPosZ(6f * (float) (fp + 0.54f * fr));
+            shen.setPosZ(1.6f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.07f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
             if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
@@ -98,7 +99,7 @@ public class Aa12ItemModel extends GeoModel<Aa12Item> {
 
         root.setPosX(PosX);
 
-        root.setPosY((float) y + 2.5f * PosY);
+        root.setPosY((float) y + PosY);
 
         root.setRotX((float) x);
 
@@ -132,5 +133,13 @@ public class Aa12ItemModel extends GeoModel<Aa12Item> {
         move.setRotZ(3.7f * (float) yaw + 2.7f * (float) m);
 
         move.setRotY(1.9f * (float) yaw - 1.7f * (float) m);
+
+        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+
+        player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
+
+        player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
+
+        player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

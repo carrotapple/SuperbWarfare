@@ -91,11 +91,11 @@ public class Aa12Item extends GunItem implements GeoItem, AnimatedItem {
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.aa12.reloadempty"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.aa12.reload_empty"));
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading") && !stack.getOrCreateTag().getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.aa12.reload"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.aa12.reload_normal"));
             }
 
             if (stack.getOrCreateTag().getInt("fire_mode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
@@ -183,7 +183,7 @@ public class Aa12Item extends GunItem implements GeoItem, AnimatedItem {
                 tag.putDouble("reload_time", 0);
             }
             if (tag.getBoolean("reloading") && tag.getInt("ammo") == 0) {
-                if (tag.getDouble("reload_time") == 55) {
+                if (tag.getDouble("reload_time") == 82) {
                     entity.getPersistentData().putDouble("id", id);
                     if (entity instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, TargetModSounds.AA_12_RELOAD_EMPTY.get(), 100, 1);
@@ -203,7 +203,7 @@ public class Aa12Item extends GunItem implements GeoItem, AnimatedItem {
                     GunsTool.reload(entity, GunInfo.Type.SHOTGUN);
                 }
             } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
-                if (tag.getDouble("reload_time") == 44) {
+                if (tag.getDouble("reload_time") == 61) {
                     entity.getPersistentData().putDouble("id", id);
                     if (entity instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, TargetModSounds.AA_12_RELOAD_NORMAL.get(), 100, 1);
