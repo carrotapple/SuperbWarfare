@@ -81,8 +81,8 @@ public class ClientEventHandler {
             }
 
             data.putDouble("sway_time", data.getDouble("sway_time") + 0.015 * times);
-            data.putDouble("x", (pose * -0.008 * Math.sin(data.getDouble("sway_time")) * (1 - 0.9 * data.getDouble("zoom_time"))));
-            data.putDouble("y", (pose * 0.125 * Math.sin(data.getDouble("sway_time") - 1.585) * (1 - 0.9 * data.getDouble("zoom_time"))));
+            data.putDouble("x", (pose * -0.008 * Math.sin(data.getDouble("sway_time")) * (1 - 0.95 * data.getDouble("zoom_time"))));
+            data.putDouble("y", (pose * 0.125 * Math.sin(data.getDouble("sway_time") - 1.585) * (1 - 0.95 * data.getDouble("zoom_time"))));
         }
     }
 
@@ -136,9 +136,9 @@ public class ClientEventHandler {
                     data.putDouble("gun_moveX_time", 0);
                 }
 
-                data.putDouble("gun_move_posY", -0.135 * Math.sin(2 * Math.PI * (data.getDouble("gun_moveY_time") - 0.25)) * (1 - 0.75 * data.getDouble("zoom_time")));
+                data.putDouble("gun_move_posY", -0.135 * Math.sin(2 * Math.PI * (data.getDouble("gun_moveY_time") - 0.25)) * (1 - 0.95 * data.getDouble("zoom_time")));
 
-                data.putDouble("gun_move_posX", 0.2 * Math.sin(1 * Math.PI * data.getDouble("gun_moveX_time")) * (1 - 0.75 * data.getDouble("zoom_time")));
+                data.putDouble("gun_move_posX", 0.2 * Math.sin(1 * Math.PI * data.getDouble("gun_moveX_time")) * (1 - 0.95 * data.getDouble("zoom_time")));
 
             } else {
                 if (data.getDouble("gun_moveY_time") > 0.25) {
@@ -154,15 +154,15 @@ public class ClientEventHandler {
                 }
 
                 if (data.getDouble("gun_move_posX") > 0) {
-                    data.putDouble("gun_move_posX", data.getDouble("gun_move_posX") - 1.5 * (Math.pow(data.getDouble("gun_move_posX"), 2) * times) * (1 - 0.5 * data.getDouble("zoom_time")));
+                    data.putDouble("gun_move_posX", data.getDouble("gun_move_posX") - 1.5 * (Math.pow(data.getDouble("gun_move_posX"), 2) * times) * (1 - 0.75 * data.getDouble("zoom_time")));
                 } else {
-                    data.putDouble("gun_move_posX", data.getDouble("gun_move_posX") + 1.5 * (Math.pow(data.getDouble("gun_move_posX"), 2) * times) * (1 - 0.5 * data.getDouble("zoom_time")));
+                    data.putDouble("gun_move_posX", data.getDouble("gun_move_posX") + 1.5 * (Math.pow(data.getDouble("gun_move_posX"), 2) * times) * (1 - 0.75 * data.getDouble("zoom_time")));
                 }
 
                 if (data.getDouble("gun_move_posY") > 0) {
-                    data.putDouble("gun_move_posY", data.getDouble("gun_move_posY") - 1.5 * (Math.pow(data.getDouble("gun_move_posY"), 2) * times) * (1 - 0.5 * data.getDouble("zoom_time")));
+                    data.putDouble("gun_move_posY", data.getDouble("gun_move_posY") - 1.5 * (Math.pow(data.getDouble("gun_move_posY"), 2) * times) * (1 - 0.75 * data.getDouble("zoom_time")));
                 } else {
-                    data.putDouble("gun_move_posY", data.getDouble("gun_move_posY") + 1.5 * (Math.pow(data.getDouble("gun_move_posY"), 2) * times) * (1 - 0.5 * data.getDouble("zoom_time")));
+                    data.putDouble("gun_move_posY", data.getDouble("gun_move_posY") + 1.5 * (Math.pow(data.getDouble("gun_move_posY"), 2) * times) * (1 - 0.75 * data.getDouble("zoom_time")));
                 }
 
             }
@@ -328,10 +328,10 @@ public class ClientEventHandler {
             if (-0.8 < velocity + 0.078 && velocity + 0.078 < 0.8) {
                 if (data.getDouble("vy") < entity.getDeltaMovement().y() + 0.078) {
                     data.putDouble("vy",
-                            ((data.getDouble("vy") + 0.5 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.4 * data.getDouble("zoom_time"))));
+                            ((data.getDouble("vy") + 0.5 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.6 * data.getDouble("zoom_time"))));
                 } else {
                     data.putDouble("vy",
-                            ((data.getDouble("vy") - 0.5 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.4 * data.getDouble("zoom_time"))));
+                            ((data.getDouble("vy") - 0.5 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.6 * data.getDouble("zoom_time"))));
                 }
             }
             if (data.getDouble("vy") > 0.8) {
