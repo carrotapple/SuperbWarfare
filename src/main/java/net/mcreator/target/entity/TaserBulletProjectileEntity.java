@@ -11,6 +11,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -99,16 +100,14 @@ public class TaserBulletProjectileEntity extends ThrowableItemProjectile {
                     }
                 }
             }
-        }
 
-        if (this.getOwner() instanceof LivingEntity source) {
-            CompoundTag tag = source.getMainHandItem().getOrCreateTag();
-            tag.putInt("hit_count", tag.getInt("hit_count") + 1);
-        }
 
-        if (entity instanceof Player player && !player.isCreative()) {
-            if (!player.level().isClientSide()) {
-                player.addEffect(new MobEffectInstance(TargetModMobEffects.SHOCK.get(), 100, 0));
+        if (entity instanceof LivingEntity living) {
+            if (living instanceof Player player && player.isCreative()){
+                return;
+            }
+            if (!living.level().isClientSide()) {
+                living.addEffect(new MobEffectInstance(TargetModMobEffects.SHOCK.get(), 100, 0));
             }
         }
 

@@ -1,10 +1,7 @@
 package net.mcreator.target.entity;
 
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.init.TargetModDamageTypes;
-import net.mcreator.target.init.TargetModEntities;
-import net.mcreator.target.init.TargetModParticleTypes;
-import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.init.*;
 import net.mcreator.target.network.message.ClientIndicatorMessage;
 import net.mcreator.target.network.message.PlayerGunKillMessage;
 import net.mcreator.target.tools.ExtendedEntityRayTraceResult;
@@ -22,6 +19,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -54,7 +53,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     protected int shooterId;
     private float damage = 1f;
     private float headShot = 1f;
-    private float legShot = 0.4f;
+    private float legShot = 0.5f;
     private boolean beast = false;
 
     public ProjectileEntity(EntityType<? extends ProjectileEntity> p_i50159_1_, Level p_i50159_2_) {
@@ -371,6 +370,14 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
             }
             entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.legShot);
+            if (entity instanceof LivingEntity living) {
+                if (living instanceof Player player && player.isCreative()){
+                    return;
+                }
+                if (!living.level().isClientSide()) {
+                    living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,20,2,false,false));
+                }
+            }
         }
         else {
             if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {

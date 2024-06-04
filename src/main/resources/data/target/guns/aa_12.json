@@ -4,7 +4,7 @@
   "dev": 3.5,
   "recoil_x": 0.006,
   "recoil_y": 0.018,
-  "damage": 1.5,
+  "damage": 2,
   "headshot": 1.5,
   "velocity": 16,
   "mag": 25,
