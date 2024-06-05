@@ -327,17 +327,17 @@ public class PlayerEventHandler {
                     recoil = recoil + 0.017 * (2.4 - recoil);
 
                     double sinRes = 0;
-                    sinRes = 1 * Math.sin(Math.PI * (2 * recoil - 1)) * (0.5 / (2 * recoil - 1));
+                    sinRes = 1.1 * Math.sin(Math.PI * (2 * recoil - 1)) * (0.5 / (2 * recoil - 1));
 
                     if (sinRes < 0){
-                        sinRes = 4 * sinRes;
+                        sinRes = 3.5 * sinRes;
                     }
 
                     float newPitch = ((float) (player.getXRot() - 5f * recoilY * ry * (sinRes + Mth.clamp(0.8 - recoil,0,0.8))));
                     player.setXRot(newPitch);
                     player.xRotO = player.getXRot();
 
-                    float newYaw = ((float) (player.getYRot() - 5f * recoilYaw * recoilX * rx * sinRes));
+                    float newYaw = ((float) (player.getYRot() - 4f * recoilYaw * recoilX * rx * sinRes));
                     player.setYRot(newYaw);
                     player.yRotO = player.getYRot();
                 }
