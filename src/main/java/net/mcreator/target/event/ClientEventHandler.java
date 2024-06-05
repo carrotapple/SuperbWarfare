@@ -284,16 +284,16 @@ public class ClientEventHandler {
             data.putDouble("firetime", 0.02);
             data.putDouble("fire_rotx_time", 0.02);
             if (data.getDouble("firepos2") < 0.6) {
-                data.putDouble("firepos2", (data.getDouble("firepos2") + 0.04 * times));
+                data.putDouble("firepos2", (data.getDouble("firepos2") + 0.06 * times));
             }
         }
         if (0 < data.getDouble("firepos2")) {
-            data.putDouble("firepos2", (data.getDouble("firepos2") - 0.01 * times));
+            data.putDouble("firepos2", (data.getDouble("firepos2") - 0.015 * times));
         } else {
             data.putDouble("firepos2", 0);
         }
         if (0 < data.getDouble("firetime")) {
-            data.putDouble("firetime", (data.getDouble("firetime") + 0.12 * (1.1 - data.getDouble("firetime")) * times));
+            data.putDouble("firetime", (data.getDouble("firetime") + 0.18 * (1.1 - data.getDouble("firetime")) * times));
         }
         if (0 < data.getDouble("firetime") && data.getDouble("firetime") < 0.454) {
             data.putDouble("fire_pos",
@@ -307,7 +307,7 @@ public class ClientEventHandler {
 
 
         if (0 < data.getDouble("fire_rotx_time") && data.getDouble("fire_rotx_time") < 1.732) {
-            data.putDouble("fire_rotx_time", (data.getDouble("fire_rotx_time") + 0.12 * (1.9 - data.getDouble("fire_rotx_time")) * times));
+            data.putDouble("fire_rotx_time", (data.getDouble("fire_rotx_time") + 0.18 * (1.9 - data.getDouble("fire_rotx_time")) * times));
         }
 
         if (0 < data.getDouble("fire_rotx_time") && data.getDouble("fire_rotx_time") < 1.732) {

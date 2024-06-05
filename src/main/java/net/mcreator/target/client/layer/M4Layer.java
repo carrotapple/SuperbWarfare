@@ -14,8 +14,8 @@ import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 public class M4Layer extends GeoRenderLayer<M4Item> {
     private static final ResourceLocation LAYER = new ResourceLocation("target", "textures/item/m4_e.png");
 
-    public M4Layer(GeoRenderer<M4Item> entityRenderer) {
-        super(entityRenderer);
+    public M4Layer(GeoRenderer<M4Item> itemGeoRenderer) {
+        super(itemGeoRenderer);
     }
 
     @Override

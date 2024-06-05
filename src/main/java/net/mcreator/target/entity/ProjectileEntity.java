@@ -33,6 +33,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.*;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.entity.PartEntity;
 import net.minecraftforge.network.PacketDistributor;
@@ -273,27 +274,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     protected void onProjectileTick() {
     }
-
-    protected void onHitBlock(Vec3 location) {
-        if (this.level() instanceof ServerLevel serverLevel) {
-            if (this.beast) {
-                ParticleTool.sendParticle(serverLevel, ParticleTypes.END_ROD, location.x, location.y, location.z, 15, 0.1, 0.1, 0.1, 0.05, true);
-            } else {
-                ParticleTool.sendParticle(serverLevel, TargetModParticleTypes.BULLET_HOLE.get(), location.x, location.y, location.z, 1, 0, 0, 0, 0, true);
-                ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, location.x, location.y, location.z, 3, 0, 0.1, 0, 0.01, true);
-
-                this.discard();
-            }
-            serverLevel.playSound(null, new BlockPos((int) location.x, (int) location.y, (int) location.z), TargetModSounds.LAND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
-        }
-    }
-
     private void onHit(HitResult result) {
         if (result instanceof BlockHitResult blockHitResult) {
             if (blockHitResult.getType() == HitResult.Type.MISS) {
                 return;
             }
-
             Vec3 hitVec = result.getLocation();
             this.onHitBlock(hitVec);
         }
@@ -312,6 +297,21 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
             this.onHitEntity(entity, entityHitResult.isHeadshot(), entityHitResult.isLegshot());
             entity.invulnerableTime = 0;
+        }
+    }
+
+    protected void onHitBlock(Vec3 location) {
+
+        if (this.level() instanceof ServerLevel serverLevel) {
+            if (this.beast) {
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.END_ROD, location.x, location.y, location.z, 15, 0.1, 0.1, 0.1, 0.05, true);
+            } else {
+                ParticleTool.sendParticle(serverLevel, TargetModParticleTypes.BULLET_HOLE.get(), location.x, location.y, location.z, 1, 0, 0, 0, 0, true);
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, location.x, location.y, location.z, 3, 0, 0.1, 0, 0.01, true);
+
+                this.discard();
+            }
+            serverLevel.playSound(null, new BlockPos((int) location.x, (int) location.y, (int) location.z), TargetModSounds.LAND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
         }
     }
 

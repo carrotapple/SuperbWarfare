@@ -190,6 +190,9 @@ public class M60Item extends GunItem implements GeoItem, AnimatedItem {
                         SoundTool.playLocalSound(serverPlayer, TargetModSounds.M_60_RELOAD_NORMAL.get(), 100, 1);
                     }
                 }
+                if (tag.getDouble("reload_time") <= 55) {
+                    tag.putDouble("empty", 0);
+                }
                 if (player.getMainHandItem().getItem() == itemStack.getItem()
                         && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
                     if (tag.getDouble("reload_time") > 0) {
