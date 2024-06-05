@@ -7,7 +7,9 @@ import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -16,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,6 +26,22 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
+
+    @SubscribeEvent
+    public static void onRenderHand(RenderHandEvent event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) {
+            return;
+        }
+        var data = player.getPersistentData();
+        float xRotOffset = Mth.lerp(event.getPartialTick(), player.xBobO, player.xBob);
+        float yRotOffset = Mth.lerp(event.getPartialTick(), player.yBobO, player.yBob);
+        float xRot = player.getViewXRot(event.getPartialTick()) - xRotOffset;
+        float yRot = player.getViewYRot(event.getPartialTick()) - yRotOffset;
+        data.putDouble("xRot", Mth.clamp(0.05 * xRot,-5,5) * (1 -  0.75 * data.getDouble("zoom_time")));
+        data.putDouble("yRot", Mth.clamp(0.05 * yRot,-10,10) * (1 - 0.75 * data.getDouble("zoom_time")));
+        data.putDouble("zRot", Mth.clamp(0.1 * yRot,-10,10) * (1 - data.getDouble("zoom_time")));
+    }
 
     @SubscribeEvent
     public static void computeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
@@ -183,155 +202,16 @@ public class ClientEventHandler {
                         ((data.getDouble("move") - Math.pow(Math.abs(data.getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * data.getDouble("zoom_time")))
                                 * (1 - 0.1 * data.getDouble("zoom_time"))));
             }
-            if (data.getDouble("turnr") == 1) {
-                data.putDouble("turntimeyaw", (data.getDouble("turntimeyaw") + 0.08 * times * Math.pow(data.getDouble("amplitudeyaw"), 2)));
-            }
-            if (data.getDouble("turnl") == 1) {
-                data.putDouble("turntimeyaw", (data.getDouble("turntimeyaw") - 0.08 * times * Math.pow(data.getDouble("amplitudeyaw"), 2)));
-            }
-            if (data.getDouble("turntimeyaw") > 1) {
-                data.putDouble("turntimeyaw", 1);
-            }
-            if (data.getDouble("turntimeyaw") < -1) {
-                data.putDouble("turntimeyaw", (-1));
-            }
-            if (data.getDouble("turntimeyaw") >= 0) {
-                if (data.getDouble("turnr") == 0) {
-                    data.putDouble("turntimeyaw", (data.getDouble("turntimeyaw") - 0.02 * times));
-                }
-            }
-            if (data.getDouble("turntimeyaw") < 0) {
-                if (data.getDouble("turnl") == 0) {
-                    data.putDouble("turntimeyaw", (data.getDouble("turntimeyaw") + 0.02 * times));
-                }
-            }
-            if (data.getDouble("amplitudeyaw") < Math.abs(data.getDouble("r1") - data.getDouble("r2"))) {
-                data.putDouble("amplitudeyaw", (data.getDouble("amplitudeyaw")
-                        + 0.005 * Math.sin(0.5 * Math.PI * (Math.abs(data.getDouble("r1") - data.getDouble("r2")) - data.getDouble("amplitudeyaw")))));
-            } else {
-                data.putDouble("amplitudeyaw", (data.getDouble("amplitudeyaw")
-                        - 0.005 * Math.sin(0.5 * Math.PI * (Math.abs(data.getDouble("r1") - data.getDouble("r2")) - data.getDouble("amplitudeyaw")))));
-            }
-            if (data.getDouble("amplitudeyaw") > 0) {
-                data.putDouble("amplitudeyaw", (data.getDouble("amplitudeyaw") - 0.01 * Math.pow(data.getDouble("amplitudeyaw"), 2)));
-            } else {
-                data.putDouble("amplitudeyaw", (data.getDouble("amplitudeyaw") + 0.01 * Math.pow(data.getDouble("amplitudeyaw"), 2)));
-            }
-            data.putDouble("yaw", (0.04 * Math.tan(0.25 * Math.PI * data.getDouble("turntimeyaw")) * (1 - 1 * data.getDouble("zoom_time"))));
-            if (data.getDouble("turnu") == 1) {
-                data.putDouble("turntimepitch", (data.getDouble("turntimepitch") + 0.02 * times));
-            }
-            if (data.getDouble("turnd") == 1) {
-                data.putDouble("turntimepitch", (data.getDouble("turntimepitch") - 0.02 * times));
-            }
-            if (data.getDouble("turntimepitch") > 1) {
-                data.putDouble("turntimepitch", 1);
-            }
-            if (data.getDouble("turntimepitch") < -1) {
-                data.putDouble("turntimepitch", (-1));
-            }
-            if (data.getDouble("turntimepitch") >= 0) {
-                if (data.getDouble("turnu") == 0) {
-                    data.putDouble("turntimepitch", (data.getDouble("turntimepitch") - 0.04 * times));
-                }
-            }
-            if (data.getDouble("turntimepitch") < 0) {
-                if (data.getDouble("turnd") == 0) {
-                    data.putDouble("turntimepitch", (data.getDouble("turntimepitch") + 0.04 * times));
-                }
-            }
-            if (data.getDouble("amplitudepitch") < Math.abs(data.getDouble("p1") - data.getDouble("p2"))) {
-                data.putDouble("amplitudepitch", (data.getDouble("amplitudepitch")
-                        + 0.00001 * Math.pow(Math.abs(data.getDouble("p1") - data.getDouble("p2")) - data.getDouble("amplitudepitch"), 2)));
-            } else {
-                data.putDouble("amplitudepitch", (data.getDouble("amplitudepitch")
-                        - 0.00001 * Math.pow(Math.abs(data.getDouble("p1") - data.getDouble("p2")) - data.getDouble("amplitudepitch"), 2)));
-            }
-            if (data.getDouble("amplitudepitch") > 0) {
-                data.putDouble("amplitudepitch", (data.getDouble("amplitudepitch") - 0.01 * Math.pow(data.getDouble("amplitudepitch"), 2)));
-            } else {
-                data.putDouble("amplitudepitch", (data.getDouble("amplitudepitch") + 0.01 * Math.pow(data.getDouble("amplitudepitch"), 2)));
-            }
-            data.putDouble("gun_pitch",
-                    ((0.15 * data.getDouble("amplitudepitch") * Math.tan(0.25 * Math.PI * data.getDouble("turntimepitch")) * (1 - 0.8 * data.getDouble("zoom_time"))
-                            - 0.05 * data.getDouble("vy")) * (1 - 1 * data.getDouble("zoom_time"))));
-            if (data.getDouble("firetime") == 0) {
-                data.putDouble("rottime", (data.getDouble("rottime") + 1));
-                if (data.getDouble("rottime") >= 3) {
-                    data.putDouble("rottime", 0);
-                }
-                if (data.getDouble("rottime") == 1) {
-                    data.putDouble("r1", (entity.getYRot()));
-                    data.putDouble("p1", (entity.getXRot()));
-                }
-                if (data.getDouble("rottime") == 2) {
-                    data.putDouble("r2", (entity.getYRot()));
-                    data.putDouble("p2", (entity.getXRot()));
-                }
-                if (0 > data.getDouble("r1") - data.getDouble("r2")) {
-                    data.putDouble("rot", (data.getDouble("rot") - 0.01));
-                } else if (0 < data.getDouble("r1") - data.getDouble("r2")) {
-                    data.putDouble("rot", (data.getDouble("rot") + 0.01));
-                } else if (0 == data.getDouble("r1") - data.getDouble("r2")) {
-                    data.putDouble("rot", 0);
-                }
-                if (0 > data.getDouble("p1") - data.getDouble("p2")) {
-                    data.putDouble("pit", (data.getDouble("pit") - 0.01));
-                } else if (0 < data.getDouble("p1") - data.getDouble("p2")) {
-                    data.putDouble("pit", (data.getDouble("pit") + 0.01));
-                } else if (0 == data.getDouble("p1") - data.getDouble("p2")) {
-                    data.putDouble("pit", 0);
-                }
-                if (data.getDouble("rot") < 0) {
-                    data.putDouble("rot", (data.getDouble("rot") + 2 * times * Math.pow(data.getDouble("rot"), 2)));
-                    if (data.getDouble("rot") < -0.04) {
-                        data.putDouble("turnr", 1);
-                        data.putDouble("turnl", 0);
-                    }
-                } else if (data.getDouble("rot") > 0) {
-                    data.putDouble("rot", (data.getDouble("rot") - 2 * times * Math.pow(data.getDouble("rot"), 2)));
-                    if (data.getDouble("rot") > 0.04) {
-                        data.putDouble("turnl", 1);
-                        data.putDouble("turnr", 0);
-                    }
-                } else {
-                    data.putDouble("rot", 0);
-                    data.putDouble("turnl", 0);
-                    data.putDouble("turnr", 0);
-                }
-                if (data.getDouble("pit") < 0) {
-                    data.putDouble("pit", (data.getDouble("pit") + 2 * times * Math.pow(data.getDouble("pit"), 2)));
-                    if (data.getDouble("pit") < -0.034) {
-                        data.putDouble("turnu", 1);
-                        data.putDouble("turnd", 0);
-                    }
-                } else if (data.getDouble("pit") > 0) {
-                    data.putDouble("pit", (data.getDouble("pit") - 2 * times * Math.pow(data.getDouble("pit"), 2)));
-                    if (data.getDouble("pit") > 0.034) {
-                        data.putDouble("turnd", 1);
-                        data.putDouble("turnu", 0);
-                    }
-                } else {
-                    data.putDouble("pit", 0);
-                    data.putDouble("turnd", 0);
-                    data.putDouble("turnu", 0);
-                }
-            } else {
-                data.putDouble("pit", 0);
-                data.putDouble("turnl", 0);
-                data.putDouble("turnr", 0);
-                data.putDouble("turnd", 0);
-                data.putDouble("turnu", 0);
-            }
+
             double velocity = entity.getDeltaMovement().y();
 
             if (-0.8 < velocity + 0.078 && velocity + 0.078 < 0.8) {
                 if (data.getDouble("vy") < entity.getDeltaMovement().y() + 0.078) {
                     data.putDouble("vy",
-                            ((data.getDouble("vy") + 0.5 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.6 * data.getDouble("zoom_time"))));
+                            ((data.getDouble("vy") + 0.5 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.3 * data.getDouble("zoom_time"))));
                 } else {
                     data.putDouble("vy",
-                            ((data.getDouble("vy") - 0.5 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.6 * data.getDouble("zoom_time"))));
+                            ((data.getDouble("vy") - 0.5 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.3 * data.getDouble("zoom_time"))));
                 }
             }
             if (data.getDouble("vy") > 0.8) {

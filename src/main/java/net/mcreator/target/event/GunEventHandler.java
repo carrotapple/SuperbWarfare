@@ -35,64 +35,8 @@ public class GunEventHandler {
         }
 
         if (event.phase == TickEvent.Phase.END) {
-            handleGunsDev(player);
             handleGunFire(player);
             handleMiniGunFire(player);
-        }
-    }
-
-    private static void handleGunsDev(Player player) {
-        if (player == null) {
-            return;
-        }
-
-        ItemStack stack = player.getMainHandItem();
-
-        double basic = stack.getOrCreateTag().getDouble("dev");
-
-        double sprint = player.isSprinting() ? 0.5 * basic : 0;
-        double sneaking = player.isShiftKeyDown() ? (-0.25) * basic : 0;
-        double prone = player.getPersistentData().getDouble("prone") > 0 ? (-0.5) * basic : 0;
-        double jump = player.onGround() ? 0 : 1.5 * basic;
-        double fire = stack.getOrCreateTag().getInt("fire_animation") > 0 ? 0.5 * basic : 0;
-        double ride = player.isPassenger() ? (-0.5) * basic : 0;
-
-        double walk;
-        if (player.getPersistentData().getDouble("move_forward") == 1 || player.getPersistentData().getDouble("move_backward") == 1 ||
-                player.getPersistentData().getDouble("move_left") == 1 || player.getPersistentData().getDouble("move_right") == 1) {
-            walk = 0.2 * basic;
-        } else {
-            walk = 0;
-        }
-
-        double zoom;
-        if (player.getPersistentData().getDouble("zoom_animation_time") > 4) {
-            if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
-                zoom = 0.0001;
-            } else if (stack.is(TargetModTags.Items.SHOTGUN)) {
-                zoom = 0.9;
-            } else {
-                zoom = 0.0001;
-            }
-        } else {
-            zoom = 1;
-        }
-
-        double index = zoom * (basic + walk + sprint + sneaking + prone + jump + fire + ride);
-
-        if (player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) < index) {
-            player.getAttribute(TargetModAttributes.SPREAD.get())
-                    .setBaseValue(player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) + 0.125 * Math.pow(index - player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()), 2));
-        } else {
-            player.getAttribute(TargetModAttributes.SPREAD.get())
-                    .setBaseValue(player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) - 0.125 * Math.pow(index - player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()), 2));
-        }
-
-        if (player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) > 15) {
-            player.getAttribute(TargetModAttributes.SPREAD.get()).setBaseValue(15);
-        }
-        if (player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) < 0) {
-            player.getAttribute(TargetModAttributes.SPREAD.get()).setBaseValue(0);
         }
     }
 

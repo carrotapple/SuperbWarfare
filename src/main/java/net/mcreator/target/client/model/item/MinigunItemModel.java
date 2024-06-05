@@ -4,6 +4,7 @@ import net.mcreator.target.item.gun.Minigun;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
@@ -105,26 +106,24 @@ public class MinigunItemModel extends GeoModel<Minigun> {
 
         CoreGeoBone move = getAnimationProcessor().getBone("move");
 
-        double m = 0;
-        m = player.getPersistentData().getDouble("move");
+        double m = player.getPersistentData().getDouble("move");
 
-        double yaw = 0;
-        yaw = player.getPersistentData().getDouble("yaw");
-
-        double pit = 0;
-        pit = player.getPersistentData().getDouble("gun_pitch");
-
-        double vy = 0;
-        vy = player.getPersistentData().getDouble("vy");
-
-        move.setPosY(-1.8f * (float) vy);
+        double vy = player.getPersistentData().getDouble("vy");
 
         move.setPosX(9.3f * (float) m);
 
-        move.setRotX(2.0f * (float) pit);
+        move.setPosY(-0.95f * (float) vy);
 
-        move.setRotZ(2.7f * (float) yaw + 2.7f * (float) m);
+        double xRot = player.getPersistentData().getDouble("xRot");
 
-        move.setRotY(3.9f * (float) yaw - 1.7f * (float) m);
+        double yRot = player.getPersistentData().getDouble("yRot");
+
+        double zRot = player.getPersistentData().getDouble("zRot");
+
+        move.setRotX(Mth.DEG_TO_RAD * (float) xRot);
+
+        move.setRotY(Mth.DEG_TO_RAD * (float) yRot);
+
+        move.setRotZ(2.7f * (float) m + Mth.DEG_TO_RAD * (float) zRot);
     }
 }

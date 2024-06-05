@@ -4,6 +4,7 @@ import net.mcreator.target.item.gun.Mk14Item;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
@@ -141,39 +142,24 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
 
         CoreGeoBone move = getAnimationProcessor().getBone("move");
 
-        double m = 0;
-        m = player.getPersistentData().getDouble("move");
+        double m = player.getPersistentData().getDouble("move");
 
-        double yaw = 0;
-        yaw = player.getPersistentData().getDouble("yaw");
+        double vy = player.getPersistentData().getDouble("vy");
 
-        double pit = 0;
-        pit = player.getPersistentData().getDouble("gun_pitch");
+        move.setPosX(9.3f * (float) m);
 
-        double vy = 0;
-        vy = player.getPersistentData().getDouble("vy");
+        move.setPosY(-0.95f * (float) vy);
 
-        move.setPosY(-1 * (float) vy);
+        double xRot = player.getPersistentData().getDouble("xRot");
 
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+        double yRot = player.getPersistentData().getDouble("yRot");
 
-            move.setPosX(0);
+        double zRot = player.getPersistentData().getDouble("zRot");
 
-            move.setRotX(0);
+        move.setRotX(1.6f * Mth.DEG_TO_RAD * (float) xRot);
 
-            move.setRotZ(0);
+        move.setRotY(1.6f * Mth.DEG_TO_RAD * (float) yRot);
 
-            move.setRotY(0);
-
-        } else {
-
-            move.setPosX(9.3f * (float) m);
-
-            move.setRotX(2.0f * (float) pit);
-
-            move.setRotZ(2.7f * (float) yaw + 2.7f * (float) m);
-
-            move.setRotY(3.9f * (float) yaw - 1.7f * (float) m);
-        }
+        move.setRotZ(2.7f * (float) m + Mth.DEG_TO_RAD * (float) zRot);
     }
 }
