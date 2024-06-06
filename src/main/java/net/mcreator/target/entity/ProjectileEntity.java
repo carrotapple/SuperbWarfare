@@ -256,7 +256,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         double y = vec.y;
         double z = vec.z;
 
-        this.setDeltaMovement(x - 0.02 * x, y - 0.05, z - 0.02 * z);
+        this.setDeltaMovement(x - 0.02 * x, y - 0.02 * y - 0.05, z - 0.02 * z);
 
         this.tickCount++;
         if (this.tickCount > 30) {
