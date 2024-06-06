@@ -71,7 +71,7 @@ public abstract class GunItem extends Item {
                 tag.putDouble("empty", 1);
             }
             if (itemstack.getItem() == TargetModItems.SKS.get() && tag.getInt("ammo") == 0) {
-                tag.putDouble("gj", 1);
+                tag.putDouble("HoldOpen", 1);
             }
             if (itemstack.getItem() == TargetModItems.M_60.get() && tag.getInt("ammo") <= 5) {
                 tag.putDouble("empty", 1);

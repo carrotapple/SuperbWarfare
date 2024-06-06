@@ -38,7 +38,7 @@ public class SksItemModel extends GeoModel<SksItem> {
         Player player = Minecraft.getInstance().player;
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.getOrCreateTag().getDouble("gj") == 1) {
+        if (stack.getOrCreateTag().getDouble("HoldOpen") == 1) {
             bolt.setPosZ(3f);
         }
 

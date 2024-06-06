@@ -173,7 +173,7 @@ public class Mk14Item extends GunItem implements GeoItem, AnimatedItem {
                     tag.putDouble("reload_time", 0);
                 }
                 if (tag.getDouble("reload_time") == 5 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    tag.putDouble("gj", 0);
+                    tag.putDouble("HoldOpen", 0);
                 }
                 if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
                     GunsTool.reload(entity, GunInfo.Type.RIFLE);

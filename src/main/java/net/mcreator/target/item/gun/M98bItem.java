@@ -82,7 +82,7 @@ public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.draw"));
             }
 
-            if (stack.getOrCreateTag().getDouble("bolt_action_anim") > 0) {
+            if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.shift"));
             }
 
@@ -91,11 +91,11 @@ public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.reload"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.reload_empty"));
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading") && !stack.getOrCreateTag().getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.reload2"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.reload_normal"));
             }
 
             if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
@@ -175,7 +175,7 @@ public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
                 tag.putDouble("reload_time", 0);
             }
             if (tag.getBoolean("reloading") && tag.getInt("ammo") == 0) {
-                if (tag.getDouble("reload_time") == 79) {
+                if (tag.getDouble("reload_time") == 83) {
                     entity.getPersistentData().putDouble("id", id);
                     if (entity instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, TargetModSounds.M_98B_RELOAD_EMPTY.get(), 100, 1);
@@ -195,7 +195,7 @@ public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
                     GunsTool.reload(entity, GunInfo.Type.SNIPER);
                 }
             } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
-                if (tag.getDouble("reload_time") == 57) {
+                if (tag.getDouble("reload_time") == 61) {
                     entity.getPersistentData().putDouble("id", id);
                     if (entity instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, TargetModSounds.M_98B_RELOAD_NORMAL.get(), 100, 1);

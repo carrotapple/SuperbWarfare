@@ -101,11 +101,11 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.draw"));
             }
 
-            if (stack.getOrCreateTag().getBoolean("zoom_fire") && stack.getOrCreateTag().getDouble("bolt_action_anim") > 0) {
+            if (stack.getOrCreateTag().getBoolean("zoom_fire") && stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.shift2"));
             }
 
-            if (!stack.getOrCreateTag().getBoolean("zoom_fire") && stack.getOrCreateTag().getDouble("bolt_action_anim") > 0) {
+            if (!stack.getOrCreateTag().getBoolean("zoom_fire") && stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.shift"));
             }
 

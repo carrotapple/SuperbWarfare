@@ -117,6 +117,8 @@ public class M60ItemModel extends GeoModel<M60Item> {
             }
         }
 
+        tiba.setRotZ((float) (-0.25f * fp + 0.4 * fr));
+
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
 
         if (stack.getOrCreateTag().getDouble("flash_time") > 0) {

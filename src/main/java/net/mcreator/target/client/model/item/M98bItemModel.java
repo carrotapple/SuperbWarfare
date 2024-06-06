@@ -69,16 +69,16 @@ public class M98bItemModel extends GeoModel<M98bItem> {
 
         gun.setPosX(2.245f * (float) p);
 
-        gun.setPosY(0.5225f * (float) p - (float) (0.4f * zp));
+        gun.setPosY(0.3f * (float) p - (float) (0.2f * zp));
 
-        gun.setPosZ(6.2f * (float) p + (float) (0.3f * zp));
+        gun.setPosZ(4.2f * (float) p + (float) (0.3f * zp));
 
         gun.setRotZ((float) (0.02f * zp));
 
         CoreGeoBone holo = getAnimationProcessor().getBone("scope2");
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
         CoreGeoBone qiang = getAnimationProcessor().getBone("qiang");
-        if (gun.getPosX() > 2) {
+        if (gun.getPosX() > 1.9) {
             holo.setScaleX(1);
             holo.setScaleY(1);
             qiang.setScaleX(0);
@@ -148,5 +148,13 @@ public class M98bItemModel extends GeoModel<M98bItem> {
         move.setRotY(Mth.DEG_TO_RAD * (float) yRot);
 
         move.setRotZ(2.7f * (float) m + Mth.DEG_TO_RAD * (float) zRot);
+
+        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+
+        player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
+
+        player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
+
+        player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

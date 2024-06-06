@@ -42,7 +42,7 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         Player player = Minecraft.getInstance().player;
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.getOrCreateTag().getDouble("gj") == 1) {
+        if (stack.getOrCreateTag().getDouble("HoldOpen") == 1) {
             bolt.setPosZ(3.25f);
         }
 

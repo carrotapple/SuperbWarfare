@@ -81,9 +81,11 @@ public class GunEventHandler {
                 } else {
                     stack.getOrCreateTag().putDouble("animindex", 1);
                 }
-
+                /*
+                  空仓挂机
+                 */
                 if (stack.getOrCreateTag().getInt("ammo") == 1) {
-                    stack.getOrCreateTag().putDouble("gj", 1);
+                    stack.getOrCreateTag().putDouble("HoldOpen", 1);
                 }
 
                 /*
@@ -134,10 +136,10 @@ public class GunEventHandler {
                     if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
                         zoom_add_cooldown = 5;
                         stack.getOrCreateTag().putDouble("marlin_animation_time", 15);
-                        stack.getOrCreateTag().putDouble("fastfiring", 0);
+                        stack.getOrCreateTag().putBoolean("fastfiring", false);
                     } else {
                         stack.getOrCreateTag().putDouble("marlin_animation_time", 10);
-                        stack.getOrCreateTag().putDouble("fastfiring", 1);
+                        stack.getOrCreateTag().putBoolean("fastfiring", true);
                     }
                 }
 
@@ -153,14 +155,14 @@ public class GunEventHandler {
               在开火动画的最后1tick，设置需要拉栓上膛的武器拉栓动画的倒计时为data里的拉栓时间
              */
             if (stack.getOrCreateTag().getInt("fire_animation") == 1 && stack.getOrCreateTag().getBoolean("need_bolt_action")) {
-                stack.getOrCreateTag().putDouble("bolt_action_anim", stack.getOrCreateTag().getDouble("bolt_action_time"));
-                player.getCooldowns().addCooldown(stack.getItem(), (int) stack.getOrCreateTag().getDouble("bolt_action_time"));
+                stack.getOrCreateTag().putInt("bolt_action_anim", stack.getOrCreateTag().getInt("bolt_action_time"));
+                player.getCooldowns().addCooldown(stack.getItem(), stack.getOrCreateTag().getInt("bolt_action_time"));
                 playGunBoltSounds(player);
             }
-            if (stack.getOrCreateTag().getDouble("bolt_action_anim") > 0) {
-                stack.getOrCreateTag().putDouble("bolt_action_anim", stack.getOrCreateTag().getDouble("bolt_action_anim") - 1);
+            if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+                stack.getOrCreateTag().putInt("bolt_action_anim", stack.getOrCreateTag().getInt("bolt_action_anim") - 1);
             }
-            if (stack.getOrCreateTag().getDouble("bolt_action_anim") == 1) {
+            if (stack.getOrCreateTag().getInt("bolt_action_anim") == 1) {
                 stack.getOrCreateTag().putBoolean("need_bolt_action", false);
             }
         }

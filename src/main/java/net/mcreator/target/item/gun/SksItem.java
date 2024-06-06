@@ -192,7 +192,7 @@ public class SksItem extends GunItem implements GeoItem, AnimatedItem {
                     tag.putBoolean("empty_reload", false);
                 }
                 if (tag.getDouble("reload_time") == 14 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    tag.putDouble("gj", 0);
+                    tag.putDouble("HoldOpen", 0);
                 }
                 if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
                     GunsTool.reload(entity, GunInfo.Type.RIFLE);
