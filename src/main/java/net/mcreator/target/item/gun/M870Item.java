@@ -142,7 +142,7 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         var procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
         data.add(procedureController);
-        var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
+        var idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
     }
 

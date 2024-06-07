@@ -52,9 +52,9 @@ public class M870ItemModel extends GeoModel<M870Item> {
         double zp = 0;
         zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-        gun.setPosX(5.22f * (float) p);
+        gun.setPosX(1.7f * (float) p);
 
-        gun.setPosY(3.00f * (float) p - (float) (0.7f * zp));
+        gun.setPosY(1.12f * (float) p - (float) (0.2f * zp));
 
         gun.setPosZ(1.5f * (float) p + (float) (0.9f * zp));
 
@@ -66,8 +66,8 @@ public class M870ItemModel extends GeoModel<M870Item> {
         double fr = player.getPersistentData().getDouble("fire_rot");
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-            shen.setPosY(0.4f * (float) (fp + 2 * fr));
-            shen.setPosZ(5.6f * (float) (fp + 0.54f * fr));
+            shen.setPosY(0.2f * (float) (fp + 2 * fr));
+            shen.setPosZ(2.6f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.28f * (float) (fp + fr));
             shen.setRotZ(0f);
             if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
@@ -76,8 +76,8 @@ public class M870ItemModel extends GeoModel<M870Item> {
                 shen.setRotY(-0.025f * (float) fr);
             }
         } else {
-            shen.setPosY(0.7f * (float) (fp + 2 * fr));
-            shen.setPosZ(6.2f * (float) (fp + 0.54f * fr));
+            shen.setPosY(0.3f * (float) (fp + 2 * fr));
+            shen.setPosZ(3.2f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.3f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
             if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
@@ -111,7 +111,7 @@ public class M870ItemModel extends GeoModel<M870Item> {
 
         root.setPosX(PosX);
 
-        root.setPosY((float) y + 2.5f * PosY);
+        root.setPosY((float) y + PosY);
 
         root.setRotX((float) x);
 
@@ -142,5 +142,13 @@ public class M870ItemModel extends GeoModel<M870Item> {
         move.setRotY(Mth.DEG_TO_RAD * (float) yRot);
 
         move.setRotZ(2.7f * (float) m + Mth.DEG_TO_RAD * (float) zRot);
+
+        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+
+        player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
+
+        player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
+
+        player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

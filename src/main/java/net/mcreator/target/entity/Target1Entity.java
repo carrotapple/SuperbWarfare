@@ -29,10 +29,12 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -105,38 +107,11 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-
-        if (this.getPersistentData().getDouble("target_down") > 0) {
-            return false;
-        }
-
         if (!this.level().isClientSide()) {
-            this.level().playSound(null, BlockPos.containing(this.getX(), this.getY(), this.getZ()), TargetModSounds.HIT.get(), SoundSource.BLOCKS, 2, 1);
+            this.level().playSound(null, BlockPos.containing(this.getX(), this.getY(), this.getZ()), TargetModSounds.HIT.get(), SoundSource.BLOCKS, 8, 1);
         } else {
-            this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), TargetModSounds.HIT.get(), SoundSource.BLOCKS, 2, 1, false);
+            this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), TargetModSounds.HIT.get(), SoundSource.BLOCKS, 8, 1, false);
         }
-
-        if (source.is(DamageTypes.IN_FIRE))
-            return false;
-        if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
-            return false;
-        if (source.is(DamageTypes.FALL))
-            return false;
-        if (source.is(DamageTypes.CACTUS))
-            return false;
-        if (source.is(DamageTypes.DROWN))
-            return false;
-        if (source.is(DamageTypes.LIGHTNING_BOLT))
-            return false;
-        if (source.is(DamageTypes.FALLING_ANVIL))
-            return false;
-        if (source.is(DamageTypes.DRAGON_BREATH))
-            return false;
-        if (source.is(DamageTypes.WITHER))
-            return false;
-        if (source.is(DamageTypes.WITHER_SKULL))
-            return false;
-
         return super.hurt(source, amount);
     }
 
@@ -164,17 +139,44 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
         super.readAdditionalSaveData(compound);
     }
 
+    public static void onEntityAttacked(LivingAttackEvent event, DamageSource source) {
+        var entity = event.getEntity();
+        if (entity == null) return;
+        if (entity instanceof Target1Entity target1) {
+
+            if (source.is(DamageTypes.IN_FIRE)
+                || source.getDirectEntity() instanceof ThrownPotion
+                || source.getDirectEntity() instanceof AreaEffectCloud
+                || source.is(DamageTypes.FALL)
+                || source.is(DamageTypes.CACTUS)
+                || source.is(DamageTypes.DROWN)
+                || source.is(DamageTypes.LIGHTNING_BOLT)
+                || source.is(DamageTypes.FALLING_ANVIL)
+                || source.is(DamageTypes.DRAGON_BREATH)
+                || source.is(DamageTypes.WITHER)
+                || source.is(DamageTypes.WITHER_SKULL)
+                || source.is(DamageTypes.MAGIC)) {
+                event.setCanceled(true);
+            }
+
+            if (entity.getPersistentData().getDouble("target_down") > 0) {
+                event.setCanceled(true);
+            }
+        }
+    }
     @SubscribeEvent
     public static void onTarget1Down(LivingDeathEvent event) {
         var entity = event.getEntity();
         var sourceEntity = event.getSource().getEntity();
 
-        if (entity == null || sourceEntity == null) return;
+        if (entity == null) return;
 
         if (entity instanceof Target1Entity target1) {
-            event.setCanceled(true);
 
+            event.setCanceled(true);
             target1.setHealth(target1.getMaxHealth());
+
+            if (sourceEntity == null) return;
 
             if (sourceEntity instanceof Player player) {
                 player.displayClientMessage(Component.literal(("Target Down " + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceEntity.position()))) + "M")), true);
@@ -309,6 +311,7 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
     protected void tickDeath() {
         ++this.deathTime;
         if (this.deathTime >= 100) {
+            this.spawnAtLocation(new ItemStack(TargetModItems.TARGET_DEPLOYER.get()));
             this.remove(Target1Entity.RemovalReason.KILLED);
         }
     }

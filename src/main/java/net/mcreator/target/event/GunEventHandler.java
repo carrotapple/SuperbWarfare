@@ -343,8 +343,8 @@ public class GunEventHandler {
                 projectile.beast();
             }
 
-            projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
-            projectile.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.001f , player.getLookAngle().z, 1 * (float) heldItem.getOrCreateTag().getDouble("velocity"),
+            projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.02 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
+            projectile.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.0015f , player.getLookAngle().z, 1 * (float) heldItem.getOrCreateTag().getDouble("velocity"),
                     (float) player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()));
             player.level().addFreshEntity(projectile);
         }
