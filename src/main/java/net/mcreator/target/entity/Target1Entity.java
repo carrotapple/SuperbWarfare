@@ -107,6 +107,23 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
+
+        if (source.is(DamageTypes.IN_FIRE)
+                || source.getDirectEntity() instanceof ThrownPotion
+                || source.getDirectEntity() instanceof AreaEffectCloud
+                || source.is(DamageTypes.FALL)
+                || source.is(DamageTypes.CACTUS)
+                || source.is(DamageTypes.DROWN)
+                || source.is(DamageTypes.LIGHTNING_BOLT)
+                || source.is(DamageTypes.FALLING_ANVIL)
+                || source.is(DamageTypes.DRAGON_BREATH)
+                || source.is(DamageTypes.WITHER)
+                || source.is(DamageTypes.WITHER_SKULL)
+                || source.is(DamageTypes.MAGIC)
+                || this.getPersistentData().getDouble("target_down") > 0) {
+            return false;
+        }
+
         if (!this.level().isClientSide()) {
             this.level().playSound(null, BlockPos.containing(this.getX(), this.getY(), this.getZ()), TargetModSounds.HIT.get(), SoundSource.BLOCKS, 8, 1);
         } else {
@@ -139,31 +156,6 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
         super.readAdditionalSaveData(compound);
     }
 
-    public static void onEntityAttacked(LivingAttackEvent event, DamageSource source) {
-        var entity = event.getEntity();
-        if (entity == null) return;
-        if (entity instanceof Target1Entity target1) {
-
-            if (source.is(DamageTypes.IN_FIRE)
-                || source.getDirectEntity() instanceof ThrownPotion
-                || source.getDirectEntity() instanceof AreaEffectCloud
-                || source.is(DamageTypes.FALL)
-                || source.is(DamageTypes.CACTUS)
-                || source.is(DamageTypes.DROWN)
-                || source.is(DamageTypes.LIGHTNING_BOLT)
-                || source.is(DamageTypes.FALLING_ANVIL)
-                || source.is(DamageTypes.DRAGON_BREATH)
-                || source.is(DamageTypes.WITHER)
-                || source.is(DamageTypes.WITHER_SKULL)
-                || source.is(DamageTypes.MAGIC)) {
-                event.setCanceled(true);
-            }
-
-            if (entity.getPersistentData().getDouble("target_down") > 0) {
-                event.setCanceled(true);
-            }
-        }
-    }
     @SubscribeEvent
     public static void onTarget1Down(LivingDeathEvent event) {
         var entity = event.getEntity();
@@ -342,13 +334,11 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
 
     @Override
     public EntityDimensions getDimensions(Pose p_33597_) {
-        float num;
-        if (this.getPersistentData().getDouble("target_down") > 0) {
+        Entity entity = this;
+        float num = 0;
+        if (entity.getPersistentData().getDouble("target_down") > 0) {
             num = 0.1f;
-        } else {
-            num = 1f;
         }
-
-        return super.getDimensions(p_33597_).scale(num);
+        return super.getDimensions(p_33597_).scale(0.1f);
     }
 }

@@ -28,7 +28,7 @@ import net.minecraftforge.fml.common.Mod;
 public class ClientEventHandler {
 
     @SubscribeEvent
-    public static void onRenderHand(RenderHandEvent event) {
+    public static void handleWeaponTurn(RenderHandEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) {
             return;
@@ -208,10 +208,10 @@ public class ClientEventHandler {
             if (-0.8 < velocity + 0.078 && velocity + 0.078 < 0.8) {
                 if (data.getDouble("vy") < entity.getDeltaMovement().y() + 0.078) {
                     data.putDouble("vy",
-                            ((data.getDouble("vy") + 0.5 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.3 * data.getDouble("zoom_time"))));
+                            ((data.getDouble("vy") + 0.35 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.3 * data.getDouble("zoom_time"))));
                 } else {
                     data.putDouble("vy",
-                            ((data.getDouble("vy") - 0.5 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.3 * data.getDouble("zoom_time"))));
+                            ((data.getDouble("vy") - 0.35 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.3 * data.getDouble("zoom_time"))));
                 }
             }
             if (data.getDouble("vy") > 0.8) {
@@ -351,13 +351,14 @@ public class ClientEventHandler {
         double yaw = event.getYaw();
         double pitch = event.getPitch();
         double roll = event.getRoll();
+        if (entity.getMainHandItem().is(TargetModTags.Items.GUN)) {
 
-        event.setPitch((float) (pitch + data.getDouble("camera_rot_x")));
+            event.setPitch((float) (pitch + data.getDouble("camera_rot_x") + 0.2 * data.getDouble("xRot") + 3 * data.getDouble("vy")));
 
-        event.setYaw((float) (yaw + data.getDouble("camera_rot_y")));
+            event.setYaw((float) (yaw + data.getDouble("camera_rot_y") + 0.8 * data.getDouble("yRot")));
 
-        event.setRoll((float) (roll + data.getDouble("camera_rot_z")));
-
+            event.setRoll((float) (roll + data.getDouble("camera_rot_z") + 0.35 * data.getDouble("zRot")));
+        }
     }
 
     private static void handleBowPullAnimation(LivingEntity entity) {
