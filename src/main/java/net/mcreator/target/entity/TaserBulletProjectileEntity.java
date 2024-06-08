@@ -118,61 +118,24 @@ public class TaserBulletProjectileEntity extends ThrowableItemProjectile {
             entity.hurt(TargetModDamageTypes.causeShockDamage(this.level().registryAccess(),  this.getOwner()), this.damage);
         }
 
-        TargetMod.queueServerWork(20, () -> {
-            if (entity == null || this.getOwner() == null || !entity.isAlive())
-                return;
-            if (!entity.level().isClientSide())
-                entity.hurt(TargetModDamageTypes.causeShockDamage(this.level().registryAccess(), this.getOwner()), 1);
-                entity.invulnerableTime = 0;
-            if (this.getOwner() instanceof ServerPlayer player) {
-                this.getOwner().level().playSound(null, this.getOwner().blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
-                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
-            }
-        });
-        TargetMod.queueServerWork(40, () -> {
-            if (entity == null || this.getOwner() == null || !entity.isAlive())
-                return;
-            if (!entity.level().isClientSide())
-                entity.hurt(TargetModDamageTypes.causeShockDamage(this.level().registryAccess(), this.getOwner()), 1);
-                entity.invulnerableTime = 0;
-            if (this.getOwner() instanceof ServerPlayer player) {
-                this.getOwner().level().playSound(null, this.getOwner().blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
-                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
-            }
-        });
-        TargetMod.queueServerWork(60, () -> {
-            if (entity == null || this.getOwner() == null || !entity.isAlive())
-                return;
-            if (!entity.level().isClientSide())
-                entity.hurt(TargetModDamageTypes.causeShockDamage(this.level().registryAccess(), this.getOwner()), 1);
-                entity.invulnerableTime = 0;
-            if (this.getOwner() instanceof ServerPlayer player) {
-                this.getOwner().level().playSound(null, this.getOwner().blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
-                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
-            }
-        });
-        TargetMod.queueServerWork(80, () -> {
-            if (entity == null || this.getOwner() == null || !entity.isAlive())
-                return;
-            if (!entity.level().isClientSide())
-                entity.hurt(TargetModDamageTypes.causeShockDamage(this.level().registryAccess(), this.getOwner()), 1);
-                entity.invulnerableTime = 0;
-            if (this.getOwner() instanceof ServerPlayer player) {
-                this.getOwner().level().playSound(null, this.getOwner().blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
-                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
-            }
-        });
-        TargetMod.queueServerWork(100, () -> {
-            if (entity == null || this.getOwner() == null || !entity.isAlive())
-                return;
-            if (!entity.level().isClientSide())
-                entity.hurt(TargetModDamageTypes.causeShockDamage(this.level().registryAccess(), this.getOwner()), 1);
-                entity.invulnerableTime = 0;
-            if (this.getOwner() instanceof ServerPlayer player) {
-                this.getOwner().level().playSound(null, this.getOwner().blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
-                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
-            }
-        });
+        for(int i=1;i<=5;i++) {
+
+            TargetMod.queueServerWork(i * 20, () -> {
+
+                if (entity == null || this.getOwner() == null || !entity.isAlive())
+                    return;
+                if (!entity.level().isClientSide())
+
+                    entity.hurt(TargetModDamageTypes.causeShockDamage(this.level().registryAccess(), this.getOwner()), 1);
+                    entity.invulnerableTime = 0;
+
+                if (this.getOwner() instanceof ServerPlayer player) {
+                    this.getOwner().level().playSound(null, this.getOwner().blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
+                    TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
+                }
+            });
+        }
+
         this.discard();
     }
 
