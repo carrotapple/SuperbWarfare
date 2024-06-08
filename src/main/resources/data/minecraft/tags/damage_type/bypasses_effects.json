@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "target:gunfire",
-    "target:gunfire_headshot"
+    "target:gunfire_headshot",
+    "target:shock"
   ]
 }

@@ -37,6 +37,7 @@ public class KillMessageOverlay {
     private static final ResourceLocation GENERIC = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/generic.png");
     private static final ResourceLocation BEAST = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/beast.png");
     private static final ResourceLocation BLEEDING = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/bleeding.png");
+    private static final ResourceLocation SHOCK = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/shock.png");
     private static final ResourceLocation BLOOD_CRYSTAL = new ResourceLocation(TargetMod.MODID, "textures/screens/damage_types/blood_crystal.png");
 
     private static final ResourceLocation WORLD_PEACE_STAFF = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/compat/world_peace_staff.png");
@@ -247,7 +248,8 @@ public class KillMessageOverlay {
             icon = HEADSHOT;
         } else {
             if (record.damageType == TargetModDamageTypes.GUN_FIRE || record.damageType == TargetModDamageTypes.GUN_FIRE_HEADSHOT
-                    || record.damageType == TargetModDamageTypes.ARROW_IN_KNEE || record.damageType == TargetModDamageTypes.ARROW_IN_BRAIN) {
+                    || record.damageType == TargetModDamageTypes.ARROW_IN_KNEE || record.damageType == TargetModDamageTypes.ARROW_IN_BRAIN
+                    || record.damageType == TargetModDamageTypes.SHOCK) {
                 icon = null;
             } else {
                 // 如果是其他伤害，则渲染对应图标
@@ -263,6 +265,8 @@ public class KillMessageOverlay {
                     icon = BLEEDING;
                 } else if (record.damageType == ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("dreamaticvoyage", "blood_crystal"))) {
                     icon = BLOOD_CRYSTAL;
+                } else if (record.damageType == TargetModDamageTypes.SHOCK) {
+                    icon = SHOCK;
                 } else {
                     icon = GENERIC;
                 }

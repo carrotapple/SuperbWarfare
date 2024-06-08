@@ -1,5 +1,6 @@
 package net.mcreator.target.mobeffect;
 
+import net.mcreator.target.init.TargetModDamageTypes;
 import net.mcreator.target.init.TargetModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
@@ -29,6 +30,9 @@ public class ShockMobEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity entity, int amplifier) {
+        if (!entity.level().isClientSide()) {
+            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10, 10));
+        }
         entity.setXRot((float) Mth.nextDouble(RandomSource.create(), -23, -36));
         entity.xRotO = entity.getXRot();
     }

@@ -164,6 +164,9 @@
   "death.attack.mine": "%1$s不慎踩到了阔剑地雷",
   "death.attack.mine.entity": "%1$s踩到了%2$s的阔剑地雷",
   "death.attack.mine.item": "%1$s踩到了%2$s的阔剑地雷",
+  "death.attack.shock": "%1$s被电麻了",
+  "death.attack.shock.entity": "%1$s被%2$s电麻了",
+  "death.attack.shock.item": "%1$s被%2$s电麻了",
 
   "gui.target.mortar_gui.button_angle_add_05": "+0.5",
   "gui.target.mortar_gui.button_angle_reduce_05": "-0.5",
@@ -189,7 +192,10 @@
   "key.target.fire_mode": "开火模式",
   "key.target.zoom": "缩放",
 
-  "effect.target.shock": "麻痹",
+  "effect.target.shock": "电击",
+  "item.minecraft.potion.effect.target_shock": "电击药水",
+  "item.minecraft.splash_potion.effect.target_shock": "喷溅型电击药水",
+  "item.minecraft.lingering_potion.effect.target_shock": "滞留型电击药水",
 
   "des.target.sensitivity": "当前枪械的灵敏度为：%1$s",
 
