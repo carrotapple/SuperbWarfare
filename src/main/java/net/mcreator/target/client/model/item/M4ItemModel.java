@@ -118,7 +118,7 @@ public class M4ItemModel extends GeoModel<M4Item> {
 
         move.setPosX(9.3f * (float) m);
 
-        move.setPosY(-1.0f * (float) vy);
+        move.setPosY(-2f * (float) vy);
 
         double xRot = player.getPersistentData().getDouble("xRot");
 
@@ -126,7 +126,7 @@ public class M4ItemModel extends GeoModel<M4Item> {
 
         double zRot = player.getPersistentData().getDouble("zRot");
 
-        move.setRotX(0.65f * Mth.DEG_TO_RAD * (float) xRot);
+        move.setRotX(0.65f * Mth.DEG_TO_RAD * (float) xRot - 0.15f * (float) vy);
 
         move.setRotY(0.65f * Mth.DEG_TO_RAD * (float) yRot);
 

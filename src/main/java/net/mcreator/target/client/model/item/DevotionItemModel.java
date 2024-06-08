@@ -661,7 +661,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
 
         move.setPosX(9.3f * (float) m);
 
-        move.setPosY(-1.2f * (float) vy);
+        move.setPosY(-2 * (float) vy);
 
         double xRot = player.getPersistentData().getDouble("xRot");
 
@@ -669,7 +669,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
 
         double zRot = player.getPersistentData().getDouble("zRot");
 
-        move.setRotX(1.8f * Mth.DEG_TO_RAD * (float) xRot);
+        move.setRotX(1.8f * Mth.DEG_TO_RAD * (float) xRot - 0.15f * (float) vy);
 
         move.setRotY(1.6f * Mth.DEG_TO_RAD * (float) yRot);
 

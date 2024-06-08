@@ -1,5 +1,6 @@
 package net.mcreator.target.mixins;
 
+import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.CameraType;
@@ -32,6 +33,7 @@ public class MouseHandlerMixin {
         ItemStack stack = mc.player.getMainHandItem();
 
         boolean flag = false;
+        boolean shock = false;
         float sens = 0.2f;
         float fov = (float) player.getPersistentData().getDouble("fov");
         float custom_sens = (float) stack.getOrCreateTag().getInt("sensitivity");
@@ -50,6 +52,11 @@ public class MouseHandlerMixin {
                 return original;
             }
         }
-        return original * additionalAdsSensitivity * (1.0 - sens * (flag ? 1 : 0));
+
+        if (Minecraft.getInstance().player.hasEffect(TargetModMobEffects.SHOCK.get()) && !Minecraft.getInstance().player.isSpectator()) {
+            shock = true;
+        }
+
+        return original * additionalAdsSensitivity * (1.0 - sens * (flag ? 1 : 0)) * (shock ? 0 : 1);
     }
 }

@@ -2,6 +2,7 @@ package net.mcreator.target.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.mcreator.target.TargetMod;
+import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.message.FireMessage;
 import net.mcreator.target.network.message.SensitivityMessage;
@@ -48,9 +49,40 @@ public class ClickHandler {
         if (player == null) return;
 
         int button = event.getButton();
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && player.getMainHandItem().is(TargetModTags.Items.GUN)) {
+
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (Minecraft.getInstance().player.hasEffect(TargetModMobEffects.SHOCK.get())) {
+                event.setCanceled(true);
+                return;
+            }
+            if (player.getMainHandItem().is(TargetModTags.Items.GUN)) {
+                event.setCanceled(true);
+                TargetMod.PACKET_HANDLER.sendToServer(new FireMessage(0));
+            }
+        }
+
+        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (Minecraft.getInstance().player.hasEffect(TargetModMobEffects.SHOCK.get())) {
+                event.setCanceled(true);
+            }
+        }
+
+        if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            if (Minecraft.getInstance().player.hasEffect(TargetModMobEffects.SHOCK.get())) {
+                event.setCanceled(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onMouseScrolling(InputEvent.MouseScrollingEvent event) {
+        if (notInGame()) return;
+
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+
+        if (Minecraft.getInstance().player.hasEffect(TargetModMobEffects.SHOCK.get())) {
             event.setCanceled(true);
-            TargetMod.PACKET_HANDLER.sendToServer(new FireMessage(0));
         }
     }
 

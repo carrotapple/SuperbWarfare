@@ -20,6 +20,7 @@ import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
@@ -130,6 +131,14 @@ public class TaserBulletProjectileEntity extends ThrowableItemProjectile {
 
         if (this.tickCount > 200) {
             this.discard();
+        }
+    }
+
+    @Override
+    protected void onHitBlock(BlockHitResult result) {
+        if (!level().isClientSide) {
+        this.setDeltaMovement(this.getDeltaMovement().multiply(0, 0, 0));
+        this.setNoGravity(true);
         }
     }
 }

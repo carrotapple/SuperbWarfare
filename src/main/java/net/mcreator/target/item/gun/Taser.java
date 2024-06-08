@@ -187,7 +187,7 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading")) {
-                if (stack.getOrCreateTag().getDouble("reload_time") == 55) {
+                if (stack.getOrCreateTag().getDouble("reload_time") == 54) {
                     player.getPersistentData().putDouble("id", id);
 
                     if (!player.level().isClientSide()) {

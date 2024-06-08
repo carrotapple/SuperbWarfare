@@ -29,20 +29,8 @@ public class ShockMobEffect extends MobEffect {
 
     @Override
     public void applyEffectTick(LivingEntity entity, int amplifier) {
-//        entity.setDeltaMovement(new Vec3(0, (entity.getDeltaMovement().y()), 0));
-
-//        if (!entity.level().isClientSide()) {
-//            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10, 10));
-//        }
-
-        entity.setYRot((float) (entity.getYRot() + Mth.nextDouble(RandomSource.create(), -15, 15)));
-        entity.setXRot((float) Mth.nextDouble(RandomSource.create(), -20, -23));
-        entity.setYBodyRot(entity.getYRot());
-        entity.setYHeadRot(entity.getYRot());
-        entity.yRotO = entity.getYRot();
+        entity.setXRot((float) Mth.nextDouble(RandomSource.create(), -23, -36));
         entity.xRotO = entity.getXRot();
-        entity.yBodyRotO = entity.getYRot();
-        entity.yHeadRotO = entity.getYRot();
     }
 
     @Override

@@ -161,7 +161,7 @@ public class M60ItemModel extends GeoModel<M60Item> {
 
         move.setPosX(9.3f * (float) m);
 
-        move.setPosY(-1.6f * (float) vy);
+        move.setPosY(-2f * (float) vy);
 
         double xRot = player.getPersistentData().getDouble("xRot");
 
@@ -169,7 +169,7 @@ public class M60ItemModel extends GeoModel<M60Item> {
 
         double zRot = player.getPersistentData().getDouble("zRot");
 
-        move.setRotX(Mth.DEG_TO_RAD * (float) xRot);
+        move.setRotX(Mth.DEG_TO_RAD * (float) xRot - 0.15f * (float) vy);
 
         move.setRotY(Mth.DEG_TO_RAD * (float) yRot);
 

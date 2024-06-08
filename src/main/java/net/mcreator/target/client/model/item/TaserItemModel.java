@@ -36,27 +36,12 @@ public class TaserItemModel extends GeoModel<Taser> {
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
 
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-            shen.setPosY(0.02f * (float) (fp + 2 * fr));
-            shen.setPosZ(0.5f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.02f * (float) (fp + fr));
-            shen.setRotZ(0f);
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                shen.setRotY(0.0025f * (float) fr);
-            } else {
-                shen.setRotY(-0.0025f * (float) fr);
-            }
-        } else {
-            shen.setPosY(0.03f * (float) (fp + 2 * fr));
-            shen.setPosZ(0.7f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.03f * (float) (0.18f * fp + fr));
-            shen.setRotZ(-0.001f * (float) (fp + 1.3 * fr));
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                shen.setRotY(0.0045f * (float) fr);
-            } else {
-                shen.setRotY(-0.0045f * (float) fr);
-            }
-        }
+        shen.setPosX(-0.05f * (float) (fp + 0.2 * fr));
+        shen.setPosY(0.1f * (float) (fp + 2 * fr));
+        shen.setPosZ(1.2f * (float) (1.3 * fp + 0.54f * fr));
+        shen.setRotX(0.04f * (float) (1.28f * fp + fr));
+        shen.setRotY(0.02f * (float) fr);
+        shen.setRotZ(-0.02f * (float) (fp + 1.3 * fr));
 
         double p = 0;
         p = player.getPersistentData().getDouble("zoom_pos");
@@ -64,9 +49,9 @@ public class TaserItemModel extends GeoModel<Taser> {
         double zp = 0;
         zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-        gun.setPosX(2.6f * (float) p);
+        gun.setPosX(1.82f * (float) p);
 
-        gun.setPosY(1.2f * (float) p - (float) (0.6f * zp));
+        gun.setPosY(1.3f * (float) p - (float) (0.3f * zp));
 
         gun.setPosZ((float) p + (float) (0.5f * zp));
 
@@ -82,13 +67,13 @@ public class TaserItemModel extends GeoModel<Taser> {
         y = player.getPersistentData().getDouble("y");
         x = player.getPersistentData().getDouble("x");
 
+        float RotZ = (float) player.getPersistentData().getDouble("gun_move_rotZ");
+
         root.setPosX(PosX);
 
         root.setPosY((float) y + PosY);
 
         root.setRotX((float) x);
-
-        float RotZ = (float) player.getPersistentData().getDouble("gun_move_rotZ");
 
         root.setRotY(0.2f * PosX);
 
@@ -102,7 +87,7 @@ public class TaserItemModel extends GeoModel<Taser> {
 
         move.setPosX(9.3f * (float) m);
 
-        move.setPosY(-0.95f * (float) vy);
+        move.setPosY(-2 * (float) vy);
 
         double xRot = player.getPersistentData().getDouble("xRot");
 
@@ -110,11 +95,18 @@ public class TaserItemModel extends GeoModel<Taser> {
 
         double zRot = player.getPersistentData().getDouble("zRot");
 
-        move.setRotX(Mth.DEG_TO_RAD * (float) xRot);
+        move.setRotX(Mth.DEG_TO_RAD * (float) xRot - 0.15f * (float) vy);
 
         move.setRotY(Mth.DEG_TO_RAD * (float) yRot);
 
         move.setRotZ(2.7f * (float) m + Mth.DEG_TO_RAD * (float) zRot);
 
+        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+
+        player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
+
+        player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
+
+        player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

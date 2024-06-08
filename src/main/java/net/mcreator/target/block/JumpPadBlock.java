@@ -91,7 +91,7 @@ public class JumpPadBlock extends Block {
             entity.setDeltaMovement(new Vec3(0.7 * entity.getDeltaMovement().x(), 1.7, 0.7 * entity.getDeltaMovement().z()));
         }
 
-        if (!zooming) entity.getPersistentData().putDouble("vy", 0.8);
+
 
         if (!level.isClientSide()) {
             level.playSound(null, BlockPos.containing(pos.getX(), pos.getY(), pos.getZ()), TargetModSounds.JUMP.get(), SoundSource.BLOCKS, 1, 1);

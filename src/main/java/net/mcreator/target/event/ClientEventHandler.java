@@ -101,7 +101,7 @@ public class ClientEventHandler {
 
             data.putDouble("sway_time", data.getDouble("sway_time") + 0.015 * times);
             data.putDouble("x", (pose * -0.008 * Math.sin(data.getDouble("sway_time")) * (1 - 0.95 * data.getDouble("zoom_time"))));
-            data.putDouble("y", (pose * 0.125 * Math.sin(data.getDouble("sway_time") - 1.585) * (1 - 0.95 * data.getDouble("zoom_time"))));
+            data.putDouble("y", (pose * 0.125 * Math.sin(data.getDouble("sway_time") - 1.585) * (1 - 0.95 * data.getDouble("zoom_time"))) - 3 * data.getDouble("gun_move_rotZ"));
         }
     }
 
@@ -340,8 +340,8 @@ public class ClientEventHandler {
 
     private static void handleShockCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
         if (entity.hasEffect(TargetModMobEffects.SHOCK.get()) && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
-            event.setYaw(Minecraft.getInstance().gameRenderer.getMainCamera().getYRot());
-            event.setPitch(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot());
+            event.setYaw(Minecraft.getInstance().gameRenderer.getMainCamera().getYRot() + (float) Mth.nextDouble(RandomSource.create(), -3, 3));
+            event.setPitch(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot() + (float) Mth.nextDouble(RandomSource.create(), -3, 3));
             event.setRoll((float) Mth.nextDouble(RandomSource.create(), 8, 12));
         }
     }
