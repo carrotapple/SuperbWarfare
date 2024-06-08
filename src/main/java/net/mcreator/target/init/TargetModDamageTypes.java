@@ -44,8 +44,8 @@ public class TargetModDamageTypes {
         return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(MINE), entity);
     }
 
-    public static DamageSource causeShockDamage(RegistryAccess registryAccess, @Nullable Entity directEntity, @Nullable Entity attacker) {
-        return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(SHOCK), directEntity, attacker);
+    public static DamageSource causeShockDamage(RegistryAccess registryAccess, @Nullable Entity attacker) {
+        return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(SHOCK), attacker);
     }
 
     private static class DamageMessages extends DamageSource {
