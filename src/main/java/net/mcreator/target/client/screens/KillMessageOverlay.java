@@ -248,8 +248,7 @@ public class KillMessageOverlay {
             icon = HEADSHOT;
         } else {
             if (record.damageType == TargetModDamageTypes.GUN_FIRE || record.damageType == TargetModDamageTypes.GUN_FIRE_HEADSHOT
-                    || record.damageType == TargetModDamageTypes.ARROW_IN_KNEE || record.damageType == TargetModDamageTypes.ARROW_IN_BRAIN
-                    || record.damageType == TargetModDamageTypes.SHOCK) {
+                    || record.damageType == TargetModDamageTypes.ARROW_IN_KNEE || record.damageType == TargetModDamageTypes.ARROW_IN_BRAIN) {
                 icon = null;
             } else {
                 // 如果是其他伤害，则渲染对应图标
