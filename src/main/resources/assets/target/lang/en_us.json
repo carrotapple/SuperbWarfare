@@ -196,6 +196,12 @@
   "item.minecraft.potion.effect.target_shock": "Potion of Shock",
   "item.minecraft.splash_potion.effect.target_shock": "Splash Potion of Shock",
   "item.minecraft.lingering_potion.effect.target_shock": "Lingering Potion of Shock",
+  "item.minecraft.potion.effect.target_strong_shock": "Potion of Shock",
+  "item.minecraft.splash_potion.effect.target_strong_shock": "Splash Potion of Shock",
+  "item.minecraft.lingering_potion.effect.target_strong_shock": "Lingering Potion of Shock",
+  "item.minecraft.potion.effect.target_long_shock": "Potion of Shock",
+  "item.minecraft.splash_potion.effect.target_long_shock": "Splash Potion of Shock",
+  "item.minecraft.lingering_potion.effect.target_long_shock": "Lingering Potion of Shock",
 
   "des.target.sensitivity": "Current Sensitivity of This Gun: %1$s",
 

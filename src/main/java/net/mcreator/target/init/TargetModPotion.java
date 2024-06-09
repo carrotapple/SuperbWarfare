@@ -13,4 +13,8 @@ public class TargetModPotion {
 
     public static final RegistryObject<Potion> SHOCK= POTIONS.register("target_shock",
             () -> new Potion(new MobEffectInstance(TargetModMobEffects.SHOCK.get(), 100, 0)));
+    public static final RegistryObject<Potion> STRONG_SHOCK = POTIONS.register("target_strong_shock",
+            () -> new Potion(new MobEffectInstance(TargetModMobEffects.SHOCK.get(), 100, 1)));
+    public static final RegistryObject<Potion> LONG_SHOCK = POTIONS.register("target_long_shock",
+            () -> new Potion(new MobEffectInstance(TargetModMobEffects.SHOCK.get(), 400, 0)));
 }

@@ -1223,6 +1223,14 @@
       }
     ]
   },
+  "electric": {
+    "sounds": [
+      {
+        "name": "target:electric",
+        "stream": false
+      }
+    ]
+  },
   "triggerclick": {
     "sounds": [
       {

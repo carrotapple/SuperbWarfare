@@ -15,6 +15,7 @@ public class TargetModSounds {
     public static final RegistryObject<SoundEvent> TASER_FIRE_3P = REGISTRY.register("taser_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "taser_fire_3p")));
     public static final RegistryObject<SoundEvent> TASER_RELOAD = REGISTRY.register("taser_reload", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "taser_reload")));
     public static final RegistryObject<SoundEvent> SHOCK = REGISTRY.register("shock", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "shock")));
+    public static final RegistryObject<SoundEvent> ELECTRIC = REGISTRY.register("electric", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "electric")));
     public static final RegistryObject<SoundEvent> TRACHELIUM_FIRE_1P = REGISTRY.register("trachelium_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "trachelium_fire_1p")));
     public static final RegistryObject<SoundEvent> TRACHELIUM_FIRE_3P = REGISTRY.register("trachelium_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "trachelium_fire_3p")));
     public static final RegistryObject<SoundEvent> TRACHELIUM_FAR = REGISTRY.register("trachelium_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "trachelium_far")));
