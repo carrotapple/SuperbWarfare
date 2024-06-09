@@ -5,13 +5,11 @@ import net.mcreator.target.headshot.BoundingBoxManager;
 import net.mcreator.target.headshot.IHeadshotBox;
 import net.mcreator.target.init.*;
 import net.mcreator.target.network.message.ClientIndicatorMessage;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -108,32 +106,14 @@ public class TaserBulletProjectileEntity extends ThrowableItemProjectile {
                 return;
             }
             if (!living.level().isClientSide()) {
-                living.addEffect(new MobEffectInstance(TargetModMobEffects.SHOCK.get(), 100, 0));
+                living.addEffect(new MobEffectInstance(TargetModMobEffects.SHOCK.get(), 100, 0), this.getOwner());
             }
         }
 
         if (headshot) {
-            entity.hurt(TargetModDamageTypes.causeShockDamage(this.level().registryAccess(),  this.getOwner()), this.damage * 1.5f);
+            entity.hurt(TargetModDamageTypes.causeShockDamage(this.level().registryAccess(), this.getOwner()), this.damage * 1.5f);
         } else {
-            entity.hurt(TargetModDamageTypes.causeShockDamage(this.level().registryAccess(),  this.getOwner()), this.damage);
-        }
-
-        for(int i=1;i<=5;i++) {
-
-            TargetMod.queueServerWork(i * 20, () -> {
-
-                if (entity == null || this.getOwner() == null || !entity.isAlive())
-                    return;
-                if (!entity.level().isClientSide())
-
-                    entity.hurt(TargetModDamageTypes.causeShockDamage(this.level().registryAccess(), this.getOwner()), 1);
-                    entity.invulnerableTime = 0;
-
-                if (this.getOwner() instanceof ServerPlayer player) {
-                    this.getOwner().level().playSound(null, this.getOwner().blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
-                    TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
-                }
-            });
+            entity.hurt(TargetModDamageTypes.causeShockDamage(this.level().registryAccess(), this.getOwner()), this.damage);
         }
 
         this.discard();
@@ -155,8 +135,8 @@ public class TaserBulletProjectileEntity extends ThrowableItemProjectile {
     @Override
     protected void onHitBlock(BlockHitResult result) {
         if (!level().isClientSide) {
-        this.setDeltaMovement(this.getDeltaMovement().multiply(0, 0, 0));
-        this.setNoGravity(true);
+            this.setDeltaMovement(this.getDeltaMovement().multiply(0, 0, 0));
+            this.setNoGravity(true);
         }
     }
 }
