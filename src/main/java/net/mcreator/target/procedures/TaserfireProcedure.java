@@ -14,7 +14,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 
 // TODO 内联这个类
@@ -40,7 +39,7 @@ public class TaserfireProcedure {
                         serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.TASER_FIRE_3P.get(), SoundSource.PLAYERS, 1, 1);
                     }
 
-                    int volt = EnchantmentHelper.getItemEnchantmentLevel(TargetModEnchantments.VOLT_OVERLOAD.get(), stack);
+                    int volt = EnchantmentHelper.getTagEnchantmentLevel(TargetModEnchantments.VOLT_OVERLOAD.get(), stack);
 
                     Level level = entity.level();
                     if (!level.isClientSide()) {

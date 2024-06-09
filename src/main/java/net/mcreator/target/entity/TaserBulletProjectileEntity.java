@@ -36,11 +36,6 @@ public class TaserBulletProjectileEntity extends ThrowableItemProjectile {
         return this;
     }
 
-    public TaserBulletProjectileEntity volt(int volt) {
-        this.volt = volt;
-        return this;
-    }
-
     public TaserBulletProjectileEntity(EntityType<? extends TaserBulletProjectileEntity> type, Level world) {
         super(type, world);
     }
