@@ -205,6 +205,10 @@
 
   "enchantment.target.volt_overload": "电压过载",
   "enchantment.target.volt_overload.desc": "增加泰瑟枪电击的伤害",
+  "enchantment.target.super_recharge": "超级快充",
+  "enchantment.target.super_recharge.desc": "增加泰瑟枪充能的速度",
+  "enchantment.target.longer_wire": "延长导线",
+  "enchantment.target.longer_wire.desc": "增加泰瑟枪的射程",
 
   "des.target.sensitivity": "当前枪械的灵敏度为：%1$s",
 

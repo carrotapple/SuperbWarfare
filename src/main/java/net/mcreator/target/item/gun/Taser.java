@@ -4,13 +4,11 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.TaserItemRenderer;
+import net.mcreator.target.init.TargetModEnchantments;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.item.AnimatedItem;
-import net.mcreator.target.tools.EnchantmentCategoryTool;
-import net.mcreator.target.tools.GunsTool;
-import net.mcreator.target.tools.SoundTool;
-import net.mcreator.target.tools.TooltipTool;
+import net.mcreator.target.tools.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -18,6 +16,7 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -28,6 +27,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -48,11 +48,27 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
+    public static final String TAG_POWER = "Power";
+    public static final int MAX_POWER_SIZE = 1200;
 
     public Taser() {
         super(new Item.Properties().stacksTo(1).rarity(Rarity.COMMON));
     }
 
+    @Override
+    public boolean isBarVisible(ItemStack pStack) {
+        return ItemNBTTool.getInt(pStack, TAG_POWER, 1200) != 1200;
+    }
+
+    @Override
+    public int getBarWidth(ItemStack pStack) {
+        return Math.round((float) ItemNBTTool.getInt(pStack, TAG_POWER, 1200) * 13.0F / 1200F);
+    }
+
+    @Override
+    public int getBarColor(ItemStack pStack) {
+        return 0xFFFF00;
+    }
 
     @Override
     public Set<SoundEvent> getReloadSound() {
@@ -217,6 +233,11 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
                 }
             }
         }
+        int charge_speed = EnchantmentHelper.getTagEnchantmentLevel(TargetModEnchantments.SUPER_RECHARGE.get(), stack);
+
+        if (ItemNBTTool.getInt(stack, TAG_POWER, 1200) < 1200) {
+            ItemNBTTool.setInt(stack, TAG_POWER, Mth.clamp(ItemNBTTool.getInt(stack, TAG_POWER, 1200) + 1 + charge_speed,0,1200));
+        }
     }
 
     protected static boolean check(ItemStack stack) {
@@ -246,7 +267,7 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public int getEnchantmentValue(ItemStack stack) {
-        return 15;
+        return 10;
     }
 
     @Override

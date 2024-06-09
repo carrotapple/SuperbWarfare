@@ -203,8 +203,12 @@
   "item.minecraft.splash_potion.effect.target_long_shock": "Splash Potion of Shock",
   "item.minecraft.lingering_potion.effect.target_long_shock": "Lingering Potion of Shock",
 
-  "enchantment.target.volt_overload": "Volt Overload ",
+  "enchantment.target.volt_overload": "Volt Overload",
   "enchantment.target.volt_overload.desc": "Increases the shock damage of TaserGun",
+  "enchantment.target.super_recharge": "Super Recharge",
+  "enchantment.target.super_recharge.desc": "Increases the recharge speed of TaserGun",
+  "enchantment.target.longer_wire": "Longer Wire",
+  "enchantment.target.longer_wire.desc": "Increases the range of TaserGun",
 
   "des.target.sensitivity": "Current Sensitivity of This Gun: %1$s",
 

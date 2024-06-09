@@ -1,16 +1,19 @@
 package net.mcreator.target.client.model.item;
 
 import net.mcreator.target.item.gun.Taser;
-import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.tools.ItemNBTTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class TaserItemModel extends GeoModel<Taser> {
+
+    public static final String TAG_POWER = "Power";
     @Override
     public ResourceLocation getAnimationResource(Taser animatable) {
         return new ResourceLocation("target", "animations/taser.animation.json");
@@ -30,8 +33,24 @@ public class TaserItemModel extends GeoModel<Taser> {
     public void setCustomAnimations(Taser animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
+        CoreGeoBone bar = getAnimationProcessor().getBone("bar");
+        CoreGeoBone bar2 = getAnimationProcessor().getBone("bar2");
+        CoreGeoBone screen = getAnimationProcessor().getBone("screen");
+        CoreGeoBone screen2 = getAnimationProcessor().getBone("screen2");
 
         Player player = Minecraft.getInstance().player;
+
+        ItemStack stack = player.getMainHandItem();
+        bar.setScaleX((float) ItemNBTTool.getInt(stack, TAG_POWER, 1200) / 1200);
+        bar2.setScaleX((float) ItemNBTTool.getInt(stack, TAG_POWER, 1200) / 1200);
+
+        if (ItemNBTTool.getInt(stack, TAG_POWER, 1200) >= 400) {
+            screen.setHidden(false);
+            screen2.setHidden(true);
+        } else {
+            screen.setHidden(true);
+            screen2.setHidden(false);
+        }
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");

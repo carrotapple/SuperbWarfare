@@ -30,11 +30,7 @@ import java.util.Optional;
 public class TaserBulletProjectileEntity extends ThrowableItemProjectile {
     private float damage = 1f;
     private int volt = 0;
-
-    public TaserBulletProjectileEntity damage(float damage) {
-        this.damage = damage;
-        return this;
-    }
+    private int wire_length = 0;
 
     public TaserBulletProjectileEntity(EntityType<? extends TaserBulletProjectileEntity> type, Level world) {
         super(type, world);
@@ -44,10 +40,11 @@ public class TaserBulletProjectileEntity extends ThrowableItemProjectile {
         super(type, entity, world);
     }
 
-    public TaserBulletProjectileEntity(LivingEntity entity, Level level, float damage, int volt) {
+    public TaserBulletProjectileEntity(LivingEntity entity, Level level, float damage, int volt, int wire_length) {
         super(TargetModEntities.TASER_BULLET_PROJECTILE.get(), entity, level);
         this.damage = damage;
         this.volt = volt;
+        this.wire_length = wire_length;
     }
 
     public TaserBulletProjectileEntity(PlayMessages.SpawnEntity packet, Level level) {
@@ -130,7 +127,7 @@ public class TaserBulletProjectileEntity extends ThrowableItemProjectile {
     public void tick() {
         super.tick();
 
-        if (this.tickCount == 5) {
+        if (this.tickCount == 5 + wire_length) {
             this.setDeltaMovement(new Vec3(0, 0, 0));
         }
 
@@ -142,8 +139,7 @@ public class TaserBulletProjectileEntity extends ThrowableItemProjectile {
     @Override
     protected void onHitBlock(BlockHitResult result) {
         if (!level().isClientSide) {
-            this.setDeltaMovement(this.getDeltaMovement().multiply(0, 0, 0));
-            this.setNoGravity(true);
+            this.setDeltaMovement(new Vec3(0, 0, 0));
         }
     }
 }
