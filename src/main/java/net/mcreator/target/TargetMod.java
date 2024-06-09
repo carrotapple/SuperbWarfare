@@ -9,8 +9,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.TickEvent;
@@ -51,6 +49,7 @@ public class TargetMod {
         TargetModParticleTypes.REGISTRY.register(bus);
         TargetModPotion.POTIONS.register(bus);
         TargetModMenus.REGISTRY.register(bus);
+        TargetModEnchantments.REGISTRY.register(bus);
 
         bus.addListener(this::onCommonSetup);
 

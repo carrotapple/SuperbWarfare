@@ -28,7 +28,18 @@ import net.minecraftforge.network.PlayMessages;
 import java.util.Optional;
 
 public class TaserBulletProjectileEntity extends ThrowableItemProjectile {
-    private float damage = 5f;
+    private float damage = 1f;
+    private int volt = 0;
+
+    public TaserBulletProjectileEntity damage(float damage) {
+        this.damage = damage;
+        return this;
+    }
+
+    public TaserBulletProjectileEntity volt(int volt) {
+        this.volt = volt;
+        return this;
+    }
 
     public TaserBulletProjectileEntity(EntityType<? extends TaserBulletProjectileEntity> type, Level world) {
         super(type, world);
@@ -38,9 +49,10 @@ public class TaserBulletProjectileEntity extends ThrowableItemProjectile {
         super(type, entity, world);
     }
 
-    public TaserBulletProjectileEntity(LivingEntity entity, Level level, float damage) {
+    public TaserBulletProjectileEntity(LivingEntity entity, Level level, float damage, int volt) {
         super(TargetModEntities.TASER_BULLET_PROJECTILE.get(), entity, level);
         this.damage = damage;
+        this.volt = volt;
     }
 
     public TaserBulletProjectileEntity(PlayMessages.SpawnEntity packet, Level level) {
@@ -106,7 +118,7 @@ public class TaserBulletProjectileEntity extends ThrowableItemProjectile {
                 return;
             }
             if (!living.level().isClientSide()) {
-                living.addEffect(new MobEffectInstance(TargetModMobEffects.SHOCK.get(), 100, 0), this.getOwner());
+                living.addEffect(new MobEffectInstance(TargetModMobEffects.SHOCK.get(), 100, volt), this.getOwner());
             }
         }
 

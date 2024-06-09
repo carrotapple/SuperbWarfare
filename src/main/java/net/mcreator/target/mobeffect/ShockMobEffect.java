@@ -40,7 +40,7 @@ public class ShockMobEffect extends MobEffect {
             attacker = entity.level().getEntity(entity.getPersistentData().getInt("TargetShockAttacker"));
         }
 
-        entity.hurt(TargetModDamageTypes.causeShockDamage(entity.level().registryAccess(), attacker), 2 * (amplifier + 1));
+        entity.hurt(TargetModDamageTypes.causeShockDamage(entity.level().registryAccess(), attacker), 2 + (1.25f * amplifier));
         entity.level().playSound(null, entity.getOnPos(), TargetModSounds.ELECTRIC.get(), SoundSource.PLAYERS, 1, 1);
 
         if (attacker instanceof ServerPlayer player) {
@@ -72,7 +72,7 @@ public class ShockMobEffect extends MobEffect {
         }
 
         living.hurt(TargetModDamageTypes.causeShockDamage(living.level().registryAccess(),
-                event.getEffectSource()), 2 * (instance.getAmplifier() + 1));
+                event.getEffectSource()), 2 + (1.25f * instance.getAmplifier()));
 
         if (event.getEffectSource() instanceof LivingEntity source) {
             living.getPersistentData().putInt("TargetShockAttacker", source.getId());

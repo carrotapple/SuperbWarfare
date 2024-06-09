@@ -2,6 +2,7 @@ package net.mcreator.target.procedures;
 
 import net.mcreator.target.entity.TaserBulletProjectileEntity;
 import net.mcreator.target.init.TargetModAttributes;
+import net.mcreator.target.init.TargetModEnchantments;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
@@ -12,6 +13,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 
 // TODO 内联这个类
@@ -37,9 +40,11 @@ public class TaserfireProcedure {
                         serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.TASER_FIRE_3P.get(), SoundSource.PLAYERS, 1, 1);
                     }
 
+                    int volt = EnchantmentHelper.getItemEnchantmentLevel(TargetModEnchantments.VOLT_OVERLOAD.get(), stack);
+
                     Level level = entity.level();
                     if (!level.isClientSide()) {
-                        TaserBulletProjectileEntity taserBulletProjectile = new TaserBulletProjectileEntity(player, level, (float) stack.getOrCreateTag().getDouble("damage"));
+                        TaserBulletProjectileEntity taserBulletProjectile = new TaserBulletProjectileEntity(player, level, (float) stack.getOrCreateTag().getDouble("damage"), volt);
 
                         taserBulletProjectile.setPos(entity.getX(), entity.getEyeY() - 0.1, entity.getZ());
                         taserBulletProjectile.shoot(entity.getLookAngle().x, entity.getLookAngle().y, entity.getLookAngle().z, (float) stack.getOrCreateTag().getDouble("velocity"),
