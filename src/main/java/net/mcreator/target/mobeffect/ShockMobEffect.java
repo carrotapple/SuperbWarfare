@@ -13,11 +13,13 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -33,10 +35,12 @@ public class ShockMobEffect extends MobEffect {
 
     @Override
     public void addAttributeModifiers(LivingEntity entity, AttributeMap attributeMap, int amplifier) {
-        if (!entity.level().isClientSide()) {
-            entity.level().playSound(null, BlockPos.containing(entity.getX(), entity.getY(), entity.getZ()), TargetModSounds.SHOCK.get(), SoundSource.HOSTILE, 1, 1);
-        } else {
-            entity.level().playLocalSound(entity.getX(), entity.getY(), entity.getZ(), TargetModSounds.SHOCK.get(), SoundSource.HOSTILE, 1, 1, false);
+        if (entity instanceof Player player) {
+            if (!entity.level().isClientSide()) {
+                entity.level().playSound(null, BlockPos.containing(entity.getX(), entity.getY(), entity.getZ()), TargetModSounds.SHOCK.get(), SoundSource.HOSTILE, 1, 1);
+            } else {
+                entity.level().playLocalSound(entity.getX(), entity.getY(), entity.getZ(), TargetModSounds.SHOCK.get(), SoundSource.HOSTILE, 1, 1, false);
+            }
         }
     }
 
@@ -44,6 +48,9 @@ public class ShockMobEffect extends MobEffect {
     public void applyEffectTick(LivingEntity entity, int amplifier) {
         entity.setXRot((float) Mth.nextDouble(RandomSource.create(), -23, -36));
         entity.xRotO = entity.getXRot();
+        if (!entity.level().isClientSide()) {
+            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10, 10));
+        }
     }
 
     @Override
@@ -61,7 +68,7 @@ public class ShockMobEffect extends MobEffect {
         }
 
         living.hurt(TargetModDamageTypes.causeShockDamage(living.level().registryAccess(),
-                event.getEffectSource()), 5.0f);
+                event.getEffectSource()), 2 * (instance.getAmplifier() + 1));
 
         if (event.getEffectSource() instanceof LivingEntity source) {
             living.getPersistentData().putInt("TargetShockAttacker", source.getId());
@@ -115,8 +122,8 @@ public class ShockMobEffect extends MobEffect {
             }
 
             if (instance.getDuration() % 20 == 0) {
-                living.hurt(TargetModDamageTypes.causeShockDamage(living.level().registryAccess(), entity), 5.0f);
-
+                living.hurt(TargetModDamageTypes.causeShockDamage(living.level().registryAccess(), entity), 2 * (instance.getAmplifier() + 1));
+                living.level().playSound(null, living.getOnPos(), TargetModSounds.ELECTRIC.get(), SoundSource.PLAYERS, 1, 1);
                 if (entity instanceof ServerPlayer player) {
                     player.level().playSound(null, player.blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
                     TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
