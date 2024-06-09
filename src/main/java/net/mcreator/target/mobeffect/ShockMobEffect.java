@@ -54,22 +54,17 @@ public class ShockMobEffect extends MobEffect {
     @SubscribeEvent
     public static void onEffectAdded(MobEffectEvent.Added event) {
         LivingEntity living = event.getEntity();
+
+        MobEffectInstance instance = event.getEffectInstance();
+        if (!instance.getEffect().equals(TargetModMobEffects.SHOCK.get())) {
+            return;
+        }
+
+        living.hurt(TargetModDamageTypes.causeShockDamage(living.level().registryAccess(),
+                event.getEffectSource()), 5.0f);
+
         if (event.getEffectSource() instanceof LivingEntity source) {
-            MobEffectInstance instance = event.getEffectInstance();
-
-            if (!instance.getEffect().equals(TargetModMobEffects.SHOCK.get())) {
-                return;
-            }
-
             living.getPersistentData().putInt("TargetShockAttacker", source.getId());
-
-            if (living.hasEffect(TargetModMobEffects.SHOCK.get())) {
-                System.out.println(instance.getDuration());
-                if (instance.getDuration() % 10 == 0) {
-                    living.hurt(TargetModDamageTypes.causeShockDamage(living.level().registryAccess(),
-                            source), 5.0f);
-                }
-            }
         }
     }
 
