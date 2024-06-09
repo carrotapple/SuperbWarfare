@@ -61,7 +61,6 @@ public class ShockMobEffect extends MobEffect {
                 return;
             }
 
-            living.getPersistentData().putBoolean("TargetShock", true);
             living.getPersistentData().putInt("TargetShockAttacker", source.getId());
 
             if (living.hasEffect(TargetModMobEffects.SHOCK.get())) {
@@ -84,7 +83,6 @@ public class ShockMobEffect extends MobEffect {
         }
 
         if (instance.getEffect().equals(TargetModMobEffects.SHOCK.get())) {
-            living.getPersistentData().remove("TargetShock");
             living.getPersistentData().remove("TargetShockAttacker");
         }
     }
@@ -99,7 +97,6 @@ public class ShockMobEffect extends MobEffect {
         }
 
         if (instance.getEffect().equals(TargetModMobEffects.SHOCK.get())) {
-            living.getPersistentData().remove("TargetShock");
             living.getPersistentData().remove("TargetShockAttacker");
         }
     }
@@ -115,12 +112,12 @@ public class ShockMobEffect extends MobEffect {
                 return;
             }
 
-            if (!living.getPersistentData().contains("TargetShockAttacker") ||
-                    !living.getPersistentData().getBoolean("TargetShock")) {
-                return;
+            Entity entity;
+            if (!living.getPersistentData().contains("TargetShockAttacker")) {
+                entity = null;
+            } else {
+                entity = living.level().getEntity(living.getPersistentData().getInt("TargetShockAttacker"));
             }
-
-            Entity entity = living.level().getEntity(living.getPersistentData().getInt("TargetShockAttacker"));
 
             if (instance.getDuration() % 20 == 0) {
                 living.hurt(TargetModDamageTypes.causeShockDamage(living.level().registryAccess(), entity), 5.0f);
