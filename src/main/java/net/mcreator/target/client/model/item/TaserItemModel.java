@@ -34,22 +34,20 @@ public class TaserItemModel extends GeoModel<Taser> {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone bar = getAnimationProcessor().getBone("bar");
-        CoreGeoBone bar2 = getAnimationProcessor().getBone("bar2");
-        CoreGeoBone screen = getAnimationProcessor().getBone("screen");
-        CoreGeoBone screen2 = getAnimationProcessor().getBone("screen2");
+        CoreGeoBone bluecover = getAnimationProcessor().getBone("bluecover");
+        CoreGeoBone redcover = getAnimationProcessor().getBone("redcover");
 
         Player player = Minecraft.getInstance().player;
 
         ItemStack stack = player.getMainHandItem();
         bar.setScaleX((float) ItemNBTTool.getInt(stack, TAG_POWER, 1200) / 1200);
-        bar2.setScaleX((float) ItemNBTTool.getInt(stack, TAG_POWER, 1200) / 1200);
 
         if (ItemNBTTool.getInt(stack, TAG_POWER, 1200) >= 400) {
-            screen.setHidden(false);
-            screen2.setHidden(true);
+            bluecover.setHidden(false);
+            redcover.setHidden(true);
         } else {
-            screen.setHidden(true);
-            screen2.setHidden(false);
+            bluecover.setHidden(true);
+            redcover.setHidden(false);
         }
 
         double fp = player.getPersistentData().getDouble("fire_pos");
