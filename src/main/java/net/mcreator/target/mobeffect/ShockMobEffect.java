@@ -1,6 +1,7 @@
 package net.mcreator.target.mobeffect;
 
 import net.mcreator.target.TargetMod;
+import net.mcreator.target.entity.ClaymoreEntity;
 import net.mcreator.target.init.TargetModDamageTypes;
 import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModSounds;
@@ -10,6 +11,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -18,6 +21,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -114,6 +118,25 @@ public class ShockMobEffect extends MobEffect {
         if (living.hasEffect(TargetModMobEffects.SHOCK.get())) {
             living.setXRot((float) Mth.nextDouble(RandomSource.create(), -23, -36));
             living.xRotO = living.getXRot();
+        }
+    }
+
+    @SubscribeEvent
+    public static void onEntityAttacked(LivingAttackEvent event) {
+        if (event == null || event.getEntity() == null) {
+            return;
+        }
+        shockCancelDamage(event);
+    }
+
+    private static void shockCancelDamage(LivingAttackEvent event) {
+        DamageSource source = event.getSource();
+        Entity sourceentity = source.getDirectEntity();
+        if (sourceentity == null) {
+            return;
+        }
+        if (sourceentity instanceof LivingEntity living && living.hasEffect(TargetModMobEffects.SHOCK.get())) {
+            event.setCanceled(true);
         }
     }
 }
