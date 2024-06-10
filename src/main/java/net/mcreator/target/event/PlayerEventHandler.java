@@ -321,19 +321,22 @@ public class PlayerEventHandler {
 
                 double recoil = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.recoil).orElse(0d);
 
-                if (recoil >= 2) recoil = 0d;
+                if (recoil >= 2.5) recoil = 0d;
+
+                double sinRes = 0;
 
                 if (0 < recoil && recoil < 2) {
-                    recoil = recoil + 0.013 * (2.5 - recoil);
+                    recoil = recoil + 0.025;
+                    sinRes = Math.sin(Math.PI * recoil);
+                }
 
-                    double sinRes = 0;
-                    sinRes = 0.9 * Math.sin(Math.PI * (2 * recoil - 1)) * (0.5 / (2 * recoil - 1));
+                if (2 <= recoil && recoil < 2.5) {
+                    recoil = recoil + 0.013;
+                    sinRes = 0.4 * Math.sin(2 * Math.PI * recoil);
+                }
 
-                    if (sinRes < 0){
-                        sinRes = 4 * sinRes;
-                    }
-
-                    float newPitch = ((float) (player.getXRot() - 5f * recoilY * ry * (sinRes + Mth.clamp(0.8 - recoil,0,0.8))));
+                if (0 < recoil && recoil < 2.5) {
+                    float newPitch = ((float) (player.getXRot() - 6f * recoilY * ry * (sinRes + Mth.clamp(0.8 - recoil,0,0.8))));
                     player.setXRot(newPitch);
                     player.xRotO = player.getXRot();
 
