@@ -274,44 +274,27 @@ public class PlayerEventHandler {
     private static void handleGunRecoil(Player player) {
         if (!player.getMainHandItem().is(TargetModTags.Items.GUN)) return;
 
-        CompoundTag tag = player.getMainHandItem().getOrCreateTag();
-        float recoilX = (float) tag.getDouble("recoil_x");
-        float recoilY = (float) tag.getDouble("recoil_y");
-
-        float recoilYaw = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.recoilHorizon).orElse(0d).floatValue();
-
-        double recoil = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.recoil).orElse(0d);
-
-        if (recoil >= 2.5) recoil = 0d;
-
-        double sinRes = 0;
-
-        if (0 < recoil && recoil < 2) {
-            recoil = recoil + 0.2;
-            sinRes = Math.sin(Math.PI * recoil);
-        }
-
-        if (2 <= recoil && recoil < 2.5) {
-            recoil = recoil + 0.1;
-            sinRes = 0.4 * Math.sin(2 * Math.PI * recoil);
-        }
+        float recoilx = (float)player.getMainHandItem().getOrCreateTag().getDouble("recoil_x");
+        float recoily = (float)player.getMainHandItem().getOrCreateTag().getDouble("recoil_y");
+        float recoilyaw = ((float) (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon);
 
         double[] recoilTimer = {0};
-        double totalTime = 20;
+        double totalTime = 100;
         int sleepTime = 2;
         double recoilDuration = totalTime / sleepTime;
-
-        double finalRecoil1 = recoil;
-        double finalSinRes = sinRes;
         Runnable recoilRunnable = () -> {
             while (recoilTimer[0] < recoilDuration) {
 
-                float rx, ry;
+                if (player == null)
+                    return;
+                float rx = 0;
+                float ry = 0;
+
                 if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && player.getPersistentData().getDouble("prone") == 0) {
                     rx = 0.7f;
                     ry = 0.8f;
                 } else if (player.getPersistentData().getDouble("prone") > 0) {
-                    if (tag.getDouble("bipod") == 1) {
+                    if (player.getMainHandItem().getOrCreateTag().getDouble("bipod") == 1) {
                         rx = 0.05f;
                         ry = 0.1f;
                     } else {
@@ -323,21 +306,34 @@ public class PlayerEventHandler {
                     ry = 1f;
                 }
 
-                if (0 < finalRecoil1 && finalRecoil1 < 2.5) {
-                    float newPitch = ((float) (player.getXRot() - 6f * recoilY * ry * (finalSinRes + Mth.clamp(1 - finalRecoil1,0,1))));
+                if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoil >= 1) {
+                    {
+                        double _setval = 0;
+                        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                            capability.recoil = _setval;
+                            capability.syncPlayerVariables(player);
+                        });
+                    }
+                }
+
+                if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoil > 0) {
+                    {
+                        double _setval = (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoil + 0.0025;
+                        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                            capability.recoil = _setval;
+                            capability.syncPlayerVariables(player);
+                        });
+                    }
+
+                    float newPitch = ((float) (player.getXRot() - 1.5f * recoily * ry * (Math.sin(2 * Math.PI * (1.03f * (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoil - 0.032047110911)) + 0.2)));
                     player.setXRot(newPitch);
                     player.xRotO = player.getXRot();
 
-                    float newYaw = ((float) (player.getYRot() - 4f * recoilYaw * recoilX * rx * finalSinRes));
+                    float newYaw = ((float) (player.getYRot() - 1.0f * recoilyaw * recoilx * rx * (Math.sin(2 * Math.PI * (1.03f * (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoil - 0.032047110911)) + 0.2)));
                     player.setYRot(newYaw);
                     player.yRotO = player.getYRot();
-                }
 
-                double finalRecoil = finalRecoil1;
-                player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(c -> {
-                    c.recoil = finalRecoil;
-                    c.syncPlayerVariables(player);
-                });
+                }
 
                 recoilTimer[0]++;
                 try {
