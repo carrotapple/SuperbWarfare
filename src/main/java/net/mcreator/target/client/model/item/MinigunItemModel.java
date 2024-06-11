@@ -32,6 +32,8 @@ public class MinigunItemModel extends GeoModel<Minigun> {
         CoreGeoBone gun = getAnimationProcessor().getBone("barrel");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
+        CoreGeoBone light = getAnimationProcessor().getBone("light");
+        CoreGeoBone heat_barrels = getAnimationProcessor().getBone("heatbarrels");
 
         Player player = Minecraft.getInstance().player;
         ItemStack stack = player.getMainHandItem();
@@ -42,6 +44,9 @@ public class MinigunItemModel extends GeoModel<Minigun> {
         }
         float times = 250f / fps;
 
+        float heat = (float)stack.getOrCreateTag().getDouble("heat");
+
+        heat_barrels.setScaleZ(4 * heat);
 
         gun.setRotZ((float) (gun.getRotZ() + times * -0.008f * stack.getOrCreateTag().getDouble("minigun_rotation")));
 
@@ -72,13 +77,14 @@ public class MinigunItemModel extends GeoModel<Minigun> {
         }
 
         if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
+            flare.setHidden(false);
+            light.setHidden(false);
             flare.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
             flare.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
             flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
         } else {
-            flare.setScaleX(0);
-            flare.setScaleY(0);
-            flare.setRotZ(0);
+            flare.setHidden(true);
+            light.setHidden(true);
 
         }
 
@@ -125,5 +131,13 @@ public class MinigunItemModel extends GeoModel<Minigun> {
         move.setRotY(Mth.DEG_TO_RAD * (float) yRot);
 
         move.setRotZ(2.7f * (float) m + Mth.DEG_TO_RAD * (float) zRot);
+
+        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+
+        player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
+
+        player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
+
+        player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

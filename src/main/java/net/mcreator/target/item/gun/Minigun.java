@@ -16,6 +16,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -184,9 +185,18 @@ public class Minigun extends GunItem implements GeoItem, AnimatedItem {
         super.inventoryTick(itemstack, world, entity, slot, selected);
         if (entity == null)
             return;
-        if (itemstack.getOrCreateTag().getDouble("heat") > 0) {
-            itemstack.getOrCreateTag().putDouble("heat", (itemstack.getOrCreateTag().getDouble("heat") - 0.5));
+
+        double cooldown = 0;
+        if(entity.wasInPowderSnow){
+            cooldown = 0.75;
+        } else if (entity.isInWaterOrRain()){
+            cooldown = 0.2;
+        } else if (entity.isOnFire() || entity.isInLava()){
+            cooldown = -0.5;
         }
+
+        itemstack.getOrCreateTag().putDouble("heat", Mth.clamp(itemstack.getOrCreateTag().getDouble("heat") - 0.25 - cooldown,0,55));
+
         if (itemstack.getOrCreateTag().getDouble("heat") == 0) {
             itemstack.getOrCreateTag().putDouble("heat_bar", 51);
         } else {
