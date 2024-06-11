@@ -65,8 +65,6 @@ public class PlayerEventHandler {
             handleDistantRange(player);
             handleBocekPulling(player);
             handleGunRecoil(player);
-            handleGunFire(player);
-            handleGunDev(player);
         }
     }
 
@@ -267,34 +265,49 @@ public class PlayerEventHandler {
         }
     }
 
-    /**
-     * 计算后坐力
-     */
-
     private static void handleGunRecoil(Player player) {
         if (!player.getMainHandItem().is(TargetModTags.Items.GUN)) return;
 
-        float recoilx = (float)player.getMainHandItem().getOrCreateTag().getDouble("recoil_x");
-        float recoily = (float)player.getMainHandItem().getOrCreateTag().getDouble("recoil_y");
-        float recoilyaw = ((float) (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon);
+        CompoundTag tag = player.getMainHandItem().getOrCreateTag();
+        float recoilX = (float) tag.getDouble("recoil_x");
+        float recoilY = (float) tag.getDouble("recoil_y");
+
+        float recoilYaw = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.recoilHorizon).orElse(0d).floatValue();
 
         double[] recoilTimer = {0};
-        double totalTime = 100;
+        double totalTime = 20;
         int sleepTime = 2;
         double recoilDuration = totalTime / sleepTime;
+
         Runnable recoilRunnable = () -> {
             while (recoilTimer[0] < recoilDuration) {
 
-                if (player == null)
-                    return;
-                float rx = 0;
-                float ry = 0;
+                /**
+                 * 开火动画计时器
+                 */
 
+                if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing > 0) {
+                    player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        capability.firing = (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing - 0.1;
+                        capability.syncPlayerVariables(player);
+                    });
+                } else {
+                    player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        capability.firing = 0;
+                        capability.syncPlayerVariables(player);
+                    });
+                }
+
+                /**
+                 * 计算后坐力
+                 */
+
+                float rx, ry;
                 if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && player.getPersistentData().getDouble("prone") == 0) {
                     rx = 0.7f;
                     ry = 0.8f;
                 } else if (player.getPersistentData().getDouble("prone") > 0) {
-                    if (player.getMainHandItem().getOrCreateTag().getDouble("bipod") == 1) {
+                    if (tag.getDouble("bipod") == 1) {
                         rx = 0.05f;
                         ry = 0.1f;
                     } else {
@@ -306,34 +319,91 @@ public class PlayerEventHandler {
                     ry = 1f;
                 }
 
-                if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoil >= 1) {
-                    {
-                        double _setval = 0;
-                        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                            capability.recoil = _setval;
-                            capability.syncPlayerVariables(player);
-                        });
-                    }
+                double recoil = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.recoil).orElse(0d);
+
+                if (recoil >= 2.5) recoil = 0d;
+
+                double sinRes = 0;
+
+                if (0 < recoil && recoil < 2) {
+                    recoil = recoil + 0.025;
+                    sinRes = Math.sin(Math.PI * recoil);
                 }
 
-                if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoil > 0) {
-                    {
-                        double _setval = (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoil + 0.0025;
-                        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                            capability.recoil = _setval;
-                            capability.syncPlayerVariables(player);
-                        });
-                    }
+                if (2 <= recoil && recoil < 2.5) {
+                    recoil = recoil + 0.013;
+                    sinRes = 0.4 * Math.sin(2 * Math.PI * recoil);
+                }
 
-                    float newPitch = ((float) (player.getXRot() - 1.5f * recoily * ry * (Math.sin(2 * Math.PI * (1.03f * (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoil - 0.032047110911)) + 0.2)));
+                if (0 < recoil && recoil < 2.5) {
+                    float newPitch = ((float) (player.getXRot() - 6f * recoilY * ry * (sinRes + Mth.clamp(0.8 - recoil,0,0.8))));
                     player.setXRot(newPitch);
                     player.xRotO = player.getXRot();
 
-                    float newYaw = ((float) (player.getYRot() - 1.0f * recoilyaw * recoilx * rx * (Math.sin(2 * Math.PI * (1.03f * (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoil - 0.032047110911)) + 0.2)));
+                    float newYaw = ((float) (player.getYRot() - 4f * recoilYaw * recoilX * rx * sinRes));
                     player.setYRot(newYaw);
                     player.yRotO = player.getYRot();
-
                 }
+
+                /**
+                 * 计算散布
+                 */
+
+                ItemStack stack = player.getMainHandItem();
+
+                double basic = stack.getOrCreateTag().getDouble("dev");
+
+                double sprint = player.isSprinting() ? 0.5 * basic : 0;
+                double sneaking = player.isShiftKeyDown() ? (-0.25) * basic : 0;
+                double prone = player.getPersistentData().getDouble("prone") > 0 ? (-0.5) * basic : 0;
+                double jump = player.onGround() ? 0 : 1.5 * basic;
+                double fire = stack.getOrCreateTag().getInt("fire_animation") > 0 ? 0.5 * basic : 0;
+                double ride = player.isPassenger() ? (-0.5) * basic : 0;
+
+                double walk;
+                if (player.getPersistentData().getDouble("move_forward") == 1 || player.getPersistentData().getDouble("move_backward") == 1 ||
+                        player.getPersistentData().getDouble("move_left") == 1 || player.getPersistentData().getDouble("move_right") == 1) {
+                    walk = 0.2 * basic;
+                } else {
+                    walk = 0;
+                }
+
+                double zoom;
+                if (player.getPersistentData().getDouble("zoom_animation_time") > 4) {
+                    if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
+                        zoom = 0.0001;
+                    } else if (stack.is(TargetModTags.Items.SHOTGUN)) {
+                        zoom = 0.9;
+                    } else {
+                        zoom = 0.0001;
+                    }
+                } else {
+                    zoom = 1;
+                }
+
+                double index = zoom * (basic + walk + sprint + sneaking + prone + jump + fire + ride);
+
+                if (player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) < index) {
+                    player.getAttribute(TargetModAttributes.SPREAD.get())
+                            .setBaseValue(player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) + 0.125 * Math.pow(index - player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()), 2));
+                } else {
+                    player.getAttribute(TargetModAttributes.SPREAD.get())
+                            .setBaseValue(player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) - 0.125 * Math.pow(index - player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()), 2));
+                }
+
+                if (player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) > 15) {
+                    player.getAttribute(TargetModAttributes.SPREAD.get()).setBaseValue(15);
+                }
+                if (player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) < 0) {
+                    player.getAttribute(TargetModAttributes.SPREAD.get()).setBaseValue(0);
+                }
+
+
+                double finalRecoil = recoil;
+                player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(c -> {
+                    c.recoil = finalRecoil;
+                    c.syncPlayerVariables(player);
+                });
 
                 recoilTimer[0]++;
                 try {
@@ -347,78 +417,4 @@ public class PlayerEventHandler {
         recoilThread.start();
     }
 
-    /**
-     * 开火动画计时器
-     */
-    private static void handleGunFire(Player player) {
-        if (!player.getMainHandItem().is(TargetModTags.Items.GUN)) return;
-
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing > 0) {
-            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.firing = (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing - 0.5;
-                capability.syncPlayerVariables(player);
-            });
-        } else {
-            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.firing = 0;
-                capability.syncPlayerVariables(player);
-            });
-        }
-    }
-
-    /**
-     * 计算散布
-     */
-    private static void handleGunDev(Player player) {
-        if (!player.getMainHandItem().is(TargetModTags.Items.GUN)) return;
-
-        ItemStack stack = player.getMainHandItem();
-
-        double basic = stack.getOrCreateTag().getDouble("dev");
-
-        double sprint = player.isSprinting() ? 0.5 * basic : 0;
-        double sneaking = player.isShiftKeyDown() ? (-0.25) * basic : 0;
-        double prone = player.getPersistentData().getDouble("prone") > 0 ? (-0.5) * basic : 0;
-        double jump = player.onGround() ? 0 : 1.5 * basic;
-        double fire = stack.getOrCreateTag().getInt("fire_animation") > 0 ? 0.5 * basic : 0;
-        double ride = player.isPassenger() ? (-0.5) * basic : 0;
-
-        double walk;
-        if (player.getPersistentData().getDouble("move_forward") == 1 || player.getPersistentData().getDouble("move_backward") == 1 ||
-                player.getPersistentData().getDouble("move_left") == 1 || player.getPersistentData().getDouble("move_right") == 1) {
-            walk = 0.2 * basic;
-        } else {
-            walk = 0;
-        }
-
-        double zoom;
-        if (player.getPersistentData().getDouble("zoom_animation_time") > 4) {
-            if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
-                zoom = 0.0001;
-            } else if (stack.is(TargetModTags.Items.SHOTGUN)) {
-                zoom = 0.9;
-            } else {
-                zoom = 0.0001;
-            }
-        } else {
-            zoom = 1;
-        }
-
-        double index = zoom * (basic + walk + sprint + sneaking + prone + jump + fire + ride);
-
-        if (player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) < index) {
-            player.getAttribute(TargetModAttributes.SPREAD.get())
-                    .setBaseValue(player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) + 0.25 * Math.pow(index - player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()), 2));
-        } else {
-            player.getAttribute(TargetModAttributes.SPREAD.get())
-                    .setBaseValue(player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) - 0.25 * Math.pow(index - player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()), 2));
-        }
-
-        if (player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) > 15) {
-            player.getAttribute(TargetModAttributes.SPREAD.get()).setBaseValue(15);
-        }
-        if (player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) < 0) {
-            player.getAttribute(TargetModAttributes.SPREAD.get()).setBaseValue(0);
-        }
-    }
 }
