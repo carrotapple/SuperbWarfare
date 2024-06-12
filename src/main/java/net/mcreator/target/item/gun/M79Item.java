@@ -184,7 +184,7 @@ public class M79Item extends GunItem implements GeoItem, AnimatedItem {
                 tag.putDouble("reload_time", 0);
             }
             if (tag.getBoolean("reloading")) {
-                if (tag.getDouble("reload_time") == 86) {
+                if (tag.getDouble("reload_time") == 61) {
                     entity.getPersistentData().putDouble("id", id);
                     if (entity instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, TargetModSounds.M_79_RELOAD.get(), 100, 1);

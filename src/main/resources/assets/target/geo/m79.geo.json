@@ -28,7 +28,7 @@
 				{
 					"name": "0",
 					"parent": "bone",
-					"pivot": [0, 0, 0]
+					"pivot": [0, 0, 10]
 				},
 				{
 					"name": "gun",
@@ -75,13 +75,8 @@
 					]
 				},
 				{
-					"name": "qian",
-					"parent": "gun",
-					"pivot": [0, -0.0083, 1.6901]
-				},
-				{
 					"name": "Lefthand",
-					"parent": "qian",
+					"parent": "gun",
 					"pivot": [3, -5.5, 8.2],
 					"rotation": [66.92679, 12.45515, -5.24927],
 					"cubes": [
@@ -98,6 +93,11 @@
 							}
 						}
 					]
+				},
+				{
+					"name": "qian",
+					"parent": "gun",
+					"pivot": [0, -0.0083, 1.6901]
 				},
 				{
 					"name": "bullet",

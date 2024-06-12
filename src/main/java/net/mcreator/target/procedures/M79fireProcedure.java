@@ -48,7 +48,7 @@ public class M79fireProcedure {
                             ("particle minecraft:cloud" + (" " + (entity.getX() + 1.8 * entity.getLookAngle().x)) + (" " + (entity.getY() + entity.getBbHeight() - 0.1 + 1.8 * entity.getLookAngle().y))
                                     + (" " + (entity.getZ() + 1.8 * entity.getLookAngle().z)) + " 0.1 0.1 0.1 0.002 4 force @s"));
                 }
-                player.getCooldowns().addCooldown(stack.getItem(), 15);
+                player.getCooldowns().addCooldown(stack.getItem(), 2);
 
                 if (entity instanceof ServerPlayer) {
                     SoundTool.playLocalSound(player, TargetModSounds.M_79_FIRE_1P.get(), 2, 1);

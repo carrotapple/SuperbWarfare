@@ -27,7 +27,7 @@ public class TargetModEntities {
     public static final RegistryObject<EntityType<ClaymoreEntity>> CLAYMORE = register("claymore",
             EntityType.Builder.<ClaymoreEntity>of(ClaymoreEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(ClaymoreEntity::new).fireImmune().sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<TaserBulletProjectileEntity>> TASER_BULLET_PROJECTILE = register("projectile_taser_bullet_projectile",
-            EntityType.Builder.<TaserBulletProjectileEntity>of(TaserBulletProjectileEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setCustomClientFactory(TaserBulletProjectileEntity::new)
+            EntityType.Builder.<TaserBulletProjectileEntity>of(TaserBulletProjectileEntity::new, MobCategory.MISC).setCustomClientFactory(TaserBulletProjectileEntity::new).setShouldReceiveVelocityUpdates(true).setTrackingRange(64)
                     .setUpdateInterval(1).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<GunGrenadeEntity>> GUN_GRENADE = register("projectile_gun_grenade",
             EntityType.Builder.<GunGrenadeEntity>of(GunGrenadeEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(GunGrenadeEntity::new).sized(0.5f, 0.5f));
