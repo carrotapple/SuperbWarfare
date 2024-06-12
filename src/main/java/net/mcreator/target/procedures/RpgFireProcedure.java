@@ -52,7 +52,8 @@ public class RpgFireProcedure {
             }
 
             if (tag.getInt("ammo") == 1) {
-                tag.putDouble("empty", 1);
+                tag.putBoolean("empty", true);
+                tag.putBoolean("close_hammer", true);
             }
 
             player.getCooldowns().addCooldown(mainHandItem.getItem(), 10);

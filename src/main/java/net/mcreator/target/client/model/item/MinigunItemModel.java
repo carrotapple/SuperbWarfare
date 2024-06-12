@@ -54,27 +54,16 @@ public class MinigunItemModel extends GeoModel<Minigun> {
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
 
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-            shen.setPosY(0.02f * (float) (fp + 2 * fr));
-            shen.setPosZ(0.6f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.003f * (float) (fp + fr));
-            shen.setRotZ(0f);
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                shen.setRotY(0.015f * (float) fr);
-            } else {
-                shen.setRotY(-0.015f * (float) fr);
-            }
+        shen.setPosY(0.1f * (float) (fp + 2 * fr));
+        shen.setPosZ(2.2f * (float) (0.5 * fp + 1.54f * fr));
+        shen.setRotX(0.05f * (float) (0.18f * fp + fr));
+        shen.setRotZ(-0.02f * (float) (fp + 1.3 * fr));
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+            shen.setRotY(0.055f * (float) fr);
         } else {
-            shen.setPosY(0.04f * (float) (fp + 2 * fr));
-            shen.setPosZ(1.2f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.03f * (float) (0.18f * fp + fr));
-            shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                shen.setRotY(0.045f * (float) fr);
-            } else {
-                shen.setRotY(-0.045f * (float) fr);
-            }
+            shen.setRotY(-0.055f * (float) fr);
         }
+
 
         if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
             flare.setHidden(false);

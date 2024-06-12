@@ -65,7 +65,7 @@ public class PlayerReloadProcedure {
                     tag.putBoolean("reloading", true);
                     tag.putDouble("empty_reload", 1);
                     tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                    tag.putDouble("reload_time", 91);
+                    tag.putDouble("reload_time", 97);
                 }
                 if (player.getMainHandItem().getItem() == TargetModItems.ABEKIRI.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))

@@ -32,14 +32,19 @@ public class RpgItemModel extends GeoModel<RpgItem> {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone rocket = getAnimationProcessor().getBone("Rockets");
         CoreGeoBone shen = getAnimationProcessor().getBone("rpg");
+        CoreGeoBone hammer = getAnimationProcessor().getBone("hammer");
 
         Player player = Minecraft.getInstance().player;
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.getOrCreateTag().getDouble("empty") == 1) {
-            rocket.setScaleX(0);
-            rocket.setScaleY(0);
-            rocket.setScaleZ(0);
+        if (stack.getOrCreateTag().getBoolean("empty")) {
+            rocket.setHidden(true);
+        } else {
+            rocket.setHidden(false);
+        }
+
+        if (stack.getOrCreateTag().getBoolean("close_hammer")) {
+            hammer.setRotX(-90 * Mth.DEG_TO_RAD);
         }
 
         double fp = player.getPersistentData().getDouble("fire_pos");
@@ -84,13 +89,12 @@ public class RpgItemModel extends GeoModel<RpgItem> {
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
 
         if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
+            flare.setHidden(false);
             flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
             flare.setScaleY((float) (1.0 + 0.5 * (Math.random() - 0.5)));
             flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
         } else {
-            flare.setScaleX(0);
-            flare.setScaleY(0);
-            flare.setRotZ(0);
+            flare.setHidden(true);
         }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");

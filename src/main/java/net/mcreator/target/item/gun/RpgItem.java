@@ -186,7 +186,7 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
                 tag.putDouble("reload_time", 0);
             }
             if (tag.getBoolean("reloading")) {
-                if (tag.getDouble("reload_time") == 91) {
+                if (tag.getDouble("reload_time") == 97) {
                     entity.getPersistentData().putDouble("id", id);
                     if (entity.getServer() != null) {
                         SoundTool.playLocalSound(player, TargetModSounds.RPG_RELOAD.get(), 100, 1);
@@ -203,7 +203,10 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
                     tag.putBoolean("empty_reload", false);
                 }
                 if (tag.getDouble("reload_time") == 84) {
-                    tag.putDouble("empty", 0);
+                    tag.putBoolean("empty", false);
+                }
+                if (tag.getDouble("reload_time") == 7) {
+                    tag.putBoolean("close_hammer", false);
                 }
                 if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
                     if (tag.getInt("max_ammo") >= 0) {
