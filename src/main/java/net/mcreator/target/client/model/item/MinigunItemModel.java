@@ -58,12 +58,7 @@ public class MinigunItemModel extends GeoModel<Minigun> {
         shen.setPosZ(2.2f * (float) (0.5 * fp + 1.54f * fr));
         shen.setRotX(0.05f * (float) (0.18f * fp + fr));
         shen.setRotZ(-0.02f * (float) (fp + 1.3 * fr));
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-            shen.setRotY(0.055f * (float) fr);
-        } else {
-            shen.setRotY(-0.055f * (float) fr);
-        }
-
+        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
 
         if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
             flare.setHidden(false);

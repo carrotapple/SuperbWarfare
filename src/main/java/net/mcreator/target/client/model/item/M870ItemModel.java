@@ -70,22 +70,13 @@ public class M870ItemModel extends GeoModel<M870Item> {
             shen.setPosZ(2.6f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.28f * (float) (fp + fr));
             shen.setRotZ(0f);
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                shen.setRotY(0.025f * (float) fr);
-            } else {
-                shen.setRotY(-0.025f * (float) fr);
-            }
         } else {
             shen.setPosY(0.3f * (float) (fp + 2 * fr));
             shen.setPosZ(3.2f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.3f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                shen.setRotY(0.045f * (float) fr);
-            } else {
-                shen.setRotY(-0.045f * (float) fr);
-            }
         }
+        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
 
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
 

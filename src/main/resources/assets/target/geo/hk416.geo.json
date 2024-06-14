@@ -6,7 +6,7 @@
 				"identifier": "geometry.hk416",
 				"texture_width": 128,
 				"texture_height": 128,
-				"visible_bounds_width": 11,
+				"visible_bounds_width": 18,
 				"visible_bounds_height": 6,
 				"visible_bounds_offset": [0, 0, 0]
 			},
@@ -9510,7 +9510,7 @@
 							"uv": {
 								"north": {"uv": [85.59375, 35.3125], "uv_size": [4, 4]},
 								"east": {"uv": [101.15625, 18.53125], "uv_size": [5.9375, 4]},
-								"south": {"uv": [45.26233, 89.86003], "uv_size": [8, 8]},
+								"south": {"uv": [55.20764, 90.39909], "uv_size": [36, 36]},
 								"west": {"uv": [92.0625, 17.21875], "uv_size": [7.53125, 4]},
 								"up": {"uv": [112.0625, 26.0625], "uv_size": [-4, -7.875]},
 								"down": {"uv": [116.1875, 31.125], "uv_size": [-4, -4.625]}

@@ -62,44 +62,31 @@ public class DevotionItemModel extends GeoModel<Devotion> {
 
         bolt.setPosZ(-2f * (float) bp);
 
+        CoreGeoBone holo = getAnimationProcessor().getBone("holo");
+        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
+        if (gun.getPosX() > 1.2) {
+            holo.setHidden(false);
+            number.setHidden(false);
+        } else {
+            holo.setHidden(true);
+            number.setHidden(true);
+        }
+
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-            shen.setPosY(-0.01f * (float) (fp + 2 * fr));
-            shen.setPosZ(0.4f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.003f * (float) (fp + fr));
-            shen.setRotZ(0f);
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                shen.setRotY(0.015f * (float) fr);
-            } else {
-                shen.setRotY(-0.015f * (float) fr);
-            }
+            shen.setPosY(0.05f * (float) (fp + 2 * fr));
+            holo.setPosY(-0.03f * (float) (fp + 2.3 * fr));
+            shen.setPosZ(1.1f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.001f * (float) (fp + fr));
         } else {
             shen.setPosY(-0.03f * (float) (fp + 2 * fr));
             shen.setPosZ(0.75f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.02f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                shen.setRotY(0.03f * (float) fr);
-            } else {
-                shen.setRotY(-0.03f * (float) fr);
-            }
         }
-
-        CoreGeoBone holo = getAnimationProcessor().getBone("holo");
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
-        if (gun.getPosX() > 1.2) {
-            holo.setScaleX(1);
-            holo.setScaleY(1);
-            number.setScaleX(1);
-            number.setScaleY(1);
-        } else {
-            holo.setScaleX(0);
-            holo.setScaleY(0);
-            number.setScaleX(0);
-            number.setScaleY(0);
-        }
+        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
 
         if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
             flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));

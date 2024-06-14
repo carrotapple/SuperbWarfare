@@ -267,43 +267,27 @@ public class ClientEventHandler {
         amplitude = 15000 * stack.getOrCreateTag().getDouble("recoil_y")
                 * stack.getOrCreateTag().getDouble("recoil_x");
         var data = entity.getPersistentData();
-        if (entity.isShiftKeyDown() && entity.getBbHeight() >= 1 && data.getDouble("prone") == 0) {
-            pose = 0.9;
-        } else if (data.getDouble("prone") > 0) {
-            if (stack.getOrCreateTag().getDouble("bipod") == 1) {
-                pose = 0.75;
-            } else {
-                pose = 0.8;
-            }
-        } else {
-            pose = 1;
-        }
 
         var capability = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null);
         if (capability.orElse(new TargetModVariables.PlayerVariables()).firing > 0) {
-            data.putDouble("firetime", 0.02);
-            data.putDouble("fire_rotx_time", 0.02);
-            if (data.getDouble("firepos2") < 0.6) {
-                data.putDouble("firepos2", (data.getDouble("firepos2") + 0.06 * times));
-            }
+            data.putDouble("firetime", 0.001);
+            data.putDouble("fire_rotx_time", 0.001);
+            data.putDouble("firepos2", 0.1);
         }
-        if (0 < data.getDouble("firepos2")) {
-            data.putDouble("firepos2", (data.getDouble("firepos2") - 0.015 * times));
-        } else {
-            data.putDouble("firepos2", 0);
-        }
+
+        data.putDouble("firepos2", Mth.clamp(data.getDouble("firepos2") - 0.01 * times,0,0.6));
+
         if (0 < data.getDouble("firetime")) {
-            data.putDouble("firetime", (data.getDouble("firetime") + 0.18 * (1.1 - data.getDouble("firetime")) * times));
+            data.putDouble("firetime", (data.getDouble("firetime") + 0.25 * (1.1 - data.getDouble("firetime")) * times));
         }
         if (0 < data.getDouble("firetime") && data.getDouble("firetime") < 0.454) {
             data.putDouble("fire_pos",
-                    (pose * ((-18.34) * Math.pow(data.getDouble("firetime"), 2) + 8.58 * data.getDouble("firetime") + data.getDouble("firepos2"))));
+                    ((-18.34) * Math.pow(data.getDouble("firetime"), 2) + 8.58 * data.getDouble("firetime") + data.getDouble("firepos2")));
         }
         if (0.454 <= data.getDouble("firetime") && data.getDouble("firetime") < 1) {
             data.putDouble("fire_pos",
-                    (pose * (4.34 * Math.pow(data.getDouble("firetime"), 2) - 6.5 * data.getDouble("firetime") + 2.167 + data.getDouble("firepos2"))));
+                    (4.34 * Math.pow(data.getDouble("firetime"), 2) - 6.5 * data.getDouble("firetime") + 2.167 + data.getDouble("firepos2")));
         }
-
 
 
         if (0 < data.getDouble("fire_rotx_time") && data.getDouble("fire_rotx_time") < 1.732) {
@@ -312,7 +296,7 @@ public class ClientEventHandler {
 
         if (0 < data.getDouble("fire_rotx_time") && data.getDouble("fire_rotx_time") < 1.732) {
             data.putDouble("fire_rot",
-                    (pose * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2))));
+                    (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2)));
             if ((capability.orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
                 event.setYaw((float) (yaw - 1.3 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2)) + 1 * Mth.clamp(0.3 - data.getDouble("fire_rotx_time"),0,1) * (2 * Math.random() - 1)));
                 event.setPitch((float) (pitch + 1.3 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2)) + 1 * Mth.clamp(0.3 - data.getDouble("fire_rotx_time"),0,1) * (2 * Math.random() - 1)));

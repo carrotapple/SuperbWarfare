@@ -39,7 +39,7 @@ public class SksItemModel extends GeoModel<SksItem> {
         ItemStack stack = player.getMainHandItem();
 
         if (stack.getOrCreateTag().getDouble("HoldOpen") == 1) {
-            bolt.setPosZ(3f);
+            bolt.setPosZ(2.5f);
         }
 
         double p = 0;
@@ -71,28 +71,19 @@ public class SksItemModel extends GeoModel<SksItem> {
         double fr = player.getPersistentData().getDouble("fire_rot");
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-            shen.setPosY(-0.01f * (float) (fp + 2 * fr));
-            shen.setPosZ(0.8f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.003f * (float) (fp + fr));
-            shen.setRotZ(0f);
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                shen.setRotY(0.015f * (float) fr);
-            } else {
-                shen.setRotY(-0.015f * (float) fr);
-            }
+            shen.setPosY(0.04f * (float) (fp + 2 * fr));
+            holo.setPosY(-0.43f * (float) (fp + 2.3 * fr));
+            shen.setPosZ(0.6f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.015f * (float) (fp + fr));
         } else {
-            shen.setPosY(-0.03f * (float) (fp + 2 * fr));
+            shen.setPosY(0.08f * (float) (fp + 2 * fr));
             shen.setPosZ(1.2f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.07f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                shen.setRotY(0.03f * (float) fr);
-            } else {
-                shen.setRotY(-0.03f * (float) fr);
-            }
         }
+        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
 
-        shuan.setPosZ(2.5f * (float) fp);
+        shuan.setPosZ(2f * (float) fp);
 
         if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
             flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));

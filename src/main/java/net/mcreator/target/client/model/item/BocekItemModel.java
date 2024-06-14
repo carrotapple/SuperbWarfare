@@ -120,21 +120,11 @@ public class BocekItemModel extends GeoModel<BocekItem> {
             fire.setPosZ(3f * (float) (fp + 0.54f * fr));
             fire.setRotX(0.003f * (float) (fp + fr));
             fire.setRotZ(0f);
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                fire.setRotY(0.015f * (float) fr);
-            } else {
-                fire.setRotY(-0.015f * (float) fr);
-            }
         } else {
             fire.setPosY(-0.03f * (float) (fp + 2 * fr));
             fire.setPosZ(4f * (float) (fp + 0.54f * fr));
             fire.setRotX(0.07f * (float) (0.18f * fp + fr));
             fire.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                fire.setRotY(0.03f * (float) fr);
-            } else {
-                fire.setRotY(-0.03f * (float) fr);
-            }
         }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");

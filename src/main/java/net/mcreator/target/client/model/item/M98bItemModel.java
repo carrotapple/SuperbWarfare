@@ -44,22 +44,13 @@ public class M98bItemModel extends GeoModel<M98bItem> {
             shen.setPosZ(3.6f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.18f * (float) (fp + fr));
             shen.setRotZ(0f);
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                shen.setRotY(0.025f * (float) fr);
-            } else {
-                shen.setRotY(-0.025f * (float) fr);
-            }
         } else {
             shen.setPosY(0.7f * (float) (fp + 2 * fr));
             shen.setPosZ(4.2f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.25f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                shen.setRotY(0.045f * (float) fr);
-            } else {
-                shen.setRotY(-0.045f * (float) fr);
-            }
         }
+        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
 
         double p = 0;
         p = player.getPersistentData().getDouble("zoom_pos");

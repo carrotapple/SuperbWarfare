@@ -115,7 +115,6 @@ public class FireMessage {
             }
 
             player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
                 capability.recoil = 0.1;
                 capability.firing = 1;
                 capability.syncPlayerVariables(player);

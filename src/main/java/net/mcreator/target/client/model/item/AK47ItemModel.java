@@ -84,22 +84,13 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
             shen.setPosZ(0.2f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.003f * (float) (fp + fr));
             shen.setRotZ(0f);
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                shen.setRotY(0.015f * (float) fr);
-            } else {
-                shen.setRotY(-0.015f * (float) fr);
-            }
         } else {
             shen.setPosY(-0.03f * (float) (fp + 2 * fr));
             shen.setPosZ(0.8f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.07f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                shen.setRotY(0.03f * (float) fr);
-            } else {
-                shen.setRotY(-0.03f * (float) fr);
-            }
         }
+        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
 
         shuan.setPosZ(2.4f * (float) fp);
 
