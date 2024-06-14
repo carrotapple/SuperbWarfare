@@ -133,11 +133,11 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload_empty"));
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading") && !stack.getOrCreateTag().getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload2"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload_normal"));
             }
 
             if (stack.getOrCreateTag().getInt("fire_mode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
@@ -227,7 +227,7 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
                 GunsTool.reload(entity, GunInfo.Type.HANDGUN);
             }
         } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
-            if (tag.getDouble("reload_time") == 47) {
+            if (tag.getDouble("reload_time") == 43) {
                 entity.getPersistentData().putDouble("id", id);
                 if (entity instanceof ServerPlayer serverPlayer) {
                     serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("target:vector_reload_normal"))),

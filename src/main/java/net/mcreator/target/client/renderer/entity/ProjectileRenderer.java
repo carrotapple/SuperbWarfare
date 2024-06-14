@@ -16,6 +16,7 @@ import net.minecraft.util.Mth;
 
 public class ProjectileRenderer extends EntityRenderer<ProjectileEntity> {
     private static final ResourceLocation texture = new ResourceLocation("target:textures/entity/bullet_tex.png");
+    private static final ResourceLocation empty_texture = new ResourceLocation("target:textures/entity/empty.png");
     private final ModelBullet<ProjectileEntity> model;
 
     public ProjectileRenderer(EntityRendererProvider.Context context) {
@@ -40,6 +41,9 @@ public class ProjectileRenderer extends EntityRenderer<ProjectileEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(ProjectileEntity entity) {
-        return texture;
+        if (entity.tickCount > 1){
+            return texture;
+        }
+        return empty_texture;
     }
 }

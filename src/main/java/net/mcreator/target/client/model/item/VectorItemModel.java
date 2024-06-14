@@ -40,17 +40,15 @@ public class VectorItemModel extends GeoModel<VectorItem> {
         double zp = 0;
         zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-        gun.setPosX(2.62f * (float) p);
+        gun.setPosX(2.35f * (float) p);
 
-        gun.setPosY(0.9f * (float) p - (float) (0.6f * zp));
+        gun.setPosY(0.74f * (float) p - (float) (0.2f * zp));
 
-        gun.setPosZ(3f * (float) p + (float) (0.5f * zp));
-
-        gun.setRotZ(-0.087f * (float) p + (float) (0.05f * zp));
+        gun.setPosZ(5f * (float) p + (float) (0.3f * zp));
 
         gun.setScaleZ(1f - (0.5f * (float) p));
 
-        scope.setScaleZ(1f - (0.6f * (float) p));
+        scope.setScaleZ(1f - (0.2f * (float) p));
 
         float fps = Minecraft.getInstance().getFps();
         if (fps <= 0) {
@@ -59,12 +57,10 @@ public class VectorItemModel extends GeoModel<VectorItem> {
         float times = 250f / fps;
 
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming && gun.getPosX() > 2.45) {
-            holo.setScaleX(1);
-            holo.setScaleY(1);
+        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming && gun.getPosX() > 2) {
+            holo.setHidden(false);
         } else {
-            holo.setScaleX(0);
-            holo.setScaleY(0);
+            holo.setHidden(true);
         }
 
         double fp = player.getPersistentData().getDouble("fire_pos");
@@ -135,5 +131,13 @@ public class VectorItemModel extends GeoModel<VectorItem> {
         move.setRotY(0.7f * Mth.DEG_TO_RAD * (float) yRot);
 
         move.setRotZ(2.7f * (float) m + Mth.DEG_TO_RAD * (float) zRot);
+
+        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+
+        player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
+
+        player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
+
+        player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

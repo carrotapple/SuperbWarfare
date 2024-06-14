@@ -127,7 +127,7 @@ public class PlayerReloadProcedure {
                         tag.putBoolean("reloading", true);
                         tag.putBoolean("empty_reload", false);
                         tag.putDouble("id", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-                        tag.putDouble("reload_time", 47);
+                        tag.putDouble("reload_time", 43);
                     } else if (tag.getInt("ammo") == 0) {
                         tag.putBoolean("reloading", true);
                         tag.putDouble("empty_reload", 1);
