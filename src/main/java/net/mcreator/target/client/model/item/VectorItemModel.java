@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
@@ -31,8 +32,20 @@ public class VectorItemModel extends GeoModel<VectorItem> {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone scope = getAnimationProcessor().getBone("scope");
+        CoreGeoBone kmj = getAnimationProcessor().getBone("kuaimanji");
 
         Player player = Minecraft.getInstance().player;
+        ItemStack stack = player.getMainHandItem();
+
+        if (stack.getOrCreateTag().getInt("fire_mode") == 0) {
+            kmj.setRotX(-120 * Mth.DEG_TO_RAD);
+        }
+        if (stack.getOrCreateTag().getInt("fire_mode") == 1) {
+            kmj.setRotX(-60 * Mth.DEG_TO_RAD);
+        }
+        if (stack.getOrCreateTag().getInt("fire_mode") == 2) {
+            kmj.setRotX(0);
+        }
 
         double p = 0;
         p = player.getPersistentData().getDouble("zoom_pos");
