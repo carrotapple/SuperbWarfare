@@ -179,7 +179,7 @@ public class GunEventHandler {
             return;
         }
 
-        if (player.getPersistentData().getBoolean("firing") && !player.isSprinting()) {
+        if ((player.getPersistentData().getBoolean("firing") || (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zoom) && !player.isSprinting()) {
             if (tag.getDouble("minigun_rotation") < 10) {
                 tag.putDouble("minigun_rotation", (tag.getDouble("minigun_rotation") + 1));
             }
@@ -192,7 +192,7 @@ public class GunEventHandler {
 
         if (tag.getDouble("overheat") == 0
                 && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo > 0
-                && !(player.getCooldowns().isOnCooldown(stack.getItem())) && tag.getDouble("minigun_rotation") >= 10) {
+                && !(player.getCooldowns().isOnCooldown(stack.getItem())) && tag.getDouble("minigun_rotation") >= 10 && player.getPersistentData().getBoolean("firing")) {
             tag.putDouble("heat", (tag.getDouble("heat") + 0.5));
             if (tag.getDouble("heat") >= 50.5) {
                 tag.putDouble("overheat", 40);
