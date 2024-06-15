@@ -1,13 +1,17 @@
 package net.mcreator.target.init;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.network.message.DoubleJumpMessage;
 import net.mcreator.target.network.message.FireModeMessage;
 import net.mcreator.target.network.message.ReloadMessage;
-import net.mcreator.target.network.message.ZoomMessage;
+import net.mcreator.target.network.message.SensitivityMessage;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.Input;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.event.TickEvent;
@@ -61,33 +65,52 @@ public class TargetModKeyMappings {
         }
     };
 
-    public static final KeyMapping ZOOM = new KeyMapping("key.target.zoom", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_RIGHT, "key.categories.target") {
+    public static final KeyMapping SENSITIVITY_INCREASE = new KeyMapping("key.target.sensitivity_increase", GLFW.GLFW_KEY_PAGE_UP, "key.categories.target") {
         private boolean isDownOld = false;
 
         @Override
         public void setDown(boolean isDown) {
             super.setDown(isDown);
-            if (isDownOld != isDown && isDown && Minecraft.getInstance().player != null) {
-                TargetMod.PACKET_HANDLER.sendToServer(new ZoomMessage(0, 0));
-                ZoomMessage.pressAction(Minecraft.getInstance().player, 0);
-                ZOOM_LAST_PRESS = System.currentTimeMillis();
-            } else if (isDownOld != isDown && Minecraft.getInstance().player != null) {
-                int dt = (int) (System.currentTimeMillis() - ZOOM_LAST_PRESS);
-                TargetMod.PACKET_HANDLER.sendToServer(new ZoomMessage(1, dt));
-                ZoomMessage.pressAction(Minecraft.getInstance().player, 1);
+            if (isDownOld != isDown && isDown) {
+                TargetMod.PACKET_HANDLER.sendToServer(new SensitivityMessage(true));
             }
             isDownOld = isDown;
         }
     };
 
-    private static long ZOOM_LAST_PRESS = 0;
+    public static final KeyMapping SENSITIVITY_REDUCE = new KeyMapping("key.target.sensitivity_reduce", GLFW.GLFW_KEY_PAGE_DOWN, "key.categories.target") {
+        private boolean isDownOld = false;
+
+        @Override
+        public void setDown(boolean isDown) {
+            super.setDown(isDown);
+            if (isDownOld != isDown && isDown) {
+                TargetMod.PACKET_HANDLER.sendToServer(new SensitivityMessage(false));
+            }
+            isDownOld = isDown;
+        }
+    };
+
+    public static final KeyMapping INTERACT = new KeyMapping("key.target.interact", GLFW.GLFW_KEY_X, "key.categories.target") {
+        private boolean isDownOld = false;
+
+        @Override
+        public void setDown(boolean isDown) {
+            super.setDown(isDown);
+            if (isDownOld != isDown && isDown) {
+            }
+            isDownOld = isDown;
+        }
+    };
 
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(RELOAD);
         event.register(DOUBLE_JUMP);
         event.register(FIRE_MODE);
-        event.register(ZOOM);
+        event.register(SENSITIVITY_INCREASE);
+        event.register(SENSITIVITY_REDUCE);
+        event.register(INTERACT);
     }
 
     @Mod.EventBusSubscriber({Dist.CLIENT})
@@ -98,7 +121,9 @@ public class TargetModKeyMappings {
                 RELOAD.consumeClick();
                 DOUBLE_JUMP.consumeClick();
                 FIRE_MODE.consumeClick();
-                ZOOM.consumeClick();
+                SENSITIVITY_INCREASE.consumeClick();
+                SENSITIVITY_REDUCE.consumeClick();
+                INTERACT.consumeClick();
             }
         }
     }

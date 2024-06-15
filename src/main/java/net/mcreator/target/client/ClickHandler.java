@@ -2,15 +2,31 @@ package net.mcreator.target.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.mcreator.target.TargetMod;
+import net.mcreator.target.init.TargetModKeyMappings;
 import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModTags;
+import net.mcreator.target.item.gun.GunItem;
+import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.network.message.FireMessage;
 import net.mcreator.target.network.message.SensitivityMessage;
+import net.mcreator.target.network.message.ZoomMessage;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.client.settings.KeyModifier;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
@@ -27,7 +43,7 @@ public class ClickHandler {
     }
 
     @SubscribeEvent
-    public static void onKeyReleased(InputEvent.MouseButton.Pre event) {
+    public static void onButtonReleased(InputEvent.MouseButton.Pre event) {
         if (notInGame()) return;
         if (event.getAction() != InputConstants.RELEASE) return;
 
@@ -38,10 +54,18 @@ public class ClickHandler {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             TargetMod.PACKET_HANDLER.sendToServer(new FireMessage(1));
         }
+        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (Minecraft.getInstance().player.hasEffect(TargetModMobEffects.SHOCK.get())) {
+                event.setCanceled(true);
+            }
+            if (player.getMainHandItem().is(TargetModTags.Items.GUN)) {
+                TargetMod.PACKET_HANDLER.sendToServer(new ZoomMessage(1));
+            }
+        }
     }
 
     @SubscribeEvent
-    public static void onKeyPressed(InputEvent.MouseButton.Pre event) {
+    public static void onButtonPressed(InputEvent.MouseButton.Pre event) {
         if (notInGame()) return;
         if (event.getAction() != InputConstants.PRESS) return;
 
@@ -64,6 +88,12 @@ public class ClickHandler {
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (Minecraft.getInstance().player.hasEffect(TargetModMobEffects.SHOCK.get())) {
                 event.setCanceled(true);
+            }
+            if (player.getMainHandItem().is(TargetModTags.Items.GUN)) {
+                if (!TargetModKeyMappings.INTERACT.isDown()) {
+                    event.setCanceled(true);
+                }
+                TargetMod.PACKET_HANDLER.sendToServer(new ZoomMessage(0));
             }
         }
 
@@ -100,25 +130,10 @@ public class ClickHandler {
     }
 
     @SubscribeEvent
-    public static void onSensitivityKeyPressed(InputEvent.Key event) {
-        Player player = Minecraft.getInstance().player;
-        if (player == null) return;
-
-        ItemStack stack = player.getMainHandItem();
-        int button = event.getKey();
-
+    public static void onKeyPressed(InputEvent.Key event) {
         if (notInGame()) return;
         if (event.getAction() != InputConstants.PRESS) return;
         setKeyState(event.getKey(), 1);
-
-        if (stack.is(TargetModTags.Items.GUN)){
-            if (button == GLFW.GLFW_KEY_PAGE_UP) {
-                TargetMod.PACKET_HANDLER.sendToServer(new SensitivityMessage(true));
-            }
-            if (button == GLFW.GLFW_KEY_PAGE_DOWN) {
-                TargetMod.PACKET_HANDLER.sendToServer(new SensitivityMessage(false));
-            }
-        }
     }
 
     @SubscribeEvent

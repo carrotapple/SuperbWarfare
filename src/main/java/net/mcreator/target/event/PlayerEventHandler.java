@@ -6,6 +6,7 @@ import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.SoundTool;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -25,6 +26,14 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber
 public class PlayerEventHandler {
+    private static boolean notInGame() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return true;
+        if (mc.getOverlay() != null) return true;
+        if (mc.screen != null) return true;
+        if (!mc.mouseHandler.isMouseGrabbed()) return true;
+        return !mc.isWindowActive();
+    }
 
     @SubscribeEvent
     public static void onPlayerRespawned(PlayerEvent.PlayerRespawnEvent event) {
@@ -54,6 +63,7 @@ public class PlayerEventHandler {
         }
 
         if (event.phase == TickEvent.Phase.END) {
+            handlePlayerCancelZoom(player);
             handlePlayerProne(player);
             handlePlayerSprint(player);
             handleWeaponLevel(player);
@@ -68,6 +78,22 @@ public class PlayerEventHandler {
         }
     }
 
+    /**
+     * 玩家不在游戏内时取消瞄准
+     */
+    private static void handlePlayerCancelZoom(Player player) {
+        if (notInGame()) {
+            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.zoom = false;
+                capability.syncPlayerVariables(player);
+            });
+            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.zooming = false;
+                capability.syncPlayerVariables(player);
+            });
+            player.getPersistentData().putDouble("zoom_animation_time", 0);
+        }
+    }
 
     /**
      * 判断玩家是否趴下

@@ -10,21 +10,17 @@ import java.util.function.Supplier;
 
 public class ZoomMessage {
     private final int type;
-    private final int pressedMs;
 
-    public ZoomMessage(int type, int pressedMs) {
+    public ZoomMessage(int type) {
         this.type = type;
-        this.pressedMs = pressedMs;
     }
 
     public ZoomMessage(FriendlyByteBuf buffer) {
         this.type = buffer.readInt();
-        this.pressedMs = buffer.readInt();
     }
 
     public static void buffer(ZoomMessage message, FriendlyByteBuf buffer) {
         buffer.writeInt(message.type);
-        buffer.writeInt(message.pressedMs);
     }
 
     public static void handler(ZoomMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
