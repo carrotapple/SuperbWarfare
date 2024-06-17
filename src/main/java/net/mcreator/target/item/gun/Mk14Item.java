@@ -79,34 +79,34 @@ public class Mk14Item extends GunItem implements GeoItem, AnimatedItem {
         if (this.animationProcedure.equals("empty")) {
 
             if (stack.getOrCreateTag().getInt("draw_time") < 16) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.model.draw"));
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m14.draw"));
             }
 
             if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.model.fire"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m14.fire"));
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.model.reloadempty"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m14.reload_empty"));
             }
 
             if (stack.getOrCreateTag().getBoolean("reloading") && !stack.getOrCreateTag().getBoolean("empty_reload")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.model.reload"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m14.reload_normal"));
             }
 
             if (stack.getOrCreateTag().getInt("fire_mode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.model.changefirerate2"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m14.changefirerate2"));
             }
 
             if (stack.getOrCreateTag().getInt("fire_mode") == 2 && stack.getOrCreateTag().getDouble("cg") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.model.changefirerate"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m14changefirerate"));
             }
 
             if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.model.run"));
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m14.run"));
             }
 
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.model.idle"));
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m14.idle"));
         }
         return PlayState.STOP;
     }
@@ -156,7 +156,7 @@ public class Mk14Item extends GunItem implements GeoItem, AnimatedItem {
                 tag.putDouble("reload_time", 0);
             }
             if (tag.getBoolean("reloading") && tag.getInt("ammo") == 0) {
-                if (tag.getDouble("reload_time") == 55) {
+                if (tag.getDouble("reload_time") == 78) {
                     entity.getPersistentData().putDouble("id", id);
                     if (entity instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, TargetModSounds.MK_14_RELOAD_EMPTY.get(), 100, 1);
@@ -172,14 +172,14 @@ public class Mk14Item extends GunItem implements GeoItem, AnimatedItem {
                     tag.putBoolean("empty_reload", false);
                     tag.putDouble("reload_time", 0);
                 }
-                if (tag.getDouble("reload_time") == 5 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
+                if (tag.getDouble("reload_time") == 18 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
                     tag.putDouble("HoldOpen", 0);
                 }
                 if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
                     GunsTool.reload(entity, GunInfo.Type.RIFLE);
                 }
             } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
-                if (tag.getDouble("reload_time") == 45) {
+                if (tag.getDouble("reload_time") == 55) {
                     entity.getPersistentData().putDouble("id", id);
                     if (entity instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, TargetModSounds.MK_14_RELOAD_NORMAL.get(), 100, 1);

@@ -2,8 +2,8 @@
   "credit": "Made with Blockbench",
   "parent": "builtin/entity",
   "texture_size": [
-    220,
-    220
+    128,
+    128
   ],
   "display": {
     "thirdperson_righthand": {
@@ -32,14 +32,14 @@
     },
     "firstperson_righthand": {
       "translation": [
-        10,
-        -35,
-        -18
+        -2.75,
+        -3.75,
+        1.5
       ],
       "scale": [
-        3,
-        3,
-        3
+        2,
+        2,
+        2
       ]
     },
     "firstperson_lefthand": {
