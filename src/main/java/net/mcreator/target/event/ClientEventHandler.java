@@ -1,6 +1,7 @@
 package net.mcreator.target.event;
 
 import net.mcreator.target.init.TargetModAttributes;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
@@ -385,7 +386,8 @@ public class ClientEventHandler {
         ItemStack stack = player.getMainHandItem();
 
         double p = player.getPersistentData().getDouble("zoom_pos");
-        double zoom = stack.getOrCreateTag().getDouble("zoom");
+
+        double zoom = stack.getOrCreateTag().getDouble("zoom") + stack.getOrCreateTag().getDouble("custom_zoom");
 
         if (stack.is(TargetModTags.Items.GUN)) {
             event.setFOV(event.getFOV() / (1.0 + p * (zoom - 1)));

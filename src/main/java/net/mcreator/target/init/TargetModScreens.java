@@ -1,7 +1,6 @@
 package net.mcreator.target.init;
 
 import net.mcreator.target.client.gui.GunRecycleGuiScreen;
-import net.mcreator.target.client.gui.MortarGUIScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -13,7 +12,6 @@ public class TargetModScreens {
     @SubscribeEvent
     public static void clientLoad(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            MenuScreens.register(TargetModMenus.MORTAR_GUI.get(), MortarGUIScreen::new);
             MenuScreens.register(TargetModMenus.GUN_RECYCLE_GUI.get(), GunRecycleGuiScreen::new);
         });
     }

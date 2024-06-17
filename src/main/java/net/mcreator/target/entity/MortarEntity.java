@@ -159,36 +159,19 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
         super.mobInteract(player, hand);
-        double x = this.getX();
-        double y = this.getY();
-        double z = this.getZ();
 
         ItemStack mainHandItem = player.getMainHandItem();
-        if (mainHandItem.getItem() == ItemStack.EMPTY.getItem()) {
-            if (player.isShiftKeyDown()) {
-                this.setYRot(player.getYRot());
-                this.setXRot(this.getXRot());
-                this.setYBodyRot(this.getYRot());
-                this.setYHeadRot(this.getYRot());
-                this.yRotO = this.getYRot();
-                this.xRotO = this.getXRot();
-                this.yBodyRotO = this.getYRot();
-                this.yHeadRotO = this.getYRot();
-            } else if (player instanceof ServerPlayer serverPlayer) {
-                NetworkHooks.openScreen(serverPlayer, new MenuProvider() {
-                    @Override
-                    public Component getDisplayName() {
-                        return Component.literal("MortarGUI");
-                    }
-
-                    @Override
-                    public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
-                        return new MortarGUIMenu(id, inventory, new FriendlyByteBuf(Unpooled.buffer()).writeBlockPos(BlockPos.containing(x, y, z)));
-                    }
-                }, BlockPos.containing(x, y, z));
-            }
+        if (player.isShiftKeyDown()) {
+            this.setYRot(player.getYRot());
+            this.setXRot(this.getXRot());
+            this.setYBodyRot(this.getYRot());
+            this.setYHeadRot(this.getYRot());
+            this.yRotO = this.getYRot();
+            this.xRotO = this.getXRot();
+            this.yBodyRotO = this.getYRot();
+            this.yHeadRotO = this.getYRot();
         }
-        if (mainHandItem.getItem() == TargetModItems.MORTAR_SHELLS.get() && !player.getCooldowns().isOnCooldown(TargetModItems.MORTAR_SHELLS.get())) {
+        if (mainHandItem.getItem() == TargetModItems.MORTAR_SHELLS.get() && !player.getCooldowns().isOnCooldown(TargetModItems.MORTAR_SHELLS.get()) && !player.isShiftKeyDown()) {
             player.getCooldowns().addCooldown(TargetModItems.MORTAR_SHELLS.get(), 30);
             if (!player.isCreative()) {
                 player.getInventory().clearOrCountMatchingItems(p -> TargetModItems.MORTAR_SHELLS.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());

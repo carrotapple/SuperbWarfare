@@ -1514,5 +1514,13 @@
         "stream": false
       }
     ]
+  },
+  "adjust_fov": {
+    "sounds": [
+      {
+        "name": "target:adjust_fov",
+        "stream": false
+      }
+    ]
   }
 }

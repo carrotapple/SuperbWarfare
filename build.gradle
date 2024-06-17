@@ -14,7 +14,7 @@ def getGitCommitHash() {
     return stdout.toString().trim()
 }
 
-version = '0.1.3-SNAPSHOT-' + getGitCommitHash()
+version = '0.1.4-SNAPSHOT-' + getGitCommitHash()
 group = 'com.Atsushio.target'
 archivesBaseName = 'target'
 

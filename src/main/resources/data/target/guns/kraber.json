@@ -1,6 +1,8 @@
 {
   "zoom_speed": 0.6,
   "zoom": 6,
+  "min_zoom": 4,
+  "max_zoom": 10,
   "bipod": 1,
   "dev": 6,
   "recoil_x": 0.008,
