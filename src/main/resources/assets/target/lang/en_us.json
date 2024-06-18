@@ -168,12 +168,6 @@
   "death.attack.shock.entity": "%1$s was shocked by %2$s",
   "death.attack.shock.item": "%1$s was shocked by %2$s",
 
-  "gui.target.mortar_gui.button_angle_add_05": "+0.5",
-  "gui.target.mortar_gui.button_angle_reduce_05": "-0.5",
-  "gui.target.mortar_gui.button_angle_add_1": "+1",
-  "gui.target.mortar_gui.button_angle_reduce_1": "-1",
-  "gui.target.mortar_gui.button_angle_add_10": "+10",
-  "gui.target.mortar_gui.button_angle_reduce_10": "-10",
   "gui.target.gun_recycle_gui.tooltip_if_guns_level_10you_will_get": "If gun\u0027s level \u003e 10,you will get soul nuggets",
   "gui.target.gun_recycle_gui.button_dismantle": "Dismantle",
   "gui.target.mortar_gui.button_set": "Confirm",
