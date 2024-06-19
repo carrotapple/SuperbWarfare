@@ -7,7 +7,7 @@
     "item": "target:rare_material_pack"
   },
   "addition": {
-    "item": "target:ingot_steel"
+    "tag": "minecraft:logs"
   },
   "result": {
     "item": "target:sks"

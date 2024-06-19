@@ -6,5 +6,5 @@
       "loot_table_id": "minecraft:chests/shipwreck_map"
     }
   ],
-  "lootTable": "target:chests/blueprint_common_chest"
+  "lootTable": "target:chests/blue_print_common"
 }

@@ -1207,7 +1207,7 @@
       }
     ]
   },
-  "bulletsupply": {
+  "bullet_supply": {
     "sounds": [
       {
         "name": "target:bullet_supply",

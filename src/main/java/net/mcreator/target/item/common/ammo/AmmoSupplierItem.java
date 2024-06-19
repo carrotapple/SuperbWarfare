@@ -26,7 +26,7 @@ public abstract class AmmoSupplierItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        player.getCooldowns().addCooldown(this, 20);
+        player.getCooldowns().addCooldown(this, 10);
         stack.shrink(1);
 
         player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {

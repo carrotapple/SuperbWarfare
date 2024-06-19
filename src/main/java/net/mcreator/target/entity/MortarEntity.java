@@ -286,15 +286,9 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
                 var y = this.getY();
                 var z = this.getZ();
                 level.explode(null, x, y, z, 0, Level.ExplosionInteraction.NONE);
-                ItemEntity barrel = new ItemEntity(level, x, (y + 1), z, new ItemStack(TargetModItems.MORTAR_BARREL.get()));
-                barrel.setPickUpDelay(10);
-                level.addFreshEntity(barrel);
-                ItemEntity bipod = new ItemEntity(level, x, (y + 1), z, new ItemStack(TargetModItems.MORTAR_BIPOD.get()));
-                bipod.setPickUpDelay(10);
-                level.addFreshEntity(bipod);
-                ItemEntity plate = new ItemEntity(level, x, (y + 1), z, new ItemStack(TargetModItems.MORTAR_BASE_PLATE.get()));
-                plate.setPickUpDelay(10);
-                level.addFreshEntity(plate);
+                ItemEntity mortar = new ItemEntity(level, x, (y + 1), z, new ItemStack(TargetModItems.MORTAR_DEPLOYER.get()));
+                mortar.setPickUpDelay(10);
+                level.addFreshEntity(mortar);
             }
         }
     }
