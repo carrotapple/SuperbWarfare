@@ -29,12 +29,13 @@ public class GunEventHandler {
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
+        ItemStack stack = player.getMainHandItem();
 
         if (player == null) {
             return;
         }
 
-        if (event.phase == TickEvent.Phase.END) {
+        if (event.phase == TickEvent.Phase.END && stack.is(TargetModTags.Items.GUN)) {
             handleGunFire(player);
             handleMiniGunFire(player);
         }

@@ -47,7 +47,7 @@ public class ClientEventHandler {
     public static void computeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
         ClientLevel level = Minecraft.getInstance().level;
         Entity entity = event.getCamera().getEntity();
-        if (level != null && entity instanceof LivingEntity living) {
+        if (level != null && entity instanceof LivingEntity living && living.getMainHandItem().is(TargetModTags.Items.GUN)) {
             handleWeaponCrossHair(living);
             handleWeaponSway(living);
             handleWeaponMove(living);
@@ -374,24 +374,24 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public static void onFovUpdate(ViewportEvent.ComputeFov event) {
-        if (!event.usedConfiguredFov()) {
-            return;
-        }
-
         Player player = Minecraft.getInstance().player;
+        ItemStack stack = player.getMainHandItem();
+
         if (player == null) {
             return;
         }
 
-        ItemStack stack = player.getMainHandItem();
-
-        double p = player.getPersistentData().getDouble("zoom_pos");
-
-        double zoom = stack.getOrCreateTag().getDouble("zoom") + stack.getOrCreateTag().getDouble("custom_zoom");
-
         if (stack.is(TargetModTags.Items.GUN)) {
+            if (!event.usedConfiguredFov()) {
+                return;
+            }
+
+            double p = player.getPersistentData().getDouble("zoom_pos");
+            double zoom = stack.getOrCreateTag().getDouble("zoom") + stack.getOrCreateTag().getDouble("custom_zoom");
+
             event.setFOV(event.getFOV() / (1.0 + p * (zoom - 1)));
             player.getPersistentData().putDouble("fov", event.getFOV());
+
         }
     }
 
