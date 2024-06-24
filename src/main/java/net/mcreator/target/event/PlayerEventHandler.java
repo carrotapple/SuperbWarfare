@@ -127,7 +127,7 @@ public class PlayerEventHandler {
             if (tag.getInt("level") == 0) {
                 tag.putDouble("exp2", 20);
             } else {
-                tag.putDouble("exp2", (tag.getDouble("exp1") + tag.getInt("level") * 500));
+                tag.putDouble("exp2", (tag.getDouble("exp1") + tag.getInt("level") * 200 * (1 + 0.1 * tag.getInt("level"))));
             }
             if (tag.getDouble("damagetotal") >= tag.getDouble("exp2")) {
                 tag.putDouble("exp1", (tag.getDouble("exp2")));
