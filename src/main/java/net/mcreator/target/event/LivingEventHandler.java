@@ -138,13 +138,14 @@ public class LivingEventHandler {
         }
 
         var damagesource = event.getSource();
-        var sourceEntity = damagesource.getDirectEntity();
+        var sourceEntity = damagesource.getEntity();
 
         if (sourceEntity == null) {
             return;
         }
 
-        if (sourceEntity instanceof ServerPlayer player && (damagesource.is(DamageTypes.EXPLOSION) || damagesource.is(DamageTypes.PLAYER_EXPLOSION) || damagesource.is(TargetModDamageTypes.MINE))) {
+        if (sourceEntity instanceof ServerPlayer player && (damagesource.is(DamageTypes.EXPLOSION) || damagesource.is(DamageTypes.PLAYER_EXPLOSION)
+                || damagesource.is(TargetModDamageTypes.MINE) || damagesource.is(TargetModDamageTypes.PROJECTILE_BOOM))) {
             SoundTool.playLocalSound(player, TargetModSounds.INDICATION.get(), 1f, 1f);
 
             TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));

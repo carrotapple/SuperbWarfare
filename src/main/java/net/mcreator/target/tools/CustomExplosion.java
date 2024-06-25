@@ -56,6 +56,10 @@ public class CustomExplosion extends Explosion {
         this(pLevel, pSource, null, null, damage, pToBlowX, pToBlowY, pToBlowZ, pRadius, 0, pBlockInteraction);
     }
 
+    public CustomExplosion(Level pLevel, @Nullable Entity pSource, @Nullable DamageSource source, float damage, double pToBlowX, double pToBlowY, double pToBlowZ, float pRadius, Explosion.BlockInteraction pBlockInteraction) {
+        this(pLevel, pSource, source, null, damage, pToBlowX, pToBlowY, pToBlowZ, pRadius, 0, pBlockInteraction);
+    }
+
     public CustomExplosion(Level pLevel, @Nullable Entity pSource, float damage, double pToBlowX, double pToBlowY, double pToBlowZ, float pRadius, int fireTime, Explosion.BlockInteraction pBlockInteraction) {
         this(pLevel, pSource, null, null, damage, pToBlowX, pToBlowY, pToBlowZ, pRadius, fireTime, pBlockInteraction);
     }

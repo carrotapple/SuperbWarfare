@@ -1,7 +1,6 @@
 package net.mcreator.target.mobeffect;
 
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.entity.ClaymoreEntity;
 import net.mcreator.target.init.TargetModDamageTypes;
 import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModSounds;
@@ -12,7 +11,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;

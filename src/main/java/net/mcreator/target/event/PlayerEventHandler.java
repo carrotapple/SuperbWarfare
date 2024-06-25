@@ -48,11 +48,11 @@ public class PlayerEventHandler {
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
-        ItemStack stack = player.getMainHandItem();
-
         if (player == null) {
             return;
         }
+
+        ItemStack stack = player.getMainHandItem();
 
         if (event.phase == TickEvent.Phase.END && stack.is(TargetModTags.Items.GUN)) {
             handlePlayerProne(player);
@@ -282,10 +282,9 @@ public class PlayerEventHandler {
         Runnable recoilRunnable = () -> {
             while (recoilTimer[0] < recoilDuration) {
 
-                /**
-                 * 开火动画计时器
+                /*
+                  开火动画计时器
                  */
-
                 if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing > 0) {
                     player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                         capability.firing = (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).firing - 0.1;
@@ -298,10 +297,9 @@ public class PlayerEventHandler {
                     });
                 }
 
-                /**
-                 * 计算后坐力
+                /*
+                  计算后坐力
                  */
-
                 float rx, ry;
                 if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && player.getPersistentData().getDouble("prone") == 0) {
                     rx = 0.7f;
@@ -345,10 +343,9 @@ public class PlayerEventHandler {
                     player.yRotO = player.getYRot();
                 }
 
-                /**
-                 * 计算散布
+                /*
+                  计算散布
                  */
-
                 ItemStack stack = player.getMainHandItem();
 
                 double basic = stack.getOrCreateTag().getDouble("dev");

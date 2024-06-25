@@ -1,7 +1,6 @@
 package net.mcreator.target.event;
 
 import net.mcreator.target.init.TargetModAttributes;
-import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
@@ -38,9 +37,9 @@ public class ClientEventHandler {
         float yRotOffset = Mth.lerp(event.getPartialTick(), player.yBobO, player.yBob);
         float xRot = player.getViewXRot(event.getPartialTick()) - xRotOffset;
         float yRot = player.getViewYRot(event.getPartialTick()) - yRotOffset;
-        data.putDouble("xRot", Mth.clamp(0.05 * xRot,-5,5) * (1 -  0.75 * data.getDouble("zoom_time")));
-        data.putDouble("yRot", Mth.clamp(0.05 * yRot,-10,10) * (1 - 0.75 * data.getDouble("zoom_time")));
-        data.putDouble("zRot", Mth.clamp(0.1 * yRot,-10,10) * (1 - data.getDouble("zoom_time")));
+        data.putDouble("xRot", Mth.clamp(0.05 * xRot, -5, 5) * (1 - 0.75 * data.getDouble("zoom_time")));
+        data.putDouble("yRot", Mth.clamp(0.05 * yRot, -10, 10) * (1 - 0.75 * data.getDouble("zoom_time")));
+        data.putDouble("zRot", Mth.clamp(0.1 * yRot, -10, 10) * (1 - data.getDouble("zoom_time")));
     }
 
     @SubscribeEvent
@@ -254,7 +253,6 @@ public class ClientEventHandler {
         double pitch = event.getPitch();
         double roll = event.getRoll();
 
-        double pose;
         double amplitude;
         float fps = Minecraft.getInstance().getFps();
         if (fps <= 0) {
@@ -275,7 +273,7 @@ public class ClientEventHandler {
             data.putDouble("firepos2", 0.1);
         }
 
-        data.putDouble("firepos2", Mth.clamp(data.getDouble("firepos2") - 0.01 * times,0,0.6));
+        data.putDouble("firepos2", Mth.clamp(data.getDouble("firepos2") - 0.01 * times, 0, 0.6));
 
         if (0 < data.getDouble("firetime")) {
             data.putDouble("firetime", (data.getDouble("firetime") + 0.25 * (1.1 - data.getDouble("firetime")) * times));
@@ -296,15 +294,15 @@ public class ClientEventHandler {
 
         if (0 < data.getDouble("fire_rotx_time") && data.getDouble("fire_rotx_time") < 1.732) {
             data.putDouble("fire_rot",
-                    (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2)));
+                    (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time"), 2)));
             if ((capability.orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
-                event.setYaw((float) (yaw - 1.3 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2)) + 1 * Mth.clamp(0.3 - data.getDouble("fire_rotx_time"),0,1) * (2 * Math.random() - 1)));
-                event.setPitch((float) (pitch + 1.3 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2)) + 1 * Mth.clamp(0.3 - data.getDouble("fire_rotx_time"),0,1) * (2 * Math.random() - 1)));
-                event.setRoll((float) (roll + 4.2 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2)) + 3 * Mth.clamp(0.5 - data.getDouble("fire_rotx_time"),0,0.5) * (2 * Math.random() - 1)));
+                event.setYaw((float) (yaw - 1.3 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time"), 2)) + 1 * Mth.clamp(0.3 - data.getDouble("fire_rotx_time"), 0, 1) * (2 * Math.random() - 1)));
+                event.setPitch((float) (pitch + 1.3 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time"), 2)) + 1 * Mth.clamp(0.3 - data.getDouble("fire_rotx_time"), 0, 1) * (2 * Math.random() - 1)));
+                event.setRoll((float) (roll + 4.2 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time"), 2)) + 3 * Mth.clamp(0.5 - data.getDouble("fire_rotx_time"), 0, 0.5) * (2 * Math.random() - 1)));
             } else if ((capability.orElse(new TargetModVariables.PlayerVariables())).recoilHorizon <= 0) {
-                event.setYaw((float) (yaw + 1.3 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2)) + 1 * Mth.clamp(0.3 - data.getDouble("fire_rotx_time"),0,1) * (2 * Math.random() - 1)));
-                event.setPitch((float) (pitch - 1.3 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2)) + 1 * Mth.clamp(0.3 - data.getDouble("fire_rotx_time"),0,1) * (2 * Math.random() - 1)));
-                event.setRoll((float) (roll - 4.2 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time") , 2)) + 3 * Mth.clamp(0.5 - data.getDouble("fire_rotx_time"),0,0.5) * (2 * Math.random() - 1)));
+                event.setYaw((float) (yaw + 1.3 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time"), 2)) + 1 * Mth.clamp(0.3 - data.getDouble("fire_rotx_time"), 0, 1) * (2 * Math.random() - 1)));
+                event.setPitch((float) (pitch - 1.3 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time"), 2)) + 1 * Mth.clamp(0.3 - data.getDouble("fire_rotx_time"), 0, 1) * (2 * Math.random() - 1)));
+                event.setRoll((float) (roll - 4.2 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time"), 2)) + 3 * Mth.clamp(0.5 - data.getDouble("fire_rotx_time"), 0, 0.5) * (2 * Math.random() - 1)));
             }
         }
         if (0 <= data.getDouble("firetime") && data.getDouble("firetime") <= 0.25) {
@@ -375,11 +373,11 @@ public class ClientEventHandler {
     @SubscribeEvent
     public static void onFovUpdate(ViewportEvent.ComputeFov event) {
         Player player = Minecraft.getInstance().player;
-        ItemStack stack = player.getMainHandItem();
-
         if (player == null) {
             return;
         }
+
+        ItemStack stack = player.getMainHandItem();
 
         if (stack.is(TargetModTags.Items.GUN)) {
             if (!event.usedConfiguredFov()) {

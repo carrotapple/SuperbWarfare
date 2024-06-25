@@ -168,6 +168,9 @@
   "death.attack.shock": "%1$s was shocked",
   "death.attack.shock.entity": "%1$s was shocked by %2$s",
   "death.attack.shock.item": "%1$s was shocked by %2$s",
+  "death.attack.projectile_boom": "%1$s被轰上了天",
+  "death.attack.projectile_boom.entity": "%1$s被%2$s轰上了天",
+  "death.attack.projectile_boom.item": "%1$s被%2$s用%3$s轰上了天",
 
   "gui.target.gun_recycle_gui.tooltip_if_guns_level_10you_will_get": "If gun\u0027s level \u003e 10,you will get soul nuggets",
   "gui.target.gun_recycle_gui.button_dismantle": "Dismantle",

@@ -27,11 +27,11 @@ public class GunEventHandler {
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
-        ItemStack stack = player.getMainHandItem();
-
         if (player == null) {
             return;
         }
+
+        ItemStack stack = player.getMainHandItem();
 
         if (event.phase == TickEvent.Phase.END && stack.is(TargetModTags.Items.GUN)) {
             handleGunFire(player);
@@ -332,7 +332,7 @@ public class GunEventHandler {
             projectile.monster_multiple(monster_multiple);
 
             projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
-            projectile.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.0005f , player.getLookAngle().z, 1 * (float) heldItem.getOrCreateTag().getDouble("velocity"),
+            projectile.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.0005f, player.getLookAngle().z, 1 * (float) heldItem.getOrCreateTag().getDouble("velocity"),
                     (float) player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()));
             player.level().addFreshEntity(projectile);
         }

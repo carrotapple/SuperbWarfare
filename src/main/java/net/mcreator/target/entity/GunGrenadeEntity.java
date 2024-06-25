@@ -162,7 +162,8 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
     }
 
     private void causeExplode() {
-        CustomExplosion explosion = new CustomExplosion(this.level(), this, 72f, this.getX(), this.getY(), this.getZ(),
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 72f, this.getX(), this.getY(), this.getZ(),
                 7.5f, Explosion.BlockInteraction.KEEP);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);

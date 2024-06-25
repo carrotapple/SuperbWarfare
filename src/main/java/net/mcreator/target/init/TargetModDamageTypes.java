@@ -23,6 +23,7 @@ public class TargetModDamageTypes {
     public static final ResourceKey<DamageType> MINE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(TargetMod.MODID, "mine"));
     public static final ResourceKey<DamageType> BEAST = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(TargetMod.MODID, "beast"));
     public static final ResourceKey<DamageType> SHOCK = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(TargetMod.MODID, "shock"));
+    public static final ResourceKey<DamageType> PROJECTILE_BOOM = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(TargetMod.MODID, "projectile_boom"));
 
     public static DamageSource causeGunFireDamage(RegistryAccess registryAccess, @Nullable Entity directEntity, @Nullable Entity attacker) {
         return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(GUN_FIRE), directEntity, attacker);
@@ -46,6 +47,10 @@ public class TargetModDamageTypes {
 
     public static DamageSource causeShockDamage(RegistryAccess registryAccess, @Nullable Entity attacker) {
         return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(SHOCK), attacker);
+    }
+
+    public static DamageSource causeProjectileBoomDamage(RegistryAccess registryAccess, @Nullable Entity directEntity, @Nullable Entity attacker) {
+        return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(PROJECTILE_BOOM), directEntity, attacker);
     }
 
     private static class DamageMessages extends DamageSource {
