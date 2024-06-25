@@ -9,3 +9,4 @@ public class EnchantmentCategoryTool {
 
     public static final EnchantmentCategory GUN = EnchantmentCategory.create("target:gun", item -> item instanceof GunItem && !(item instanceof Taser));
 }
+

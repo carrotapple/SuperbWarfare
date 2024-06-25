@@ -2,6 +2,7 @@ package net.mcreator.target.procedures;
 
 import net.mcreator.target.entity.GunGrenadeEntity;
 import net.mcreator.target.init.TargetModAttributes;
+import net.mcreator.target.init.TargetModEnchantments;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 
 // TODO 内联这个类
@@ -33,7 +35,9 @@ public class M79fireProcedure {
 
                 Level level = entity.level();
                 if (!level.isClientSide()) {
-                    GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, level, (float) stack.getOrCreateTag().getDouble("damage"));
+
+                    int monster_multiple = EnchantmentHelper.getTagEnchantmentLevel(TargetModEnchantments.MONSTER_HUNTER.get(), stack);
+                    GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, level, (float) stack.getOrCreateTag().getDouble("damage"), monster_multiple);
 
                     gunGrenadeEntity.setPos(entity.getX(), entity.getEyeY() - 0.1, entity.getZ());
                     gunGrenadeEntity.shoot(entity.getLookAngle().x, entity.getLookAngle().y, entity.getLookAngle().z, (float) stack.getOrCreateTag().getDouble("velocity"),

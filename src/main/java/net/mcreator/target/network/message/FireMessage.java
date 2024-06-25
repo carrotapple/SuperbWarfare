@@ -2,6 +2,7 @@ package net.mcreator.target.network.message;
 
 import net.mcreator.target.entity.BocekArrowEntity;
 import net.mcreator.target.entity.ProjectileEntity;
+import net.mcreator.target.init.TargetModEnchantments;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -146,6 +148,7 @@ public class FireMessage {
         double damage;
         float headshot = (float) tag.getDouble("headshot");
         float velocity = 4 * (float) tag.getDouble("speed");
+        int monster_multiple = EnchantmentHelper.getTagEnchantmentLevel(TargetModEnchantments.MONSTER_HUNTER.get(), heldItem);
 
         var projectile = new ProjectileEntity(player.level())
                 .shooter(player)
@@ -153,6 +156,9 @@ public class FireMessage {
         if (tag.getBoolean("beast")) {
             projectile.beast();
         }
+
+        projectile.monster_multiple(monster_multiple);
+
         projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
 
         damage = 0.008333333 * tag.getDouble("damage") * tag.getDouble("speed") * tag.getDouble("damageadd");

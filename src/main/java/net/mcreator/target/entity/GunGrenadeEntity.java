@@ -19,6 +19,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Explosion;
@@ -34,6 +35,8 @@ import net.minecraftforge.network.PlayMessages;
 import java.util.Optional;
 
 public class GunGrenadeEntity extends ThrowableItemProjectile {
+
+    private int monster_multiple = 0;
     private float damage = 5f;
 
     public GunGrenadeEntity(EntityType<? extends GunGrenadeEntity> type, Level world) {
@@ -44,9 +47,10 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         super(type, entity, world);
     }
 
-    public GunGrenadeEntity(LivingEntity entity, Level level, float damage) {
+    public GunGrenadeEntity(LivingEntity entity, Level level, float damage, int  monster_multiple) {
         super(TargetModEntities.GUN_GRENADE.get(), entity, level);
         this.damage = damage;
+        this.monster_multiple = monster_multiple;
     }
 
     public GunGrenadeEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
@@ -65,6 +69,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
+        float m_multiple = (1 + 0.4f * this.monster_multiple);
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
@@ -122,9 +127,17 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         }
 
         if (headshot) {
-            entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 2f);
+            if (entity instanceof Monster monster) {
+                monster.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 2f * m_multiple);
+            } else {
+                entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 2f);
+            }
         } else {
-            entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
+            if (entity instanceof Monster monster) {
+                monster.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * m_multiple);
+            } else {
+                entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
+            }
         }
 
         this.discard();
