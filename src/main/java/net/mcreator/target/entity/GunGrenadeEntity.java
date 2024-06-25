@@ -36,7 +36,7 @@ import java.util.Optional;
 
 public class GunGrenadeEntity extends ThrowableItemProjectile {
 
-    private int monster_multiple = 0;
+    private int monsterMultiplier = 0;
     private float damage = 5f;
 
     public GunGrenadeEntity(EntityType<? extends GunGrenadeEntity> type, Level world) {
@@ -47,10 +47,10 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         super(type, entity, world);
     }
 
-    public GunGrenadeEntity(LivingEntity entity, Level level, float damage, int  monster_multiple) {
+    public GunGrenadeEntity(LivingEntity entity, Level level, float damage, int monsterMultiplier) {
         super(TargetModEntities.GUN_GRENADE.get(), entity, level);
         this.damage = damage;
-        this.monster_multiple = monster_multiple;
+        this.monsterMultiplier = monsterMultiplier;
     }
 
     public GunGrenadeEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
@@ -69,7 +69,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        float m_multiple = (1 + 0.4f * this.monster_multiple);
+        float damageMultiplier = 1 + 0.4f * this.monsterMultiplier;
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
@@ -128,13 +128,13 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
 
         if (headshot) {
             if (entity instanceof Monster monster) {
-                monster.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 2f * m_multiple);
+                monster.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 2f * damageMultiplier);
             } else {
                 entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 2f);
             }
         } else {
             if (entity instanceof Monster monster) {
-                monster.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * m_multiple);
+                monster.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * damageMultiplier);
             } else {
                 entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
             }
@@ -176,8 +176,8 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
 
     private void causeExplode() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 72f, this.getX(), this.getY(), this.getZ(),
-                7.5f, Explosion.BlockInteraction.KEEP);
+                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 72f,
+                this.getX(), this.getY(), this.getZ(), 7.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(this.monsterMultiplier);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);

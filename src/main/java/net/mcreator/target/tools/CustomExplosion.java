@@ -7,6 +7,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.ProtectionEnchantment;
 import net.minecraft.world.level.Explosion;
@@ -34,10 +35,11 @@ public class CustomExplosion extends Explosion {
     private final DamageSource damageSource;
     private final ExplosionDamageCalculator damageCalculator;
     private final float damage;
-    private final int fireTime;
+    private int fireTime;
+    private float damageMultiplier;
 
     public CustomExplosion(Level pLevel, @Nullable Entity pSource, @Nullable DamageSource source, @Nullable ExplosionDamageCalculator pDamageCalculator,
-                           float damage, double pToBlowX, double pToBlowY, double pToBlowZ, float pRadius, int fireTime,
+                           float damage, double pToBlowX, double pToBlowY, double pToBlowZ, float pRadius,
                            Explosion.BlockInteraction pBlockInteraction) {
         super(pLevel, pSource, source, null, pToBlowX, pToBlowY, pToBlowZ, pRadius, false, pBlockInteraction);
         this.level = pLevel;
@@ -49,19 +51,24 @@ public class CustomExplosion extends Explosion {
         this.y = pToBlowY;
         this.z = pToBlowZ;
         this.damage = damage;
-        this.fireTime = fireTime;
     }
 
     public CustomExplosion(Level pLevel, @Nullable Entity pSource, float damage, double pToBlowX, double pToBlowY, double pToBlowZ, float pRadius, Explosion.BlockInteraction pBlockInteraction) {
-        this(pLevel, pSource, null, null, damage, pToBlowX, pToBlowY, pToBlowZ, pRadius, 0, pBlockInteraction);
+        this(pLevel, pSource, null, null, damage, pToBlowX, pToBlowY, pToBlowZ, pRadius, pBlockInteraction);
     }
 
     public CustomExplosion(Level pLevel, @Nullable Entity pSource, @Nullable DamageSource source, float damage, double pToBlowX, double pToBlowY, double pToBlowZ, float pRadius, Explosion.BlockInteraction pBlockInteraction) {
-        this(pLevel, pSource, source, null, damage, pToBlowX, pToBlowY, pToBlowZ, pRadius, 0, pBlockInteraction);
+        this(pLevel, pSource, source, null, damage, pToBlowX, pToBlowY, pToBlowZ, pRadius, pBlockInteraction);
     }
 
-    public CustomExplosion(Level pLevel, @Nullable Entity pSource, float damage, double pToBlowX, double pToBlowY, double pToBlowZ, float pRadius, int fireTime, Explosion.BlockInteraction pBlockInteraction) {
-        this(pLevel, pSource, null, null, damage, pToBlowX, pToBlowY, pToBlowZ, pRadius, fireTime, pBlockInteraction);
+    public CustomExplosion setFireTime(int fireTime) {
+        this.fireTime = fireTime;
+        return this;
+    }
+
+    public CustomExplosion setDamageMultiplier(float damageMultiplier) {
+        this.damageMultiplier = damageMultiplier;
+        return this;
     }
 
     @Override
@@ -139,7 +146,12 @@ public class CustomExplosion extends Explosion {
                         double seenPercent = getSeenPercent(position, entity);
                         double damagePercent = (1.0D - distanceRate) * seenPercent;
 
-                        entity.hurt(this.damageSource, (float) ((int) ((damagePercent * damagePercent + damagePercent) / 2.0D * damage)));
+                        double damageFinal = (damagePercent * damagePercent + damagePercent) / 2.0D * damage;
+                        if (entity instanceof Monster monster) {
+                            monster.hurt(this.damageSource, (int) damageFinal * (1 + 0.4f * this.damageMultiplier));
+                        } else {
+                            entity.hurt(this.damageSource, (float) ((int) damageFinal));
+                        }
 
                         if (fireTime > 0) {
                             entity.setSecondsOnFire(fireTime);
