@@ -8,6 +8,7 @@ import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.message.ClientIndicatorMessage;
+import net.mcreator.target.tools.CustomExplosion;
 import net.mcreator.target.tools.ParticleTool;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -133,8 +135,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         super.onHitBlock(blockHitResult);
         if (this.getPersistentData().getInt("fuse") > 0) {
             if (this.level() instanceof ServerLevel) {
-                this.level().explode(this, this.getX(), this.getY(), this.getZ(), 4.5f, Level.ExplosionInteraction.NONE);
-                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+                causeExplode();
             }
         }
 
@@ -154,10 +155,19 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
 
         if (this.tickCount > 200 || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
-                this.level().explode(this, this.getX(), this.getY(), this.getZ(), 4.5f, Level.ExplosionInteraction.NONE);
-                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+                causeExplode();
             }
             this.discard();
         }
+    }
+
+    private void causeExplode() {
+        CustomExplosion explosion = new CustomExplosion(this.level(), this, 72f, this.getX(), this.getY(), this.getZ(),
+                7.5f, Explosion.BlockInteraction.KEEP);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+
+        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
     }
 }

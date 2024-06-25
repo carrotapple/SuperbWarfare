@@ -4,7 +4,6 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.tools.ParticleTool;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -15,8 +14,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -24,7 +21,6 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.Item;
@@ -346,8 +342,10 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
     public static void onEntityAttacked(LivingAttackEvent event) {
         var damagesource = event.getSource();
         var entity = event.getEntity();
-        var sourceentity = event.getSource().getEntity();
-        if (damagesource == null || entity == null || sourceentity == null) return;
+        if (damagesource == null || entity == null) return;
+
+        var sourceentity = damagesource.getEntity();
+        if (sourceentity == null) return;
 
         if (entity instanceof ClaymoreEntity tamEnt && tamEnt.getOwner() == sourceentity) {
             if (tamEnt.getOwner() instanceof Player player && player.isCreative()) {
