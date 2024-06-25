@@ -1,4 +1,4 @@
-package net.mcreator.target.item;
+package net.mcreator.target.item.common.material;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -9,8 +9,8 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class Scheelite extends Item {
-    public Scheelite() {
+public class Copperplate extends Item {
+    public Copperplate() {
         super(new Item.Properties().stacksTo(64).rarity(Rarity.COMMON));
     }
 

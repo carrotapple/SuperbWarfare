@@ -119,6 +119,7 @@
   "item.target.mortar_deployer": "Mortar",
   "item.target.claymore_mine": "Claymore",
   "item.target.fusee": "Fusee",
+  "item.target.primer": "Primer",
   "item.target.dog_tag": "Dog Tag",
   "curios.identifier.dog_tag": "Dog Tag",
 
@@ -205,6 +206,8 @@
   "enchantment.target.super_recharge.desc": "Increases the recharge speed of TaserGun",
   "enchantment.target.longer_wire": "Longer Wire",
   "enchantment.target.longer_wire.desc": "Increases the range of TaserGun",
+  "enchantment.target.monster_hunter": "Monster Hunter",
+  "enchantment.target.monster_hunter.desc": "Increases bullet damage against monsters",
 
   "des.target.sensitivity": "Current Sensitivity of This Gun: %1$s",
 

@@ -17,11 +17,11 @@
       "item": "minecraft:tnt"
     },
     "d": {
-      "item": "minecraft:gunpowder"
+      "item": "target:primer"
     }
   },
   "result": {
     "item": "target:mortar_shells",
-    "count": 2
+    "count": 4
   }
 }

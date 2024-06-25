@@ -2,10 +2,7 @@ package net.mcreator.target.event;
 
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.entity.ProjectileEntity;
-import net.mcreator.target.init.TargetModAttributes;
-import net.mcreator.target.init.TargetModItems;
-import net.mcreator.target.init.TargetModSounds;
-import net.mcreator.target.init.TargetModTags;
+import net.mcreator.target.init.*;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.ParticleTool;
 import net.mcreator.target.tools.SoundTool;
@@ -18,6 +15,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -319,6 +317,7 @@ public class GunEventHandler {
 
         if (!player.level().isClientSide()) {
             float headshot = (float) heldItem.getOrCreateTag().getDouble("headshot");
+            int monster_multiple = EnchantmentHelper.getTagEnchantmentLevel(TargetModEnchantments.MONSTER_HUNTER.get(), heldItem);
             float damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("add_damage")) * (float) heldItem.getOrCreateTag().getDouble("damageadd");
 
             ProjectileEntity projectile = new ProjectileEntity(player.level())
@@ -329,6 +328,8 @@ public class GunEventHandler {
             if (heldItem.getOrCreateTag().getBoolean("beast")) {
                 projectile.beast();
             }
+
+            projectile.monster_multiple(monster_multiple);
 
             projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
             projectile.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.0005f , player.getLookAngle().z, 1 * (float) heldItem.getOrCreateTag().getDouble("velocity"),

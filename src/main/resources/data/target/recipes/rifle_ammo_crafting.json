@@ -4,7 +4,7 @@
   "pattern": [
     " a ",
     "bcb",
-    "bcb"
+    " d "
   ],
   "key": {
     "a": {
@@ -15,6 +15,9 @@
     },
     "c": {
       "item": "minecraft:gunpowder"
+    },
+    "d": {
+      "item": "target:primer"
     }
   },
   "result": {

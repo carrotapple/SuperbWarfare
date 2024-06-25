@@ -1,27 +1,27 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "equipment",
+  "category": "misc",
   "pattern": [
     " a ",
     "bcb",
-    "bdb"
+    " d "
   ],
   "key": {
     "a": {
       "item": "target:fusee"
     },
     "b": {
-      "item": "minecraft:iron_nugget"
+      "item": "minecraft:iron_ingot"
     },
     "c": {
       "item": "minecraft:tnt"
     },
     "d": {
-      "item": "minecraft:copper_ingot"
+      "item": "target:primer"
     }
   },
   "result": {
     "item": "target:grenade_40mm",
-    "count": 1
+    "count": 6
   }
 }

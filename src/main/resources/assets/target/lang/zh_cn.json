@@ -119,6 +119,7 @@
   "item.target.mortar_deployer": "迫击炮",
   "item.target.claymore_mine": "阔剑地雷",
   "item.target.fusee": "引信",
+  "item.target.primer": "底火",
   "item.target.dog_tag": "狗牌",
   "curios.identifier.dog_tag": "狗牌",
 
@@ -205,6 +206,8 @@
   "enchantment.target.super_recharge.desc": "增加泰瑟枪充能的速度",
   "enchantment.target.longer_wire": "延长导线",
   "enchantment.target.longer_wire.desc": "增加泰瑟枪的射程",
+  "enchantment.target.monster_hunter": "怪物猎人",
+  "enchantment.target.monster_hunter.desc": "增加对怪物的子弹伤害",
 
   "des.target.sensitivity": "当前枪械的灵敏度为：%1$s",
 

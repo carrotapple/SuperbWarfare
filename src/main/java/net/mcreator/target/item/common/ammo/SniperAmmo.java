@@ -12,7 +12,7 @@ import java.util.List;
 
 public class SniperAmmo extends AmmoSupplierItem {
     public SniperAmmo() {
-        super(GunInfo.Type.SNIPER, 4, new Item.Properties().stacksTo(64).rarity(Rarity.COMMON));
+        super(GunInfo.Type.SNIPER, 2, new Item.Properties().stacksTo(64).rarity(Rarity.COMMON));
     }
 
     @Override

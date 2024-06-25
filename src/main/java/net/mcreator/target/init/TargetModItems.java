@@ -2,7 +2,6 @@ package net.mcreator.target.init;
 
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.item.*;
-import net.mcreator.target.item.common.Buckshot;
 import net.mcreator.target.item.common.ammo.*;
 import net.mcreator.target.item.common.blueprint.*;
 import net.mcreator.target.item.common.material.*;
@@ -88,6 +87,7 @@ public class TargetModItems {
     public static final RegistryObject<Item> MORTAR_BASE_PLATE = ITEMS.register("mortar_base_plate", MortarBasePlate::new);
     public static final RegistryObject<Item> MORTAR_BIPOD = ITEMS.register("mortar_bipod", MortarBipod::new);
     public static final RegistryObject<Item> FUSEE = ITEMS.register("fusee", Fusee::new);
+    public static final RegistryObject<Item> PRIMER = ITEMS.register("primer", Primer::new);
     public static final RegistryObject<Item> SOUL_STEEL_NUGGET = ITEMS.register("soul_steel_nugget", SoulSteelNugget::new);
     public static final RegistryObject<Item> COPPERPLATE = ITEMS.register("copperplate", Copperplate::new);
     public static final RegistryObject<Item> INGOT_STEEL = ITEMS.register("ingot_steel", IngotSteel::new);
@@ -106,7 +106,6 @@ public class TargetModItems {
     public static final RegistryObject<Item> DEEPSLATE_SCHEELITE_ORE = block(TargetModBlocks.DEEPSLATE_SCHEELITE_ORE);
     public static final RegistryObject<Item> GALENA = ITEMS.register("galena", Galena::new);
     public static final RegistryObject<Item> SCHEELITE = ITEMS.register("scheelite", Scheelite::new);
-    public static final RegistryObject<Item> BUCKSHOT = ITEMS.register("buckshot", Buckshot::new);
     public static final RegistryObject<Item> DOG_TAG = ITEMS.register("dog_tag", DogTag::new);
 
     public static final RegistryObject<Item> IRON_BARREL = ITEMS.register("iron_barrel", IronBarrel::new);

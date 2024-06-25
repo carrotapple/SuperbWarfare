@@ -24,6 +24,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -54,6 +55,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     protected int shooterId;
     private float damage = 1f;
     private float headShot = 1f;
+    private int monster_multiple = 1;
     private float legShot = 0.5f;
     private boolean beast = false;
 
@@ -81,6 +83,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     public ProjectileEntity headShot(float headShot) {
         this.headShot = headShot;
+        return this;
+    }
+
+    public ProjectileEntity monster_multiple(int monster_multiple) {
+        this.monster_multiple = monster_multiple;
         return this;
     }
 
@@ -318,6 +325,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     }
 
     protected void onHitEntity(Entity entity, boolean headshot, boolean legshot) {
+        float m_multiple = (1 + 0.4f * this.monster_multiple);
+
         if (entity == null) return;
 
         if (entity instanceof PartEntity<?> part) {
@@ -363,7 +372,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
                 TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(1, 5));
             }
-            entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.headShot);
+            if (entity instanceof Monster monster) {
+                monster.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.headShot * m_multiple);
+            } else {
+                entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.headShot);
+            }
         } else if (legshot) {
             if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
                 var holder = Holder.direct(TargetModSounds.INDICATION.get());
@@ -371,7 +384,13 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
                 TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
             }
-            entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.legShot);
+
+            if (entity instanceof Monster monster) {
+                monster.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.legShot * m_multiple);
+            } else {
+                entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.legShot);
+            }
+
             if (entity instanceof LivingEntity living) {
                 if (living instanceof Player player && player.isCreative()){
                     return;
@@ -388,7 +407,12 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
                 TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
             }
-            entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage);
+
+            if (entity instanceof Monster monster) {
+                monster.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage * m_multiple);
+            } else {
+                entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage);
+            }
         }
         this.discard();
     }

@@ -4,7 +4,7 @@
   "pattern": [
     " a ",
     "bcb",
-    " d "
+    "d d"
   ],
   "key": {
     "a": {
@@ -17,11 +17,11 @@
       "item": "minecraft:tnt"
     },
     "d": {
-      "item": "minecraft:iron_bars"
+      "item": "minecraft:stick"
     }
   },
   "result": {
     "item": "target:claymore_mine",
-    "count": 1
+    "count": 2
   }
 }

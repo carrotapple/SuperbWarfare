@@ -3,7 +3,8 @@
   "category": "misc",
   "pattern": [
     " a ",
-    "bcb"
+    "bcb",
+    " d "
   ],
   "key": {
     "a": {
@@ -14,10 +15,13 @@
     },
     "c": {
       "item": "minecraft:gunpowder"
+    },
+    "d": {
+      "item": "target:primer"
     }
   },
   "result": {
     "item": "target:handgun_ammo",
-    "count": 6
+    "count": 8
   }
 }

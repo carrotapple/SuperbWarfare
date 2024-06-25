@@ -2,26 +2,26 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    " b ",
-    "aba",
-    "cdc"
+    " a ",
+    "bcb",
+    " d "
   ],
   "key": {
     "a": {
-      "item": "minecraft:paper"
+      "tag": "forge:ingots/lead"
     },
     "b": {
-      "item": "target:buckshot"
-    },
-    "c": {
       "tag": "forge:plates/copper"
     },
-    "d": {
+    "c": {
       "item": "minecraft:gunpowder"
+    },
+    "d": {
+      "item": "target:primer"
     }
   },
   "result": {
     "item": "target:shotgun_ammo",
-    "count": 6
+    "count": 4
   }
 }

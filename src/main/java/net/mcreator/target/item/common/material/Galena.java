@@ -1,4 +1,4 @@
-package net.mcreator.target.item;
+package net.mcreator.target.item.common.material;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
