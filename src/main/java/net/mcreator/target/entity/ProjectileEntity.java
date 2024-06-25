@@ -55,7 +55,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     protected int shooterId;
     private float damage = 1f;
     private float headShot = 1f;
-    private int monster_multiple = 1;
+    private int monster_multiple = 0;
     private float legShot = 0.5f;
     private boolean beast = false;
 

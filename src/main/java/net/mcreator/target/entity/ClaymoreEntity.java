@@ -1,8 +1,10 @@
 package net.mcreator.target.entity;
 
 import net.mcreator.target.TargetMod;
+import net.mcreator.target.init.TargetModDamageTypes;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.tools.CustomExplosion;
 import net.mcreator.target.tools.ParticleTool;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -26,6 +28,7 @@ import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -123,12 +126,21 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
     public void die(DamageSource source) {
         super.die(source);
 
-        if (level() instanceof ServerLevel server) {
-            server.explode(this, this.getX(), this.getY(), this.getZ(), 6.5f, Level.ExplosionInteraction.NONE);
-
-            ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+        if (level() instanceof ServerLevel) {
+            destoryExplode();
             this.discard();
         }
+    }
+
+    private void destoryExplode() {
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 45f,
+                this.getX(), this.getY(), this.getZ(), 7.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+
+        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
     }
 
     @Override
@@ -227,12 +239,23 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
 
                 TargetMod.queueServerWork(1, () -> {
                     if (!level.isClientSide())
-                        level.explode(this, target.getX(), target.getY(), target.getZ(), 6.5f, Level.ExplosionInteraction.NONE);
+                        triggerExplode(target);
                 });
             }
         }
 
         this.refreshDimensions();
+    }
+
+    private void triggerExplode(Entity target) {
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 150f,
+                target.getX(), target.getY(), target.getZ(), 4f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+
+        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
     }
 
     @Override

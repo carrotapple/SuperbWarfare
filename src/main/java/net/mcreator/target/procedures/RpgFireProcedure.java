@@ -2,6 +2,7 @@ package net.mcreator.target.procedures;
 
 import net.mcreator.target.entity.RpgRocketEntity;
 import net.mcreator.target.init.TargetModAttributes;
+import net.mcreator.target.init.TargetModEnchantments;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
@@ -12,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 
 // TODO 内联这个类
@@ -36,7 +38,8 @@ public class RpgFireProcedure {
 
 
             if (!level.isClientSide()) {
-                RpgRocketEntity rocketEntity = new RpgRocketEntity(player, level, (float) tag.getDouble("damage"));
+                int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(TargetModEnchantments.MONSTER_HUNTER.get(), mainHandItem);
+                RpgRocketEntity rocketEntity = new RpgRocketEntity(player, level, (float) tag.getDouble("damage"), monsterMultiple);
                 rocketEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                 rocketEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) tag.getDouble("velocity"),
                         (float) player.getAttribute(TargetModAttributes.SPREAD.get()).getBaseValue());

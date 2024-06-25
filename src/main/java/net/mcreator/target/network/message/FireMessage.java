@@ -87,9 +87,10 @@ public class FireMessage {
             if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
                 Level level = player.level();
                 if (!level.isClientSide()) {
+                    int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(TargetModEnchantments.MONSTER_HUNTER.get(), stack);
                     float damage = (float) (0.02 * stack.getOrCreateTag().getDouble("damage") * (1 + 0.05 * stack.getOrCreateTag().getInt("level")));
 
-                    BocekArrowEntity arrow = new BocekArrowEntity(player, level);
+                    BocekArrowEntity arrow = new BocekArrowEntity(player, level, monsterMultiple);
                     arrow.setBaseDamage(damage);
                     arrow.setKnockback(0);
                     arrow.setSilent(true);

@@ -8,6 +8,7 @@ import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.message.ClientIndicatorMessage;
+import net.mcreator.target.tools.CustomExplosion;
 import net.mcreator.target.tools.ParticleTool;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
@@ -18,8 +19,10 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -32,6 +35,8 @@ import net.minecraftforge.network.PlayMessages;
 import java.util.Optional;
 
 public class RpgRocketEntity extends ThrowableItemProjectile {
+
+    private int monsterMultiplier = 0;
     private float damage = 150f;
 
     public RpgRocketEntity(EntityType<? extends RpgRocketEntity> type, Level world) {
@@ -42,9 +47,10 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
         super(type, entity, world);
     }
 
-    public RpgRocketEntity(LivingEntity entity, Level level, float damage) {
+    public RpgRocketEntity(LivingEntity entity, Level level, float damage, int monsterMultiplier) {
         super(TargetModEntities.RPG_ROCKET.get(), entity, level);
         this.damage = damage;
+        this.monsterMultiplier = monsterMultiplier;
     }
 
     public RpgRocketEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
@@ -63,6 +69,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
+        float damageMultiplier = 1 + 0.4f * this.monsterMultiplier;
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
@@ -72,13 +79,9 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
             }
         }
 
-        if (this.tickCount > 2) {
-            if (this.level() instanceof ServerLevel level) {
-                level.explode(this, this.getX(), this.getY(), this.getZ(), 5, Level.ExplosionInteraction.NONE);
-
-                if (!entity.level().isClientSide()) {
-                    ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-                }
+        if (this.tickCount > 1) {
+            if (this.level() instanceof ServerLevel) {
+                causeExplode();
                 this.discard();
             }
         }
@@ -121,9 +124,17 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
         }
 
         if (headshot) {
-            entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 5f);
+            if (entity instanceof Monster monster) {
+                monster.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 5f * damageMultiplier);
+            } else {
+                entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 5f);
+            }
         } else {
-            entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
+            if (entity instanceof Monster monster) {
+                monster.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * damageMultiplier);
+            } else {
+                entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
+            }
         }
 
         this.discard();
@@ -137,11 +148,9 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
     @Override
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
-
-        if (this.tickCount > 2) {
-            if (this.level() instanceof ServerLevel level) {
-                level.explode(this, this.getX(), this.getY(), this.getZ(), 5, Level.ExplosionInteraction.NONE);
-                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+        if (this.tickCount > 0) {
+            if (this.level() instanceof ServerLevel) {
+                causeExplode();
             }
         }
 
@@ -152,12 +161,12 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
     public void tick() {
         super.tick();
 
-        if (this.tickCount == 2) {
+        if (this.tickCount == 1) {
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(), 50, 0.8, 0.8, 0.8, 0.01, true);
             }
         }
-        if (this.tickCount > 2) {
+        if (this.tickCount > 1) {
             this.setDeltaMovement(new Vec3((1.04 * this.getDeltaMovement().x()), (1.04 * this.getDeltaMovement().y() - 0.02), (1.04 * this.getDeltaMovement().z())));
 
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
@@ -168,10 +177,20 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
 
         if (this.tickCount > 100 || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
-                this.level().explode(this, this.getX(), this.getY(), this.getZ(), 5f, Level.ExplosionInteraction.NONE);
-                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+                causeExplode();
             }
             this.discard();
         }
+    }
+
+    private void causeExplode() {
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 100f,
+                this.getX(), this.getY(), this.getZ(), 10f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(this.monsterMultiplier);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+
+        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
     }
 }

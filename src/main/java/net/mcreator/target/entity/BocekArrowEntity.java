@@ -14,6 +14,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.item.ItemStack;
@@ -35,6 +36,8 @@ import java.util.Optional;
 public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
     public static final ItemStack PROJECTILE_ITEM = new ItemStack(Items.ARROW);
 
+    private int monsterMultiplier = 0;
+
     public BocekArrowEntity(EntityType<? extends BocekArrowEntity> type, Level world) {
         super(type, world);
     }
@@ -43,8 +46,9 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
         super(type, x, y, z, world);
     }
 
-    public BocekArrowEntity(LivingEntity entity, Level level) {
+    public BocekArrowEntity(LivingEntity entity, Level level, int monsterMultiplier) {
         super(TargetModEntities.BOCEK_ARROW.get(), entity, level);
+        this.monsterMultiplier = monsterMultiplier;
     }
 
     public BocekArrowEntity(PlayMessages.SpawnEntity packet, Level world) {
@@ -80,6 +84,8 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
+        float damageMultiplier = 1 + 0.4f * this.monsterMultiplier;
+
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
@@ -136,9 +142,17 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
 
         boolean hurt;
         if (headshot) {
-            hurt = entity.hurt(TargetModDamageTypes.causeArrowInBrainDamage(this.level().registryAccess(), this, this.getOwner()), (float) i * 2);
+            if (entity instanceof Monster monster) {
+                hurt = monster.hurt(TargetModDamageTypes.causeArrowInBrainDamage(this.level().registryAccess(), this, this.getOwner()), (float) i * 2 * damageMultiplier);
+            } else {
+                hurt = entity.hurt(TargetModDamageTypes.causeArrowInBrainDamage(this.level().registryAccess(), this, this.getOwner()), (float) i * 2);
+            }
         } else {
-            hurt = entity.hurt(TargetModDamageTypes.causeArrowInKneeDamage(this.level().registryAccess(), this, this.getOwner()), (float) i);
+            if (entity instanceof Monster monster) {
+                hurt = monster.hurt(TargetModDamageTypes.causeArrowInBrainDamage(this.level().registryAccess(), this, this.getOwner()), (float) i * damageMultiplier);
+            } else {
+                hurt = entity.hurt(TargetModDamageTypes.causeArrowInBrainDamage(this.level().registryAccess(), this, this.getOwner()), (float) i);
+            }
         }
 
         if (!hurt) {

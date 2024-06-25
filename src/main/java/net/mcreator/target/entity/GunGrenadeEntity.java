@@ -79,12 +79,9 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
             }
         }
 
-        if (this.getPersistentData().getInt("fuse") > 0) {
-            if (this.level() instanceof ServerLevel level) {
-                level.explode(this, (this.getX()), (this.getY()), (this.getZ()), 4.5f, Level.ExplosionInteraction.NONE);
-                if (!entity.level().isClientSide()) {
-                    ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-                }
+        if (this.tickCount > 0) {
+            if (this.level() instanceof ServerLevel) {
+                causeExplode();
                 this.discard();
             }
         }
@@ -146,7 +143,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
     @Override
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
-        if (this.getPersistentData().getInt("fuse") > 0) {
+        if (this.tickCount > 0) {
             if (this.level() instanceof ServerLevel) {
                 causeExplode();
             }
@@ -158,8 +155,6 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
     @Override
     public void tick() {
         super.tick();
-
-        this.getPersistentData().putInt("fuse", this.getPersistentData().getInt("fuse") + 1);
 
         if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
             ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(),
