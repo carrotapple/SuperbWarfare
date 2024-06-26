@@ -44,15 +44,6 @@ public class LivingEventHandler {
     }
 
     @SubscribeEvent
-    public static void onEntityAttacked(LivingAttackEvent event) {
-        if (event == null || event.getEntity() == null) {
-            return;
-        }
-
-        claymoreDamage(event);
-    }
-
-    @SubscribeEvent
     public static void onEntityDeath(LivingDeathEvent event) {
         if (event == null || event.getEntity() == null) {
             return;
@@ -72,7 +63,7 @@ public class LivingEventHandler {
         if (damagesource.is(TargetModDamageTypes.ARROW_IN_KNEE) || damagesource.is(TargetModDamageTypes.ARROW_IN_BRAIN)) {
             stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
         }
-        if ((damagesource.is(DamageTypes.EXPLOSION) || damagesource.is(DamageTypes.PLAYER_EXPLOSION) || damagesource.is(DamageTypes.ARROW))
+        if ((damagesource.is(TargetModDamageTypes.PROJECTILE_BOOM) || damagesource.is(DamageTypes.ARROW))
                 && (stack.getItem() == TargetModItems.M_79.get() || stack.getItem() == TargetModItems.RPG.get())
         ) {
             stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
@@ -94,30 +85,15 @@ public class LivingEventHandler {
             }
             event.setAmount((float) damage);
             stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
+        }
 
-            if (entity instanceof Target1Entity && sourceentity instanceof Player player) {
-                player.displayClientMessage(Component.literal("Damage:" + new java.text.DecimalFormat("##.#").format(damage) + " Distance:" + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceentity.position()))) + "M"), false);
-            }
+        if (entity instanceof Target1Entity && sourceentity instanceof Player player) {
+            player.displayClientMessage(Component.literal("Damage:" + new java.text.DecimalFormat("##.#").format(damage) + " Distance:" + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceentity.position()))) + "M"), false);
         }
     }
 
     private static double reduceDamageByDistance(double amount, double distance, double rate, double minDistance) {
         return amount / (1 + rate * Math.max(0, distance - minDistance));
-    }
-
-    private static void claymoreDamage(LivingAttackEvent event) {
-        LivingEntity entity = event.getEntity();
-        DamageSource source = event.getSource();
-        Entity sourceentity = source.getEntity();
-
-        if (event.getEntity() == null || entity == null || sourceentity == null) {
-            return;
-        }
-
-        if ((source.is(DamageTypes.EXPLOSION) || source.is(DamageTypes.PLAYER_EXPLOSION)) && sourceentity instanceof ClaymoreEntity claymore) {
-            event.setCanceled(true);
-            entity.hurt(TargetModDamageTypes.causeMineDamage(entity.level().registryAccess(), claymore.getOwner()), event.getAmount());
-        }
     }
 
     private static void killIndication(Entity sourceEntity) {

@@ -198,10 +198,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         boolean legshot = false;
         float eyeHeight = entity.getEyeHeight();
         float BodyHeight = entity.getBbHeight();
-        if ((eyeHeight - 0.35) < hitBoxPos.y && hitBoxPos.y < (eyeHeight + 0.4)) {
+        if ((eyeHeight - 0.35) < hitBoxPos.y && hitBoxPos.y < (eyeHeight + 0.4) && !(entity instanceof ClaymoreEntity || entity instanceof MortarEntity)) {
             headshot = true;
         }
-        if (hitBoxPos.y < (0.33 * BodyHeight)) {
+        if (hitBoxPos.y < (0.33 * BodyHeight) && !(entity instanceof ClaymoreEntity || entity instanceof MortarEntity)) {
             legshot = true;
         }
 

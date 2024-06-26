@@ -149,9 +149,9 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
             }
         } else {
             if (entity instanceof Monster monster) {
-                hurt = monster.hurt(TargetModDamageTypes.causeArrowInBrainDamage(this.level().registryAccess(), this, this.getOwner()), (float) i * damageMultiplier);
+                hurt = monster.hurt(TargetModDamageTypes.causeArrowInKneeDamage(this.level().registryAccess(), this, this.getOwner()), (float) i * damageMultiplier);
             } else {
-                hurt = entity.hurt(TargetModDamageTypes.causeArrowInBrainDamage(this.level().registryAccess(), this, this.getOwner()), (float) i);
+                hurt = entity.hurt(TargetModDamageTypes.causeArrowInKneeDamage(this.level().registryAccess(), this, this.getOwner()), (float) i);
             }
         }
 

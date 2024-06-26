@@ -1,9 +1,8 @@
 package net.mcreator.target.entity;
 
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.init.TargetModDamageTypes;
-import net.mcreator.target.init.TargetModEntities;
-import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.*;
+import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.CustomExplosion;
 import net.mcreator.target.tools.ParticleTool;
 import net.minecraft.core.registries.Registries;
@@ -28,6 +27,7 @@ import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -249,13 +249,11 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
 
     private void triggerExplode(Entity target) {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 150f,
+                TargetModDamageTypes.causeMineDamage(this.level().registryAccess(), this.getOwner()), 150f,
                 target.getX(), target.getY(), target.getZ(), 4f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
-
-        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
     }
 
     @Override
