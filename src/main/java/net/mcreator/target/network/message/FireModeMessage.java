@@ -103,19 +103,8 @@ public class FireModeMessage {
             }
         }
 
-//        if (item == TargetModItems.AK_47.get()
-//                || item == TargetModItems.M_4.get()
-//                || item == TargetModItems.AA_12.get()
-//                || item == TargetModItems.HK_416.get()
-//                || item == TargetModItems.RPK.get()
-//                || item == TargetModItems.MK_14.get()) {
-//            setFireMode(player, tag, fireMode == 0 ? 2 : 0);
-//        }
-//        if (item == TargetModItems.VECTOR.get()) {
-//            setFireMode(player, tag, (fireMode + 1) % 3);
-//        }
-        if (item == TargetModItems.SENTINEL.get() && !(player.getCooldowns().isOnCooldown(item)) && tag.getDouble("charging") == 0) {
-            tag.putDouble("charging", 1);
+        if (item == TargetModItems.SENTINEL.get() && !(player.getCooldowns().isOnCooldown(item)) && !tag.getBoolean("charging") && !tag.getBoolean("reloading")) {
+            tag.putBoolean("charging", true);
             tag.putDouble("cid", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
             tag.putDouble("charging_time", 128);
         }

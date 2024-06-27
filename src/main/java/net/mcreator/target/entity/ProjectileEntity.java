@@ -1,6 +1,7 @@
 package net.mcreator.target.entity;
 
 import net.mcreator.target.TargetMod;
+import net.mcreator.target.block.BarbedWireBlock;
 import net.mcreator.target.init.*;
 import net.mcreator.target.network.message.ClientIndicatorMessage;
 import net.mcreator.target.network.message.PlayerGunKillMessage;
@@ -28,7 +29,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
@@ -50,7 +51,13 @@ import java.util.function.Predicate;
 public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnData {
     private static final Predicate<Entity> PROJECTILE_TARGETS = input -> input != null && input.isPickable() && !input.isSpectator() && input.isAlive();
 
-    private static final Predicate<BlockState> IGNORE_LEAVES = input -> input != null && input.getBlock() instanceof LeavesBlock;
+    private static final Predicate<BlockState> IGNORE_LEAVES = input -> input != null && (input.getBlock() instanceof LeavesBlock
+            || input.getBlock() instanceof FenceBlock
+            || input.getBlock() instanceof IronBarsBlock
+            || input.getBlock() instanceof StainedGlassPaneBlock
+            || input.getBlock() instanceof DoorBlock
+            || input.getBlock() instanceof TrapDoorBlock
+            || input.getBlock() instanceof BarbedWireBlock);
     protected LivingEntity shooter;
     protected int shooterId;
     private float damage = 1f;

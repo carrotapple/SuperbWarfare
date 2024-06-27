@@ -258,6 +258,7 @@ public class PlayerReloadProcedure {
                 if (player.getMainHandItem().getItem() == TargetModItems.SENTINEL.get()
                         && !(player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem()))
                         && !tag.getBoolean("reloading")
+                        && !tag.getBoolean("charging")
                         && tag.getInt("ammo") < 6
                         && (entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperAmmo > 0) {
                     if (tag.getInt("ammo") > 0) {

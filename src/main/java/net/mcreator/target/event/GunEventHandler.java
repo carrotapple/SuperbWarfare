@@ -59,6 +59,7 @@ public class GunEventHandler {
 
             if ((player.getPersistentData().getBoolean("firing") || stack.getOrCreateTag().getInt("burst_fire") > 0)
                     && !stack.getOrCreateTag().getBoolean("reloading")
+                    && !stack.getOrCreateTag().getBoolean("charging")
                     && stack.getOrCreateTag().getInt("ammo") > 0
                     && !player.getCooldowns().isOnCooldown(stack.getItem())
                     && stack.getOrCreateTag().getDouble("need_bolt_action") == 0) {

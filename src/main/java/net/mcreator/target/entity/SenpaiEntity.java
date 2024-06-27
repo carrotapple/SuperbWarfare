@@ -61,7 +61,7 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
 
     public SenpaiEntity(EntityType<SenpaiEntity> type, Level world) {
         super(type, world);
-        xpReward = 20;
+        xpReward = 40;
         setNoAi(false);
     }
 
@@ -85,7 +85,7 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.6, false) {
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.4, false) {
             @Override
             protected double getAttackReachSqr(LivingEntity entity) {
                 return this.mob.getBbWidth() * this.mob.getBbWidth() + entity.getBbWidth();
@@ -105,7 +105,13 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
 
     protected void dropCustomDeathLoot(DamageSource source, int looting, boolean recentlyHitIn) {
         super.dropCustomDeathLoot(source, looting, recentlyHitIn);
-        this.spawnAtLocation(new ItemStack(Items.GOLDEN_APPLE));
+        if (Math.random() < 0.01) {
+            this.spawnAtLocation(new ItemStack(Items.ENCHANTED_GOLDEN_APPLE));
+        } else if (0.01 <= Math.random() && Math.random() < 0.2) {
+            this.spawnAtLocation(new ItemStack(Items.GOLDEN_APPLE));
+        } else if (Math.random() >= 0.2) {
+            this.spawnAtLocation(new ItemStack(Items.APPLE));
+        }
     }
 
     @Override
@@ -115,7 +121,7 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
 
     @Override
     public void playStepSound(BlockPos pos, BlockState blockIn) {
-        this.playSound(TargetModSounds.STEP.get(), 0.15f, 1);
+        this.playSound(TargetModSounds.STEP.get(), 0.25f, 1);
     }
 
     @Override
@@ -141,20 +147,6 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
     @Override
     public void baseTick() {
         super.baseTick();
-
-        this.getPersistentData().putInt("find_target", this.getPersistentData().getInt("find_target") + 1);
-        double target = this.getPersistentData().getInt("find_target");
-        if (target == 1) {
-            final Vec3 center = new Vec3(this.getX(), this.getY(), this.getZ());
-            this.level().getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(256 / 2d), e -> true)
-                    .stream()
-                    .sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center)))
-                    .filter(e -> e instanceof Player player && !player.isCreative())
-                    .forEach(e -> this.setTarget((LivingEntity) e));
-        } else if (target >= 100) {
-            this.getPersistentData().putInt("find_target", 0);
-        }
-
         this.refreshDimensions();
     }
 
@@ -177,11 +169,11 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 0.25)
-                .add(Attributes.MAX_HEALTH, 51)
+                .add(Attributes.MOVEMENT_SPEED, 0.23)
+                .add(Attributes.MAX_HEALTH, 24)
                 .add(Attributes.ARMOR, 0)
                 .add(Attributes.ATTACK_DAMAGE, 5)
-                .add(Attributes.FOLLOW_RANGE, 1024)
+                .add(Attributes.FOLLOW_RANGE, 64)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.5);
     }
 

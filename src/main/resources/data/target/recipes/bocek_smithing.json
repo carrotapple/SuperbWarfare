@@ -7,7 +7,7 @@
     "item": "target:special_material_pack"
   },
   "addition": {
-    "item": "target:soul_steel_ingot"
+    "item": "minecraft:bow"
   },
   "result": {
     "item": "target:bocek"

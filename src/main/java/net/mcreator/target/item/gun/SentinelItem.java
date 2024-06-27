@@ -121,11 +121,11 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload2"));
             }
 
-            if (stack.getOrCreateTag().getDouble("charging_time") > 127 && stack.getOrCreateTag().getDouble("charging") == 1) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.chargep"));
-            }
+//            if (stack.getOrCreateTag().getDouble("charging_time") > 127 && stack.getOrCreateTag().getBoolean("charging")) {
+//                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.chargep"));
+//            }
 
-            if (stack.getOrCreateTag().getDouble("charging_time") < 127 && stack.getOrCreateTag().getDouble("charging_time") > 0 && stack.getOrCreateTag().getDouble("charging") == 1) {
+            if (stack.getOrCreateTag().getDouble("charging_time") < 127 && stack.getOrCreateTag().getDouble("charging_time") > 0 && stack.getOrCreateTag().getBoolean("charging")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.charge"));
             }
 
@@ -233,10 +233,10 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
 
             cid = tag.getDouble("cid");
             if (player.getMainHandItem().getOrCreateTag().getDouble("cid") != tag.getDouble("cid")) {
-                tag.putDouble("charging", 0);
+                tag.putBoolean("charging", false);
                 tag.putDouble("charging_time", 0);
             }
-            if (tag.getDouble("charging") == 1) {
+            if (tag.getBoolean("charging")) {
                 if (tag.getDouble("charging_time") == 127) {
                     entity.getPersistentData().putDouble("cid", cid);
                     if (entity instanceof ServerPlayer serverPlayer) {
@@ -249,18 +249,18 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
                         tag.putDouble("charging_time", tag.getDouble("charging_time") - 1);
                     }
                 } else {
-                    tag.putDouble("charging", 0);
+                    tag.putBoolean("charging", false);
                     tag.putDouble("charging_time", 0);
                 }
                 if (tag.getDouble("charging_time") == 16 && player.getMainHandItem().getOrCreateTag().getDouble("cid") == cid) {
                     tag.putDouble("power", 100);
                 }
                 if (tag.getDouble("charging_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("cid") == cid) {
-                    tag.putDouble("charging", 0);
+                    tag.putBoolean("charging", false);
                 }
             }
             if (tag.getDouble("power") > 0) {
-                tag.putDouble("add_damage", 10);
+                tag.putDouble("add_damage", 0.2857142857142857 * tag.getDouble("damage") * tag.getDouble("damageadd"));
                 tag.putDouble("power", tag.getDouble("power") - 0.025);
             } else {
                 tag.putDouble("add_damage", 0);
