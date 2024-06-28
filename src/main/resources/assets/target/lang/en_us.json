@@ -178,6 +178,7 @@
   "gui.target.gun_recycle_gui.label_gun_recycle": "Gun Dismantle",
 
   "entity.target.projectile": "Bullet",
+  "entity.target.projectile_frag": "Frag",
   "entity.target.mortar": "Mortar",
   "entity.target.target": "Target",
   "entity.target.target_1": "Target",

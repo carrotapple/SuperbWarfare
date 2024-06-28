@@ -21,5 +21,6 @@ public class TargetModEntityRenderers {
         event.registerEntityRenderer(TargetModEntities.MORTAR_SHELL.get(), MortarShellRenderer::new);
         event.registerEntityRenderer(TargetModEntities.BOCEK_ARROW.get(), BocekArrowRenderer::new);
         event.registerEntityRenderer(TargetModEntities.PROJECTILE.get(), ProjectileRenderer::new);
+        event.registerEntityRenderer(TargetModEntities.FRAG.get(), FragRenderer::new);
     }
 }

@@ -178,6 +178,7 @@
   "gui.target.gun_recycle_gui.label_gun_recycle": "枪械拆解",
 
   "entity.target.projectile": "子弹",
+  "entity.target.projectile_frag": "破片",
   "entity.target.mortar": "迫击炮",
   "entity.target.target": "标靶",
   "entity.target.target_1": "标靶",

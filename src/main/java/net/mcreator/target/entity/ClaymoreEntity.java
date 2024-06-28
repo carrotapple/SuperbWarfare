@@ -134,7 +134,7 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
 
     private void destoryExplode() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 45f,
+                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 15f,
                 this.getX(), this.getY(), this.getZ(), 7.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
@@ -249,11 +249,29 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
 
     private void triggerExplode(Entity target) {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                TargetModDamageTypes.causeMineDamage(this.level().registryAccess(), this.getOwner()), 150f,
+                TargetModDamageTypes.causeMineDamage(this.level().registryAccess(), this.getOwner()), 40f,
                 target.getX(), target.getY(), target.getZ(), 4f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
+        for (int index0 = 0; index0 < 250; index0++) {
+            fragShoot();
+        }
+    }
+
+    public void fragShoot() {
+
+        if (!this.level().isClientSide()) {
+
+            Vec3 vec3 = (this.position());
+
+            FragEntity frag = new FragEntity(this.getOwner(), level());
+
+            frag.setPos(this.getX(), this.getEyeY() + 0.1, this.getZ());
+            frag.shoot(this.getLookAngle().x, this.getLookAngle().y + 0.5f, this.getLookAngle().z, 7,
+                    60);
+            this.level().addFreshEntity(frag);
+        }
     }
 
     @Override
