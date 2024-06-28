@@ -24,9 +24,8 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 
-import java.util.Optional;
-
 public class FragEntity extends ThrowableItemProjectile {
+    private Vec3 position0;
 
     public FragEntity(EntityType<? extends FragEntity> type, Level world) {
         super(type, world);
@@ -43,6 +42,12 @@ public class FragEntity extends ThrowableItemProjectile {
     public FragEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
         this(TargetModEntities.FRAG.get(), level);
     }
+
+    public FragEntity setPosition0(Vec3 position0) {
+        this.position0 = position0;
+        return this;
+    }
+
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -66,7 +71,9 @@ public class FragEntity extends ThrowableItemProjectile {
                 living.level().playSound(null, living.blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
                 TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
 
-                entity.hurt(TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 4 - (float) Mth.clamp(0.04 * this.position().distanceTo(this.getOwner().position()) * (entity instanceof LivingEntity living_ ? living_.getMaxHealth() : 1),0,3.5));
+                entity.hurt(TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
+                        5 - (float) Mth.clamp(0.2 * this.position0.distanceTo(entity.position())
+                                * (entity instanceof LivingEntity livingEntity ? livingEntity.getMaxHealth() / 100 + 1 : 1), 0, 4.5));
             }
         }
 
@@ -76,7 +83,6 @@ public class FragEntity extends ThrowableItemProjectile {
     @Override
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
-
 
         this.discard();
     }

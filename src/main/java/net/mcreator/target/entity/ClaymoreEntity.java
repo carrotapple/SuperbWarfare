@@ -1,8 +1,9 @@
 package net.mcreator.target.entity;
 
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.init.*;
-import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.init.TargetModDamageTypes;
+import net.mcreator.target.init.TargetModEntities;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.tools.CustomExplosion;
 import net.mcreator.target.tools.ParticleTool;
 import net.minecraft.core.registries.Registries;
@@ -27,7 +28,6 @@ import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -254,18 +254,14 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
-        for (int index0 = 0; index0 < 250; index0++) {
+        for (int index0 = 0; index0 < 100; index0++) {
             fragShoot();
         }
     }
 
     public void fragShoot() {
-
         if (!this.level().isClientSide()) {
-
-            Vec3 vec3 = (this.position());
-
-            FragEntity frag = new FragEntity(this.getOwner(), level());
+            FragEntity frag = new FragEntity(this.getOwner(), level()).setPosition0(this.position());
 
             frag.setPos(this.getX(), this.getEyeY() + 0.1, this.getZ());
             frag.shoot(this.getLookAngle().x, this.getLookAngle().y + 0.5f, this.getLookAngle().z, 7,
