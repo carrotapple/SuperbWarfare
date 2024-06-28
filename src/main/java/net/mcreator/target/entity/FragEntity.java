@@ -72,7 +72,7 @@ public class FragEntity extends ThrowableItemProjectile {
                 TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
 
                 entity.hurt(TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        5 - (float) Mth.clamp(0.2 * this.position0.distanceTo(entity.position())
+                        5 - (float) Mth.clamp(0.1 * this.position0.distanceTo(entity.position())
                                 * (entity instanceof LivingEntity livingEntity ? livingEntity.getMaxHealth() / 100 + 1 : 1), 0, 4.5));
             }
         }

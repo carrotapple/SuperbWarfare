@@ -68,19 +68,19 @@ public class GunRecycleGuiButtonMessage {
         if (gun.is(TargetModTags.Items.GUN)) {
             // 普通稀有度
             var material = switch (gun.getRarity()) {
-                case COMMON -> Items.IRON_INGOT;
-                case RARE -> TargetModItems.INGOT_STEEL.get();
-                case EPIC -> TargetModItems.CEMENTED_CARBIDE_INGOT.get();
+                case COMMON -> TargetModItems.COMMON_MATERIAL_PACK.get();
+                case RARE -> TargetModItems.RARE_MATERIAL_PACK.get();
+                case EPIC -> TargetModItems.EPIC_MATERIAL_PACK.get();
                 default -> null;
             };
             if (material != null) ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(material));
 
             // 特殊稀有度
             if (gun.is(TargetModTags.Items.LEGENDARY_GUN)) {
-                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(Items.NETHERITE_INGOT));
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TargetModItems.LEGENDARY_MATERIAL_PACK.get()));
             }
             if (gun.is(TargetModTags.Items.SPECIAL_GUN)) {
-                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TargetModItems.SOUL_STEEL_INGOT.get()));
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TargetModItems.SPECIAL_MATERIAL_PACK.get()));
             }
 
             // 高等级额外奖励

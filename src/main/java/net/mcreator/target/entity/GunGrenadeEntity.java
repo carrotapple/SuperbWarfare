@@ -178,7 +178,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         explosion.finalizeExplosion(false);
 
         ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-        for (int index0 = 0; index0 < 50; index0++) {
+        for (int index0 = 0; index0 < 100; index0++) {
             fragShoot();
         }
     }

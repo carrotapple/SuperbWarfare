@@ -1,19 +1,26 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "minecraft:crafting_shapeless",
   "category": "misc",
-  "pattern": [
-    "aaa",
-    "aaa",
-    "bbb"
-  ],
-  "key": {
-    "a": {
+  "ingredients": [
+    {
       "item": "target:handgun_ammo"
     },
-    "b": {
-      "item": "minecraft:paper"
+    {
+      "item": "target:handgun_ammo"
+    },
+    {
+      "item": "target:handgun_ammo"
+    },
+    {
+      "item": "target:handgun_ammo"
+    },
+    {
+      "item": "target:handgun_ammo"
+    },
+    {
+      "item": "target:handgun_ammo"
     }
-  },
+  ],
   "result": {
     "item": "target:handgun_ammo_box",
     "count": 1
