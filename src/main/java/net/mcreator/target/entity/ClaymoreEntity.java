@@ -254,7 +254,7 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
-        for (int index0 = 0; index0 < 100; index0++) {
+        for (int index0 = 0; index0 < 250; index0++) {
             fragShoot();
         }
     }

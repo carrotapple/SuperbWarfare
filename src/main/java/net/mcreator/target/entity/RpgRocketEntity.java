@@ -69,7 +69,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        float damageMultiplier = 1 + 0.4f * this.monsterMultiplier;
+        float damageMultiplier = 1 + 0.2f * this.monsterMultiplier;
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
@@ -148,7 +148,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
     @Override
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
-        if (this.tickCount > 0) {
+        if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
                 causeExplode();
             }
@@ -161,13 +161,14 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
     public void tick() {
         super.tick();
 
-        if (this.tickCount == 1) {
+        if (this.tickCount == 2) {
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, this.getX(), this.getY(), this.getZ(), 50, 0.8, 0.8, 0.8, 0.01, true);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(), 50, 0.8, 0.8, 0.8, 0.01, true);
             }
         }
         if (this.tickCount > 1) {
-            this.setDeltaMovement(new Vec3((1.04 * this.getDeltaMovement().x()), (1.04 * this.getDeltaMovement().y() - 0.02), (1.04 * this.getDeltaMovement().z())));
+            this.setDeltaMovement(new Vec3((1.03 * this.getDeltaMovement().x()), (1.03 * this.getDeltaMovement().y() - 0.05), (1.03 * this.getDeltaMovement().z())));
 
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, this.getX(), this.getY(), this.getZ(), 2, 0, 0, 0, 0, true);

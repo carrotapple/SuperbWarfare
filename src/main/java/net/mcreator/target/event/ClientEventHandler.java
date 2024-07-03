@@ -113,7 +113,7 @@ public class ClientEventHandler {
 
             float times = 90f / fps;
             var data = entity.getPersistentData();
-            double move_speed = (float) entity.getDeltaMovement().horizontalDistanceSqr();
+            double move_speed = (float) Mth.clamp(entity.getDeltaMovement().horizontalDistanceSqr(),0,0.02);
             double on_ground;
             if (entity.onGround()) {
                 if (entity.isSprinting()) {

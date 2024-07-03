@@ -332,7 +332,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     }
 
     protected void onHitEntity(Entity entity, boolean headshot, boolean legshot) {
-        float m_multiple = (1 + 0.4f * this.monster_multiple);
+        float m_multiple = 1 + 0.2f * this.monster_multiple;
 
         if (entity == null) return;
 

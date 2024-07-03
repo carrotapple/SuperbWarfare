@@ -179,6 +179,11 @@
 
   "entity.target.projectile": "子弹",
   "entity.target.projectile_frag": "破片",
+  "entity.target.projectile_mortar_shell": "迫击炮弹",
+  "entity.target.projectile_gun_grenade": "枪榴弹",
+  "entity.target.projectile_rpg_rocket": "RPG火箭弹",
+  "entity.target.projectile_bocekarrow": "箭矢",
+  "entity.target.projectile_taser_bullet_projectile": "电极",
   "entity.target.mortar": "迫击炮",
   "entity.target.target": "标靶",
   "entity.target.target_1": "标靶",

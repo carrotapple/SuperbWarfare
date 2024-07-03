@@ -69,7 +69,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        float damageMultiplier = 1 + 0.4f * this.monsterMultiplier;
+        float damageMultiplier = 1 + 0.2f * this.monsterMultiplier;
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
