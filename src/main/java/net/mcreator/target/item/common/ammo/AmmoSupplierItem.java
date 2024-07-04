@@ -26,8 +26,9 @@ public abstract class AmmoSupplierItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+        int count = stack.getCount();
         player.getCooldowns().addCooldown(this, 10);
-        stack.shrink(1);
+        stack.shrink(count);
 
         player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
             var newAmmoCount = switch (this.type) {
@@ -35,7 +36,7 @@ public abstract class AmmoSupplierItem extends Item {
                 case RIFLE -> capability.rifleAmmo;
                 case SHOTGUN -> capability.shotgunAmmo;
                 case SNIPER -> capability.sniperAmmo;
-            } + ammoToAdd;
+            } + ammoToAdd * count;
             switch (this.type) {
                 case HANDGUN -> capability.handgunAmmo = newAmmoCount;
                 case RIFLE -> capability.rifleAmmo = newAmmoCount;
@@ -46,7 +47,7 @@ public abstract class AmmoSupplierItem extends Item {
         });
 
         if (!level.isClientSide()) {
-            player.displayClientMessage(Component.translatable("item.target.ammo_supplier.supply", Component.translatable(this.type.translatableKey).getString(), ammoToAdd), false);
+            player.displayClientMessage(Component.translatable("item.target.ammo_supplier.supply", Component.translatable(this.type.translatableKey).getString(), ammoToAdd * count), false);
             level.playSound(null, player.blockPosition(), TargetModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 1, 1);
         }
         return InteractionResultHolder.consume(stack);
