@@ -1,21 +1,16 @@
 package net.mcreator.target.client.model.item;
 
-import net.mcreator.target.init.TargetModMobEffects;
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.AK47Item;
 import net.mcreator.target.network.TargetModVariables;
-import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.ViewportEvent;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
-import net.minecraft.network.chat.Component;
 
 
 public class AK47ItemModel extends GeoModel<AK47Item> {
@@ -43,15 +38,11 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         CoreGeoBone shuan = getAnimationProcessor().getBone("shuan");
 
         Player player = Minecraft.getInstance().player;
-
-        if (player == null) {
-            return;
-        }
-
+        if (player == null) return;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return;
 
         double p = player.getPersistentData().getDouble("zoom_pos");
-
         double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(1.97f * (float) p);

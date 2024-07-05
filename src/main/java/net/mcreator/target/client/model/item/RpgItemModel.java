@@ -1,5 +1,6 @@
 package net.mcreator.target.client.model.item;
 
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.RpgItem;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -35,13 +36,11 @@ public class RpgItemModel extends GeoModel<RpgItem> {
         CoreGeoBone hammer = getAnimationProcessor().getBone("hammer");
 
         Player player = Minecraft.getInstance().player;
+        if (player == null) return;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return;
 
-        if (stack.getOrCreateTag().getBoolean("empty")) {
-            rocket.setHidden(true);
-        } else {
-            rocket.setHidden(false);
-        }
+        rocket.setHidden(stack.getOrCreateTag().getBoolean("empty"));
 
         if (stack.getOrCreateTag().getBoolean("close_hammer")) {
             hammer.setRotX(-90 * Mth.DEG_TO_RAD);

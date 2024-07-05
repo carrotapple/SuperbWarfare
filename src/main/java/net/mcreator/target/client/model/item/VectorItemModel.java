@@ -1,5 +1,6 @@
 package net.mcreator.target.client.model.item;
 
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.VectorItem;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -35,7 +36,9 @@ public class VectorItemModel extends GeoModel<VectorItem> {
         CoreGeoBone kmj = getAnimationProcessor().getBone("kuaimanji");
 
         Player player = Minecraft.getInstance().player;
+        if (player == null) return;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return;
 
         if (stack.getOrCreateTag().getInt("fire_mode") == 0) {
             kmj.setRotX(-120 * Mth.DEG_TO_RAD);
@@ -84,12 +87,12 @@ public class VectorItemModel extends GeoModel<VectorItem> {
             shen.setRotX(0.03f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
         }
-        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
+        shen.setPosX(0.5f * (float) fr * (float) ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
-        float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
-        float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
+        float PosX = (float) player.getPersistentData().getDouble("gun_move_posX");
+        float PosY = (float) player.getPersistentData().getDouble("gun_move_posY");
 
         double y = 0;
         double x = 0;

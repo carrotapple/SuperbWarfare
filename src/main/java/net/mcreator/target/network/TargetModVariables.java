@@ -277,9 +277,6 @@ public class TargetModVariables {
         public boolean bowPullHold = false;
         public boolean bowPull = false;
         public boolean playerDoubleJump = false;
-//        public int hitIndicator = 0;
-//        public int headIndicator = 0;
-//        public int killIndicator = 0;
 
         public void syncPlayerVariables(Entity entity) {
             if (entity instanceof ServerPlayer)

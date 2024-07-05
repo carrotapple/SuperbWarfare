@@ -1,5 +1,6 @@
 package net.mcreator.target.client.model.item;
 
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.Taser;
 import net.mcreator.target.tools.ItemNBTTool;
 import net.minecraft.client.Minecraft;
@@ -14,6 +15,7 @@ import software.bernie.geckolib.model.GeoModel;
 public class TaserItemModel extends GeoModel<Taser> {
 
     public static final String TAG_POWER = "Power";
+
     @Override
     public ResourceLocation getAnimationResource(Taser animatable) {
         return new ResourceLocation("target", "animations/taser.animation.json");
@@ -38,8 +40,10 @@ public class TaserItemModel extends GeoModel<Taser> {
         CoreGeoBone redcover = getAnimationProcessor().getBone("redcover");
 
         Player player = Minecraft.getInstance().player;
-
+        if (player == null) return;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return;
+
         bar.setScaleX((float) ItemNBTTool.getInt(stack, TAG_POWER, 1200) / 1200);
 
         if (ItemNBTTool.getInt(stack, TAG_POWER, 1200) >= 400) {
@@ -60,11 +64,8 @@ public class TaserItemModel extends GeoModel<Taser> {
         shen.setRotY(0.02f * (float) fr);
         shen.setRotZ(-0.02f * (float) (fp + 1.3 * fr));
 
-        double p = 0;
-        p = player.getPersistentData().getDouble("zoom_pos");
-
-        double zp = 0;
-        zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double p = player.getPersistentData().getDouble("zoom_pos");
+        double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(1.82f * (float) p);
 
@@ -76,13 +77,11 @@ public class TaserItemModel extends GeoModel<Taser> {
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
-        float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
-        float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
+        float PosX = (float) player.getPersistentData().getDouble("gun_move_posX");
+        float PosY = (float) player.getPersistentData().getDouble("gun_move_posY");
 
-        double y = 0;
-        double x = 0;
-        y = player.getPersistentData().getDouble("y");
-        x = player.getPersistentData().getDouble("x");
+        double y = player.getPersistentData().getDouble("y");
+        double x = player.getPersistentData().getDouble("x");
 
         float RotZ = (float) player.getPersistentData().getDouble("gun_move_rotZ");
 

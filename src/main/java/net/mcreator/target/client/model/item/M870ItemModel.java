@@ -1,5 +1,6 @@
 package net.mcreator.target.client.model.item;
 
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.M870Item;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -34,7 +35,9 @@ public class M870ItemModel extends GeoModel<M870Item> {
         CoreGeoBone shell = getAnimationProcessor().getBone("shell");
 
         Player player = Minecraft.getInstance().player;
+        if (player == null) return;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return;
 
         if (stack.getOrCreateTag().getBoolean("reloading")) {
             if (stack.getOrCreateTag().getDouble("prepare") == 0) {
@@ -46,11 +49,8 @@ public class M870ItemModel extends GeoModel<M870Item> {
             }
         }
 
-        double p = 0;
-        p = player.getPersistentData().getDouble("zoom_pos");
-
-        double zp = 0;
-        zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double p = player.getPersistentData().getDouble("zoom_pos");
+        double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(1.7f * (float) p);
 
@@ -76,7 +76,7 @@ public class M870ItemModel extends GeoModel<M870Item> {
             shen.setRotX(0.3f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
         }
-        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
+        shen.setPosX(0.5f * (float) fr * (float) ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
 
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
 
@@ -92,8 +92,8 @@ public class M870ItemModel extends GeoModel<M870Item> {
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
-        float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
-        float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
+        float PosX = (float) player.getPersistentData().getDouble("gun_move_posX");
+        float PosY = (float) player.getPersistentData().getDouble("gun_move_posY");
 
         double y = 0;
         double x = 0;

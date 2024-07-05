@@ -1,5 +1,6 @@
 package net.mcreator.target.client.model.item;
 
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.MarlinItem;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -34,7 +35,9 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
         CoreGeoBone jichui = getAnimationProcessor().getBone("jichui");
 
         Player player = Minecraft.getInstance().player;
+        if (player == null) return;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return;
 
         double p = 0;
         p = player.getPersistentData().getDouble("zoom_pos");

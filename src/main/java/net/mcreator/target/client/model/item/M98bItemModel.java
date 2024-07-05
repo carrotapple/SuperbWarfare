@@ -1,5 +1,6 @@
 package net.mcreator.target.client.model.item;
 
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.M98bItem;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -34,7 +35,9 @@ public class M98bItemModel extends GeoModel<M98bItem> {
         CoreGeoBone shi = getAnimationProcessor().getBone("shi");
 
         Player player = Minecraft.getInstance().player;
+        if (player == null) return;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return;
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");

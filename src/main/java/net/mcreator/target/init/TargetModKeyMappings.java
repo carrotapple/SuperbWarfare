@@ -7,11 +7,6 @@ import net.mcreator.target.network.message.ReloadMessage;
 import net.mcreator.target.network.message.SensitivityMessage;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.Input;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.event.TickEvent;
@@ -92,14 +87,10 @@ public class TargetModKeyMappings {
     };
 
     public static final KeyMapping INTERACT = new KeyMapping("key.target.interact", GLFW.GLFW_KEY_X, "key.categories.target") {
-        private boolean isDownOld = false;
 
         @Override
         public void setDown(boolean isDown) {
             super.setDown(isDown);
-            if (isDownOld != isDown && isDown) {
-            }
-            isDownOld = isDown;
         }
     };
 

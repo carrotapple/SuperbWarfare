@@ -1,7 +1,7 @@
 package net.mcreator.target.client.model.item;
 
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.Trachelium;
-import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -33,7 +33,9 @@ public class TracheliumItemModel extends GeoModel<Trachelium> {
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
 
         Player player = Minecraft.getInstance().player;
+        if (player == null) return;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return;
 
         double p = 0;
         p = player.getPersistentData().getDouble("zoom_pos");

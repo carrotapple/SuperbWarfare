@@ -1,5 +1,6 @@
 package net.mcreator.target.client.model.item;
 
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.BocekItem;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -43,7 +44,9 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
 
         Player player = Minecraft.getInstance().player;
+        if (player == null) return;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return;
 
         if (stack.getOrCreateTag().getInt("arrow_empty") > 0) {
             arrow.setScaleX(0);

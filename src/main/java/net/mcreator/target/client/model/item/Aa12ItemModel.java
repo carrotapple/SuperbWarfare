@@ -1,5 +1,6 @@
 package net.mcreator.target.client.model.item;
 
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.Aa12Item;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -33,9 +34,9 @@ public class Aa12ItemModel extends GeoModel<Aa12Item> {
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
 
         Player player = Minecraft.getInstance().player;
-
-        assert player != null;
+        if (player == null) return;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return;
 
         double p = player.getPersistentData().getDouble("zoom_pos");
         double zp = player.getPersistentData().getDouble("zoom_pos_z");

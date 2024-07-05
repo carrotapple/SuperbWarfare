@@ -32,7 +32,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -48,7 +47,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-@Mod.EventBusSubscriber
 public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
@@ -249,6 +247,7 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
             }
         }
     }
+
     @Override
     public ResourceLocation getGunIcon() {
         return new ResourceLocation(TargetMod.MODID, "textures/gun_icon/vector_icon.png");

@@ -24,7 +24,6 @@ public class CrossHairOverlay {
     public static int HEAD_INDICATOR = 0;
     public static int KILL_INDICATOR = 0;
 
-    // TODO 使用partialTicks修改渲染
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
         int w = event.getWindow().getGuiScaledWidth();
@@ -45,13 +44,9 @@ public class CrossHairOverlay {
 
         if (shouldRenderCrossHair(entity)) {
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("target:textures/screens/point.png"), w / 2f - 7.5f, h / 2f - 8, 0, 0, 16, 16, 16, 16);
-
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("target:textures/screens/rexheng.png"), w / 2f - 9.5f - 2.8f * (float) spread, h / 2f - 8, 0, 0, 16, 16, 16, 16);
-
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("target:textures/screens/rexheng.png"), w / 2f - 6.5f + 2.8f * (float) spread, h / 2f - 8, 0, 0, 16, 16, 16, 16);
-
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("target:textures/screens/rexshu.png"), w / 2f - 7.5f, h / 2f - 7 + 2.8f * (float) spread, 0, 0, 16, 16, 16, 16);
-
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("target:textures/screens/rexshu.png"), w / 2f - 7.5f, h / 2f - 10 - 2.8f * (float) spread, 0, 0, 16, 16, 16, 16);
         }
 
@@ -69,11 +64,8 @@ public class CrossHairOverlay {
 
         if (KILL_INDICATOR > 0) {
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("target:textures/screens/kill_mark1.png"), w / 2f - 7.5f - 2 + m, h / 2f - 8 - 2 + m, 0, 0, 16, 16, 16, 16);
-
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("target:textures/screens/kill_mark2.png"), w / 2f - 7.5f + 2 - m, h / 2f - 8 - 2 + m, 0, 0, 16, 16, 16, 16);
-
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("target:textures/screens/kill_mark3.png"), w / 2f - 7.5f - 2 + m, h / 2f - 8 + 2 - m, 0, 0, 16, 16, 16, 16);
-
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("target:textures/screens/kill_mark4.png"), w / 2f - 7.5f + 2 - m, h / 2f - 8 + 2 - m, 0, 0, 16, 16, 16, 16);
         }
 

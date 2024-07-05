@@ -1,5 +1,6 @@
 package net.mcreator.target.client.model.item;
 
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.SksItem;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -36,7 +37,9 @@ public class SksItemModel extends GeoModel<SksItem> {
         CoreGeoBone shuan = getAnimationProcessor().getBone("bolt2");
 
         Player player = Minecraft.getInstance().player;
+        if (player == null) return;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return;
 
         if (stack.getOrCreateTag().getDouble("HoldOpen") == 1) {
             bolt.setPosZ(2.5f);

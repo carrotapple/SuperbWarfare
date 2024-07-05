@@ -1,5 +1,6 @@
 package net.mcreator.target.client.model.item;
 
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.M79Item;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -33,7 +34,9 @@ public class M79ItemModel extends GeoModel<M79Item> {
         CoreGeoBone shen = getAnimationProcessor().getBone("gun");
 
         Player player = Minecraft.getInstance().player;
+        if (player == null) return;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return;
 
         double p = 0;
         p = player.getPersistentData().getDouble("zoom_pos");

@@ -1,5 +1,6 @@
 package net.mcreator.target.client.model.item;
 
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.Hk416Item;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -36,7 +37,9 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
 
         Player player = Minecraft.getInstance().player;
+        if (player == null) return;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return;
 
         if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
             flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
@@ -48,24 +51,17 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
             flare.setRotZ(0);
         }
 
-        double p = 0;
-        p = player.getPersistentData().getDouble("zoom_pos");
-
-        double zp = 0;
-        zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double p = player.getPersistentData().getDouble("zoom_pos");
+        double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(3.28f * (float) p);
-
         gun.setPosY(1.04f * (float) p - (float) (0.2f * zp));
-
         gun.setPosZ(4f * (float) p + (float) (0.3f * zp));
-
         gun.setRotZ((float) (0.05f * zp));
 
         scope.setScaleZ(1f - (0.5f * (float) p));
 
         if (gun.getPosX() > 3.1) {
-
             holo.setScaleX(1);
             holo.setScaleY(1);
         } else {
@@ -87,22 +83,18 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
             shen.setRotX(0.03f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
         }
-        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
+        shen.setPosX(0.5f * (float) fr * (float) ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
-        float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
-        float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
+        float PosX = (float) player.getPersistentData().getDouble("gun_move_posX");
+        float PosY = (float) player.getPersistentData().getDouble("gun_move_posY");
 
-        double y = 0;
-        double x = 0;
-        y = player.getPersistentData().getDouble("y");
-        x = player.getPersistentData().getDouble("x");
+        double y = player.getPersistentData().getDouble("y");
+        double x = player.getPersistentData().getDouble("x");
 
         root.setPosX(PosX);
-
         root.setPosY((float) y + PosY);
-
         root.setRotX((float) x);
 
         float RotZ = (float) player.getPersistentData().getDouble("gun_move_rotZ");

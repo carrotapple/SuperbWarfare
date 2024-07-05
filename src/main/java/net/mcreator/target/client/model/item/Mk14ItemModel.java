@@ -1,5 +1,6 @@
 package net.mcreator.target.client.model.item;
 
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.Mk14Item;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -41,7 +42,9 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
         CoreGeoBone action = getAnimationProcessor().getBone("action");
 
         Player player = Minecraft.getInstance().player;
+        if (player == null) return;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return;
 
         if (player.getPersistentData().getDouble("prone") > 0) {
             l.setRotX(-1.5f);

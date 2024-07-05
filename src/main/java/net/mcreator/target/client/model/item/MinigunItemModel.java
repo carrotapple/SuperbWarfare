@@ -1,5 +1,6 @@
 package net.mcreator.target.client.model.item;
 
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.Minigun;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -36,7 +37,9 @@ public class MinigunItemModel extends GeoModel<Minigun> {
         CoreGeoBone heat_barrels = getAnimationProcessor().getBone("heatbarrels");
 
         Player player = Minecraft.getInstance().player;
+        if (player == null) return;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return;
 
         float fps = Minecraft.getInstance().getFps();
         if (fps <= 0) {

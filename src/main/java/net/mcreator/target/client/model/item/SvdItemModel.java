@@ -1,5 +1,6 @@
 package net.mcreator.target.client.model.item;
 
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.SvdItem;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -40,7 +41,9 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         CoreGeoBone glass = getAnimationProcessor().getBone("glass");
 
         Player player = Minecraft.getInstance().player;
+        if (player == null) return;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return;
 
         if (stack.getOrCreateTag().getDouble("HoldOpen") == 1) {
             bolt.setPosZ(3.25f);
