@@ -3,34 +3,21 @@ package net.mcreator.target.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.entity.MortarEntity;
-import net.mcreator.target.entity.Target1Entity;
-import net.mcreator.target.entity.TargetEntity;
 import net.mcreator.target.init.TargetModKeyMappings;
 import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModTags;
-import net.mcreator.target.item.gun.GunItem;
 import net.mcreator.target.network.TargetModVariables;
-import net.mcreator.target.network.message.*;
+import net.mcreator.target.network.message.AdjustMortarAngleMessage;
+import net.mcreator.target.network.message.AdjustZoomFovMessage;
+import net.mcreator.target.network.message.FireMessage;
+import net.mcreator.target.network.message.ZoomMessage;
 import net.mcreator.target.tools.TraceTool;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.settings.KeyConflictContext;
-import net.minecraftforge.client.settings.KeyModifier;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
@@ -111,14 +98,16 @@ public class ClickHandler {
     @SubscribeEvent
     public static void onMouseScrolling(InputEvent.MouseScrollingEvent event) {
         Player player = Minecraft.getInstance().player;
-        ItemStack stack = player.getMainHandItem();
-        var tag = stack.getOrCreateTag();
-        double scroll = event.getScrollDelta();
 
         if (notInGame()) return;
         if (player == null) return;
 
+        ItemStack stack = player.getMainHandItem();
+
+        double scroll = event.getScrollDelta();
+
         if (stack.is(TargetModTags.Items.GUN) && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zoom) {
+            var tag = stack.getOrCreateTag();
             if (tag.getDouble("min_zoom") != 0 && tag.getDouble("max_zoom") != 0) {
                 TargetMod.PACKET_HANDLER.sendToServer(new AdjustZoomFovMessage(scroll));
             }
@@ -127,13 +116,13 @@ public class ClickHandler {
 
         Entity looking = TraceTool.findLookingEntity(player, 6);
         if (looking == null) return;
-        if (looking instanceof MortarEntity && player.isShiftKeyDown()){
+        if (looking instanceof MortarEntity && player.isShiftKeyDown()) {
             TargetMod.PACKET_HANDLER.sendToServer(new AdjustMortarAngleMessage(scroll));
             event.setCanceled(true);
         }
 
 
-        if (Minecraft.getInstance().player.hasEffect(TargetModMobEffects.SHOCK.get())) {
+        if (player.hasEffect(TargetModMobEffects.SHOCK.get())) {
             event.setCanceled(true);
         }
     }

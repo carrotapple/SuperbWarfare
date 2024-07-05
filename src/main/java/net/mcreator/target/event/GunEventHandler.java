@@ -173,11 +173,11 @@ public class GunEventHandler {
      */
     private static void handleMiniGunFire(Player player) {
         ItemStack stack = player.getMainHandItem();
-        var tag = stack.getOrCreateTag();
-
         if (stack.getItem() != TargetModItems.MINIGUN.get()) {
             return;
         }
+
+        var tag = stack.getOrCreateTag();
 
         if ((player.getPersistentData().getBoolean("firing") || (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zoom) && !player.isSprinting()) {
             if (tag.getDouble("minigun_rotation") < 10) {
@@ -309,7 +309,6 @@ public class GunEventHandler {
     public static void gunShoot(Player player) {
         ItemStack heldItem = player.getMainHandItem();
         player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-
             capability.recoilHorizon = 2 * Math.random() - 1;
             capability.recoil = 0.1;
             capability.firing = 1;

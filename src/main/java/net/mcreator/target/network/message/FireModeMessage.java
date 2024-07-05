@@ -42,7 +42,7 @@ public class FireModeMessage {
     public static void pressAction(Player player, int type) {
         if (player == null) return;
         // security measure to prevent arbitrary chunk generation
-        if (!player.level().hasChunkAt(player.blockPosition()))
+        if (!player.level().isLoaded(player.blockPosition()))
             return;
         if (type == 0) {
             changeFireMode(player);
@@ -50,7 +50,6 @@ public class FireModeMessage {
     }
 
     private static void setFireMode(Player player, CompoundTag tag) {
-
         if (player instanceof ServerPlayer serverPlayer) {
             serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(TargetModSounds.FIRE_RATE.get()),
                     SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1f, 1f, serverPlayer.level().random.nextLong()));

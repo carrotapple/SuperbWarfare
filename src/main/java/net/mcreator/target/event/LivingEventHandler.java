@@ -1,9 +1,11 @@
 package net.mcreator.target.event;
 
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.entity.ClaymoreEntity;
 import net.mcreator.target.entity.Target1Entity;
-import net.mcreator.target.init.*;
+import net.mcreator.target.init.TargetModDamageTypes;
+import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.gun.GunItem;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.network.message.ClientIndicatorMessage;
@@ -23,7 +25,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -60,9 +61,11 @@ public class LivingEventHandler {
 
         double damage = amount;
         ItemStack stack = sourceentity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
-        if (damagesource.is(TargetModDamageTypes.ARROW_IN_KNEE) || damagesource.is(TargetModDamageTypes.ARROW_IN_BRAIN)) {
+        if ((damagesource.is(TargetModDamageTypes.ARROW_IN_KNEE) || damagesource.is(TargetModDamageTypes.ARROW_IN_BRAIN)
+                && stack.getItem() == TargetModItems.BOCEK.get())) {
             stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
         }
+
         if ((damagesource.is(TargetModDamageTypes.PROJECTILE_BOOM) || damagesource.is(DamageTypes.ARROW))
                 && (stack.getItem() == TargetModItems.M_79.get() || stack.getItem() == TargetModItems.RPG.get())
         ) {

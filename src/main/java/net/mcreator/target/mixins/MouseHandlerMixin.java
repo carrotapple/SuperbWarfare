@@ -30,33 +30,32 @@ public class MouseHandlerMixin {
             return original;
         }
 
+        if (player.hasEffect(TargetModMobEffects.SHOCK.get()) && !player.isSpectator()) {
+            return 0;
+        }
+
         ItemStack stack = mc.player.getMainHandItem();
 
+        if (!stack.is(TargetModTags.Items.GUN)) {
+            return original;
+        }
+
         boolean flag = false;
-        boolean shock = false;
         float sens = 0.2f;
         float fov = (float) player.getPersistentData().getDouble("fov");
-        float custom_sens = (float) stack.getOrCreateTag().getInt("sensitivity");
+        float customSens = (float) stack.getOrCreateTag().getInt("sensitivity");
 
-        float original_fov = mc.options.fov().get();
+        float originalFov = mc.options.fov().get();
 
         if (!player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
-            if (stack.is(TargetModTags.Items.GUN)) {
-                if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-                    additionalAdsSensitivity = (float) Mth.clamp((1 + 0.1f * custom_sens) * (1.25F * fov / original_fov) * (1 + 0.2f * Math.pow((original_fov / fov), 1.25)), 0.125F, 2F);
-                } else {
-                    additionalAdsSensitivity = Mth.clamp((1 + 0.1f * custom_sens) * 1.25F, 0.125F, 2F);
-                }
-                flag = true;
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+                additionalAdsSensitivity = (float) Mth.clamp((1 + 0.1f * customSens) * (1.25F * fov / originalFov) * (1 + 0.2f * Math.pow((originalFov / fov), 1.25)), 0.125F, 2F);
             } else {
-                return original;
+                additionalAdsSensitivity = Mth.clamp((1 + 0.1f * customSens) * 1.25F, 0.125F, 2F);
             }
+            flag = true;
         }
 
-        if (Minecraft.getInstance().player.hasEffect(TargetModMobEffects.SHOCK.get()) && !Minecraft.getInstance().player.isSpectator()) {
-            shock = true;
-        }
-
-        return original * additionalAdsSensitivity * (1.0 - sens * (flag ? 1 : 0)) * (shock ? 0 : 1);
+        return original * additionalAdsSensitivity * (1.0 - sens * (flag ? 1 : 0));
     }
 }
