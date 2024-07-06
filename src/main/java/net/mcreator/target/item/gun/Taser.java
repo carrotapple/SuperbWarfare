@@ -7,6 +7,7 @@ import net.mcreator.target.client.renderer.item.TaserItemRenderer;
 import net.mcreator.target.init.TargetModEnchantments;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.tools.*;
 import net.minecraft.client.Minecraft;
@@ -97,9 +98,11 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState<Taser> event) {
+    private PlayState idlePredicate(AnimationState event) {
         LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
 
@@ -124,7 +127,7 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState<Taser> event) {
+    private PlayState procedurePredicate(AnimationState event) {
         if (transformType != null && transformType.firstPerson()) {
             if (!(this.animationProcedure.equals("empty")) && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));

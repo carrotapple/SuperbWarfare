@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.BocekItemRenderer;
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.RarityTool;
@@ -72,19 +73,20 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     private PlayState idlePredicate(AnimationState event) {
-        if (transformType != null && transformType.firstPerson()) {
-            LocalPlayer player = Minecraft.getInstance().player;
-            ItemStack stack = player.getMainHandItem();
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
 
-            if (stack.getOrCreateTag().getInt("draw_time") < 16) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.bocek.draw"));
-            }
-
-            if (this.animationProcedure.equals("empty")) {
-                event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.bocek.idle"));
-                return PlayState.CONTINUE;
-            }
+        if (stack.getOrCreateTag().getInt("draw_time") < 16) {
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.bocek.draw"));
         }
+
+        if (this.animationProcedure.equals("empty")) {
+            event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.bocek.idle"));
+            return PlayState.CONTINUE;
+        }
+
         return PlayState.STOP;
     }
 

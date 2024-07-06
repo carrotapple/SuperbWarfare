@@ -6,6 +6,7 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.TracheliumItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.tools.*;
 import net.minecraft.ChatFormatting;
@@ -82,9 +83,12 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState<Trachelium> event) {
+    private PlayState idlePredicate(AnimationState event) {
         LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
+
         if (this.animationProcedure.equals("empty")) {
 
             if (stack.getOrCreateTag().getInt("draw_time") < 11) {
@@ -108,7 +112,7 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState<Trachelium> event) {
+    private PlayState procedurePredicate(AnimationState event) {
         if (transformType != null && transformType.firstPerson()) {
             if (!(this.animationProcedure.equals("empty")) && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));

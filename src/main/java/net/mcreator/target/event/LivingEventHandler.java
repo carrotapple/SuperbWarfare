@@ -144,6 +144,10 @@ public class LivingEventHandler {
             ItemStack oldStack = event.getFrom();
             ItemStack newStack = event.getTo();
 
+            if (!newStack.is(TargetModTags.Items.GUN) ){
+                return;
+            }
+
             if (player instanceof ServerPlayer serverPlayer) {
                 var newTag = newStack.getTag();
                 var oldTag = oldStack.getTag();
@@ -167,13 +171,18 @@ public class LivingEventHandler {
                         capability.syncPlayerVariables(player);
                     });
 
-                    player.getPersistentData().putDouble("zoom_pos", 0);
-                    player.getPersistentData().putDouble("zoom_animation_time", 0);
                     if (newStack.getOrCreateTag().getInt("bolt_action_time") > 0) {
                         newStack.getOrCreateTag().putInt("bolt_action_anim", 0);
                     }
                 }
             }
+
+            player.getPersistentData().putDouble("zoom_pos", 0);
+            player.getPersistentData().putDouble("zoom_animation_time", 0);
+            player.getPersistentData().putBoolean("is_reloading",false);
+            player.getPersistentData().putBoolean("is_empty_reloading",false);
+            player.getPersistentData().putInt("gun_reloading_time",0);
+
         }
     }
 

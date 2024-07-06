@@ -6,6 +6,7 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.VectorItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.tools.GunInfo;
 import net.mcreator.target.tools.GunsTool;
@@ -78,48 +79,11 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState procedurePredicate(AnimationState<VectorItem> event) {
-        if (transformType != null && transformType.firstPerson()) {
-            if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
-                if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                    this.animationProcedure = "empty";
-                    event.getController().forceAnimationReset();
-                }
-            } else if (this.animationProcedure.equals("empty")) {
-                return PlayState.STOP;
-            }
-        }
-        return PlayState.CONTINUE;
-    }
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        AnimationController<VectorItem> procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
-        data.add(procedureController);
-        AnimationController<VectorItem> idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
-        data.add(idleController);
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
-        TooltipTool.addGunTips(list, stack);
-    }
-
-    public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(TargetModItems.VECTOR.get());
-        GunsTool.initCreativeGun(stack, TargetModItems.VECTOR.getId().getPath());
-        return stack;
-    }
-
-    private PlayState idlePredicate(AnimationState<VectorItem> event) {
+    private PlayState idlePredicate(AnimationState event) {
         LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
             if (stack.getOrCreateTag().getInt("draw_time") < 11) {
@@ -157,6 +121,45 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.vec.idle"));
         }
         return PlayState.STOP;
+    }
+
+    private PlayState procedurePredicate(AnimationState event) {
+        if (transformType != null && transformType.firstPerson()) {
+            if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
+                if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+                    this.animationProcedure = "empty";
+                    event.getController().forceAnimationReset();
+                }
+            } else if (this.animationProcedure.equals("empty")) {
+                return PlayState.STOP;
+            }
+        }
+        return PlayState.CONTINUE;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        AnimationController<VectorItem> procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
+        data.add(procedureController);
+        AnimationController<VectorItem> idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
+        data.add(idleController);
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
+        TooltipTool.addGunTips(list, stack);
+    }
+
+    public static ItemStack getGunInstance() {
+        ItemStack stack = new ItemStack(TargetModItems.VECTOR.get());
+        GunsTool.initCreativeGun(stack, TargetModItems.VECTOR.getId().getPath());
+        return stack;
     }
 
     @Override

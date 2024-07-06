@@ -4,9 +4,12 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.entity.ProjectileEntity;
 import net.mcreator.target.init.*;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.tools.GunInfo;
+import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.ParticleTool;
 import net.mcreator.target.tools.SoundTool;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -36,6 +39,7 @@ public class GunEventHandler {
         if (event.phase == TickEvent.Phase.END && stack.is(TargetModTags.Items.GUN)) {
             handleGunFire(player);
             handleMiniGunFire(player);
+            handleGunReload(player);
         }
     }
 
@@ -338,4 +342,115 @@ public class GunEventHandler {
         }
     }
 
+    /**
+     * 通用的武器换弹流程
+     */
+    private static void handleGunReload(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        CompoundTag tag = stack.getOrCreateTag();
+
+        if (player.getPersistentData().getBoolean("start_reload")) {
+            if (stack.is(TargetModTags.Items.OPEN_BOLT)) {
+                if(tag.getInt("ammo") == 0) {
+                    player.getPersistentData().putInt("gun_reloading_time",(int)tag.getDouble("empty_reload_time"));
+                    player.getPersistentData().putBoolean("is_empty_reloading",true);
+                    playGunEmptyReloadSounds(player);
+                    player.getPersistentData().putBoolean("start_reload",false);
+                } else {
+                    player.getPersistentData().putInt("gun_reloading_time",(int)tag.getDouble("normal_reload_time"));
+                    player.getPersistentData().putBoolean("is_reloading",true);
+                    playGunNormalReloadSounds(player);
+                    player.getPersistentData().putBoolean("start_reload",false);
+                }
+            } else {
+                player.getPersistentData().putInt("gun_reloading_time",(int)tag.getDouble("normal_reload_time"));
+                player.getPersistentData().putBoolean("is_reloading",true);
+                playGunNormalReloadSounds(player);
+                player.getPersistentData().putBoolean("start_reload",false);
+            }
+        }
+
+        if (player.getPersistentData().getInt("gun_reloading_time") > 0) {
+            player.getPersistentData().putInt("gun_reloading_time",player.getPersistentData().getInt("gun_reloading_time") - 1);
+        }
+
+        if (player.getPersistentData().getInt("gun_reloading_time") == 0 && (player.getPersistentData().getBoolean("is_empty_reloading") || player.getPersistentData().getBoolean("is_reloading"))) {
+            if (stack.is(TargetModTags.Items.OPEN_BOLT)) {
+                if(tag.getInt("ammo") == 0) {
+
+                    if (stack.is(TargetModTags.Items.SHOTGUN)) {
+                        GunsTool.reload(player, GunInfo.Type.SHOTGUN);
+                    } else if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
+                        GunsTool.reload(player, GunInfo.Type.SNIPER);
+                    } else if (stack.is(TargetModTags.Items.HANDGUN) || stack.is(TargetModTags.Items.SMG)) {
+                        GunsTool.reload(player, GunInfo.Type.HANDGUN);
+                    } else if (stack.is(TargetModTags.Items.RIFLE)) {
+                        GunsTool.reload(player, GunInfo.Type.RIFLE);
+                    }
+                    player.getPersistentData().putBoolean("is_empty_reloading",false);
+
+                } else {
+
+                    if (stack.is(TargetModTags.Items.SHOTGUN)) {
+                        GunsTool.reload(player, GunInfo.Type.SHOTGUN ,true);
+                    } else if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
+                        GunsTool.reload(player, GunInfo.Type.SNIPER ,true);
+                    } else if (stack.is(TargetModTags.Items.HANDGUN) || stack.is(TargetModTags.Items.SMG)) {
+                        GunsTool.reload(player, GunInfo.Type.HANDGUN ,true);
+                    } else if (stack.is(TargetModTags.Items.RIFLE)) {
+                        GunsTool.reload(player, GunInfo.Type.RIFLE ,true);
+                    }
+                    player.getPersistentData().putBoolean("is_reloading",false);
+
+                }
+            } else {
+
+                if (stack.is(TargetModTags.Items.SHOTGUN)) {
+                    GunsTool.reload(player, GunInfo.Type.SHOTGUN);
+                } else if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
+                    GunsTool.reload(player, GunInfo.Type.SNIPER);
+                } else if (stack.is(TargetModTags.Items.HANDGUN) || stack.is(TargetModTags.Items.SMG)) {
+                    GunsTool.reload(player, GunInfo.Type.HANDGUN);
+                } else if (stack.is(TargetModTags.Items.RIFLE)) {
+                    GunsTool.reload(player, GunInfo.Type.RIFLE);
+                }
+                player.getPersistentData().putBoolean("is_reloading",false);
+
+            }
+        }
+    }
+
+    public static void playGunEmptyReloadSounds(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) {
+            return;
+        }
+
+        if (!player.level().isClientSide) {
+            String origin = stack.getItem().getDescriptionId();
+            String name = origin.substring(origin.lastIndexOf(".") + 1);
+
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_reload_empty"));
+            if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
+                SoundTool.playLocalSound(serverPlayer, sound1p, 2f, 1f);
+            }
+        }
+    }
+
+    public static void playGunNormalReloadSounds(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) {
+            return;
+        }
+
+        if (!player.level().isClientSide) {
+            String origin = stack.getItem().getDescriptionId();
+            String name = origin.substring(origin.lastIndexOf(".") + 1);
+
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_reload_normal"));
+            if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
+                SoundTool.playLocalSound(serverPlayer, sound1p, 2f, 1f);
+            }
+        }
+    }
 }

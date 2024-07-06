@@ -6,6 +6,7 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.renderer.item.M79ItemRenderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.AnimatedItem;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.SoundTool;
@@ -81,7 +82,9 @@ public class M79Item extends GunItem implements GeoItem, AnimatedItem {
 
     private PlayState idlePredicate(AnimationState event) {
         LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
 
