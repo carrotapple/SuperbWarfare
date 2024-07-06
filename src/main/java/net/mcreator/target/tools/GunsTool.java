@@ -3,8 +3,6 @@ package net.mcreator.target.tools;
 import com.google.gson.stream.JsonReader;
 import net.mcreator.target.TargetMod;
 import net.mcreator.target.network.TargetModVariables;
-import net.mcreator.target.network.message.AdjustMortarAngleMessage;
-import net.mcreator.target.network.message.GunReloadResultMessage;
 import net.mcreator.target.network.message.GunsDataMessage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -133,7 +131,10 @@ public class GunsTool {
             capability.syncPlayerVariables(entity);
         });
 
-        int need_to_add = ammo + Math.min(ammoToAdd, playerAmmo);
-        TargetMod.PACKET_HANDLER.sendToServer(new GunReloadResultMessage(need_to_add));
+        int needToAdd = ammo + Math.min(ammoToAdd, playerAmmo);
+
+        tag.putInt("ammo", needToAdd);
+        tag.putBoolean("is_normal_reloading", false);
+        tag.putBoolean("is_empty_reloading", false);
     }
 }

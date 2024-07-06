@@ -1,6 +1,5 @@
 package net.mcreator.target.network.message;
 
-import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
 import net.minecraft.core.Holder;
@@ -9,10 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -60,11 +56,10 @@ public class FireModeMessage {
     public static void changeFireMode(Player player) {
         ItemStack mainHandItem = player.getMainHandItem();
         CompoundTag tag = mainHandItem.getOrCreateTag();
-        Item item = mainHandItem.getItem();
         int fireMode = tag.getInt("fire_mode");
 
         if (mainHandItem.is(TargetModTags.Items.GUN)) {
-            if (tag.getInt("fire_mode") == 0) {
+            if (fireMode == 0) {
                 if (tag.getDouble("burst") == 1) {
                     tag.putInt("fire_mode", 1);
                     setFireMode(player, tag);
@@ -76,7 +71,7 @@ public class FireModeMessage {
                     return;
                 }
             }
-            if (tag.getInt("fire_mode") == 1) {
+            if (fireMode == 1) {
                 if (tag.getDouble("auto") == 1) {
                     tag.putInt("fire_mode", 2);
                     setFireMode(player, tag);
@@ -88,7 +83,7 @@ public class FireModeMessage {
                     return;
                 }
             }
-            if (tag.getInt("fire_mode") == 2) {
+            if (fireMode == 2) {
                 if (tag.getDouble("semi") == 1) {
                     tag.putInt("fire_mode", 0);
                     setFireMode(player, tag);

@@ -3,7 +3,6 @@ package net.mcreator.target.network.message;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
-import net.mcreator.target.procedures.PlayerReloadProcedure;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -20,11 +19,11 @@ public class ReloadMessage {
         this.type = type;
     }
 
-    public ReloadMessage(FriendlyByteBuf buffer) {
-        this.type = buffer.readInt();
+    public static ReloadMessage decode(FriendlyByteBuf buffer) {
+        return new ReloadMessage(buffer.readInt());
     }
 
-    public static void buffer(ReloadMessage message, FriendlyByteBuf buffer) {
+    public static void encode(ReloadMessage message, FriendlyByteBuf buffer) {
         buffer.writeInt(message.type);
     }
 
@@ -38,30 +37,25 @@ public class ReloadMessage {
         context.setPacketHandled(true);
     }
 
-    public static void pressAction(Player entity, int type) {
-        Level world = entity.level();
+    public static void pressAction(Player player, int type) {
+        Level level = player.level();
 
-        if (!world.hasChunkAt(entity.blockPosition()))
+        if (!level.isLoaded(player.blockPosition()))
             return;
         if (type == 0) {
-//            PlayerReloadProcedure.execute(entity);
+            ItemStack stack = player.getMainHandItem();
+            var capability = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables());
 
-            ItemStack stack = entity.getMainHandItem();
-            var capability = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables());
-
-            if (!entity.isSpectator()
-            && stack.is(TargetModTags.Items.GUN)
-            && !capability.zooming
-            && !(entity.getCooldowns().isOnCooldown(stack.getItem()))
-            && (stack.getOrCreateTag().getInt("gun_reloading_time") == 0)
+            if (!player.isSpectator()
+                    && stack.is(TargetModTags.Items.GUN)
+                    && !capability.zooming
+                    && !(player.getCooldowns().isOnCooldown(stack.getItem()))
+                    && (stack.getOrCreateTag().getInt("gun_reloading_time") == 0)
             ) {
                 CompoundTag tag = stack.getOrCreateTag();
 
-                boolean can_reload = false;
+                boolean can_reload = tag.getDouble("normal_reload_time") != 0 || tag.getDouble("empty_reload_time") != 0;
 
-                if (tag.getDouble("normal_reload_time") != 0 || tag.getDouble("empty_reload_time") != 0) {
-                    can_reload = true;
-                }
                 //检查备弹
                 if (stack.is(TargetModTags.Items.SHOTGUN) && capability.shotgunAmmo == 0) {
                     return;
@@ -82,15 +76,15 @@ public class ReloadMessage {
                 if (stack.is(TargetModTags.Items.OPEN_BOLT) && can_reload) {
                     if (stack.getItem() == TargetModItems.M_60.get() || stack.getItem() == TargetModItems.ABEKIRI.get()) {
                         if (tag.getInt("ammo") < tag.getDouble("mag")) {
-                            tag.putBoolean("start_reload",true);
+                            tag.putBoolean("start_reload", true);
                         }
                     } else {
                         if (tag.getInt("ammo") < tag.getDouble("mag") + 1) {
-                            tag.putBoolean("start_reload",true);
+                            tag.putBoolean("start_reload", true);
                         }
                     }
-                } else if (tag.getInt("ammo") < tag.getDouble("mag")){
-                    tag.putBoolean("start_reload",true);
+                } else if (tag.getInt("ammo") < tag.getDouble("mag")) {
+                    tag.putBoolean("start_reload", true);
                 }
             }
         }

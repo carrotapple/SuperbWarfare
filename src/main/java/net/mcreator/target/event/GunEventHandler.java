@@ -356,25 +356,25 @@ public class GunEventHandler {
         //启动换弹
         if (tag.getBoolean("start_reload")) {
             if (stack.is(TargetModTags.Items.OPEN_BOLT)) {
-                if(tag.getInt("ammo") == 0) {
-                    tag.putInt("gun_reloading_time",(int)tag.getDouble("empty_reload_time"));
-                    stack.getOrCreateTag().putBoolean("is_empty_reloading",true);
+                if (tag.getInt("ammo") == 0) {
+                    tag.putInt("gun_reloading_time", (int) tag.getDouble("empty_reload_time"));
+                    stack.getOrCreateTag().putBoolean("is_empty_reloading", true);
                     playGunEmptyReloadSounds(player);
                 } else {
-                    tag.putInt("gun_reloading_time",(int)tag.getDouble("normal_reload_time"));
-                    stack.getOrCreateTag().putBoolean("is_normal_reloading",true);
+                    tag.putInt("gun_reloading_time", (int) tag.getDouble("normal_reload_time"));
+                    stack.getOrCreateTag().putBoolean("is_normal_reloading", true);
                     playGunNormalReloadSounds(player);
                 }
             } else {
-                tag.putInt("gun_reloading_time",(int)tag.getDouble("empty_reload_time"));
-                stack.getOrCreateTag().putBoolean("is_empty_reloading",true);
+                tag.putInt("gun_reloading_time", (int) tag.getDouble("empty_reload_time"));
+                stack.getOrCreateTag().putBoolean("is_empty_reloading", true);
                 playGunEmptyReloadSounds(player);
             }
-            tag.putBoolean("start_reload",false);
+            tag.putBoolean("start_reload", false);
         }
 
         if (tag.getInt("gun_reloading_time") > 0) {
-            tag.putInt("gun_reloading_time",tag.getInt("gun_reloading_time") - 1);
+            tag.putInt("gun_reloading_time", tag.getInt("gun_reloading_time") - 1);
         }
 
         if (stack.getItem() == TargetModItems.RPG.get()) {
@@ -384,7 +384,6 @@ public class GunEventHandler {
             if (tag.getInt("gun_reloading_time") == 7) {
                 tag.putBoolean("close_hammer", false);
             }
-
         }
 
         if (stack.getItem() == TargetModItems.MK_14.get()) {
@@ -407,7 +406,7 @@ public class GunEventHandler {
 
         if (tag.getInt("gun_reloading_time") == 1) {
             if (stack.is(TargetModTags.Items.OPEN_BOLT)) {
-                if(tag.getInt("ammo") == 0) {
+                if (tag.getInt("ammo") == 0) {
                     playGunEmptyReload(player);
                 } else {
                     playGunNormalReload(player);
@@ -417,32 +416,32 @@ public class GunEventHandler {
             }
         }
     }
-    public static void playGunNormalReload(Player player) {
 
+    public static void playGunNormalReload(Player player) {
         ItemStack stack = player.getMainHandItem();
 
         if (stack.is(TargetModTags.Items.SHOTGUN)) {
             if (stack.getItem() == TargetModItems.ABEKIRI.get()) {
                 GunsTool.reload(player, GunInfo.Type.SHOTGUN);
             } else {
-                GunsTool.reload(player, GunInfo.Type.SHOTGUN ,true);
+                GunsTool.reload(player, GunInfo.Type.SHOTGUN, true);
             }
         } else if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
-            GunsTool.reload(player, GunInfo.Type.SNIPER ,true);
+            GunsTool.reload(player, GunInfo.Type.SNIPER, true);
         } else if (stack.is(TargetModTags.Items.HANDGUN) || stack.is(TargetModTags.Items.SMG)) {
-            GunsTool.reload(player, GunInfo.Type.HANDGUN ,true);
+            GunsTool.reload(player, GunInfo.Type.HANDGUN, true);
         } else if (stack.is(TargetModTags.Items.RIFLE)) {
             if (stack.getItem() == TargetModItems.M_60.get()) {
                 GunsTool.reload(player, GunInfo.Type.RIFLE);
             } else {
-                GunsTool.reload(player, GunInfo.Type.RIFLE ,true);
+                GunsTool.reload(player, GunInfo.Type.RIFLE, true);
             }
         }
         stack.getOrCreateTag().putBoolean("is_normal_reloading", false);
         stack.getOrCreateTag().putBoolean("is_empty_reloading", false);
     }
-    public static void playGunEmptyReload(Player player) {
 
+    public static void playGunEmptyReload(Player player) {
         ItemStack stack = player.getMainHandItem();
 
         if (stack.is(TargetModTags.Items.SHOTGUN)) {

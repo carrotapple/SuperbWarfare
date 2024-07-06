@@ -24,7 +24,6 @@ public class TargetModKeyMappings {
             super.setDown(isDown);
             if (isDownOld != isDown && isDown && Minecraft.getInstance().player != null) {
                 TargetMod.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
-                ReloadMessage.pressAction(Minecraft.getInstance().player, 0);
             }
             isDownOld = isDown;
         }
