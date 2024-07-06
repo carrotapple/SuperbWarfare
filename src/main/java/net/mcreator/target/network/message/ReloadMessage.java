@@ -44,7 +44,7 @@ public class ReloadMessage {
         if (!world.hasChunkAt(entity.blockPosition()))
             return;
         if (type == 0) {
-            PlayerReloadProcedure.execute(entity);
+//            PlayerReloadProcedure.execute(entity);
 
             ItemStack stack = entity.getMainHandItem();
             var capability = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables());
@@ -53,10 +53,16 @@ public class ReloadMessage {
             && stack.is(TargetModTags.Items.GUN)
             && !capability.zooming
             && !(entity.getCooldowns().isOnCooldown(stack.getItem()))
-            && entity.getPersistentData().getInt("gun_reloading_time") == 0
+            && (stack.getOrCreateTag().getInt("gun_reloading_time") == 0)
             ) {
                 CompoundTag tag = stack.getOrCreateTag();
 
+                boolean can_reload = false;
+
+                if (tag.getDouble("normal_reload_time") != 0 || tag.getDouble("empty_reload_time") != 0) {
+                    can_reload = true;
+                }
+                //检查备弹
                 if (stack.is(TargetModTags.Items.SHOTGUN) && capability.shotgunAmmo == 0) {
                     return;
                 } else if (stack.is(TargetModTags.Items.SNIPER_RIFLE) && capability.sniperAmmo == 0) {
@@ -67,12 +73,13 @@ public class ReloadMessage {
                     return;
                 }
 
-                if (stack.is(TargetModTags.Items.OPEN_BOLT) && (tag.getDouble("normal_reload_time") != 0 || tag.getDouble("empty_reload_time") != 0)) {
-                    if(tag.getInt("ammo") < tag.getDouble("mag") + 1) {
-                        entity.getPersistentData().putBoolean("start_reload",true);
+                if (stack.is(TargetModTags.Items.OPEN_BOLT) && can_reload) {
+                    //有OPEN_BOLT的枪非空仓换弹子弹会多一发
+                    if (tag.getInt("ammo") < tag.getDouble("mag") + 1) {
+                        tag.putBoolean("start_reload",true);
                     }
                 } else if (tag.getInt("ammo") < tag.getDouble("mag")){
-                    entity.getPersistentData().putBoolean("start_reload",true);
+                    tag.putBoolean("start_reload",true);
                 }
             }
         }

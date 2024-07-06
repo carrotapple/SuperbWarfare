@@ -144,44 +144,40 @@ public class LivingEventHandler {
             ItemStack oldStack = event.getFrom();
             ItemStack newStack = event.getTo();
 
-            if (!newStack.is(TargetModTags.Items.GUN) ){
-                return;
-            }
 
             if (player instanceof ServerPlayer serverPlayer) {
-                var newTag = newStack.getTag();
-                var oldTag = oldStack.getTag();
 
                 if (newStack.getItem() != oldStack.getItem()
-                        || newTag == null || oldTag == null
-                        || !newTag.hasUUID("gun_uuid") || !oldTag.hasUUID("gun_uuid")
-                        || !newTag.getUUID("gun_uuid").equals(oldTag.getUUID("gun_uuid"))
+                        || newStack.getTag() == null || oldStack.getTag() == null
+                        || !newStack.getTag().hasUUID("gun_uuid") || !oldStack.getTag().hasUUID("gun_uuid")
+                        || !newStack.getTag().getUUID("gun_uuid").equals(oldStack.getTag().getUUID("gun_uuid"))
                 ) {
+
+                    if (!newStack.is(TargetModTags.Items.GUN)) {
+
+                    }
+
                     if (newStack.getItem() instanceof GunItem) {
                         newStack.getOrCreateTag().putBoolean("draw", true);
+                        if (newStack.getOrCreateTag().getInt("bolt_action_time") > 0) {
+                            newStack.getOrCreateTag().putInt("bolt_action_anim", 0);
+                        }
+                        newStack.getOrCreateTag().putBoolean("is_normal_reloading",false);
+                        newStack.getOrCreateTag().putBoolean("is_empty_reloading",false);
+                        newStack.getOrCreateTag().putInt("gun_reloading_time",0);
                     }
 
                     if (oldStack.getItem() instanceof GunItem oldGun) {
                         stopGunReloadSound(serverPlayer, oldGun);
-                        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                            capability.zoom = false;
-                            capability.zooming = false;
-                            capability.syncPlayerVariables(player);
-                        });
-                        player.getPersistentData().putDouble("zoom_pos", 0);
-                        player.getPersistentData().putDouble("zoom_animation_time", 0);
-                        oldStack.getOrCreateTag().putBoolean("is_reloading",false);
-                        oldStack.getOrCreateTag().putBoolean("is_empty_reloading",false);
-                        player.getPersistentData().putInt("gun_reloading_time",0);
-                        if (newStack.getOrCreateTag().getInt("bolt_action_time") > 0) {
-                            newStack.getOrCreateTag().putInt("bolt_action_anim", 0);
+                        if (oldStack.getOrCreateTag().getInt("bolt_action_time") > 0) {
+                            oldStack.getOrCreateTag().putInt("bolt_action_anim", 0);
                         }
+                        oldStack.getOrCreateTag().putBoolean("is_normal_reloading",false);
+                        oldStack.getOrCreateTag().putBoolean("is_empty_reloading",false);
+                        oldStack.getOrCreateTag().putInt("gun_reloading_time",0);
                     }
                 }
             }
-
-
-
         }
     }
 
@@ -191,6 +187,7 @@ public class LivingEventHandler {
             player.connection.send(clientboundstopsoundpacket);
         });
     }
+
 
     private static void handlePlayerKillEntity(LivingDeathEvent event) {
         LivingEntity entity = event.getEntity();

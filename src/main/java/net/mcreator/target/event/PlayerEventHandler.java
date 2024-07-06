@@ -171,7 +171,7 @@ public class PlayerEventHandler {
     private static void handlePrepareZoom(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.is(TargetModTags.Items.GUN) && !stack.getOrCreateTag().getBoolean("reloading") && !player.isSpectator() && !stack.getOrCreateTag().getBoolean("charging")) {
+        if (stack.is(TargetModTags.Items.GUN) && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading")) && !player.isSpectator() && !stack.getOrCreateTag().getBoolean("charging")) {
             if (player.getMainHandItem().getItem() != TargetModItems.MINIGUN.get()) {
                 if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zoom) {
                     player.setSprinting(false);

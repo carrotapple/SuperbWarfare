@@ -53,9 +53,9 @@ public class PressFireProcedure {
             capability.syncPlayerVariables(player);
         });
 
-        if (tag.getInt("ammo") == 0) {
-            PlayerReloadProcedure.execute(player);
-        }
+//        if (tag.getInt("ammo") == 0) {
+//            PlayerReloadProcedure.execute(player);
+//        }
 
         // 栓动武器左键手动拉栓
         if (mainHandItem.is(TargetModTags.Items.GUN) && tag.getInt("bolt_action_time") > 0 && tag.getInt("ammo") > 0 && tag.getInt("bolt_action_anim") == 0) {
