@@ -8,23 +8,16 @@ import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.AnimatedItem;
-import net.mcreator.target.tools.GunInfo;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.core.Holder;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -33,7 +26,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.registries.ForgeRegistries;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -79,7 +71,7 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState event) {
+    private PlayState idlePredicate(AnimationState<VectorItem> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
@@ -123,7 +115,7 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState event) {
+    private PlayState procedurePredicate(AnimationState<VectorItem> event) {
         if (transformType != null && transformType.firstPerson()) {
             if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
@@ -192,63 +184,6 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public void setAnimationProcedure(String procedure) {
         this.animationProcedure = procedure;
-    }
-
-    @Override
-    public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemStack, world, entity, slot, selected);
-
-        CompoundTag tag = itemStack.getOrCreateTag();
-        double id = tag.getDouble("id");
-        var mainHandItem = entity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
-        if (mainHandItem.getOrCreateTag().getDouble("id") != tag.getDouble("id")) {
-            tag.putBoolean("empty_reload", false);
-            tag.putBoolean("reloading", false);
-            tag.putDouble("reload_time", 0);
-        }
-        if (tag.getBoolean("reloading") && tag.getInt("ammo") == 0) {
-            if (tag.getDouble("reload_time") == 61) {
-                entity.getPersistentData().putDouble("id", id);
-                if (entity instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("target:vector_reload_empty"))),
-                            SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 10f, 1f, serverPlayer.level().random.nextLong()));
-                }
-//                entity.level().playSound(null, entity.blockPosition(), TargetModSounds.VECTOR_RELOAD_EMPTY.get(), SoundSource.PLAYERS, 100, 1);
-            }
-            if (mainHandItem.getItem() == itemStack.getItem()
-                    && mainHandItem.getOrCreateTag().getDouble("id") == id
-                    && tag.getDouble("reload_time") > 0) {
-                tag.putDouble("reload_time", tag.getDouble("reload_time") - 1);
-            } else {
-                tag.putBoolean("reloading", false);
-                tag.putBoolean("empty_reload", false);
-                tag.putDouble("reload_time", 0);
-            }
-            if (tag.getDouble("reload_time") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
-                GunsTool.reload(entity, GunInfo.Type.HANDGUN);
-            }
-        } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
-            if (tag.getDouble("reload_time") == 43) {
-                entity.getPersistentData().putDouble("id", id);
-                if (entity instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("target:vector_reload_normal"))),
-                            SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 10f, 1f, serverPlayer.level().random.nextLong()));
-                }
-//                entity.level().playSound(null, entity.blockPosition(), TargetModSounds.VECTOR_RELOAD_NORMAL.get(), SoundSource.PLAYERS, 100, 1);
-            }
-            if (mainHandItem.getItem() == itemStack.getItem()
-                    && mainHandItem.getOrCreateTag().getDouble("id") == id
-                    && tag.getDouble("reload_time") > 0) {
-                tag.putDouble("reload_time", (tag.getDouble("reload_time") - 1));
-            } else {
-                tag.putBoolean("reloading", false);
-                tag.putBoolean("empty_reload", false);
-                tag.putDouble("reload_time", 0);
-            }
-            if (tag.getDouble("reload_time") == 1 && mainHandItem.getOrCreateTag().getDouble("id") == id) {
-                GunsTool.reload(entity, GunInfo.Type.HANDGUN, true);
-            }
-        }
     }
 
     @Override

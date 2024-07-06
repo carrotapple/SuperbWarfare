@@ -72,7 +72,7 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState event) {
+    private PlayState idlePredicate(AnimationState<BocekItem> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
@@ -90,7 +90,7 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState event) {
+    private PlayState procedurePredicate(AnimationState<BocekItem> event) {
         if (transformType != null && transformType.firstPerson()) {
             if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
@@ -130,7 +130,7 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
         if (slot == EquipmentSlot.MAINHAND) {
             map = HashMultimap.create(map);
             map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, "henghengaaa", -0.03f, AttributeModifier.Operation.MULTIPLY_BASE));
+                    new AttributeModifier(uuid, TargetMod.ATTRIBUTE_MODIFIER, -0.03f, AttributeModifier.Operation.MULTIPLY_BASE));
         }
         return map;
     }
@@ -163,7 +163,6 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
             itemstack.getOrCreateTag().putInt("max_ammo", getAmmoCount(player));
         }
 
-        // TODO 合并至GunReload
         CompoundTag tag = itemstack.getOrCreateTag();
         if (tag.getInt("arrow_empty") > 0) {
             tag.putInt("arrow_empty", tag.getInt("arrow_empty") - 1);

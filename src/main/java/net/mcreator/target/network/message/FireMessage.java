@@ -2,11 +2,15 @@ package net.mcreator.target.network.message;
 
 import net.mcreator.target.entity.BocekArrowEntity;
 import net.mcreator.target.entity.ProjectileEntity;
+import net.mcreator.target.event.GunEventHandler;
 import net.mcreator.target.init.TargetModEnchantments;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
-import net.mcreator.target.procedures.PressFireProcedure;
+import net.mcreator.target.procedures.M79fireProcedure;
+import net.mcreator.target.procedures.RpgFireProcedure;
+import net.mcreator.target.procedures.TaserfireProcedure;
 import net.mcreator.target.tools.SoundTool;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -55,7 +59,7 @@ public class FireMessage {
         }
 
         if (type == 0) {
-            PressFireProcedure.execute(player);
+            handleSpecialShoot(player);
         } else if (type == 1) {
             player.getPersistentData().putBoolean("firing", false);
             player.getPersistentData().putDouble("minigun_firing", 0);
@@ -65,6 +69,58 @@ public class FireMessage {
             });
 
             handleBowShoot(player);
+        }
+    }
+
+    private static void handleSpecialShoot(Player player) {
+        var mainHandItem = player.getMainHandItem();
+        var tag = mainHandItem.getOrCreateTag();
+
+        TaserfireProcedure.execute(player);
+        M79fireProcedure.execute(player);
+        RpgFireProcedure.execute(player);
+
+        if (mainHandItem.is(TargetModTags.Items.GUN)) {
+            if (tag.getInt("fire_mode") == 1) {
+                player.getPersistentData().putBoolean("firing", false);
+                tag.putInt("burst_fire", (int) tag.getDouble("burst_size"));
+            } else {
+                player.getPersistentData().putBoolean("firing", true);
+            }
+            if (tag.getDouble("force_stop_reloading") == 1 && tag.getBoolean("reloading") && tag.getDouble("prepare") == 0 && tag.getInt("ammo") > 0) {
+                tag.putDouble("force_stop", 1);
+            }
+        }
+
+        if (mainHandItem.is(TargetModTags.Items.GUN)
+                && !(mainHandItem.getItem() == TargetModItems.BOCEK.get())
+                && !(mainHandItem.getItem() == TargetModItems.MINIGUN.get())
+                && tag.getInt("ammo") == 0
+                && !tag.getBoolean("reloading")) {
+            if (!player.level().isClientSide()) {
+                SoundTool.playLocalSound(player, TargetModSounds.TRIGGER_CLICK.get(), 10, 1);
+            }
+        }
+
+        if (mainHandItem.getItem() == TargetModItems.MINIGUN.get()) {
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo == 0) {
+                if (!player.level().isClientSide()) {
+                    SoundTool.playLocalSound(player, TargetModSounds.TRIGGER_CLICK.get(), 10, 1);
+                }
+            }
+        }
+
+        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            capability.bowPullHold = true;
+            capability.syncPlayerVariables(player);
+        });
+
+        // 栓动武器左键手动拉栓
+        if (mainHandItem.is(TargetModTags.Items.GUN) && tag.getInt("bolt_action_time") > 0 && tag.getInt("ammo") > 0 && tag.getInt("bolt_action_anim") == 0) {
+            if (!player.getCooldowns().isOnCooldown(mainHandItem.getItem()) && mainHandItem.getOrCreateTag().getDouble("need_bolt_action") == 1) {
+                mainHandItem.getOrCreateTag().putInt("bolt_action_anim", mainHandItem.getOrCreateTag().getInt("bolt_action_time"));
+                GunEventHandler.playGunBoltSounds(player);
+            }
         }
     }
 
