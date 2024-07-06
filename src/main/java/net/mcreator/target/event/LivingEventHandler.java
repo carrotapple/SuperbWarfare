@@ -144,17 +144,26 @@ public class LivingEventHandler {
             ItemStack oldStack = event.getFrom();
             ItemStack newStack = event.getTo();
 
-
             if (player instanceof ServerPlayer serverPlayer) {
-
                 if (newStack.getItem() != oldStack.getItem()
                         || newStack.getTag() == null || oldStack.getTag() == null
                         || !newStack.getTag().hasUUID("gun_uuid") || !oldStack.getTag().hasUUID("gun_uuid")
                         || !newStack.getTag().getUUID("gun_uuid").equals(oldStack.getTag().getUUID("gun_uuid"))
                 ) {
+                    if (oldStack.getItem() instanceof GunItem oldGun) {
+                        stopGunReloadSound(serverPlayer, oldGun);
 
-                    if (!newStack.is(TargetModTags.Items.GUN)) {
+                        if (oldStack.getTag() == null) {
+                            return;
+                        }
+                        var oldTags = oldStack.getTag();
 
+                        if (oldTags.getInt("bolt_action_time") > 0) {
+                            oldTags.putInt("bolt_action_anim", 0);
+                        }
+                        oldTags.putBoolean("is_normal_reloading", false);
+                        oldTags.putBoolean("is_empty_reloading", false);
+                        oldTags.putInt("gun_reloading_time", 0);
                     }
 
                     if (newStack.getItem() instanceof GunItem) {
@@ -162,19 +171,19 @@ public class LivingEventHandler {
                         if (newStack.getOrCreateTag().getInt("bolt_action_time") > 0) {
                             newStack.getOrCreateTag().putInt("bolt_action_anim", 0);
                         }
-                        newStack.getOrCreateTag().putBoolean("is_normal_reloading",false);
-                        newStack.getOrCreateTag().putBoolean("is_empty_reloading",false);
-                        newStack.getOrCreateTag().putInt("gun_reloading_time",0);
-                    }
+                        newStack.getOrCreateTag().putBoolean("is_normal_reloading", false);
+                        newStack.getOrCreateTag().putBoolean("is_empty_reloading", false);
+                        newStack.getOrCreateTag().putInt("gun_reloading_time", 0);
 
-                    if (oldStack.getItem() instanceof GunItem oldGun) {
-                        stopGunReloadSound(serverPlayer, oldGun);
-                        if (oldStack.getOrCreateTag().getInt("bolt_action_time") > 0) {
-                            oldStack.getOrCreateTag().putInt("bolt_action_anim", 0);
+                        double weight = newStack.getOrCreateTag().getDouble("weight");
+
+                        if (weight == 0) {
+                            player.getCooldowns().addCooldown(newStack.getItem(), 12);
+                        } else if (weight == 1) {
+                            player.getCooldowns().addCooldown(newStack.getItem(), 17);
+                        } else if (weight == 2) {
+                            player.getCooldowns().addCooldown(newStack.getItem(), 30);
                         }
-                        oldStack.getOrCreateTag().putBoolean("is_normal_reloading",false);
-                        oldStack.getOrCreateTag().putBoolean("is_empty_reloading",false);
-                        oldStack.getOrCreateTag().putInt("gun_reloading_time",0);
                     }
                 }
             }

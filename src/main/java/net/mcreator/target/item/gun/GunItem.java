@@ -8,7 +8,6 @@ import net.mcreator.target.tools.EnchantmentCategoryTool;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.ItemNBTTool;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
@@ -58,18 +57,6 @@ public abstract class GunItem extends Item {
                     capability.zooming = false;
                     capability.syncPlayerVariables(entity);
                 });
-
-                if (entity instanceof Player player) {
-                    double weight = itemstack.getOrCreateTag().getDouble("weight");
-
-                    if (weight == 0) {
-                        player.getCooldowns().addCooldown(itemstack.getItem(), 12);
-                    } else if (weight == 1) {
-                        player.getCooldowns().addCooldown(itemstack.getItem(), 17);
-                    } else if (weight == 2) {
-                        player.getCooldowns().addCooldown(itemstack.getItem(), 30);
-                    }
-                }
 
                 if (itemstack.getItem() == TargetModItems.RPG.get() && itemstack.getOrCreateTag().getInt("ammo") == 0) {
                     itemstack.getOrCreateTag().putDouble("empty", 1);
