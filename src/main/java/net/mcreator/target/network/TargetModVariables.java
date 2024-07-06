@@ -232,7 +232,7 @@ public class TargetModVariables {
         }
     }
 
-    public static final Capability<PlayerVariables> PLAYER_VARIABLES_CAPABILITY = CapabilityManager.get(new CapabilityToken<PlayerVariables>() {
+    public static final Capability<PlayerVariables> PLAYER_VARIABLES_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
     });
 
     @Mod.EventBusSubscriber

@@ -43,6 +43,12 @@ public class PlayerEventHandler {
                 stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag"));
             }
         }
+
+        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            capability.zoom = false;
+            capability.zooming = false;
+            capability.syncPlayerVariables(player);
+        });
     }
 
     @SubscribeEvent
