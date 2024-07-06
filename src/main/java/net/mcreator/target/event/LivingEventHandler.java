@@ -163,25 +163,24 @@ public class LivingEventHandler {
 
                     if (oldStack.getItem() instanceof GunItem oldGun) {
                         stopGunReloadSound(serverPlayer, oldGun);
-                    }
-
-                    player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                        capability.zoom = false;
-                        capability.zooming = false;
-                        capability.syncPlayerVariables(player);
-                    });
-
-                    if (newStack.getOrCreateTag().getInt("bolt_action_time") > 0) {
-                        newStack.getOrCreateTag().putInt("bolt_action_anim", 0);
+                        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                            capability.zoom = false;
+                            capability.zooming = false;
+                            capability.syncPlayerVariables(player);
+                        });
+                        player.getPersistentData().putDouble("zoom_pos", 0);
+                        player.getPersistentData().putDouble("zoom_animation_time", 0);
+                        oldStack.getOrCreateTag().putBoolean("is_reloading",false);
+                        oldStack.getOrCreateTag().putBoolean("is_empty_reloading",false);
+                        player.getPersistentData().putInt("gun_reloading_time",0);
+                        if (newStack.getOrCreateTag().getInt("bolt_action_time") > 0) {
+                            newStack.getOrCreateTag().putInt("bolt_action_anim", 0);
+                        }
                     }
                 }
             }
 
-            player.getPersistentData().putDouble("zoom_pos", 0);
-            player.getPersistentData().putDouble("zoom_animation_time", 0);
-            player.getPersistentData().putBoolean("is_reloading",false);
-            player.getPersistentData().putBoolean("is_empty_reloading",false);
-            player.getPersistentData().putInt("gun_reloading_time",0);
+
 
         }
     }

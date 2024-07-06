@@ -93,11 +93,11 @@ public class AK47Item extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.fire"));
             }
 
-            if (player.getPersistentData().getBoolean("is_empty_reloading") && player.getPersistentData().getInt("gun_reloading_time") > 0) {
+            if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_empty"));
             }
 
-            if (player.getPersistentData().getBoolean("is_reloading") && player.getPersistentData().getInt("gun_reloading_time") > 0) {
+            if (stack.getOrCreateTag().getBoolean("is_reloading")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_normal"));
             }
 

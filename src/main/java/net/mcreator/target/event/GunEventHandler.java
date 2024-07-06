@@ -353,18 +353,18 @@ public class GunEventHandler {
             if (stack.is(TargetModTags.Items.OPEN_BOLT)) {
                 if(tag.getInt("ammo") == 0) {
                     player.getPersistentData().putInt("gun_reloading_time",(int)tag.getDouble("empty_reload_time"));
-                    player.getPersistentData().putBoolean("is_empty_reloading",true);
+                    stack.getOrCreateTag().putBoolean("is_empty_reloading",true);
                     playGunEmptyReloadSounds(player);
                     player.getPersistentData().putBoolean("start_reload",false);
                 } else {
                     player.getPersistentData().putInt("gun_reloading_time",(int)tag.getDouble("normal_reload_time"));
-                    player.getPersistentData().putBoolean("is_reloading",true);
+                    stack.getOrCreateTag().putBoolean("is_reloading",true);
                     playGunNormalReloadSounds(player);
                     player.getPersistentData().putBoolean("start_reload",false);
                 }
             } else {
                 player.getPersistentData().putInt("gun_reloading_time",(int)tag.getDouble("normal_reload_time"));
-                player.getPersistentData().putBoolean("is_reloading",true);
+                stack.getOrCreateTag().putBoolean("is_reloading",true);
                 playGunNormalReloadSounds(player);
                 player.getPersistentData().putBoolean("start_reload",false);
             }
@@ -374,7 +374,7 @@ public class GunEventHandler {
             player.getPersistentData().putInt("gun_reloading_time",player.getPersistentData().getInt("gun_reloading_time") - 1);
         }
 
-        if (player.getPersistentData().getInt("gun_reloading_time") == 0 && (player.getPersistentData().getBoolean("is_empty_reloading") || player.getPersistentData().getBoolean("is_reloading"))) {
+        if (player.getPersistentData().getInt("gun_reloading_time") == 0 && (stack.getOrCreateTag().getBoolean("is_empty_reloading") || stack.getOrCreateTag().getBoolean("is_reloading"))) {
             if (stack.is(TargetModTags.Items.OPEN_BOLT)) {
                 if(tag.getInt("ammo") == 0) {
 
@@ -387,7 +387,7 @@ public class GunEventHandler {
                     } else if (stack.is(TargetModTags.Items.RIFLE)) {
                         GunsTool.reload(player, GunInfo.Type.RIFLE);
                     }
-                    player.getPersistentData().putBoolean("is_empty_reloading",false);
+                    stack.getOrCreateTag().putBoolean("is_empty_reloading",false);
 
                 } else {
 
@@ -400,7 +400,7 @@ public class GunEventHandler {
                     } else if (stack.is(TargetModTags.Items.RIFLE)) {
                         GunsTool.reload(player, GunInfo.Type.RIFLE ,true);
                     }
-                    player.getPersistentData().putBoolean("is_reloading",false);
+                    stack.getOrCreateTag().putBoolean("is_reloading",false);
 
                 }
             } else {
@@ -414,7 +414,7 @@ public class GunEventHandler {
                 } else if (stack.is(TargetModTags.Items.RIFLE)) {
                     GunsTool.reload(player, GunInfo.Type.RIFLE);
                 }
-                player.getPersistentData().putBoolean("is_reloading",false);
+                stack.getOrCreateTag().putBoolean("is_reloading",false);
 
             }
         }
