@@ -58,7 +58,7 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(TargetModSounds.TRACHELIUM_RELOAD.get());
+        return Set.of(TargetModSounds.TRACHELIUM_RELOAD_EMPTY.get());
     }
 
     @Override
@@ -99,7 +99,7 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.fire"));
             }
 
-            if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
+            if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.reload"));
             }
 
@@ -158,43 +158,6 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return slotChanged;
-    }
-
-    @Override
-    public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemstack, world, entity, slot, selected);
-
-        var itemTag = itemstack.getOrCreateTag();
-        double id = itemTag.getDouble("id");
-        var mainHandItem = entity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY;
-        var mainHandItemTag = mainHandItem.getOrCreateTag();
-
-        if (mainHandItemTag.getDouble("id") != itemTag.getDouble("id")) {
-            itemTag.putBoolean("empty_reload", false);
-            itemTag.putBoolean("reloading", false);
-            itemTag.putDouble("reload_time", 0);
-        }
-        if (itemTag.getBoolean("reloading")) {
-            if (itemTag.getDouble("reload_time") == 62) {
-                entity.getPersistentData().putDouble("id", id);
-                if (entity instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.TRACHELIUM_RELOAD.get(), 100, 1);
-                }
-            }
-            if (mainHandItem.getItem() == itemstack.getItem()
-                    && mainHandItemTag.getDouble("id") == id) {
-                if (itemTag.getDouble("reload_time") > 0) {
-                    itemTag.putDouble("reload_time", (itemTag.getDouble("reload_time") - 1));
-                }
-            } else {
-                itemTag.putBoolean("reloading", false);
-                itemTag.putBoolean("empty_reload", false);
-                itemTag.putDouble("reload_time", 0);
-            }
-            if (itemTag.getDouble("reload_time") == 1 && mainHandItemTag.getDouble("id") == id) {
-                GunsTool.reload(entity, GunInfo.Type.HANDGUN);
-            }
-        }
     }
 
     @Override

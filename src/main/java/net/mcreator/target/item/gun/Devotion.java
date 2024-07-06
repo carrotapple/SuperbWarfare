@@ -89,11 +89,11 @@ public class Devotion extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.devotion.fire"));
             }
 
-            if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
+            if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.devotion.reload_empty"));
             }
 
-            if (stack.getOrCreateTag().getBoolean("reloading") && !stack.getOrCreateTag().getBoolean("empty_reload")) {
+            if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.devotion.reload_normal"));
             }
 
@@ -157,63 +157,6 @@ public class Devotion extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
         TooltipTool.addGunTips(list, stack);
-    }
-
-    @Override
-    public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemstack, world, entity, slot, selected);
-
-        var itemTag = itemstack.getOrCreateTag();
-        var id = itemTag.getDouble("id");
-        var mainHandItem = entity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
-        var mainHandItemTag = mainHandItem.getOrCreateTag();
-
-        if (mainHandItemTag.getDouble("id") != itemTag.getDouble("id")) {
-            itemTag.putBoolean("empty_reload", false);
-            itemTag.putBoolean("reloading", false);
-            itemTag.putDouble("reload_time", 0);
-        }
-        if (itemTag.getBoolean("reloading") && itemTag.getInt("ammo") == 0) {
-            if (itemTag.getDouble("reload_time") == 92) {
-                entity.getPersistentData().putDouble("id", id);
-                if (entity instanceof ServerPlayer player) {
-                    SoundTool.playLocalSound(player, TargetModSounds.DEVOTION_RELOAD_EMPTY.get(), 100, 1);
-                }
-            }
-            if (mainHandItem.getItem() == itemstack.getItem()
-                    && mainHandItemTag.getDouble("id") == id) {
-                if (itemTag.getDouble("reload_time") > 0) {
-                    itemTag.putDouble("reload_time", itemTag.getDouble("reload_time") - 1);
-                }
-            } else {
-                itemTag.putBoolean("reloading", false);
-                itemTag.putBoolean("empty_reload", false);
-                itemTag.putDouble("reload_time", 0);
-            }
-            if (itemTag.getDouble("reload_time") == 1 && mainHandItemTag.getDouble("id") == id) {
-                GunsTool.reload(entity, GunInfo.Type.RIFLE);
-            }
-        } else if (itemTag.getBoolean("reloading") && itemTag.getInt("ammo") > 0) {
-            if (itemTag.getDouble("reload_time") == 70) {
-                entity.getPersistentData().putDouble("id", id);
-                if (entity instanceof ServerPlayer player) {
-                    SoundTool.playLocalSound(player, TargetModSounds.DEVOTION_RELOAD_NORMAL.get(), 100, 1);
-                }
-            }
-            if (mainHandItem.getItem() == itemstack.getItem()
-                    && mainHandItemTag.getDouble("id") == id) {
-                if (itemTag.getDouble("reload_time") > 0) {
-                    itemTag.putDouble("reload_time", (itemTag.getDouble("reload_time") - 1));
-                }
-            } else {
-                itemTag.putBoolean("reloading", false);
-                itemTag.putBoolean("empty_reload", false);
-                itemTag.putDouble("reload_time", 0);
-            }
-            if (itemTag.getDouble("reload_time") == 1 && mainHandItemTag.getDouble("id") == id) {
-                GunsTool.reload(entity, GunInfo.Type.RIFLE, true);
-            }
-        }
     }
 
     @Override

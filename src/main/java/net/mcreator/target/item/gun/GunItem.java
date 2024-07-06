@@ -44,8 +44,6 @@ public abstract class GunItem extends Item {
                 return;
             }
 
-            CompoundTag tag = itemstack.getOrCreateTag();
-
             if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
                 GunsTool.initGun(level, itemstack, this.getDescriptionId().substring(this.getDescriptionId().lastIndexOf('.') + 1));
                 GunsTool.genUUID(itemstack);
@@ -53,16 +51,16 @@ public abstract class GunItem extends Item {
             }
             GunsTool.pvpModeCheck(itemstack, level);
 
-            if (tag.getBoolean("draw")) {
-                tag.putBoolean("draw", false);
-                tag.putInt("draw_time", 0);
+            if (itemstack.getOrCreateTag().getBoolean("draw")) {
+                itemstack.getOrCreateTag().putBoolean("draw", false);
+                itemstack.getOrCreateTag().putInt("draw_time", 0);
                 entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                     capability.zooming = false;
                     capability.syncPlayerVariables(entity);
                 });
 
                 if (entity instanceof Player player) {
-                    double weight = tag.getDouble("weight");
+                    double weight = itemstack.getOrCreateTag().getDouble("weight");
 
                     if (weight == 0) {
                         player.getCooldowns().addCooldown(itemstack.getItem(), 12);
@@ -73,27 +71,27 @@ public abstract class GunItem extends Item {
                     }
                 }
 
-                if (itemstack.getItem() == TargetModItems.RPG.get() && tag.getInt("ammo") == 0) {
-                    tag.putDouble("empty", 1);
+                if (itemstack.getItem() == TargetModItems.RPG.get() && itemstack.getOrCreateTag().getInt("ammo") == 0) {
+                    itemstack.getOrCreateTag().putDouble("empty", 1);
                 }
-                if (itemstack.getItem() == TargetModItems.SKS.get() && tag.getInt("ammo") == 0) {
-                    tag.putDouble("HoldOpen", 1);
+                if (itemstack.getItem() == TargetModItems.SKS.get() && itemstack.getOrCreateTag().getInt("ammo") == 0) {
+                    itemstack.getOrCreateTag().putBoolean("HoldOpen", true);
                 }
-                if (itemstack.getItem() == TargetModItems.M_60.get() && tag.getInt("ammo") <= 5) {
-                    tag.putDouble("empty", 1);
+                if (itemstack.getItem() == TargetModItems.M_60.get() && itemstack.getOrCreateTag().getInt("ammo") <= 5) {
+                    itemstack.getOrCreateTag().putBoolean("bullet_chain", true);
                 }
             }
 
             if (mainHandItem.getItem() == itemstack.getItem()) {
-                if (tag.getInt("draw_time") < 50) {
-                    tag.putInt("draw_time", (tag.getInt("draw_time") + 1));
+                if (itemstack.getOrCreateTag().getInt("draw_time") < 50) {
+                    itemstack.getOrCreateTag().putInt("draw_time", (itemstack.getOrCreateTag().getInt("draw_time") + 1));
                 }
             }
-            if (tag.getInt("fire_animation") > 0) {
-                tag.putInt("fire_animation", (tag.getInt("fire_animation") - 1));
+            if (itemstack.getOrCreateTag().getInt("fire_animation") > 0) {
+                itemstack.getOrCreateTag().putInt("fire_animation", (itemstack.getOrCreateTag().getInt("fire_animation") - 1));
             }
-            if (tag.getDouble("flash_time") > 0) {
-                tag.putDouble("flash_time", (tag.getDouble("flash_time") - 1));
+            if (itemstack.getOrCreateTag().getDouble("flash_time") > 0) {
+                itemstack.getOrCreateTag().putDouble("flash_time", (itemstack.getOrCreateTag().getDouble("flash_time") - 1));
             }
         }
     }

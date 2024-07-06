@@ -13,14 +13,14 @@ public class TargetModSounds {
 
     public static final RegistryObject<SoundEvent> TASER_FIRE_1P = REGISTRY.register("taser_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "taser_fire_1p")));
     public static final RegistryObject<SoundEvent> TASER_FIRE_3P = REGISTRY.register("taser_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "taser_fire_3p")));
-    public static final RegistryObject<SoundEvent> TASER_RELOAD = REGISTRY.register("taser_reload", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "taser_reload")));
+    public static final RegistryObject<SoundEvent> TASER_RELOAD_EMPTY = REGISTRY.register("taser_reload_empty", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "taser_reload_empty")));
     public static final RegistryObject<SoundEvent> SHOCK = REGISTRY.register("shock", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "shock")));
     public static final RegistryObject<SoundEvent> ELECTRIC = REGISTRY.register("electric", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "electric")));
     public static final RegistryObject<SoundEvent> TRACHELIUM_FIRE_1P = REGISTRY.register("trachelium_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "trachelium_fire_1p")));
     public static final RegistryObject<SoundEvent> TRACHELIUM_FIRE_3P = REGISTRY.register("trachelium_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "trachelium_fire_3p")));
     public static final RegistryObject<SoundEvent> TRACHELIUM_FAR = REGISTRY.register("trachelium_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "trachelium_far")));
     public static final RegistryObject<SoundEvent> TRACHELIUM_VERYFAR = REGISTRY.register("trachelium_veryfar", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "trachelium_veryfar")));
-    public static final RegistryObject<SoundEvent> TRACHELIUM_RELOAD = REGISTRY.register("trachelium_reload", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "trachelium_reload")));
+    public static final RegistryObject<SoundEvent> TRACHELIUM_RELOAD_EMPTY = REGISTRY.register("trachelium_reload_empty", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "trachelium_reload_empty")));
     public static final RegistryObject<SoundEvent> TRIGGER_CLICK = REGISTRY.register("triggerclick", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "triggerclick")));
     public static final RegistryObject<SoundEvent> HIT = REGISTRY.register("hit", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "hit")));
     public static final RegistryObject<SoundEvent> TARGET_DOWN = REGISTRY.register("targetdown", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "targetdown")));
@@ -35,7 +35,7 @@ public class TargetModSounds {
     public static final RegistryObject<SoundEvent> HUNTING_RIFLE_FIRE_3P = REGISTRY.register("hunting_rifle_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "hunting_rifle_fire_3p")));
     public static final RegistryObject<SoundEvent> HUNTING_RIFLE_FAR = REGISTRY.register("hunting_rifle_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "hunting_rifle_far")));
     public static final RegistryObject<SoundEvent> HUNTING_RIFLE_VERYFAR = REGISTRY.register("hunting_rifle_veryfar", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "hunting_rifle_veryfar")));
-    public static final RegistryObject<SoundEvent> HUNTING_RIFLE_RELOAD = REGISTRY.register("hunting_rifle_reload", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "hunting_rifle_reload")));
+    public static final RegistryObject<SoundEvent> HUNTING_RIFLE_RELOAD_EMPTY = REGISTRY.register("hunting_rifle_reload_empty", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "hunting_rifle_reload_empty")));
     public static final RegistryObject<SoundEvent> OUCH = REGISTRY.register("ouch", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "ouch")));
     public static final RegistryObject<SoundEvent> STEP = REGISTRY.register("step", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "step")));
     public static final RegistryObject<SoundEvent> GROWL = REGISTRY.register("growl", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "growl")));
@@ -44,7 +44,7 @@ public class TargetModSounds {
     public static final RegistryObject<SoundEvent> M_79_FIRE_3P = REGISTRY.register("m_79_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "m_79_fire_3p")));
     public static final RegistryObject<SoundEvent> M_79_FAR = REGISTRY.register("m_79_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "m_79_far")));
     public static final RegistryObject<SoundEvent> M_79_VERYFAR = REGISTRY.register("m_79_veryfar", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "m_79_veryfar")));
-    public static final RegistryObject<SoundEvent> M_79_RELOAD = REGISTRY.register("m_79_reload", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "m_79_reload")));
+    public static final RegistryObject<SoundEvent> M_79_RELOAD_EMPTY = REGISTRY.register("m_79_reload_empty", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "m_79_reload_empty")));
     public static final RegistryObject<SoundEvent> SKS_FIRE_1P = REGISTRY.register("sks_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "sks_fire_1p")));
     public static final RegistryObject<SoundEvent> SKS_FIRE_3P = REGISTRY.register("sks_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "sks_fire_3p")));
     public static final RegistryObject<SoundEvent> SKS_RELOAD_NORMAL = REGISTRY.register("sks_reload_normal", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "sks_reload_normal")));
@@ -76,7 +76,7 @@ public class TargetModSounds {
     public static final RegistryObject<SoundEvent> RPG_FIRE_3P = REGISTRY.register("rpg_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "rpg_fire_3p")));
     public static final RegistryObject<SoundEvent> RPG_FAR = REGISTRY.register("rpg_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "rpg_far")));
     public static final RegistryObject<SoundEvent> RPG_VERYFAR = REGISTRY.register("rpg_veryfar", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "rpg_veryfar")));
-    public static final RegistryObject<SoundEvent> RPG_RELOAD = REGISTRY.register("rpg_reload", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "rpg_reload")));
+    public static final RegistryObject<SoundEvent> RPG_RELOAD_EMPTY = REGISTRY.register("rpg_reload_empty", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "rpg_reload_empty")));
     public static final RegistryObject<SoundEvent> MORTAR_FIRE = REGISTRY.register("mortar_fire", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "mortar_fire")));
     public static final RegistryObject<SoundEvent> MORTAR_LOAD = REGISTRY.register("mortar_load", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "mortar_load")));
     public static final RegistryObject<SoundEvent> MORTAR_DISTANT = REGISTRY.register("mortar_distant", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "mortar_distant")));

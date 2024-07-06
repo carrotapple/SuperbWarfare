@@ -94,11 +94,11 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.fire"));
             }
 
-            if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
+            if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload_empty"));
             }
 
-            if (stack.getOrCreateTag().getBoolean("reloading") && !stack.getOrCreateTag().getBoolean("empty_reload")) {
+            if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload_normal"));
             }
 

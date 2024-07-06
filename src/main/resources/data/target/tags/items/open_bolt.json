@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
+    "target:abekiri",
+    "target:m_60",
     "target:ak_47",
     "target:svd",
     "target:mk_14",

@@ -90,7 +90,7 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.rpg.fire"));
             }
 
-            if (tag.getBoolean("reloading") && tag.getBoolean("empty_reload")) {
+            if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.rpg.reload"));
             }
 
@@ -171,7 +171,7 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(TargetModSounds.RPG_RELOAD.get());
+        return Set.of(TargetModSounds.RPG_RELOAD_EMPTY.get());
     }
 
     @Override
@@ -182,45 +182,6 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
             var tag = itemStack.getOrCreateTag();
             tag.putInt("max_ammo", getAmmoCount(player));
 
-            double id = tag.getDouble("id");
-            if (player.getMainHandItem().getOrCreateTag().getDouble("id") != tag.getDouble("id")) {
-                tag.putBoolean("empty_reload", false);
-                tag.putBoolean("reloading", false);
-                tag.putDouble("reload_time", 0);
-            }
-            if (tag.getBoolean("reloading")) {
-                if (tag.getDouble("reload_time") == 97) {
-                    entity.getPersistentData().putDouble("id", id);
-                    if (entity.getServer() != null) {
-                        SoundTool.playLocalSound(player, TargetModSounds.RPG_RELOAD.get(), 100, 1);
-                    }
-                }
-                if (player.getMainHandItem().getItem() == itemStack.getItem()
-                        && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    if (tag.getDouble("reload_time") > 0) {
-                        tag.putDouble("reload_time", tag.getDouble("reload_time") - 1);
-                    }
-                } else {
-                    tag.putBoolean("reloading", false);
-                    tag.putDouble("reload_time", 0);
-                    tag.putBoolean("empty_reload", false);
-                }
-                if (tag.getDouble("reload_time") == 84) {
-                    tag.putBoolean("empty", false);
-                }
-                if (tag.getDouble("reload_time") == 7) {
-                    tag.putBoolean("close_hammer", false);
-                }
-                if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    if (tag.getInt("max_ammo") >= 0) {
-                        tag.putInt("ammo", 1);
-                        player.getInventory().clearOrCountMatchingItems(p -> TargetModItems.ROCKET.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
-
-                        tag.putBoolean("reloading", false);
-                        tag.putBoolean("empty_reload", false);
-                    }
-                }
-            }
         }
     }
 

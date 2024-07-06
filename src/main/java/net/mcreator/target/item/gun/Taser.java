@@ -73,7 +73,7 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(TargetModSounds.TASER_RELOAD.get());
+        return Set.of(TargetModSounds.TASER_RELOAD_EMPTY.get());
     }
 
     @Override
@@ -114,7 +114,7 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.taser.fire"));
             }
 
-            if (stack.getOrCreateTag().getBoolean("reloading")) {
+            if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.taser.reload"));
             }
 
@@ -197,44 +197,6 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
 
         if (entity instanceof Player player) {
             stack.getOrCreateTag().putInt("max_ammo", getAmmoCount(player));
-
-            ItemStack heldItem = player.getMainHandItem();
-
-            double id = stack.getOrCreateTag().getDouble("id");
-            if (heldItem.getOrCreateTag().getDouble("id") != stack.getOrCreateTag().getDouble("id")) {
-                stack.getOrCreateTag().putBoolean("empty_reload", false);
-                stack.getOrCreateTag().putBoolean("reloading", false);
-                stack.getOrCreateTag().putDouble("reload_time", 0);
-            }
-
-            if (stack.getOrCreateTag().getBoolean("reloading")) {
-                if (stack.getOrCreateTag().getDouble("reload_time") == 54) {
-                    player.getPersistentData().putDouble("id", id);
-
-                    if (!player.level().isClientSide()) {
-                        SoundTool.playLocalSound(player, TargetModSounds.TASER_RELOAD.get(), 100, 1);
-                    }
-                }
-                if (heldItem.getItem() == stack.getItem() && heldItem.getOrCreateTag().getDouble("id") == id) {
-                    if (stack.getOrCreateTag().getDouble("reload_time") > 0) {
-                        stack.getOrCreateTag().putDouble("reload_time", (stack.getOrCreateTag().getDouble("reload_time") - 1));
-                    }
-                } else {
-                    stack.getOrCreateTag().putBoolean("reloading", false);
-                    stack.getOrCreateTag().putDouble("reload_time", 0);
-                    stack.getOrCreateTag().putBoolean("empty_reload", false);
-                }
-
-                if (stack.getOrCreateTag().getDouble("reload_time") == 1 && heldItem.getOrCreateTag().getDouble("id") == id) {
-                    if (stack.getOrCreateTag().getInt("max_ammo") >= 1) {
-                        stack.getOrCreateTag().putInt("ammo", 1);
-
-                        player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == TargetModItems.TASER_ELECTRODE.get(), 1, player.inventoryMenu.getCraftSlots());
-                        stack.getOrCreateTag().putBoolean("reloading", false);
-                        stack.getOrCreateTag().putBoolean("empty_reload", false);
-                    }
-                }
-            }
         }
         int charge_speed = EnchantmentHelper.getTagEnchantmentLevel(TargetModEnchantments.SUPER_RECHARGE.get(), stack);
 

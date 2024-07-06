@@ -12,5 +12,6 @@
   "semi": 1,
   "burst": 0,
   "auto": 0,
-  "burst_size": 1
+  "burst_size": 1,
+  "empty_reload_time": 55
 }

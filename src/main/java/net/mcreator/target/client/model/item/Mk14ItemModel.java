@@ -108,7 +108,7 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
 
         CoreGeoBone bolt = getAnimationProcessor().getBone("bolt");
 
-        if (stack.getOrCreateTag().getDouble("HoldOpen") == 1) {
+        if (stack.getOrCreateTag().getBoolean("HoldOpen")) {
             bolt.setPosZ(2.5f);
         }
 

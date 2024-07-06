@@ -97,15 +97,8 @@ public class FireModeMessage {
                 if (tag.getDouble("burst") == 1) {
                     tag.putInt("fire_mode", 1);
                     setFireMode(player, tag);
-                    return;
                 }
             }
-        }
-
-        if (item == TargetModItems.SENTINEL.get() && !(player.getCooldowns().isOnCooldown(item)) && !tag.getBoolean("charging") && !tag.getBoolean("reloading")) {
-            tag.putBoolean("charging", true);
-            tag.putDouble("cid", (Mth.nextDouble(RandomSource.create(), 1, 1919810)));
-            tag.putDouble("charging_time", 128);
         }
     }
 }

@@ -116,17 +116,14 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.fire"));
             }
 
-            if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
+            if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload"));
             }
 
-            if (stack.getOrCreateTag().getBoolean("reloading") && !stack.getOrCreateTag().getBoolean("empty_reload")) {
+            if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload2"));
             }
 
-//            if (stack.getOrCreateTag().getDouble("charging_time") > 127 && stack.getOrCreateTag().getBoolean("charging")) {
-//                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.chargep"));
-//            }
 
             if (stack.getOrCreateTag().getDouble("charging_time") < 127 && stack.getOrCreateTag().getDouble("charging_time") > 0 && stack.getOrCreateTag().getBoolean("charging")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.charge"));
@@ -177,100 +174,16 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemStack, world, entity, slot, selected);
-        if (entity instanceof Player player) {
-            double cid;
-            var tag = itemStack.getOrCreateTag();
-            double id = tag.getDouble("id");
-            if (player.getMainHandItem().getOrCreateTag().getDouble("id") != tag.getDouble("id")) {
-                tag.putBoolean("empty_reload", false);
-                tag.putBoolean("reloading", false);
-                tag.putDouble("reload_time", 0);
-            }
-            if (tag.getBoolean("reloading") && tag.getInt("ammo") == 0) {
-                if (tag.getDouble("reload_time") == 73) {
-                    entity.getPersistentData().putDouble("id", id);
-                    if (entity instanceof ServerPlayer serverPlayer) {
-                        SoundTool.playLocalSound(serverPlayer, TargetModSounds.SENTINEL_RELOAD_EMPTY.get(), 100, 1);
-                    }
-                }
-                if (player.getMainHandItem().getItem() == itemStack.getItem()
-                        && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    if (tag.getDouble("reload_time") > 0) {
-                        tag.putDouble("reload_time", (tag.getDouble("reload_time") - 1));
-                    }
-                } else {
-                    tag.putBoolean("reloading", false);
-                    tag.putBoolean("empty_reload", false);
-                    tag.putDouble("reload_time", 0);
-                }
-                if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    GunsTool.reload(entity, GunInfo.Type.SNIPER);
-                }
-            } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
-                if (tag.getDouble("reload_time") == 53) {
-                    entity.getPersistentData().putDouble("id", id);
-                    if (entity instanceof ServerPlayer serverPlayer) {
-                        SoundTool.playLocalSound(serverPlayer, TargetModSounds.SENTINEL_RELOAD_NORMAL.get(), 100, 1);
-                    }
-                }
-                if (player.getMainHandItem().getItem() == itemStack.getItem()
-                        && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    if (tag.getDouble("reload_time") > 0) {
-                        tag.putDouble("reload_time", (tag.getDouble("reload_time") - 1));
-                    }
-                } else {
-                    tag.putBoolean("reloading", false);
-                    tag.putBoolean("empty_reload", false);
-                    tag.putDouble("reload_time", 0);
-                }
-                if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    GunsTool.reload(entity, GunInfo.Type.SNIPER, true);
-                }
-            }
-            if (tag.getDouble("firing") > 0) {
-                tag.putDouble("firing", tag.getDouble("firing") - 1);
-            }
-            if (tag.getDouble("zoom_firing") > 0) {
-                tag.putDouble("zoom_firing", tag.getDouble("zoom_firing") - 1);
-            }
+        var tag = itemStack.getOrCreateTag();
 
-            cid = tag.getDouble("cid");
-            if (player.getMainHandItem().getOrCreateTag().getDouble("cid") != tag.getDouble("cid")) {
-                tag.putBoolean("charging", false);
-                tag.putDouble("charging_time", 0);
-            }
-            if (tag.getBoolean("charging")) {
-                if (tag.getDouble("charging_time") == 127) {
-                    entity.getPersistentData().putDouble("cid", cid);
-                    if (entity instanceof ServerPlayer serverPlayer) {
-                        SoundTool.playLocalSound(serverPlayer, TargetModSounds.SENTINEL_CHARGE.get(), 100, 1);
-                    }
-                }
-                if (player.getMainHandItem().getItem() == itemStack.getItem()
-                        && player.getMainHandItem().getOrCreateTag().getDouble("cid") == cid) {
-                    if (tag.getDouble("charging_time") > 0) {
-                        tag.putDouble("charging_time", tag.getDouble("charging_time") - 1);
-                    }
-                } else {
-                    tag.putBoolean("charging", false);
-                    tag.putDouble("charging_time", 0);
-                }
-                if (tag.getDouble("charging_time") == 16 && player.getMainHandItem().getOrCreateTag().getDouble("cid") == cid) {
-                    tag.putDouble("power", 100);
-                }
-                if (tag.getDouble("charging_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("cid") == cid) {
-                    tag.putBoolean("charging", false);
-                }
-            }
-            if (tag.getDouble("power") > 0) {
-                tag.putDouble("add_damage", 0.2857142857142857 * tag.getDouble("damage") * tag.getDouble("damageadd"));
-                tag.putDouble("power", tag.getDouble("power") - 0.025);
-            } else {
-                tag.putDouble("add_damage", 0);
-            }
-            if (tag.getDouble("crot") > 0) {
-                tag.putDouble("crot", tag.getDouble("crot") - 1);
-            }
+        if (tag.getDouble("power") > 0) {
+            tag.putDouble("add_damage", 0.2857142857142857 * tag.getDouble("damage") * tag.getDouble("damageadd"));
+            tag.putDouble("power", tag.getDouble("power") - 0.025);
+        } else {
+            tag.putDouble("add_damage", 0);
+        }
+        if (tag.getDouble("crot") > 0) {
+            tag.putDouble("crot", tag.getDouble("crot") - 1);
         }
     }
 

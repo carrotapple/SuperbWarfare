@@ -41,7 +41,7 @@ public class SksItemModel extends GeoModel<SksItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(TargetModTags.Items.GUN)) return;
 
-        if (stack.getOrCreateTag().getDouble("HoldOpen") == 1) {
+        if (stack.getOrCreateTag().getBoolean("HoldOpen")) {
             bolt.setPosZ(2.5f);
         }
 

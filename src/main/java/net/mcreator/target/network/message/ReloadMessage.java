@@ -71,12 +71,23 @@ public class ReloadMessage {
                     return;
                 } else if (stack.is(TargetModTags.Items.RIFLE) && capability.rifleAmmo == 0) {
                     return;
+                } else if (stack.getItem() == TargetModItems.TASER.get() && tag.getInt("max_ammo") == 0) {
+                    return;
+                } else if (stack.getItem() == TargetModItems.M_79.get() && tag.getInt("max_ammo") == 0) {
+                    return;
+                } else if (stack.getItem() == TargetModItems.RPG.get() && tag.getInt("max_ammo") == 0) {
+                    return;
                 }
 
                 if (stack.is(TargetModTags.Items.OPEN_BOLT) && can_reload) {
-                    //有OPEN_BOLT的枪非空仓换弹子弹会多一发
-                    if (tag.getInt("ammo") < tag.getDouble("mag") + 1) {
-                        tag.putBoolean("start_reload",true);
+                    if (stack.getItem() == TargetModItems.M_60.get() || stack.getItem() == TargetModItems.ABEKIRI.get()) {
+                        if (tag.getInt("ammo") < tag.getDouble("mag")) {
+                            tag.putBoolean("start_reload",true);
+                        }
+                    } else {
+                        if (tag.getInt("ammo") < tag.getDouble("mag") + 1) {
+                            tag.putBoolean("start_reload",true);
+                        }
                     }
                 } else if (tag.getInt("ammo") < tag.getDouble("mag")){
                     tag.putBoolean("start_reload",true);

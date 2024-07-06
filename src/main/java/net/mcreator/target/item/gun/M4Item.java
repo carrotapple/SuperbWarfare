@@ -89,11 +89,11 @@ public class M4Item extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m4.fire"));
             }
 
-            if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
+            if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m4.reload_empty"));
             }
 
-            if (stack.getOrCreateTag().getBoolean("reloading") && !stack.getOrCreateTag().getBoolean("empty_reload")) {
+            if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m4.reload_normal"));
             }
 
@@ -167,62 +167,6 @@ public class M4Item extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
         TooltipTool.addGunTips(list, stack);
-    }
-
-    @Override
-    public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemStack, world, entity, slot, selected);
-
-        if (entity instanceof Player player) {
-            var tag = itemStack.getOrCreateTag();
-            double id = tag.getDouble("id");
-            if (player.getMainHandItem().getOrCreateTag().getDouble("id") != tag.getDouble("id")) {
-                tag.putBoolean("empty_reload", false);
-                tag.putBoolean("reloading", false);
-                tag.putDouble("reload_time", 0);
-            }
-            if (tag.getBoolean("reloading") && tag.getInt("ammo") == 0) {
-                if (tag.getDouble("reload_time") == 61) {
-                    if (entity instanceof ServerPlayer serverPlayer) {
-                        SoundTool.playLocalSound(serverPlayer, TargetModSounds.M_4_RELOAD_EMPTY.get(), 100, 1);
-                    }
-                    entity.getPersistentData().putDouble("id", id);
-                }
-                if (player.getMainHandItem().getItem() == itemStack.getItem()
-                        && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    if (tag.getDouble("reload_time") > 0) {
-                        tag.putDouble("reload_time", tag.getDouble("reload_time") - 1);
-                    }
-                } else {
-                    tag.putBoolean("reloading", false);
-                    tag.putBoolean("empty_reload", false);
-                    tag.putDouble("reload_time", 0);
-                }
-                if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    GunsTool.reload(entity, GunInfo.Type.RIFLE);
-                }
-            } else if (tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
-                if (tag.getDouble("reload_time") == 53) {
-                    if (entity instanceof ServerPlayer serverPlayer) {
-                        SoundTool.playLocalSound(serverPlayer, TargetModSounds.M_4_RELOAD_NORMAL.get(), 100, 1);
-                    }
-                    entity.getPersistentData().putDouble("id", id);
-                }
-                if (player.getMainHandItem().getItem() == itemStack.getItem()
-                        && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    if (tag.getDouble("reload_time") > 0) {
-                        tag.putDouble("reload_time", tag.getDouble("reload_time") - 1);
-                    }
-                } else {
-                    tag.putBoolean("reloading", false);
-                    tag.putBoolean("empty_reload", false);
-                    tag.putDouble("reload_time", 0);
-                }
-                if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    GunsTool.reload(entity, GunInfo.Type.RIFLE, true);
-                }
-            }
-        }
     }
 
     @Override

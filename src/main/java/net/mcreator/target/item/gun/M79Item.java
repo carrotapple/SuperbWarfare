@@ -51,7 +51,7 @@ public class M79Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(TargetModSounds.M_79_RELOAD.get());
+        return Set.of(TargetModSounds.M_79_RELOAD_EMPTY.get());
     }
 
     public M79Item() {
@@ -96,7 +96,7 @@ public class M79Item extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m79.fire"));
             }
 
-            if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getBoolean("empty_reload")) {
+            if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m79.reload"));
             }
 
@@ -178,38 +178,6 @@ public class M79Item extends GunItem implements GeoItem, AnimatedItem {
         super.inventoryTick(itemStack, world, entity, slot, selected);
         if (entity instanceof Player player) {
             itemStack.getOrCreateTag().putInt("max_ammo", getAmmoCount(player));
-            var tag = itemStack.getOrCreateTag();
-            double id = tag.getDouble("id");
-            int ammo1 = 1 - tag.getInt("ammo");
-            if (player.getMainHandItem().getOrCreateTag().getDouble("id") != tag.getDouble("id")) {
-                tag.putBoolean("empty_reload", false);
-                tag.putBoolean("reloading", false);
-                tag.putDouble("reload_time", 0);
-            }
-            if (tag.getBoolean("reloading")) {
-                if (tag.getDouble("reload_time") == 61) {
-                    entity.getPersistentData().putDouble("id", id);
-                    if (entity instanceof ServerPlayer serverPlayer) {
-                        SoundTool.playLocalSound(serverPlayer, TargetModSounds.M_79_RELOAD.get(), 100, 1);
-                    }
-                }
-                if (player.getMainHandItem().getItem() == itemStack.getItem()
-                        && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    if (tag.getDouble("reload_time") > 0) {
-                        tag.putDouble("reload_time", tag.getDouble("reload_time") - 1);
-                    }
-                } else {
-                    tag.putBoolean("reloading", false);
-                    tag.putDouble("reload_time", 0);
-                    tag.putBoolean("empty_reload", false);
-                }
-                if (tag.getDouble("reload_time") == 1 && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                    tag.putInt("ammo", tag.getInt("ammo") + Math.min(ammo1, tag.getInt("max_ammo")));
-                    player.getInventory().clearOrCountMatchingItems(p -> TargetModItems.GRENADE_40MM.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
-                    tag.putBoolean("reloading", false);
-                    tag.putBoolean("empty_reload", false);
-                }
-            }
         }
     }
 
