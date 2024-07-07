@@ -56,6 +56,8 @@ public class ReloadMessage {
 
                 boolean can_reload = tag.getDouble("normal_reload_time") != 0 || tag.getDouble("empty_reload_time") != 0;
 
+                boolean can_single_reload = tag.getDouble("iterative_time") != 0;
+
                 //检查备弹
                 if (stack.is(TargetModTags.Items.SHOTGUN) && capability.shotgunAmmo == 0) {
                     return;
@@ -72,19 +74,26 @@ public class ReloadMessage {
                 } else if (stack.getItem() == TargetModItems.RPG.get() && tag.getInt("max_ammo") == 0) {
                     return;
                 }
-
-                if (stack.is(TargetModTags.Items.OPEN_BOLT) && can_reload) {
-                    if (stack.getItem() == TargetModItems.M_60.get() || stack.getItem() == TargetModItems.ABEKIRI.get()) {
-                        if (tag.getInt("ammo") < tag.getDouble("mag")) {
-                            tag.putBoolean("start_reload", true);
+                if (can_reload) {
+                    if (stack.is(TargetModTags.Items.OPEN_BOLT)) {
+                        if (stack.getItem() == TargetModItems.M_60.get() || stack.getItem() == TargetModItems.ABEKIRI.get()) {
+                            if (tag.getInt("ammo") < tag.getDouble("mag")) {
+                                tag.putBoolean("start_reload", true);
+                            }
+                        } else {
+                            if (tag.getInt("ammo") < tag.getDouble("mag") + 1) {
+                                tag.putBoolean("start_reload", true);
+                            }
                         }
-                    } else {
-                        if (tag.getInt("ammo") < tag.getDouble("mag") + 1) {
-                            tag.putBoolean("start_reload", true);
-                        }
+                    } else if (tag.getInt("ammo") < tag.getDouble("mag")) {
+                        tag.putBoolean("start_reload", true);
                     }
-                } else if (tag.getInt("ammo") < tag.getDouble("mag")) {
-                    tag.putBoolean("start_reload", true);
+                    return;
+                }
+                if (can_single_reload) {
+                    if (tag.getInt("ammo") < tag.getDouble("mag")) {
+                        tag.putBoolean("start_single_reload", true);
+                    }
                 }
             }
         }

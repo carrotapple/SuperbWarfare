@@ -40,6 +40,7 @@ public class GunEventHandler {
             handleGunFire(player);
             handleMiniGunFire(player);
             handleGunReload(player);
+            handleGunSingleReload(player);
         }
     }
 
@@ -63,6 +64,7 @@ public class GunEventHandler {
 
             if ((player.getPersistentData().getBoolean("firing") || stack.getOrCreateTag().getInt("burst_fire") > 0)
                     && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+                    && !stack.getOrCreateTag().getBoolean("reloading")
                     && !stack.getOrCreateTag().getBoolean("charging")
                     && stack.getOrCreateTag().getInt("ammo") > 0
                     && !player.getCooldowns().isOnCooldown(stack.getItem())
@@ -495,6 +497,258 @@ public class GunEventHandler {
             String name = origin.substring(origin.lastIndexOf(".") + 1);
 
             SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_reload_normal"));
+            if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
+                SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
+            }
+        }
+    }
+
+    /**
+     * 单发装填类的武器换弹流程
+     */
+    private static void handleGunSingleReload(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        CompoundTag tag = stack.getOrCreateTag();
+
+        //换弹流程计时器
+
+        if (tag.getDouble("prepare") > 0) {
+            tag.putDouble("prepare", tag.getDouble("prepare") - 1);
+        }
+        if (tag.getDouble("prepare_load") > 0) {
+            tag.putDouble("prepare_load", tag.getDouble("prepare_load") - 1);
+        }
+        if (tag.getDouble("iterative") > 0) {
+            tag.putDouble("iterative", tag.getDouble("iterative") - 1);
+        }
+        if (tag.getDouble("finish") > 0) {
+            tag.putDouble("finish", tag.getDouble("finish") - 1);
+        }
+
+        //一阶段
+
+        if (tag.getBoolean("start_single_reload")) {
+
+            //此处判断空仓换弹的时候，是否在准备阶段就需要装填一发，如M870
+            if (tag.getDouble("prepare_load_time") != 0 && tag.getInt("ammo") == 0) {
+                playGunPrepareLoadReloadSounds(player);
+                tag.putInt("prepare_load",(int)tag.getDouble("prepare_load_time"));
+                player.getCooldowns().addCooldown(stack.getItem(), (int)tag.getDouble("prepare_load_time"));
+
+            } else {
+                playGunPrepareReloadSounds(player);
+                tag.putInt("prepare",(int)tag.getDouble("prepare_time"));
+                player.getCooldowns().addCooldown(stack.getItem(), (int)tag.getDouble("prepare_time"));
+            }
+
+            tag.putBoolean("force_stop", false);
+            tag.putBoolean("stop", false);
+            tag.putInt("reload_stage",1);
+            tag.putBoolean("reloading", true);
+            tag.putBoolean("start_single_reload", false);
+
+        }
+
+        if (stack.getItem() == TargetModItems.M_870.get()) {
+            if (tag.getInt("prepare_load") == 10) {
+                singleLoad(player);
+            }
+        }
+
+        //一阶段结束，检查备弹，如果有则二阶段启动，无则直接跳到三阶段
+
+
+        if ((tag.getDouble("prepare") == 1 || tag.getDouble("prepare_load") == 1)) {
+
+            //检查备弹
+            var capability = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables());
+            if (stack.is(TargetModTags.Items.SHOTGUN) && capability.shotgunAmmo == 0) {
+                tag.putBoolean("force_stage3_start",true);
+            } else if (stack.is(TargetModTags.Items.SNIPER_RIFLE) && capability.sniperAmmo == 0) {
+                tag.putBoolean("force_stage3_start",true);
+            } else if ((stack.is(TargetModTags.Items.HANDGUN) || stack.is(TargetModTags.Items.SMG)) && capability.handgunAmmo == 0) {
+                tag.putBoolean("force_stage3_start",true);
+            } else if (stack.is(TargetModTags.Items.RIFLE) && capability.rifleAmmo == 0) {
+                tag.putBoolean("force_stage3_start",true);
+            } else {
+                tag.putInt("reload_stage",2);
+            }
+        }
+
+        //强制停止换弹，进入三阶段
+        if (tag.getBoolean("force_stop")) {
+            tag.putBoolean("stop",true);
+        }
+
+        //二阶段
+
+        if ((tag.getDouble("prepare") == 0 || tag.getDouble("prepare_load") == 0)
+                && tag.getInt("reload_stage") == 2
+                && tag.getInt("iterative") == 0
+                && !tag.getBoolean("stop")
+                && tag.getInt("ammo") < (int)tag.getDouble("mag")) {
+
+            playGunLoopReloadSounds(player);
+            tag.putDouble("iterative", (int)tag.getDouble("iterative_time"));
+            player.getCooldowns().addCooldown(stack.getItem(), (int)tag.getDouble("iterative_time"));
+            //动画播放nbt
+            if (tag.getDouble("load_index") == 1) {
+                tag.putDouble("load_index", 0);
+            } else {
+                tag.putDouble("load_index", 1);
+            }
+        }
+
+        //装填
+
+        if (stack.getItem() == TargetModItems.M_870.get()) {
+            if (tag.getInt("iterative") == 3) {
+                singleLoad(player);
+            }
+        }
+
+        if (stack.getItem() == TargetModItems.MARLIN.get()) {
+            if (tag.getInt("iterative") == 3) {
+                singleLoad(player);
+            }
+        }
+
+        //二阶段结束
+        if (tag.getInt("iterative") == 1) {
+
+            //装满结束
+            if (tag.getInt("ammo") >= (int)tag.getDouble("mag")) {
+                tag.putInt("reload_stage",3);
+            }
+
+            //备弹耗尽结束
+            var capability = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables());
+            if (stack.is(TargetModTags.Items.SHOTGUN) && capability.shotgunAmmo == 0) {
+                tag.putInt("reload_stage",3);
+            } else if (stack.is(TargetModTags.Items.SNIPER_RIFLE) && capability.sniperAmmo == 0) {
+                tag.putInt("reload_stage",3);
+            } else if ((stack.is(TargetModTags.Items.HANDGUN) || stack.is(TargetModTags.Items.SMG)) && capability.handgunAmmo == 0) {
+                tag.putInt("reload_stage",3);
+            } else if (stack.is(TargetModTags.Items.RIFLE) && capability.rifleAmmo == 0) {
+                tag.putInt("reload_stage",3);
+            }
+
+            //强制结束
+            if (tag.getBoolean("stop")) {
+                tag.putInt("reload_stage",3);
+                tag.putBoolean("force_stop", false);
+                tag.putBoolean("stop", false);
+            }
+        }
+
+        //三阶段
+
+        if ((tag.getInt("iterative") == 1 && tag.getInt("reload_stage") == 3) || tag.getBoolean("force_stage3_start")) {
+            tag.putBoolean("force_stage3_start", false);
+            tag.putDouble("finish", (int)tag.getDouble("finish_time"));
+            player.getCooldowns().addCooldown(stack.getItem(), (int)tag.getDouble("finish_time"));
+            playGunEndReloadSounds(player);
+
+        }
+
+        //三阶段结束
+        if (tag.getInt("finish") == 1) {
+            tag.putInt("reload_stage",0);
+            tag.putBoolean("reloading", false);
+        }
+    }
+
+    public static void singleLoad(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        CompoundTag tag = stack.getOrCreateTag();
+
+        tag.putInt("ammo", tag.getInt("ammo") + 1);
+
+        if (stack.is(TargetModTags.Items.SHOTGUN)) {
+            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.shotgunAmmo = capability.shotgunAmmo - 1;
+                capability.syncPlayerVariables(player);
+            });
+        } else if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
+            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.sniperAmmo = capability.sniperAmmo - 1;
+                capability.syncPlayerVariables(player);
+            });
+        } else if ((stack.is(TargetModTags.Items.HANDGUN) || stack.is(TargetModTags.Items.SMG))) {
+            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.handgunAmmo = capability.handgunAmmo - 1;
+                capability.syncPlayerVariables(player);
+            });
+        } else if (stack.is(TargetModTags.Items.RIFLE)) {
+            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.rifleAmmo = capability.rifleAmmo - 1;
+                capability.syncPlayerVariables(player);
+            });
+        }
+    }
+
+    public static void playGunPrepareReloadSounds(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) {
+            return;
+        }
+
+        if (!player.level().isClientSide) {
+            String origin = stack.getItem().getDescriptionId();
+            String name = origin.substring(origin.lastIndexOf(".") + 1);
+
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_prepare"));
+            if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
+                SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
+            }
+        }
+    }
+
+    public static void playGunPrepareLoadReloadSounds(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) {
+            return;
+        }
+
+        if (!player.level().isClientSide) {
+            String origin = stack.getItem().getDescriptionId();
+            String name = origin.substring(origin.lastIndexOf(".") + 1);
+
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_prepare_load"));
+            if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
+                SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
+            }
+        }
+    }
+
+    public static void playGunLoopReloadSounds(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) {
+            return;
+        }
+
+        if (!player.level().isClientSide) {
+            String origin = stack.getItem().getDescriptionId();
+            String name = origin.substring(origin.lastIndexOf(".") + 1);
+
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_loop"));
+            if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
+                SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
+            }
+        }
+    }
+
+    public static void playGunEndReloadSounds(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) {
+            return;
+        }
+
+        if (!player.level().isClientSide) {
+            String origin = stack.getItem().getDescriptionId();
+            String name = origin.substring(origin.lastIndexOf(".") + 1);
+
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_end"));
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
             }

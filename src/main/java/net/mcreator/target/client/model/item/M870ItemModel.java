@@ -39,16 +39,6 @@ public class M870ItemModel extends GeoModel<M870Item> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(TargetModTags.Items.GUN)) return;
 
-        if (stack.getOrCreateTag().getBoolean("reloading")) {
-            if (stack.getOrCreateTag().getDouble("prepare") == 0) {
-                if (stack.getOrCreateTag().getDouble("loading") > 10 || stack.getOrCreateTag().getDouble("loading") < 2) {
-                    shell.setScaleX(0);
-                    shell.setScaleY(0);
-                    shell.setScaleZ(0);
-                }
-            }
-        }
-
         double p = player.getPersistentData().getDouble("zoom_pos");
         double zp = player.getPersistentData().getDouble("zoom_pos_z");
 

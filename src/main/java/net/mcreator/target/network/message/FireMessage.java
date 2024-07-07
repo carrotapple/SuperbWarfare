@@ -98,7 +98,7 @@ public class FireMessage {
         } else {
             player.getPersistentData().putBoolean("firing", true);
         }
-        if (tag.getDouble("force_stop_reloading") == 1 && tag.getBoolean("reloading") && tag.getDouble("prepare") == 0 && tag.getInt("ammo") > 0) {
+        if (tag.getDouble("prepare") == 0 && tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
             tag.putDouble("force_stop", 1);
         }
 

@@ -1125,7 +1125,7 @@
       }
     ]
   },
-  "marlin_start": {
+  "marlin_prepare": {
     "sounds": [
       {
         "name": "target:marlin/marlin_start",
@@ -1174,7 +1174,7 @@
       }
     ]
   },
-  "m_870_preparealt": {
+  "m_870_prepare_load": {
     "sounds": [
       {
         "name": "target:m_870/m_870_preparealt",
@@ -1182,7 +1182,7 @@
       }
     ]
   },
-  "m_870_reloadloop": {
+  "m_870_loop": {
     "sounds": [
       {
         "name": "target:m_870/m_870_reload_loop",

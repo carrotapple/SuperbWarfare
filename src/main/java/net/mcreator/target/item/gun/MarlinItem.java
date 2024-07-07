@@ -105,19 +105,19 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.shift2"));
                 }
 
-                if (stack.getOrCreateTag().getBoolean("reloading") && stack.getOrCreateTag().getDouble("prepare") > 0) {
+                if (stack.getOrCreateTag().getInt("reload_stage") == 1 && stack.getOrCreateTag().getDouble("prepare") > 0) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.prepare"));
                 }
 
-                if (stack.getOrCreateTag().getDouble("load_index") == 0 && stack.getOrCreateTag().getDouble("loading") > 0) {
+                if (stack.getOrCreateTag().getDouble("load_index") == 0 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.iterativeload"));
                 }
 
-                if (stack.getOrCreateTag().getDouble("load_index") == 1 && stack.getOrCreateTag().getDouble("loading") > 0) {
+                if (stack.getOrCreateTag().getDouble("load_index") == 1 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.iterativeload2"));
                 }
 
-                if (stack.getOrCreateTag().getDouble("finish") > 0) {
+                if (stack.getOrCreateTag().getInt("reload_stage") == 3) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.finish"));
                 }
 
@@ -168,75 +168,15 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
-        if (entity instanceof Player player) {
-            var tag = itemstack.getOrCreateTag();
-            double id = tag.getDouble("id");
-            if (player.getMainHandItem().getOrCreateTag().getDouble("id") != tag.getDouble("id")) {
-                tag.putDouble("finish", 0);
-                tag.putBoolean("reloading", false);
-                tag.putDouble("prepare", 0);
-                tag.putDouble("loading", 0);
-                tag.putDouble("force_stop", 0);
-                tag.putDouble("stop", 0);
-            }
-            if (tag.getDouble("marlin_animation_time") > 0) {
-                tag.putDouble("marlin_animation_time", tag.getDouble("marlin_animation_time") - 1);
-            }
-            if (tag.getDouble("prepare") > 0) {
-                tag.putDouble("prepare", tag.getDouble("prepare") - 1);
-            }
-            if (tag.getDouble("loading") > 0) {
-                tag.putDouble("loading", tag.getDouble("loading") - 1);
-            }
-            if (tag.getDouble("finish") > 0 && tag.getDouble("loading") == 0) {
-                tag.putDouble("finish", tag.getDouble("finish") - 1);
-            }
-            if (player.getMainHandItem().getOrCreateTag().getDouble("id") != tag.getDouble("id")) {
-                tag.putBoolean("reloading", false);
-            }
-            if (tag.getBoolean("reloading") && player.getMainHandItem().getOrCreateTag().getDouble("id") == id) {
-                if (tag.getDouble("prepare") == 0 && tag.getDouble("loading") == 0
-                        && !(tag.getInt("ammo") >= 8 || entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.rifleAmmo).orElse(0) == 0)) {
-                    if (tag.getDouble("force_stop") == 1) {
-                        tag.putDouble("stop", 1);
-                    } else {
-                        tag.putDouble("loading", 16);
-                        player.getCooldowns().addCooldown(itemstack.getItem(), 16);
-                        if (entity instanceof ServerPlayer serverPlayer) {
-                            SoundTool.playLocalSound(serverPlayer, TargetModSounds.MARLIN_LOOP.get(), 100, 1);
-                        }
-                        if (tag.getDouble("load_index") == 1) {
-                            tag.putDouble("load_index", 0);
-                        } else {
-                            tag.putDouble("load_index", 1);
-                        }
-                    }
-                }
-                if (tag.getDouble("loading") == 9) {
-                    tag.putInt("ammo", tag.getInt("ammo") + 1);
-                    entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                        capability.rifleAmmo = capability.rifleAmmo - 1;
-                        capability.syncPlayerVariables(entity);
-                    });
-                }
-                if ((tag.getInt("ammo") >= 8 || entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.rifleAmmo).orElse(0) == 0)
-                        && tag.getDouble("loading") == 0 || tag.getDouble("stop") == 1) {
-                    tag.putDouble("force_stop", 0);
-                    tag.putDouble("stop", 0);
-                    tag.putDouble("finish", 19);
-                    player.getCooldowns().addCooldown(itemstack.getItem(), 19);
-                    tag.putBoolean("reloading", false);
-                    if (entity instanceof ServerPlayer serverPlayer) {
-                        SoundTool.playLocalSound(serverPlayer, TargetModSounds.MARLIN_END.get(), 100, 1);
-                    }
-                }
-            }
+        var tag = itemstack.getOrCreateTag();
+        if (tag.getDouble("marlin_animation_time") > 0) {
+            tag.putDouble("marlin_animation_time", tag.getDouble("marlin_animation_time") - 1);
         }
     }
 
     @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(TargetModSounds.MARLIN_LOOP.get(), TargetModSounds.MARLIN_START.get(), TargetModSounds.MARLIN_END.get());
+        return Set.of(TargetModSounds.MARLIN_LOOP.get(), TargetModSounds.MARLIN_PREPARE.get(), TargetModSounds.MARLIN_END.get());
     }
 
     @Override
