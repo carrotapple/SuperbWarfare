@@ -81,9 +81,7 @@ public class ClickHandler {
                 event.setCanceled(true);
             }
             if (player.getMainHandItem().is(TargetModTags.Items.GUN)) {
-                if (!TargetModKeyMappings.INTERACT.isDown()) {
-                    event.setCanceled(true);
-                }
+                event.setCanceled(true);
                 TargetMod.PACKET_HANDLER.sendToServer(new ZoomMessage(0));
             }
         }

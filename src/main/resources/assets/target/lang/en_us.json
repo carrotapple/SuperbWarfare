@@ -196,7 +196,7 @@
   "key.target.fire_mode": "Fire Mode",
   "key.target.sensitivity_increase": "Increase Sensitivity",
   "key.target.sensitivity_reduce": "Reduce Sensitivity",
-  "key.target.interact": "Can RightClick Interact While Hold",
+  "key.target.interact": "Interact",
 
   "effect.target.shock": "Shock",
   "item.minecraft.potion.effect.target_shock": "Potion of Shock",

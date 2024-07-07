@@ -196,7 +196,7 @@
   "key.target.fire_mode": "开火模式",
   "key.target.sensitivity_increase": "增加灵敏度",
   "key.target.sensitivity_reduce": "减少灵敏度",
-  "key.target.interact": "持枪时按住后可右键交互",
+  "key.target.interact": "交互",
 
   "effect.target.shock": "电击",
   "item.minecraft.potion.effect.target_shock": "电击药水",

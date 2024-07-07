@@ -1,10 +1,7 @@
 package net.mcreator.target.init;
 
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.network.message.DoubleJumpMessage;
-import net.mcreator.target.network.message.FireModeMessage;
-import net.mcreator.target.network.message.ReloadMessage;
-import net.mcreator.target.network.message.SensitivityMessage;
+import net.mcreator.target.network.message.*;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
@@ -86,10 +83,16 @@ public class TargetModKeyMappings {
     };
 
     public static final KeyMapping INTERACT = new KeyMapping("key.target.interact", GLFW.GLFW_KEY_X, "key.categories.target") {
+        private boolean isDownOld = false;
 
         @Override
         public void setDown(boolean isDown) {
             super.setDown(isDown);
+            if (isDownOld != isDown && isDown) {
+                TargetMod.PACKET_HANDLER.sendToServer(new InteractMessage(0));
+                InteractMessage.pressAction(Minecraft.getInstance().player, 0);
+            }
+            isDownOld = isDown;
         }
     };
 
