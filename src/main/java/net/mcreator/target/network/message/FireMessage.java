@@ -1,5 +1,6 @@
 package net.mcreator.target.network.message;
 
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.entity.*;
 import net.mcreator.target.event.GunEventHandler;
 import net.mcreator.target.init.*;
@@ -48,6 +49,8 @@ public class FireMessage {
         context.setPacketHandled(true);
     }
 
+
+
     public static void pressAction(Player player, int type) {
         Level world = player.level();
 
@@ -79,6 +82,10 @@ public class FireMessage {
         }
 
         var tag = handItem.getOrCreateTag();
+
+        if (tag.getInt("ammo") == 0) {
+            TargetMod.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
+        }
 
         if (handItem.getItem() == TargetModItems.TASER.get()) {
             handleTaserFire(player);

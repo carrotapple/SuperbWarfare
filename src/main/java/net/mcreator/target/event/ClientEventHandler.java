@@ -206,18 +206,10 @@ public class ClientEventHandler {
 
             if (-0.8 < velocity + 0.078 && velocity + 0.078 < 0.8) {
                 if (data.getDouble("vy") < entity.getDeltaMovement().y() + 0.078) {
-                    data.putDouble("vy",
-                            ((data.getDouble("vy") + 0.35 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.3 * data.getDouble("zoom_time"))));
+                    data.putDouble("vy",Mth.clamp(((data.getDouble("vy") + 0.35 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.8 * data.getDouble("zoom_time"))),-0.8,0.8));
                 } else {
-                    data.putDouble("vy",
-                            ((data.getDouble("vy") - 0.35 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.3 * data.getDouble("zoom_time"))));
+                    data.putDouble("vy",Mth.clamp(((data.getDouble("vy") - 0.35 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.8 * data.getDouble("zoom_time"))),-0.8,0.8));
                 }
-            }
-            if (data.getDouble("vy") > 0.8) {
-                data.putDouble("vy", 0.8);
-            }
-            if (data.getDouble("vy") < -0.8) {
-                data.putDouble("vy", (-0.8));
             }
         }
     }
