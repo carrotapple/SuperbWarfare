@@ -83,9 +83,6 @@ public class FireMessage {
 
         var tag = handItem.getOrCreateTag();
 
-        if (tag.getInt("ammo") == 0) {
-            TargetMod.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
-        }
 
         if (handItem.getItem() == TargetModItems.TASER.get()) {
             handleTaserFire(player);

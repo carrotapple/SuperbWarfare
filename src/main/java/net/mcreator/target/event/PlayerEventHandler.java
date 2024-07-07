@@ -60,18 +60,20 @@ public class PlayerEventHandler {
 
         ItemStack stack = player.getMainHandItem();
 
-        if (event.phase == TickEvent.Phase.END && stack.is(TargetModTags.Items.GUN)) {
-            handlePlayerProne(player);
-            handlePlayerSprint(player);
-            handleWeaponLevel(player);
-            handleAmmoCount(player);
-            handleGround(player);
-            handlePrepareZoom(player);
-            handleSpecialWeaponAmmo(player);
-            handleChangeFireRate(player);
+        if (event.phase == TickEvent.Phase.END) {
+            if (stack.is(TargetModTags.Items.GUN)) {
+                handlePlayerProne(player);
+                handlePlayerSprint(player);
+                handleWeaponLevel(player);
+                handleAmmoCount(player);
+                handleGround(player);
+                handlePrepareZoom(player);
+                handleSpecialWeaponAmmo(player);
+                handleChangeFireRate(player);
+                handleBocekPulling(player);
+                handleGunRecoil(player);
+            }
             handleDistantRange(player);
-            handleBocekPulling(player);
-            handleGunRecoil(player);
         }
     }
 
