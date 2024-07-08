@@ -2,6 +2,7 @@ package net.mcreator.target.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.mcreator.target.TargetMod;
+import net.mcreator.target.client.gui.RangeHelper;
 import net.mcreator.target.entity.MortarEntity;
 import net.mcreator.target.init.TargetModKeyMappings;
 import net.mcreator.target.init.TargetModMobEffects;
@@ -13,6 +14,7 @@ import net.mcreator.target.network.message.FireMessage;
 import net.mcreator.target.network.message.ZoomMessage;
 import net.mcreator.target.tools.TraceTool;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -112,15 +114,14 @@ public class ClickHandler {
             event.setCanceled(true);
         }
 
+        if (player.hasEffect(TargetModMobEffects.SHOCK.get())) {
+            event.setCanceled(true);
+        }
+
         Entity looking = TraceTool.findLookingEntity(player, 6);
         if (looking == null) return;
         if (looking instanceof MortarEntity && player.isShiftKeyDown()) {
             TargetMod.PACKET_HANDLER.sendToServer(new AdjustMortarAngleMessage(scroll));
-            event.setCanceled(true);
-        }
-
-
-        if (player.hasEffect(TargetModMobEffects.SHOCK.get())) {
             event.setCanceled(true);
         }
     }
