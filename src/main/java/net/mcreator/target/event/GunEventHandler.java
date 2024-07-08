@@ -41,6 +41,7 @@ public class GunEventHandler {
             handleMiniGunFire(player);
             handleGunReload(player);
             handleGunSingleReload(player);
+            handleSentinelCharge(player);
         }
     }
 
@@ -754,4 +755,36 @@ public class GunEventHandler {
             }
         }
     }
+
+    /**
+     * 哨兵充能
+     */
+    private static void handleSentinelCharge(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        CompoundTag tag = stack.getOrCreateTag();
+        //启动换弹
+        if (tag.getBoolean("start_sentinel_charge")) {
+
+            tag.putInt("sentinel_charge_time", 127);
+            stack.getOrCreateTag().putBoolean("sentinel_is_charging", true);
+
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, "sentinel_charge"));
+            if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
+                SoundTool.playLocalSound(serverPlayer, sound1p, 2f, 1f);
+            }
+
+            tag.putBoolean("start_sentinel_charge", false);
+        }
+
+        if (tag.getInt("sentinel_charge_time") > 0) {
+            tag.putInt("sentinel_charge_time", tag.getInt("sentinel_charge_time") - 1);
+        }
+
+
+        if (tag.getInt("sentinel_charge_time") == 1) {
+            tag.putDouble("power",100);
+            tag.putBoolean("sentinel_is_charging", false);
+        }
+    }
+
 }

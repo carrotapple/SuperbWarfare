@@ -1,7 +1,9 @@
 package net.mcreator.target.network.message;
 
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
+import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -93,6 +95,18 @@ public class FireModeMessage {
                     tag.putInt("fire_mode", 1);
                     setFireMode(player, tag);
                 }
+            }
+
+            var capability = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables());
+
+            if (mainHandItem.getItem() == TargetModItems.SENTINEL.get()
+                    && !player.isSpectator()
+                    && !capability.zooming
+                    && !(player.getCooldowns().isOnCooldown(mainHandItem.getItem()))
+                    && mainHandItem.getOrCreateTag().getInt("gun_reloading_time") == 0
+                    && !mainHandItem.getOrCreateTag().getBoolean("sentinel_is_charging")){
+
+                tag.putBoolean("start_sentinel_charge", true);
             }
         }
     }

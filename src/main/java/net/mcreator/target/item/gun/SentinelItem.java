@@ -125,7 +125,7 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
             }
 
 
-            if (stack.getOrCreateTag().getDouble("charging_time") < 127 && stack.getOrCreateTag().getDouble("charging_time") > 0 && stack.getOrCreateTag().getBoolean("charging")) {
+            if (stack.getOrCreateTag().getDouble("sentinel_charge_time") < 127 && stack.getOrCreateTag().getDouble("sentinel_charge_time") > 0 && stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.charge"));
             }
 

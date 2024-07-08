@@ -173,6 +173,9 @@ public class LivingEventHandler {
                         oldTags.putDouble("prepare_load", 0);
                         oldTags.putDouble("iterative", 0);
                         oldTags.putDouble("finish", 0);
+
+                        oldTags.putBoolean("sentinel_is_charging", false);
+                        oldTags.putInt("sentinel_charge_time", 0);
                     }
 
                     if (newStack.getItem() instanceof GunItem) {
@@ -192,6 +195,9 @@ public class LivingEventHandler {
                         newStack.getOrCreateTag().putDouble("prepare_load", 0);
                         newStack.getOrCreateTag().putDouble("iterative", 0);
                         newStack.getOrCreateTag().putDouble("finish", 0);
+
+                        newStack.getOrCreateTag().putBoolean("sentinel_is_charging", false);
+                        newStack.getOrCreateTag().putInt("sentinel_charge_time", 0);
 
                         double weight = newStack.getOrCreateTag().getDouble("weight");
 

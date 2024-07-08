@@ -50,7 +50,7 @@ public class ReloadMessage {
                     && stack.is(TargetModTags.Items.GUN)
                     && !capability.zooming
                     && !(player.getCooldowns().isOnCooldown(stack.getItem()))
-                    && (stack.getOrCreateTag().getInt("gun_reloading_time") == 0)
+                    && stack.getOrCreateTag().getInt("gun_reloading_time") == 0
             ) {
                 CompoundTag tag = stack.getOrCreateTag();
 
