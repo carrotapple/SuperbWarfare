@@ -47,9 +47,7 @@ public class AdjustMortarAngleMessage {
                 angle = living.getAttribute(TargetModAttributes.MORTAR_PITCH.get()).getBaseValue();
             }
 
-            var range = -looking.getXRot();
-
-            player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(angle) + " Range:" + new java.text.DecimalFormat("##.#").format((int) RangeHelper.getRange(range)) + "M"), true);
+            player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(angle) + " Range:" + new java.text.DecimalFormat("##.#").format((int) RangeHelper.getRange(angle)) + "M"), true);
             SoundTool.playLocalSound(player, TargetModSounds.ADJUST_FOV.get(), 1f, 0.7f);
         });
         context.get().setPacketHandled(true);
