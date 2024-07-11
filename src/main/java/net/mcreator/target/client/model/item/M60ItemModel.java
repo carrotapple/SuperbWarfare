@@ -87,11 +87,11 @@ public class M60ItemModel extends GeoModel<M60Item> {
         double zp = 0;
         zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-        gun.setPosX(3.69f * (float) p);
+        gun.setPosX(3.74f * (float) p);
 
-        gun.setPosY(0.62f * (float) p - (float) (0.2f * zp));
+        gun.setPosY(-0.1f * (float) p - (float) (0.1f * zp));
 
-        gun.setPosZ((float) p + (float) (0.6f * zp));
+        gun.setPosZ((float) p + (float) (0.3f * zp));
 
         gun.setRotZ(-0.087f * (float) p + (float) (0.05f * zp));
 
@@ -99,12 +99,12 @@ public class M60ItemModel extends GeoModel<M60Item> {
         double fr = player.getPersistentData().getDouble("fire_rot");
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
-            shen.setPosY(-0.01f * (float) (fp + 2 * fr));
-            shen.setPosZ(0.2f * (float) (fp + 0.54f * fr));
+            shen.setPosY(-0.03f * (float) (fp + 2 * fr));
+            shen.setPosZ(0.6f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.003f * (float) (fp + fr));
             shen.setRotZ(0f);
         } else {
-            shen.setPosY(-0.03f * (float) (fp + 2 * fr));
+            shen.setPosY(-0.05f * (float) (fp + 2 * fr));
             shen.setPosZ(0.8f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.04f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
@@ -168,5 +168,13 @@ public class M60ItemModel extends GeoModel<M60Item> {
         move.setRotY(Mth.DEG_TO_RAD * (float) yRot);
 
         move.setRotZ(2.7f * (float) m + Mth.DEG_TO_RAD * (float) zRot);
+
+        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+
+        player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
+
+        player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
+
+        player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }
