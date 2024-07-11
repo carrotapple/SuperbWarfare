@@ -46,7 +46,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public class Minigun extends GunItem implements GeoItem, AnimatedItem {
-    private static final String TAG_HEAT = "heat_bar";
+    private static final String TAG_HEAT = "heat";
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
@@ -57,17 +57,18 @@ public class Minigun extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public boolean isBarVisible(ItemStack pStack) {
-        return ItemNBTTool.getInt(pStack, TAG_HEAT, 0) != 51;
+        return ItemNBTTool.getDouble(pStack, TAG_HEAT, 0) != 0;
     }
 
     @Override
     public int getBarWidth(ItemStack pStack) {
-        return Math.round((float) ItemNBTTool.getInt(pStack, TAG_HEAT, 0) * 13.0F / 51F);
+        return Math.round((float) ItemNBTTool.getDouble(pStack, TAG_HEAT, 0) * 13.0F / 51F);
     }
 
     @Override
     public int getBarColor(ItemStack pStack) {
-        return 0xFF0000;
+        double f = 1 - ItemNBTTool.getDouble(pStack, TAG_HEAT, 0) / 55.0F;
+        return Mth.hsvToRgb((float) f / 3.0F, 1.0F, 1.0F);
     }
 
     @Override
@@ -82,8 +83,7 @@ public class Minigun extends GunItem implements GeoItem, AnimatedItem {
             }
 
             private static final HumanoidModel.ArmPose MinigunPose = HumanoidModel.ArmPose.create("Minigun", false, (model, entity, arm) -> {
-                if (arm == HumanoidArm.LEFT) {
-                } else {
+                if (arm != HumanoidArm.LEFT) {
                     model.rightArm.xRot = -0.2F + model.head.xRot;
                     model.rightArm.yRot = -0.2F;
                     model.leftArm.xRot = -1F + model.head.xRot;
@@ -108,7 +108,7 @@ public class Minigun extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState event) {
+    private PlayState idlePredicate(AnimationState<Minigun> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
@@ -128,7 +128,7 @@ public class Minigun extends GunItem implements GeoItem, AnimatedItem {
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState event) {
+    private PlayState procedurePredicate(AnimationState<Minigun> event) {
         if (transformType != null && transformType.firstPerson()) {
             if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
@@ -186,25 +186,18 @@ public class Minigun extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
-        if (entity == null)
-            return;
 
         double cooldown = 0;
-        if(entity.wasInPowderSnow){
+        if (entity.wasInPowderSnow) {
             cooldown = 0.75;
-        } else if (entity.isInWaterOrRain()){
+        } else if (entity.isInWaterOrRain()) {
             cooldown = 0.2;
-        } else if (entity.isOnFire() || entity.isInLava()){
+        } else if (entity.isOnFire() || entity.isInLava()) {
             cooldown = -0.5;
         }
 
-        itemstack.getOrCreateTag().putDouble("heat", Mth.clamp(itemstack.getOrCreateTag().getDouble("heat") - 0.25 - cooldown,0,55));
+        itemstack.getOrCreateTag().putDouble("heat", Mth.clamp(itemstack.getOrCreateTag().getDouble("heat") - 0.25 - cooldown, 0, 55));
 
-        if (itemstack.getOrCreateTag().getDouble("heat") == 0) {
-            itemstack.getOrCreateTag().putDouble("heat_bar", 51);
-        } else {
-            itemstack.getOrCreateTag().putDouble("heat_bar", (itemstack.getOrCreateTag().getDouble("heat")));
-        }
         if (itemstack.getOrCreateTag().getDouble("overheat") > 0) {
             itemstack.getOrCreateTag().putDouble("overheat", (itemstack.getOrCreateTag().getDouble("overheat") - 1));
         }

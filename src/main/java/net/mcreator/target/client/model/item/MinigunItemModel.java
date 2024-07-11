@@ -47,7 +47,7 @@ public class MinigunItemModel extends GeoModel<Minigun> {
         }
         float times = 250f / fps;
 
-        float heat = (float)stack.getOrCreateTag().getDouble("heat");
+        float heat = (float) stack.getOrCreateTag().getDouble("heat");
 
         heat_barrels.setScaleZ(4 * heat);
 
@@ -61,7 +61,7 @@ public class MinigunItemModel extends GeoModel<Minigun> {
         shen.setPosZ(2.2f * (float) (0.5 * fp + 1.54f * fr));
         shen.setRotX(0.05f * (float) (0.18f * fp + fr));
         shen.setRotZ(-0.02f * (float) (fp + 1.3 * fr));
-        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
+        shen.setPosX(0.5f * (float) fr * (float) ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
 
         if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
             flare.setHidden(false);
@@ -77,8 +77,8 @@ public class MinigunItemModel extends GeoModel<Minigun> {
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
-        float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
-        float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
+        float PosX = (float) player.getPersistentData().getDouble("gun_move_posX");
+        float PosY = (float) player.getPersistentData().getDouble("gun_move_posY");
 
         double y = 0;
         double x = 0;
