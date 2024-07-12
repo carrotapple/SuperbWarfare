@@ -172,6 +172,9 @@ public class FireMessage {
                     player.playSound(TargetModSounds.BOCEK_ZOOM_FIRE_3P.get(), 2, 1);
                 }
             } else {
+
+                stack.getOrCreateTag().putBoolean("shoot",true);
+
                 for (int index0 = 0; index0 < 10; index0++) {
                     spawnBullet(player);
                 }
@@ -201,12 +204,6 @@ public class FireMessage {
 
     private static void spawnBullet(Player player) {
         ItemStack heldItem = player.getMainHandItem();
-        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
-            capability.recoil = 0.1;
-            capability.firing = 1;
-            capability.syncPlayerVariables(player);
-        });
 
         if (player.level().isClientSide()) return;
 
@@ -240,12 +237,7 @@ public class FireMessage {
         if (!stack.getOrCreateTag().getBoolean("reloading")) {
             if (!player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getInt("ammo") > 0
                     && ItemNBTTool.getInt(stack, "Power", 1200) > 400) {
-                player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
-                    capability.recoil = 0.1;
-                    capability.firing = 1;
-                    capability.syncPlayerVariables(player);
-                });
+
                 player.getCooldowns().addCooldown(stack.getItem(), 5);
 
                 if (player instanceof ServerPlayer serverPlayer) {
@@ -266,6 +258,8 @@ public class FireMessage {
                     level.addFreshEntity(taserBulletProjectile);
                 }
 
+                stack.getOrCreateTag().putBoolean("shoot",true);
+
                 stack.getOrCreateTag().putInt("fire_animation", 4);
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
                 ItemNBTTool.setInt(stack, "Power", ItemNBTTool.getInt(stack, "Power", 1200) - 400);
@@ -279,12 +273,6 @@ public class FireMessage {
         ItemStack stack = player.getMainHandItem();
         if (!stack.getOrCreateTag().getBoolean("reloading")) {
             if (!player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getInt("ammo") > 0) {
-                player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
-                    capability.recoil = 0.1;
-                    capability.firing = 1;
-                    capability.syncPlayerVariables(player);
-                });
 
                 Level level = player.level();
                 if (!level.isClientSide()) {
@@ -313,6 +301,9 @@ public class FireMessage {
                     serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.M_79_FAR.get(), SoundSource.PLAYERS, 6, 1);
                     serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.M_79_VERYFAR.get(), SoundSource.PLAYERS, 12, 1);
                 }
+
+                stack.getOrCreateTag().putBoolean("shoot",true);
+
                 stack.getOrCreateTag().putInt("fire_animation", 2);
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
             }
@@ -327,12 +318,6 @@ public class FireMessage {
         CompoundTag tag = mainHandItem.getOrCreateTag();
 
         if (!tag.getBoolean("reloading") && !player.getCooldowns().isOnCooldown(mainHandItem.getItem()) && tag.getInt("ammo") > 0) {
-            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.recoilHorizon = Math.random() < 0.5 ? -1 : 1;
-                capability.recoil = 0.1;
-                capability.firing = 1;
-                capability.syncPlayerVariables(player);
-            });
 
             if (!level.isClientSide()) {
                 int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(TargetModEnchantments.MONSTER_HUNTER.get(), mainHandItem);
@@ -365,6 +350,8 @@ public class FireMessage {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.RPG_FAR.get(), SoundSource.PLAYERS, 8, 1);
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.RPG_VERYFAR.get(), SoundSource.PLAYERS, 16, 1);
             }
+
+            tag.putBoolean("shoot",true);
 
             tag.putInt("fire_animation", 2);
             tag.putInt("ammo", tag.getInt("ammo") - 1);

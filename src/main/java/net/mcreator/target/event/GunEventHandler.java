@@ -161,6 +161,9 @@ public class GunEventHandler {
                 for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {
                     gunShoot(player);
                 }
+
+                stack.getOrCreateTag().putBoolean("shoot",true);
+
             }
 
             /*
@@ -229,6 +232,8 @@ public class GunEventHandler {
                     player.playSound(TargetModSounds.MINIGUN_VERYFAR.get(), 24f, pitch);
                 }
             }
+
+            stack.getOrCreateTag().putBoolean("shoot",true);
 
             for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {
                 gunShoot(player);
@@ -320,12 +325,6 @@ public class GunEventHandler {
 
     public static void gunShoot(Player player) {
         ItemStack heldItem = player.getMainHandItem();
-        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            capability.recoilHorizon = 2 * Math.random() - 1;
-            capability.recoil = 0.1;
-            capability.firing = 1;
-            capability.syncPlayerVariables(player);
-        });
 
         if (!player.level().isClientSide()) {
             float headshot = (float) heldItem.getOrCreateTag().getDouble("headshot");
@@ -786,5 +785,4 @@ public class GunEventHandler {
             tag.putBoolean("sentinel_is_charging", false);
         }
     }
-
 }

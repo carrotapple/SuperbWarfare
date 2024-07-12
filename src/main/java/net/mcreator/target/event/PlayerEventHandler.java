@@ -294,6 +294,16 @@ public class PlayerEventHandler {
         Runnable recoilRunnable = () -> {
             while (recoilTimer[0] < recoilDuration) {
 
+                if (tag.getBoolean("shoot")) {
+                    player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        capability.recoilHorizon = 2 * Math.random() - 1;
+                        capability.recoil = 0.1;
+                        capability.firing = 1;
+                        capability.syncPlayerVariables(player);
+                    });
+                    tag.putBoolean("shoot",false);
+                }
+
                 /*
                   开火动画计时器
                  */
@@ -355,6 +365,12 @@ public class PlayerEventHandler {
                     player.yRotO = player.getYRot();
                 }
 
+                double finalRecoil = recoil;
+                player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(c -> {
+                    c.recoil = finalRecoil;
+                    c.syncPlayerVariables(player);
+                });
+
                 /*
                   计算散布
                  */
@@ -406,13 +422,6 @@ public class PlayerEventHandler {
                 if (player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) < 0) {
                     player.getAttribute(TargetModAttributes.SPREAD.get()).setBaseValue(0);
                 }
-
-
-                double finalRecoil = recoil;
-                player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(c -> {
-                    c.recoil = finalRecoil;
-                    c.syncPlayerVariables(player);
-                });
 
                 recoilTimer[0]++;
                 try {
