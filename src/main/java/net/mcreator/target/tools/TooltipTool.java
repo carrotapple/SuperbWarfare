@@ -4,6 +4,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -103,5 +104,9 @@ public class TooltipTool {
         }
 
         addLevelTips(tooltip, stack);
+
+        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                e -> tooltip.add(Component.literal(e.getEnergyStored() + " / " + e.getMaxEnergyStored() + " FE").withStyle(ChatFormatting.GRAY))
+        );
     }
 }

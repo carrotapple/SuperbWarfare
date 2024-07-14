@@ -25,6 +25,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 @Mod.EventBusSubscriber
 public class GunEventHandler {
 
@@ -267,25 +269,33 @@ public class GunEventHandler {
             String origin = stack.getItem().getDescriptionId();
             String name = origin.substring(origin.lastIndexOf(".") + 1);
 
-            if (player.getMainHandItem().getItem() == TargetModItems.SENTINEL.get() && stack.getOrCreateTag().getDouble("power") > 0) {
-                SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, "sentinel_charge_fire_1p"));
-                if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, sound1p, 2f, 1f);
-                }
+            if (stack.getItem() == TargetModItems.SENTINEL.get()) {
+                AtomicBoolean charged = new AtomicBoolean(false);
 
-                SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, "sentinel_charge_fire_3p"));
-                if (sound3p != null) {
-                    player.level().playSound(null, player.getOnPos(), sound3p, SoundSource.PLAYERS, 4f, 1f);
-                }
+                stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                        e -> charged.set(e.getEnergyStored() > 0)
+                );
 
-                SoundEvent soundFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, "sentinel_charge_far"));
-                if (soundFar != null) {
-                    player.playSound(soundFar, 12f, 1f);
-                }
+                if (charged.get()) {
+                    SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, "sentinel_charge_fire_1p"));
+                    if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
+                        SoundTool.playLocalSound(serverPlayer, sound1p, 2f, 1f);
+                    }
 
-                SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, "sentinel_charge_veryfar"));
-                if (soundVeryFar != null) {
-                    player.playSound(soundVeryFar, 24f, 1f);
+                    SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, "sentinel_charge_fire_3p"));
+                    if (sound3p != null) {
+                        player.level().playSound(null, player.getOnPos(), sound3p, SoundSource.PLAYERS, 4f, 1f);
+                    }
+
+                    SoundEvent soundFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, "sentinel_charge_far"));
+                    if (soundFar != null) {
+                        player.playSound(soundFar, 12f, 1f);
+                    }
+
+                    SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, "sentinel_charge_veryfar"));
+                    if (soundVeryFar != null) {
+                        player.playSound(soundVeryFar, 24f, 1f);
+                    }
                 }
             } else {
                 SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_fire_1p"));
@@ -769,7 +779,6 @@ public class GunEventHandler {
         CompoundTag tag = stack.getOrCreateTag();
         //启动换弹
         if (tag.getBoolean("start_sentinel_charge")) {
-
             tag.putInt("sentinel_charge_time", 127);
             stack.getOrCreateTag().putBoolean("sentinel_is_charging", true);
 
@@ -790,7 +799,6 @@ public class GunEventHandler {
                     iEnergyStorage -> iEnergyStorage.receiveEnergy(24000, false)
             );
 
-//            tag.putDouble("power", Mth.clamp(tag.getDouble("power") + 24000,0,240000));
             player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == TargetModItems.SHIELD_CELL.get(), 1, player.inventoryMenu.getCraftSlots());
         }
 

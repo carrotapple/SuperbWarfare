@@ -207,8 +207,6 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
                 energy -> {
                     int energyStored = energy.getEnergyStored();
 
-                    System.out.println("Client:" + world.isClientSide + " " + energyStored);
-
                     if (energyStored > 0) {
                         energy.extractEnergy(5, false);
 

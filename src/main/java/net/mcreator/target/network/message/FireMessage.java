@@ -169,7 +169,6 @@ public class FireMessage {
                     player.playSound(TargetModSounds.BOCEK_ZOOM_FIRE_3P.get(), 2, 1);
                 }
             } else {
-
                 stack.getOrCreateTag().putBoolean("shoot", true);
 
                 for (int index0 = 0; index0 < 10; index0++) {

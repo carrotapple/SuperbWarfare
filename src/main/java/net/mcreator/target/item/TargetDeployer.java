@@ -43,7 +43,7 @@ public class TargetDeployer extends Item {
             }
         }
 
-        player.getInventory().clearOrCountMatchingItems(p -> TargetModItems.TARGET_DEPLOYER.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
+        context.getItemInHand().shrink(1);
         player.swing(InteractionHand.MAIN_HAND, true);
 
         return InteractionResult.SUCCESS;
