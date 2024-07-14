@@ -49,6 +49,7 @@ public class ReloadMessage {
             if (!player.isSpectator()
                     && stack.is(TargetModTags.Items.GUN)
                     && !capability.zooming
+                    && !stack.getOrCreateTag().getBoolean("charging")
                     && !(player.getCooldowns().isOnCooldown(stack.getItem()))
                     && stack.getOrCreateTag().getInt("gun_reloading_time") == 0
             ) {
