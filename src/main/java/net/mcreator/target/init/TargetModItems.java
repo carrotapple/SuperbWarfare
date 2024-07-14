@@ -107,6 +107,7 @@ public class TargetModItems {
     public static final RegistryObject<Item> GALENA = ITEMS.register("galena", Galena::new);
     public static final RegistryObject<Item> SCHEELITE = ITEMS.register("scheelite", Scheelite::new);
     public static final RegistryObject<Item> DOG_TAG = ITEMS.register("dog_tag", DogTag::new);
+    public static final RegistryObject<Item> SHIELD_CELL = ITEMS.register("shield_cell", ShieldCell::new);
 
     public static final RegistryObject<Item> IRON_BARREL = ITEMS.register("iron_barrel", IronBarrel::new);
     public static final RegistryObject<Item> IRON_ACTION = ITEMS.register("iron_action", IronAction::new);

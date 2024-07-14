@@ -104,7 +104,8 @@ public class FireModeMessage {
                     && !capability.zooming
                     && !(player.getCooldowns().isOnCooldown(mainHandItem.getItem()))
                     && mainHandItem.getOrCreateTag().getInt("gun_reloading_time") == 0
-                    && !mainHandItem.getOrCreateTag().getBoolean("sentinel_is_charging")){
+                    && !mainHandItem.getOrCreateTag().getBoolean("sentinel_is_charging")
+                    && tag.getInt("cell_count") > 0) {
 
                 tag.putBoolean("start_sentinel_charge", true);
             }

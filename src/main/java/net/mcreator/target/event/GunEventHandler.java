@@ -782,6 +782,7 @@ public class GunEventHandler {
 
         if (tag.getInt("sentinel_charge_time") == 17) {
             tag.putDouble("power", Mth.clamp(tag.getDouble("power") + 24000,0,240000));
+            player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == TargetModItems.SHIELD_CELL.get(), 1, player.inventoryMenu.getCraftSlots());
         }
 
         if (tag.getInt("sentinel_charge_time") == 1) {

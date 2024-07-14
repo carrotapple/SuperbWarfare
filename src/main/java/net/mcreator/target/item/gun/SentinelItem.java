@@ -171,10 +171,29 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
         TooltipTool.addSentinelTips(list, stack);
     }
 
+    public static int getCellCount(Player player) {
+        int sum = 0;
+        for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
+            ItemStack itemstack = player.getInventory().getItem(i);
+            if (check(itemstack)) {
+                sum += itemstack.getCount();
+            }
+        }
+        return sum;
+    }
+
+    protected static boolean check(ItemStack stack) {
+        return stack.getItem() == TargetModItems.SHIELD_CELL.get();
+    }
+
     @Override
     public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemStack, world, entity, slot, selected);
         var tag = itemStack.getOrCreateTag();
+
+        if (entity instanceof Player player) {
+            tag.putInt("cell_count", getCellCount(player));
+        }
 
         if (tag.getDouble("power") > 0) {
             tag.putDouble("add_damage", 0.2857142857142857 * tag.getDouble("damage") * tag.getDouble("damageadd"));
