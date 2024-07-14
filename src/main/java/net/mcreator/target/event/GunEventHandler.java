@@ -15,6 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -135,8 +136,8 @@ public class GunEventHandler {
 
                 if (player.getMainHandItem().getItem() == TargetModItems.SENTINEL.get()) {
                     stack.getOrCreateTag().putBoolean("zoom_fire", (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming);
-                    if (stack.getOrCreateTag().getDouble("power") > 20) {
-                        stack.getOrCreateTag().putDouble("power", (stack.getOrCreateTag().getDouble("power") - 20));
+                    if (stack.getOrCreateTag().getDouble("power") > 3000) {
+                        stack.getOrCreateTag().putDouble("power", stack.getOrCreateTag().getDouble("power") - 3000);
                     } else {
                         stack.getOrCreateTag().putDouble("power", 0);
                     }
@@ -779,9 +780,11 @@ public class GunEventHandler {
             tag.putInt("sentinel_charge_time", tag.getInt("sentinel_charge_time") - 1);
         }
 
+        if (tag.getInt("sentinel_charge_time") == 17) {
+            tag.putDouble("power", Mth.clamp(tag.getDouble("power") + 24000,0,240000));
+        }
 
         if (tag.getInt("sentinel_charge_time") == 1) {
-            tag.putDouble("power",100);
             tag.putBoolean("sentinel_is_charging", false);
         }
     }

@@ -62,7 +62,7 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public int getBarWidth(ItemStack pStack) {
-        return Math.round((float) ItemNBTTool.getInt(pStack, TAG_POWER, 0) * 13.0F / 100F);
+        return Math.round((float) ItemNBTTool.getInt(pStack, TAG_POWER, 0) * 13.0F / 240000F);
     }
 
     @Override
@@ -117,11 +117,11 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
             }
 
             if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload_empty"));
             }
 
             if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload2"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload_normal"));
             }
 
 
@@ -178,7 +178,7 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
 
         if (tag.getDouble("power") > 0) {
             tag.putDouble("add_damage", 0.2857142857142857 * tag.getDouble("damage") * tag.getDouble("damageadd"));
-            tag.putDouble("power", tag.getDouble("power") - 0.025);
+            tag.putDouble("power", tag.getDouble("power") - 5);
         } else {
             tag.putDouble("add_damage", 0);
         }

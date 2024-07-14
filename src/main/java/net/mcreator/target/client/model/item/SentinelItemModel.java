@@ -35,28 +35,21 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         CoreGeoBone scope = getAnimationProcessor().getBone("scope2");
         CoreGeoBone ammo = getAnimationProcessor().getBone("ammobar");
         CoreGeoBone cb = getAnimationProcessor().getBone("chamber2");
-        CoreGeoBone b1 = getAnimationProcessor().getBone("b1");
-        CoreGeoBone b2 = getAnimationProcessor().getBone("b2");
-        CoreGeoBone b3 = getAnimationProcessor().getBone("b3");
-        CoreGeoBone b4 = getAnimationProcessor().getBone("b4");
-        CoreGeoBone b5 = getAnimationProcessor().getBone("b5");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(TargetModTags.Items.GUN)) return;
 
-        double p = 0;
-        p = player.getPersistentData().getDouble("zoom_pos");
+        double p = player.getPersistentData().getDouble("zoom_pos");
 
-        double zp = 0;
-        zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-        gun.setPosX(3.08f * (float) p);
+        gun.setPosX(2.928f * (float) p);
 
-        gun.setPosY(-1.03f * (float) p - (float) (0.2f * zp));
+        gun.setPosY(-0.062f * (float) p - (float) (0.1f * zp));
 
-        gun.setPosZ(10f * (float) p + (float) (0.5f * zp));
+        gun.setPosZ(10f * (float) p + (float) (0.3f * zp));
 
         gun.setRotZ((float) (0.05f * zp));
 
@@ -100,7 +93,7 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
 
         CoreGeoBone charge = getAnimationProcessor().getBone("charge");
 
-        charge.setRotZ(charge.getRotZ() + times * 0.03f);
+        charge.setRotZ(charge.getRotZ() + times * 0.05f);
 
         if ((stack.getOrCreateTag().getDouble("power") > 0)) {
             charge.setScaleX(1);
@@ -115,10 +108,8 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
         float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
 
-        double y = 0;
-        double x = 0;
-        y = player.getPersistentData().getDouble("y");
-        x = player.getPersistentData().getDouble("x");
+        double y = player.getPersistentData().getDouble("y");
+        double x = player.getPersistentData().getDouble("x");
 
         root.setPosX(PosX);
 
@@ -169,5 +160,13 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         if ((stack.getOrCreateTag().getDouble("ammo") <= 5)) {
             ammo.setScaleX((float) (stack.getOrCreateTag().getDouble("ammo") / 5));
         }
+
+        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+
+        player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
+
+        player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
+
+        player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

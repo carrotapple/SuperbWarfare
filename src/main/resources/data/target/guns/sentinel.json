@@ -17,6 +17,6 @@
   "burst": 0,
   "auto": 0,
   "burst_size": 1,
-  "normal_reload_time": 53,
-  "empty_reload_time": 73
+  "normal_reload_time": 59,
+  "empty_reload_time": 85
 }
