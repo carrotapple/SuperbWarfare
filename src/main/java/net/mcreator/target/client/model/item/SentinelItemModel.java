@@ -8,9 +8,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SentinelItemModel extends GeoModel<SentinelItem> {
     @Override
@@ -89,13 +92,18 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
             shen.setRotX(0.15f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
         }
-        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
+        shen.setPosX(0.5f * (float) fr * (float) ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
 
         CoreGeoBone charge = getAnimationProcessor().getBone("charge");
 
         charge.setRotZ(charge.getRotZ() + times * 0.05f);
 
-        if ((stack.getOrCreateTag().getDouble("power") > 0)) {
+        AtomicBoolean flag = new AtomicBoolean(false);
+        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() > 0)
+        );
+
+        if (flag.get()) {
             charge.setScaleX(1);
             charge.setScaleY(1);
         } else {
@@ -105,8 +113,8 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
-        float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
-        float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
+        float PosX = (float) player.getPersistentData().getDouble("gun_move_posX");
+        float PosY = (float) player.getPersistentData().getDouble("gun_move_posY");
 
         double y = player.getPersistentData().getDouble("y");
         double x = player.getPersistentData().getDouble("x");

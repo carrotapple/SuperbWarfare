@@ -1,6 +1,5 @@
 package net.mcreator.target.network.message;
 
-import net.mcreator.target.TargetMod;
 import net.mcreator.target.entity.*;
 import net.mcreator.target.event.GunEventHandler;
 import net.mcreator.target.init.*;
@@ -48,8 +47,6 @@ public class FireMessage {
         });
         context.setPacketHandled(true);
     }
-
-
 
     public static void pressAction(Player player, int type) {
         Level world = player.level();
@@ -173,7 +170,7 @@ public class FireMessage {
                 }
             } else {
 
-                stack.getOrCreateTag().putBoolean("shoot",true);
+                stack.getOrCreateTag().putBoolean("shoot", true);
 
                 for (int index0 = 0; index0 < 10; index0++) {
                     spawnBullet(player);
@@ -258,7 +255,7 @@ public class FireMessage {
                     level.addFreshEntity(taserBulletProjectile);
                 }
 
-                stack.getOrCreateTag().putBoolean("shoot",true);
+                stack.getOrCreateTag().putBoolean("shoot", true);
 
                 stack.getOrCreateTag().putInt("fire_animation", 4);
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
@@ -302,7 +299,7 @@ public class FireMessage {
                     serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.M_79_VERYFAR.get(), SoundSource.PLAYERS, 12, 1);
                 }
 
-                stack.getOrCreateTag().putBoolean("shoot",true);
+                stack.getOrCreateTag().putBoolean("shoot", true);
 
                 stack.getOrCreateTag().putInt("fire_animation", 2);
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
@@ -351,7 +348,7 @@ public class FireMessage {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.RPG_VERYFAR.get(), SoundSource.PLAYERS, 16, 1);
             }
 
-            tag.putBoolean("shoot",true);
+            tag.putBoolean("shoot", true);
 
             tag.putInt("fire_animation", 2);
             tag.putInt("ammo", tag.getInt("ammo") - 1);

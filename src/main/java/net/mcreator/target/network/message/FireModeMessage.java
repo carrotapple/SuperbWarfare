@@ -104,10 +104,18 @@ public class FireModeMessage {
                     && !capability.zooming
                     && !(player.getCooldowns().isOnCooldown(mainHandItem.getItem()))
                     && mainHandItem.getOrCreateTag().getInt("gun_reloading_time") == 0
-                    && !mainHandItem.getOrCreateTag().getBoolean("sentinel_is_charging")
-                    && tag.getInt("cell_count") > 0) {
+                    && !mainHandItem.getOrCreateTag().getBoolean("sentinel_is_charging")) {
 
-                tag.putBoolean("start_sentinel_charge", true);
+                int count = 0;
+                for (var inv : player.getInventory().items) {
+                    if (inv.is(TargetModItems.SHIELD_CELL.get())) {
+                        count++;
+                    }
+                }
+
+                if (count > 0) {
+                    tag.putBoolean("start_sentinel_charge", true);
+                }
             }
         }
     }
