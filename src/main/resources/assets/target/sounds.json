@@ -629,58 +629,58 @@
     ]
   },
 
-  "kraber_fire_1p": {
+  "ntw_20_fire_1p": {
     "sounds": [
       {
-        "name": "target:kraber/kraber_fire_1p",
+        "name": "target:ntw_20/ntw_20_fire_1p",
         "stream": false
       }
     ]
   },
-  "kraber_fire_3p": {
+  "ntw_20_fire_3p": {
     "sounds": [
       {
-        "name": "target:kraber/kraber_fire_3p",
+        "name": "target:ntw_20/ntw_20_fire_3p",
         "stream": false
       }
     ]
   },
-  "kraber_far": {
+  "ntw_20_far": {
     "sounds": [
       {
-        "name": "target:kraber/kraber_far",
+        "name": "target:ntw_20/ntw_20_far",
         "stream": false
       }
     ]
   },
-  "kraber_veryfar": {
+  "ntw_20_veryfar": {
     "sounds": [
       {
-        "name": "target:kraber/kraber_veryfar",
+        "name": "target:ntw_20/ntw_20_veryfar",
         "stream": false
       }
     ]
   },
-  "kraber_reload_normal": {
+  "ntw_20_reload_normal": {
     "sounds": [
       {
-        "name": "target:kraber/kraber_reload_normal",
+        "name": "target:ntw_20/ntw_20_reload_normal",
         "stream": false
       }
     ]
   },
-  "kraber_reload_empty": {
+  "ntw_20_reload_empty": {
     "sounds": [
       {
-        "name": "target:kraber/kraber_reload_empty",
+        "name": "target:ntw_20/ntw_20_reload_empty",
         "stream": false
       }
     ]
   },
-  "kraber_bolt": {
+  "ntw_20_bolt": {
     "sounds": [
       {
-        "name": "target:kraber/kraber_bolt",
+        "name": "target:ntw_20/ntw_20_bolt",
         "stream": false
       }
     ]

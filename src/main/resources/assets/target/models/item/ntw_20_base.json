@@ -1,0 +1,6 @@
+{
+  "parent": "target:displaysettings/ntw20.item",
+  "textures": {
+    "layer0": "target:item/ntw_20"
+  }
+}

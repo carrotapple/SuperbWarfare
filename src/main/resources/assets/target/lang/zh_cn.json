@@ -35,7 +35,7 @@
   "item.target.hk_416": "Hk-416突击步枪",
   "item.target.hunting_rifle": "猎枪",
   "item.target.svd": "SVD狙击步枪",
-  "item.target.kraber": "克莱贝尔狙击步枪",
+  "item.target.ntw_20": "NTW-20反器材狙击步枪",
 
   "des.target.tips.damage": "伤害: ",
   "des.target.tips.level": "等级: ",
@@ -43,7 +43,7 @@
   "item.target.vector_blueprint": "短剑冲锋枪蓝图",
   "item.target.m_60_blueprint": "M60通用机枪蓝图",
   "item.target.hk_416_blueprint": "Hk-416突击步枪蓝图",
-  "item.target.kraber_blueprint": "克莱贝尔狙击步枪蓝图",
+  "item.target.ntw_20_blueprint": "NTW-20反器材狙击步枪蓝图",
   "item.target.hunting_rifle_blueprint": "猎枪蓝图",
   "item.target.m_79_blueprint": "M79 榴弹发射器蓝图",
   "item.target.m_870_blueprint": "M870霰弹枪蓝图",

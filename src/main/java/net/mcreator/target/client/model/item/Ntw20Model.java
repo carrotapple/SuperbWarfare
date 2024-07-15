@@ -1,7 +1,7 @@
 package net.mcreator.target.client.model.item;
 
 import net.mcreator.target.init.TargetModTags;
-import net.mcreator.target.item.gun.Kraber;
+import net.mcreator.target.item.gun.Ntw20;
 import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -12,30 +12,36 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class KraberItemModel extends GeoModel<Kraber> {
+public class Ntw20Model extends GeoModel<Ntw20> {
     @Override
-    public ResourceLocation getAnimationResource(Kraber animatable) {
-        return new ResourceLocation("target", "animations/kraber.animation.json");
+    public ResourceLocation getAnimationResource(Ntw20 animatable) {
+        return new ResourceLocation("target", "animations/ntw_20.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(Kraber animatable) {
-        return new ResourceLocation("target", "geo/kraber.geo.json");
+    public ResourceLocation getModelResource(Ntw20 animatable) {
+        return new ResourceLocation("target", "geo/ntw_20.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(Kraber animatable) {
-        return new ResourceLocation("target", "textures/item/kraber.png");
+    public ResourceLocation getTextureResource(Ntw20 animatable) {
+        return new ResourceLocation("target", "textures/item/ntw_20.png");
     }
 
     @Override
-    public void setCustomAnimations(Kraber animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(Ntw20 animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone scope = getAnimationProcessor().getBone("scope");
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
         CoreGeoBone l = getAnimationProcessor().getBone("l");
         CoreGeoBone r = getAnimationProcessor().getBone("r");
+        CoreGeoBone action = getAnimationProcessor().getBone("action");
+        CoreGeoBone body = getAnimationProcessor().getBone("body");
+        CoreGeoBone jing = getAnimationProcessor().getBone("jing");
+        CoreGeoBone base = getAnimationProcessor().getBone("base");
+        CoreGeoBone lh = getAnimationProcessor().getBone("lh");
+        CoreGeoBone rex = getAnimationProcessor().getBone("rex");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -61,25 +67,40 @@ public class KraberItemModel extends GeoModel<Kraber> {
             shen.setRotX(0.1f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
         }
+
+        action.setPosZ(3 * (float) fp);
+        lh.setPosZ(-3 * (float) fp);
+
         shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
 
-        double p = 0;
-        p = player.getPersistentData().getDouble("zoom_pos");
+        double p = player.getPersistentData().getDouble("zoom_pos");
+        double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-        double zp = 0;
-        zp = player.getPersistentData().getDouble("zoom_pos_z");
+        gun.setPosX(4.528f * (float) p);
 
-        gun.setPosX(6.298f * (float) p);
+        gun.setPosY(-0.43f * (float) p - (float) (0.2f * zp));
 
-        gun.setPosY(0.32f * (float) p - (float) (0.2f * zp));
-
-        gun.setPosZ(10.4f * (float) p + (float) (0.3f * zp));
+        gun.setPosZ(10.0f * (float) p + (float) (0.3f * zp));
 
         gun.setRotZ((float) (0.02f * zp));
 
         gun.setScaleZ(1f - (0.8f * (float) p));
 
-        scope.setScaleZ(1f - (0.9f * (float) p));
+        scope.setScaleZ(1f - (0.85f * (float) p));
+
+        if (gun.getPosX() > 2.5f) {
+            rex.setHidden(false);
+            action.setHidden(true);
+            body.setHidden(true);
+            jing.setHidden(true);
+            base.setHidden(true);
+        } else {
+            rex.setHidden(true);
+            action.setHidden(false);
+            body.setHidden(false);
+            jing.setHidden(false);
+            base.setHidden(false);
+        }
 
         if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
             flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
@@ -134,5 +155,13 @@ public class KraberItemModel extends GeoModel<Kraber> {
         move.setRotY(0.6f * Mth.DEG_TO_RAD * (float) yRot);
 
         move.setRotZ(2.7f * (float) m + Mth.DEG_TO_RAD * (float) zRot);
+
+        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+
+        player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
+
+        player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
+
+        player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

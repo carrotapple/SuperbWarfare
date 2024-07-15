@@ -9,8 +9,8 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class KRABERBlueprint extends Item {
-    public KRABERBlueprint() {
+public class Ntw20Blueprint extends Item {
+    public Ntw20Blueprint() {
         super(new Item.Properties().stacksTo(64).rarity(RarityTool.SPECIAL));
     }
 

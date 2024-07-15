@@ -37,7 +37,7 @@ public class TargetModTabs {
                                 output.accept(HuntingRifle.getGunInstance());
                                 output.accept(M98bItem.getGunInstance());
                                 output.accept(SentinelItem.getGunInstance());
-                                output.accept(Kraber.getGunInstance());
+                                output.accept(Ntw20.getGunInstance());
                                 output.accept(M870Item.getGunInstance());
                                 output.accept(Aa12Item.getGunInstance());
                                 output.accept(Devotion.getGunInstance());

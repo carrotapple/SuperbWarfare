@@ -11,14 +11,14 @@
       "item": "minecraft:diamond"
     },
     "b": {
-      "item": "target:kraber_blueprint"
+      "item": "target:ntw_20_blueprint"
     },
     "c": {
       "item": "minecraft:lapis_lazuli"
     }
   },
   "result": {
-    "item": "target:kraber_blueprint",
+    "item": "target:ntw_20_blueprint",
     "count": 2
   }
 }

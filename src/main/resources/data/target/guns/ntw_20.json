@@ -1,17 +1,17 @@
 {
   "zoom_speed": 0.6,
-  "zoom": 6,
+  "zoom": 8,
   "min_zoom": 4,
-  "max_zoom": 10,
+  "max_zoom": 8,
   "bipod": 1,
   "dev": 6,
-  "recoil_x": 0.008,
-  "recoil_y": 0.018,
-  "damage": 70,
+  "recoil_x": 0.002,
+  "recoil_y": 0.088,
+  "damage": 140,
   "headshot": 3,
-  "velocity": 32.5,
+  "velocity": 31,
   "projectile_amount": 1,
-  "mag": 4,
+  "mag": 3,
   "fire_interval": 10,
   "bolt_action_time": 30,
   "weight": 2,
@@ -20,6 +20,6 @@
   "burst": 0,
   "auto": 0,
   "burst_size": 1,
-  "normal_reload_time": 68,
-  "empty_reload_time": 86
+  "normal_reload_time": 64,
+  "empty_reload_time": 87
 }

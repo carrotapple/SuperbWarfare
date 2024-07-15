@@ -39,7 +39,7 @@ public class TargetModItems {
     public static final RegistryObject<Item> M_98B = GUNS.register("m_98b", M98bItem::new);
     public static final RegistryObject<Item> SENTINEL = GUNS.register("sentinel", SentinelItem::new);
     public static final RegistryObject<Item> HUNTING_RIFLE = GUNS.register("hunting_rifle", HuntingRifle::new);
-    public static final RegistryObject<Item> KRABER = GUNS.register("kraber", Kraber::new);
+    public static final RegistryObject<Item> NTW_20 = GUNS.register("ntw_20", Ntw20::new);
     public static final RegistryObject<Item> M_870 = GUNS.register("m_870", M870Item::new);
     public static final RegistryObject<Item> AA_12 = GUNS.register("aa_12", Aa12Item::new);
     public static final RegistryObject<Item> DEVOTION = GUNS.register("devotion", Devotion::new);
@@ -142,7 +142,7 @@ public class TargetModItems {
     public static final RegistryObject<Item> HK_416_BLUEPRINT = ITEMS.register("hk_416_blueprint", HK416Blueprint::new);
     public static final RegistryObject<Item> RPK_BLUEPRINT = ITEMS.register("rpk_blueprint", RPKBlueprint::new);
     public static final RegistryObject<Item> SKS_BLUEPRINT = ITEMS.register("sks_blueprint", SKSBlueprint::new);
-    public static final RegistryObject<Item> KRABER_BLUEPRINT = ITEMS.register("kraber_blueprint", KRABERBlueprint::new);
+    public static final RegistryObject<Item> NTW_20_BLUEPRINT = ITEMS.register("ntw_20_blueprint", Ntw20Blueprint::new);
     public static final RegistryObject<Item> VECTOR_BLUEPRINT = ITEMS.register("vector_blueprint", VectorBlueprint::new);
     public static final RegistryObject<Item> MINIGUN_BLUEPRINT = ITEMS.register("minigun_blueprint", MinigunBlueprint::new);
     public static final RegistryObject<Item> MK_14_BLUEPRINT = ITEMS.register("mk_14_blueprint", Mk14Blueprint::new);

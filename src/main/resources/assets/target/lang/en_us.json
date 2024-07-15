@@ -35,7 +35,7 @@
   "item.target.hk_416": "Hk-416",
   "item.target.hunting_rifle": "HUNTING RIFLE",
   "item.target.svd": "SVD",
-  "item.target.kraber": "KRABER",
+  "item.target.ntw_20": "NTW-20",
 
   "des.target.tips.damage": "Damage: ",
   "des.target.tips.level": "Level: ",
@@ -43,7 +43,7 @@
   "item.target.vector_blueprint": "VECTOR Blueprint",
   "item.target.m_60_blueprint": "M60 Blueprint",
   "item.target.hk_416_blueprint": "Hk-416 Blueprint",
-  "item.target.kraber_blueprint": "KRABER  Blueprint",
+  "item.target.ntw_20_blueprint": "NTW-20 Blueprint",
   "item.target.hunting_rifle_blueprint": "HUNTING RIFLE Blueprint",
   "item.target.m_79_blueprint": "M79 Blueprint",
   "item.target.m_870_blueprint": "M870 Blueprint",

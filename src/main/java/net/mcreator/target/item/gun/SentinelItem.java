@@ -9,6 +9,7 @@ import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.AnimatedItem;
+import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.RarityTool;
 import net.mcreator.target.tools.TooltipTool;
@@ -131,11 +132,11 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.draw"));
             }
 
-            if (stack.getOrCreateTag().getBoolean("zoom_fire") && stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming && stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.shift2"));
             }
 
-            if (!stack.getOrCreateTag().getBoolean("zoom_fire") && stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+            if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.shift"));
             }
 

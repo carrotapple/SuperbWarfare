@@ -188,7 +188,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "target:kraber_blueprint",
+          "name": "target:ntw_20_blueprint",
           "weight": 30,
           "functions": [
             {

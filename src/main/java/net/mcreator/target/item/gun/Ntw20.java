@@ -3,28 +3,28 @@ package net.mcreator.target.item.gun;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.client.renderer.item.KraberItemRenderer;
+import net.mcreator.target.client.renderer.item.Ntw20Renderer;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.item.AnimatedItem;
-import net.mcreator.target.tools.*;
+import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.tools.GunsTool;
+import net.mcreator.target.tools.RarityTool;
+import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -45,21 +45,21 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class Kraber extends GunItem implements GeoItem, AnimatedItem {
+public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
-    public Kraber() {
+    public Ntw20() {
         super(new Item.Properties().stacksTo(1).rarity(RarityTool.SPECIAL));
     }
 
     @Override
     public Set<SoundEvent> getReloadSound() {
         return Set.of(
-                TargetModSounds.KRABER_RELOAD_EMPTY.get(),
-                TargetModSounds.KRABER_RELOAD_NORMAL.get(),
-                TargetModSounds.KRABER_BOLT.get()
+                TargetModSounds.NTW_20_RELOAD_EMPTY.get(),
+                TargetModSounds.NTW_20_RELOAD_NORMAL.get(),
+                TargetModSounds.NTW_20_BOLT.get()
         );
     }
 
@@ -67,7 +67,7 @@ public class Kraber extends GunItem implements GeoItem, AnimatedItem {
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
-            private final BlockEntityWithoutLevelRenderer renderer = new KraberItemRenderer();
+            private final BlockEntityWithoutLevelRenderer renderer = new Ntw20Renderer();
 
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
@@ -94,30 +94,34 @@ public class Kraber extends GunItem implements GeoItem, AnimatedItem {
         if (this.animationProcedure.equals("empty")) {
 
             if (stack.getOrCreateTag().getInt("draw_time") < 29) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.kraber.draw"));
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.draw"));
+            }
+
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming && stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.shift2"));
             }
 
             if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.kraber.shift"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.shift"));
             }
 
             if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.kraber.fire"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.fire"));
             }
 
             if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.kraber.reload"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.reload_empty"));
             }
 
             if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.kraber.reload2"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.reload_normal"));
             }
 
             if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.kraber.run"));
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.run"));
             }
 
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.kraber.idle"));
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.idle"));
         }
         return PlayState.STOP;
     }
@@ -179,8 +183,8 @@ public class Kraber extends GunItem implements GeoItem, AnimatedItem {
     }
 
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(TargetModItems.KRABER.get());
-        GunsTool.initCreativeGun(stack, TargetModItems.KRABER.getId().getPath());
+        ItemStack stack = new ItemStack(TargetModItems.NTW_20.get());
+        GunsTool.initCreativeGun(stack, TargetModItems.NTW_20.getId().getPath());
         return stack;
     }
 
@@ -191,11 +195,11 @@ public class Kraber extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(TargetMod.MODID, "textures/gun_icon/kraber_icon.png");
+        return new ResourceLocation(TargetMod.MODID, "textures/gun_icon/ntw_20_icon.png");
     }
 
     @Override
     public String getGunDisplayName() {
-        return "KRABER";
+        return "NTW_20";
     }
 }
