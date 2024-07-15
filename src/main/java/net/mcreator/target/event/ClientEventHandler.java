@@ -11,7 +11,9 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -55,6 +57,20 @@ public class ClientEventHandler {
             handleShockCamera(event, living);
             handlePlayerCameraShake(event, living);
             handleBowPullAnimation(living);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRenderHand(RenderHandEvent event) {
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+
+        InteractionHand hand = Minecraft.getInstance().options.mainHand().get() == HumanoidArm.RIGHT ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
+
+        if (event.getHand() == hand) {
+            if (player.getMainHandItem().is(TargetModTags.Items.GUN)) {
+                event.setCanceled(true);
+            }
         }
     }
 
@@ -113,7 +129,7 @@ public class ClientEventHandler {
 
             float times = 90f / fps;
             var data = entity.getPersistentData();
-            double move_speed = (float) Mth.clamp(entity.getDeltaMovement().horizontalDistanceSqr(),0,0.02);
+            double move_speed = (float) Mth.clamp(entity.getDeltaMovement().horizontalDistanceSqr(), 0, 0.02);
             double on_ground;
             if (entity.onGround()) {
                 if (entity.isSprinting()) {
@@ -206,9 +222,9 @@ public class ClientEventHandler {
 
             if (-0.8 < velocity + 0.078 && velocity + 0.078 < 0.8) {
                 if (data.getDouble("vy") < entity.getDeltaMovement().y() + 0.078) {
-                    data.putDouble("vy",Mth.clamp(((data.getDouble("vy") + 0.35 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.8 * data.getDouble("zoom_time"))),-0.8,0.8));
+                    data.putDouble("vy", Mth.clamp(((data.getDouble("vy") + 0.35 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.8 * data.getDouble("zoom_time"))), -0.8, 0.8));
                 } else {
-                    data.putDouble("vy",Mth.clamp(((data.getDouble("vy") - 0.35 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.8 * data.getDouble("zoom_time"))),-0.8,0.8));
+                    data.putDouble("vy", Mth.clamp(((data.getDouble("vy") - 0.35 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.8 * data.getDouble("zoom_time"))), -0.8, 0.8));
                 }
             }
         }
