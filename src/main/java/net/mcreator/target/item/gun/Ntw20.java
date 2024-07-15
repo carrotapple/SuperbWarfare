@@ -200,6 +200,6 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public String getGunDisplayName() {
-        return "NTW_20";
+        return "NTW-20";
     }
 }

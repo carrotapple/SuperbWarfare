@@ -8,6 +8,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TooltipTool {
 
@@ -85,9 +86,13 @@ public class TooltipTool {
     public static void addSentinelTips(List<Component> tooltip, ItemStack stack) {
         tooltip.add(Component.literal(""));
 
-        boolean flag = ItemNBTTool.getDouble(stack, "charging_time", 0) > 0;
+        AtomicBoolean flag = new AtomicBoolean(false);
 
-        if (flag) {
+        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                e -> flag.set(e.getEnergyStored() > 0)
+        );
+
+        if (flag.get()) {
             double damage = (ItemNBTTool.getDouble(stack, "damage", 0) +
                     ItemNBTTool.getDouble(stack, "add_damage", 0))
                     * ItemNBTTool.getDouble(stack, "damageadd", 1);
