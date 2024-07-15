@@ -76,9 +76,9 @@ public class Ntw20Model extends GeoModel<Ntw20> {
         double p = player.getPersistentData().getDouble("zoom_pos");
         double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-        gun.setPosX(4.53f * (float) p);
+        gun.setPosX(4.54f * (float) p);
 
-        gun.setPosY(-0.44f * (float) p - (float) (0.2f * zp));
+        gun.setPosY(-0.45f * (float) p - (float) (0.2f * zp));
 
         gun.setPosZ(10.0f * (float) p + (float) (0.3f * zp));
 
@@ -88,7 +88,7 @@ public class Ntw20Model extends GeoModel<Ntw20> {
 
         scope.setScaleZ(1f - (0.85f * (float) p));
 
-        if (gun.getPosX() > 2.5f) {
+        if (gun.getPosX() > 4.3f) {
             rex.setHidden(false);
             action.setHidden(true);
             body.setHidden(true);
