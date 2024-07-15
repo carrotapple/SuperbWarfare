@@ -1,31 +1,18 @@
 package net.mcreator.target.item;
 
 import net.mcreator.target.init.TargetModEntities;
-import net.mcreator.target.init.TargetModItems;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
-
-import java.util.List;
 
 public class TargetDeployer extends Item {
     public TargetDeployer() {
-        super(new Item.Properties().stacksTo(1).rarity(Rarity.COMMON));
-    }
-
-    @Override
-    public void appendHoverText(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag) {
-        super.appendHoverText(itemstack, world, list, flag);
+        super(new Item.Properties());
     }
 
     @Override
