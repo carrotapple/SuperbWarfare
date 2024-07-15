@@ -127,7 +127,7 @@ public class FireMessage {
 
         // 栓动武器左键手动拉栓
         if (tag.getInt("bolt_action_time") > 0 && tag.getInt("ammo") > 0 && tag.getInt("bolt_action_anim") == 0) {
-            if (!player.getCooldowns().isOnCooldown(handItem.getItem()) && handItem.getOrCreateTag().getDouble("need_bolt_action") == 1) {
+            if (!player.getCooldowns().isOnCooldown(handItem.getItem()) && handItem.getOrCreateTag().getBoolean("need_bolt_action")) {
                 handItem.getOrCreateTag().putInt("bolt_action_anim", handItem.getOrCreateTag().getInt("bolt_action_time"));
                 GunEventHandler.playGunBoltSounds(player);
             }

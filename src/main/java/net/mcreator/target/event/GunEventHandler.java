@@ -72,7 +72,7 @@ public class GunEventHandler {
                     && !stack.getOrCreateTag().getBoolean("charging")
                     && stack.getOrCreateTag().getInt("ammo") > 0
                     && !player.getCooldowns().isOnCooldown(stack.getItem())
-                    && stack.getOrCreateTag().getDouble("need_bolt_action") == 0) {
+                    && !stack.getOrCreateTag().getBoolean("need_bolt_action")) {
 
                 playGunSounds(player);
 
