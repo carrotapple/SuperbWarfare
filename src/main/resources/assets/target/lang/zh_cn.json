@@ -220,6 +220,7 @@
   "enchantment.target.monster_hunter.desc": "增加对怪物的子弹伤害",
 
   "des.target.sensitivity": "当前枪械的灵敏度为：%1$s",
+  "des.target.need_bolt_action": "【需要拉栓】",
 
   "commands.ammo.get": "当前%s弹药数量: %s",
   "commands.ammo.set": "为%3$s位玩家的%1$s弹药数量设置为%2$s",

@@ -6,9 +6,12 @@ import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.event.TickEvent;
@@ -28,12 +31,12 @@ public class CrossHairOverlay {
     public static void eventHandler(RenderGuiEvent.Pre event) {
         int w = event.getWindow().getGuiScaledWidth();
         int h = event.getWindow().getGuiScaledHeight();
-        Player entity = Minecraft.getInstance().player;
-        if (entity == null) {
+        Player player = Minecraft.getInstance().player;
+        if (player == null) {
             return;
         }
 
-        double spread = entity.getPersistentData().getDouble("crosshair");
+        double spread = player.getPersistentData().getDouble("crosshair");
 
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
@@ -42,7 +45,7 @@ public class CrossHairOverlay {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
-        if (shouldRenderCrossHair(entity)) {
+        if (shouldRenderCrossHair(player)) {
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("target:textures/screens/point.png"), w / 2f - 7.5f, h / 2f - 8, 0, 0, 16, 16, 16, 16);
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("target:textures/screens/rexheng.png"), w / 2f - 9.5f - 2.8f * (float) spread, h / 2f - 8, 0, 0, 16, 16, 16, 16);
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("target:textures/screens/rexheng.png"), w / 2f - 6.5f + 2.8f * (float) spread, h / 2f - 8, 0, 0, 16, 16, 16, 16);
@@ -74,6 +77,17 @@ public class CrossHairOverlay {
         RenderSystem.enableDepthTest();
         RenderSystem.disableBlend();
         RenderSystem.setShaderColor(1, 1, 1, 1);
+
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return;
+
+        if (stack.getOrCreateTag().getBoolean("need_bolt_action")) {
+            Font font = Minecraft.getInstance().font;
+            Component component = Component.translatable("des.target.need_bolt_action");
+
+            event.getGuiGraphics().drawString(font, component, w / 2 - font.width(component) / 2, h / 2 + 50, 0xFF6969);
+        }
+
     }
 
     private static boolean shouldRenderCrossHair(Player player) {

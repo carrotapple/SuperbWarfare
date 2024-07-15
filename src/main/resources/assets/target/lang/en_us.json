@@ -220,6 +220,7 @@
   "enchantment.target.monster_hunter.desc": "Increases bullet damage against monsters",
 
   "des.target.sensitivity": "Current Sensitivity of This Gun: %1$s",
+  "des.target.need_bolt_action": "[ Need Bolt Action ]",
 
   "commands.ammo.get": "Current %s ammo: %s",
   "commands.ammo.set": "Set %s ammo to %s for %s players",
