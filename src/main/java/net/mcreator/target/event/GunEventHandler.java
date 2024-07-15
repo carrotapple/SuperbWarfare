@@ -296,28 +296,29 @@ public class GunEventHandler {
                     if (soundVeryFar != null) {
                         player.playSound(soundVeryFar, 24f, 1f);
                     }
-                }
-            } else {
-                SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_fire_1p"));
-                if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, sound1p, 2f, 1f);
-                }
 
-                SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_fire_3p"));
-                if (sound3p != null) {
-                    player.level().playSound(null, player.getOnPos(), sound3p, SoundSource.PLAYERS, 4f, 1f);
+                    return;
                 }
+            }
 
-                SoundEvent soundFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_far"));
-                if (soundFar != null) {
-                    player.playSound(soundFar, 12f, 1f);
-                }
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_fire_1p"));
+            if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
+                SoundTool.playLocalSound(serverPlayer, sound1p, 2f, 1f);
+            }
 
-                SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_veryfar"));
-                if (soundVeryFar != null) {
-                    player.playSound(soundVeryFar, 24f, 1f);
-                }
+            SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_fire_3p"));
+            if (sound3p != null) {
+                player.level().playSound(null, player.getOnPos(), sound3p, SoundSource.PLAYERS, 4f, 1f);
+            }
 
+            SoundEvent soundFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_far"));
+            if (soundFar != null) {
+                player.playSound(soundFar, 12f, 1f);
+            }
+
+            SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(TargetMod.MODID, name + "_veryfar"));
+            if (soundVeryFar != null) {
+                player.playSound(soundVeryFar, 24f, 1f);
             }
         }
     }
