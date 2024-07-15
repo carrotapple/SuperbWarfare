@@ -115,22 +115,7 @@
 		},
 		"animation.ntw_20.fire": {
 			"loop": "hold_on_last_frame",
-			"animation_length": 0.7917,
-			"bones": {
-				"0": {
-					"rotation": {
-						"0.0": {
-							"vector": [-2.9962, -0.10977, -1.3475],
-							"easing": "easeInElastic"
-						},
-						"0.1667": {
-							"vector": [0, 0, 0],
-							"easing": "easeInElastic",
-							"easingArgs": [3]
-						}
-					}
-				}
-			}
+			"animation_length": 0.7917
 		},
 		"animation.ntw_20.shift": {
 			"loop": "hold_on_last_frame",
