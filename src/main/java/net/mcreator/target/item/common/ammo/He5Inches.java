@@ -58,7 +58,7 @@ public class He5Inches extends Item {
         if (level instanceof ServerLevel server) {
             MortarShellEntity entityToSpawn = new MortarShellEntity(TargetModEntities.MORTAR_SHELL.get(), player, level);
             entityToSpawn.setPos(cannon.getX(), cannon.getEyeY(), cannon.getZ());
-            entityToSpawn.shoot(cannon.getLookAngle().x, cannon.getLookAngle().y, cannon.getLookAngle().z, 20, 0.1f);
+            entityToSpawn.shoot(cannon.getLookAngle().x, cannon.getLookAngle().y, cannon.getLookAngle().z, 10, 0.1f);
             level.addFreshEntity(entityToSpawn);
 
             if (player instanceof ServerPlayer serverPlayer) {
@@ -67,6 +67,29 @@ public class He5Inches extends Item {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.MK_42_FAR.get(), SoundSource.PLAYERS, 16, 1);
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.MK_42_VERYFAR.get(), SoundSource.PLAYERS, 32, 1);
             }
+
+            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                    cannon.getX() + 5 * cannon.getLookAngle().x,
+                    cannon.getY(),
+                    cannon.getZ() + 5 * cannon.getLookAngle().z,
+                    200, 5, 0.02, 5, 0.005);
+
+            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                    cannon.getX() + 10 * cannon.getLookAngle().x,
+                    cannon.getEyeY() + 10 * cannon.getLookAngle().y,
+                    cannon.getZ() + 10 * cannon.getLookAngle().z,
+                    100, 0.5, 0.5, 0.5, 0.05);
+
+//            for (int index0 = 0; index0 < 40; index0++) {
+//                level.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+//                        cannon.getX() + 8 * cannon.getLookAngle().x,
+//                        cannon.getEyeY() + 8 * cannon.getLookAngle().y,
+//                        cannon.getZ() + 8 * cannon.getLookAngle().z,
+//                        (2 + 0.5 * (Math.random() - 0.5)) * cannon.getLookAngle().x,
+//                        (2 + 0.5 * (Math.random() - 0.5)) * cannon.getLookAngle().y,
+//                        (2 + 0.5 * (Math.random() - 0.5)) * cannon.getLookAngle().z);
+//            }
+
 
 //            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, (player.getX() + 3 * player.getLookAngle().x), (player.getY() + 0.1 + 3 * player.getLookAngle().y), (player.getZ() + 3 * player.getLookAngle().z), 40, 0.4, 0.4, 0.4,
 //                    0.01);

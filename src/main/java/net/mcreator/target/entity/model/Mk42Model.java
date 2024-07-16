@@ -27,10 +27,8 @@ public class Mk42Model extends GeoModel<Mk42Entity> {
 
     @Override
     public void setCustomAnimations(Mk42Entity animatable, long instanceId, AnimationState animationState) {
-
         CoreGeoBone barrle = getAnimationProcessor().getBone("maingun");
         EntityModelData entityData = (EntityModelData) animationState.getData(DataTickets.ENTITY_MODEL_DATA);
         barrle.setRotX((entityData.headPitch()) * Mth.DEG_TO_RAD);
-
     }
 }

@@ -207,43 +207,25 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
     @Override
     public void baseTick() {
         super.baseTick();
-        double[] Timer = {0};
-        double totalTime = 10;
-        int sleepTime = 2;
-        double Duration = totalTime / sleepTime;
-        Runnable Runnable = () -> {
-            while (Timer[0] < Duration) {
 
-                if (this.getFirstPassenger() == null) return;
+        if (this.getFirstPassenger() == null) return;
 
-                Entity gunner = this.getFirstPassenger();
+        Entity gunner = this.getFirstPassenger();
 
-                float adjust_rateX = (float) Mth.clamp(Math.pow(gunner.getXRot() - this.getXRot(), 2),0,5f);
-                float adjust_rateY = (float) Mth.clamp(Math.pow(gunner.getYRot() - this.getYRot(), 2),0,3f);
+        float adjust_rateX = (float) Mth.clamp(Math.pow(gunner.getXRot() - this.getXRot(), 2),0,5f);
+        float adjust_rateY = (float) Mth.clamp(Math.pow(gunner.getYRot() - this.getYRot(), 2),0,3f);
 
-                if (RotY < gunner.getYRot()) {
-                    RotY = (float) Mth.clamp(this.yHeadRot + adjust_rateY,Double.NEGATIVE_INFINITY, gunner.getYRot());
-                } else {
-                    RotY = (float) Mth.clamp(this.yHeadRot- adjust_rateY,gunner.getYRot(),Double.POSITIVE_INFINITY);
-                }
+        if (RotY < gunner.getYRot()) {
+            RotY = (float) Mth.clamp(this.yHeadRot + adjust_rateY,Double.NEGATIVE_INFINITY, gunner.getYRot());
+        } else {
+            RotY = (float) Mth.clamp(this.yHeadRot- adjust_rateY,gunner.getYRot(),Double.POSITIVE_INFINITY);
+        }
 
-                if (RotX < gunner.getXRot()) {
-                    RotX = Mth.clamp((Mth.clamp(this.getXRot() + adjust_rateX,-85 ,15)),-85, gunner.getXRot());
-                } else {
-                    RotX = Mth.clamp((Mth.clamp(this.getXRot() - adjust_rateX,-85 ,15)),gunner.getXRot(),15);
-                }
-
-
-                Timer[0]++;
-                try {
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        Thread Thread = new Thread(Runnable);
-        Thread.start();
+        if (RotX < gunner.getXRot()) {
+            RotX = Mth.clamp((Mth.clamp(this.getXRot() + adjust_rateX,-85 ,15)),-85, gunner.getXRot());
+        } else {
+            RotX = Mth.clamp((Mth.clamp(this.getXRot() - adjust_rateX,-85 ,15)),gunner.getXRot(),15);
+        }
 
         this.refreshDimensions();
     }

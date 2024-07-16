@@ -1194,7 +1194,19 @@
   "mk_42_fire_1p": {
     "sounds": [
       {
-        "name": "target:mk_42/mk_42_fire_1p",
+        "name": "target:mk_42/mk_42_fire_1p_1",
+        "stream": false
+      },
+      {
+        "name": "target:mk_42/mk_42_fire_1p_2",
+        "stream": false
+      },
+      {
+        "name": "target:mk_42/mk_42_fire_1p_3",
+        "stream": false
+      },
+      {
+        "name": "target:mk_42/mk_42_fire_1p_4",
         "stream": false
       }
     ]
