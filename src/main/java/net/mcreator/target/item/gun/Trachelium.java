@@ -129,18 +129,13 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         AnimationController<Trachelium> procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
         data.add(procedureController);
-        AnimationController<Trachelium> idleController = new AnimationController<>(this, "idleController", 6, this::idlePredicate);
+        AnimationController<Trachelium> idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        return true;
     }
 
     @Override
@@ -153,11 +148,6 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
                     new AttributeModifier(uuid, TargetMod.ATTRIBUTE_MODIFIER, -0.02f, AttributeModifier.Operation.MULTIPLY_BASE));
         }
         return map;
-    }
-
-    @Override
-    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-        return slotChanged;
     }
 
     @Override

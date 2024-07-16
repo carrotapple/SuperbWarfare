@@ -95,11 +95,11 @@ public class Abekiri extends GunItem implements GeoItem, AnimatedItem {
             }
 
             if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ab.reload2"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ab.reload_empty"));
             }
 
             if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ab.reload"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ab.reload_normal"));
             }
 
             if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
@@ -135,16 +135,6 @@ public class Abekiri extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        return true;
-    }
-
-    @Override
-    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-        return false;
     }
 
     @Override

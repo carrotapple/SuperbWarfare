@@ -40,7 +40,6 @@ public class Ntw20Model extends GeoModel<Ntw20> {
         CoreGeoBone body = getAnimationProcessor().getBone("body");
         CoreGeoBone jing = getAnimationProcessor().getBone("jing");
         CoreGeoBone base = getAnimationProcessor().getBone("base");
-        CoreGeoBone lh = getAnimationProcessor().getBone("lh");
         CoreGeoBone rex = getAnimationProcessor().getBone("rex");
 
         Player player = Minecraft.getInstance().player;
@@ -67,9 +66,6 @@ public class Ntw20Model extends GeoModel<Ntw20> {
             shen.setRotX(0.1f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
         }
-
-        action.setPosZ(3 * (float) fp);
-        lh.setPosZ(-3 * (float) fp);
 
         shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
 

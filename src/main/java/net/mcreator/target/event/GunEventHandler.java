@@ -137,18 +137,10 @@ public class GunEventHandler {
                 }
 
                 if (stack.getItem() == TargetModItems.SENTINEL.get()) {
-                    stack.getOrCreateTag().putBoolean("zoom_fire", (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming);
-
                     stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                             iEnergyStorage -> iEnergyStorage.extractEnergy(3000, false)
                     );
-
-//                    if (stack.getOrCreateTag().getDouble("power") > 3000) {
-//                        stack.getOrCreateTag().putDouble("power", stack.getOrCreateTag().getDouble("power") - 3000);
-//                    } else {
-//                        stack.getOrCreateTag().putDouble("power", 0);
-//                    }
-                    stack.getOrCreateTag().putDouble("crot", 20);
+                    stack.getOrCreateTag().putDouble("chamber_rot", 20);
                 }
 
                 int zoom_add_cooldown = 0;

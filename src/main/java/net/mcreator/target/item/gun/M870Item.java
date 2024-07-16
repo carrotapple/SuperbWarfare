@@ -164,16 +164,6 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        return true;
-    }
-
-    @Override
-    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-        return false;
-    }
-
-    @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> map = super.getAttributeModifiers(slot, stack);
         UUID uuid = new UUID(slot.toString().hashCode(), 0);

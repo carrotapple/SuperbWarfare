@@ -66,7 +66,7 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         }
         float times = 250f / fps;
 
-        cb.setRotZ(cb.getRotZ() + times * 0.03f * (float) (stack.getOrCreateTag().getDouble("crot")));
+        cb.setRotZ(cb.getRotZ() + times * 0.03f * (float) (stack.getOrCreateTag().getDouble("chamber_rot")));
 
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
         if (gun.getPosX() > 1.8) {

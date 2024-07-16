@@ -120,17 +120,13 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState<SentinelItem> event) {
+    private PlayState fireAnimPredicate(AnimationState event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
-
-            if (stack.getOrCreateTag().getInt("draw_time") < 16) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.draw"));
-            }
 
             if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming && stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.shift2"));
@@ -156,7 +152,27 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.charge"));
             }
 
-            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.idle"));
+        }
+        return PlayState.STOP;
+    }
+
+    private PlayState idlePredicate(AnimationState<SentinelItem> event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
+
+        if (this.animationProcedure.equals("empty")) {
+
+            if (stack.getOrCreateTag().getInt("draw_time") < 16) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.draw"));
+            }
+
+            if (player.isSprinting() && player.onGround()
+                    && player.getPersistentData().getDouble("noRun") == 0
+                    && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+                    && !stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.run"));
             }
 
@@ -182,8 +198,8 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        var procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
-        data.add(procedureController);
+        var fireAnimController = new AnimationController<>(this, "fireAnimController", 1, this::fireAnimPredicate);
+        data.add(fireAnimController);
         var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
         data.add(idleController);
     }
@@ -218,8 +234,8 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
                 }
         );
 
-        if (tag.getDouble("crot") > 0) {
-            tag.putDouble("crot", tag.getDouble("crot") - 1);
+        if (tag.getDouble("chamber_rot") > 0) {
+            tag.putDouble("chamber_rot", tag.getDouble("chamber_rot") - 1);
         }
     }
 
@@ -231,16 +247,6 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
                 TargetModSounds.SENTINEL_CHARGE.get(),
                 TargetModSounds.SENTINEL_BOLT.get()
         );
-    }
-
-    @Override
-    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        return true;
-    }
-
-    @Override
-    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-        return false;
     }
 
     @Override

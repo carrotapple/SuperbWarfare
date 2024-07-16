@@ -44,7 +44,7 @@ public class AbekiriItemModel extends GeoModel<Abekiri> {
         double zp = 0;
         zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-        gun.setPosX(2.5f * (float) p);
+        gun.setPosX(2.45f * (float) p);
 
         gun.setPosY(1.7f * (float) p - (float) (0.4f * zp));
 
@@ -117,5 +117,13 @@ public class AbekiriItemModel extends GeoModel<Abekiri> {
         move.setRotY(Mth.DEG_TO_RAD * (float) yRot);
 
         move.setRotZ(2.7f * (float) m + Mth.DEG_TO_RAD * (float) zRot);
+
+        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+
+        player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
+
+        player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
+
+        player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

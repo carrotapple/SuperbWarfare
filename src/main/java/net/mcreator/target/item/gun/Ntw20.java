@@ -20,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -31,6 +32,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -85,17 +87,13 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState event) {
+    private PlayState fireAnimPredicate(AnimationState event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
-
-            if (stack.getOrCreateTag().getInt("draw_time") < 29) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.draw"));
-            }
 
             if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming && stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.shift2"));
@@ -117,7 +115,26 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.reload_normal"));
             }
 
-            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.idle"));
+        }
+        return PlayState.STOP;
+    }
+
+    private PlayState idlePredicate(AnimationState event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
+
+        if (this.animationProcedure.equals("empty")) {
+
+            if (stack.getOrCreateTag().getInt("draw_time") < 29) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.draw"));
+            }
+
+            if (player.isSprinting() && player.onGround()
+                && player.getPersistentData().getDouble("noRun") == 0
+                && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.run"));
             }
 
@@ -126,25 +143,10 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState event) {
-        if (transformType != null && transformType.firstPerson()) {
-            if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
-                if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                    this.animationProcedure = "empty";
-                    event.getController().forceAnimationReset();
-                }
-            } else if (this.animationProcedure.equals("empty")) {
-                return PlayState.STOP;
-            }
-        }
-        return PlayState.CONTINUE;
-    }
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        var procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
-        data.add(procedureController);
+        var fireAnimController = new AnimationController<>(this, "fireAnimController", 1, this::fireAnimPredicate);
+        data.add(fireAnimController);
         var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
         data.add(idleController);
     }
@@ -153,16 +155,6 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        return true;
-    }
-
-    @Override
-    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-        return false;
     }
 
     @Override

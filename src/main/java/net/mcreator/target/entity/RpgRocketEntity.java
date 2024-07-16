@@ -168,7 +168,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
             }
         }
         if (this.tickCount > 1) {
-            this.setDeltaMovement(new Vec3((1.03 * this.getDeltaMovement().x()), (1.03 * this.getDeltaMovement().y() - 0.05), (1.03 * this.getDeltaMovement().z())));
+            this.setDeltaMovement(new Vec3((1.03 * this.getDeltaMovement().x()), (1.03 * this.getDeltaMovement().y() - 0.02), (1.03 * this.getDeltaMovement().z())));
 
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, this.getX(), this.getY(), this.getZ(), 2, 0, 0, 0, 0, true);
