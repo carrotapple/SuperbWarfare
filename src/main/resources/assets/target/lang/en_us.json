@@ -108,6 +108,7 @@
   "des.target.creative_ammo_box": "Creative Ammo *2147483647",
   "item.target.ammo_supplier.supply": "%s Ammo +%s",
   "item.target.ammo_supplier.creative": "All Ammo +2147483647",
+  "item.target.he_5_inches": "5'' HE Shell",
 
   "item.target.target_deployer": "Target",
   "item.target.senpai_spawn_egg": "Senpai Spawn Egg",
@@ -190,6 +191,7 @@
   "entity.target.target_1": "Target",
   "entity.target.claymore": "Claymore",
   "entity.target.senpai": "Senpai",
+  "entity.target.mk_42": "5''/54 Mk42",
 
   "key.categories.target": "TARGET",
   "key.target.reload": "Reload",

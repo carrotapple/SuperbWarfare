@@ -22,5 +22,6 @@ public class TargetModEntityRenderers {
         event.registerEntityRenderer(TargetModEntities.BOCEK_ARROW.get(), BocekArrowRenderer::new);
         event.registerEntityRenderer(TargetModEntities.PROJECTILE.get(), ProjectileRenderer::new);
         event.registerEntityRenderer(TargetModEntities.FRAG.get(), FragRenderer::new);
+        event.registerEntityRenderer(TargetModEntities.MK_42.get(), Mk42Renderer::new);
     }
 }

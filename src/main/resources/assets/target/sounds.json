@@ -1191,6 +1191,39 @@
     ]
   },
 
+  "mk_42_fire_1p": {
+    "sounds": [
+      {
+        "name": "target:mk_42/mk_42_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "mK_42_fire_3p": {
+    "sounds": [
+      {
+        "name": "target:mk_42/mk_42_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "mk_42_far": {
+    "sounds": [
+      {
+        "name": "target:mk_42/mk_42_far",
+        "stream": false
+      }
+    ]
+  },
+  "mk_42_veryfar": {
+    "sounds": [
+      {
+        "name": "target:mk_42/mk_42_veryfar",
+        "stream": false
+      }
+    ]
+  },
+
   "lightsaber": {
     "sounds": [
       {

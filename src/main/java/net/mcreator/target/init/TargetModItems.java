@@ -68,6 +68,7 @@ public class TargetModItems {
     public static final RegistryObject<Item> GRENADE_40MM = AMMO.register("grenade_40mm", Grenade40mm::new);
     public static final RegistryObject<Item> MORTAR_SHELLS = AMMO.register("mortar_shells", MortarShells::new);
     public static final RegistryObject<Item> ROCKET = AMMO.register("rocket", Rocket::new);
+    public static final RegistryObject<Item> HE_5_INCHES = AMMO.register("he_5_inches", He5Inches::new);
 
     /**
      * items
@@ -75,6 +76,7 @@ public class TargetModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, TargetMod.MODID);
 
     public static final RegistryObject<Item> SENPAI_SPAWN_EGG = ITEMS.register("senpai_spawn_egg", () -> new ForgeSpawnEggItem(TargetModEntities.SENPAI, -11584987, -14014413, new Item.Properties()));
+    public static final RegistryObject<Item> MK_42_SPAWN_EGG = ITEMS.register("mk42_spawn_egg", () -> new ForgeSpawnEggItem(TargetModEntities.MK_42, -11584987, -14014413, new Item.Properties()));
     public static final RegistryObject<Item> TARGET_DEPLOYER = ITEMS.register("target_deployer", TargetDeployer::new);
     public static final RegistryObject<Item> SANDBAG = block(TargetModBlocks.SANDBAG);
     public static final RegistryObject<Item> BARBED_WIRE = block(TargetModBlocks.BARBED_WIRE);
