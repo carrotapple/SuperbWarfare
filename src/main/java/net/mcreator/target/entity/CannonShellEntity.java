@@ -22,6 +22,8 @@ import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.network.NetworkHooks;
@@ -34,6 +36,7 @@ public class CannonShellEntity extends ThrowableItemProjectile {
     private float explosionDamage = 0;
     private float fireProbability = 0;
     private int fireTime = 0;
+    private int durability = 40;
 
     public CannonShellEntity(EntityType<? extends CannonShellEntity> type, Level world) {
         super(type, world);
@@ -60,6 +63,11 @@ public class CannonShellEntity extends ThrowableItemProjectile {
         this(TargetModEntities.CANNON_SHELL.get(), level);
     }
 
+    public CannonShellEntity durability(int durability) {
+        this.durability = durability;
+        return this;
+    }
+
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
@@ -69,7 +77,6 @@ public class CannonShellEntity extends ThrowableItemProjectile {
     protected Item getDefaultItem() {
         return TargetModItems.HE_5_INCHES.get();
     }
-
 
     @Override
     public void onHitEntity(EntityHitResult entityHitResult) {
@@ -99,13 +106,24 @@ public class CannonShellEntity extends ThrowableItemProjectile {
         int y = blockHitResult.getBlockPos().getY();
         int z = blockHitResult.getBlockPos().getZ();
 
-        float hardness = this.level().getBlockState(BlockPos.containing(x, y, z)).getDestroySpeed(this.level(), BlockPos.containing(x, y, z));
-
-
-        if (!this.level().isClientSide() && this.level() instanceof ServerLevel) {
-            causeExplode();
+        BlockState blockState = this.level().getBlockState(BlockPos.containing(x, y, z));
+        if (blockState.is(Blocks.BEDROCK) || blockState.is(Blocks.BARRIER)) {
+            if (!this.level().isClientSide()) {
+                causeExplode();
+            }
+            this.discard();
+            return;
         }
-        this.discard();
+
+        float hardness = this.level().getBlockState(BlockPos.containing(x, y, z)).getBlock().defaultDestroyTime();
+        this.durability -= (int) hardness;
+
+        if (this.durability <= 0) {
+            if (!this.level().isClientSide()) {
+                causeExplode();
+            }
+            this.discard();
+        }
     }
 
     @Override
@@ -124,8 +142,7 @@ public class CannonShellEntity extends ThrowableItemProjectile {
     }
 
     private void causeExplode() {
-
-        if (Math.random() > fireProbability){
+        if (Math.random() > fireProbability) {
             fireTime = 0;
         }
 
