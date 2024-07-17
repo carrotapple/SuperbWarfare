@@ -2,12 +2,17 @@
 package net.mcreator.target.entity;
 
 import net.mcreator.target.init.*;
+import net.mcreator.target.item.common.ammo.CannonShellItem;
 import net.mcreator.target.item.common.ammo.He5Inches;
+import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.CustomExplosion;
 import net.mcreator.target.tools.ParticleTool;
+import net.mcreator.target.tools.SoundTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -212,39 +217,103 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
 
         Entity gunner = this.getFirstPassenger();
 
-        float adjust_rateX = (float) Mth.clamp(Math.pow(gunner.getXRot() - this.getXRot(), 2),0,5f);
-        float adjust_rateY = (float) Mth.clamp(Math.pow(gunner.getYRot() - this.getYRot(), 2),0,3f);
+//        float adjust_rateX = (float) Mth.clamp(Math.pow(gunner.getXRot() - this.getXRot(), 2),0,5f);
+//        float adjust_rateY = (float) Mth.clamp(Math.pow(gunner.getYRot() - this.getYRot(), 2),0,3f);
+//
+//        if (RotY < gunner.getYRot()) {
+//            RotY = (float) Mth.clamp(this.yHeadRot + adjust_rateY,Double.NEGATIVE_INFINITY, gunner.getYRot());
+//        } else {
+//            RotY = (float) Mth.clamp(this.yHeadRot- adjust_rateY,gunner.getYRot(),Double.POSITIVE_INFINITY);
+//        }
+//
+//        if (RotX < gunner.getXRot()) {
+//            RotX = Mth.clamp((Mth.clamp(this.getXRot() + adjust_rateX,-85 ,15)),-85, gunner.getXRot());
+//        } else {
+//            RotX = Mth.clamp((Mth.clamp(this.getXRot() - adjust_rateX,-85 ,15)),gunner.getXRot(),15);
+//        }
 
-        if (RotY < gunner.getYRot()) {
-            RotY = (float) Mth.clamp(this.yHeadRot + adjust_rateY,Double.NEGATIVE_INFINITY, gunner.getYRot());
-        } else {
-            RotY = (float) Mth.clamp(this.yHeadRot- adjust_rateY,gunner.getYRot(),Double.POSITIVE_INFINITY);
+        if (this.getPersistentData().getInt("fire_cooldown") > 0) {
+            this.getPersistentData().putInt("fire_cooldown", this.getPersistentData().getInt("fire_cooldown") - 1);
         }
 
-        if (RotX < gunner.getXRot()) {
-            RotX = Mth.clamp((Mth.clamp(this.getXRot() + adjust_rateX,-85 ,15)),-85, gunner.getXRot());
-        } else {
-            RotX = Mth.clamp((Mth.clamp(this.getXRot() - adjust_rateX,-85 ,15)),gunner.getXRot(),15);
+        if (this.getPersistentData().getBoolean("firing") && gunner instanceof Player player && this.getPersistentData().getInt("fire_cooldown") == 0) {
+            cannonShoot(player);
         }
 
         this.refreshDimensions();
     }
 
+    public void cannonShoot(Player player) {
+
+        Level level = player.level();
+        if (level instanceof ServerLevel server) {
+
+            if (!(player.getMainHandItem().getItem() instanceof CannonShellItem))
+                return;
+
+            float hitDamage = 0;
+            float explosionRadius = 0;
+            float explosionDamage = 0;
+            float fireProbability = 0;
+            int fireTime = 0;
+
+            if (player.getMainHandItem().is(TargetModItems.HE_5_INCHES.get())) {
+                hitDamage = 100;
+                explosionRadius = 10;
+                explosionDamage = 200;
+                fireProbability = 0.3F;
+                fireTime = 100;
+            }
+
+            player.getMainHandItem().shrink(1);
+
+            CannonShellEntity entityToSpawn = new CannonShellEntity(TargetModEntities.CANNON_SHELL.get(), player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime);
+            entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
+            entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 15, 0.1f);
+            level.addFreshEntity(entityToSpawn);
+
+            if (player instanceof ServerPlayer serverPlayer) {
+                SoundTool.playLocalSound(serverPlayer, TargetModSounds.MK_42_FIRE_1P.get(), 2, 1);
+                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.MK_42_FIRE_3P.get(), SoundSource.PLAYERS, 6, 1);
+                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.MK_42_FAR.get(), SoundSource.PLAYERS, 16, 1);
+                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.MK_42_VERYFAR.get(), SoundSource.PLAYERS, 32, 1);
+            }
+
+            this.getPersistentData().putInt("fire_cooldown", 30);
+
+            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.recoilHorizon = 2 * Math.random() - 1;
+                capability.cannonFiring = 1;
+                capability.syncPlayerVariables(player);
+            });
+
+            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                    this.getX() + 5 * this.getLookAngle().x,
+                    this.getY(),
+                    this.getZ() + 5 * this.getLookAngle().z,
+                    200, 5, 0.02, 5, 0.005);
+
+            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                    this.getX() + 9 * this.getLookAngle().x,
+                    this.getEyeY() + 9 * this.getLookAngle().y,
+                    this.getZ() + 9 * this.getLookAngle().z,
+                    70, 0.3, 0.3, 0.3, 0.01);
+
+        }
+    }
+
     @Override
     public void travel(Vec3 dir) {
-
+        if (this.getFirstPassenger() == null) return;
+        Entity gunner = this.getFirstPassenger();
         if (this.isVehicle()) {
-            this.setYRot(RotY);
+            this.setYRot(gunner.getYRot());
             this.yRotO = this.getYRot();
-            this.setXRot(RotX);
+            this.setXRot(Mth.clamp(gunner.getXRot() - 1.35f, -85, 15));
             this.setRot(this.getYRot(), this.getXRot());
-            this.yBodyRot = RotY;
-            this.yHeadRot = RotY;
-            this.setMaxUpStep(0.5F);
-            return;
+            this.yBodyRot = gunner.getYRot();
+            this.yHeadRot = gunner.getYRot();
         }
-        this.setMaxUpStep(0.5F);
-        super.travel(dir);
     }
 
     @Override

@@ -45,6 +45,8 @@ public class TargetModEntities {
             EntityType.Builder.<BocekArrowEntity>of(BocekArrowEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(BocekArrowEntity::new).setTrackingRange(64).setUpdateInterval(1).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<ProjectileEntity>> PROJECTILE = register("projectile",
             EntityType.Builder.<ProjectileEntity>of(ProjectileEntity::new, MobCategory.MISC).setCustomClientFactory(ProjectileEntity::new).setTrackingRange(512).sized(0.5f, 0.5f));
+    public static final RegistryObject<EntityType<CannonShellEntity>> CANNON_SHELL = register("projectile_cannon_shell",
+            EntityType.Builder.<CannonShellEntity>of(CannonShellEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(CannonShellEntity::new).sized(0.5f, 0.5f));
 
 
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String registryname, EntityType.Builder<T> entityTypeBuilder) {

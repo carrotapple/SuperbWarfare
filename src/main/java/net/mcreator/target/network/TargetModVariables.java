@@ -81,6 +81,7 @@ public class TargetModVariables {
             clone.recoil = original.recoil;
             clone.recoilHorizon = original.recoilHorizon;
             clone.firing = original.firing;
+            clone.cannonFiring = original.cannonFiring;
             clone.targetAngle = original.targetAngle;
             clone.rifleAmmo = original.rifleAmmo;
             clone.refresh = original.refresh;
@@ -268,6 +269,7 @@ public class TargetModVariables {
         public double recoil = 0;
         public double recoilHorizon = 0;
         public double firing = 0;
+        public double cannonFiring = 0;
         public double targetAngle = 0;
         public int rifleAmmo = 0;
         public boolean refresh = false;
@@ -290,6 +292,7 @@ public class TargetModVariables {
             nbt.putDouble("recoil", recoil);
             nbt.putDouble("recoil_horizon", recoilHorizon);
             nbt.putDouble("firing", firing);
+            nbt.putDouble("cannonFiring", cannonFiring);
             nbt.putDouble("target_angle", targetAngle);
             nbt.putInt("rifle_ammo", rifleAmmo);
             nbt.putBoolean("refresh", refresh);
@@ -310,6 +313,7 @@ public class TargetModVariables {
             recoil = nbt.getDouble("recoil");
             recoilHorizon = nbt.getDouble("recoil_horizon");
             firing = nbt.getDouble("firing");
+            cannonFiring = nbt.getDouble("cannonFiring");
             targetAngle = nbt.getDouble("target_angle");
             rifleAmmo = nbt.getInt("rifle_ammo");
             refresh = nbt.getBoolean("refresh");
@@ -366,6 +370,7 @@ public class TargetModVariables {
                 variables.recoil = message.data.recoil;
                 variables.recoilHorizon = message.data.recoilHorizon;
                 variables.firing = message.data.firing;
+                variables.cannonFiring = message.data.cannonFiring;
                 variables.targetAngle = message.data.targetAngle;
                 variables.rifleAmmo = message.data.rifleAmmo;
                 variables.refresh = message.data.refresh;

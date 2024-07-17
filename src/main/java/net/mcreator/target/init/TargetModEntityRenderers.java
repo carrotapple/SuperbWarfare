@@ -1,6 +1,7 @@
 package net.mcreator.target.init;
 
 import net.mcreator.target.client.renderer.entity.*;
+import net.mcreator.target.entity.CannonShellEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,6 +20,7 @@ public class TargetModEntityRenderers {
         event.registerEntityRenderer(TargetModEntities.TARGET.get(), TargetRenderer::new);
         event.registerEntityRenderer(TargetModEntities.RPG_ROCKET.get(), RpgRocketRenderer::new);
         event.registerEntityRenderer(TargetModEntities.MORTAR_SHELL.get(), MortarShellRenderer::new);
+        event.registerEntityRenderer(TargetModEntities.CANNON_SHELL.get(), CannonShellRenderer::new);
         event.registerEntityRenderer(TargetModEntities.BOCEK_ARROW.get(), BocekArrowRenderer::new);
         event.registerEntityRenderer(TargetModEntities.PROJECTILE.get(), ProjectileRenderer::new);
         event.registerEntityRenderer(TargetModEntities.FRAG.get(), FragRenderer::new);

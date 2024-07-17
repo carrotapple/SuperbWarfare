@@ -95,6 +95,7 @@ public class TargetMod {
         addNetworkMessage(DoubleJumpMessage.class, DoubleJumpMessage::buffer, DoubleJumpMessage::new, DoubleJumpMessage::handler);
         addNetworkMessage(GunsDataMessage.class, GunsDataMessage::encode, GunsDataMessage::decode, GunsDataMessage::handler, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         addNetworkMessage(FireMessage.class, FireMessage::buffer, FireMessage::new, FireMessage::handler);
+        addNetworkMessage(VehicleFireMessage.class, VehicleFireMessage::buffer, VehicleFireMessage::new, VehicleFireMessage::handler);
         addNetworkMessage(FireModeMessage.class, FireModeMessage::buffer, FireModeMessage::new, FireModeMessage::handler);
         addNetworkMessage(GunRecycleGuiButtonMessage.class, GunRecycleGuiButtonMessage::buffer, GunRecycleGuiButtonMessage::new, GunRecycleGuiButtonMessage::handler);
         addNetworkMessage(ReloadMessage.class, ReloadMessage::encode, ReloadMessage::decode, ReloadMessage::handler);

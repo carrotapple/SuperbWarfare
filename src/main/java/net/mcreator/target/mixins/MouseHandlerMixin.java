@@ -1,5 +1,6 @@
 package net.mcreator.target.mixins;
 
+import net.mcreator.target.entity.Mk42Entity;
 import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
@@ -35,6 +36,10 @@ public class MouseHandlerMixin {
         }
 
         ItemStack stack = mc.player.getMainHandItem();
+
+        if (player.getVehicle() != null && player.getVehicle() instanceof Mk42Entity) {
+            return 0.23;
+        }
 
         if (!stack.is(TargetModTags.Items.GUN)) {
             return original;

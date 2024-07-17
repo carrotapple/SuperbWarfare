@@ -1,5 +1,6 @@
 package net.mcreator.target.event;
 
+import net.mcreator.target.entity.Mk42Entity;
 import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModTags;
@@ -42,12 +43,18 @@ public class ClientEventHandler {
         data.putDouble("xRot", Mth.clamp(0.05 * xRot, -5, 5) * (1 - 0.75 * data.getDouble("zoom_time")));
         data.putDouble("yRot", Mth.clamp(0.05 * yRot, -10, 10) * (1 - 0.75 * data.getDouble("zoom_time")));
         data.putDouble("zRot", Mth.clamp(0.1 * yRot, -10, 10) * (1 - data.getDouble("zoom_time")));
+
+        data.putDouble("Cannon_xRot", Mth.clamp(0.2 * xRot, -3, 3));
+        data.putDouble("Cannon_yRot", Mth.clamp(1 * yRot, -15, 15));
     }
 
     @SubscribeEvent
     public static void computeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
         ClientLevel level = Minecraft.getInstance().level;
         Entity entity = event.getCamera().getEntity();
+        if (level != null && entity instanceof LivingEntity living) {
+            handleCannonCamera(event, living);
+        }
         if (level != null && entity instanceof LivingEntity living && living.getMainHandItem().is(TargetModTags.Items.GUN)) {
             handleWeaponCrossHair(living);
             handleWeaponSway(living);
@@ -57,6 +64,49 @@ public class ClientEventHandler {
             handleShockCamera(event, living);
             handlePlayerCameraShake(event, living);
             handleBowPullAnimation(living);
+        }
+    }
+
+    private static void handleCannonCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
+        var data = entity.getPersistentData();
+        double yaw = event.getYaw();
+        double pitch = event.getPitch();
+        double roll = event.getRoll();
+
+        float fps = Minecraft.getInstance().getFps();
+        if (fps <= 0) {
+            fps = 1f;
+        }
+
+        float times = 45f / fps;
+
+        if (entity.getVehicle() != null && entity.getVehicle() instanceof Mk42Entity) {
+
+            var capability = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null);
+            if (capability.orElse(new TargetModVariables.PlayerVariables()).cannonFiring > 0) {
+                data.putDouble("cannon_fire_shake_time", 0.001);
+            }
+
+            if (0 < data.getDouble("cannon_fire_shake_time") && data.getDouble("cannon_fire_shake_time") < 1.732) {
+                data.putDouble("cannon_fire_shake_time", (data.getDouble("cannon_fire_shake_time") + 0.18 * (1.9 - data.getDouble("cannon_fire_shake_time")) * times));
+            }
+
+            if (0 < data.getDouble("cannon_fire_shake_time") && data.getDouble("cannon_fire_shake_time") < 1.732) {
+
+                float shake = (float) ((1 / 6.3 * (data.getDouble("cannon_fire_shake_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("cannon_fire_shake_time") - 0.5)) * (3 - Math.pow(data.getDouble("cannon_fire_shake_time"), 2)) + 1 * Mth.clamp(0.3 - data.getDouble("cannon_fire_shake_time"), 0, 1) * 0.25 * (2 * Math.random() - 1) * capability.orElse(new TargetModVariables.PlayerVariables()).recoilHorizon);
+
+                event.setYaw((float) (yaw - 13.3 * shake));
+                event.setPitch((float) (pitch + 13.3 * shake));
+                event.setRoll((float) (roll + 15.2 * shake));
+
+            } else {
+                event.setPitch((float) (pitch + 1 * data.getDouble("Cannon_xRot")));
+                event.setYaw((float) (yaw + 1 * data.getDouble("Cannon_yRot")));
+            }
+
+            if (data.getDouble("cannon_fire_shake_time") >= 1.732) {
+                data.putDouble("cannon_fire_shake_time", 0);
+            }
         }
     }
 
