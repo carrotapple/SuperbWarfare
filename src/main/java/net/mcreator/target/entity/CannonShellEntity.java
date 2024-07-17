@@ -1,8 +1,11 @@
 package net.mcreator.target.entity;
 
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.init.TargetModDamageTypes;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.network.message.ClientIndicatorMessage;
 import net.mcreator.target.tools.CustomExplosion;
 import net.mcreator.target.tools.ParticleTool;
 import net.minecraft.core.BlockPos;
@@ -10,6 +13,8 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -20,6 +25,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 
 public class CannonShellEntity extends ThrowableItemProjectile {
@@ -68,8 +74,16 @@ public class CannonShellEntity extends ThrowableItemProjectile {
     @Override
     public void onHitEntity(EntityHitResult entityHitResult) {
         Entity entity = entityHitResult.getEntity();
-
         entity.hurt(this.level().damageSources().thrown(this, this.getOwner()), this.damage);
+        entity.invulnerableTime = 0;
+
+        if (this.getOwner() instanceof LivingEntity living) {
+            if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
+                living.level().playSound(null, living.blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
+
+                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
+            }
+        }
 
         if (this.level() instanceof ServerLevel) {
             causeExplode();

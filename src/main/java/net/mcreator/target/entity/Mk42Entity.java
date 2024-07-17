@@ -240,6 +240,15 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
             cannonShoot(player);
         }
 
+        if (this.getPersistentData().getBoolean("shot")) {
+            gunner.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.recoilHorizon = 2 * Math.random() - 1;
+                capability.cannonFiring = 1;
+                capability.syncPlayerVariables(gunner);
+            });
+            this.getPersistentData().putBoolean("shot", false);
+        }
+
         this.refreshDimensions();
     }
 
@@ -280,12 +289,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
             }
 
             this.getPersistentData().putInt("fire_cooldown", 30);
-
-            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.recoilHorizon = 2 * Math.random() - 1;
-                capability.cannonFiring = 1;
-                capability.syncPlayerVariables(player);
-            });
+            this.getPersistentData().putBoolean("shot", true);
 
             server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
                     this.getX() + 5 * this.getLookAngle().x,
