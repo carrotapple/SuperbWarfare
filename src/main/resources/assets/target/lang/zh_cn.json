@@ -108,7 +108,8 @@
   "des.target.creative_ammo_box": "创造弹药 *2147483647",
   "item.target.ammo_supplier.supply": "%s弹药 +%s",
   "item.target.ammo_supplier.creative": "所有弹药 +2147483647",
-  "item.target.he_5_inches": "5寸口径高爆弹",
+  "item.target.he_5_inches": "高爆弹",
+  "item.target.ap_5_inches": "穿甲弹",
 
   "item.target.target_deployer": "标靶",
   "item.target.senpai_spawn_egg": "野兽先辈刷怪蛋",

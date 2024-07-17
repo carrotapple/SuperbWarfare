@@ -108,7 +108,8 @@
   "des.target.creative_ammo_box": "Creative Ammo *2147483647",
   "item.target.ammo_supplier.supply": "%s Ammo +%s",
   "item.target.ammo_supplier.creative": "All Ammo +2147483647",
-  "item.target.he_5_inches": "5'' HE Shell",
+  "item.target.he_5_inches": "HE Shell",
+  "item.target.ap_5_inches": "AP Shell",
 
   "item.target.target_deployer": "Target",
   "item.target.senpai_spawn_egg": "Senpai Spawn Egg",

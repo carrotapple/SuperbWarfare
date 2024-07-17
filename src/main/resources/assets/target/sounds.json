@@ -1519,14 +1519,6 @@
       }
     ]
   },
-  "mK_42_fire_3p": {
-    "sounds": [
-      {
-        "name": "target:mk_42/mk_42_fire_3p",
-        "stream": false
-      }
-    ]
-  },
   "mk_42_far": {
     "sounds": [
       {
@@ -1539,6 +1531,14 @@
     "sounds": [
       {
         "name": "target:mk_42/mk_42_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "mk_42_fire_3p": {
+    "sounds": [
+      {
+        "name": "target:mk_42/mk_42_fire_3p",
         "stream": false
       }
     ]

@@ -8,6 +8,7 @@ import net.mcreator.target.entity.MortarEntity;
 import net.mcreator.target.init.TargetModKeyMappings;
 import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModTags;
+import net.mcreator.target.item.common.ammo.CannonShellItem;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.network.message.*;
 import net.mcreator.target.tools.TraceTool;
@@ -74,7 +75,9 @@ public class ClickHandler {
             if (player.getVehicle() != null && player.getVehicle() instanceof Mk42Entity) {
                 event.setCanceled(true);
                 TargetMod.PACKET_HANDLER.sendToServer(new VehicleFireMessage(0));
-                return;
+                if (player.getMainHandItem().getItem() instanceof CannonShellItem) {
+                    return;
+                }
             }
             if (player.getMainHandItem().is(TargetModTags.Items.GUN)) {
                 event.setCanceled(true);
