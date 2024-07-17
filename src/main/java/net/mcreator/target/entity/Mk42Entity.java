@@ -170,6 +170,8 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
     public InteractionResult mobInteract(Player sourceentity, InteractionHand hand) {
         InteractionResult retval = InteractionResult.sidedSuccess(this.level().isClientSide());
         super.mobInteract(sourceentity, hand);
+        sourceentity.setXRot(this.getXRot());
+        sourceentity.setYRot(this.getYRot());
         sourceentity.startRiding(this);
         return retval;
     }
@@ -270,11 +272,13 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
                 hitDamage = 100;
                 explosionRadius = 10;
                 explosionDamage = 200;
-                fireProbability = 0.3F;
+                fireProbability = 0.18F;
                 fireTime = 100;
             }
 
-            player.getMainHandItem().shrink(1);
+            if (!player.isCreative()) {
+                player.getMainHandItem().shrink(1);
+            }
 
             CannonShellEntity entityToSpawn = new CannonShellEntity(TargetModEntities.CANNON_SHELL.get(), player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime);
             entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
