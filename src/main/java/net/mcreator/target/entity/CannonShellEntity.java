@@ -129,7 +129,6 @@ public class CannonShellEntity extends ThrowableItemProjectile {
 
         float hardness = this.level().getBlockState(BlockPos.containing(x, y, z)).getBlock().defaultDestroyTime();
         this.durability -= (int) hardness;
-        causeSmallExplode();
 
         if (blockState.is(TargetModBlocks.BARBED_WIRE.get()) || blockState.is(Blocks.NETHERITE_BLOCK)) {
             this.durability -= 10;
@@ -190,16 +189,6 @@ public class CannonShellEntity extends ThrowableItemProjectile {
         } else {
             ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
         }
-    }
-
-    private void causeSmallExplode() {
-        CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 10,
-                this.getX(), this.getY(), this.getZ(), 3, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
-        explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
-        explosion.finalizeExplosion(false);
-        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
     }
 
     @Override

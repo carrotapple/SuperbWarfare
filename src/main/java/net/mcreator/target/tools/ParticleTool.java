@@ -48,10 +48,10 @@ public class ParticleTool {
 
         if (level instanceof ServerLevel serverLevel) {
             if ((level.getBlockState(BlockPos.containing(x, y, z))).getBlock() == Blocks.WATER) {
-                sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 3, z, 200, 1, 3, 1, 0.01, true);
-                sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 3, z, 300, 2, 1, 2, 0.01, true);
-                sendParticle(serverLevel, ParticleTypes.FALLING_WATER, x, y + 3, z, 600, 1.5, 4, 1.5, 1, true);
-                sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, x, y, z, 1000, 3, 0.5, 3, 0.1, true);
+                sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 3, z, 100, 1, 3, 1, 0.01, true);
+                sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 3, z, 150, 2, 1, 2, 0.01, true);
+                sendParticle(serverLevel, ParticleTypes.FALLING_WATER, x, y + 3, z, 400, 1.5, 4, 1.5, 1, true);
+                sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, x, y, z, 300, 3, 0.5, 3, 0.1, true);
             }
             sendParticle(serverLevel, ParticleTypes.EXPLOSION, x, y + 1, z, 5, 0.7, 0.7, 0.7, 1, true);
             sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 80, 0.4, 1, 0.4, 0.02, true);
@@ -85,17 +85,18 @@ public class ParticleTool {
 
         if (level instanceof ServerLevel serverLevel) {
             if ((level.getBlockState(BlockPos.containing(x, y, z))).getBlock() == Blocks.WATER) {
-                sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 3, z, 400, 2, 6, 2, 0.01, true);
-                sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 3, z, 600, 4, 2, 4, 0.01, true);
-                sendParticle(serverLevel, ParticleTypes.FALLING_WATER, x, y + 3, z, 2400, 3, 8, 3, 1, true);
-                sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, x, y, z, 2000, 6, 1, 6, 0.1, true);
+                sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 3, z, 100, 2, 6, 2, 0.01, true);
+                sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 3, z, 200, 4, 2, 4, 0.01, true);
+                sendParticle(serverLevel, ParticleTypes.FALLING_WATER, x, y + 3, z, 500, 3, 8, 3, 1, true);
+                sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, x, y, z, 350, 6, 1, 6, 0.1, true);
             }
-            sendParticle(serverLevel, ParticleTypes.EXPLOSION, x, y + 1, z, 300, 2.5, 2.5, 2.5, 1, true);
-            sendParticle(serverLevel, ParticleTypes.FLASH, x, y + 1, z, 700, 5, 5, 5, 20, true);
-            sendParticle(serverLevel, TargetModParticleTypes.FIRE_STAR.get(), x, y + 1, z, 1500, 0, 0, 0, 1.5, true);
-            sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y + 1, z, 300, 2, 3, 2, 0.005, true);
-            sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 600, 7, 0.1, 7, 0.005, true);
-            sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 1, z, 700, 3, 4, 3, 0.4, true);
+
+            sendParticle(serverLevel, ParticleTypes.EXPLOSION, x, y + 1, z, 75, 2.5, 2.5, 2.5, 1, true);
+            sendParticle(serverLevel, ParticleTypes.FLASH, x, y + 1, z, 200, 5, 5, 5, 20, true);
+            sendParticle(serverLevel, TargetModParticleTypes.FIRE_STAR.get(), x, y + 1, z, 400, 0, 0, 0, 1.5, true);
+            sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y + 1, z, 75, 2, 3, 2, 0.005, true);
+            sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 150, 7, 0.1, 7, 0.005, true);
+            sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 1, z, 200, 3, 4, 3, 0.4, true);
         }
 
     }
