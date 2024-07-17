@@ -3,7 +3,7 @@ package net.mcreator.target.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.target.entity.Mk42Entity;
-import net.mcreator.target.entity.MortarEntity;
+import net.mcreator.target.entity.layer.Mk42Layer;
 import net.mcreator.target.entity.model.Mk42Model;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -15,7 +15,9 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 public class Mk42Renderer extends GeoEntityRenderer<Mk42Entity> {
     public Mk42Renderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new Mk42Model());
-        this.shadowRadius = 0f;
+        this.shadowRadius = 3f;
+        this.addRenderLayer(new Mk42Layer(this));
+
     }
 
     @Override

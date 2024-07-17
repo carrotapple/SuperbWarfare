@@ -2,7 +2,11 @@ package net.mcreator.target.client.screens;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.mcreator.target.tools.RenderTool;
+import net.mcreator.target.entity.Mk42Entity;
+import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.item.gun.GunItem;
+import net.mcreator.target.network.TargetModVariables;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -13,11 +17,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT)
+@Mod.EventBusSubscriber({Dist.CLIENT})
 public class Mk42UIOverlay {
-    public static final int TEXTURE_WIDTH = 1626;
-    public static final int TEXTURE_HEIGHT = 586;
-
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
         int w = event.getWindow().getGuiScaledWidth();
@@ -29,13 +30,9 @@ public class Mk42UIOverlay {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        RenderTool.preciseBlit(event.getGuiGraphics(),
-                new ResourceLocation("target:textures/screens/mk_42_rex.png"),
-                (float) w / 2 - (float) TEXTURE_WIDTH / 10f, (float) h / 2 - (float) TEXTURE_HEIGHT / 10f,
-                0, 0, TEXTURE_WIDTH / 5f, TEXTURE_HEIGHT / 5f, TEXTURE_WIDTH / 5f, TEXTURE_HEIGHT / 5f);
-//        if (shouldRenderCrossHair(player)) {
-//
-//        }
+        if (shouldRenderCrossHair(player)) {
+            event.getGuiGraphics().blit(new ResourceLocation("target:textures/screens/mk_42_rex.png"), w / 2 + -407, h / 2 + -146, 0, 0, 813, 293, 813, 293);
+        }
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
@@ -43,11 +40,11 @@ public class Mk42UIOverlay {
         RenderSystem.setShaderColor(1, 1, 1, 1);
     }
 
-//    private static boolean shouldRenderCrossHair(Player player) {
-//        if (player == null) return false;
-//        return !player.isSpectator()
-//                && player.getMainHandItem().getItem() == TargetModItems.M_79.get()
-//                && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON
-//                && !player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zooming).orElse(false);
-//    }
+    private static boolean shouldRenderCrossHair(Player player) {
+        if (player == null) return false;
+        return !player.isSpectator()
+                && !(player.getMainHandItem().getItem() instanceof GunItem)
+                && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON
+                && (player.getVehicle() != null && player.getVehicle() instanceof Mk42Entity);
+    }
 }

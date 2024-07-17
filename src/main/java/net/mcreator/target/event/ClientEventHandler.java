@@ -83,7 +83,7 @@ public class ClientEventHandler {
         if (entity.getVehicle() != null && entity.getVehicle() instanceof Mk42Entity) {
 
             var capability = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null);
-            if (capability.orElse(new TargetModVariables.PlayerVariables()).cannonFiring > 0) {
+            if (capability.orElse(new TargetModVariables.PlayerVariables()).cannonRecoil > 7) {
                 data.putDouble("cannon_fire_shake_time", 0.001);
             }
 
@@ -466,7 +466,7 @@ public class ClientEventHandler {
             return;
         }
 
-        if (mc.player.getMainHandItem().is(TargetModTags.Items.GUN)) {
+        if (mc.player.getMainHandItem().is(TargetModTags.Items.GUN) || (mc.player.getVehicle() != null && mc.player.getVehicle() instanceof Mk42Entity)) {
             event.setCanceled(true);
         }
     }

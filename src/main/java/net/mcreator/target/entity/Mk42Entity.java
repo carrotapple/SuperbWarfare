@@ -235,7 +235,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
         if (this.getPersistentData().getInt("fire_cooldown") > 28) {
             gunner.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.recoilHorizon = 2 * Math.random() - 1;
-                capability.cannonFiring = 1;
+//                capability.cannonFiring = 1;
                 capability.cannonRecoil = 10;
                 capability.syncPlayerVariables(gunner);
             });
@@ -273,7 +273,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
             }
 
             if (stack.is(TargetModItems.AP_5_INCHES.get())) {
-                hitDamage = 150;
+                hitDamage = 450;
                 explosionRadius = 3;
                 explosionDamage = 250;
                 fireProbability = 0;
@@ -309,11 +309,50 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
                     this.getZ() + 5 * this.getLookAngle().z,
                     200, 5, 0.02, 5, 0.005);
 
+            double x = this.getX() + 9 * this.getLookAngle().x;
+            double y = this.getEyeY() + 9 * this.getLookAngle().y;
+            double z = this.getZ() + 9 * this.getLookAngle().z;
+
+            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 10, 0.4, 0.4, 0.4, 0.0075);
+
+            server.sendParticles(ParticleTypes.CLOUD, x, y, z, 10, 0.4, 0.4, 0.4, 0.0075);
+
+
             server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
-                    this.getX() + 9 * this.getLookAngle().x,
-                    this.getEyeY() + 9 * this.getLookAngle().y,
-                    this.getZ() + 9 * this.getLookAngle().z,
-                    70, 0.3, 0.3, 0.3, 0.01);
+                    this.getX() + 9.5 * this.getLookAngle().x,
+                    this.getEyeY() + 9.5 * this.getLookAngle().y,
+                    this.getZ() + 9.5 * this.getLookAngle().z,
+                    5, 0.15, 0.15, 0.15, 0.0075);
+
+            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                    this.getX() + 10 * this.getLookAngle().x,
+                    this.getEyeY() + 10 * this.getLookAngle().y,
+                    this.getZ() + 10 * this.getLookAngle().z,
+                    4, 0.15, 0.15, 0.15, 0.0075);
+
+            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                    this.getX() + 11.5 * this.getLookAngle().x,
+                    this.getEyeY() + 11.5 * this.getLookAngle().y,
+                    this.getZ() + 11.5 * this.getLookAngle().z,
+                    3, 0.15, 0.15, 0.15, 0.0075);
+
+            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                    this.getX() + 12 * this.getLookAngle().x,
+                    this.getEyeY() + 12 * this.getLookAngle().y,
+                    this.getZ() + 12 * this.getLookAngle().z,
+                    2, 0.15, 0.15, 0.15, 0.0075);
+
+            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                    this.getX() + 12.5 * this.getLookAngle().x,
+                    this.getEyeY() + 12.5 * this.getLookAngle().y,
+                    this.getZ() + 12.5 * this.getLookAngle().z,
+                    2, 0.15, 0.15, 0.15, 0.0075);
+
+            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                    this.getX() + 13 * this.getLookAngle().x,
+                    this.getEyeY() + 13 * this.getLookAngle().y,
+                    this.getZ() + 13 * this.getLookAngle().z,
+                    1, 0.15, 0.15, 0.15, 0.0075);
 
         }
     }
