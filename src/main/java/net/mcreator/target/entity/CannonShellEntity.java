@@ -1,10 +1,7 @@
 package net.mcreator.target.entity;
 
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.init.TargetModDamageTypes;
-import net.mcreator.target.init.TargetModEntities;
-import net.mcreator.target.init.TargetModItems;
-import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.init.*;
 import net.mcreator.target.network.message.ClientIndicatorMessage;
 import net.mcreator.target.tools.CustomExplosion;
 import net.mcreator.target.tools.ParticleTool;
@@ -22,10 +19,13 @@ import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.StonecutterBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
@@ -95,7 +95,21 @@ public class CannonShellEntity extends ThrowableItemProjectile {
         if (this.level() instanceof ServerLevel) {
             causeExplode();
         }
-        this.discard();
+
+        Vec3 vec = this.getDeltaMovement();
+        double vec_x = vec.x;
+        double vec_y = vec.y;
+        double vec_z = vec.z;
+
+        this.setDeltaMovement(vec_x - 0.02 * vec_x, vec_y - 0.02 * vec_y, vec_z - 0.02 * vec_z);
+
+        this.durability -= 2;
+        if (this.durability <= 0) {
+            if (!this.level().isClientSide()) {
+                causeExplode();
+            }
+            this.discard();
+        }
     }
 
     @Override
@@ -117,6 +131,26 @@ public class CannonShellEntity extends ThrowableItemProjectile {
 
         float hardness = this.level().getBlockState(BlockPos.containing(x, y, z)).getBlock().defaultDestroyTime();
         this.durability -= (int) hardness;
+        causeSmallExplode();
+
+        if (blockState.is(TargetModBlocks.BARBED_WIRE.get()) || blockState.is(Blocks.NETHERITE_BLOCK)) {
+            this.durability -= 10;
+        }
+
+        if (blockState.is(Blocks.IRON_BLOCK) || blockState.is(Blocks.COPPER_BLOCK)) {
+            this.durability -= 5;
+        }
+
+        if (blockState.is(Blocks.GOLD_BLOCK)) {
+            this.durability -= 3;
+        }
+
+        Vec3 vec = this.getDeltaMovement();
+        double vec_x = vec.x;
+        double vec_y = vec.y;
+        double vec_z = vec.z;
+
+        this.setDeltaMovement(vec_x - 0.02 * vec_x * hardness, vec_y - 0.02 * vec_y * hardness, vec_z - 0.02 * vec_z * hardness);
 
         if (this.durability <= 0) {
             if (!this.level().isClientSide()) {
@@ -153,7 +187,21 @@ public class CannonShellEntity extends ThrowableItemProjectile {
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
 
-        ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
+        if (explosionRadius > 7) {
+            ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
+        } else {
+            ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+        }
+    }
+
+    private void causeSmallExplode() {
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 10,
+                this.getX(), this.getY(), this.getZ(), 3, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
     }
 
     @Override

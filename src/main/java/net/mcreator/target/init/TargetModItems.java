@@ -69,6 +69,7 @@ public class TargetModItems {
     public static final RegistryObject<Item> MORTAR_SHELLS = AMMO.register("mortar_shells", MortarShells::new);
     public static final RegistryObject<Item> ROCKET = AMMO.register("rocket", Rocket::new);
     public static final RegistryObject<Item> HE_5_INCHES = AMMO.register("he_5_inches", He5Inches::new);
+    public static final RegistryObject<Item> AP_5_INCHES = AMMO.register("ap_5_inches", Ap5Inches::new);
 
     /**
      * items

@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "target:item/shells/he_5_inches"
+    "layer0": "target:item/shells/ap_5_inches"
   }
 }

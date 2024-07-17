@@ -53,7 +53,7 @@ public class ParticleTool {
                 sendParticle(serverLevel, ParticleTypes.FALLING_WATER, x, y + 3, z, 600, 1.5, 4, 1.5, 1, true);
                 sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, x, y, z, 1000, 3, 0.5, 3, 0.1, true);
             }
-            sendParticle(serverLevel, ParticleTypes.EXPLOSION, x, y + 1, z, 100, 1, 1, 1, 1, true);
+            sendParticle(serverLevel, ParticleTypes.EXPLOSION, x, y + 1, z, 5, 0.7, 0.7, 0.7, 1, true);
             sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 80, 0.4, 1, 0.4, 0.02, true);
             sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, x, y + 1, z, 80, 0.4, 1, 0.4, 0.02, true);
             sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 80, 2, 0.001, 2, 0.01, true);

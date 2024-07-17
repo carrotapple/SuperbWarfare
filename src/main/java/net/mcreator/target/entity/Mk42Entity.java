@@ -267,6 +267,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
             float explosionDamage = 0;
             float fireProbability = 0;
             int fireTime = 0;
+            int durability = 0;
 
             if (player.getMainHandItem().is(TargetModItems.HE_5_INCHES.get())) {
                 hitDamage = 100;
@@ -274,16 +275,28 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
                 explosionDamage = 200;
                 fireProbability = 0.18F;
                 fireTime = 100;
+                durability = 0;
+            }
+
+            if (player.getMainHandItem().is(TargetModItems.AP_5_INCHES.get())) {
+                hitDamage = 150;
+                explosionRadius = 3;
+                explosionDamage = 250;
+                fireProbability = 0;
+                fireTime = 0;
+                durability = 25;
             }
 
             if (!player.isCreative()) {
                 player.getMainHandItem().shrink(1);
             }
 
-            CannonShellEntity entityToSpawn = new CannonShellEntity(TargetModEntities.CANNON_SHELL.get(), player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime);
+            CannonShellEntity entityToSpawn = new CannonShellEntity(TargetModEntities.CANNON_SHELL.get(), player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime).durability(durability);
+
             entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
             entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 15, 0.1f);
             level.addFreshEntity(entityToSpawn);
+
 
             if (player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, TargetModSounds.MK_42_FIRE_1P.get(), 2, 1);
