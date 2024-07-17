@@ -269,7 +269,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
                 explosionRadius = 10;
                 explosionDamage = 200;
                 fireProbability = 0.18F;
-                fireTime = 100;
+                fireTime = 5;
             }
 
             if (stack.is(TargetModItems.AP_5_INCHES.get())) {
