@@ -1167,50 +1167,6 @@
       }
     ]
   },
-  "mk_42_fire_1p": {
-    "sounds": [
-      {
-        "name": "target:mk_42/mk_42_fire_1p_1",
-        "stream": false
-      },
-      {
-        "name": "target:mk_42/mk_42_fire_1p_2",
-        "stream": false
-      },
-      {
-        "name": "target:mk_42/mk_42_fire_1p_3",
-        "stream": false
-      },
-      {
-        "name": "target:mk_42/mk_42_fire_1p_4",
-        "stream": false
-      }
-    ]
-  },
-  "mK_42_fire_3p": {
-    "sounds": [
-      {
-        "name": "target:mk_42/mk_42_fire_3p",
-        "stream": false
-      }
-    ]
-  },
-  "mk_42_far": {
-    "sounds": [
-      {
-        "name": "target:mk_42/mk_42_far",
-        "stream": false
-      }
-    ]
-  },
-  "mk_42_veryfar": {
-    "sounds": [
-      {
-        "name": "target:mk_42/mk_42_veryfar",
-        "stream": false
-      }
-    ]
-  },
   "lightsaber": {
     "sounds": [
       {
@@ -1539,6 +1495,50 @@
     "sounds": [
       {
         "name": "target:adjust_fov",
+        "stream": false
+      }
+    ]
+  },
+  "mk_42_fire_1p": {
+    "sounds": [
+      {
+        "name": "target:mk_42/mk_42_fire_1p_1",
+        "stream": false
+      },
+      {
+        "name": "target:mk_42/mk_42_fire_1p_2",
+        "stream": false
+      },
+      {
+        "name": "target:mk_42/mk_42_fire_1p_3",
+        "stream": false
+      },
+      {
+        "name": "target:mk_42/mk_42_fire_1p_4",
+        "stream": false
+      }
+    ]
+  },
+  "mK_42_fire_3p": {
+    "sounds": [
+      {
+        "name": "target:mk_42/mk_42_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "mk_42_far": {
+    "sounds": [
+      {
+        "name": "target:mk_42/mk_42_far",
+        "stream": false
+      }
+    ]
+  },
+  "mk_42_veryfar": {
+    "sounds": [
+      {
+        "name": "target:mk_42/mk_42_veryfar",
         "stream": false
       }
     ]

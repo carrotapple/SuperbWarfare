@@ -64,7 +64,6 @@ public class TargetModSounds {
     public static final RegistryObject<SoundEvent> AK_47_RELOAD_NORMAL = REGISTRY.register("ak_47_reload_normal", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "ak_47_reload_normal")));
     public static final RegistryObject<SoundEvent> AK_47_RELOAD_EMPTY = REGISTRY.register("ak_47_reload_empty", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "ak_47_reload_empty")));
     public static final RegistryObject<SoundEvent> LAND = REGISTRY.register("land", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "land")));
-    public static final RegistryObject<SoundEvent> SHIFT = REGISTRY.register("shift", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "shift")));
     public static final RegistryObject<SoundEvent> HEADSHOT = REGISTRY.register("headshot", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "headshot")));
     public static final RegistryObject<SoundEvent> DEVOTION_FIRE_1P = REGISTRY.register("devotion_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "devotion_fire_1p")));
     public static final RegistryObject<SoundEvent> DEVOTION_FIRE_3P = REGISTRY.register("devotion_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "devotion_fire_3p")));
