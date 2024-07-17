@@ -270,6 +270,7 @@ public class TargetModVariables {
         public double recoilHorizon = 0;
         public double firing = 0;
         public double cannonFiring = 0;
+        public int cannonRecoil = 0;
         public double targetAngle = 0;
         public int rifleAmmo = 0;
         public boolean refresh = false;
@@ -293,6 +294,7 @@ public class TargetModVariables {
             nbt.putDouble("recoil_horizon", recoilHorizon);
             nbt.putDouble("firing", firing);
             nbt.putDouble("cannonFiring", cannonFiring);
+            nbt.putInt("cannonRecoil", cannonRecoil);
             nbt.putDouble("target_angle", targetAngle);
             nbt.putInt("rifle_ammo", rifleAmmo);
             nbt.putBoolean("refresh", refresh);
@@ -314,6 +316,7 @@ public class TargetModVariables {
             recoilHorizon = nbt.getDouble("recoil_horizon");
             firing = nbt.getDouble("firing");
             cannonFiring = nbt.getDouble("cannonFiring");
+            cannonRecoil = nbt.getInt("cannonRecoil");
             targetAngle = nbt.getDouble("target_angle");
             rifleAmmo = nbt.getInt("rifle_ammo");
             refresh = nbt.getBoolean("refresh");
@@ -371,6 +374,7 @@ public class TargetModVariables {
                 variables.recoilHorizon = message.data.recoilHorizon;
                 variables.firing = message.data.firing;
                 variables.cannonFiring = message.data.cannonFiring;
+                variables.cannonRecoil = message.data.cannonRecoil;
                 variables.targetAngle = message.data.targetAngle;
                 variables.rifleAmmo = message.data.rifleAmmo;
                 variables.refresh = message.data.refresh;

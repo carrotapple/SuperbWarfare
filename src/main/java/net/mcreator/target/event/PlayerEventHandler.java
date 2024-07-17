@@ -81,6 +81,12 @@ public class PlayerEventHandler {
                     capability.syncPlayerVariables(player);
                 });
             }
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).cannonRecoil > 0) {
+                player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    capability.cannonRecoil = (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).cannonRecoil - 1;
+                    capability.syncPlayerVariables(player);
+                });
+            }
         }
     }
 

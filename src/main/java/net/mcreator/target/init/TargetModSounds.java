@@ -185,6 +185,7 @@ public class TargetModSounds {
     public static final RegistryObject<SoundEvent> MK_42_FIRE_3P = REGISTRY.register("mk_42_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "mk_42_fire_3p")));
     public static final RegistryObject<SoundEvent> MK_42_FAR = REGISTRY.register("mk_42_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "mk_42_far")));
     public static final RegistryObject<SoundEvent> MK_42_VERYFAR = REGISTRY.register("mk_42_veryfar", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "mk_42_veryfar")));
+    public static final RegistryObject<SoundEvent> MK_42_RELOAD = REGISTRY.register("mk_42_reload", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "mk_42_reload")));
 
     public static final RegistryObject<SoundEvent> BULLET_SUPPLY = REGISTRY.register("bullet_supply", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "bullet_supply")));
     public static final RegistryObject<SoundEvent> ADJUST_FOV = REGISTRY.register("adjust_fov", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "adjust_fov")));

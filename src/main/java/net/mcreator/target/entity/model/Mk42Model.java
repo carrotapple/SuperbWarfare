@@ -1,8 +1,10 @@
 package net.mcreator.target.entity.model;
 
 import net.mcreator.target.entity.Mk42Entity;
+import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -30,5 +32,12 @@ public class Mk42Model extends GeoModel<Mk42Entity> {
         CoreGeoBone barrle = getAnimationProcessor().getBone("maingun");
         EntityModelData entityData = (EntityModelData) animationState.getData(DataTickets.ENTITY_MODEL_DATA);
         barrle.setRotX((entityData.headPitch()) * Mth.DEG_TO_RAD);
+
+//        CoreGeoBone paoguan = getAnimationProcessor().getBone("paoguan");
+//        if (animatable.getFirstPassenger() == null) return;
+//        Entity gunner = animatable.getFirstPassenger();
+//        var capability = gunner.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null);
+//        paoguan.setPosZ(capability.orElse(new TargetModVariables.PlayerVariables()).cannonRecoil);
+
     }
 }

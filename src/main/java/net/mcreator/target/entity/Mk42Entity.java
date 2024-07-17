@@ -1,14 +1,13 @@
 package net.mcreator.target.entity;
 
-import net.mcreator.target.init.TargetModDamageTypes;
-import net.mcreator.target.init.TargetModEntities;
-import net.mcreator.target.init.TargetModItems;
-import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.init.*;
 import net.mcreator.target.item.common.ammo.CannonShellItem;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.CustomExplosion;
 import net.mcreator.target.tools.ParticleTool;
 import net.mcreator.target.tools.SoundTool;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -237,6 +236,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
             gunner.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.recoilHorizon = 2 * Math.random() - 1;
                 capability.cannonFiring = 1;
+                capability.cannonRecoil = 10;
                 capability.syncPlayerVariables(gunner);
             });
         }
@@ -295,6 +295,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
 
             if (player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, TargetModSounds.MK_42_FIRE_1P.get(), 2, 1);
+                SoundTool.playLocalSound(serverPlayer, TargetModSounds.MK_42_RELOAD.get(), 2, 1);
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.MK_42_FIRE_3P.get(), SoundSource.PLAYERS, 6, 1);
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.MK_42_FAR.get(), SoundSource.PLAYERS, 16, 1);
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.MK_42_VERYFAR.get(), SoundSource.PLAYERS, 32, 1);
@@ -357,6 +358,15 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
 
     private PlayState movementPredicate(AnimationState event) {
         if (this.animationprocedure.equals("empty")) {
+
+            if (this.getFirstPassenger() != null) {
+                Entity gunner = this.getFirstPassenger();
+                var capability = gunner.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null);
+                if (capability.orElse(new TargetModVariables.PlayerVariables()).cannonRecoil > 0) {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire"));
+                }
+            }
+
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mk42.idle"));
         }
         return PlayState.STOP;
@@ -394,8 +404,8 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "movement", 4, this::movementPredicate));
-        data.add(new AnimationController<>(this, "procedure", 4, this::procedurePredicate));
+        data.add(new AnimationController<>(this, "movement", 0, this::movementPredicate));
+        data.add(new AnimationController<>(this, "procedure", 0, this::procedurePredicate));
     }
 
     @Override

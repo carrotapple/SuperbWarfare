@@ -3,6 +3,42 @@
 	"animations": {
 		"animation.mk42.idle": {
 			"loop": true
+		},
+		"animation.mk42.fire": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.5,
+			"bones": {
+				"paoguan": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 11],
+							"easing": "easeInElastic"
+						},
+						"0.4917": {
+							"vector": [0, 0, 0],
+							"easing": "easeInQuad"
+						}
+					}
+				}
+			}
+		},
+		"animation.mk42.fire2": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.5,
+			"bones": {
+				"paoguan": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 11],
+							"easing": "easeInElastic"
+						},
+						"0.4917": {
+							"vector": [0, 0, 0],
+							"easing": "easeInQuad"
+						}
+					}
+				}
+			}
 		}
 	},
 	"geckolib_format_version": 2
