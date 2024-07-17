@@ -1,56 +1,51 @@
-
 package net.mcreator.target.entity;
 
-import net.mcreator.target.init.*;
+import net.mcreator.target.init.TargetModDamageTypes;
+import net.mcreator.target.init.TargetModEntities;
+import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.item.common.ammo.CannonShellItem;
-import net.mcreator.target.item.common.ammo.He5Inches;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.CustomExplosion;
 import net.mcreator.target.tools.ParticleTool;
 import net.mcreator.target.tools.SoundTool;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import software.bernie.geckolib.util.GeckoLibUtil;
-import software.bernie.geckolib.core.object.PlayState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animatable.GeoEntity;
-
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.network.PlayMessages;
-import net.minecraftforge.network.NetworkHooks;
-
-import net.minecraft.world.level.Level;
-import net.minecraft.world.entity.projectile.ThrownPotion;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
+import net.minecraftforge.registries.ForgeRegistries;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class Mk42Entity extends PathfinderMob implements GeoEntity {
     public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.BOOLEAN);
@@ -80,6 +75,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
         this.entityData.define(ANIMATION, "undefined");
         this.entityData.define(TEXTURE, "sherman");
     }
+
     @Override
     protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
         return 2.16F;
@@ -110,7 +106,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
 
     @Override
     public MobType getMobType() {
-        return MobType.UNDEFINED;
+        return super.getMobType();
     }
 
     @Override
@@ -155,15 +151,14 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
             return false;
         if (source.is(DamageTypes.WITHER_SKULL))
             return false;
-        if (source.getDirectEntity() instanceof Player player && this.getFirstPassenger() != null && player == this.getFirstPassenger()){
+        if (source.getDirectEntity() instanceof Player player && this.getFirstPassenger() != null && player == this.getFirstPassenger()) {
             return false;
         }
-        if (source.getDirectEntity() instanceof Player player && this.getFirstPassenger() != null && player == this.getFirstPassenger()){
+        if (source.getDirectEntity() instanceof Player player && this.getFirstPassenger() != null && player == this.getFirstPassenger()) {
             return false;
         }
         return super.hurt(source, amount);
     }
-
 
 
     @Override
@@ -182,12 +177,12 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
         super.die(source);
 
         if (level() instanceof ServerLevel) {
-            destoryExplode();
+            destroyExplode();
             this.discard();
         }
     }
 
-    private void destoryExplode() {
+    private void destroyExplode() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
                 TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this), 30f,
                 this.getX(), this.getY(), this.getZ(), 7.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
@@ -255,12 +250,13 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
     }
 
     public void cannonShoot(Player player) {
-
         Level level = player.level();
         if (level instanceof ServerLevel server) {
+            ItemStack stack = player.getMainHandItem();
 
-            if (!(player.getMainHandItem().getItem() instanceof CannonShellItem))
+            if (!(stack.getItem() instanceof CannonShellItem)) {
                 return;
+            }
 
             float hitDamage = 0;
             float explosionRadius = 0;
@@ -269,16 +265,15 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
             int fireTime = 0;
             int durability = 0;
 
-            if (player.getMainHandItem().is(TargetModItems.HE_5_INCHES.get())) {
+            if (stack.is(TargetModItems.HE_5_INCHES.get())) {
                 hitDamage = 100;
                 explosionRadius = 10;
                 explosionDamage = 200;
                 fireProbability = 0.18F;
                 fireTime = 100;
-                durability = 0;
             }
 
-            if (player.getMainHandItem().is(TargetModItems.AP_5_INCHES.get())) {
+            if (stack.is(TargetModItems.AP_5_INCHES.get())) {
                 hitDamage = 150;
                 explosionRadius = 3;
                 explosionDamage = 250;
@@ -288,10 +283,11 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
             }
 
             if (!player.isCreative()) {
-                player.getMainHandItem().shrink(1);
+                stack.shrink(1);
             }
 
-            CannonShellEntity entityToSpawn = new CannonShellEntity(TargetModEntities.CANNON_SHELL.get(), player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime).durability(durability);
+            CannonShellEntity entityToSpawn = new CannonShellEntity(TargetModEntities.CANNON_SHELL.get(),
+                    player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime).durability(durability);
 
             entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
             entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 15, 0.1f);

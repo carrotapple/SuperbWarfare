@@ -23,7 +23,6 @@
       }
     ]
   },
-
   "trachelium_fire_1p": {
     "sounds": [
       {
@@ -64,7 +63,6 @@
       }
     ]
   },
-
   "hunting_rifle_fire_1p": {
     "sounds": [
       {
@@ -105,7 +103,6 @@
       }
     ]
   },
-
   "m_79_fire_1p": {
     "sounds": [
       {
@@ -146,7 +143,6 @@
       }
     ]
   },
-
   "sks_fire_1p": {
     "sounds": [
       {
@@ -195,7 +191,6 @@
       }
     ]
   },
-
   "abekiri_fire_1p": {
     "sounds": [
       {
@@ -244,7 +239,6 @@
       }
     ]
   },
-
   "ak_47_fire_1p": {
     "sounds": [
       {
@@ -293,7 +287,6 @@
       }
     ]
   },
-
   "devotion_fire_1p": {
     "sounds": [
       {
@@ -342,7 +335,6 @@
       }
     ]
   },
-
   "rpg_fire_1p": {
     "sounds": [
       {
@@ -383,7 +375,6 @@
       }
     ]
   },
-
   "m_4_fire_1p": {
     "sounds": [
       {
@@ -432,7 +423,6 @@
       }
     ]
   },
-
   "aa_12_fire_1p": {
     "sounds": [
       {
@@ -481,7 +471,6 @@
       }
     ]
   },
-
   "bocek_zoom_fire_1p": {
     "sounds": [
       {
@@ -530,7 +519,6 @@
       }
     ]
   },
-
   "hk_416_fire_1p": {
     "sounds": [
       {
@@ -579,7 +567,6 @@
       }
     ]
   },
-
   "rpk_fire_1p": {
     "sounds": [
       {
@@ -628,7 +615,6 @@
       }
     ]
   },
-
   "ntw_20_fire_1p": {
     "sounds": [
       {
@@ -685,7 +671,6 @@
       }
     ]
   },
-
   "vector_fire_1p": {
     "sounds": [
       {
@@ -734,7 +719,6 @@
       }
     ]
   },
-
   "minigun_fire_1p": {
     "sounds": [
       {
@@ -783,7 +767,6 @@
       }
     ]
   },
-
   "mk_14_fire_1p": {
     "sounds": [
       {
@@ -832,7 +815,6 @@
       }
     ]
   },
-
   "sentinel_fire_1p": {
     "sounds": [
       {
@@ -929,7 +911,6 @@
       }
     ]
   },
-
   "m_60_fire_1p": {
     "sounds": [
       {
@@ -978,7 +959,6 @@
       }
     ]
   },
-
   "svd_fire_1p": {
     "sounds": [
       {
@@ -1027,7 +1007,6 @@
       }
     ]
   },
-
   "m_98b_fire_1p": {
     "sounds": [
       {
@@ -1084,7 +1063,6 @@
       }
     ]
   },
-
   "marlin_fire_1p": {
     "sounds": [
       {
@@ -1141,7 +1119,6 @@
       }
     ]
   },
-
   "m_870_fire_1p": {
     "sounds": [
       {
@@ -1190,7 +1167,6 @@
       }
     ]
   },
-
   "mk_42_fire_1p": {
     "sounds": [
       {
@@ -1235,7 +1211,6 @@
       }
     ]
   },
-
   "lightsaber": {
     "sounds": [
       {
@@ -1455,67 +1430,67 @@
   "land": {
     "sounds": [
       {
-        "name": "target:bullet/1",
+        "name": "target:bullet/bullet1",
         "stream": false
       },
       {
-        "name": "target:bullet/2",
+        "name": "target:bullet/bullet2",
         "stream": false
       },
       {
-        "name": "target:bullet/3",
+        "name": "target:bullet/bullet3",
         "stream": false
       },
       {
-        "name": "target:bullet/4",
+        "name": "target:bullet/bullet4",
         "stream": false
       },
       {
-        "name": "target:bullet/5",
+        "name": "target:bullet/bullet5",
         "stream": false
       },
       {
-        "name": "target:bullet/6",
+        "name": "target:bullet/bullet6",
         "stream": false
       },
       {
-        "name": "target:bullet/7",
+        "name": "target:bullet/bullet7",
         "stream": false
       },
       {
-        "name": "target:bullet/8",
+        "name": "target:bullet/bullet8",
         "stream": false
       },
       {
-        "name": "target:bullet/9",
+        "name": "target:bullet/bullet9",
         "stream": false
       },
       {
-        "name": "target:bullet/10",
+        "name": "target:bullet/bullet10",
         "stream": false
       },
       {
-        "name": "target:bullet/11",
+        "name": "target:bullet/bullet11",
         "stream": false
       },
       {
-        "name": "target:bullet/12",
+        "name": "target:bullet/bullet12",
         "stream": false
       },
       {
-        "name": "target:bullet/13",
+        "name": "target:bullet/bullet13",
         "stream": false
       },
       {
-        "name": "target:bullet/14",
+        "name": "target:bullet/bullet14",
         "stream": false
       },
       {
-        "name": "target:bullet/15",
+        "name": "target:bullet/bullet15",
         "stream": false
       },
       {
-        "name": "target:bullet/16",
+        "name": "target:bullet/bullet16",
         "stream": false
       }
     ]
