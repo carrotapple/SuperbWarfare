@@ -38,7 +38,11 @@ public class MouseHandlerMixin {
         ItemStack stack = mc.player.getMainHandItem();
 
         if (player.getVehicle() != null && player.getVehicle() instanceof Mk42Entity) {
-            return 0.23;
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zoom) {
+                return 0.12;
+            } else {
+                return 0.23;
+            }
         }
 
         if (!stack.is(TargetModTags.Items.GUN)) {

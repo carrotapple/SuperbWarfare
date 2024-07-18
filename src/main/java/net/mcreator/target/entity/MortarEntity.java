@@ -5,6 +5,7 @@ import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
+import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -163,6 +164,9 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
             this.yHeadRotO = this.getYRot();
         }
         if (mainHandItem.getItem() == TargetModItems.MORTAR_SHELLS.get() && !player.getCooldowns().isOnCooldown(TargetModItems.MORTAR_SHELLS.get()) && !player.isShiftKeyDown()) {
+
+            this.getPersistentData().putInt("fire_time",25);
+
             player.getCooldowns().addCooldown(TargetModItems.MORTAR_SHELLS.get(), 30);
             if (!player.isCreative()) {
                 player.getInventory().clearOrCountMatchingItems(p -> TargetModItems.MORTAR_SHELLS.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
@@ -179,9 +183,9 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
                     entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
                     entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 8, (float) 0.5);
                     level.addFreshEntity(entityToSpawn);
-                    server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, (this.getX() + 3 * this.getLookAngle().x), (this.getY() + 0.1 + 3 * this.getLookAngle().y), (this.getZ() + 3 * this.getLookAngle().z), 40, 0.4, 0.4, 0.4,
-                            0.01);
-                    server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(), 100, 2.5, 0.04, 2.5, 0.005);
+                    server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, (this.getX() + 3 * this.getLookAngle().x), (this.getY() + 0.1 + 3 * this.getLookAngle().y), (this.getZ() + 3 * this.getLookAngle().z), 8, 0.4, 0.4, 0.4,
+                            0.007);
+                    server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(), 50, 2, 0.02, 2, 0.0005);
                 }
             });
         }
@@ -211,6 +215,10 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
         };
         Thread Thread = new Thread(Runnable);
         Thread.start();
+
+        if (this.getPersistentData().getInt("fire_time") > 0) {
+            this.getPersistentData().putInt("fire_time",this.getPersistentData().getInt("fire_time") - 1);
+        }
 
         this.refreshDimensions();
     }
@@ -254,7 +262,7 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
 
     private PlayState movementPredicate(AnimationState event) {
         if (this.animationProcedure.equals("empty")) {
-            if (this.isShiftKeyDown()) {
+            if (this.getPersistentData().getInt("fire_time") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mortar.fire"));
             }
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mortar.idle"));

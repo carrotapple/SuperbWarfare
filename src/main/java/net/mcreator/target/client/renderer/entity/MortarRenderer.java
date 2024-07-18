@@ -3,6 +3,7 @@ package net.mcreator.target.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.target.entity.MortarEntity;
+import net.mcreator.target.entity.layer.MortarLayer;
 import net.mcreator.target.entity.model.MortarModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -15,6 +16,7 @@ public class MortarRenderer extends GeoEntityRenderer<MortarEntity> {
     public MortarRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new MortarModel());
         this.shadowRadius = 0f;
+        this.addRenderLayer(new MortarLayer(this));
     }
 
     @Override

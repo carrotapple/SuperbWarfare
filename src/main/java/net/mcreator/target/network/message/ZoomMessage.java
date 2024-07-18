@@ -1,7 +1,11 @@
 package net.mcreator.target.network.message;
 
+import net.mcreator.target.entity.Mk42Entity;
+import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.tools.SoundTool;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
@@ -45,6 +49,11 @@ public class ZoomMessage {
                 capability.zoom = true;
                 capability.syncPlayerVariables(entity);
             });
+            if (entity.isPassenger() && entity.getVehicle() instanceof Mk42Entity) {
+                if (entity instanceof ServerPlayer serverPlayer) {
+                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.CANNON_ZOOM_IN.get(), 2, 1);
+                }
+            }
         }
         if (type == 1) {
             entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
@@ -56,6 +65,11 @@ public class ZoomMessage {
                 capability.syncPlayerVariables(entity);
             });
             entity.getPersistentData().putDouble("zoom_animation_time", 0);
+            if (entity.isPassenger() && entity.getVehicle() instanceof Mk42Entity) {
+                if (entity instanceof ServerPlayer serverPlayer) {
+                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.CANNON_ZOOM_OUT.get(), 2, 1);
+                }
+            }
 
         }
     }

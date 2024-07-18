@@ -50,9 +50,8 @@ public class ClickHandler {
             if (Minecraft.getInstance().player.hasEffect(TargetModMobEffects.SHOCK.get())) {
                 event.setCanceled(true);
             }
-            if (player.getMainHandItem().is(TargetModTags.Items.GUN)) {
-                TargetMod.PACKET_HANDLER.sendToServer(new ZoomMessage(1));
-            }
+
+            TargetMod.PACKET_HANDLER.sendToServer(new ZoomMessage(1));
         }
     }
 
@@ -86,7 +85,7 @@ public class ClickHandler {
             if (Minecraft.getInstance().player.hasEffect(TargetModMobEffects.SHOCK.get())) {
                 event.setCanceled(true);
             }
-            if (player.getMainHandItem().is(TargetModTags.Items.GUN)) {
+            if (player.getMainHandItem().is(TargetModTags.Items.GUN) || (player.isPassenger() && player.getVehicle() instanceof Mk42Entity)) {
                 event.setCanceled(true);
                 TargetMod.PACKET_HANDLER.sendToServer(new ZoomMessage(0));
             }

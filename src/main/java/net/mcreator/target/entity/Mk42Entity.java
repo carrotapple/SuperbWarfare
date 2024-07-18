@@ -6,8 +6,6 @@ import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.CustomExplosion;
 import net.mcreator.target.tools.ParticleTool;
 import net.mcreator.target.tools.SoundTool;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -34,6 +32,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -234,8 +234,13 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
 
         if (this.getPersistentData().getInt("fire_cooldown") > 28) {
             gunner.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.recoilHorizon = 2 * Math.random() - 1;
-//                capability.cannonFiring = 1;
+
+                if (Math.random() < 0.5) {
+                    capability.recoilHorizon = -1;
+                } else {
+                    capability.recoilHorizon = 1;
+                }
+
                 capability.cannonRecoil = 10;
                 capability.syncPlayerVariables(gunner);
             });
@@ -402,7 +407,11 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
                 Entity gunner = this.getFirstPassenger();
                 var capability = gunner.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null);
                 if (capability.orElse(new TargetModVariables.PlayerVariables()).cannonRecoil > 0) {
-                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire"));
+                    if (capability.orElse(new TargetModVariables.PlayerVariables()).recoilHorizon == 1) {
+                        return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire"));
+                    } else {
+                        return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire2"));
+                    }
                 }
             }
 
@@ -450,5 +459,23 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    @SubscribeEvent
+    public static void onEntityAttacked(LivingHurtEvent event) {
+        var damagesource = event.getSource();
+        var entity = event.getEntity();
+        if (damagesource == null || entity == null) return;
+
+        var sourceentity = damagesource.getEntity();
+        if (sourceentity == null) return;
+
+        if (entity instanceof Mk42Entity mk42) {
+            if (mk42.getFirstPassenger() == null) return;
+            Entity gunner = mk42.getFirstPassenger();
+            if (event.getSource().getDirectEntity() == gunner){
+                event.setCanceled(true);
+            }
+        }
     }
 }

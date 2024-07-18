@@ -33,11 +33,14 @@ public class Mk42Model extends GeoModel<Mk42Entity> {
         EntityModelData entityData = (EntityModelData) animationState.getData(DataTickets.ENTITY_MODEL_DATA);
         barrle.setRotX((entityData.headPitch()) * Mth.DEG_TO_RAD);
 
-//        CoreGeoBone paoguan = getAnimationProcessor().getBone("paoguan");
-//        if (animatable.getFirstPassenger() == null) return;
-//        Entity gunner = animatable.getFirstPassenger();
-//        var capability = gunner.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null);
-//        paoguan.setPosZ(capability.orElse(new TargetModVariables.PlayerVariables()).cannonRecoil);
+        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+
+        if (animatable.getFirstPassenger() == null) return;
+        Entity gunner = animatable.getFirstPassenger();
+
+        gunner.getPersistentData().putDouble("cannon_camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
+        gunner.getPersistentData().putDouble("cannon_camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
+        gunner.getPersistentData().putDouble("cannon_camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
 
     }
 }

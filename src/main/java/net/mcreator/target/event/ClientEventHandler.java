@@ -52,7 +52,7 @@ public class ClientEventHandler {
     public static void computeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
         ClientLevel level = Minecraft.getInstance().level;
         Entity entity = event.getCamera().getEntity();
-        if (level != null && entity instanceof LivingEntity living) {
+        if (level != null && entity instanceof LivingEntity living && entity.isPassenger() && entity.getVehicle() instanceof Mk42Entity) {
             handleCannonCamera(event, living);
         }
         if (level != null && entity instanceof LivingEntity living && living.getMainHandItem().is(TargetModTags.Items.GUN)) {
@@ -73,41 +73,10 @@ public class ClientEventHandler {
         double pitch = event.getPitch();
         double roll = event.getRoll();
 
-        float fps = Minecraft.getInstance().getFps();
-        if (fps <= 0) {
-            fps = 1f;
-        }
+        event.setPitch((float) (pitch + 1 * data.getDouble("Cannon_xRot") + data.getDouble("cannon_camera_rot_x")));
+        event.setYaw((float) (yaw + 1 * data.getDouble("Cannon_yRot") + data.getDouble("cannon_camera_rot_y")));
+        event.setRoll((float) (roll + data.getDouble("cannon_camera_rot_z")));
 
-        float times = 45f / fps;
-
-        if (entity.getVehicle() != null && entity.getVehicle() instanceof Mk42Entity) {
-
-            var capability = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null);
-            if (capability.orElse(new TargetModVariables.PlayerVariables()).cannonRecoil > 7) {
-                data.putDouble("cannon_fire_shake_time", 0.001);
-            }
-
-            if (0 < data.getDouble("cannon_fire_shake_time") && data.getDouble("cannon_fire_shake_time") < 1.732) {
-                data.putDouble("cannon_fire_shake_time", (data.getDouble("cannon_fire_shake_time") + 0.18 * (1.9 - data.getDouble("cannon_fire_shake_time")) * times));
-            }
-
-            if (0 < data.getDouble("cannon_fire_shake_time") && data.getDouble("cannon_fire_shake_time") < 1.732) {
-
-                float shake = (float) ((1 / 6.3 * (data.getDouble("cannon_fire_shake_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("cannon_fire_shake_time") - 0.5)) * (3 - Math.pow(data.getDouble("cannon_fire_shake_time"), 2)) + 1 * Mth.clamp(0.3 - data.getDouble("cannon_fire_shake_time"), 0, 1) * 0.25 * (2 * Math.random() - 1) * capability.orElse(new TargetModVariables.PlayerVariables()).recoilHorizon);
-
-                event.setYaw((float) (yaw - 13.3 * shake));
-                event.setPitch((float) (pitch + 13.3 * shake));
-                event.setRoll((float) (roll + 15.2 * shake));
-
-            } else {
-                event.setPitch((float) (pitch + 1 * data.getDouble("Cannon_xRot")));
-                event.setYaw((float) (yaw + 1 * data.getDouble("Cannon_yRot")));
-            }
-
-            if (data.getDouble("cannon_fire_shake_time") >= 1.732) {
-                data.putDouble("cannon_fire_shake_time", 0);
-            }
-        }
     }
 
     @SubscribeEvent
@@ -447,7 +416,12 @@ public class ClientEventHandler {
 
             event.setFOV(event.getFOV() / (1.0 + p * (zoom - 1)));
             player.getPersistentData().putDouble("fov", event.getFOV());
-
+            return;
+        }
+        if (player.isPassenger() && player.getVehicle() instanceof Mk42Entity) {
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zoom) {
+                event.setFOV(event.getFOV() / 5);
+            }
         }
     }
 

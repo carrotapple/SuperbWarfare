@@ -1558,5 +1558,21 @@
         "stream": false
       }
     ]
+  },
+  "cannon_zoom_in": {
+    "sounds": [
+      {
+        "name": "target:mk_42/cannon_zoom_in",
+        "stream": false
+      }
+    ]
+  },
+  "cannon_zoom_out": {
+    "sounds": [
+      {
+        "name": "target:mk_42/cannon_zoom_out",
+        "stream": false
+      }
+    ]
   }
 }

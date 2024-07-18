@@ -10,6 +10,7 @@
   "client": [
     "ItemInHandLayerMixin",
     "MixinCamera",
+    "CameraMixin",
     "KeyMappingMixin",
     "GameRendererMixin",
     "MouseHandlerMixin"
