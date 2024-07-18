@@ -63,7 +63,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
     public Mk42Entity(EntityType<Mk42Entity> type, Level world) {
         super(type, world);
         xpReward = 0;
-        setNoAi(true);
+        setNoAi(false);
         setPersistenceRequired();
     }
 
@@ -362,19 +362,51 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
         }
     }
 
+//    @Override
+//    public void travel(Vec3 dir) {
+//        if (this.getFirstPassenger() == null) return;
+//        Entity gunner = this.getFirstPassenger();
+//        if (this.isVehicle()) {
+//            this.setYRot(gunner.getYRot());
+//            this.yRotO = this.getYRot();
+//            this.setXRot(Mth.clamp(gunner.getXRot() - 1.35f, -85, 15));
+//            this.setRot(this.getYRot(), this.getXRot());
+//            this.yBodyRot = gunner.getYRot();
+//            this.yHeadRot = gunner.getYRot();
+//        }
+//    }
+
     @Override
     public void travel(Vec3 dir) {
-        if (this.getFirstPassenger() == null) return;
-        Entity gunner = this.getFirstPassenger();
+        Entity entity = this.getPassengers().isEmpty() ? null : (Entity) this.getPassengers().get(0);
         if (this.isVehicle()) {
-            this.setYRot(gunner.getYRot());
+            this.setYRot(entity.getYRot());
             this.yRotO = this.getYRot();
-            this.setXRot(Mth.clamp(gunner.getXRot() - 1.35f, -85, 15));
+            this.setXRot(Mth.clamp(entity.getXRot() - 1.35f, -85, 15));
             this.setRot(this.getYRot(), this.getXRot());
-            this.yBodyRot = gunner.getYRot();
-            this.yHeadRot = gunner.getYRot();
+            this.yBodyRot = entity.getYRot();
+            this.yHeadRot = entity.getYRot();
+            this.setMaxUpStep(1.0F);
+            if (entity instanceof LivingEntity passenger) {
+                this.setSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED));
+                float forward = passenger.zza;
+                float strafe = passenger.xxa;
+                super.travel(new Vec3(strafe, 0, forward));
+            }
+            double d1 = this.getX() - this.xo;
+            double d0 = this.getZ() - this.zo;
+            float f1 = (float) Math.sqrt(d1 * d1 + d0 * d0) * 4;
+            if (f1 > 1.0F)
+                f1 = 1.0F;
+            this.walkAnimation.setSpeed(this.walkAnimation.speed() + (f1 - this.walkAnimation.speed()) * 0.4F);
+            this.walkAnimation.position(this.walkAnimation.position() + this.walkAnimation.speed());
+            this.calculateEntityAnimation(true);
+            return;
         }
+        this.setMaxUpStep(0.5F);
+        super.travel(dir);
     }
+
 
     @Override
     public EntityDimensions getDimensions(Pose p_33597_) {

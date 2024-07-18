@@ -1,5 +1,6 @@
 package net.mcreator.target.block;
 
+import net.mcreator.target.entity.Mk42Entity;
 import net.mcreator.target.entity.Target1Entity;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.network.TargetModVariables;
@@ -77,7 +78,7 @@ public class JumpPadBlock extends Block {
         super.entityInside(blockstate, level, pos, entity);
 
         // 禁止套娃
-        if (entity instanceof Target1Entity) return;
+        if (entity instanceof Target1Entity || entity instanceof Mk42Entity) return;
 
         boolean zooming = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zooming).orElse(false);
 
