@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.target.entity.Mk42Entity;
 import net.mcreator.target.item.gun.GunItem;
+import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.tools.RenderTool;
 import net.mcreator.target.tools.TraceTool;
 import net.minecraft.client.CameraType;
@@ -54,7 +55,8 @@ public class Mk42UIOverlay {
         if (player == null) return false;
         return !player.isSpectator()
                 && !(player.getMainHandItem().getItem() instanceof GunItem)
-                && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON
-                && (player.getVehicle() != null && player.getVehicle() instanceof Mk42Entity);
+//                && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON
+                && (player.getVehicle() != null && player.getVehicle() instanceof Mk42Entity)
+                && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zoom;
     }
 }
