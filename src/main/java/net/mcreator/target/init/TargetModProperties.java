@@ -9,10 +9,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.mcreator.target.tools.ItemNBTTool;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public class PropertyRegistry {
+public class TargetModProperties {
     @SubscribeEvent
     public static void propertyOverrideRegistry(FMLClientSetupEvent event) {
         event.enqueueWork(() -> ItemProperties.register(TargetModItems.MONITOR.get(), new ResourceLocation("target", "monitor_linked"),
-                (itemStack, clientWorld, livingEntity, seed) -> ItemNBTTool.getBoolean(itemStack, "linked", false) ? 1.0F : 0.0F));
+                (itemStack, clientWorld, livingEntity, seed) -> ItemNBTTool.getBoolean(itemStack, "Linked", false) ? 1.0F : 0.0F));
     }
 }

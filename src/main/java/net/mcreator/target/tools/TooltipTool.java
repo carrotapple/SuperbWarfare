@@ -127,7 +127,6 @@ public class TooltipTool {
         DroneEntity entity = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(256))
                 .stream().filter(e -> e.getStringUUID().equals(id)).findFirst().orElse(null);
 
-        tooltip.add(Component.literal("" + entity));
         if (entity == null) return;
 
         tooltip.add(Component.literal(""));

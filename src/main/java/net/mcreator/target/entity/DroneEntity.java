@@ -217,7 +217,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 
     private PlayState movementPredicate(AnimationState event) {
         if (this.animationprocedure.equals("empty")) {
-            if (linked) {
+            if (this.linked) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.drone.fly"));
             }
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.drone.idle"));
