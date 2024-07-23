@@ -47,213 +47,214 @@ import net.mcreator.target.item.Monitor;
 import java.util.Objects;
 
 public class DroneEntity extends PathfinderMob implements GeoEntity {
-	public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
-	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-	private boolean swinging;
-	private boolean lastloop;
-	private boolean linked = false;
-	private long lastSwing;
+    public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+    private boolean swinging;
+    private boolean lastloop;
+    private boolean linked = false;
+    private long lastSwing;
+
+    public String animationprocedure = "empty";
+
+    public DroneEntity(PlayMessages.SpawnEntity packet, Level world) {
+        this(TargetModEntities.DRONE.get(), world);
+    }
+
+    public DroneEntity(EntityType<DroneEntity> type, Level world) {
+        super(type, world);
+        xpReward = 0;
+        setNoAi(false);
+        setPersistenceRequired();
+        this.moveControl = new FlyingMoveControl(this, 10, true);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(SHOOT, false);
+        this.entityData.define(ANIMATION, "undefined");
+    }
+
+    @Override
+    protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
+        return 0.05F;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    protected PathNavigation createNavigation(Level world) {
+        return new FlyingPathNavigation(this, world);
+    }
+
+    @Override
+    public MobType getMobType() {
+        return super.getMobType();
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+        return false;
+    }
+
+    @Override
+    public boolean causeFallDamage(float l, float d, DamageSource source) {
+        return false;
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+    }
+
+    @Override
+    public void baseTick() {
+        super.baseTick();
+        this.refreshDimensions();
+    }
+
+    @Override
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        super.mobInteract(player, hand);
+
+        ItemStack stack = player.getMainHandItem();
+        if (stack.getItem() == TargetModItems.MONITOR.get()) {
+            if (!player.isCrouching()) {
+                if (!this.linked) {
+                    if (stack.getOrCreateTag().getBoolean("Linked")) {
+                        player.displayClientMessage(Component.translatable("des.target.monitor.monitor_already_linked").withStyle(ChatFormatting.RED), true);
+                        return InteractionResult.sidedSuccess(this.level().isClientSide());
+                    }
+
+                    this.getPersistentData().putString("controller", player.getStringUUID());
+                    this.linked = true;
+
+                    Monitor.link(stack, this.getId());
+                    player.displayClientMessage(Component.translatable("des.target.monitor.linked").withStyle(ChatFormatting.GREEN), true);
+
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        serverPlayer.level().playSound(null, serverPlayer.getOnPos(), Objects.requireNonNull(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("entity.arrow.hit_player"))), SoundSource.PLAYERS, 0.5F, 1);
+                    }
+                } else {
+                    player.displayClientMessage(Component.translatable("des.target.monitor.already_linked").withStyle(ChatFormatting.RED), true);
+                }
+            } else {
+                if (this.linked) {
+                    if (!stack.getOrCreateTag().getBoolean("Linked")) {
+                        player.displayClientMessage(Component.translatable("des.target.monitor.already_linked").withStyle(ChatFormatting.RED), true);
+                        return InteractionResult.sidedSuccess(this.level().isClientSide());
+                    }
+
+                    this.getPersistentData().putString("controller", "none");
+
+                    this.linked = false;
+                    Monitor.disLink(stack);
+
+                    player.displayClientMessage(Component.translatable("des.target.monitor.unlinked").withStyle(ChatFormatting.RED), true);
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        serverPlayer.level().playSound(null, serverPlayer.getOnPos(), Objects.requireNonNull(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("entity.arrow.hit_player"))), SoundSource.PLAYERS, 0.5F, 1);
+                    }
+                }
+            }
+        }
+
+        return InteractionResult.sidedSuccess(this.level().isClientSide());
+    }
 
 
-	public String animationprocedure = "empty";
+    @Override
+    public EntityDimensions getDimensions(Pose p_33597_) {
+        return super.getDimensions(p_33597_).scale((float) 1);
+    }
 
-	public DroneEntity(PlayMessages.SpawnEntity packet, Level world) {
-		this(TargetModEntities.DRONE.get(), world);
-	}
+    @Override
+    protected void checkFallDamage(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
+    }
 
-	public DroneEntity(EntityType<DroneEntity> type, Level world) {
-		super(type, world);
-		xpReward = 0;
-		setNoAi(false);
-		setPersistenceRequired();
-		this.moveControl = new FlyingMoveControl(this, 10, true);
-	}
+    @Override
+    public void setNoGravity(boolean ignored) {
+        super.setNoGravity(true);
+    }
 
-	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		this.entityData.define(SHOOT, false);
-		this.entityData.define(ANIMATION, "undefined");
-	}
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        this.updateSwingTime();
+        this.setNoGravity(true);
+    }
 
-	@Override
-	protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
-		return 0.05F;
-	}
+    public static void init() {
+    }
 
-	@Override
-	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
-	}
+    public static AttributeSupplier.Builder createAttributes() {
+        AttributeSupplier.Builder builder = Mob.createMobAttributes();
+        builder = builder.add(Attributes.MOVEMENT_SPEED, 0.1);
+        builder = builder.add(Attributes.MAX_HEALTH, 10);
+        builder = builder.add(Attributes.ARMOR, 0);
+        builder = builder.add(Attributes.ATTACK_DAMAGE, 0);
+        builder = builder.add(Attributes.FOLLOW_RANGE, 64);
+        builder = builder.add(Attributes.FLYING_SPEED, 0.1);
+        return builder;
+    }
 
-	@Override
-	protected PathNavigation createNavigation(Level world) {
-		return new FlyingPathNavigation(this, world);
-	}
+    private PlayState movementPredicate(AnimationState event) {
+        if (this.animationprocedure.equals("empty")) {
+            if (linked) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.drone.fly"));
+            }
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.drone.idle"));
+        }
+        return PlayState.STOP;
+    }
 
-	@Override
-	public MobType getMobType() {
-		return MobType.UNDEFINED;
-	}
+    private PlayState procedurePredicate(AnimationState event) {
+        if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
+            if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+                this.animationprocedure = "empty";
+                event.getController().forceAnimationReset();
+            }
+        } else if (animationprocedure.equals("empty")) {
+            return PlayState.STOP;
+        }
+        return PlayState.CONTINUE;
+    }
 
-	@Override
-	public boolean removeWhenFarAway(double distanceToClosestPlayer) {
-		return false;
-	}
+    @Override
+    protected void tickDeath() {
+        ++this.deathTime;
+        if (this.deathTime == 20) {
+            this.remove(DroneEntity.RemovalReason.KILLED);
+            this.dropExperience();
+        }
+    }
 
-	@Override
-	public boolean causeFallDamage(float l, float d, DamageSource source) {
-		return false;
-	}
+    public String getSyncedAnimation() {
+        return this.entityData.get(ANIMATION);
+    }
 
-	@Override
-	public void addAdditionalSaveData(CompoundTag compound) {
-		super.addAdditionalSaveData(compound);
-	}
+    public void setAnimation(String animation) {
+        this.entityData.set(ANIMATION, animation);
+    }
 
-	@Override
-	public void readAdditionalSaveData(CompoundTag compound) {
-		super.readAdditionalSaveData(compound);
-	}
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        data.add(new AnimationController<>(this, "movement", 1, this::movementPredicate));
+        data.add(new AnimationController<>(this, "procedure", 1, this::procedurePredicate));
+    }
 
-	@Override
-	public void baseTick() {
-		super.baseTick();
-		this.refreshDimensions();
-	}
-
-	@Override
-	public InteractionResult mobInteract(Player sourceentity, InteractionHand hand) {
-		super.mobInteract(sourceentity, hand);
-
-		ItemStack stack = sourceentity.getMainHandItem();
-		if (stack.getItem() == TargetModItems.MONITOR.get()) {
-			if (!sourceentity.isCrouching()) {
-				if (!linked) {
-
-					if (stack.getOrCreateTag().getBoolean("linked")) {
-						sourceentity.displayClientMessage(Component.translatable("des.target.monitor.monitor_already_linked").withStyle(ChatFormatting.RED), true);
-						return InteractionResult.sidedSuccess(this.level().isClientSide());
-					}
-
-					stack.getOrCreateTag().putString("link", this.getStringUUID());
-					this.getPersistentData().putString("controller", sourceentity.getStringUUID());
-					linked = true;
-					Monitor.link(stack,true);
-					sourceentity.displayClientMessage(Component.translatable("des.target.monitor.linked").withStyle(ChatFormatting.GREEN), true);
-					if (sourceentity instanceof ServerPlayer serverPlayer) {
-						serverPlayer.level().playSound(null, serverPlayer.getOnPos(), Objects.requireNonNull(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("entity.arrow.hit_player"))), SoundSource.PLAYERS, 0.5F, 1);
-					}
-				} else {
-					sourceentity.displayClientMessage(Component.translatable("des.target.monitor.already_linked").withStyle(ChatFormatting.RED), true);
-				}
-			} else {
-				if (linked) {
-					if (!stack.getOrCreateTag().getString("link").equals(this.getStringUUID())) {
-						sourceentity.displayClientMessage(Component.translatable("des.target.monitor.already_linked").withStyle(ChatFormatting.RED), true);
-						return InteractionResult.sidedSuccess(this.level().isClientSide());
-					}
-
-					stack.getOrCreateTag().putString("link", "none");
-					this.getPersistentData().putString("controller", "none");
-					linked = false;
-					Monitor.link(stack,false);
-					sourceentity.displayClientMessage(Component.translatable("des.target.monitor.unlinked").withStyle(ChatFormatting.RED), true);
-					if (sourceentity instanceof ServerPlayer serverPlayer) {
-						serverPlayer.level().playSound(null, serverPlayer.getOnPos(), Objects.requireNonNull(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("entity.arrow.hit_player"))), SoundSource.PLAYERS, 0.5F, 1);
-					}
-				}
-			}
-		}
-
-		return InteractionResult.sidedSuccess(this.level().isClientSide());
-	}
-
-
-	@Override
-	public EntityDimensions getDimensions(Pose p_33597_) {
-		return super.getDimensions(p_33597_).scale((float) 1);
-	}
-
-	@Override
-	protected void checkFallDamage(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
-	}
-
-	@Override
-	public void setNoGravity(boolean ignored) {
-		super.setNoGravity(true);
-	}
-
-	@Override
-	public void aiStep() {
-		super.aiStep();
-		this.updateSwingTime();
-		this.setNoGravity(true);
-	}
-
-	public static void init() {
-	}
-
-	public static AttributeSupplier.Builder createAttributes() {
-		AttributeSupplier.Builder builder = Mob.createMobAttributes();
-		builder = builder.add(Attributes.MOVEMENT_SPEED, 0.1);
-		builder = builder.add(Attributes.MAX_HEALTH, 10);
-		builder = builder.add(Attributes.ARMOR, 0);
-		builder = builder.add(Attributes.ATTACK_DAMAGE, 0);
-		builder = builder.add(Attributes.FOLLOW_RANGE, 64);
-		builder = builder.add(Attributes.FLYING_SPEED, 0.1);
-		return builder;
-	}
-
-	private PlayState movementPredicate(AnimationState event) {
-		if (this.animationprocedure.equals("empty")) {
-			if (linked) {
-				return event.setAndContinue(RawAnimation.begin().thenLoop("animation.drone.fly"));
-			}
-			return event.setAndContinue(RawAnimation.begin().thenLoop("animation.drone.idle"));
-		}
-		return PlayState.STOP;
-	}
-
-	private PlayState procedurePredicate(AnimationState event) {
-		if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-			event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
-			if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-				this.animationprocedure = "empty";
-				event.getController().forceAnimationReset();
-			}
-		} else if (animationprocedure.equals("empty")) {
-			return PlayState.STOP;
-		}
-		return PlayState.CONTINUE;
-	}
-
-	@Override
-	protected void tickDeath() {
-		++this.deathTime;
-		if (this.deathTime == 20) {
-			this.remove(DroneEntity.RemovalReason.KILLED);
-			this.dropExperience();
-		}
-	}
-
-	public String getSyncedAnimation() {
-		return this.entityData.get(ANIMATION);
-	}
-
-	public void setAnimation(String animation) {
-		this.entityData.set(ANIMATION, animation);
-	}
-
-	@Override
-	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-		data.add(new AnimationController<>(this, "movement", 1, this::movementPredicate));
-		data.add(new AnimationController<>(this, "procedure", 1, this::procedurePredicate));
-	}
-
-	@Override
-	public AnimatableInstanceCache getAnimatableInstanceCache() {
-		return this.cache;
-	}
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
+    }
 }

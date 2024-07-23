@@ -1,8 +1,11 @@
 package net.mcreator.target.tools;
 
+import net.mcreator.target.entity.DroneEntity;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -116,10 +119,19 @@ public class TooltipTool {
         );
     }
 
-    public static void addMonitorTips(List<Component> tooltip, ItemStack stack, Player player) {
+    public static void addMonitorTips(List<Component> tooltip, int id) {
+        if (id == -1) return;
+
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+
+        Entity entity = player.level().getEntity(id);
+        if (entity == null) return;
+
+        if (!(entity instanceof DroneEntity)) return;
+
         tooltip.add(Component.literal(""));
 
-
-        tooltip.add(Component.literal(player.position().distanceTo(e) + " M").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.literal(player.distanceTo(entity) + " M").withStyle(ChatFormatting.GRAY));
     }
 }
