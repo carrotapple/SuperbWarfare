@@ -126,6 +126,7 @@
   "curios.identifier.dog_tag": "Dog Tag",
   "item.target.shield_cell": "Cell",
   "item.target.mk42_spawn_egg": "MK-42 Spawn Egg",
+  "item.target.monitor": "Monitor",
 
   "attribute.target.spread": "Spread",
 
@@ -194,6 +195,7 @@
   "entity.target.claymore": "Claymore",
   "entity.target.senpai": "Senpai",
   "entity.target.mk_42": "5''/54 Mk42",
+  "entity.target.drone": "Drone",
 
   "key.categories.target": "TARGET",
   "key.target.reload": "Reload",
@@ -230,5 +232,10 @@
   "commands.ammo.set": "Set %s ammo to %s for %s players",
   "commands.ammo.add": "Added %s ammo of amount %s for %s players",
   "commands.pvp_mode.on": "Enabled PVP Mode",
-  "commands.pvp_mode.off": "Disabled PVP Mode"
+  "commands.pvp_mode.off": "Disabled PVP Mode",
+
+  "des.target.monitor.linked": "Connect！",
+  "des.target.monitor.monitor_already_linked": "This monitor has been connected！",
+  "des.target.monitor.already_linked": "This device has been connected！",
+  "des.target.monitor.unlinked": "Disconnect！"
 }

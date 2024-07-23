@@ -2,6 +2,7 @@
 package net.mcreator.target.entity;
 
 import net.mcreator.target.init.TargetModItems;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -51,7 +52,10 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 	private boolean swinging;
 	private boolean lastloop;
+	private boolean linked = false;
 	private long lastSwing;
+
+
 	public String animationprocedure = "empty";
 
 	public DroneEntity(PlayMessages.SpawnEntity packet, Level world) {
@@ -61,7 +65,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 	public DroneEntity(EntityType<DroneEntity> type, Level world) {
 		super(type, world);
 		xpReward = 0;
-		setNoAi(true);
+		setNoAi(false);
 		setPersistenceRequired();
 		this.moveControl = new FlyingMoveControl(this, 10, true);
 	}
@@ -125,11 +129,41 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 
 		ItemStack stack = sourceentity.getMainHandItem();
 		if (stack.getItem() == TargetModItems.MONITOR.get()) {
-			stack.getOrCreateTag().putString("link", this.getStringUUID());
-			Monitor.link(stack,true);
-			sourceentity.displayClientMessage(Component.literal("LINKED!"), true);
-			if (sourceentity instanceof ServerPlayer serverPlayer) {
-				serverPlayer.level().playSound(null, serverPlayer.getOnPos(), Objects.requireNonNull(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("entity.arrow.hit_player"))), SoundSource.PLAYERS, 0.5F, 1);
+			if (!sourceentity.isCrouching()) {
+				if (!linked) {
+
+					if (stack.getOrCreateTag().getBoolean("linked")) {
+						sourceentity.displayClientMessage(Component.translatable("des.target.monitor.monitor_already_linked").withStyle(ChatFormatting.RED), true);
+						return InteractionResult.sidedSuccess(this.level().isClientSide());
+					}
+
+					stack.getOrCreateTag().putString("link", this.getStringUUID());
+					this.getPersistentData().putString("controller", sourceentity.getStringUUID());
+					linked = true;
+					Monitor.link(stack,true);
+					sourceentity.displayClientMessage(Component.translatable("des.target.monitor.linked").withStyle(ChatFormatting.GREEN), true);
+					if (sourceentity instanceof ServerPlayer serverPlayer) {
+						serverPlayer.level().playSound(null, serverPlayer.getOnPos(), Objects.requireNonNull(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("entity.arrow.hit_player"))), SoundSource.PLAYERS, 0.5F, 1);
+					}
+				} else {
+					sourceentity.displayClientMessage(Component.translatable("des.target.monitor.already_linked").withStyle(ChatFormatting.RED), true);
+				}
+			} else {
+				if (linked) {
+					if (!stack.getOrCreateTag().getString("link").equals(this.getStringUUID())) {
+						sourceentity.displayClientMessage(Component.translatable("des.target.monitor.already_linked").withStyle(ChatFormatting.RED), true);
+						return InteractionResult.sidedSuccess(this.level().isClientSide());
+					}
+
+					stack.getOrCreateTag().putString("link", "none");
+					this.getPersistentData().putString("controller", "none");
+					linked = false;
+					Monitor.link(stack,false);
+					sourceentity.displayClientMessage(Component.translatable("des.target.monitor.unlinked").withStyle(ChatFormatting.RED), true);
+					if (sourceentity instanceof ServerPlayer serverPlayer) {
+						serverPlayer.level().playSound(null, serverPlayer.getOnPos(), Objects.requireNonNull(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("entity.arrow.hit_player"))), SoundSource.PLAYERS, 0.5F, 1);
+					}
+				}
 			}
 		}
 
@@ -174,7 +208,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 
 	private PlayState movementPredicate(AnimationState event) {
 		if (this.animationprocedure.equals("empty")) {
-			if (!this.onGround()) {
+			if (linked) {
 				return event.setAndContinue(RawAnimation.begin().thenLoop("animation.drone.fly"));
 			}
 			return event.setAndContinue(RawAnimation.begin().thenLoop("animation.drone.idle"));

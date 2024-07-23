@@ -70,6 +70,6 @@ public class TargetModEntities {
         event.put(CLAYMORE.get(), ClaymoreEntity.createAttributes().build());
         event.put(TARGET.get(), TargetEntity.createAttributes().build());
         event.put(MK_42.get(), Mk42Entity.createAttributes().build());
-        event.put(DRONE.get(), Mk42Entity.createAttributes().build());
+        event.put(DRONE.get(), DroneEntity.createAttributes().build());
     }
 }

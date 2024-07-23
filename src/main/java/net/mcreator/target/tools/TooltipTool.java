@@ -3,6 +3,7 @@ package net.mcreator.target.tools;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
@@ -113,5 +114,12 @@ public class TooltipTool {
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                 e -> tooltip.add(Component.literal(e.getEnergyStored() + " / " + e.getMaxEnergyStored() + " FE").withStyle(ChatFormatting.GRAY))
         );
+    }
+
+    public static void addMonitorTips(List<Component> tooltip, ItemStack stack, Player player) {
+        tooltip.add(Component.literal(""));
+
+
+        tooltip.add(Component.literal(player.position().distanceTo(e) + " M").withStyle(ChatFormatting.GRAY));
     }
 }

@@ -126,6 +126,7 @@
   "curios.identifier.dog_tag": "狗牌",
   "item.target.shield_cell": "电池",
   "item.target.mk42_spawn_egg": "MK-42刷怪蛋",
+  "item.target.monitor": "遥控器",
 
   "attribute.target.spread": "散布",
 
@@ -194,6 +195,7 @@
   "entity.target.claymore": "阔剑地雷",
   "entity.target.senpai": "野兽先辈",
   "entity.target.mk_42": "5''/54 Mk42",
+  "entity.target.drone": "无人机",
 
   "key.categories.target": "TARGET",
   "key.target.reload": "装填子弹",
@@ -230,5 +232,10 @@
   "commands.ammo.set": "为%3$s位玩家的%1$s弹药数量设置为%2$s",
   "commands.ammo.add": "为%3$s位玩家添加了%2$s发%1$s弹药",
   "commands.pvp_mode.on": "已启用PVP模式",
-  "commands.pvp_mode.off": "已禁用PVP模式"
+  "commands.pvp_mode.off": "已禁用PVP模式",
+
+  "des.target.monitor.linked": "连接成功！",
+  "des.target.monitor.monitor_already_linked": "这个遥控器已连接到一个设备！",
+  "des.target.monitor.already_linked": "这个设备已被连接！",
+  "des.target.monitor.unlinked": "断开连接！"
 }
