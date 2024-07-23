@@ -5,7 +5,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -119,16 +118,17 @@ public class TooltipTool {
         );
     }
 
-    public static void addMonitorTips(List<Component> tooltip, int id) {
-        if (id == -1) return;
+    public static void addMonitorTips(List<Component> tooltip, String id) {
+        if (id.equals("none")) return;
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
 
-        Entity entity = player.level().getEntity(id);
-        if (entity == null) return;
+        DroneEntity entity = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(256))
+                .stream().filter(e -> e.getStringUUID().equals(id)).findFirst().orElse(null);
 
-        if (!(entity instanceof DroneEntity)) return;
+        tooltip.add(Component.literal("" + entity));
+        if (entity == null) return;
 
         tooltip.add(Component.literal(""));
 

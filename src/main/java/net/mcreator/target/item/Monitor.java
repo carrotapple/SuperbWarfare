@@ -18,18 +18,18 @@ public class Monitor extends Item {
         super(new Properties().stacksTo(1));
     }
 
-    public static void link(ItemStack itemstack, int id) {
+    public static void link(ItemStack itemstack, String id) {
         ItemNBTTool.setBoolean(itemstack, LINKED, true);
-        ItemNBTTool.setInt(itemstack, LINKED_DRONE, id);
+        itemstack.getOrCreateTag().putString(LINKED_DRONE, id);
     }
 
     public static void disLink(ItemStack itemstack) {
         ItemNBTTool.setBoolean(itemstack, LINKED, false);
-        ItemNBTTool.setInt(itemstack, LINKED_DRONE, -1);
+        itemstack.getOrCreateTag().putString(LINKED_DRONE, "none");
     }
 
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
-        TooltipTool.addMonitorTips(list, ItemNBTTool.getInt(stack, LINKED_DRONE, -1));
+        TooltipTool.addMonitorTips(list, stack.getOrCreateTag().getString(LINKED_DRONE));
     }
 }

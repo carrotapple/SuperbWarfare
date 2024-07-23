@@ -54,6 +54,8 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
     private boolean swinging;
     private boolean lastloop;
     private boolean linked = false;
+    private String controller;
+
     private long lastSwing;
 
     public String animationprocedure = "empty";
@@ -110,11 +112,17 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
+
+        compound.putBoolean("Linked", this.linked);
+        compound.putString("Controller", this.controller);
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
+
+        this.linked = compound.getBoolean("Linked");
+        this.controller = compound.getString("Controller");
     }
 
     @Override
@@ -136,10 +144,10 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                         return InteractionResult.sidedSuccess(this.level().isClientSide());
                     }
 
-                    this.getPersistentData().putString("controller", player.getStringUUID());
                     this.linked = true;
+                    this.controller = player.getStringUUID();
 
-                    Monitor.link(stack, this.getId());
+                    Monitor.link(stack, this.getStringUUID());
                     player.displayClientMessage(Component.translatable("des.target.monitor.linked").withStyle(ChatFormatting.GREEN), true);
 
                     if (player instanceof ServerPlayer serverPlayer) {
@@ -155,12 +163,12 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                         return InteractionResult.sidedSuccess(this.level().isClientSide());
                     }
 
-                    this.getPersistentData().putString("controller", "none");
-
+                    this.controller = "none";
                     this.linked = false;
-                    Monitor.disLink(stack);
 
+                    Monitor.disLink(stack);
                     player.displayClientMessage(Component.translatable("des.target.monitor.unlinked").withStyle(ChatFormatting.RED), true);
+
                     if (player instanceof ServerPlayer serverPlayer) {
                         serverPlayer.level().playSound(null, serverPlayer.getOnPos(), Objects.requireNonNull(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("entity.arrow.hit_player"))), SoundSource.PLAYERS, 0.5F, 1);
                     }
