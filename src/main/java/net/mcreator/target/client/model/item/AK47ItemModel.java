@@ -46,13 +46,9 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(1.97f * (float) p);
-
         gun.setPosY(0.011f * (float) p - (float) (0.2f * zp));
-
         gun.setPosZ(3.8f * (float) p + (float) (0.5f * zp));
-
         gun.setScaleZ(1f - (0.2f * (float) p));
-
         scope.setScaleZ(1f - (0.4f * (float) p));
 
 

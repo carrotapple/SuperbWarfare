@@ -1,5 +1,5 @@
 {
-  "zoom_speed": 0.6,
+  "zoom_speed": 0.4,
   "zoom": 6,
   "min_zoom": 1.3,
   "max_zoom": 6,
@@ -7,8 +7,8 @@
   "dev": 6,
   "recoil_x": 0.01,
   "recoil_y": 0.038,
-  "damage": 140,
-  "headshot": 4,
+  "damage": 100,
+  "headshot": 3,
   "velocity": 31,
   "projectile_amount": 1,
   "mag": 3,

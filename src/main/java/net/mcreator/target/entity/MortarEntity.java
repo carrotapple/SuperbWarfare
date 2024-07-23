@@ -48,6 +48,8 @@ import javax.annotation.Nullable;
 public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<Integer> FIRE_TIME = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.INT);
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
 
@@ -67,6 +69,8 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
         super.defineSynchedData();
         this.entityData.define(SHOOT, false);
         this.entityData.define(ANIMATION, "undefined");
+        this.entityData.define(FIRE_TIME, 0);
+
     }
 
     @Override
@@ -141,12 +145,16 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
+        compound.putInt("fire_time", this.entityData.get(FIRE_TIME));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
+        if (compound.contains("fire_time"))
+            this.entityData.set(FIRE_TIME, compound.getInt("fire_time"));
     }
+
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
@@ -165,7 +173,9 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
         }
         if (mainHandItem.getItem() == TargetModItems.MORTAR_SHELLS.get() && !player.getCooldowns().isOnCooldown(TargetModItems.MORTAR_SHELLS.get()) && !player.isShiftKeyDown()) {
 
-            this.getPersistentData().putInt("fire_time",25);
+//            this.getPersistentData().putInt("fire_time",25);
+
+            this.entityData.set(FIRE_TIME,25);
 
             player.getCooldowns().addCooldown(TargetModItems.MORTAR_SHELLS.get(), 30);
             if (!player.isCreative()) {
@@ -216,9 +226,11 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
         Thread Thread = new Thread(Runnable);
         Thread.start();
 
-        if (this.getPersistentData().getInt("fire_time") > 0) {
-            this.getPersistentData().putInt("fire_time",this.getPersistentData().getInt("fire_time") - 1);
-        }
+//        if (this.getPersistentData().getInt("fire_time") > 0) {
+//            this.getPersistentData().putInt("fire_time",this.getPersistentData().getInt("fire_time") - 1);
+//        }
+
+        this.entityData.set(FIRE_TIME,this.entityData.get(FIRE_TIME) - 1);
 
         this.refreshDimensions();
     }
@@ -262,7 +274,7 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
 
     private PlayState movementPredicate(AnimationState event) {
         if (this.animationProcedure.equals("empty")) {
-            if (this.getPersistentData().getInt("fire_time") > 0) {
+            if (this.entityData.get(FIRE_TIME) > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mortar.fire"));
             }
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mortar.idle"));

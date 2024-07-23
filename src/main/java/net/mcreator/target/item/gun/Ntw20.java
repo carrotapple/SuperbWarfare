@@ -169,7 +169,7 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
         if (slot == EquipmentSlot.MAINHAND) {
             map = HashMultimap.create(map);
             map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, TargetMod.ATTRIBUTE_MODIFIER, -0.1f, AttributeModifier.Operation.MULTIPLY_BASE));
+                    new AttributeModifier(uuid, TargetMod.ATTRIBUTE_MODIFIER, -0.15f, AttributeModifier.Operation.MULTIPLY_BASE));
         }
         return map;
     }

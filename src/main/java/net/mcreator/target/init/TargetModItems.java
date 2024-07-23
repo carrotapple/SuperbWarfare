@@ -77,7 +77,10 @@ public class TargetModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, TargetMod.MODID);
 
     public static final RegistryObject<Item> SENPAI_SPAWN_EGG = ITEMS.register("senpai_spawn_egg", () -> new ForgeSpawnEggItem(TargetModEntities.SENPAI, -11584987, -14014413, new Item.Properties()));
-    public static final RegistryObject<Item> MK_42_SPAWN_EGG = ITEMS.register("mk42_spawn_egg", () -> new ForgeSpawnEggItem(TargetModEntities.MK_42, -11584987, -14014413, new Item.Properties()));
+    public static final RegistryObject<Item> MK_42_SPAWN_EGG = ITEMS.register("mk42_spawn_egg", () -> new ForgeSpawnEggItem(TargetModEntities.MK_42, -8348258, -2630437, new Item.Properties()));
+    public static final RegistryObject<Item> DRONE_SPAWN_EGG = ITEMS.register("drone_spawn_egg", () -> new ForgeSpawnEggItem(TargetModEntities.DRONE, -3355444, -10053121, new Item.Properties()));
+
+    public static final RegistryObject<Item> MONITOR = ITEMS.register("monitor", Monitor::new);
     public static final RegistryObject<Item> TARGET_DEPLOYER = ITEMS.register("target_deployer", TargetDeployer::new);
     public static final RegistryObject<Item> SANDBAG = block(TargetModBlocks.SANDBAG);
     public static final RegistryObject<Item> BARBED_WIRE = block(TargetModBlocks.BARBED_WIRE);

@@ -28,6 +28,10 @@ public class TargetModEntities {
             EntityType.Builder.<ClaymoreEntity>of(ClaymoreEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(ClaymoreEntity::new).fireImmune().sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<Mk42Entity>> MK_42 = register("mk_42",
             EntityType.Builder.<Mk42Entity>of(Mk42Entity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(Mk42Entity::new).fireImmune().sized(5.4f, 3.5f));
+
+    public static final RegistryObject<EntityType<DroneEntity>> DRONE = register("drone",
+            EntityType.Builder.<DroneEntity>of(DroneEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(DroneEntity::new).sized(0.4f, 0.175f));
+
     public static final RegistryObject<EntityType<TaserBulletProjectileEntity>> TASER_BULLET_PROJECTILE = register("projectile_taser_bullet_projectile",
             EntityType.Builder.<TaserBulletProjectileEntity>of(TaserBulletProjectileEntity::new, MobCategory.MISC).setCustomClientFactory(TaserBulletProjectileEntity::new).setShouldReceiveVelocityUpdates(true).setTrackingRange(64)
                     .setUpdateInterval(1).sized(0.5f, 0.5f));
@@ -66,5 +70,6 @@ public class TargetModEntities {
         event.put(CLAYMORE.get(), ClaymoreEntity.createAttributes().build());
         event.put(TARGET.get(), TargetEntity.createAttributes().build());
         event.put(MK_42.get(), Mk42Entity.createAttributes().build());
+        event.put(DRONE.get(), Mk42Entity.createAttributes().build());
     }
 }
