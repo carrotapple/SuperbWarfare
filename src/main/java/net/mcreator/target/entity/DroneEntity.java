@@ -190,7 +190,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
         double y = vec.y;
         double z = vec.z;
 
-        this.setDeltaMovement(Mth.clamp(1.04 * x ,-0.8,0.8), y, Mth.clamp(1.04 * z,-0.8,0.8));
+        this.setDeltaMovement(Mth.clamp(1.06 * x ,-0.95,0.95), y, Mth.clamp(1.06 * z,-0.95,0.95));
 
         this.refreshDimensions();
     }
@@ -256,7 +256,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
             if (stack.getOrCreateTag().getBoolean("Using")) {
                 this.setYRot(control.getYRot());
                 this.yRotO = this.getYRot();
-                this.setXRot(control.getXRot());
+                this.setXRot(Mth.clamp(control.getXRot(),-25,95));
                 this.setRot(this.getYRot(), this.getXRot());
                 this.yBodyRot = control.getYRot();
                 this.yHeadRot = control.getYRot();
@@ -307,12 +307,12 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 
     public static AttributeSupplier.Builder createAttributes() {
         AttributeSupplier.Builder builder = Mob.createMobAttributes();
-        builder = builder.add(Attributes.MOVEMENT_SPEED, 1);
-        builder = builder.add(Attributes.MAX_HEALTH, 10);
+        builder = builder.add(Attributes.MOVEMENT_SPEED, 0.1);
+        builder = builder.add(Attributes.MAX_HEALTH, 20);
         builder = builder.add(Attributes.ARMOR, 0);
         builder = builder.add(Attributes.ATTACK_DAMAGE, 0);
         builder = builder.add(Attributes.FOLLOW_RANGE, 64);
-        builder = builder.add(Attributes.FLYING_SPEED, 10);
+        builder = builder.add(Attributes.FLYING_SPEED, 0.1);
         return builder;
     }
 

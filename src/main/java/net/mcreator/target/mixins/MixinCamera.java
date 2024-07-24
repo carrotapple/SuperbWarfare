@@ -43,9 +43,8 @@ public abstract class MixinCamera {
                         .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
 
                 if (drone != null) {
-
-                    setRotation(drone.getYRot(), drone.getXRot());
-                    setPosition(drone.getX() + 0.18 * drone.getLookAngle().x, drone.getY() + drone.getEyeHeight(), drone.getZ() + 0.18 * drone.getLookAngle().z);
+                    setRotation(drone.getViewYRot(partialTicks), drone.getViewXRot(partialTicks));
+                    setPosition(Mth.lerp(partialTicks, drone.xo, drone.getX()) + 0.18 * drone.getLookAngle().x, Mth.lerp(partialTicks, drone.yo, drone.getY()) + 0.075, Mth.lerp(partialTicks, drone.zo, drone.getZ()) + 0.18 * drone.getLookAngle().z);
                     info.cancel();
                 }
             }
