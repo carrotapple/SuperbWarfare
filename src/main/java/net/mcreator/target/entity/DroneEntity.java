@@ -320,7 +320,15 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
         super.die(source);
 
         String id = this.entityData.get(CONTROLLER);
-        Player player = this.level().getPlayerByUUID(UUID.fromString(id));
+
+        UUID uuid;
+        try {
+            uuid = UUID.fromString(id);
+        } catch (IllegalArgumentException e) {
+            return;
+        }
+
+        Player player = this.level().getPlayerByUUID(uuid);
         if (player != null) {
             player.getInventory().items.stream().filter(stack -> stack.getItem() == TargetModItems.MONITOR.get())
                     .forEach(stack -> {
