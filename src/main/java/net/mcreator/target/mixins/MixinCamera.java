@@ -1,8 +1,11 @@
 package net.mcreator.target.mixins;
 
+import net.mcreator.target.entity.DroneEntity;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -26,18 +29,27 @@ public abstract class MixinCamera {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setRotation(FF)V", ordinal = 0),
             method = "setup(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/world/entity/Entity;ZZF)V",
             cancellable = true)
+
     private void onSetup(BlockGetter level, Entity entity, boolean detached, boolean mirrored, float partialTicks, CallbackInfo info) {
-//        Minecraft mc = Minecraft.getInstance();
-//        Player player = mc.player;
-//
-//        if (player != null) {
-//            ItemStack stack = player.getMainHandItem();
-//
-//            if (stack.is(TargetModTags.Items.GUN)) {
-//                setRotation(player.getYRot(), player.getXRot());
-//                setPosition(player.getX(), player.getY() + 3, player.getZ());
-//                info.cancel();
-//            }
-//        }
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
+
+        if (player != null) {
+            ItemStack stack = player.getMainHandItem();
+
+            if (stack.is(TargetModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+
+                DroneEntity drone = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
+                        .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
+
+                if (drone != null) {
+
+                    setRotation(drone.getYRot(), drone.getXRot());
+                    setPosition(drone.getX() + 0.18 * drone.getLookAngle().x, drone.getY() + drone.getEyeHeight(), drone.getZ() + 0.18 * drone.getLookAngle().z);
+                    info.cancel();
+                }
+            }
+        }
     }
+
 }

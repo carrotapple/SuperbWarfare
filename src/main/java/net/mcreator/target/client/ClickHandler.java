@@ -147,6 +147,26 @@ public class ClickHandler {
         if (notInGame()) return;
         if (event.getAction() != InputConstants.PRESS) return;
         setKeyState(event.getKey(), 1);
+
+        int button = event.getKey();
+        if (button == GLFW.GLFW_KEY_A) {
+            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveLeftMessage(true));
+        }
+        if (button == GLFW.GLFW_KEY_D) {
+            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveRightMessage(true));
+        }
+        if (button == GLFW.GLFW_KEY_W) {
+            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveForwardMessage(true));
+        }
+        if (button == GLFW.GLFW_KEY_S) {
+            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveBackwardMessage(true));
+        }
+        if (button == GLFW.GLFW_KEY_SPACE) {
+            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveUpMessage(true));
+        }
+        if (button == GLFW.GLFW_KEY_LEFT_CONTROL) {
+            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveDownMessage(true));
+        }
     }
 
     @SubscribeEvent
@@ -154,5 +174,25 @@ public class ClickHandler {
         if (notInGame()) return;
         if (event.getAction() != InputConstants.RELEASE) return;
         setKeyState(event.getKey(), 0);
+
+        int button = event.getKey();
+        if (button == GLFW.GLFW_KEY_A) {
+            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveLeftMessage(false));
+        }
+        if (button == GLFW.GLFW_KEY_D) {
+            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveRightMessage(false));
+        }
+        if (button == GLFW.GLFW_KEY_W) {
+            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveForwardMessage(false));
+        }
+        if (button == GLFW.GLFW_KEY_S) {
+            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveBackwardMessage(false));
+        }
+        if (button == GLFW.GLFW_KEY_SPACE) {
+            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveUpMessage(false));
+        }
+        if (button == GLFW.GLFW_KEY_LEFT_CONTROL) {
+            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveDownMessage(false));
+        }
     }
 }

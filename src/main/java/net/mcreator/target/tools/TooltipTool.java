@@ -124,13 +124,11 @@ public class TooltipTool {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
 
-        DroneEntity entity = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(256))
+        DroneEntity entity = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
                 .stream().filter(e -> e.getStringUUID().equals(id)).findFirst().orElse(null);
 
         if (entity == null) return;
 
-        tooltip.add(Component.literal(""));
-
-        tooltip.add(Component.literal(player.distanceTo(entity) + " M").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.literal("Distance:" + new DecimalFormat("##.#").format(player.distanceTo(entity)) + "M").withStyle(ChatFormatting.GRAY));
     }
 }

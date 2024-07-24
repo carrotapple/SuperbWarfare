@@ -105,6 +105,12 @@ public class TargetMod {
         addNetworkMessage(AdjustZoomFovMessage.class, AdjustZoomFovMessage::encode, AdjustZoomFovMessage::decode, AdjustZoomFovMessage::handler);
         addNetworkMessage(AdjustMortarAngleMessage.class, AdjustMortarAngleMessage::encode, AdjustMortarAngleMessage::decode, AdjustMortarAngleMessage::handler);
         addNetworkMessage(InteractMessage.class, InteractMessage::encode, InteractMessage::decode, InteractMessage::handler);
+        addNetworkMessage(DroneMoveLeftMessage.class, DroneMoveLeftMessage::encode, DroneMoveLeftMessage::decode, DroneMoveLeftMessage::handler);
+        addNetworkMessage(DroneMoveRightMessage.class, DroneMoveRightMessage::encode, DroneMoveRightMessage::decode, DroneMoveRightMessage::handler);
+        addNetworkMessage(DroneMoveForwardMessage.class, DroneMoveForwardMessage::encode, DroneMoveForwardMessage::decode, DroneMoveForwardMessage::handler);
+        addNetworkMessage(DroneMoveBackwardMessage.class, DroneMoveBackwardMessage::encode, DroneMoveBackwardMessage::decode, DroneMoveBackwardMessage::handler);
+        addNetworkMessage(DroneMoveUpMessage.class, DroneMoveUpMessage::encode, DroneMoveUpMessage::decode, DroneMoveUpMessage::handler);
+        addNetworkMessage(DroneMoveDownMessage.class, DroneMoveDownMessage::encode, DroneMoveDownMessage::decode, DroneMoveDownMessage::handler);
 
         event.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)),
                 Ingredient.of(Items.LIGHTNING_ROD), PotionUtils.setPotion(new ItemStack(Items.POTION), TargetModPotion.SHOCK.get())));

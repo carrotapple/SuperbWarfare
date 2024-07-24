@@ -3,15 +3,20 @@ package net.mcreator.target.entity;
 
 import net.mcreator.target.init.TargetModItems;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.core.object.PlayState;
@@ -44,19 +49,18 @@ import net.minecraft.core.BlockPos;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.item.Monitor;
 
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 public class DroneEntity extends PathfinderMob implements GeoEntity {
-    public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<Boolean> LINKED = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<String> CONTROLLER = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private float moveX = 0;
+    private float moveY = 0;
+    private float moveZ = 0;
 
-    private boolean swinging;
-    private boolean lastloop;
-    private boolean linked = false;
-    private String controller;
-
-    private long lastSwing;
 
     public String animationprocedure = "empty";
 
@@ -69,19 +73,26 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
         xpReward = 0;
         setNoAi(false);
         setPersistenceRequired();
-        this.moveControl = new FlyingMoveControl(this, 10, true);
+    }
+
+    public DroneEntity(EntityType<? extends DroneEntity> type, Level world, float moveX, float moveY, float moveZ) {
+        super(type, world);
+        this.moveX = moveX;
+        this.moveY = moveY;
+        this.moveZ = moveZ;
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(SHOOT, false);
         this.entityData.define(ANIMATION, "undefined");
+        this.entityData.define(CONTROLLER, "undefined");
+        this.entityData.define(LINKED, false);
     }
 
     @Override
     protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
-        return 0.05F;
+        return 0.075F;
     }
 
     @Override
@@ -113,21 +124,77 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
 
-        compound.putBoolean("Linked", this.linked);
-        compound.putString("Controller", this.controller);
+        compound.putBoolean("Linked", this.entityData.get(LINKED));
+        compound.putString("Controller", this.entityData.get(CONTROLLER));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
 
-        this.linked = compound.getBoolean("Linked");
-        this.controller = compound.getString("Controller");
+        if (compound.contains("Linked"))
+            this.entityData.set(LINKED, compound.getBoolean("Linked"));
+        if (compound.contains("Controller"))
+            this.entityData.set(CONTROLLER, compound.getString("Controller"));
     }
 
     @Override
     public void baseTick() {
         super.baseTick();
+
+        if (this.getPersistentData().getBoolean("left")) {
+            moveX = -1.5f;
+        }
+        if (this.getPersistentData().getBoolean("right")) {
+            moveX = 1.5f;
+        }
+
+        if (!this.getPersistentData().getBoolean("left") && !this.getPersistentData().getBoolean("right")) {
+            if (moveX >= 0) {
+                moveX = Mth.clamp(moveX - 0.3f,0,1);
+            } else {
+                moveX = Mth.clamp(moveX + 0.3f,-1,0);
+            }
+        }
+
+        if (this.getPersistentData().getBoolean("forward")) {
+            moveZ = -1.5f;
+        }
+        if (this.getPersistentData().getBoolean("backward")) {
+            moveZ = 1.5f;
+        }
+
+        if (!this.getPersistentData().getBoolean("forward") && !this.getPersistentData().getBoolean("backward")) {
+            if (moveZ >= 0) {
+                moveZ = Mth.clamp(moveZ - 0.3f,0,1);
+            } else {
+                moveZ = Mth.clamp(moveZ + 0.3f,-1,0);
+            }
+        }
+
+        if (this.getPersistentData().getBoolean("up")) {
+            moveY = -1.5f;
+        }
+        if (this.getPersistentData().getBoolean("down")) {
+            moveY = 1.5f;
+        }
+
+        if (!this.getPersistentData().getBoolean("up") && !this.getPersistentData().getBoolean("down")) {
+            if (moveY >= 0) {
+                moveY = Mth.clamp(moveY - 0.3f,0,1);
+            } else {
+                moveY = Mth.clamp(moveY + 0.3f,-1,0);
+            }
+        }
+
+        Vec3 vec = this.getDeltaMovement();
+
+        double x = vec.x;
+        double y = vec.y;
+        double z = vec.z;
+
+        this.setDeltaMovement(Mth.clamp(1.04 * x ,-0.8,0.8), y, Mth.clamp(1.04 * z,-0.8,0.8));
+
         this.refreshDimensions();
     }
 
@@ -138,14 +205,14 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
         ItemStack stack = player.getMainHandItem();
         if (stack.getItem() == TargetModItems.MONITOR.get()) {
             if (!player.isCrouching()) {
-                if (!this.linked) {
+                if (!this.entityData.get(LINKED)) {
                     if (stack.getOrCreateTag().getBoolean("Linked")) {
                         player.displayClientMessage(Component.translatable("des.target.monitor.monitor_already_linked").withStyle(ChatFormatting.RED), true);
                         return InteractionResult.sidedSuccess(this.level().isClientSide());
                     }
 
-                    this.linked = true;
-                    this.controller = player.getStringUUID();
+                    this.entityData.set(LINKED, true);
+                    this.entityData.set(CONTROLLER, player.getStringUUID());
 
                     Monitor.link(stack, this.getStringUUID());
                     player.displayClientMessage(Component.translatable("des.target.monitor.linked").withStyle(ChatFormatting.GREEN), true);
@@ -157,14 +224,14 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                     player.displayClientMessage(Component.translatable("des.target.monitor.already_linked").withStyle(ChatFormatting.RED), true);
                 }
             } else {
-                if (this.linked) {
+                if (this.entityData.get(LINKED)) {
                     if (!stack.getOrCreateTag().getBoolean("Linked")) {
                         player.displayClientMessage(Component.translatable("des.target.monitor.already_linked").withStyle(ChatFormatting.RED), true);
                         return InteractionResult.sidedSuccess(this.level().isClientSide());
                     }
 
-                    this.controller = "none";
-                    this.linked = false;
+                    this.entityData.set(CONTROLLER, "none");
+                    this.entityData.set(LINKED, false);
 
                     Monitor.disLink(stack);
                     player.displayClientMessage(Component.translatable("des.target.monitor.unlinked").withStyle(ChatFormatting.RED), true);
@@ -174,11 +241,48 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                     }
                 }
             }
+        } else if (stack.isEmpty()&& player.isCrouching()) {
+            if (!this.level().isClientSide()) this.discard();
+            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TargetModItems.DRONE_SPAWN_EGG.get()));
         }
 
         return InteractionResult.sidedSuccess(this.level().isClientSide());
     }
 
+    @Override
+    public void travel(Vec3 dir) {
+        LivingEntity control = this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(512))
+                .stream().filter(e -> e.getStringUUID().equals(this.entityData.get(CONTROLLER))).findFirst().orElse(null);
+
+        if (control != null) {
+            ItemStack stack = control.getMainHandItem();
+            if (stack.getOrCreateTag().getBoolean("Using")) {
+                this.setYRot(control.getYRot());
+                this.yRotO = this.getYRot();
+                this.setXRot(control.getXRot());
+                this.setRot(this.getYRot(), this.getXRot());
+                this.yBodyRot = control.getYRot();
+                this.yHeadRot = control.getYRot();
+                this.setMaxUpStep(1.0F);
+                this.setSpeed(4 * (float)this.getAttributeValue(Attributes.MOVEMENT_SPEED));
+                float forward = -moveZ;
+                float upDown = -moveY;
+                float strafe = -moveX;
+                super.travel(new Vec3(strafe, upDown, forward));
+                return;
+            }
+
+        }
+        this.setMaxUpStep(0.5F);
+        super.travel(dir);
+    }
+
+
+
+    @Override
+    public void die(DamageSource source) {
+        super.die(source);
+    }
 
     @Override
     public EntityDimensions getDimensions(Pose p_33597_) {
@@ -217,7 +321,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 
     private PlayState movementPredicate(AnimationState event) {
         if (this.animationprocedure.equals("empty")) {
-            if (this.linked) {
+            if (this.entityData.get(LINKED) || !this.onGround()) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.drone.fly"));
             }
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.drone.idle"));
@@ -241,10 +345,14 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
     @Override
     protected void tickDeath() {
         ++this.deathTime;
-        if (this.deathTime == 20) {
+        if (this.deathTime >= 100 || this.onGround()) {
             this.remove(DroneEntity.RemovalReason.KILLED);
+            if (level() instanceof ServerLevel) {
+                level().explode(null, this.getX(), this.getY(), this.getZ(), 0.1F, Level.ExplosionInteraction.NONE);
+            }
             this.dropExperience();
         }
+        this.setDeltaMovement(new Vec3(this.getDeltaMovement().x(), this.getDeltaMovement().y() - 0.02, this.getDeltaMovement().z()));
     }
 
     public String getSyncedAnimation() {

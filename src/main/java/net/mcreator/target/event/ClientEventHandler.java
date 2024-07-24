@@ -1,7 +1,9 @@
 package net.mcreator.target.event;
 
+import net.mcreator.target.entity.DroneEntity;
 import net.mcreator.target.entity.Mk42Entity;
 import net.mcreator.target.init.TargetModAttributes;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
@@ -85,9 +87,20 @@ public class ClientEventHandler {
         if (player == null) return;
 
         InteractionHand hand = Minecraft.getInstance().options.mainHand().get() == HumanoidArm.RIGHT ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
+        ItemStack stack = player.getMainHandItem();
 
         if (event.getHand() == hand) {
-            if (player.getMainHandItem().is(TargetModTags.Items.GUN)) {
+            if (player.getUseItem().is(TargetModTags.Items.GUN)) {
+                event.setCanceled(true);
+            }
+        }
+
+        if (stack.is(TargetModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+
+            DroneEntity drone = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
+                    .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
+
+            if (drone != null) {
                 event.setCanceled(true);
             }
         }
