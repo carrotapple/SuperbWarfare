@@ -5,7 +5,6 @@ import net.mcreator.target.tools.ItemNBTTool;
 import net.mcreator.target.tools.TooltipTool;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -37,9 +36,13 @@ public class Monitor extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-        InteractionResultHolder<ItemStack> ar = super.use(world, player, hand);
-        Minecraft mc = Minecraft.getInstance();
         ItemStack stack = player.getMainHandItem();
+
+        if (!ItemNBTTool.getBoolean(stack, LINKED, false)) {
+            return super.use(world, player, hand);
+        }
+
+        Minecraft mc = Minecraft.getInstance();
         if (!stack.getOrCreateTag().getBoolean("Using")) {
             stack.getOrCreateTag().putBoolean("Using", true);
             mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
@@ -50,17 +53,18 @@ public class Monitor extends Item {
 
         DroneEntity drone = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
                 .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
-        if (drone != null) {
-            drone.getPersistentData().putBoolean("left",false);
-            drone.getPersistentData().putBoolean("right",false);
-            drone.getPersistentData().putBoolean("forward",false);
-            drone.getPersistentData().putBoolean("backward",false);
-            drone.getPersistentData().putBoolean("up",false);
-            drone.getPersistentData().putBoolean("down",false);
-        }
-        return ar;
-    }
 
+        if (drone != null) {
+            drone.getPersistentData().putBoolean("left", false);
+            drone.getPersistentData().putBoolean("right", false);
+            drone.getPersistentData().putBoolean("forward", false);
+            drone.getPersistentData().putBoolean("backward", false);
+            drone.getPersistentData().putBoolean("up", false);
+            drone.getPersistentData().putBoolean("down", false);
+        }
+
+        return super.use(world, player, hand);
+    }
 
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {

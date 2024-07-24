@@ -2,18 +2,15 @@ package net.mcreator.target.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.client.gui.RangeHelper;
 import net.mcreator.target.entity.Mk42Entity;
 import net.mcreator.target.entity.MortarEntity;
 import net.mcreator.target.init.TargetModItems;
-import net.mcreator.target.init.TargetModKeyMappings;
 import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
 import net.mcreator.target.network.message.*;
 import net.mcreator.target.tools.TraceTool;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -151,54 +148,37 @@ public class ClickHandler {
     @SubscribeEvent
     public static void onKeyPressed(InputEvent.Key event) {
         if (notInGame()) return;
-        if (event.getAction() != InputConstants.PRESS) return;
-        setKeyState(event.getKey(), 1);
+
+        boolean clicked;
+        if (event.getAction() == InputConstants.PRESS) {
+            clicked = true;
+        } else if (event.getAction() == InputConstants.RELEASE) {
+            clicked = false;
+        } else {
+            return;
+        }
+
+        setKeyState(event.getKey(), clicked ? 1 : 0);
 
         int button = event.getKey();
         if (button == GLFW.GLFW_KEY_A) {
-            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveLeftMessage(true));
+            TargetMod.PACKET_HANDLER.sendToServer(new DroneMovementMessage(0, clicked));
         }
         if (button == GLFW.GLFW_KEY_D) {
-            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveRightMessage(true));
+            TargetMod.PACKET_HANDLER.sendToServer(new DroneMovementMessage(1, clicked));
         }
         if (button == GLFW.GLFW_KEY_W) {
-            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveForwardMessage(true));
+            TargetMod.PACKET_HANDLER.sendToServer(new DroneMovementMessage(2, clicked));
         }
         if (button == GLFW.GLFW_KEY_S) {
-            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveBackwardMessage(true));
+            TargetMod.PACKET_HANDLER.sendToServer(new DroneMovementMessage(3, clicked));
         }
         if (button == GLFW.GLFW_KEY_SPACE) {
-            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveUpMessage(true));
+            TargetMod.PACKET_HANDLER.sendToServer(new DroneMovementMessage(4, clicked));
         }
-        if (button == GLFW.GLFW_KEY_LEFT_CONTROL) {
-            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveDownMessage(true));
+        if (button == GLFW.GLFW_KEY_LEFT_SHIFT) {
+            TargetMod.PACKET_HANDLER.sendToServer(new DroneMovementMessage(5, clicked));
         }
     }
 
-    @SubscribeEvent
-    public static void onKeyReleased(InputEvent.Key event) {
-        if (notInGame()) return;
-        if (event.getAction() != InputConstants.RELEASE) return;
-        setKeyState(event.getKey(), 0);
-
-        int button = event.getKey();
-        if (button == GLFW.GLFW_KEY_A) {
-            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveLeftMessage(false));
-        }
-        if (button == GLFW.GLFW_KEY_D) {
-            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveRightMessage(false));
-        }
-        if (button == GLFW.GLFW_KEY_W) {
-            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveForwardMessage(false));
-        }
-        if (button == GLFW.GLFW_KEY_S) {
-            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveBackwardMessage(false));
-        }
-        if (button == GLFW.GLFW_KEY_SPACE) {
-            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveUpMessage(false));
-        }
-        if (button == GLFW.GLFW_KEY_LEFT_CONTROL) {
-            TargetMod.PACKET_HANDLER.sendToServer(new DroneMoveDownMessage(false));
-        }
-    }
 }
