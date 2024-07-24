@@ -40,7 +40,7 @@ public class ZoomMessage {
     public static void pressAction(Player entity, int type) {
         Level world = entity.level();
 
-        if (!world.hasChunkAt(entity.blockPosition())) {
+        if (!world.isLoaded(entity.blockPosition())) {
             return;
         }
 

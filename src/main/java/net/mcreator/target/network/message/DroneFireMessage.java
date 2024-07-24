@@ -1,13 +1,10 @@
 package net.mcreator.target.network.message;
 
 import net.mcreator.target.entity.DroneEntity;
-import net.mcreator.target.entity.Mk42Entity;
 import net.mcreator.target.init.TargetModItems;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -31,22 +28,20 @@ public class DroneFireMessage {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
             if (context.getSender() != null) {
-                pressAction(context.getSender(), message.type);
+                Player player = context.getSender();
+
+                ItemStack stack = player.getMainHandItem();
+                if (stack.is(TargetModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+                    DroneEntity drone = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
+                            .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
+                    if (drone != null) {
+                        if (message.type == 0) {
+                            drone.getPersistentData().putBoolean("firing", true);
+                        }
+                    }
+                }
             }
         });
         context.setPacketHandled(true);
-    }
-
-    public static void pressAction(Player player, int type) {
-        ItemStack stack = player.getMainHandItem();
-        if (stack.is(TargetModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
-            DroneEntity drone = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
-                    .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
-            if (drone != null) {
-                if (type == 0) {
-                    drone.getPersistentData().putBoolean("firing",true);
-                }
-            }
-        }
     }
 }

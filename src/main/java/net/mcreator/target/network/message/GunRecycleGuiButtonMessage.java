@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -53,7 +52,7 @@ public class GunRecycleGuiButtonMessage {
 
     public static void handleButtonAction(Player player, int buttonID, int x, int y, int z) {
         // security measure to prevent arbitrary chunk generation
-        if (!player.level().hasChunkAt(new BlockPos(x, y, z))) return;
+        if (!player.level().isLoaded(new BlockPos(x, y, z))) return;
 
         if (buttonID == 0) {
             dismantleGun(player);
