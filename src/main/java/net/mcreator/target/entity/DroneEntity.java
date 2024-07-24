@@ -1,5 +1,6 @@
 package net.mcreator.target.entity;
 
+import net.mcreator.target.client.gui.RangeHelper;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
@@ -52,6 +53,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Boolean> LINKED = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> CONTROLLER = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private float moveX = 0;
     private float moveY = 0;
@@ -84,6 +86,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
         this.entityData.define(ANIMATION, "undefined");
         this.entityData.define(CONTROLLER, "undefined");
         this.entityData.define(LINKED, false);
+        this.entityData.define(AMMO, 0);
     }
 
     @Override
@@ -122,6 +125,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 
         compound.putBoolean("Linked", this.entityData.get(LINKED));
         compound.putString("Controller", this.entityData.get(CONTROLLER));
+        compound.putInt("ammo", this.entityData.get(AMMO));
     }
 
     @Override
@@ -132,6 +136,8 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
             this.entityData.set(LINKED, compound.getBoolean("Linked"));
         if (compound.contains("Controller"))
             this.entityData.set(CONTROLLER, compound.getString("Controller"));
+        if (compound.contains("ammo"))
+            this.entityData.set(AMMO, compound.getInt("ammo"));
     }
 
     @Override
@@ -212,7 +218,10 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 
         if (this.getPersistentData().getBoolean("firing")) {
             if (control instanceof Player player) {
-                droneDrop(player);
+                if (this.entityData.get(AMMO) > 0) {
+                    this.entityData.set(AMMO,this.entityData.get(AMMO) - 1);
+                    droneDrop(player);
+                }
             }
             this.getPersistentData().putBoolean("firing", false);
         }
@@ -276,6 +285,17 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
         } else if (stack.isEmpty() && player.isCrouching()) {
             if (!this.level().isClientSide()) this.discard();
             ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TargetModItems.DRONE_SPAWN_EGG.get()));
+        }  else if (stack.getItem() == TargetModItems.GRENADE_40MM.get()) {
+            if (!player.isCreative()) {
+                stack.shrink(1);
+            }
+            if (this.entityData.get(AMMO) < 4) {
+                this.entityData.set(AMMO,this.entityData.get(AMMO) + 1);
+                player.displayClientMessage(Component.literal("AMMO:" + this.entityData.get(AMMO)), true);
+                if (player instanceof ServerPlayer serverPlayer) {
+                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 0.5F, 1);
+                }
+            }
         }
 
         return InteractionResult.sidedSuccess(this.level().isClientSide());
