@@ -3,7 +3,6 @@ package net.mcreator.target.entity;
 
 import net.mcreator.target.init.TargetModItems;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -34,7 +33,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
-import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.damagesource.DamageSource;
@@ -49,7 +47,6 @@ import net.minecraft.core.BlockPos;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.item.Monitor;
 
-import java.text.DecimalFormat;
 import java.util.Objects;
 
 public class DroneEntity extends PathfinderMob implements GeoEntity {
@@ -310,12 +307,12 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 
     public static AttributeSupplier.Builder createAttributes() {
         AttributeSupplier.Builder builder = Mob.createMobAttributes();
-        builder = builder.add(Attributes.MOVEMENT_SPEED, 0.1);
+        builder = builder.add(Attributes.MOVEMENT_SPEED, 1);
         builder = builder.add(Attributes.MAX_HEALTH, 10);
         builder = builder.add(Attributes.ARMOR, 0);
         builder = builder.add(Attributes.ATTACK_DAMAGE, 0);
         builder = builder.add(Attributes.FOLLOW_RANGE, 64);
-        builder = builder.add(Attributes.FLYING_SPEED, 0.1);
+        builder = builder.add(Attributes.FLYING_SPEED, 10);
         return builder;
     }
 
