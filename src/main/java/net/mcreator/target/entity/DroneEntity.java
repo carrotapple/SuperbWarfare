@@ -46,6 +46,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class DroneEntity extends PathfinderMob implements GeoEntity {
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
@@ -138,65 +139,61 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
         super.baseTick();
 
         if (this.getPersistentData().getBoolean("left")) {
-            moveX = -1.5f;
+            this.moveX = -1.5f;
         }
         if (this.getPersistentData().getBoolean("right")) {
-            moveX = 1.5f;
+            this.moveX = 1.5f;
         }
 
         if (!this.getPersistentData().getBoolean("left") && !this.getPersistentData().getBoolean("right")) {
-            if (moveX >= 0) {
-                moveX = Mth.clamp(moveX - 0.3f,0,1);
+            if (this.moveX >= 0) {
+                this.moveX = Mth.clamp(this.moveX - 0.3f, 0, 1);
             } else {
-                moveX = Mth.clamp(moveX + 0.3f,-1,0);
+                this.moveX = Mth.clamp(this.moveX + 0.3f, -1, 0);
             }
         }
 
         if (this.getPersistentData().getBoolean("forward")) {
-            moveZ = -1.5f;
+            this.moveZ = -1.5f;
         }
         if (this.getPersistentData().getBoolean("backward")) {
-            moveZ = 1.5f;
+            this.moveZ = 1.5f;
         }
 
         if (!this.getPersistentData().getBoolean("forward") && !this.getPersistentData().getBoolean("backward")) {
-            if (moveZ >= 0) {
-                moveZ = Mth.clamp(moveZ - 0.3f,0,1);
+            if (this.moveZ >= 0) {
+                this.moveZ = Mth.clamp(this.moveZ - 0.3f, 0, 1);
             } else {
-                moveZ = Mth.clamp(moveZ + 0.3f,-1,0);
+                this.moveZ = Mth.clamp(this.moveZ + 0.3f, -1, 0);
             }
         }
 
         if (this.getPersistentData().getBoolean("up")) {
-            moveY = -1.5f;
+            this.moveY = -1.5f;
         }
         if (this.getPersistentData().getBoolean("down")) {
-            moveY = 1.5f;
+            this.moveY = 1.5f;
         }
 
         if (!this.getPersistentData().getBoolean("up") && !this.getPersistentData().getBoolean("down")) {
-            if (moveY >= 0) {
-                moveY = Mth.clamp(moveY - 0.3f,0,1);
+            if (this.moveY >= 0) {
+                this.moveY = Mth.clamp(this.moveY - 0.3f, 0, 1);
             } else {
-                moveY = Mth.clamp(moveY + 0.3f,-1,0);
+                this.moveY = Mth.clamp(this.moveY + 0.3f, -1, 0);
             }
         }
 
         LivingEntity control = this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(512))
                 .stream().filter(e -> e.getStringUUID().equals(this.entityData.get(CONTROLLER))).findFirst().orElse(null);
 
-        if (this.getPersistentData().getBoolean("left")
+        this.move = this.getPersistentData().getBoolean("left")
                 || this.getPersistentData().getBoolean("right")
                 || this.getPersistentData().getBoolean("forward")
                 || this.getPersistentData().getBoolean("backward")
                 || this.getPersistentData().getBoolean("up")
-                || this.getPersistentData().getBoolean("down")) {
-            move = true;
-        } else {
-            move = false;
-        }
+                || this.getPersistentData().getBoolean("down");
 
-        if (move || !this.onGround()) {
+        if (this.move || !this.onGround()) {
             this.level().playSound(null, this.getOnPos(), TargetModSounds.DRONE_SOUND.get(), SoundSource.AMBIENT, 3, 1);
             if (control != null) {
                 ItemStack stack = control.getMainHandItem();
@@ -207,30 +204,28 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
         }
 
         Vec3 vec = this.getDeltaMovement();
-
         if (this.getDeltaMovement().horizontalDistanceSqr() < 1) {
-            if (move) {
+            if (this.move) {
                 this.setDeltaMovement(vec.multiply(1.04, 1, 1.04));
             }
         }
 
         if (this.getPersistentData().getBoolean("firing")) {
             if (control instanceof Player player) {
-                DroneDrop(player);
+                droneDrop(player);
             }
-            this.getPersistentData().putBoolean("firing",false);
+            this.getPersistentData().putBoolean("firing", false);
         }
 
         this.refreshDimensions();
     }
 
-    private void DroneDrop(Player player) {
-
+    private void droneDrop(Player player) {
         Level level = player.level();
         if (!level.isClientSide()) {
             DroneGrenadeEntity droneGrenadeEntity = new DroneGrenadeEntity(player, level);
             droneGrenadeEntity.setPos(this.getX(), this.getY(), this.getZ());
-            droneGrenadeEntity.shoot(0, -1, 0, 0,0.5f);
+            droneGrenadeEntity.shoot(0, -1, 0, 0, 0.5f);
             level.addFreshEntity(droneGrenadeEntity);
         }
     }
@@ -278,7 +273,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                     }
                 }
             }
-        } else if (stack.isEmpty()&& player.isCrouching()) {
+        } else if (stack.isEmpty() && player.isCrouching()) {
             if (!this.level().isClientSide()) this.discard();
             ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TargetModItems.DRONE_SPAWN_EGG.get()));
         }
@@ -296,35 +291,44 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
             if (stack.getOrCreateTag().getBoolean("Using")) {
                 this.setYRot(control.getYRot() + 180);
                 this.yRotO = this.getYRot();
-                this.setXRot(Mth.clamp(control.getXRot(),-25,95));
+                this.setXRot(Mth.clamp(control.getXRot(), -25, 95));
                 this.setRot(this.getYRot(), this.getXRot());
                 this.yBodyRot = control.getYRot() + 180;
                 this.yHeadRot = control.getYRot() + 180;
                 this.setMaxUpStep(1.0F);
-                this.setSpeed(4 * (float)this.getAttributeValue(Attributes.MOVEMENT_SPEED));
+                this.setSpeed(4 * (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED));
                 float forward = -moveZ;
                 float upDown = -moveY;
                 float strafe = -moveX;
                 super.travel(new Vec3(2 * strafe, 2 * upDown, 2 * forward));
                 Vec3 vec3 = this.getDeltaMovement();
-                if (!move) {
+                if (!this.move) {
                     this.setDeltaMovement(vec3.multiply(0.9, 0.8, 0.9));
                 } else {
                     this.setDeltaMovement(vec3.multiply(1.05, 0.99, 1.05));
                 }
                 return;
             }
-
         }
+
         this.setMaxUpStep(0.5F);
         super.travel(dir);
     }
 
-
-
     @Override
     public void die(DamageSource source) {
         super.die(source);
+
+        String id = this.entityData.get(CONTROLLER);
+        Player player = this.level().getPlayerByUUID(UUID.fromString(id));
+        if (player != null) {
+            player.getInventory().items.stream().filter(stack -> stack.getItem() == TargetModItems.MONITOR.get())
+                    .forEach(stack -> {
+                        if (stack.getOrCreateTag().getString(Monitor.LINKED_DRONE).equals(this.getStringUUID())) {
+                            Monitor.disLink(stack);
+                        }
+                    });
+        }
     }
 
     @Override
@@ -393,7 +397,6 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
             if (level() instanceof ServerLevel) {
                 level().explode(null, this.getX(), this.getY(), this.getZ(), 0.1F, Level.ExplosionInteraction.NONE);
             }
-            this.dropExperience();
         }
         this.setDeltaMovement(new Vec3(this.getDeltaMovement().x(), this.getDeltaMovement().y() - 0.02, this.getDeltaMovement().z()));
     }
