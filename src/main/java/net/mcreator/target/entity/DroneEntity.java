@@ -199,7 +199,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                 || this.getPersistentData().getBoolean("up")
                 || this.getPersistentData().getBoolean("down");
 
-        if (this.move || !this.onGround()) {
+        if (!this.onGround()) {
             this.level().playSound(null, this.getOnPos(), TargetModSounds.DRONE_SOUND.get(), SoundSource.AMBIENT, 3, 1);
             if (control != null) {
                 ItemStack stack = control.getMainHandItem();
@@ -283,13 +283,16 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                 }
             }
         } else if (stack.isEmpty() && player.isCrouching()) {
-            if (!this.level().isClientSide()) this.discard();
             ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TargetModItems.DRONE_SPAWN_EGG.get()));
+            for (int index0 = 0; index0 < this.entityData.get(AMMO); index0++) {
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TargetModItems.GRENADE_40MM.get()));
+            }
+            if (!this.level().isClientSide()) this.discard();
         }  else if (stack.getItem() == TargetModItems.GRENADE_40MM.get()) {
             if (!player.isCreative()) {
                 stack.shrink(1);
             }
-            if (this.entityData.get(AMMO) < 4) {
+            if (this.entityData.get(AMMO) < 6) {
                 this.entityData.set(AMMO,this.entityData.get(AMMO) + 1);
                 player.displayClientMessage(Component.literal("AMMO:" + this.entityData.get(AMMO)), true);
                 if (player instanceof ServerPlayer serverPlayer) {
@@ -311,7 +314,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
             if (stack.getOrCreateTag().getBoolean("Using")) {
                 this.setYRot(control.getYRot() + 180);
                 this.yRotO = this.getYRot();
-                this.setXRot(Mth.clamp(control.getXRot(), -25, 95));
+                this.setXRot(Mth.clamp(control.getXRot(), -25, 90));
                 this.setRot(this.getYRot(), this.getXRot());
                 this.yBodyRot = control.getYRot() + 180;
                 this.yHeadRot = control.getYRot() + 180;
@@ -357,6 +360,10 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                         }
                     });
         }
+        if (level() instanceof ServerLevel) {
+            level().explode(null, this.getX(), this.getY(), this.getZ(), 0, Level.ExplosionInteraction.NONE);
+        }
+        this.discard();
     }
 
     @Override
@@ -396,7 +403,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 
     private PlayState movementPredicate(AnimationState event) {
         if (this.animationprocedure.equals("empty")) {
-            if (this.entityData.get(LINKED) || !this.onGround()) {
+            if (!this.onGround()) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.drone.fly"));
             }
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.drone.idle"));
@@ -415,18 +422,6 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
             return PlayState.STOP;
         }
         return PlayState.CONTINUE;
-    }
-
-    @Override
-    protected void tickDeath() {
-        ++this.deathTime;
-        if (this.deathTime >= 100 || this.onGround()) {
-            this.remove(DroneEntity.RemovalReason.KILLED);
-            if (level() instanceof ServerLevel) {
-                level().explode(null, this.getX(), this.getY(), this.getZ(), 0.1F, Level.ExplosionInteraction.NONE);
-            }
-        }
-        this.setDeltaMovement(new Vec3(this.getDeltaMovement().x(), this.getDeltaMovement().y() - 0.02, this.getDeltaMovement().z()));
     }
 
     public String getSyncedAnimation() {

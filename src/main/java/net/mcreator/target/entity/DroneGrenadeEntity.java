@@ -68,7 +68,7 @@ public class DroneGrenadeEntity extends ThrowableItemProjectile {
         if (entity instanceof LivingEntity) {
             entity.invulnerableTime = 0;
         }
-        entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), 50);
+        entity.hurt(TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 5);
         if (this.level() instanceof ServerLevel) {
             causeExplode();
             this.discard();
@@ -102,8 +102,8 @@ public class DroneGrenadeEntity extends ThrowableItemProjectile {
 
     private void causeExplode() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 90,
-                this.getX(), this.getY(), this.getZ(), 7.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 60,
+                this.getX(), this.getY(), this.getZ(), 5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
@@ -112,6 +112,6 @@ public class DroneGrenadeEntity extends ThrowableItemProjectile {
 
     @Override
     protected float getGravity() {
-        return 0.08F;
+        return 0.07F;
     }
 }

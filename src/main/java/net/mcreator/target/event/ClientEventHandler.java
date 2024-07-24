@@ -456,6 +456,11 @@ public class ClientEventHandler {
         if (mc.player.getMainHandItem().is(TargetModTags.Items.GUN) || (mc.player.getVehicle() != null && mc.player.getVehicle() instanceof Mk42Entity)) {
             event.setCanceled(true);
         }
+
+        ItemStack stack = mc.player.getMainHandItem();
+        if (stack.is(TargetModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+            event.setCanceled(true);
+        }
     }
 }
 

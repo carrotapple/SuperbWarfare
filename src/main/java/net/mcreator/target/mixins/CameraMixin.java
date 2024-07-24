@@ -40,7 +40,7 @@ public abstract class CameraMixin {
 
                 if (drone != null) {
                     setRotation(drone.getViewYRot(partialTicks), drone.getViewXRot(partialTicks));
-                    setPosition(Mth.lerp(partialTicks, drone.xo, drone.getX()) + 0.18 * drone.getLookAngle().x, Mth.lerp(partialTicks, drone.yo, drone.getY()) + 0.075, Mth.lerp(partialTicks, drone.zo, drone.getZ()) + 0.18 * drone.getLookAngle().z);
+                    setPosition(Mth.lerp(partialTicks, drone.xo, drone.getX()) + 0.3 * drone.getLookAngle().x, Mth.lerp(partialTicks, drone.yo, drone.getY()) + 0.08, Mth.lerp(partialTicks, drone.zo, drone.getZ()) + 0.3 * drone.getLookAngle().z);
                     info.cancel();
                 }
             }
