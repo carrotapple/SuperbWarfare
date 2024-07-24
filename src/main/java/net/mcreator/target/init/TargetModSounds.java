@@ -191,4 +191,5 @@ public class TargetModSounds {
 
     public static final RegistryObject<SoundEvent> BULLET_SUPPLY = REGISTRY.register("bullet_supply", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "bullet_supply")));
     public static final RegistryObject<SoundEvent> ADJUST_FOV = REGISTRY.register("adjust_fov", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "adjust_fov")));
+    public static final RegistryObject<SoundEvent> DRONE_SOUND = REGISTRY.register("drone_sound", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("target", "drone_sound")));
 }

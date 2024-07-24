@@ -1574,5 +1574,13 @@
         "stream": false
       }
     ]
+  },
+  "drone_sound": {
+    "sounds": [
+      {
+        "name": "target:drone_sound",
+        "stream": false
+      }
+    ]
   }
 }

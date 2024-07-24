@@ -1,8 +1,13 @@
 
 package net.mcreator.target.entity;
 
-import net.mcreator.target.init.TargetModItems;
+import net.mcreator.target.init.*;
+import net.mcreator.target.item.common.ammo.CannonShellItem;
+import net.mcreator.target.tools.SoundTool;
 import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -14,6 +19,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -44,7 +50,6 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.BlockPos;
 
-import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.item.Monitor;
 
 import java.util.Objects;
@@ -57,6 +62,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
     private float moveX = 0;
     private float moveY = 0;
     private float moveZ = 0;
+    private boolean move = false;
 
 
     public String animationprocedure = "empty";
@@ -184,15 +190,57 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
             }
         }
 
+        LivingEntity control = this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(512))
+                .stream().filter(e -> e.getStringUUID().equals(this.entityData.get(CONTROLLER))).findFirst().orElse(null);
+
+        if (this.getPersistentData().getBoolean("left")
+                || this.getPersistentData().getBoolean("right")
+                || this.getPersistentData().getBoolean("forward")
+                || this.getPersistentData().getBoolean("backward")
+                || this.getPersistentData().getBoolean("up")
+                || this.getPersistentData().getBoolean("down")) {
+            move = true;
+        } else {
+            move = false;
+        }
+
+        if (move || !this.onGround()) {
+            this.level().playSound(null, this.getOnPos(), TargetModSounds.DRONE_SOUND.get(), SoundSource.AMBIENT, 3, 1);
+            if (control != null) {
+                ItemStack stack = control.getMainHandItem();
+                if (stack.getOrCreateTag().getBoolean("Using") && control instanceof ServerPlayer serverPlayer) {
+                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.DRONE_SOUND.get(), 100, 1);
+                }
+            }
+        }
+
         Vec3 vec = this.getDeltaMovement();
 
-        double x = vec.x;
-        double y = vec.y;
-        double z = vec.z;
+        if (this.getDeltaMovement().horizontalDistanceSqr() < 1) {
+            if (move) {
+                this.setDeltaMovement(vec.multiply(1.04, 1, 1.04));
+            }
+        }
 
-        this.setDeltaMovement(Mth.clamp(1.06 * x ,-0.95,0.95), y, Mth.clamp(1.06 * z,-0.95,0.95));
+        if (this.getPersistentData().getBoolean("firing")) {
+            if (control instanceof Player player) {
+                DroneDrop(player);
+            }
+            this.getPersistentData().putBoolean("firing",false);
+        }
 
         this.refreshDimensions();
+    }
+
+    private void DroneDrop(Player player) {
+
+        Level level = player.level();
+        if (!level.isClientSide()) {
+            DroneGrenadeEntity droneGrenadeEntity = new DroneGrenadeEntity(player, level);
+            droneGrenadeEntity.setPos(this.getX(), this.getY(), this.getZ());
+            droneGrenadeEntity.shoot(0, -1, 0, 0,0.5f);
+            level.addFreshEntity(droneGrenadeEntity);
+        }
     }
 
     @Override
@@ -254,18 +302,24 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
         if (control != null) {
             ItemStack stack = control.getMainHandItem();
             if (stack.getOrCreateTag().getBoolean("Using")) {
-                this.setYRot(control.getYRot());
+                this.setYRot(control.getYRot() + 180);
                 this.yRotO = this.getYRot();
                 this.setXRot(Mth.clamp(control.getXRot(),-25,95));
                 this.setRot(this.getYRot(), this.getXRot());
-                this.yBodyRot = control.getYRot();
-                this.yHeadRot = control.getYRot();
+                this.yBodyRot = control.getYRot() + 180;
+                this.yHeadRot = control.getYRot() + 180;
                 this.setMaxUpStep(1.0F);
                 this.setSpeed(4 * (float)this.getAttributeValue(Attributes.MOVEMENT_SPEED));
                 float forward = -moveZ;
                 float upDown = -moveY;
                 float strafe = -moveX;
-                super.travel(new Vec3(strafe, upDown, forward));
+                super.travel(new Vec3(2 * strafe, 2 * upDown, 2 * forward));
+                Vec3 vec3 = this.getDeltaMovement();
+                if (!move) {
+                    this.setDeltaMovement(vec3.multiply(0.9, 0.8, 0.9));
+                } else {
+                    this.setDeltaMovement(vec3.multiply(1.05, 0.99, 1.05));
+                }
                 return;
             }
 

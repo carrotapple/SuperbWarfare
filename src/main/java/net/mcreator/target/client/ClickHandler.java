@@ -5,6 +5,7 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.client.gui.RangeHelper;
 import net.mcreator.target.entity.Mk42Entity;
 import net.mcreator.target.entity.MortarEntity;
+import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModKeyMappings;
 import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModTags;
@@ -62,6 +63,7 @@ public class ClickHandler {
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
+        ItemStack stack = player.getMainHandItem();
 
         int button = event.getButton();
 
@@ -69,6 +71,10 @@ public class ClickHandler {
             if (Minecraft.getInstance().player.hasEffect(TargetModMobEffects.SHOCK.get())) {
                 event.setCanceled(true);
                 return;
+            }
+            if (stack.is(TargetModItems.MONITOR.get())) {
+                event.setCanceled(true);
+                TargetMod.PACKET_HANDLER.sendToServer(new DroneFireMessage(0));
             }
             if (player.getVehicle() != null && player.getVehicle() instanceof Mk42Entity) {
                 event.setCanceled(true);

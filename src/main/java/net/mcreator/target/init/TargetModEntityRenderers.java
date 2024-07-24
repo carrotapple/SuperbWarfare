@@ -25,6 +25,6 @@ public class TargetModEntityRenderers {
         event.registerEntityRenderer(TargetModEntities.FRAG.get(), FragRenderer::new);
         event.registerEntityRenderer(TargetModEntities.MK_42.get(), Mk42Renderer::new);
         event.registerEntityRenderer(TargetModEntities.DRONE.get(), DroneRenderer::new);
-
+        event.registerEntityRenderer(TargetModEntities.DRONE_GRENADE.get(), DroneGrenadeRenderer::new);
     }
 }

@@ -48,6 +48,16 @@ public class Monitor extends Item {
             mc.options.setCameraType(CameraType.FIRST_PERSON);
         }
 
+        DroneEntity drone = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
+                .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
+        if (drone != null) {
+            drone.getPersistentData().putBoolean("left",false);
+            drone.getPersistentData().putBoolean("right",false);
+            drone.getPersistentData().putBoolean("forward",false);
+            drone.getPersistentData().putBoolean("backward",false);
+            drone.getPersistentData().putBoolean("up",false);
+            drone.getPersistentData().putBoolean("down",false);
+        }
         return ar;
     }
 

@@ -37,6 +37,8 @@ public class TargetModEntities {
                     .setUpdateInterval(1).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<GunGrenadeEntity>> GUN_GRENADE = register("projectile_gun_grenade",
             EntityType.Builder.<GunGrenadeEntity>of(GunGrenadeEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(GunGrenadeEntity::new).sized(0.5f, 0.5f));
+    public static final RegistryObject<EntityType<DroneGrenadeEntity>> DRONE_GRENADE = register("projectile_drone_grenade",
+            EntityType.Builder.<DroneGrenadeEntity>of(DroneGrenadeEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(DroneGrenadeEntity::new).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<FragEntity>> FRAG = register("projectile_frag",
             EntityType.Builder.<FragEntity>of(FragEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(FragEntity::new).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<TargetEntity>> TARGET = register("target",
