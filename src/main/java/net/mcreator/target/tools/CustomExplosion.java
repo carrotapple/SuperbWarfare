@@ -152,7 +152,9 @@ public class CustomExplosion extends Explosion {
                         } else {
                             entity.hurt(this.damageSource, (float) ((int) damageFinal));
                         }
-
+                        if (entity instanceof LivingEntity) {
+                            entity.invulnerableTime = 0;
+                        }
                         if (fireTime > 0) {
                             entity.setSecondsOnFire(fireTime);
                         }

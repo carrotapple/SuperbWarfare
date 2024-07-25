@@ -58,22 +58,9 @@ public class DroneGrenadeEntity extends ThrowableItemProjectile {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        Entity entity = result.getEntity();
-        if (this.getOwner() instanceof LivingEntity living) {
-            if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
-                living.level().playSound(null, living.blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
-                TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
-            }
-        }
-        if (entity instanceof LivingEntity) {
-            entity.invulnerableTime = 0;
-        }
-        entity.hurt(TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 5);
         if (this.level() instanceof ServerLevel) {
             causeExplode();
-            this.discard();
         }
-        this.discard();
     }
 
     @Override
@@ -82,7 +69,6 @@ public class DroneGrenadeEntity extends ThrowableItemProjectile {
         if (this.level() instanceof ServerLevel) {
             causeExplode();
         }
-        this.discard();
     }
 
     @Override
@@ -96,18 +82,18 @@ public class DroneGrenadeEntity extends ThrowableItemProjectile {
             if (this.level() instanceof ServerLevel) {
                 causeExplode();
             }
-            this.discard();
         }
     }
 
     private void causeExplode() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 60,
-                this.getX(), this.getY(), this.getZ(), 5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 55,
+                this.getX(), this.getY(), this.getZ(), 6.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
         ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+        this.discard();
     }
 
     @Override
