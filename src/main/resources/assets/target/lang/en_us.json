@@ -126,6 +126,7 @@
   "curios.identifier.dog_tag": "Dog Tag",
   "item.target.shield_cell": "Cell",
   "item.target.mk42_spawn_egg": "MK-42 Spawn Egg",
+  "item.target.drone": "Drone",
   "item.target.monitor": "Monitor",
 
   "attribute.target.spread": "Spread",

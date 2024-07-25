@@ -1,6 +1,5 @@
 package net.mcreator.target.entity;
 
-import net.mcreator.target.client.gui.RangeHelper;
 import net.mcreator.target.init.TargetModEntities;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
@@ -8,6 +7,7 @@ import net.mcreator.target.item.Monitor;
 import net.mcreator.target.tools.SoundTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -22,18 +22,31 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import net.minecraftforge.items.wrapper.EntityArmorInvWrapper;
+import net.minecraftforge.items.wrapper.EntityHandsInvWrapper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -46,6 +59,8 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -283,7 +298,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                 }
             }
         } else if (stack.isEmpty() && player.isCrouching()) {
-            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TargetModItems.DRONE_SPAWN_EGG.get()));
+            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TargetModItems.DRONE.get()));
             for (int index0 = 0; index0 < this.entityData.get(AMMO); index0++) {
                 ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TargetModItems.GRENADE_40MM.get()));
             }
@@ -441,5 +456,31 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    private final ItemStackHandler inventory = new ItemStackHandler(9) {
+        @Override
+        public int getSlotLimit(int slot) {
+            return 64;
+        }
+    };
+    private final CombinedInvWrapper combined = new CombinedInvWrapper(inventory, new EntityHandsInvWrapper(this), new EntityArmorInvWrapper(this));
+
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction side) {
+        if (this.isAlive() && capability == ForgeCapabilities.ITEM_HANDLER && side == null)
+            return LazyOptional.of(() -> combined).cast();
+        return super.getCapability(capability, side);
+    }
+
+    @Override
+    protected void dropEquipment() {
+        super.dropEquipment();
+        for (int i = 0; i < inventory.getSlots(); ++i) {
+            ItemStack itemstack = inventory.getStackInSlot(i);
+            if (!itemstack.isEmpty() && !EnchantmentHelper.hasVanishingCurse(itemstack)) {
+                this.spawnAtLocation(itemstack);
+            }
+        }
     }
 }

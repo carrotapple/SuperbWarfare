@@ -126,6 +126,7 @@
   "curios.identifier.dog_tag": "狗牌",
   "item.target.shield_cell": "电池",
   "item.target.mk42_spawn_egg": "MK-42刷怪蛋",
+  "item.target.drone": "无人机",
   "item.target.monitor": "遥控器",
 
   "attribute.target.spread": "散布",
