@@ -1,6 +1,7 @@
 package net.mcreator.target.network;
 
 import net.mcreator.target.client.screens.CrossHairOverlay;
+import net.mcreator.target.client.screens.DroneUIOverlay;
 import net.mcreator.target.event.KillMessageHandler;
 import net.mcreator.target.network.message.ClientIndicatorMessage;
 import net.mcreator.target.network.message.GunsDataMessage;
@@ -39,6 +40,12 @@ public class ClientPacketHandler {
                 case 2 -> CrossHairOverlay.KILL_INDICATOR = message.value;
                 default -> CrossHairOverlay.HIT_INDICATOR = message.value;
             }
+        }
+    }
+
+    public static void handleSimulationDistanceMessage(int distance, Supplier<NetworkEvent.Context> ctx) {
+        if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+            DroneUIOverlay.MAX_DISTANCE = distance * 16;
         }
     }
 }

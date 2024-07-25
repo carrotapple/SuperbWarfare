@@ -21,8 +21,8 @@ import static net.mcreator.target.entity.DroneEntity.AMMO;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class DroneUIOverlay {
+    public static int MAX_DISTANCE = 256;
 
-    private static int color = -1;
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
         int w = event.getWindow().getGuiScaledWidth();
@@ -44,18 +44,19 @@ public class DroneUIOverlay {
 
                 if (entity != null) {
                     double distance = player.distanceTo(entity);
-                    if (distance > 450) {
-                        event.getGuiGraphics().drawString(Minecraft.getInstance().font,"WARNING", w / 2 + -18, h / 2 + -47, -65536, false);
+                    int color = -1;
+
+                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, "MaxDistance:" + new DecimalFormat("##.#").format(MAX_DISTANCE) + "M", w / 2 + 10, h / 2 + 50, color, false);
+
+                    if (distance > MAX_DISTANCE) {
+                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, "WARNING", w / 2 + -18, h / 2 + -47, -65536, false);
                         color = -65536;
-                    } else {
-                        color = -1;
                     }
-                    event.getGuiGraphics().drawString(Minecraft.getInstance().font,"Distance:" + new DecimalFormat("##.#").format(distance) + "M", w / 2 + 10, h / 2 + 33, color, false);
-                    event.getGuiGraphics().drawString(Minecraft.getInstance().font,"Health:" + new DecimalFormat("##.#").format(entity.getHealth()) + "/" + new DecimalFormat("##").format(entity.getMaxHealth()), w / 2 - 77, h / 2 + 33, -1, false);
-                    event.getGuiGraphics().drawString(Minecraft.getInstance().font,"AMMO:" + new DecimalFormat("##.#").format(entity.getEntityData().get(AMMO)) + " / 6", w / 2 + 12, h / 2 + -37, -1, false);
+
+                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, "Distance:" + new DecimalFormat("##.#").format(distance) + "M", w / 2 + 10, h / 2 + 33, color, false);
+                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, "Health:" + new DecimalFormat("##.#").format(entity.getHealth()) + "/" + new DecimalFormat("##").format(entity.getMaxHealth()), w / 2 - 77, h / 2 + 33, -1, false);
+                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, "AMMO:" + new DecimalFormat("##.#").format(entity.getEntityData().get(AMMO)) + " / 6", w / 2 + 12, h / 2 + -37, -1, false);
                 }
-
-
             }
             RenderSystem.depthMask(true);
             RenderSystem.defaultBlendFunc();

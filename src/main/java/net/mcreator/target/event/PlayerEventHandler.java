@@ -1,14 +1,18 @@
 package net.mcreator.target.event;
 
+import net.mcreator.target.TargetMod;
 import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.network.message.SimulationDistanceMessage;
 import net.mcreator.target.tools.SoundTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.DistanceManager;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -22,6 +26,10 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import net.minecraftforge.network.PacketDistributor;
+
+import java.lang.reflect.Field;
 
 @Mod.EventBusSubscriber
 public class PlayerEventHandler {
@@ -73,7 +81,9 @@ public class PlayerEventHandler {
                 handleBocekPulling(player);
                 handleGunRecoil(player);
             }
+
             handleDistantRange(player);
+            handleSimulationDistance(player);
 
             if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).cannonFiring > 0) {
                 player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
@@ -314,7 +324,7 @@ public class PlayerEventHandler {
                         capability.firing = 1;
                         capability.syncPlayerVariables(player);
                     });
-                    tag.putBoolean("shoot",false);
+                    tag.putBoolean("shoot", false);
                 }
 
                 /*
@@ -448,4 +458,19 @@ public class PlayerEventHandler {
         recoilThread.start();
     }
 
+    private static void handleSimulationDistance(Player player) {
+        if (player.level() instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
+            int maxDistance;
+            Class<?> clazz = DistanceManager.class;
+            try {
+                Field field = ObfuscationReflectionHelper.findField(clazz, "simulationDistance");
+                field.setAccessible(true);
+                maxDistance = field.getInt(serverLevel.getChunkSource().chunkMap.getDistanceManager());
+            } catch (IllegalAccessException e) {
+                maxDistance = 16;
+            }
+            TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SimulationDistanceMessage(maxDistance));
+        }
+
+    }
 }
