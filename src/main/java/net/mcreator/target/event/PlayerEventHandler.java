@@ -11,7 +11,6 @@ import net.mcreator.target.tools.SoundTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.DistanceManager;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -26,10 +25,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.network.PacketDistributor;
-
-import java.lang.reflect.Field;
 
 @Mod.EventBusSubscriber
 public class PlayerEventHandler {
@@ -460,17 +456,11 @@ public class PlayerEventHandler {
 
     private static void handleSimulationDistance(Player player) {
         if (player.level() instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
-            int maxDistance;
-            Class<?> clazz = DistanceManager.class;
-            try {
-                Field field = ObfuscationReflectionHelper.findField(clazz, "simulationDistance");
-                field.setAccessible(true);
-                maxDistance = field.getInt(serverLevel.getChunkSource().chunkMap.getDistanceManager());
-            } catch (IllegalAccessException e) {
-                maxDistance = 16;
-            }
+            var distanceManager = serverLevel.getChunkSource().chunkMap.getDistanceManager();
+            var playerTicketManager = distanceManager.playerTicketManager;
+            int maxDistance = playerTicketManager.viewDistance;
+
             TargetMod.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SimulationDistanceMessage(maxDistance));
         }
-
     }
 }
