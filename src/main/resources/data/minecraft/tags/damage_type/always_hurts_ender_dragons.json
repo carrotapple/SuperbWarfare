@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "target:projectile_boom"
+    "target:projectile_boom",
+    "target:cannon_fire"
   ]
 }

@@ -177,6 +177,9 @@
   "death.attack.projectile_boom": "%1$s blew up",
   "death.attack.projectile_boom.entity": "%1$s was blown up by %2$s",
   "death.attack.projectile_boom.item": "%1$s was blown up by %2$s using %3$s",
+  "death.attack.cannon_fire": "%1$s was cracked by a shell",
+  "death.attack.cannon_fire.entity": "%1$s was cracked by %2$s",
+  "death.attack.cannon_fire.item": "%1$s was cracked by %2$s using %3$s",
 
   "gui.target.gun_recycle_gui.tooltip_if_guns_level_10you_will_get": "If gun\u0027s level \u003e 10,you will get soul nuggets",
   "gui.target.gun_recycle_gui.button_dismantle": "Dismantle",

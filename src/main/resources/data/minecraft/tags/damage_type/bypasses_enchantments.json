@@ -3,6 +3,9 @@
   "values": [
     "target:gunfire",
     "target:gunfire_headshot",
-    "target:shock"
+    "target:arrow_in_knee",
+    "target:arrow_in_brain",
+    "target:shock",
+    "target:cannon_fire"
   ]
 }

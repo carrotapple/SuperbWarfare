@@ -35,6 +35,7 @@ public class CannonShellEntity extends ThrowableItemProjectile {
     private float fireProbability = 0;
     private int fireTime = 0;
     private int durability = 40;
+    private boolean firstHit = true;
 
     public CannonShellEntity(EntityType<? extends CannonShellEntity> type, Level world) {
         super(type, world);
@@ -79,7 +80,7 @@ public class CannonShellEntity extends ThrowableItemProjectile {
     @Override
     public void onHitEntity(EntityHitResult entityHitResult) {
         Entity entity = entityHitResult.getEntity();
-        entity.hurt(this.level().damageSources().thrown(this, this.getOwner()), this.damage);
+        entity.hurt(TargetModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
         entity.invulnerableTime = 0;
 
         if (this.getOwner() instanceof LivingEntity living) {
@@ -118,6 +119,11 @@ public class CannonShellEntity extends ThrowableItemProjectile {
         int y = blockHitResult.getBlockPos().getY();
         int z = blockHitResult.getBlockPos().getZ();
 
+        if (this.firstHit) {
+            ParticleTool.cannonHitParticles(this.level(), this.position());
+            this.firstHit = false;
+        }
+
         BlockState blockState = this.level().getBlockState(BlockPos.containing(x, y, z));
         if (blockState.is(Blocks.BEDROCK) || blockState.is(Blocks.BARRIER)) {
             if (!this.level().isClientSide()) {
@@ -129,6 +135,9 @@ public class CannonShellEntity extends ThrowableItemProjectile {
 
         float hardness = this.level().getBlockState(BlockPos.containing(x, y, z)).getBlock().defaultDestroyTime();
         this.durability -= (int) hardness;
+
+        Vec3 vec = this.getDeltaMovement();
+        this.setDeltaMovement(vec.multiply(0.9, 0.9, 0.9));
 
         if (blockState.is(TargetModBlocks.BARBED_WIRE.get()) || blockState.is(Blocks.NETHERITE_BLOCK)) {
             this.durability -= 10;
@@ -142,18 +151,19 @@ public class CannonShellEntity extends ThrowableItemProjectile {
             this.durability -= 3;
         }
 
-        Vec3 vec = this.getDeltaMovement();
-        double vec_x = vec.x;
-        double vec_y = vec.y;
-        double vec_z = vec.z;
-
-        this.setDeltaMovement(vec_x - 0.02 * vec_x * hardness, vec_y - 0.02 * vec_y * hardness, vec_z - 0.02 * vec_z * hardness);
-
         if (this.durability <= 0) {
             if (!this.level().isClientSide()) {
                 causeExplode();
             }
-            this.discard();
+        }
+
+        if (this.durability > 0) {
+            TargetMod.queueServerWork(1, () -> {
+                this.setDeltaMovement(vec.multiply(0.1, 0.1, 0.1));
+                if (!this.level().isClientSide()) {
+                    causeExplode();
+                }
+            });
         }
     }
 
@@ -168,7 +178,6 @@ public class CannonShellEntity extends ThrowableItemProjectile {
             if (this.level() instanceof ServerLevel) {
                 causeExplode();
             }
-            this.discard();
         }
     }
 
@@ -189,6 +198,7 @@ public class CannonShellEntity extends ThrowableItemProjectile {
         } else {
             ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
         }
+        this.discard();
     }
 
     @Override

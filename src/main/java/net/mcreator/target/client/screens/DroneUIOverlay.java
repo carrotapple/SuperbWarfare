@@ -6,12 +6,9 @@ import net.mcreator.target.entity.DroneEntity;
 import net.mcreator.target.init.TargetModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -49,12 +46,16 @@ public class DroneUIOverlay {
                     double distance = player.distanceTo(entity);
                     int color = -1;
 
-//                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, "MaxDistance:" + new DecimalFormat("##.#").format(MAX_DISTANCE) + "M", w / 2 + 10, h / 2 + 50, color, false);
 
                     if (distance > MAX_DISTANCE - 48) {
                         event.getGuiGraphics().drawString(Minecraft.getInstance().font, "WARNING", w / 2 + -18, h / 2 + -47, -65536, false);
                         color = -65536;
                     }
+
+                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, "Distance:" + new DecimalFormat("##.#").format(distance) + "M", w / 2 + 10, h / 2 + 33, color, false);
+                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, "Health:" + new DecimalFormat("##.#").format(entity.getHealth()) + "/" + new DecimalFormat("##").format(entity.getMaxHealth()), w / 2 - 77, h / 2 + 33, -1, false);
+                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, "AMMO:" + new DecimalFormat("##.#").format(entity.getEntityData().get(AMMO)) + " / 6", w / 2 + 12, h / 2 + -37, -1, false);
+
                 }
             }
             RenderSystem.depthMask(true);

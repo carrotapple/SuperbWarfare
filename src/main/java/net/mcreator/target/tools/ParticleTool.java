@@ -100,4 +100,17 @@ public class ParticleTool {
         }
 
     }
+
+    public static void cannonHitParticles(Level level, Vec3 pos) {
+        double x = pos.x;
+        double y = pos.y;
+        double z = pos.z;
+
+        if (level instanceof ServerLevel serverLevel) {
+            sendParticle(serverLevel, ParticleTypes.EXPLOSION, x, y, z, 2, 0.5, 0.5, 0.5, 1, true);
+            sendParticle(serverLevel, ParticleTypes.FLASH, x, y, z, 2, 0.2, 0.2, 0.2, 10, true);
+            sendParticle(serverLevel, TargetModParticleTypes.FIRE_STAR.get(), x, y, z, 40, 0, 0, 0, 1.5, true);
+        }
+
+    }
 }

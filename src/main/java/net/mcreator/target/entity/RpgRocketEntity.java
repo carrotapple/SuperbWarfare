@@ -79,13 +79,6 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
             }
         }
 
-        if (this.tickCount > 1) {
-            if (this.level() instanceof ServerLevel) {
-                causeExplode();
-                this.discard();
-            }
-        }
-
         if (entity instanceof LivingEntity) {
             entity.invulnerableTime = 0;
         }
@@ -134,6 +127,12 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
                 monster.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * damageMultiplier);
             } else {
                 entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
+            }
+        }
+
+        if (this.tickCount > 1) {
+            if (this.level() instanceof ServerLevel) {
+                causeExplode();
             }
         }
 
