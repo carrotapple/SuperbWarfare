@@ -36,7 +36,7 @@ public class CrossHairOverlay {
         if (player == null) {
             return;
         }
-
+        ItemStack stack = player.getMainHandItem();
         double spread = player.getPersistentData().getDouble("crosshair");
 
         RenderSystem.disableDepthTest();
@@ -46,7 +46,7 @@ public class CrossHairOverlay {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
-        if (shouldRenderCrossHair(player)) {
+        if (shouldRenderCrossHair(player) || stack.is(TargetModItems.MINIGUN.get())) {
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("target:textures/screens/point.png"), w / 2f - 7.5f, h / 2f - 8, 0, 0, 16, 16, 16, 16);
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("target:textures/screens/rexheng.png"), w / 2f - 9.5f - 2.8f * (float) spread, h / 2f - 8, 0, 0, 16, 16, 16, 16);
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("target:textures/screens/rexheng.png"), w / 2f - 6.5f + 2.8f * (float) spread, h / 2f - 8, 0, 0, 16, 16, 16, 16);
@@ -79,7 +79,6 @@ public class CrossHairOverlay {
         RenderSystem.disableBlend();
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
-        ItemStack stack = player.getMainHandItem();
         if (!stack.is(TargetModTags.Items.GUN)) return;
 
         if (stack.getOrCreateTag().getBoolean("need_bolt_action")) {
@@ -95,7 +94,7 @@ public class CrossHairOverlay {
         if (player == null) return false;
 
         if (player.isSpectator()) return false;
-        if (!player.getMainHandItem().is(TargetModTags.Items.GUN) || (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zoom)
+        if (!player.getMainHandItem().is(TargetModTags.Items.GUN) || (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming)
             return false;
 
         return !(player.getMainHandItem().getItem() == TargetModItems.M_79.get())

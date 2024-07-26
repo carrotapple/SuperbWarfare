@@ -394,9 +394,9 @@ public class ClientEventHandler {
         CompoundTag persistentData = entity.getPersistentData();
 
         if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).bowPull) {
-            persistentData.putDouble("pulltime", Math.min(persistentData.getDouble("pulltime") + 0.014 * times, 1));
-            persistentData.putDouble("bowtime", Math.min(persistentData.getDouble("bowtime") + 0.014 * times, 1));
-            persistentData.putDouble("handtime", Math.min(persistentData.getDouble("handtime") + 0.014 * times, 1));
+            persistentData.putDouble("pulltime", Math.min(persistentData.getDouble("pulltime") + 0.018 * times, 1));
+            persistentData.putDouble("bowtime", Math.min(persistentData.getDouble("bowtime") + 0.018 * times, 1));
+            persistentData.putDouble("handtime", Math.min(persistentData.getDouble("handtime") + 0.018 * times, 1));
             persistentData.putDouble("handpos", (0.5 * Math.cos(Math.PI * Math.pow(Math.pow(persistentData.getDouble("handtime"), 2) - 1, 2)) + 0.5));
         } else {
             persistentData.putDouble("pulltime", Math.max(persistentData.getDouble("pulltime") - 0.009 * times, 0));

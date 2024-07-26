@@ -82,6 +82,10 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.bocek.draw"));
         }
 
+        if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.bocek.run"));
+        }
+
         if (this.animationProcedure.equals("empty")) {
             event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.bocek.idle"));
             return PlayState.CONTINUE;
@@ -109,7 +113,7 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         var procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
         data.add(procedureController);
-        var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
+        var idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
     }
 
