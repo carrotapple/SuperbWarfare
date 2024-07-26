@@ -250,7 +250,7 @@ public class FireMessage {
 
                     taserBulletProjectile.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                     taserBulletProjectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) stack.getOrCreateTag().getDouble("velocity"),
-                            (float) player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()));
+                            (float) (stack.getOrCreateTag().getDouble("dev") * ZoomMessage.zoom_spread));
                     level.addFreshEntity(taserBulletProjectile);
                 }
 
@@ -277,7 +277,7 @@ public class FireMessage {
 
                     gunGrenadeEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                     gunGrenadeEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) stack.getOrCreateTag().getDouble("velocity"),
-                            (float) player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()));
+                            (float) (stack.getOrCreateTag().getDouble("dev") * ZoomMessage.zoom_spread));
                     level.addFreshEntity(gunGrenadeEntity);
                 }
 
@@ -320,7 +320,7 @@ public class FireMessage {
                 RpgRocketEntity rocketEntity = new RpgRocketEntity(player, level, (float) tag.getDouble("damage") * (float) tag.getDouble("damageadd"), monsterMultiple);
                 rocketEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                 rocketEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) tag.getDouble("velocity"),
-                        (float) player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()));
+                        (float) (mainHandItem.getOrCreateTag().getDouble("dev") * ZoomMessage.zoom_spread));
                 level.addFreshEntity(rocketEntity);
             }
 

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModTags;
+import net.mcreator.target.network.TargetModVariables;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -94,7 +95,7 @@ public class CrossHairOverlay {
         if (player == null) return false;
 
         if (player.isSpectator()) return false;
-        if (!player.getMainHandItem().is(TargetModTags.Items.GUN) || !(player.getPersistentData().getDouble("zoom_animation_time") < 6))
+        if (!player.getMainHandItem().is(TargetModTags.Items.GUN) || (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zoom)
             return false;
 
         return !(player.getMainHandItem().getItem() == TargetModItems.M_79.get())

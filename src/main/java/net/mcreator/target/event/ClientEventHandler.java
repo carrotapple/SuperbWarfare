@@ -7,6 +7,7 @@ import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModMobEffects;
 import net.mcreator.target.init.TargetModTags;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.network.message.ZoomMessage;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -114,7 +115,7 @@ public class ClientEventHandler {
             }
             float times = 90f / fps;
             var data = entity.getPersistentData();
-            double spread = entity.getAttributeBaseValue(TargetModAttributes.SPREAD.get());
+            double spread = (float) (entity.getMainHandItem().getOrCreateTag().getDouble("dev") * ZoomMessage.zoom_spread);
 
             if (data.getDouble("crosshair") > spread) {
                 data.putDouble("crosshair", data.getDouble("crosshair") - 0.05 * Math.pow(spread - data.getDouble("crosshair"), 2) * times);

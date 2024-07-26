@@ -4,6 +4,7 @@ import net.mcreator.target.TargetMod;
 import net.mcreator.target.entity.ProjectileEntity;
 import net.mcreator.target.init.*;
 import net.mcreator.target.network.TargetModVariables;
+import net.mcreator.target.network.message.ZoomMessage;
 import net.mcreator.target.tools.GunInfo;
 import net.mcreator.target.tools.GunsTool;
 import net.mcreator.target.tools.ParticleTool;
@@ -353,7 +354,7 @@ public class GunEventHandler {
 
             projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
             projectile.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.0005f, player.getLookAngle().z, 1 * (float) heldItem.getOrCreateTag().getDouble("velocity"),
-                    (float) player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()));
+                    (float) (heldItem.getOrCreateTag().getDouble("dev") * ZoomMessage.zoom_spread));
             player.level().addFreshEntity(projectile);
         }
     }

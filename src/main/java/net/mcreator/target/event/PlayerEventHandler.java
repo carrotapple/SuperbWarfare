@@ -1,7 +1,6 @@
 package net.mcreator.target.event;
 
 import net.mcreator.target.TargetMod;
-import net.mcreator.target.init.TargetModAttributes;
 import net.mcreator.target.init.TargetModItems;
 import net.mcreator.target.init.TargetModSounds;
 import net.mcreator.target.init.TargetModTags;
@@ -26,6 +25,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
+
 
 @Mod.EventBusSubscriber
 public class PlayerEventHandler {
@@ -58,6 +58,7 @@ public class PlayerEventHandler {
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
+
         if (player == null) {
             return;
         }
@@ -210,12 +211,6 @@ public class PlayerEventHandler {
                         capability.zooming = true;
                         capability.syncPlayerVariables(player);
                     });
-
-                    if (player.getPersistentData().getInt("zoom_animation_time") < 10) {
-                        player.getPersistentData().putInt("zoom_animation_time", player.getPersistentData().getInt("zoom_animation_time") + 1);
-                    }
-                } else {
-                    player.getPersistentData().putInt("zoom_animation_time", 0);
                 }
             }
         }
@@ -305,6 +300,16 @@ public class PlayerEventHandler {
 
         float recoilYaw = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.recoilHorizon).orElse(0d).floatValue();
 
+        if (tag.getBoolean("shoot")) {
+            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.recoilHorizon = 2 * Math.random() - 1;
+                capability.recoil = 0.1;
+                capability.firing = 1;
+                capability.syncPlayerVariables(player);
+            });
+            tag.putBoolean("shoot", false);
+        }
+
         double[] recoilTimer = {0};
         double totalTime = 20;
         int sleepTime = 2;
@@ -389,58 +394,6 @@ public class PlayerEventHandler {
                     c.recoil = finalRecoil;
                     c.syncPlayerVariables(player);
                 });
-
-                /*
-                  计算散布
-                 */
-                ItemStack stack = player.getMainHandItem();
-
-                double basic = stack.getOrCreateTag().getDouble("dev");
-
-                double sprint = player.isSprinting() ? 0.5 * basic : 0;
-                double sneaking = player.isShiftKeyDown() ? (-0.25) * basic : 0;
-                double prone = player.getPersistentData().getDouble("prone") > 0 ? (-0.5) * basic : 0;
-                double jump = player.onGround() ? 0 : 1.5 * basic;
-                double fire = stack.getOrCreateTag().getInt("fire_animation") > 0 ? 0.5 * basic : 0;
-                double ride = player.isPassenger() ? (-0.5) * basic : 0;
-
-                double walk;
-                if (player.getPersistentData().getDouble("move_forward") == 1 || player.getPersistentData().getDouble("move_backward") == 1 ||
-                        player.getPersistentData().getDouble("move_left") == 1 || player.getPersistentData().getDouble("move_right") == 1) {
-                    walk = 0.2 * basic;
-                } else {
-                    walk = 0;
-                }
-
-                double zoom;
-                if (player.getPersistentData().getDouble("zoom_animation_time") > 4) {
-                    if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
-                        zoom = 0.0001;
-                    } else if (stack.is(TargetModTags.Items.SHOTGUN)) {
-                        zoom = 0.9;
-                    } else {
-                        zoom = 0.0001;
-                    }
-                } else {
-                    zoom = 1;
-                }
-
-                double index = zoom * (basic + walk + sprint + sneaking + prone + jump + fire + ride);
-
-                if (player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) < index) {
-                    player.getAttribute(TargetModAttributes.SPREAD.get())
-                            .setBaseValue(player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) + 0.125 * Math.pow(index - player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()), 2));
-                } else {
-                    player.getAttribute(TargetModAttributes.SPREAD.get())
-                            .setBaseValue(player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) - 0.125 * Math.pow(index - player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()), 2));
-                }
-
-                if (player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) > 15) {
-                    player.getAttribute(TargetModAttributes.SPREAD.get()).setBaseValue(15);
-                }
-                if (player.getAttributeBaseValue(TargetModAttributes.SPREAD.get()) < 0) {
-                    player.getAttribute(TargetModAttributes.SPREAD.get()).setBaseValue(0);
-                }
 
                 recoilTimer[0]++;
                 try {
