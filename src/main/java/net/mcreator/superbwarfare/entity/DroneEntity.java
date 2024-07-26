@@ -403,7 +403,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
     public static AttributeSupplier.Builder createAttributes() {
         AttributeSupplier.Builder builder = Mob.createMobAttributes();
         builder = builder.add(Attributes.MOVEMENT_SPEED, 0.1);
-        builder = builder.add(Attributes.MAX_HEALTH, 20);
+        builder = builder.add(Attributes.MAX_HEALTH, 4);
         builder = builder.add(Attributes.ARMOR, 0);
         builder = builder.add(Attributes.ATTACK_DAMAGE, 0);
         builder = builder.add(Attributes.FOLLOW_RANGE, 64);
