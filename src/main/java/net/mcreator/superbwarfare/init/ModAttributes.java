@@ -13,7 +13,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-public class TargetModAttributes {
+public class ModAttributes {
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(ForgeRegistries.ATTRIBUTES, ModUtils.MODID);
 
     public static final RegistryObject<Attribute> MORTAR_PITCH = ATTRIBUTES.register("mortar_pitch", () -> (new RangedAttribute("attribute." + ModUtils.MODID + ".mortar_pitch", 70, 20, 89)).setSyncable(true));
@@ -25,6 +25,6 @@ public class TargetModAttributes {
 
     @SubscribeEvent
     public static void addAttributes(EntityAttributeModificationEvent event) {
-        event.add(TargetModEntities.MORTAR.get(), MORTAR_PITCH.get());
+        event.add(ModEntities.MORTAR.get(), MORTAR_PITCH.get());
     }
 }

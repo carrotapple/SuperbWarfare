@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.network.message;
 
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.world.inventory.GunRecycleGuiMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -64,22 +64,22 @@ public class GunRecycleGuiButtonMessage {
         var slot0 = menu.get(0);
         var gun = slot0.getItem();
 
-        if (gun.is(TargetModTags.Items.GUN)) {
+        if (gun.is(ModTags.Items.GUN)) {
             // 普通稀有度
             var material = switch (gun.getRarity()) {
-                case COMMON -> TargetModItems.COMMON_MATERIAL_PACK.get();
-                case RARE -> TargetModItems.RARE_MATERIAL_PACK.get();
-                case EPIC -> TargetModItems.EPIC_MATERIAL_PACK.get();
+                case COMMON -> ModItems.COMMON_MATERIAL_PACK.get();
+                case RARE -> ModItems.RARE_MATERIAL_PACK.get();
+                case EPIC -> ModItems.EPIC_MATERIAL_PACK.get();
                 default -> null;
             };
             if (material != null) ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(material));
 
             // 特殊稀有度
-            if (gun.is(TargetModTags.Items.LEGENDARY_GUN)) {
-                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TargetModItems.LEGENDARY_MATERIAL_PACK.get()));
+            if (gun.is(ModTags.Items.LEGENDARY_GUN)) {
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.LEGENDARY_MATERIAL_PACK.get()));
             }
-            if (gun.is(TargetModTags.Items.SPECIAL_GUN)) {
-                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TargetModItems.SPECIAL_MATERIAL_PACK.get()));
+            if (gun.is(ModTags.Items.SPECIAL_GUN)) {
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.SPECIAL_MATERIAL_PACK.get()));
             }
 
             // 高等级额外奖励
@@ -92,7 +92,7 @@ public class GunRecycleGuiButtonMessage {
                 if (Math.random() < 0.03 * level) soulSteelNuggetCount++;
                 if (Math.random() < 0.06 * level) soulSteelNuggetCount++;
 
-                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TargetModItems.SOUL_STEEL_NUGGET.get(), soulSteelNuggetCount));
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.SOUL_STEEL_NUGGET.get(), soulSteelNuggetCount));
             }
 
             slot0.set(ItemStack.EMPTY);

@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.client.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.item.gun.M60Item;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -12,7 +13,7 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class M60Layer extends GeoRenderLayer<M60Item> {
-    private static final ResourceLocation LAYER = new ResourceLocation("target", "textures/item/m60_e.png");
+    private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/item/m60_e.png");
 
     public M60Layer(GeoRenderer<M60Item> entityRenderer) {
         super(entityRenderer);

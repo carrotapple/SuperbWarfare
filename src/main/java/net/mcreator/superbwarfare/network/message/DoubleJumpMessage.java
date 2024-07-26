@@ -1,6 +1,6 @@
 package net.mcreator.superbwarfare.network.message;
 
-import net.mcreator.superbwarfare.init.TargetModSounds;
+import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -51,9 +51,9 @@ public class DoubleJumpMessage {
             if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).playerDoubleJump) {
                 entity.setDeltaMovement(new Vec3((1 * entity.getLookAngle().x), 0.8, (1 * entity.getLookAngle().z)));
                 if (!level.isClientSide()) {
-                    level.playSound(null, BlockPos.containing(x, y, z), TargetModSounds.DOUBLE_JUMP.get(), SoundSource.BLOCKS, 1, 1);
+                    level.playSound(null, BlockPos.containing(x, y, z), ModSounds.DOUBLE_JUMP.get(), SoundSource.BLOCKS, 1, 1);
                 } else {
-                    level.playLocalSound(x, y, z, TargetModSounds.DOUBLE_JUMP.get(), SoundSource.BLOCKS, 1, 1, false);
+                    level.playLocalSound(x, y, z, ModSounds.DOUBLE_JUMP.get(), SoundSource.BLOCKS, 1, 1, false);
                 }
                 entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                     capability.playerDoubleJump = false;

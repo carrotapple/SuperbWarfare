@@ -17,7 +17,6 @@ public class Mk42Renderer extends GeoEntityRenderer<Mk42Entity> {
         super(renderManager, new Mk42Model());
         this.shadowRadius = 3f;
         this.addRenderLayer(new Mk42Layer(this));
-
     }
 
     @Override

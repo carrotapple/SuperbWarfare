@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.entity.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.MortarEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -12,7 +13,7 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class MortarLayer extends GeoRenderLayer<MortarEntity> {
-	private static final ResourceLocation LAYER = new ResourceLocation("target", "textures/entity/mortar_e.png");
+	private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/entity/mortar_e.png");
 
 	public MortarLayer(GeoRenderer<MortarEntity> entityRenderer) {
 		super(entityRenderer);

@@ -7,7 +7,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.EquipmentSlot;
 
-import net.mcreator.superbwarfare.init.TargetModItems;
+import net.mcreator.superbwarfare.init.ModItems;
 
 public class VoltOverloadEnchantment extends Enchantment {
 	public VoltOverloadEnchantment(EquipmentSlot... slots) {
@@ -31,6 +31,6 @@ public class VoltOverloadEnchantment extends Enchantment {
 
 	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack itemstack) {
-		return Ingredient.of(new ItemStack(TargetModItems.TASER.get())).test(itemstack);
+		return Ingredient.of(new ItemStack(ModItems.TASER.get())).test(itemstack);
 	}
 }

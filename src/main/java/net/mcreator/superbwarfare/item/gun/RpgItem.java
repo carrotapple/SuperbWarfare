@@ -4,9 +4,9 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.RpgItemRenderer;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModSounds;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.TooltipTool;
@@ -77,7 +77,7 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
             var tag = stack.getOrCreateTag();
@@ -160,7 +160,7 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(TargetModSounds.RPG_RELOAD_EMPTY.get());
+        return Set.of(ModSounds.RPG_RELOAD_EMPTY.get());
     }
 
     @Override
@@ -175,12 +175,12 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     protected static boolean check(ItemStack stack) {
-        return stack.getItem() == TargetModItems.ROCKET.get();
+        return stack.getItem() == ModItems.ROCKET.get();
     }
 
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(TargetModItems.RPG.get());
-        GunsTool.initCreativeGun(stack, TargetModItems.RPG.getId().getPath());
+        ItemStack stack = new ItemStack(ModItems.RPG.get());
+        GunsTool.initCreativeGun(stack, ModItems.RPG.getId().getPath());
         return stack;
     }
 

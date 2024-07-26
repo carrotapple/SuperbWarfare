@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.Devotion;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -15,17 +16,17 @@ import software.bernie.geckolib.model.GeoModel;
 public class DevotionItemModel extends GeoModel<Devotion> {
     @Override
     public ResourceLocation getAnimationResource(Devotion animatable) {
-        return new ResourceLocation("target", "animations/devotion.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/devotion.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(Devotion animatable) {
-        return new ResourceLocation("target", "geo/devotion.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/devotion.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Devotion animatable) {
-        return new ResourceLocation("target", "textures/item/devotion.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/devotion.png");
     }
 
 
@@ -39,7 +40,7 @@ public class DevotionItemModel extends GeoModel<Devotion> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         double p = 0;
         p = player.getPersistentData().getDouble("zoom_pos");

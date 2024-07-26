@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.MarlinItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -14,17 +15,17 @@ import software.bernie.geckolib.model.GeoModel;
 public class MarlinItemModel extends GeoModel<MarlinItem> {
     @Override
     public ResourceLocation getAnimationResource(MarlinItem animatable) {
-        return new ResourceLocation("target", "animations/marlin.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/marlin.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(MarlinItem animatable) {
-        return new ResourceLocation("target", "geo/marlin.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/marlin.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(MarlinItem animatable) {
-        return new ResourceLocation("target", "textures/item/marlin.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/marlin.png");
     }
 
     @Override
@@ -36,7 +37,7 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         double p = 0;
         p = player.getPersistentData().getDouble("zoom_pos");

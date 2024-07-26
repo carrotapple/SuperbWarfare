@@ -4,8 +4,8 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.BocekItemRenderer;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.RarityTool;
@@ -76,7 +76,7 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (stack.getOrCreateTag().getInt("draw_time") < 16) {
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.bocek.draw"));
@@ -168,8 +168,8 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(TargetModItems.BOCEK.get());
-        GunsTool.initCreativeGun(stack, TargetModItems.BOCEK.getId().getPath());
+        ItemStack stack = new ItemStack(ModItems.BOCEK.get());
+        GunsTool.initCreativeGun(stack, ModItems.BOCEK.getId().getPath());
         return stack;
     }
 

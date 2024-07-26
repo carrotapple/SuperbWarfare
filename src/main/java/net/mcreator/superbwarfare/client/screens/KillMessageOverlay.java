@@ -4,8 +4,8 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.event.KillMessageHandler;
-import net.mcreator.superbwarfare.init.TargetModDamageTypes;
-import net.mcreator.superbwarfare.init.TargetModItems;
+import net.mcreator.superbwarfare.init.ModDamageTypes;
+import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.tools.PlayerKillRecord;
 import net.minecraft.client.Minecraft;
@@ -89,7 +89,7 @@ public class KillMessageOverlay {
         AtomicReference<String> targetName = new AtomicReference<>(record.target.getDisplayName().getString());
         if (record.target instanceof Player targetPlayer) {
             CuriosApi.getCuriosInventory(targetPlayer).ifPresent(
-                    c -> c.findFirstCurio(TargetModItems.DOG_TAG.get()).ifPresent(
+                    c -> c.findFirstCurio(ModItems.DOG_TAG.get()).ifPresent(
                             s -> {
                                 if (s.stack().hasCustomHoverName()) {
                                     targetName.set(s.stack().getHoverName().getString());
@@ -202,7 +202,7 @@ public class KillMessageOverlay {
         // 渲染击杀者名称
         AtomicReference<String> attackerName = new AtomicReference<>(record.attacker.getDisplayName().getString());
         CuriosApi.getCuriosInventory(record.attacker).ifPresent(
-                c -> c.findFirstCurio(TargetModItems.DOG_TAG.get()).ifPresent(
+                c -> c.findFirstCurio(ModItems.DOG_TAG.get()).ifPresent(
                         s -> {
                             if (s.stack().hasCustomHoverName()) {
                                 attackerName.set(s.stack().getHoverName().getString());
@@ -247,24 +247,24 @@ public class KillMessageOverlay {
         if (record.headshot) {
             icon = HEADSHOT;
         } else {
-            if (record.damageType == TargetModDamageTypes.GUN_FIRE || record.damageType == TargetModDamageTypes.GUN_FIRE_HEADSHOT
-                    || record.damageType == TargetModDamageTypes.ARROW_IN_KNEE || record.damageType == TargetModDamageTypes.ARROW_IN_BRAIN) {
+            if (record.damageType == ModDamageTypes.GUN_FIRE || record.damageType == ModDamageTypes.GUN_FIRE_HEADSHOT
+                    || record.damageType == ModDamageTypes.ARROW_IN_KNEE || record.damageType == ModDamageTypes.ARROW_IN_BRAIN) {
                 icon = null;
             } else {
                 // 如果是其他伤害，则渲染对应图标
-                if (record.damageType == DamageTypes.EXPLOSION || record.damageType == DamageTypes.PLAYER_EXPLOSION || record.damageType == TargetModDamageTypes.PROJECTILE_BOOM) {
+                if (record.damageType == DamageTypes.EXPLOSION || record.damageType == DamageTypes.PLAYER_EXPLOSION || record.damageType == ModDamageTypes.PROJECTILE_BOOM) {
                     icon = EXPLOSION;
                 } else if (record.damageType == DamageTypes.PLAYER_ATTACK) {
                     icon = KNIFE;
-                } else if (record.damageType == TargetModDamageTypes.BEAST) {
+                } else if (record.damageType == ModDamageTypes.BEAST) {
                     icon = BEAST;
-                } else if (record.damageType == TargetModDamageTypes.MINE) {
+                } else if (record.damageType == ModDamageTypes.MINE) {
                     icon = CLAYMORE;
                 } else if (record.damageType == ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("dreamaticvoyage", "bleeding"))) {
                     icon = BLEEDING;
                 } else if (record.damageType == ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("dreamaticvoyage", "blood_crystal"))) {
                     icon = BLOOD_CRYSTAL;
-                } else if (record.damageType == TargetModDamageTypes.SHOCK) {
+                } else if (record.damageType == ModDamageTypes.SHOCK) {
                     icon = SHOCK;
                 } else {
                     icon = GENERIC;

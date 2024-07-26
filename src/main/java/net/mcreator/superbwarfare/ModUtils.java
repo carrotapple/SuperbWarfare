@@ -40,16 +40,16 @@ public class ModUtils {
     public ModUtils() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        TargetModSounds.REGISTRY.register(bus);
-        TargetModBlocks.REGISTRY.register(bus);
-        TargetModItems.register(bus);
-        TargetModEntities.REGISTRY.register(bus);
-        TargetModTabs.TABS.register(bus);
-        TargetModMobEffects.REGISTRY.register(bus);
-        TargetModParticleTypes.REGISTRY.register(bus);
-        TargetModPotion.POTIONS.register(bus);
-        TargetModMenus.REGISTRY.register(bus);
-        TargetModEnchantments.REGISTRY.register(bus);
+        ModSounds.REGISTRY.register(bus);
+        ModBlocks.REGISTRY.register(bus);
+        ModItems.register(bus);
+        ModEntities.REGISTRY.register(bus);
+        ModTabs.TABS.register(bus);
+        ModMobEffects.REGISTRY.register(bus);
+        ModParticleTypes.REGISTRY.register(bus);
+        ModPotion.POTIONS.register(bus);
+        ModMenus.REGISTRY.register(bus);
+        ModEnchantments.REGISTRY.register(bus);
 
         bus.addListener(this::onCommonSetup);
 
@@ -110,10 +110,10 @@ public class ModUtils {
         addNetworkMessage(SimulationDistanceMessage.class, SimulationDistanceMessage::encode, SimulationDistanceMessage::decode, SimulationDistanceMessage::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 
         event.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)),
-                Ingredient.of(Items.LIGHTNING_ROD), PotionUtils.setPotion(new ItemStack(Items.POTION), TargetModPotion.SHOCK.get())));
-        event.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), TargetModPotion.SHOCK.get())),
-                Ingredient.of(Items.REDSTONE), PotionUtils.setPotion(new ItemStack(Items.POTION), TargetModPotion.LONG_SHOCK.get())));
-        event.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), TargetModPotion.SHOCK.get())),
-                Ingredient.of(Items.GLOWSTONE_DUST), PotionUtils.setPotion(new ItemStack(Items.POTION), TargetModPotion.STRONG_SHOCK.get())));
+                Ingredient.of(Items.LIGHTNING_ROD), PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotion.SHOCK.get())));
+        event.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotion.SHOCK.get())),
+                Ingredient.of(Items.REDSTONE), PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotion.LONG_SHOCK.get())));
+        event.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotion.SHOCK.get())),
+                Ingredient.of(Items.GLOWSTONE_DUST), PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotion.STRONG_SHOCK.get())));
     }
 }

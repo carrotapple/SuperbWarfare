@@ -1,8 +1,8 @@
 package net.mcreator.superbwarfare.entity;
 
-import net.mcreator.superbwarfare.init.TargetModEntities;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModSounds;
+import net.mcreator.superbwarfare.init.ModEntities;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
@@ -59,7 +59,7 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
     public String animationProcedure = "empty";
 
     public Target1Entity(PlayMessages.SpawnEntity packet, Level world) {
-        this(TargetModEntities.TARGET_1.get(), world);
+        this(ModEntities.TARGET_1.get(), world);
     }
 
     public Target1Entity(EntityType<Target1Entity> type, Level world) {
@@ -122,9 +122,9 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
         }
 
         if (!this.level().isClientSide()) {
-            this.level().playSound(null, BlockPos.containing(this.getX(), this.getY(), this.getZ()), TargetModSounds.HIT.get(), SoundSource.BLOCKS, 8, 1);
+            this.level().playSound(null, BlockPos.containing(this.getX(), this.getY(), this.getZ()), ModSounds.HIT.get(), SoundSource.BLOCKS, 8, 1);
         } else {
-            this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), TargetModSounds.HIT.get(), SoundSource.BLOCKS, 8, 1, false);
+            this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), ModSounds.HIT.get(), SoundSource.BLOCKS, 8, 1, false);
         }
         return super.hurt(source, amount);
     }
@@ -169,7 +169,7 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
 
             if (sourceEntity instanceof Player player) {
                 player.displayClientMessage(Component.literal(("Target Down " + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceEntity.position()))) + "M")), true);
-                SoundTool.playLocalSound(player, TargetModSounds.TARGET_DOWN.get(), 100, 1);
+                SoundTool.playLocalSound(player, ModSounds.TARGET_DOWN.get(), 100, 1);
                 entity.getPersistentData().putDouble("target_down", 100);
             }
         }
@@ -185,7 +185,7 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
                 this.discard();
             }
 
-            player.addItem(new ItemStack(TargetModItems.TARGET_DEPLOYER.get()));
+            player.addItem(new ItemStack(ModItems.TARGET_DEPLOYER.get()));
         } else {
             if (!(player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
                 this.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3((player.getX()), this.getY(), (player.getZ())));
@@ -300,7 +300,7 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
     protected void tickDeath() {
         ++this.deathTime;
         if (this.deathTime >= 100) {
-            this.spawnAtLocation(new ItemStack(TargetModItems.TARGET_DEPLOYER.get()));
+            this.spawnAtLocation(new ItemStack(ModItems.TARGET_DEPLOYER.get()));
             this.remove(Target1Entity.RemovalReason.KILLED);
         }
     }

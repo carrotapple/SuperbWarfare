@@ -2,9 +2,9 @@ package net.mcreator.superbwarfare.client.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModKeyMappings;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModKeyMappings;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -63,7 +63,7 @@ public class AmmoBarOverlay {
 
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
-                    "[" + TargetModKeyMappings.FIRE_MODE.getKey().getDisplayName().getString() + "]",
+                    "[" + ModKeyMappings.FIRE_MODE.getKey().getDisplayName().getString() + "]",
                     w - 111.5f,
                     h - 20,
                     0xFFFFFF,
@@ -156,11 +156,11 @@ public class AmmoBarOverlay {
     private static int getGunAmmoCount(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.getItem() == TargetModItems.MINIGUN.get()) {
+        if (stack.getItem() == ModItems.MINIGUN.get()) {
             return (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo;
         }
 
-        if (stack.getItem() == TargetModItems.BOCEK.get()) {
+        if (stack.getItem() == ModItems.BOCEK.get()) {
             return stack.getOrCreateTag().getInt("max_ammo");
         }
 
@@ -170,60 +170,60 @@ public class AmmoBarOverlay {
     private static String getPlayerAmmoCount(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.getItem() == TargetModItems.MINIGUN.get() || stack.getItem() == TargetModItems.BOCEK.get()) {
+        if (stack.getItem() == ModItems.MINIGUN.get() || stack.getItem() == ModItems.BOCEK.get()) {
             return "";
         }
 
-        if (stack.getItem() == TargetModItems.M_79.get() || stack.getItem() == TargetModItems.RPG.get() || stack.getItem() == TargetModItems.TASER.get()) {
+        if (stack.getItem() == ModItems.M_79.get() || stack.getItem() == ModItems.RPG.get() || stack.getItem() == ModItems.TASER.get()) {
             return "" + stack.getOrCreateTag().getInt("max_ammo");
         }
 
-        if (stack.is(TargetModTags.Items.RIFLE)) {
+        if (stack.is(ModTags.Items.RIFLE)) {
             return "" + (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo;
         }
-        if (stack.is(TargetModTags.Items.HANDGUN) || stack.is(TargetModTags.Items.SMG)) {
+        if (stack.is(ModTags.Items.HANDGUN) || stack.is(ModTags.Items.SMG)) {
             return "" + (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).handgunAmmo;
         }
-        if (stack.is(TargetModTags.Items.SHOTGUN)) {
+        if (stack.is(ModTags.Items.SHOTGUN)) {
             return "" + (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunAmmo;
         }
-        if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
+        if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
             return "" + (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperAmmo;
         }
         return "";
     }
 
     private static String getGunAmmoType(ItemStack stack) {
-        if (stack.getItem() == TargetModItems.BOCEK.get()) {
+        if (stack.getItem() == ModItems.BOCEK.get()) {
             return "   Arrow";
         }
 
-        if (stack.getItem() == TargetModItems.M_79.get()) {
+        if (stack.getItem() == ModItems.M_79.get()) {
             return "40mm Grenade";
         }
 
-        if (stack.getItem() == TargetModItems.RPG.get()) {
+        if (stack.getItem() == ModItems.RPG.get()) {
             return "Yassin105 TBG";
         }
 
-        if (stack.getItem() == TargetModItems.TASER.get()) {
+        if (stack.getItem() == ModItems.TASER.get()) {
             return "Electrode Rod";
         }
 
-        if (stack.getItem() == TargetModItems.MINIGUN.get()) {
+        if (stack.getItem() == ModItems.MINIGUN.get()) {
             return "Rifle Ammo";
         }
 
-        if (stack.is(TargetModTags.Items.RIFLE)) {
+        if (stack.is(ModTags.Items.RIFLE)) {
             return "  Rifle Ammo";
         }
-        if (stack.is(TargetModTags.Items.HANDGUN) || stack.is(TargetModTags.Items.SMG)) {
+        if (stack.is(ModTags.Items.HANDGUN) || stack.is(ModTags.Items.SMG)) {
             return "Handgun Ammo";
         }
-        if (stack.is(TargetModTags.Items.SHOTGUN)) {
+        if (stack.is(ModTags.Items.SHOTGUN)) {
             return "Shotgun Ammo";
         }
-        if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
+        if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
             return "Sniper Ammo";
         }
         return "";

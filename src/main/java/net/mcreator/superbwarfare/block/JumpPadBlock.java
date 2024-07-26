@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.block;
 
 import net.mcreator.superbwarfare.entity.Mk42Entity;
 import net.mcreator.superbwarfare.entity.Target1Entity;
-import net.mcreator.superbwarfare.init.TargetModSounds;
+import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -97,9 +97,9 @@ public class JumpPadBlock extends Block {
         }
 
         if (!level.isClientSide()) {
-            level.playSound(null, BlockPos.containing(pos.getX(), pos.getY(), pos.getZ()), TargetModSounds.JUMP.get(), SoundSource.BLOCKS, 1, 1);
+            level.playSound(null, BlockPos.containing(pos.getX(), pos.getY(), pos.getZ()), ModSounds.JUMP.get(), SoundSource.BLOCKS, 1, 1);
         } else {
-            level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), TargetModSounds.JUMP.get(), SoundSource.BLOCKS, 1, 1, false);
+            level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), ModSounds.JUMP.get(), SoundSource.BLOCKS, 1, 1, false);
         }
 
         entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {

@@ -4,9 +4,9 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.Mk42Entity;
 import net.mcreator.superbwarfare.entity.MortarEntity;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModMobEffects;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModMobEffects;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.mcreator.superbwarfare.network.message.*;
 import net.mcreator.superbwarfare.tools.TraceTool;
@@ -45,7 +45,7 @@ public class ClickHandler {
             ModUtils.PACKET_HANDLER.sendToServer(new VehicleFireMessage(1));
         }
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            if (Minecraft.getInstance().player.hasEffect(TargetModMobEffects.SHOCK.get())) {
+            if (Minecraft.getInstance().player.hasEffect(ModMobEffects.SHOCK.get())) {
                 event.setCanceled(true);
             }
 
@@ -65,11 +65,11 @@ public class ClickHandler {
         int button = event.getButton();
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            if (Minecraft.getInstance().player.hasEffect(TargetModMobEffects.SHOCK.get())) {
+            if (Minecraft.getInstance().player.hasEffect(ModMobEffects.SHOCK.get())) {
                 event.setCanceled(true);
                 return;
             }
-            if (stack.is(TargetModItems.MONITOR.get())) {
+            if (stack.is(ModItems.MONITOR.get())) {
                 event.setCanceled(true);
                 ModUtils.PACKET_HANDLER.sendToServer(new DroneFireMessage(0));
             }
@@ -78,24 +78,24 @@ public class ClickHandler {
                 ModUtils.PACKET_HANDLER.sendToServer(new VehicleFireMessage(0));
                 return;
             }
-            if (player.getMainHandItem().is(TargetModTags.Items.GUN)) {
+            if (player.getMainHandItem().is(ModTags.Items.GUN)) {
                 event.setCanceled(true);
                 ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(0));
             }
         }
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            if (Minecraft.getInstance().player.hasEffect(TargetModMobEffects.SHOCK.get())) {
+            if (Minecraft.getInstance().player.hasEffect(ModMobEffects.SHOCK.get())) {
                 event.setCanceled(true);
             }
-            if (player.getMainHandItem().is(TargetModTags.Items.GUN) || (player.isPassenger() && player.getVehicle() instanceof Mk42Entity)) {
+            if (player.getMainHandItem().is(ModTags.Items.GUN) || (player.isPassenger() && player.getVehicle() instanceof Mk42Entity)) {
                 event.setCanceled(true);
                 ModUtils.PACKET_HANDLER.sendToServer(new ZoomMessage(0));
             }
         }
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            if (Minecraft.getInstance().player.hasEffect(TargetModMobEffects.SHOCK.get())) {
+            if (Minecraft.getInstance().player.hasEffect(ModMobEffects.SHOCK.get())) {
                 event.setCanceled(true);
             }
         }
@@ -112,7 +112,7 @@ public class ClickHandler {
 
         double scroll = event.getScrollDelta();
 
-        if (stack.is(TargetModTags.Items.GUN) && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zoom) {
+        if (stack.is(ModTags.Items.GUN) && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zoom) {
             var tag = stack.getOrCreateTag();
             if (tag.getDouble("min_zoom") != 0 && tag.getDouble("max_zoom") != 0) {
                 ModUtils.PACKET_HANDLER.sendToServer(new AdjustZoomFovMessage(scroll));
@@ -120,7 +120,7 @@ public class ClickHandler {
             event.setCanceled(true);
         }
 
-        if (player.hasEffect(TargetModMobEffects.SHOCK.get())) {
+        if (player.hasEffect(ModMobEffects.SHOCK.get())) {
             event.setCanceled(true);
         }
 

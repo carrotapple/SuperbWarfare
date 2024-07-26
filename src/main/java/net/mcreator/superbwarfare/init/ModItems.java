@@ -18,7 +18,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 @SuppressWarnings("unused")
-public class TargetModItems {
+public class ModItems {
 
     /**
      * guns
@@ -76,16 +76,16 @@ public class TargetModItems {
      */
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
 
-    public static final RegistryObject<Item> SENPAI_SPAWN_EGG = ITEMS.register("senpai_spawn_egg", () -> new ForgeSpawnEggItem(TargetModEntities.SENPAI, -11584987, -14014413, new Item.Properties()));
-    public static final RegistryObject<Item> MK_42_SPAWN_EGG = ITEMS.register("mk42_spawn_egg", () -> new ForgeSpawnEggItem(TargetModEntities.MK_42, -8348258, -2630437, new Item.Properties()));
+    public static final RegistryObject<Item> SENPAI_SPAWN_EGG = ITEMS.register("senpai_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.SENPAI, -11584987, -14014413, new Item.Properties()));
+    public static final RegistryObject<Item> MK_42_SPAWN_EGG = ITEMS.register("mk42_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.MK_42, -8348258, -2630437, new Item.Properties()));
     public static final RegistryObject<Item> DRONE = ITEMS.register("drone", Drone::new);
 
     public static final RegistryObject<Item> MONITOR = ITEMS.register("monitor", Monitor::new);
     public static final RegistryObject<Item> TARGET_DEPLOYER = ITEMS.register("target_deployer", TargetDeployer::new);
-    public static final RegistryObject<Item> SANDBAG = block(TargetModBlocks.SANDBAG);
-    public static final RegistryObject<Item> BARBED_WIRE = block(TargetModBlocks.BARBED_WIRE);
+    public static final RegistryObject<Item> SANDBAG = block(ModBlocks.SANDBAG);
+    public static final RegistryObject<Item> BARBED_WIRE = block(ModBlocks.BARBED_WIRE);
     public static final RegistryObject<Item> CLAYMORE_MINE = ITEMS.register("claymore_mine", ClaymoreMine::new);
-    public static final RegistryObject<Item> JUMP_PAD = block(TargetModBlocks.JUMP_PAD);
+    public static final RegistryObject<Item> JUMP_PAD = block(ModBlocks.JUMP_PAD);
     public static final RegistryObject<Item> LIGHT_SABER = ITEMS.register("light_saber", LightSaber::new);
     public static final RegistryObject<Item> HAMMER = ITEMS.register("hammer", Hammer::new);
     public static final RegistryObject<Item> MORTAR_DEPLOYER = ITEMS.register("mortar_deployer", MortarDeployer::new);
@@ -106,10 +106,10 @@ public class TargetModItems {
     public static final RegistryObject<Item> COAL_POWDER = ITEMS.register("coal_powder", CoalPowder::new);
     public static final RegistryObject<Item> COAL_IRON_POWDER = ITEMS.register("coal_iron_powder", CoalIronPowder::new);
     public static final RegistryObject<Item> RAW_CEMENTED_CARBIDE_POWDER = ITEMS.register("raw_cemented_carbide_powder", RawCementedCarbidePowder::new);
-    public static final RegistryObject<Item> GALENA_ORE = block(TargetModBlocks.GALENA_ORE);
-    public static final RegistryObject<Item> DEEPSLATE_GALENA_ORE = block(TargetModBlocks.DEEPSLATE_GALENA_ORE);
-    public static final RegistryObject<Item> SCHEELITE_ORE = block(TargetModBlocks.SCHEELITE_ORE);
-    public static final RegistryObject<Item> DEEPSLATE_SCHEELITE_ORE = block(TargetModBlocks.DEEPSLATE_SCHEELITE_ORE);
+    public static final RegistryObject<Item> GALENA_ORE = block(ModBlocks.GALENA_ORE);
+    public static final RegistryObject<Item> DEEPSLATE_GALENA_ORE = block(ModBlocks.DEEPSLATE_GALENA_ORE);
+    public static final RegistryObject<Item> SCHEELITE_ORE = block(ModBlocks.SCHEELITE_ORE);
+    public static final RegistryObject<Item> DEEPSLATE_SCHEELITE_ORE = block(ModBlocks.DEEPSLATE_SCHEELITE_ORE);
     public static final RegistryObject<Item> GALENA = ITEMS.register("galena", Galena::new);
     public static final RegistryObject<Item> SCHEELITE = ITEMS.register("scheelite", Scheelite::new);
     public static final RegistryObject<Item> DOG_TAG = ITEMS.register("dog_tag", DogTag::new);
@@ -162,7 +162,7 @@ public class TargetModItems {
     public static final RegistryObject<Item> DEVOTION_BLUEPRINT = ITEMS.register("devotion_blueprint", DevotionBlueprint::new);
     public static final RegistryObject<Item> TASER_BLUEPRINT = ITEMS.register("taser_blueprint", TaserBlueprint::new);
 
-    public static final RegistryObject<Item> GUN_RECYCLE = block(TargetModBlocks.GUN_RECYCLE);
+    public static final RegistryObject<Item> GUN_RECYCLE = block(ModBlocks.GUN_RECYCLE);
 
 
     private static RegistryObject<Item> block(RegistryObject<Block> block) {

@@ -12,8 +12,8 @@ import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = {Dist.CLIENT})
-public class TargetModKeyMappings {
-    public static final KeyMapping RELOAD = new KeyMapping("key.superbwarfare.reload", GLFW.GLFW_KEY_R, "key.categories.target") {
+public class ModKeyMappings {
+    public static final KeyMapping RELOAD = new KeyMapping("key.superbwarfare.reload", GLFW.GLFW_KEY_R, "key.categories.superbwarfare") {
         private boolean isDownOld = false;
 
         @Override
@@ -26,7 +26,7 @@ public class TargetModKeyMappings {
         }
     };
 
-    public static final KeyMapping DOUBLE_JUMP = new KeyMapping("key.superbwarfare.double_jump", GLFW.GLFW_KEY_SPACE, "key.categories.target") {
+    public static final KeyMapping DOUBLE_JUMP = new KeyMapping("key.superbwarfare.double_jump", GLFW.GLFW_KEY_SPACE, "key.categories.superbwarfare") {
         private boolean isDownOld = false;
 
         @Override
@@ -42,7 +42,7 @@ public class TargetModKeyMappings {
         }
     };
 
-    public static final KeyMapping FIRE_MODE = new KeyMapping("key.superbwarfare.fire_mode", GLFW.GLFW_KEY_N, "key.categories.target") {
+    public static final KeyMapping FIRE_MODE = new KeyMapping("key.superbwarfare.fire_mode", GLFW.GLFW_KEY_N, "key.categories.superbwarfare") {
         private boolean isDownOld = false;
 
         @Override
@@ -56,7 +56,7 @@ public class TargetModKeyMappings {
         }
     };
 
-    public static final KeyMapping SENSITIVITY_INCREASE = new KeyMapping("key.superbwarfare.sensitivity_increase", GLFW.GLFW_KEY_PAGE_UP, "key.categories.target") {
+    public static final KeyMapping SENSITIVITY_INCREASE = new KeyMapping("key.superbwarfare.sensitivity_increase", GLFW.GLFW_KEY_PAGE_UP, "key.categories.superbwarfare") {
         private boolean isDownOld = false;
 
         @Override
@@ -69,7 +69,7 @@ public class TargetModKeyMappings {
         }
     };
 
-    public static final KeyMapping SENSITIVITY_REDUCE = new KeyMapping("key.superbwarfare.sensitivity_reduce", GLFW.GLFW_KEY_PAGE_DOWN, "key.categories.target") {
+    public static final KeyMapping SENSITIVITY_REDUCE = new KeyMapping("key.superbwarfare.sensitivity_reduce", GLFW.GLFW_KEY_PAGE_DOWN, "key.categories.superbwarfare") {
         private boolean isDownOld = false;
 
         @Override
@@ -82,7 +82,7 @@ public class TargetModKeyMappings {
         }
     };
 
-    public static final KeyMapping INTERACT = new KeyMapping("key.superbwarfare.interact", GLFW.GLFW_KEY_X, "key.categories.target") {
+    public static final KeyMapping INTERACT = new KeyMapping("key.superbwarfare.interact", GLFW.GLFW_KEY_X, "key.categories.superbwarfare") {
         private boolean isDownOld = false;
 
         @Override
@@ -90,7 +90,9 @@ public class TargetModKeyMappings {
             super.setDown(isDown);
             if (isDownOld != isDown && isDown) {
                 ModUtils.PACKET_HANDLER.sendToServer(new InteractMessage(0));
-                InteractMessage.pressAction(Minecraft.getInstance().player, 0);
+                if (Minecraft.getInstance().player != null) {
+                    InteractMessage.pressAction(Minecraft.getInstance().player, 0);
+                }
             }
             isDownOld = isDown;
         }

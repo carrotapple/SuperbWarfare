@@ -1,8 +1,8 @@
 package net.mcreator.superbwarfare.network.message;
 
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModSounds;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
@@ -49,7 +49,7 @@ public class FireModeMessage {
 
     private static void setFireMode(Player player, CompoundTag tag) {
         if (player instanceof ServerPlayer serverPlayer) {
-            serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(TargetModSounds.FIRE_RATE.get()),
+            serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ModSounds.FIRE_RATE.get()),
                     SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1f, 1f, serverPlayer.level().random.nextLong()));
         }
         tag.putDouble("cg", 10);
@@ -60,7 +60,7 @@ public class FireModeMessage {
         CompoundTag tag = mainHandItem.getOrCreateTag();
         int fireMode = tag.getInt("fire_mode");
 
-        if (mainHandItem.is(TargetModTags.Items.GUN)) {
+        if (mainHandItem.is(ModTags.Items.GUN)) {
             if (fireMode == 0) {
                 if (tag.getDouble("burst") == 1) {
                     tag.putInt("fire_mode", 1);
@@ -99,7 +99,7 @@ public class FireModeMessage {
 
             var capability = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables());
 
-            if (mainHandItem.getItem() == TargetModItems.SENTINEL.get()
+            if (mainHandItem.getItem() == ModItems.SENTINEL.get()
                     && !player.isSpectator()
                     && !capability.zooming
                     && !(player.getCooldowns().isOnCooldown(mainHandItem.getItem()))
@@ -108,7 +108,7 @@ public class FireModeMessage {
 
                 int count = 0;
                 for (var inv : player.getInventory().items) {
-                    if (inv.is(TargetModItems.SHIELD_CELL.get())) {
+                    if (inv.is(ModItems.SHIELD_CELL.get())) {
                         count++;
                     }
                 }

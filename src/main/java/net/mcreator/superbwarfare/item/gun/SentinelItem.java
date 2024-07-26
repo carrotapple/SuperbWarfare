@@ -5,9 +5,9 @@ import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.SentinelItemRenderer;
 import net.mcreator.superbwarfare.energy.ItemEnergyProvider;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModSounds;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.mcreator.superbwarfare.tools.GunsTool;
@@ -124,7 +124,7 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
 
@@ -161,7 +161,7 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
 
@@ -242,10 +242,10 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public Set<SoundEvent> getReloadSound() {
         return Set.of(
-                TargetModSounds.SENTINEL_RELOAD_EMPTY.get(),
-                TargetModSounds.SENTINEL_RELOAD_NORMAL.get(),
-                TargetModSounds.SENTINEL_CHARGE.get(),
-                TargetModSounds.SENTINEL_BOLT.get()
+                ModSounds.SENTINEL_RELOAD_EMPTY.get(),
+                ModSounds.SENTINEL_RELOAD_NORMAL.get(),
+                ModSounds.SENTINEL_CHARGE.get(),
+                ModSounds.SENTINEL_BOLT.get()
         );
     }
 
@@ -262,8 +262,8 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(TargetModItems.SENTINEL.get());
-        GunsTool.initCreativeGun(stack, TargetModItems.SENTINEL.getId().getPath());
+        ItemStack stack = new ItemStack(ModItems.SENTINEL.get());
+        GunsTool.initCreativeGun(stack, ModItems.SENTINEL.getId().getPath());
         return stack;
     }
 

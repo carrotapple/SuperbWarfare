@@ -13,7 +13,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.mcreator.superbwarfare.enchantment.VoltOverloadEnchantment;
 import net.mcreator.superbwarfare.enchantment.SuperRechargeEnchantment;
 
-public class TargetModEnchantments {
+public class ModEnchantments {
 	public static final DeferredRegister<Enchantment> REGISTRY = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, ModUtils.MODID);
 	public static final RegistryObject<Enchantment> VOLT_OVERLOAD = REGISTRY.register("volt_overload", () -> new VoltOverloadEnchantment());
 	public static final RegistryObject<Enchantment> SUPER_RECHARGE = REGISTRY.register("super_recharge", () -> new SuperRechargeEnchantment());

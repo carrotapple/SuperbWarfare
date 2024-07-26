@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.client.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.item.gun.Mk14Item;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -12,7 +13,7 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class Mk14Layer extends GeoRenderLayer<Mk14Item> {
-    private static final ResourceLocation LAYER = new ResourceLocation("target", "textures/item/mk14_e.png");
+    private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/item/mk14_e.png");
 
     public Mk14Layer(GeoRenderer<Mk14Item> entityRenderer) {
         super(entityRenderer);

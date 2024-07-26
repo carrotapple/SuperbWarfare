@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.M98bItem;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -15,17 +16,17 @@ import software.bernie.geckolib.model.GeoModel;
 public class M98bItemModel extends GeoModel<M98bItem> {
     @Override
     public ResourceLocation getAnimationResource(M98bItem animatable) {
-        return new ResourceLocation("target", "animations/m98b.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/m98b.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(M98bItem animatable) {
-        return new ResourceLocation("target", "geo/m98b.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/m98b.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(M98bItem animatable) {
-        return new ResourceLocation("target", "textures/item/m98b.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/m98b.png");
     }
 
     @Override
@@ -37,7 +38,7 @@ public class M98bItemModel extends GeoModel<M98bItem> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");

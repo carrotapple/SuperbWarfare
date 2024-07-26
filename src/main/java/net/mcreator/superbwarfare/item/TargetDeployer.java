@@ -1,6 +1,6 @@
 package net.mcreator.superbwarfare.item;
 
-import net.mcreator.superbwarfare.init.TargetModEntities;
+import net.mcreator.superbwarfare.init.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -24,7 +24,7 @@ public class TargetDeployer extends Item {
         if (player == null) return InteractionResult.FAIL;
 
         if (context.getLevel() instanceof ServerLevel level) {
-            Entity entityToSpawn = TargetModEntities.TARGET_1.get().spawn(level, BlockPos.containing(clickedPos.getX() + 0.5, clickedPos.getY() + 1, clickedPos.getZ() + 0.5), MobSpawnType.MOB_SUMMONED);
+            Entity entityToSpawn = ModEntities.TARGET_1.get().spawn(level, BlockPos.containing(clickedPos.getX() + 0.5, clickedPos.getY() + 1, clickedPos.getZ() + 0.5), MobSpawnType.MOB_SUMMONED);
             if (entityToSpawn != null) {
                 entityToSpawn.setDeltaMovement(0, 0, 0);
             }

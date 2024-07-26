@@ -1,8 +1,8 @@
 package net.mcreator.superbwarfare.entity;
 
-import net.mcreator.superbwarfare.init.TargetModDamageTypes;
-import net.mcreator.superbwarfare.init.TargetModEntities;
-import net.mcreator.superbwarfare.init.TargetModItems;
+import net.mcreator.superbwarfare.init.ModDamageTypes;
+import net.mcreator.superbwarfare.init.ModEntities;
+import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.minecraft.core.particles.ParticleTypes;
@@ -32,11 +32,11 @@ public class DroneGrenadeEntity extends ThrowableItemProjectile {
     }
 
     public DroneGrenadeEntity(LivingEntity entity, Level level) {
-        super(TargetModEntities.DRONE_GRENADE.get(), entity, level);
+        super(ModEntities.DRONE_GRENADE.get(), entity, level);
     }
 
     public DroneGrenadeEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
-        this(TargetModEntities.DRONE_GRENADE.get(), level);
+        this(ModEntities.DRONE_GRENADE.get(), level);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class DroneGrenadeEntity extends ThrowableItemProjectile {
 
     @Override
     protected Item getDefaultItem() {
-        return TargetModItems.GRENADE_40MM.get();
+        return ModItems.GRENADE_40MM.get();
     }
 
     @Override
@@ -80,7 +80,7 @@ public class DroneGrenadeEntity extends ThrowableItemProjectile {
 
     private void causeExplode() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 55,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 55,
                 this.getX(), this.getY(), this.getZ(), 6.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);

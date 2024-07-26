@@ -23,7 +23,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = ModUtils.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class TargetModLootModifier {
+public class ModLootModifier {
     public static class TargetModLootTableModifier extends LootModifier {
         public static final Supplier<Codec<TargetModLootTableModifier>> CODEC = Suppliers
                 .memoize(() -> RecordCodecBuilder.create(instance -> codecStart(instance).and(ResourceLocation.CODEC.fieldOf("lootTable").forGetter(m -> m.lootTable)).apply(instance, TargetModLootTableModifier::new)));

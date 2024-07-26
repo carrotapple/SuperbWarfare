@@ -1,9 +1,9 @@
 package net.mcreator.superbwarfare.mobeffect;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.init.TargetModDamageTypes;
-import net.mcreator.superbwarfare.init.TargetModMobEffects;
-import net.mcreator.superbwarfare.init.TargetModSounds;
+import net.mcreator.superbwarfare.init.ModDamageTypes;
+import net.mcreator.superbwarfare.init.ModMobEffects;
+import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -42,11 +42,11 @@ public class ShockMobEffect extends MobEffect {
             attacker = entity.level().getEntity(entity.getPersistentData().getInt("TargetShockAttacker"));
         }
 
-        entity.hurt(TargetModDamageTypes.causeShockDamage(entity.level().registryAccess(), attacker), 2 + (1.25f * amplifier));
-        entity.level().playSound(null, entity.getOnPos(), TargetModSounds.ELECTRIC.get(), SoundSource.PLAYERS, 1, 1);
+        entity.hurt(ModDamageTypes.causeShockDamage(entity.level().registryAccess(), attacker), 2 + (1.25f * amplifier));
+        entity.level().playSound(null, entity.getOnPos(), ModSounds.ELECTRIC.get(), SoundSource.PLAYERS, 1, 1);
 
         if (attacker instanceof ServerPlayer player) {
-            player.level().playSound(null, player.blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
+            player.level().playSound(null, player.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
             ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
         }
     }
@@ -61,19 +61,19 @@ public class ShockMobEffect extends MobEffect {
         LivingEntity living = event.getEntity();
 
         MobEffectInstance instance = event.getEffectInstance();
-        if (!instance.getEffect().equals(TargetModMobEffects.SHOCK.get())) {
+        if (!instance.getEffect().equals(ModMobEffects.SHOCK.get())) {
             return;
         }
 
         if (living instanceof Player) {
             if (!living.level().isClientSide()) {
-                living.level().playSound(null, BlockPos.containing(living.getX(), living.getY(), living.getZ()), TargetModSounds.SHOCK.get(), SoundSource.HOSTILE, 1, 1);
+                living.level().playSound(null, BlockPos.containing(living.getX(), living.getY(), living.getZ()), ModSounds.SHOCK.get(), SoundSource.HOSTILE, 1, 1);
             } else {
-                living.level().playLocalSound(living.getX(), living.getY(), living.getZ(), TargetModSounds.SHOCK.get(), SoundSource.HOSTILE, 1, 1, false);
+                living.level().playLocalSound(living.getX(), living.getY(), living.getZ(), ModSounds.SHOCK.get(), SoundSource.HOSTILE, 1, 1, false);
             }
         }
 
-        living.hurt(TargetModDamageTypes.causeShockDamage(living.level().registryAccess(),
+        living.hurt(ModDamageTypes.causeShockDamage(living.level().registryAccess(),
                 event.getEffectSource()), 2 + (1.25f * instance.getAmplifier()));
 
         if (event.getEffectSource() instanceof LivingEntity source) {
@@ -90,7 +90,7 @@ public class ShockMobEffect extends MobEffect {
             return;
         }
 
-        if (instance.getEffect().equals(TargetModMobEffects.SHOCK.get())) {
+        if (instance.getEffect().equals(ModMobEffects.SHOCK.get())) {
             living.getPersistentData().remove("TargetShockAttacker");
         }
     }
@@ -104,7 +104,7 @@ public class ShockMobEffect extends MobEffect {
             return;
         }
 
-        if (instance.getEffect().equals(TargetModMobEffects.SHOCK.get())) {
+        if (instance.getEffect().equals(ModMobEffects.SHOCK.get())) {
             living.getPersistentData().remove("TargetShockAttacker");
         }
     }
@@ -113,7 +113,7 @@ public class ShockMobEffect extends MobEffect {
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity living = event.getEntity();
 
-        if (living.hasEffect(TargetModMobEffects.SHOCK.get())) {
+        if (living.hasEffect(ModMobEffects.SHOCK.get())) {
             living.setXRot((float) Mth.nextDouble(RandomSource.create(), -23, -36));
             living.xRotO = living.getXRot();
         }
@@ -133,7 +133,7 @@ public class ShockMobEffect extends MobEffect {
         if (sourceentity == null) {
             return;
         }
-        if (sourceentity instanceof LivingEntity living && living.hasEffect(TargetModMobEffects.SHOCK.get())) {
+        if (sourceentity instanceof LivingEntity living && living.hasEffect(ModMobEffects.SHOCK.get())) {
             event.setCanceled(true);
         }
     }

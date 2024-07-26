@@ -1,6 +1,6 @@
 package net.mcreator.superbwarfare.mixins;
 
-import net.mcreator.superbwarfare.init.TargetModDamageTypes;
+import net.mcreator.superbwarfare.init.ModDamageTypes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,9 +22,9 @@ public class LivingEntityMixin {
 
     @ModifyArg(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;knockback(DDD)V"), index = 0)
     private double modifyApplyKnockbackArgs(double original) {
-        if (this.target$source.is(TargetModDamageTypes.GUN_FIRE) || this.target$source.is(TargetModDamageTypes.GUN_FIRE_HEADSHOT)
-                || this.target$source.is(TargetModDamageTypes.ARROW_IN_KNEE) || this.target$source.is(TargetModDamageTypes.ARROW_IN_BRAIN)
-                || this.target$source.is(TargetModDamageTypes.SHOCK)) {
+        if (this.target$source.is(ModDamageTypes.GUN_FIRE) || this.target$source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)
+                || this.target$source.is(ModDamageTypes.ARROW_IN_KNEE) || this.target$source.is(ModDamageTypes.ARROW_IN_BRAIN)
+                || this.target$source.is(ModDamageTypes.SHOCK)) {
             return 0.1 * original;
         }
         return original;

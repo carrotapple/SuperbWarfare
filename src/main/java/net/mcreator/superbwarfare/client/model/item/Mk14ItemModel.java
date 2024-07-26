@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.Mk14Item;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -15,17 +16,17 @@ import software.bernie.geckolib.model.GeoModel;
 public class Mk14ItemModel extends GeoModel<Mk14Item> {
     @Override
     public ResourceLocation getAnimationResource(Mk14Item animatable) {
-        return new ResourceLocation("target", "animations/mk14ebr.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/mk14ebr.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(Mk14Item animatable) {
-        return new ResourceLocation("target", "geo/mk14ebr.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/mk14ebr.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Mk14Item animatable) {
-        return new ResourceLocation("target", "textures/item/mk14.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/mk14.png");
     }
 
     @Override
@@ -44,7 +45,7 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         if (player.getPersistentData().getDouble("prone") > 0) {
             l.setRotX(-1.5f);

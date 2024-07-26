@@ -1,6 +1,6 @@
 package net.mcreator.superbwarfare.item.common.ammo;
 
-import net.mcreator.superbwarfare.init.TargetModSounds;
+import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.mcreator.superbwarfare.tools.GunInfo;
 import net.minecraft.network.chat.Component;
@@ -48,7 +48,7 @@ public abstract class AmmoSupplierItem extends Item {
 
         if (!level.isClientSide()) {
             player.displayClientMessage(Component.translatable("item.superbwarfare.ammo_supplier.supply", Component.translatable(this.type.translatableKey).getString(), ammoToAdd * count), false);
-            level.playSound(null, player.blockPosition(), TargetModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 1, 1);
+            level.playSound(null, player.blockPosition(), ModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 1, 1);
         }
         return InteractionResultHolder.consume(stack);
     }

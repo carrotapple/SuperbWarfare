@@ -1,8 +1,8 @@
 package net.mcreator.superbwarfare.mixins;
 
 import net.mcreator.superbwarfare.entity.Mk42Entity;
-import net.mcreator.superbwarfare.init.TargetModMobEffects;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModMobEffects;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -31,7 +31,7 @@ public class MouseHandlerMixin {
             return original;
         }
 
-        if (player.hasEffect(TargetModMobEffects.SHOCK.get()) && !player.isSpectator()) {
+        if (player.hasEffect(ModMobEffects.SHOCK.get()) && !player.isSpectator()) {
             return 0;
         }
 
@@ -45,7 +45,7 @@ public class MouseHandlerMixin {
             }
         }
 
-        if (!stack.is(TargetModTags.Items.GUN)) {
+        if (!stack.is(ModTags.Items.GUN)) {
             return original;
         }
 

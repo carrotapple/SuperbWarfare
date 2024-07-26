@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.SentinelItem;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -18,17 +19,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SentinelItemModel extends GeoModel<SentinelItem> {
     @Override
     public ResourceLocation getAnimationResource(SentinelItem animatable) {
-        return new ResourceLocation("target", "animations/sentinel.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/sentinel.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(SentinelItem animatable) {
-        return new ResourceLocation("target", "geo/sentinel.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/sentinel.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(SentinelItem animatable) {
-        return new ResourceLocation("target", "textures/item/sentinel.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/sentinel.png");
     }
 
     @Override
@@ -42,7 +43,7 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         double p = player.getPersistentData().getDouble("zoom_pos");
 

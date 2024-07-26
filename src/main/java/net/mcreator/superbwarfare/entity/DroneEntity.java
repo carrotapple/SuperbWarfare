@@ -1,8 +1,8 @@
 package net.mcreator.superbwarfare.entity;
 
-import net.mcreator.superbwarfare.init.TargetModEntities;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModSounds;
+import net.mcreator.superbwarfare.init.ModEntities;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.item.Monitor;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.ChatFormatting;
@@ -73,7 +73,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
     public String animationprocedure = "empty";
 
     public DroneEntity(PlayMessages.SpawnEntity packet, Level world) {
-        this(TargetModEntities.DRONE.get(), world);
+        this(ModEntities.DRONE.get(), world);
     }
 
     public DroneEntity(EntityType<DroneEntity> type, Level world) {
@@ -210,11 +210,11 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                 || this.getPersistentData().getBoolean("down");
 
         if (!this.onGround()) {
-            this.level().playSound(null, this.getOnPos(), TargetModSounds.DRONE_SOUND.get(), SoundSource.AMBIENT, 3, 1);
+            this.level().playSound(null, this.getOnPos(), ModSounds.DRONE_SOUND.get(), SoundSource.AMBIENT, 3, 1);
             if (control != null) {
                 ItemStack stack = control.getMainHandItem();
                 if (stack.getOrCreateTag().getBoolean("Using") && control instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.DRONE_SOUND.get(), 100, 1);
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.DRONE_SOUND.get(), 100, 1);
                 }
             }
         }
@@ -254,7 +254,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
         super.mobInteract(player, hand);
 
         ItemStack stack = player.getMainHandItem();
-        if (stack.getItem() == TargetModItems.MONITOR.get()) {
+        if (stack.getItem() == ModItems.MONITOR.get()) {
             if (!player.isCrouching()) {
                 if (!this.entityData.get(LINKED)) {
                     if (stack.getOrCreateTag().getBoolean("Linked")) {
@@ -293,12 +293,12 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                 }
             }
         } else if (stack.isEmpty() && player.isCrouching()) {
-            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TargetModItems.DRONE.get()));
+            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.DRONE.get()));
             for (int index0 = 0; index0 < this.entityData.get(AMMO); index0++) {
-                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TargetModItems.GRENADE_40MM.get()));
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.GRENADE_40MM.get()));
             }
             if (!this.level().isClientSide()) this.discard();
-        }  else if (stack.getItem() == TargetModItems.GRENADE_40MM.get()) {
+        }  else if (stack.getItem() == ModItems.GRENADE_40MM.get()) {
             if (!player.isCreative()) {
                 stack.shrink(1);
             }
@@ -306,7 +306,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                 this.entityData.set(AMMO,this.entityData.get(AMMO) + 1);
                 player.displayClientMessage(Component.literal("AMMO:" + this.entityData.get(AMMO)), true);
                 if (player instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 0.5F, 1);
+                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 0.5F, 1);
                 }
             }
         }
@@ -363,7 +363,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 
         Player player = this.level().getPlayerByUUID(uuid);
         if (player != null) {
-            player.getInventory().items.stream().filter(stack -> stack.getItem() == TargetModItems.MONITOR.get())
+            player.getInventory().items.stream().filter(stack -> stack.getItem() == ModItems.MONITOR.get())
                     .forEach(stack -> {
                         if (stack.getOrCreateTag().getString(Monitor.LINKED_DRONE).equals(this.getStringUUID())) {
                             Monitor.disLink(stack);

@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.BocekItem;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -15,17 +16,17 @@ import software.bernie.geckolib.model.GeoModel;
 public class BocekItemModel extends GeoModel<BocekItem> {
     @Override
     public ResourceLocation getAnimationResource(BocekItem animatable) {
-        return new ResourceLocation("target", "animations/bocek.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/bocek.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(BocekItem animatable) {
-        return new ResourceLocation("target", "geo/bocek.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/bocek.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(BocekItem animatable) {
-        return new ResourceLocation("target", "textures/item/bocek.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/bocek.png");
     }
 
     @Override
@@ -49,7 +50,7 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         arrow.setHidden(stack.getOrCreateTag().getInt("arrow_empty") > 0);
         jian.setHidden(stack.getOrCreateTag().getInt("max_ammo") == 0);

@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.RpkItem;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -15,17 +16,17 @@ import software.bernie.geckolib.model.GeoModel;
 public class RpkItemModel extends GeoModel<RpkItem> {
     @Override
     public ResourceLocation getAnimationResource(RpkItem animatable) {
-        return new ResourceLocation("target", "animations/rpk.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/rpk.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(RpkItem animatable) {
-        return new ResourceLocation("target", "geo/rpk.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/rpk.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(RpkItem animatable) {
-        return new ResourceLocation("target", "textures/item/rpk.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/rpk.png");
     }
 
     @Override
@@ -41,7 +42,7 @@ public class RpkItemModel extends GeoModel<RpkItem> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         double p = 0;
         p = player.getPersistentData().getDouble("zoom_pos");

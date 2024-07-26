@@ -1,5 +1,6 @@
 package net.mcreator.superbwarfare.entity.model;
 
+import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.MortarEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -12,17 +13,17 @@ import software.bernie.geckolib.model.data.EntityModelData;
 public class MortarModel extends GeoModel<MortarEntity> {
     @Override
     public ResourceLocation getAnimationResource(MortarEntity entity) {
-        return new ResourceLocation("target", "animations/mortar.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/mortar.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(MortarEntity entity) {
-        return new ResourceLocation("target", "geo/mortar.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/mortar.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(MortarEntity entity) {
-        return new ResourceLocation("target", "textures/entity/mortar.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/entity/mortar.png");
     }
 
     @Override

@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.Hk416Item;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -15,17 +16,17 @@ import software.bernie.geckolib.model.GeoModel;
 public class Hk416ItemModel extends GeoModel<Hk416Item> {
     @Override
     public ResourceLocation getAnimationResource(Hk416Item animatable) {
-        return new ResourceLocation("target", "animations/hk416.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/hk416.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(Hk416Item animatable) {
-        return new ResourceLocation("target", "geo/hk416.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/hk416.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Hk416Item animatable) {
-        return new ResourceLocation("target", "textures/item/hk416.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/hk416.png");
     }
 
     @Override
@@ -39,7 +40,7 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
             flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));

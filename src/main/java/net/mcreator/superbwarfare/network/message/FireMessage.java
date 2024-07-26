@@ -65,7 +65,7 @@ public class FireMessage {
                 capability.syncPlayerVariables(player);
             });
 
-            if (player.getMainHandItem().getItem() == TargetModItems.BOCEK.get()) {
+            if (player.getMainHandItem().getItem() == ModItems.BOCEK.get()) {
                 handleBowShoot(player);
             }
         }
@@ -74,22 +74,22 @@ public class FireMessage {
     private static void handlePlayerShoot(Player player) {
         var handItem = player.getMainHandItem();
 
-        if (!handItem.is(TargetModTags.Items.GUN)) {
+        if (!handItem.is(ModTags.Items.GUN)) {
             return;
         }
 
         var tag = handItem.getOrCreateTag();
 
 
-        if (handItem.getItem() == TargetModItems.TASER.get()) {
+        if (handItem.getItem() == ModItems.TASER.get()) {
             handleTaserFire(player);
         }
 
-        if (handItem.getItem() == TargetModItems.M_79.get()) {
+        if (handItem.getItem() == ModItems.M_79.get()) {
             handleM79Fire(player);
         }
 
-        if (handItem.getItem() == TargetModItems.RPG.get()) {
+        if (handItem.getItem() == ModItems.RPG.get()) {
             handleRpgFire(player);
         }
 
@@ -103,19 +103,19 @@ public class FireMessage {
             tag.putDouble("force_stop", 1);
         }
 
-        if (handItem.getItem() != TargetModItems.BOCEK.get()
-                && handItem.getItem() != TargetModItems.MINIGUN.get()
+        if (handItem.getItem() != ModItems.BOCEK.get()
+                && handItem.getItem() != ModItems.MINIGUN.get()
                 && tag.getInt("ammo") == 0
                 && !tag.getBoolean("reloading")) {
             if (!player.level().isClientSide()) {
-                SoundTool.playLocalSound(player, TargetModSounds.TRIGGER_CLICK.get(), 10, 1);
+                SoundTool.playLocalSound(player, ModSounds.TRIGGER_CLICK.get(), 10, 1);
             }
         }
 
-        if (handItem.getItem() == TargetModItems.MINIGUN.get()) {
+        if (handItem.getItem() == ModItems.MINIGUN.get()) {
             if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo == 0) {
                 if (!player.level().isClientSide()) {
-                    SoundTool.playLocalSound(player, TargetModSounds.TRIGGER_CLICK.get(), 10, 1);
+                    SoundTool.playLocalSound(player, ModSounds.TRIGGER_CLICK.get(), 10, 1);
                 }
             }
         }
@@ -140,8 +140,8 @@ public class FireMessage {
         double power = stack.getOrCreateTag().getDouble("power");
 
         if (player instanceof ServerPlayer serverPlayer) {
-            SoundTool.stopSound(serverPlayer, TargetModSounds.BOCEK_PULL_1P.getId(), SoundSource.PLAYERS);
-            SoundTool.stopSound(serverPlayer, TargetModSounds.BOCEK_PULL_3P.getId(), SoundSource.PLAYERS);
+            SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_1P.getId(), SoundSource.PLAYERS);
+            SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_3P.getId(), SoundSource.PLAYERS);
         }
 
         if (stack.getOrCreateTag().getDouble("power") >= 6) {
@@ -149,7 +149,7 @@ public class FireMessage {
             if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
                 Level level = player.level();
                 if (!level.isClientSide()) {
-                    int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(TargetModEnchantments.MONSTER_HUNTER.get(), stack);
+                    int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), stack);
                     float damage = (float) (0.02 * stack.getOrCreateTag().getDouble("damage") * (1 + 0.05 * stack.getOrCreateTag().getInt("level")));
 
                     BocekArrowEntity arrow = new BocekArrowEntity(player, level, monsterMultiple);
@@ -165,8 +165,8 @@ public class FireMessage {
                 }
 
                 if (!player.level().isClientSide()) {
-                    SoundTool.playLocalSound(player, TargetModSounds.BOCEK_ZOOM_FIRE_1P.get(), 10, 1);
-                    player.playSound(TargetModSounds.BOCEK_ZOOM_FIRE_3P.get(), 2, 1);
+                    SoundTool.playLocalSound(player, ModSounds.BOCEK_ZOOM_FIRE_1P.get(), 10, 1);
+                    player.playSound(ModSounds.BOCEK_ZOOM_FIRE_3P.get(), 2, 1);
                 }
             } else {
                 stack.getOrCreateTag().putBoolean("shoot", true);
@@ -176,8 +176,8 @@ public class FireMessage {
                 }
 
                 if (!player.level().isClientSide() && player.getServer() != null) {
-                    SoundTool.playLocalSound(player, TargetModSounds.BOCEK_SHATTER_CAP_FIRE_1P.get(), 10, 1);
-                    player.playSound(TargetModSounds.BOCEK_SHATTER_CAP_FIRE_3P.get(), 2, 1);
+                    SoundTool.playLocalSound(player, ModSounds.BOCEK_SHATTER_CAP_FIRE_1P.get(), 10, 1);
+                    player.playSound(ModSounds.BOCEK_SHATTER_CAP_FIRE_3P.get(), 2, 1);
                 }
             }
 
@@ -207,7 +207,7 @@ public class FireMessage {
         double damage;
         float headshot = (float) tag.getDouble("headshot");
         float velocity = 4 * (float) tag.getDouble("speed");
-        int monster_multiple = EnchantmentHelper.getTagEnchantmentLevel(TargetModEnchantments.MONSTER_HUNTER.get(), heldItem);
+        int monster_multiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), heldItem);
 
         var projectile = new ProjectileEntity(player.level())
                 .shooter(player)
@@ -237,12 +237,12 @@ public class FireMessage {
                 player.getCooldowns().addCooldown(stack.getItem(), 5);
 
                 if (player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.TASER_FIRE_1P.get(), 1, 1);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.TASER_FIRE_3P.get(), SoundSource.PLAYERS, 1, 1);
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.TASER_FIRE_1P.get(), 1, 1);
+                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.TASER_FIRE_3P.get(), SoundSource.PLAYERS, 1, 1);
                 }
 
-                int volt = EnchantmentHelper.getTagEnchantmentLevel(TargetModEnchantments.VOLT_OVERLOAD.get(), stack);
-                int wire_length = EnchantmentHelper.getTagEnchantmentLevel(TargetModEnchantments.LONGER_WIRE.get(), stack);
+                int volt = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.VOLT_OVERLOAD.get(), stack);
+                int wire_length = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.LONGER_WIRE.get(), stack);
 
                 Level level = player.level();
                 if (!level.isClientSide()) {
@@ -272,7 +272,7 @@ public class FireMessage {
 
                 Level level = player.level();
                 if (!level.isClientSide()) {
-                    int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(TargetModEnchantments.MONSTER_HUNTER.get(), stack);
+                    int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), stack);
                     GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, level, (float) stack.getOrCreateTag().getDouble("damage") * (float) stack.getOrCreateTag().getDouble("damageadd"), monsterMultiple);
 
                     gunGrenadeEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
@@ -292,10 +292,10 @@ public class FireMessage {
                 player.getCooldowns().addCooldown(stack.getItem(), 2);
 
                 if (player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.M_79_FIRE_1P.get(), 2, 1);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.M_79_FIRE_3P.get(), SoundSource.PLAYERS, 4, 1);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.M_79_FAR.get(), SoundSource.PLAYERS, 6, 1);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.M_79_VERYFAR.get(), SoundSource.PLAYERS, 12, 1);
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.M_79_FIRE_1P.get(), 2, 1);
+                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_79_FIRE_3P.get(), SoundSource.PLAYERS, 4, 1);
+                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_79_FAR.get(), SoundSource.PLAYERS, 6, 1);
+                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_79_VERYFAR.get(), SoundSource.PLAYERS, 12, 1);
                 }
 
                 stack.getOrCreateTag().putBoolean("shoot", true);
@@ -316,7 +316,7 @@ public class FireMessage {
         if (!tag.getBoolean("reloading") && !player.getCooldowns().isOnCooldown(mainHandItem.getItem()) && tag.getInt("ammo") > 0) {
 
             if (!level.isClientSide()) {
-                int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(TargetModEnchantments.MONSTER_HUNTER.get(), mainHandItem);
+                int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), mainHandItem);
                 RpgRocketEntity rocketEntity = new RpgRocketEntity(player, level, (float) tag.getDouble("damage") * (float) tag.getDouble("damageadd"), monsterMultiple);
                 rocketEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                 rocketEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) tag.getDouble("velocity"),
@@ -341,10 +341,10 @@ public class FireMessage {
             player.getCooldowns().addCooldown(mainHandItem.getItem(), 10);
 
             if (player instanceof ServerPlayer serverPlayer) {
-                SoundTool.playLocalSound(serverPlayer, TargetModSounds.RPG_FIRE_1P.get(), 2, 1);
-                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.RPG_FIRE_3P.get(), SoundSource.PLAYERS, 4, 1);
-                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.RPG_FAR.get(), SoundSource.PLAYERS, 8, 1);
-                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.RPG_VERYFAR.get(), SoundSource.PLAYERS, 16, 1);
+                SoundTool.playLocalSound(serverPlayer, ModSounds.RPG_FIRE_1P.get(), 2, 1);
+                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.RPG_FIRE_3P.get(), SoundSource.PLAYERS, 4, 1);
+                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.RPG_FAR.get(), SoundSource.PLAYERS, 8, 1);
+                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.RPG_VERYFAR.get(), SoundSource.PLAYERS, 16, 1);
             }
 
             tag.putBoolean("shoot", true);

@@ -1,10 +1,10 @@
 package net.mcreator.superbwarfare.entity;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.init.TargetModAttributes;
-import net.mcreator.superbwarfare.init.TargetModEntities;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModSounds;
+import net.mcreator.superbwarfare.init.ModAttributes;
+import net.mcreator.superbwarfare.init.ModEntities;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -53,7 +53,7 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     public String animationProcedure = "empty";
 
     public MortarEntity(PlayMessages.SpawnEntity packet, Level world) {
-        this(TargetModEntities.MORTAR.get(), world);
+        this(ModEntities.MORTAR.get(), world);
     }
 
     public MortarEntity(EntityType<MortarEntity> type, Level world) {
@@ -170,25 +170,25 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
             this.yBodyRotO = this.getYRot();
             this.yHeadRotO = this.getYRot();
         }
-        if (mainHandItem.getItem() == TargetModItems.MORTAR_SHELLS.get() && !player.getCooldowns().isOnCooldown(TargetModItems.MORTAR_SHELLS.get()) && !player.isShiftKeyDown()) {
+        if (mainHandItem.getItem() == ModItems.MORTAR_SHELLS.get() && !player.getCooldowns().isOnCooldown(ModItems.MORTAR_SHELLS.get()) && !player.isShiftKeyDown()) {
 
 //            this.getPersistentData().putInt("fire_time",25);
 
             this.entityData.set(FIRE_TIME,25);
 
-            player.getCooldowns().addCooldown(TargetModItems.MORTAR_SHELLS.get(), 30);
+            player.getCooldowns().addCooldown(ModItems.MORTAR_SHELLS.get(), 30);
             if (!player.isCreative()) {
-                player.getInventory().clearOrCountMatchingItems(p -> TargetModItems.MORTAR_SHELLS.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
+                player.getInventory().clearOrCountMatchingItems(p -> ModItems.MORTAR_SHELLS.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
             }
             if (!this.level().isClientSide()) {
-                this.level().playSound(null, this.getX(), this.getY(), this.getZ(), TargetModSounds.MORTAR_LOAD.get(), SoundSource.PLAYERS, 1f, 1f);
-                this.level().playSound(null, this.getX(), this.getY(), this.getZ(), TargetModSounds.MORTAR_FIRE.get(), SoundSource.PLAYERS, 8f, 1f);
-                this.level().playSound(null, this.getX(), this.getY(), this.getZ(), TargetModSounds.MORTAR_DISTANT.get(), SoundSource.PLAYERS, 32f, 1f);
+                this.level().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.MORTAR_LOAD.get(), SoundSource.PLAYERS, 1f, 1f);
+                this.level().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.MORTAR_FIRE.get(), SoundSource.PLAYERS, 8f, 1f);
+                this.level().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.MORTAR_DISTANT.get(), SoundSource.PLAYERS, 32f, 1f);
             }
             ModUtils.queueServerWork(20, () -> {
                 Level level = this.level();
                 if (level instanceof ServerLevel server) {
-                    MortarShellEntity entityToSpawn = new MortarShellEntity(TargetModEntities.MORTAR_SHELL.get(), player, level);
+                    MortarShellEntity entityToSpawn = new MortarShellEntity(ModEntities.MORTAR_SHELL.get(), player, level);
                     entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
                     entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 8, (float) 0.5);
                     level.addFreshEntity(entityToSpawn);
@@ -212,7 +212,7 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
         Runnable Runnable = () -> {
             while (Timer[0] < Duration) {
 
-                this.setXRot((float) -this.getAttribute(TargetModAttributes.MORTAR_PITCH.get()).getBaseValue());
+                this.setXRot((float) -this.getAttribute(ModAttributes.MORTAR_PITCH.get()).getBaseValue());
 
                 Timer[0]++;
                 try {
@@ -305,7 +305,7 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
                 var y = this.getY();
                 var z = this.getZ();
                 level.explode(null, x, y, z, 0, Level.ExplosionInteraction.NONE);
-                ItemEntity mortar = new ItemEntity(level, x, (y + 1), z, new ItemStack(TargetModItems.MORTAR_DEPLOYER.get()));
+                ItemEntity mortar = new ItemEntity(level, x, (y + 1), z, new ItemStack(ModItems.MORTAR_DEPLOYER.get()));
                 mortar.setPickUpDelay(10);
                 level.addFreshEntity(mortar);
             }

@@ -70,11 +70,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     }
 
     public ProjectileEntity(Level level) {
-        super(TargetModEntities.PROJECTILE.get(), level);
+        super(ModEntities.PROJECTILE.get(), level);
     }
 
     public ProjectileEntity(PlayMessages.SpawnEntity packet, Level world) {
-        super(TargetModEntities.PROJECTILE.get(), world);
+        super(ModEntities.PROJECTILE.get(), world);
     }
 
     public ProjectileEntity shooter(LivingEntity shooter) {
@@ -321,12 +321,12 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             if (this.beast) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.END_ROD, location.x, location.y, location.z, 15, 0.1, 0.1, 0.1, 0.05, true);
             } else {
-                ParticleTool.sendParticle(serverLevel, TargetModParticleTypes.BULLET_HOLE.get(), location.x, location.y, location.z, 1, 0, 0, 0, 0, true);
+                ParticleTool.sendParticle(serverLevel, ModParticleTypes.BULLET_HOLE.get(), location.x, location.y, location.z, 1, 0, 0, 0, 0, true);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, location.x, location.y, location.z, 3, 0, 0.1, 0, 0.01, true);
 
                 this.discard();
             }
-            serverLevel.playSound(null, new BlockPos((int) location.x, (int) location.y, (int) location.z), TargetModSounds.LAND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+            serverLevel.playSound(null, new BlockPos((int) location.x, (int) location.y, (int) location.z), ModSounds.LAND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
         }
     }
 
@@ -344,11 +344,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
             if (this.shooter instanceof ServerPlayer player) {
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
-                var holder = Holder.direct(TargetModSounds.INDICATION.get());
+                var holder = Holder.direct(ModSounds.INDICATION.get());
                 player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
                 ((ServerLevel) this.level()).sendParticles(ParticleTypes.DAMAGE_INDICATOR, living.getX(), living.getY() + .5, living.getZ(), 1000, .4, .7, .4, 0);
 
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(player.getId(), living.getId(), false, TargetModDamageTypes.BEAST));
+                ModUtils.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(player.getId(), living.getId(), false, ModDamageTypes.BEAST));
             }
 
             if (living instanceof ServerPlayer victim) {
@@ -373,28 +373,28 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
         if (headshot) {
             if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
-                var holder = Holder.direct(TargetModSounds.HEADSHOT.get());
+                var holder = Holder.direct(ModSounds.HEADSHOT.get());
                 player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
 
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(1, 5));
             }
             if (entity instanceof Monster monster) {
-                monster.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.headShot * m_multiple);
+                monster.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.headShot * m_multiple);
             } else {
-                entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.headShot);
+                entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.headShot);
             }
         } else if (legshot) {
             if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
-                var holder = Holder.direct(TargetModSounds.INDICATION.get());
+                var holder = Holder.direct(ModSounds.INDICATION.get());
                 player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
 
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
             }
 
             if (entity instanceof Monster monster) {
-                monster.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.legShot * m_multiple);
+                monster.hurt(ModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.legShot * m_multiple);
             } else {
-                entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.legShot);
+                entity.hurt(ModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.legShot);
             }
 
             if (entity instanceof LivingEntity living) {
@@ -408,16 +408,16 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         }
         else {
             if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
-                var holder = Holder.direct(TargetModSounds.INDICATION.get());
+                var holder = Holder.direct(ModSounds.INDICATION.get());
                 player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
 
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
             }
 
             if (entity instanceof Monster monster) {
-                monster.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage * m_multiple);
+                monster.hurt(ModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage * m_multiple);
             } else {
-                entity.hurt(TargetModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage);
+                entity.hurt(ModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage);
             }
         }
         this.discard();

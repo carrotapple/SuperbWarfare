@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.Aa12Item;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -15,17 +16,17 @@ import software.bernie.geckolib.model.GeoModel;
 public class Aa12ItemModel extends GeoModel<Aa12Item> {
     @Override
     public ResourceLocation getAnimationResource(Aa12Item animatable) {
-        return new ResourceLocation("target", "animations/aa12.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/aa12.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(Aa12Item animatable) {
-        return new ResourceLocation("target", "geo/aa12.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/aa12.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Aa12Item animatable) {
-        return new ResourceLocation("target", "textures/item/aa12_new.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/aa12_new.png");
     }
 
     @Override
@@ -36,7 +37,7 @@ public class Aa12ItemModel extends GeoModel<Aa12Item> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         double p = player.getPersistentData().getDouble("zoom_pos");
         double zp = player.getPersistentData().getDouble("zoom_pos_z");

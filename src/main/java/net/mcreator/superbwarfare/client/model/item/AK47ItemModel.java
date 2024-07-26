@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.AK47Item;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -17,17 +18,17 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
 
     @Override
     public ResourceLocation getAnimationResource(AK47Item animatable) {
-        return new ResourceLocation("target", "animations/ak.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/ak.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(AK47Item animatable) {
-        return new ResourceLocation("target", "geo/ak.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/ak.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(AK47Item animatable) {
-        return new ResourceLocation("target", "textures/item/ak47.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/ak47.png");
     }
 
     @Override
@@ -40,7 +41,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         double p = player.getPersistentData().getDouble("zoom_pos");
         double zp = player.getPersistentData().getDouble("zoom_pos_z");

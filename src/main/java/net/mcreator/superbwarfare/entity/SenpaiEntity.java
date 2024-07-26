@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.entity;
 
-import net.mcreator.superbwarfare.init.TargetModEntities;
-import net.mcreator.superbwarfare.init.TargetModSounds;
+import net.mcreator.superbwarfare.init.ModEntities;
+import net.mcreator.superbwarfare.init.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -52,7 +52,7 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
     public String animationProcedure = "empty";
 
     public SenpaiEntity(PlayMessages.SpawnEntity packet, Level world) {
-        this(TargetModEntities.SENPAI.get(), world);
+        this(ModEntities.SENPAI.get(), world);
     }
 
     public SenpaiEntity(EntityType<SenpaiEntity> type, Level world) {
@@ -117,7 +117,7 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
 
     @Override
     public void playStepSound(BlockPos pos, BlockState blockIn) {
-        this.playSound(TargetModSounds.STEP.get(), 0.25f, 1);
+        this.playSound(ModSounds.STEP.get(), 0.25f, 1);
     }
 
     @Override
@@ -158,9 +158,9 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
     }
 
     public static void init() {
-        SpawnPlacements.register(TargetModEntities.SENPAI.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        SpawnPlacements.register(ModEntities.SENPAI.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 (entityType, world, reason, pos, random) -> (world.getDifficulty() != Difficulty.PEACEFUL && Monster.isDarkEnoughToSpawn(world, pos, random) && Mob.checkMobSpawnRules(entityType, world, reason, pos, random)));
-        DungeonHooks.addDungeonMob(TargetModEntities.SENPAI.get(), 180);
+        DungeonHooks.addDungeonMob(ModEntities.SENPAI.get(), 180);
     }
 
     public static AttributeSupplier.Builder createAttributes() {

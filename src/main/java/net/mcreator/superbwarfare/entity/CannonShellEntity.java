@@ -59,7 +59,7 @@ public class CannonShellEntity extends ThrowableItemProjectile {
     }
 
     public CannonShellEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
-        this(TargetModEntities.CANNON_SHELL.get(), level);
+        this(ModEntities.CANNON_SHELL.get(), level);
     }
 
     public CannonShellEntity durability(int durability) {
@@ -74,18 +74,18 @@ public class CannonShellEntity extends ThrowableItemProjectile {
 
     @Override
     protected Item getDefaultItem() {
-        return TargetModItems.HE_5_INCHES.get();
+        return ModItems.HE_5_INCHES.get();
     }
 
     @Override
     public void onHitEntity(EntityHitResult entityHitResult) {
         Entity entity = entityHitResult.getEntity();
-        entity.hurt(TargetModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
+        entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
         entity.invulnerableTime = 0;
 
         if (this.getOwner() instanceof LivingEntity living) {
             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
-                living.level().playSound(null, living.blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
+                living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
 
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
             }
@@ -139,7 +139,7 @@ public class CannonShellEntity extends ThrowableItemProjectile {
         Vec3 vec = this.getDeltaMovement();
         this.setDeltaMovement(vec.multiply(0.9, 0.9, 0.9));
 
-        if (blockState.is(TargetModBlocks.BARBED_WIRE.get()) || blockState.is(Blocks.NETHERITE_BLOCK)) {
+        if (blockState.is(ModBlocks.BARBED_WIRE.get()) || blockState.is(Blocks.NETHERITE_BLOCK)) {
             this.durability -= 10;
         }
 
@@ -187,7 +187,7 @@ public class CannonShellEntity extends ThrowableItemProjectile {
         }
 
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), explosionDamage,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), explosionDamage,
                 this.getX(), this.getY(), this.getZ(), explosionRadius, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1).setFireTime(fireTime);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);

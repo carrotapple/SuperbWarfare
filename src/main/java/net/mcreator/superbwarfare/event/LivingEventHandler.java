@@ -2,10 +2,10 @@ package net.mcreator.superbwarfare.event;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.Target1Entity;
-import net.mcreator.superbwarfare.init.TargetModDamageTypes;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModSounds;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModDamageTypes;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
@@ -61,29 +61,29 @@ public class LivingEventHandler {
 
         double damage = amount;
         ItemStack stack = sourceentity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
-        if ((damagesource.is(TargetModDamageTypes.ARROW_IN_KNEE) || damagesource.is(TargetModDamageTypes.ARROW_IN_BRAIN)
-                && stack.getItem() == TargetModItems.BOCEK.get())) {
+        if ((damagesource.is(ModDamageTypes.ARROW_IN_KNEE) || damagesource.is(ModDamageTypes.ARROW_IN_BRAIN)
+                && stack.getItem() == ModItems.BOCEK.get())) {
             stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
         }
 
-        if ((damagesource.is(TargetModDamageTypes.PROJECTILE_BOOM) || damagesource.is(DamageTypes.ARROW))
-                && (stack.getItem() == TargetModItems.M_79.get() || stack.getItem() == TargetModItems.RPG.get())
+        if ((damagesource.is(ModDamageTypes.PROJECTILE_BOOM) || damagesource.is(DamageTypes.ARROW))
+                && (stack.getItem() == ModItems.M_79.get() || stack.getItem() == ModItems.RPG.get())
         ) {
             stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
         }
 
-        if (damagesource.is(TargetModDamageTypes.GUN_FIRE) || damagesource.is(TargetModDamageTypes.GUN_FIRE_HEADSHOT)) {
+        if (damagesource.is(ModDamageTypes.GUN_FIRE) || damagesource.is(ModDamageTypes.GUN_FIRE_HEADSHOT)) {
             double distance = entity.position().distanceTo(sourceentity.position());
 
-            if (stack.is(TargetModTags.Items.SHOTGUN) || stack.getItem() == TargetModItems.BOCEK.get()) {
+            if (stack.is(ModTags.Items.SHOTGUN) || stack.getItem() == ModItems.BOCEK.get()) {
                 damage = reduceDamageByDistance(amount, distance, 0.03, 25);
-            } else if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
+            } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
                 damage = reduceDamageByDistance(amount, distance, 0.001, 200);
-            } else if (stack.is(TargetModTags.Items.HANDGUN)) {
+            } else if (stack.is(ModTags.Items.HANDGUN)) {
                 damage = reduceDamageByDistance(amount, distance, 0.03, 50);
-            } else if (stack.is(TargetModTags.Items.SMG)) {
+            } else if (stack.is(ModTags.Items.SMG)) {
                 damage = reduceDamageByDistance(amount, distance, 0.03, 50);
-            } else if (stack.is(TargetModTags.Items.RIFLE)) {
+            } else if (stack.is(ModTags.Items.RIFLE)) {
                 damage = reduceDamageByDistance(amount, distance, 0.0025, 150);
             }
             event.setAmount((float) damage);
@@ -105,7 +105,7 @@ public class LivingEventHandler {
         }
 
         if (!sourceEntity.level().isClientSide() && sourceEntity instanceof ServerPlayer player) {
-            SoundTool.playLocalSound(player, TargetModSounds.TARGET_DOWN.get(), 100f, 1f);
+            SoundTool.playLocalSound(player, ModSounds.TARGET_DOWN.get(), 100f, 1f);
 
             ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(2, 8));
         }
@@ -124,8 +124,8 @@ public class LivingEventHandler {
         }
 
         if (sourceEntity instanceof ServerPlayer player && (damagesource.is(DamageTypes.EXPLOSION) || damagesource.is(DamageTypes.PLAYER_EXPLOSION)
-                || damagesource.is(TargetModDamageTypes.MINE) || damagesource.is(TargetModDamageTypes.PROJECTILE_BOOM))) {
-            SoundTool.playLocalSound(player, TargetModSounds.INDICATION.get(), 1f, 1f);
+                || damagesource.is(ModDamageTypes.MINE) || damagesource.is(ModDamageTypes.PROJECTILE_BOOM))) {
+            SoundTool.playLocalSound(player, ModSounds.INDICATION.get(), 1f, 1f);
 
             ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
         }
@@ -241,7 +241,7 @@ public class LivingEventHandler {
         }
 
         if (attacker != null) {
-            if (source.is(TargetModDamageTypes.GUN_FIRE_HEADSHOT) || source.is(TargetModDamageTypes.ARROW_IN_BRAIN)) {
+            if (source.is(ModDamageTypes.GUN_FIRE_HEADSHOT) || source.is(ModDamageTypes.ARROW_IN_BRAIN)) {
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(attacker.getId(), entity.getId(), true, damageTypeResourceKey));
             } else {
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(attacker.getId(), entity.getId(), false, damageTypeResourceKey));

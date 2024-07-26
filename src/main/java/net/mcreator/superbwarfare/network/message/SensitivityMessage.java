@@ -1,6 +1,6 @@
 package net.mcreator.superbwarfare.network.message;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,7 +32,7 @@ public class SensitivityMessage {
             }
 
             ItemStack stack = player.getMainHandItem();
-            if (!stack.is(TargetModTags.Items.GUN)) {
+            if (!stack.is(ModTags.Items.GUN)) {
                 return;
             }
 

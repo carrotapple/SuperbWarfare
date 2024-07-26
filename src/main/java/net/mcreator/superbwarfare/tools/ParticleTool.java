@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.tools;
 
-import net.mcreator.superbwarfare.init.TargetModParticleTypes;
-import net.mcreator.superbwarfare.init.TargetModSounds;
+import net.mcreator.superbwarfare.init.ModParticleTypes;
+import net.mcreator.superbwarfare.init.ModSounds;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
@@ -32,18 +32,18 @@ public class ParticleTool {
 
         if (!level.isClientSide()) {
             if ((level.getBlockState(BlockPos.containing(x, y, z))).getBlock() == Blocks.WATER) {
-                level.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION_WATER.get(), SoundSource.BLOCKS, 3, 1);
+                level.playSound(null, BlockPos.containing(x, y + 1, z), ModSounds.EXPLOSION_WATER.get(), SoundSource.BLOCKS, 3, 1);
             }
-            level.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION_CLOSE.get(), SoundSource.BLOCKS, 8, 1);
-            level.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION_FAR.get(), SoundSource.BLOCKS, 16, 1);
-            level.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION_VERY_FAR.get(), SoundSource.BLOCKS, 32, 1);
+            level.playSound(null, BlockPos.containing(x, y + 1, z), ModSounds.EXPLOSION_CLOSE.get(), SoundSource.BLOCKS, 8, 1);
+            level.playSound(null, BlockPos.containing(x, y + 1, z), ModSounds.EXPLOSION_FAR.get(), SoundSource.BLOCKS, 16, 1);
+            level.playSound(null, BlockPos.containing(x, y + 1, z), ModSounds.EXPLOSION_VERY_FAR.get(), SoundSource.BLOCKS, 32, 1);
         } else {
             if ((level.getBlockState(BlockPos.containing(x, y, z))).getBlock() == Blocks.WATER) {
-                level.playLocalSound(x, (y + 1), z, TargetModSounds.EXPLOSION_WATER.get(), SoundSource.BLOCKS, 3, 1, false);
+                level.playLocalSound(x, (y + 1), z, ModSounds.EXPLOSION_WATER.get(), SoundSource.BLOCKS, 3, 1, false);
             }
-            level.playLocalSound(x, (y + 1), z, TargetModSounds.EXPLOSION_CLOSE.get(), SoundSource.BLOCKS, 24, 1, false);
-            level.playLocalSound(x, (y + 1), z, TargetModSounds.EXPLOSION_FAR.get(), SoundSource.BLOCKS, 24, 1, false);
-            level.playLocalSound(x, (y + 1), z, TargetModSounds.EXPLOSION_VERY_FAR.get(), SoundSource.BLOCKS, 64, 1, false);
+            level.playLocalSound(x, (y + 1), z, ModSounds.EXPLOSION_CLOSE.get(), SoundSource.BLOCKS, 24, 1, false);
+            level.playLocalSound(x, (y + 1), z, ModSounds.EXPLOSION_FAR.get(), SoundSource.BLOCKS, 24, 1, false);
+            level.playLocalSound(x, (y + 1), z, ModSounds.EXPLOSION_VERY_FAR.get(), SoundSource.BLOCKS, 64, 1, false);
         }
 
         if (level instanceof ServerLevel serverLevel) {
@@ -57,7 +57,7 @@ public class ParticleTool {
             sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 80, 0.4, 1, 0.4, 0.02, true);
             sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, x, y + 1, z, 80, 0.4, 1, 0.4, 0.02, true);
             sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 80, 2, 0.001, 2, 0.01, true);
-            sendParticle(serverLevel, TargetModParticleTypes.FIRE_STAR.get(), x, y, z, 80, 0, 0, 0, 0.2, true);
+            sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), x, y, z, 80, 0, 0, 0, 0.2, true);
         }
 
     }
@@ -69,18 +69,18 @@ public class ParticleTool {
 
         if (!level.isClientSide()) {
             if ((level.getBlockState(BlockPos.containing(x, y, z))).getBlock() == Blocks.WATER) {
-                level.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION_WATER.get(), SoundSource.BLOCKS, 3, 1);
+                level.playSound(null, BlockPos.containing(x, y + 1, z), ModSounds.EXPLOSION_WATER.get(), SoundSource.BLOCKS, 3, 1);
             }
-            level.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION_CLOSE.get(), SoundSource.BLOCKS, 8, 1);
-            level.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION_FAR.get(), SoundSource.BLOCKS, 16, 1);
-            level.playSound(null, BlockPos.containing(x, y + 1, z), TargetModSounds.EXPLOSION_VERY_FAR.get(), SoundSource.BLOCKS, 32, 1);
+            level.playSound(null, BlockPos.containing(x, y + 1, z), ModSounds.EXPLOSION_CLOSE.get(), SoundSource.BLOCKS, 8, 1);
+            level.playSound(null, BlockPos.containing(x, y + 1, z), ModSounds.EXPLOSION_FAR.get(), SoundSource.BLOCKS, 16, 1);
+            level.playSound(null, BlockPos.containing(x, y + 1, z), ModSounds.EXPLOSION_VERY_FAR.get(), SoundSource.BLOCKS, 32, 1);
         } else {
             if ((level.getBlockState(BlockPos.containing(x, y, z))).getBlock() == Blocks.WATER) {
-                level.playLocalSound(x, (y + 1), z, TargetModSounds.EXPLOSION_WATER.get(), SoundSource.BLOCKS, 3, 1, false);
+                level.playLocalSound(x, (y + 1), z, ModSounds.EXPLOSION_WATER.get(), SoundSource.BLOCKS, 3, 1, false);
             }
-            level.playLocalSound(x, (y + 1), z, TargetModSounds.EXPLOSION_CLOSE.get(), SoundSource.BLOCKS, 24, 1, false);
-            level.playLocalSound(x, (y + 1), z, TargetModSounds.EXPLOSION_FAR.get(), SoundSource.BLOCKS, 24, 1, false);
-            level.playLocalSound(x, (y + 1), z, TargetModSounds.EXPLOSION_VERY_FAR.get(), SoundSource.BLOCKS, 64, 1, false);
+            level.playLocalSound(x, (y + 1), z, ModSounds.EXPLOSION_CLOSE.get(), SoundSource.BLOCKS, 24, 1, false);
+            level.playLocalSound(x, (y + 1), z, ModSounds.EXPLOSION_FAR.get(), SoundSource.BLOCKS, 24, 1, false);
+            level.playLocalSound(x, (y + 1), z, ModSounds.EXPLOSION_VERY_FAR.get(), SoundSource.BLOCKS, 64, 1, false);
         }
 
         if (level instanceof ServerLevel serverLevel) {
@@ -93,7 +93,7 @@ public class ParticleTool {
 
             sendParticle(serverLevel, ParticleTypes.EXPLOSION, x, y + 1, z, 75, 2.5, 2.5, 2.5, 1, true);
             sendParticle(serverLevel, ParticleTypes.FLASH, x, y + 1, z, 200, 5, 5, 5, 20, true);
-            sendParticle(serverLevel, TargetModParticleTypes.FIRE_STAR.get(), x, y + 1, z, 400, 0, 0, 0, 1.5, true);
+            sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), x, y + 1, z, 400, 0, 0, 0, 1.5, true);
             sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y + 1, z, 75, 2, 3, 2, 0.005, true);
             sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 150, 7, 0.1, 7, 0.005, true);
             sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 1, z, 200, 3, 4, 3, 0.4, true);
@@ -109,7 +109,7 @@ public class ParticleTool {
         if (level instanceof ServerLevel serverLevel) {
             sendParticle(serverLevel, ParticleTypes.EXPLOSION, x, y, z, 2, 0.5, 0.5, 0.5, 1, true);
             sendParticle(serverLevel, ParticleTypes.FLASH, x, y, z, 2, 0.2, 0.2, 0.2, 10, true);
-            sendParticle(serverLevel, TargetModParticleTypes.FIRE_STAR.get(), x, y, z, 40, 0, 0, 0, 1.5, true);
+            sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), x, y, z, 40, 0, 0, 0, 1.5, true);
         }
 
     }

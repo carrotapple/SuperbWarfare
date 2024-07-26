@@ -1,8 +1,8 @@
 package net.mcreator.superbwarfare.network.message;
 
 import net.mcreator.superbwarfare.entity.DroneEntity;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.tools.TraceTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -51,7 +51,7 @@ public class InteractMessage {
             return;
         if (type == 0) {
             ItemStack stack = player.getMainHandItem();
-            if (player.getMainHandItem().is(TargetModTags.Items.GUN)) {
+            if (player.getMainHandItem().is(ModTags.Items.GUN)) {
                 double block_range = player.getBlockReach();
                 double entity_range = player.getBlockReach();
 
@@ -64,7 +64,7 @@ public class InteractMessage {
                     return;
                 player.interactOn(lookingEntity, InteractionHand.MAIN_HAND);
 
-            } else if (stack.is(TargetModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked") && !player.getCooldowns().isOnCooldown(stack.getItem())) {
+            } else if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked") && !player.getCooldowns().isOnCooldown(stack.getItem())) {
 
                 DroneEntity drone = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
                         .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);

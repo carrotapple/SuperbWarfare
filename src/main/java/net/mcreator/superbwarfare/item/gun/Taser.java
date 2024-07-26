@@ -4,10 +4,10 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.TaserItemRenderer;
-import net.mcreator.superbwarfare.init.TargetModEnchantments;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModSounds;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModEnchantments;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
 import net.mcreator.superbwarfare.tools.*;
 import net.minecraft.client.Minecraft;
@@ -73,7 +73,7 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(TargetModSounds.TASER_RELOAD_EMPTY.get());
+        return Set.of(ModSounds.TASER_RELOAD_EMPTY.get());
     }
 
     @Override
@@ -102,7 +102,7 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
 
@@ -188,7 +188,7 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
         if (entity instanceof Player player) {
             stack.getOrCreateTag().putInt("max_ammo", getAmmoCount(player));
         }
-        int charge_speed = EnchantmentHelper.getTagEnchantmentLevel(TargetModEnchantments.SUPER_RECHARGE.get(), stack);
+        int charge_speed = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.SUPER_RECHARGE.get(), stack);
 
         if (ItemNBTTool.getInt(stack, TAG_POWER, 1200) < 1200) {
             ItemNBTTool.setInt(stack, TAG_POWER, Mth.clamp(ItemNBTTool.getInt(stack, TAG_POWER, 1200) + 1 + charge_speed,0,1200));
@@ -196,12 +196,12 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
     }
 
     protected static boolean check(ItemStack stack) {
-        return stack.getItem() == TargetModItems.TASER_ELECTRODE.get();
+        return stack.getItem() == ModItems.TASER_ELECTRODE.get();
     }
 
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(TargetModItems.TASER.get());
-        GunsTool.initCreativeGun(stack, TargetModItems.TASER.getId().getPath());
+        ItemStack stack = new ItemStack(ModItems.TASER.get());
+        GunsTool.initCreativeGun(stack, ModItems.TASER.getId().getPath());
         return stack;
     }
 

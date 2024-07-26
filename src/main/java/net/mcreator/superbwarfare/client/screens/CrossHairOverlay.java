@@ -2,8 +2,8 @@ package net.mcreator.superbwarfare.client.screens;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -46,7 +46,7 @@ public class CrossHairOverlay {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
-        if (shouldRenderCrossHair(player) || stack.is(TargetModItems.MINIGUN.get())) {
+        if (shouldRenderCrossHair(player) || stack.is(ModItems.MINIGUN.get())) {
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/point.png"), w / 2f - 7.5f, h / 2f - 8, 0, 0, 16, 16, 16, 16);
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/rexheng.png"), w / 2f - 9.5f - 2.8f * (float) spread, h / 2f - 8, 0, 0, 16, 16, 16, 16);
             preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/rexheng.png"), w / 2f - 6.5f + 2.8f * (float) spread, h / 2f - 8, 0, 0, 16, 16, 16, 16);
@@ -79,7 +79,7 @@ public class CrossHairOverlay {
         RenderSystem.disableBlend();
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         if (stack.getOrCreateTag().getBoolean("need_bolt_action")) {
             Font font = Minecraft.getInstance().font;
@@ -94,10 +94,10 @@ public class CrossHairOverlay {
         if (player == null) return false;
 
         if (player.isSpectator()) return false;
-        if (!player.getMainHandItem().is(TargetModTags.Items.GUN) || (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming)
+        if (!player.getMainHandItem().is(ModTags.Items.GUN) || (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming)
             return false;
 
-        return !(player.getMainHandItem().getItem() == TargetModItems.M_79.get())
+        return !(player.getMainHandItem().getItem() == ModItems.M_79.get())
                 && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
     }
 

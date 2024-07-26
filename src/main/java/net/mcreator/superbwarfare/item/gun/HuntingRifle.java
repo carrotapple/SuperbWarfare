@@ -4,9 +4,9 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.HuntingRifleItemRenderer;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModSounds;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
 import net.mcreator.superbwarfare.tools.*;
 import net.minecraft.client.Minecraft;
@@ -50,7 +50,7 @@ public class HuntingRifle extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(TargetModSounds.HUNTING_RIFLE_RELOAD_EMPTY.get());
+        return Set.of(ModSounds.HUNTING_RIFLE_RELOAD_EMPTY.get());
     }
 
     @Override
@@ -79,7 +79,7 @@ public class HuntingRifle extends GunItem implements GeoItem, AnimatedItem {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
 
@@ -148,8 +148,8 @@ public class HuntingRifle extends GunItem implements GeoItem, AnimatedItem {
     }
 
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(TargetModItems.HUNTING_RIFLE.get());
-        GunsTool.initCreativeGun(stack, TargetModItems.HUNTING_RIFLE.getId().getPath());
+        ItemStack stack = new ItemStack(ModItems.HUNTING_RIFLE.get());
+        GunsTool.initCreativeGun(stack, ModItems.HUNTING_RIFLE.getId().getPath());
         return stack;
     }
 

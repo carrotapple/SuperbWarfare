@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.network.message;
 
-import net.mcreator.superbwarfare.init.TargetModSounds;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,7 +34,7 @@ public class AdjustZoomFovMessage {
             }
 
             ItemStack stack = player.getMainHandItem();
-            if (!stack.is(TargetModTags.Items.GUN)) {
+            if (!stack.is(ModTags.Items.GUN)) {
                 return;
             }
             var tag = stack.getOrCreateTag();
@@ -43,7 +43,7 @@ public class AdjustZoomFovMessage {
             double max_zoom = tag.getDouble("max_zoom") - tag.getDouble("zoom");
             tag.putDouble("custom_zoom", Mth.clamp(tag.getDouble("custom_zoom") + 0.5 * message.scroll, min_zoom, max_zoom));
             if (tag.getDouble("custom_zoom") > min_zoom && tag.getDouble("custom_zoom") < max_zoom) {
-                SoundTool.playLocalSound(player, TargetModSounds.ADJUST_FOV.get(), 1f, 0.7f);
+                SoundTool.playLocalSound(player, ModSounds.ADJUST_FOV.get(), 1f, 0.7f);
             }
         });
         context.get().setPacketHandled(true);

@@ -1,5 +1,6 @@
 package net.mcreator.superbwarfare.entity.model;
 
+import net.mcreator.superbwarfare.ModUtils;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
@@ -13,17 +14,17 @@ import static net.mcreator.superbwarfare.entity.DroneEntity.AMMO;
 public class DroneModel extends GeoModel<DroneEntity> {
 	@Override
 	public ResourceLocation getAnimationResource(DroneEntity entity) {
-		return new ResourceLocation("target", "animations/drone.animation.json");
+		return new ResourceLocation(ModUtils.MODID, "animations/drone.animation.json");
 	}
 
 	@Override
 	public ResourceLocation getModelResource(DroneEntity entity) {
-		return new ResourceLocation("target", "geo/drone.geo.json");
+		return new ResourceLocation(ModUtils.MODID, "geo/drone.geo.json");
 	}
 
 	@Override
 	public ResourceLocation getTextureResource(DroneEntity entity) {
-		return new ResourceLocation("target", "textures/entity/drone.png");
+		return new ResourceLocation(ModUtils.MODID, "textures/entity/drone.png");
 	}
 
 	@Override

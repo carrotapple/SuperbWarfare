@@ -7,7 +7,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
 
-public class TargetModTags {
+public class ModTags {
 
     public static class Items {
         public static final TagKey<Item> GUN = tag("gun");

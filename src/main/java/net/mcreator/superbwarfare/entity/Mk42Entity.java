@@ -57,7 +57,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
     public String animationprocedure = "empty";
 
     public Mk42Entity(PlayMessages.SpawnEntity packet, Level world) {
-        this(TargetModEntities.MK_42.get(), world);
+        this(ModEntities.MK_42.get(), world);
     }
 
     public Mk42Entity(EntityType<Mk42Entity> type, Level world) {
@@ -157,10 +157,10 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
             return false;
         }
 
-        if (source.is(TargetModDamageTypes.GUN_FIRE)
-                || source.is(TargetModDamageTypes.GUN_FIRE_HEADSHOT)
-                || source.is(TargetModDamageTypes.ARROW_IN_BRAIN)
-                || source.is(TargetModDamageTypes.ARROW_IN_KNEE)) {
+        if (source.is(ModDamageTypes.GUN_FIRE)
+                || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)
+                || source.is(ModDamageTypes.ARROW_IN_BRAIN)
+                || source.is(ModDamageTypes.ARROW_IN_KNEE)) {
             return super.hurt(source, 0.125f * amount);
         }
 
@@ -195,7 +195,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
 
     private void destroyExplode() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this), 30f,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this), 30f,
                 this.getX(), this.getY(), this.getZ(), 7.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
@@ -281,7 +281,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
             int fireTime = 0;
             int durability = 0;
 
-            if (stack.is(TargetModItems.HE_5_INCHES.get())) {
+            if (stack.is(ModItems.HE_5_INCHES.get())) {
                 hitDamage = 100;
                 explosionRadius = 10;
                 explosionDamage = 200;
@@ -289,7 +289,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
                 fireTime = 5;
             }
 
-            if (stack.is(TargetModItems.AP_5_INCHES.get())) {
+            if (stack.is(ModItems.AP_5_INCHES.get())) {
                 hitDamage = 450;
                 explosionRadius = 3;
                 explosionDamage = 250;
@@ -302,7 +302,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
                 stack.shrink(1);
             }
 
-            CannonShellEntity entityToSpawn = new CannonShellEntity(TargetModEntities.CANNON_SHELL.get(),
+            CannonShellEntity entityToSpawn = new CannonShellEntity(ModEntities.CANNON_SHELL.get(),
                     player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime).durability(durability);
 
             entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
@@ -311,11 +311,11 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
 
 
             if (player instanceof ServerPlayer serverPlayer) {
-                SoundTool.playLocalSound(serverPlayer, TargetModSounds.MK_42_FIRE_1P.get(), 2, 1);
-                SoundTool.playLocalSound(serverPlayer, TargetModSounds.MK_42_RELOAD.get(), 2, 1);
-                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.MK_42_FIRE_3P.get(), SoundSource.PLAYERS, 6, 1);
-                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.MK_42_FAR.get(), SoundSource.PLAYERS, 16, 1);
-                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), TargetModSounds.MK_42_VERYFAR.get(), SoundSource.PLAYERS, 32, 1);
+                SoundTool.playLocalSound(serverPlayer, ModSounds.MK_42_FIRE_1P.get(), 2, 1);
+                SoundTool.playLocalSound(serverPlayer, ModSounds.MK_42_RELOAD.get(), 2, 1);
+                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_FIRE_3P.get(), SoundSource.PLAYERS, 6, 1);
+                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_FAR.get(), SoundSource.PLAYERS, 16, 1);
+                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_VERYFAR.get(), SoundSource.PLAYERS, 32, 1);
             }
 
             this.getPersistentData().putInt("fire_cooldown", 30);

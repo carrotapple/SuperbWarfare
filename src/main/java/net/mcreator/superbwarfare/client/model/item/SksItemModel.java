@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.SksItem;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -15,17 +16,17 @@ import software.bernie.geckolib.model.GeoModel;
 public class SksItemModel extends GeoModel<SksItem> {
     @Override
     public ResourceLocation getAnimationResource(SksItem animatable) {
-        return new ResourceLocation("target", "animations/sks.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/sks.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(SksItem animatable) {
-        return new ResourceLocation("target", "geo/sks.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/sks.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(SksItem animatable) {
-        return new ResourceLocation("target", "textures/item/sks.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/sks.png");
     }
 
 
@@ -39,7 +40,7 @@ public class SksItemModel extends GeoModel<SksItem> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         if (stack.getOrCreateTag().getBoolean("HoldOpen")) {
             bolt.setPosZ(2.5f);

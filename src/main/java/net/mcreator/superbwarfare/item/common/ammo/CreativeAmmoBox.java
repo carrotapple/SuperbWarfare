@@ -1,6 +1,6 @@
 package net.mcreator.superbwarfare.item.common.ammo;
 
-import net.mcreator.superbwarfare.init.TargetModSounds;
+import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -57,7 +57,7 @@ public class CreativeAmmoBox extends Item {
 
         if (!level.isClientSide()) {
             player.displayClientMessage(Component.translatable("item.superbwarfare.ammo_supplier.creative"), false);
-            level.playSound(null, player.blockPosition(), TargetModSounds.BULLET_SUPPLY.get(), SoundSource.VOICE, 1, 1);
+            level.playSound(null, player.blockPosition(), ModSounds.BULLET_SUPPLY.get(), SoundSource.VOICE, 1, 1);
         }
         return InteractionResultHolder.consume(stack);
     }

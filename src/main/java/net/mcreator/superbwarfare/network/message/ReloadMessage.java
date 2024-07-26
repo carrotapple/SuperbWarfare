@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.network.message;
 
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -47,7 +47,7 @@ public class ReloadMessage {
             var capability = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables());
 
             if (!player.isSpectator()
-                    && stack.is(TargetModTags.Items.GUN)
+                    && stack.is(ModTags.Items.GUN)
                     && !capability.zooming
                     && !stack.getOrCreateTag().getBoolean("charging")
                     && !(player.getCooldowns().isOnCooldown(stack.getItem()))
@@ -60,24 +60,24 @@ public class ReloadMessage {
                 boolean can_single_reload = tag.getDouble("iterative_time") != 0;
 
                 //检查备弹
-                if (stack.is(TargetModTags.Items.SHOTGUN) && capability.shotgunAmmo == 0) {
+                if (stack.is(ModTags.Items.SHOTGUN) && capability.shotgunAmmo == 0) {
                     return;
-                } else if (stack.is(TargetModTags.Items.SNIPER_RIFLE) && capability.sniperAmmo == 0) {
+                } else if (stack.is(ModTags.Items.SNIPER_RIFLE) && capability.sniperAmmo == 0) {
                     return;
-                } else if ((stack.is(TargetModTags.Items.HANDGUN) || stack.is(TargetModTags.Items.SMG)) && capability.handgunAmmo == 0) {
+                } else if ((stack.is(ModTags.Items.HANDGUN) || stack.is(ModTags.Items.SMG)) && capability.handgunAmmo == 0) {
                     return;
-                } else if (stack.is(TargetModTags.Items.RIFLE) && capability.rifleAmmo == 0) {
+                } else if (stack.is(ModTags.Items.RIFLE) && capability.rifleAmmo == 0) {
                     return;
-                } else if (stack.getItem() == TargetModItems.TASER.get() && tag.getInt("max_ammo") == 0) {
+                } else if (stack.getItem() == ModItems.TASER.get() && tag.getInt("max_ammo") == 0) {
                     return;
-                } else if (stack.getItem() == TargetModItems.M_79.get() && tag.getInt("max_ammo") == 0) {
+                } else if (stack.getItem() == ModItems.M_79.get() && tag.getInt("max_ammo") == 0) {
                     return;
-                } else if (stack.getItem() == TargetModItems.RPG.get() && tag.getInt("max_ammo") == 0) {
+                } else if (stack.getItem() == ModItems.RPG.get() && tag.getInt("max_ammo") == 0) {
                     return;
                 }
                 if (can_reload) {
-                    if (stack.is(TargetModTags.Items.OPEN_BOLT)) {
-                        if (stack.getItem() == TargetModItems.M_60.get() || stack.getItem() == TargetModItems.ABEKIRI.get()) {
+                    if (stack.is(ModTags.Items.OPEN_BOLT)) {
+                        if (stack.getItem() == ModItems.M_60.get() || stack.getItem() == ModItems.ABEKIRI.get()) {
                             if (tag.getInt("ammo") < tag.getDouble("mag")) {
                                 tag.putBoolean("start_reload", true);
                             }

@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.HuntingRifle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -14,17 +15,17 @@ import software.bernie.geckolib.model.GeoModel;
 public class HuntingRifleItemModel extends GeoModel<HuntingRifle> {
     @Override
     public ResourceLocation getAnimationResource(HuntingRifle animatable) {
-        return new ResourceLocation("target", "animations/hunting_rifle.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/hunting_rifle.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(HuntingRifle animatable) {
-        return new ResourceLocation("target", "geo/hunting_rifle.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/hunting_rifle.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(HuntingRifle animatable) {
-        return new ResourceLocation("target", "textures/item/huntingrifle.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/huntingrifle.png");
     }
 
     @Override
@@ -35,7 +36,7 @@ public class HuntingRifleItemModel extends GeoModel<HuntingRifle> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         double p = 0;
         p = player.getPersistentData().getDouble("zoom_pos");

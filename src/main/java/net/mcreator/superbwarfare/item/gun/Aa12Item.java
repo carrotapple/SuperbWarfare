@@ -4,9 +4,9 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.Aa12ItemRenderer;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModSounds;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
 import net.mcreator.superbwarfare.tools.*;
 import net.minecraft.client.Minecraft;
@@ -78,7 +78,7 @@ public class Aa12Item extends GunItem implements GeoItem, AnimatedItem {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
 
@@ -162,12 +162,12 @@ public class Aa12Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(TargetModSounds.AA_12_RELOAD_EMPTY.get(), TargetModSounds.AA_12_RELOAD_NORMAL.get());
+        return Set.of(ModSounds.AA_12_RELOAD_EMPTY.get(), ModSounds.AA_12_RELOAD_NORMAL.get());
     }
 
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(TargetModItems.AA_12.get());
-        GunsTool.initCreativeGun(stack, TargetModItems.AA_12.getId().getPath());
+        ItemStack stack = new ItemStack(ModItems.AA_12.get());
+        GunsTool.initCreativeGun(stack, ModItems.AA_12.getId().getPath());
         return stack;
     }
 

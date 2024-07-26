@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.mixins;
 
 import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.entity.Mk42Entity;
-import net.mcreator.superbwarfare.init.TargetModItems;
+import net.mcreator.superbwarfare.init.ModItems;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
@@ -34,7 +34,7 @@ public abstract class CameraMixin {
         if (player != null) {
             ItemStack stack = player.getMainHandItem();
 
-            if (stack.is(TargetModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+            if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
                 DroneEntity drone = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
                         .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
 

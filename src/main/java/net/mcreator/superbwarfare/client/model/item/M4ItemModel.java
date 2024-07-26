@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.M4Item;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -15,17 +16,17 @@ import software.bernie.geckolib.model.GeoModel;
 public class M4ItemModel extends GeoModel<M4Item> {
     @Override
     public ResourceLocation getAnimationResource(M4Item animatable) {
-        return new ResourceLocation("target", "animations/m4.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/m4.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(M4Item animatable) {
-        return new ResourceLocation("target", "geo/m4.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/m4.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(M4Item animatable) {
-        return new ResourceLocation("target", "textures/item/m4.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/m4.png");
     }
 
     @Override
@@ -36,7 +37,7 @@ public class M4ItemModel extends GeoModel<M4Item> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         double p = 0;
         p = player.getPersistentData().getDouble("zoom_pos");

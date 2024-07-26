@@ -1,9 +1,9 @@
 package net.mcreator.superbwarfare.network.message;
 
 import net.mcreator.superbwarfare.entity.Mk42Entity;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModSounds;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.network.FriendlyByteBuf;
@@ -57,11 +57,11 @@ public class ZoomMessage {
 
             ItemStack stack = entity.getMainHandItem();
 
-            if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
+            if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
                 zoom_spread = 0;
-            } else if (stack.is(TargetModTags.Items.SHOTGUN)) {
+            } else if (stack.is(ModTags.Items.SHOTGUN)) {
                 zoom_spread = 0.9;
-            }  else if (stack.is(TargetModItems.MINIGUN.get())) {
+            }  else if (stack.is(ModItems.MINIGUN.get())) {
                 zoom_spread = 1;
             } else {
                 zoom_spread = 0.00001;
@@ -69,7 +69,7 @@ public class ZoomMessage {
 
             if (entity.isPassenger() && entity.getVehicle() instanceof Mk42Entity) {
                 if (entity instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.CANNON_ZOOM_IN.get(), 2, 1);
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.CANNON_ZOOM_IN.get(), 2, 1);
                 }
             }
         }
@@ -86,7 +86,7 @@ public class ZoomMessage {
             zoom_spread = 1;
             if (entity.isPassenger() && entity.getVehicle() instanceof Mk42Entity) {
                 if (entity instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.CANNON_ZOOM_OUT.get(), 2, 1);
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.CANNON_ZOOM_OUT.get(), 2, 1);
                 }
             }
 

@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.Taser;
 import net.mcreator.superbwarfare.tools.ItemNBTTool;
 import net.minecraft.client.Minecraft;
@@ -18,17 +19,17 @@ public class TaserItemModel extends GeoModel<Taser> {
 
     @Override
     public ResourceLocation getAnimationResource(Taser animatable) {
-        return new ResourceLocation("target", "animations/taser.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/taser.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(Taser animatable) {
-        return new ResourceLocation("target", "geo/taser.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/taser.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Taser animatable) {
-        return new ResourceLocation("target", "textures/item/tasergun.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/tasergun.png");
     }
 
     @Override
@@ -42,7 +43,7 @@ public class TaserItemModel extends GeoModel<Taser> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         bar.setScaleX((float) ItemNBTTool.getInt(stack, TAG_POWER, 1200) / 1200);
 

@@ -1,6 +1,6 @@
 package net.mcreator.superbwarfare.entity;
 
-import net.mcreator.superbwarfare.init.TargetModEntities;
+import net.mcreator.superbwarfare.init.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -41,7 +41,7 @@ public class TargetEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     public String animationProcedure = "empty";
 
     public TargetEntity(PlayMessages.SpawnEntity packet, Level world) {
-        this(TargetModEntities.TARGET.get(), world);
+        this(ModEntities.TARGET.get(), world);
     }
 
     public TargetEntity(EntityType<TargetEntity> type, Level world) {

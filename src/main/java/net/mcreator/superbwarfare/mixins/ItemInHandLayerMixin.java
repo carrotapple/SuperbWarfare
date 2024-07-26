@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.mixins;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.world.entity.EntityType;
@@ -24,7 +24,7 @@ public class ItemInHandLayerMixin {
         if (entity.getType() == EntityType.PLAYER) {
             if (arm == HumanoidArm.LEFT) {
                 ItemStack mainHand = entity.getMainHandItem();
-                if (!mainHand.is(TargetModTags.Items.GUN)) return;
+                if (!mainHand.is(ModTags.Items.GUN)) return;
 
                 ci.cancel();
             }

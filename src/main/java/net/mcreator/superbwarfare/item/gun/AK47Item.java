@@ -4,9 +4,9 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.AK47ItemRenderer;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModSounds;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
 import net.mcreator.superbwarfare.tools.*;
 import net.minecraft.client.Minecraft;
@@ -46,7 +46,7 @@ public class AK47Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(TargetModSounds.AK_47_RELOAD_EMPTY.get(), TargetModSounds.AK_47_RELOAD_NORMAL.get());
+        return Set.of(ModSounds.AK_47_RELOAD_EMPTY.get(), ModSounds.AK_47_RELOAD_NORMAL.get());
     }
 
     public AK47Item() {
@@ -79,7 +79,7 @@ public class AK47Item extends GunItem implements GeoItem, AnimatedItem {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
 
@@ -162,8 +162,8 @@ public class AK47Item extends GunItem implements GeoItem, AnimatedItem {
     }
 
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(TargetModItems.AK_47.get());
-        GunsTool.initCreativeGun(stack, TargetModItems.AK_47.getId().getPath());
+        ItemStack stack = new ItemStack(ModItems.AK_47.get());
+        GunsTool.initCreativeGun(stack, ModItems.AK_47.getId().getPath());
         return stack;
     }
 

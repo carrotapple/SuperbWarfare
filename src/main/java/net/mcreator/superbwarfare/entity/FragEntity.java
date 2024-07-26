@@ -1,10 +1,10 @@
 package net.mcreator.superbwarfare.entity;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.init.TargetModDamageTypes;
-import net.mcreator.superbwarfare.init.TargetModEntities;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModSounds;
+import net.mcreator.superbwarfare.init.ModDamageTypes;
+import net.mcreator.superbwarfare.init.ModEntities;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -36,11 +36,11 @@ public class FragEntity extends ThrowableItemProjectile {
     }
 
     public FragEntity(LivingEntity entity, Level level) {
-        super(TargetModEntities.FRAG.get(), entity, level);
+        super(ModEntities.FRAG.get(), entity, level);
     }
 
     public FragEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
-        this(TargetModEntities.FRAG.get(), level);
+        this(ModEntities.FRAG.get(), level);
     }
 
     public FragEntity setPosition0(Vec3 position0) {
@@ -55,7 +55,7 @@ public class FragEntity extends ThrowableItemProjectile {
 
     @Override
     protected Item getDefaultItem() {
-        return TargetModItems.GRENADE_40MM.get();
+        return ModItems.GRENADE_40MM.get();
     }
 
     @Override
@@ -68,10 +68,10 @@ public class FragEntity extends ThrowableItemProjectile {
 
         if (this.getOwner() != null && this.getOwner() instanceof LivingEntity living) {
             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
-                living.level().playSound(null, living.blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
+                living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
 
-                entity.hurt(TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
+                entity.hurt(ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
                         5 - (float) Mth.clamp(0.1 * this.position0.distanceTo(entity.position())
                                 * (entity instanceof LivingEntity livingEntity ? livingEntity.getMaxHealth() / 100 + 1 : 1), 0, 4.5));
             }

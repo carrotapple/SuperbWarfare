@@ -1,9 +1,9 @@
 package net.mcreator.superbwarfare.event;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModSounds;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.mcreator.superbwarfare.network.message.SimulationDistanceMessage;
 import net.mcreator.superbwarfare.tools.SoundTool;
@@ -43,7 +43,7 @@ public class PlayerEventHandler {
         }
 
         for (ItemStack stack : player.getInventory().items) {
-            if (stack.is(TargetModTags.Items.GUN)) {
+            if (stack.is(ModTags.Items.GUN)) {
                 stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag"));
             }
         }
@@ -66,7 +66,7 @@ public class PlayerEventHandler {
         ItemStack stack = player.getMainHandItem();
 
         if (event.phase == TickEvent.Phase.END) {
-            if (stack.is(TargetModTags.Items.GUN)) {
+            if (stack.is(ModTags.Items.GUN)) {
                 handlePlayerProne(player);
                 handlePlayerSprint(player);
                 handleWeaponLevel(player);
@@ -150,7 +150,7 @@ public class PlayerEventHandler {
      */
     private static void handleWeaponLevel(Player player) {
         ItemStack stack = player.getMainHandItem();
-        if (stack.is(TargetModTags.Items.GUN)) {
+        if (stack.is(ModTags.Items.GUN)) {
             var tag = stack.getOrCreateTag();
             if (tag.getInt("level") == 0) {
                 tag.putDouble("exp2", 20);
@@ -169,19 +169,19 @@ public class PlayerEventHandler {
     public static void handleAmmoCount(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.is(TargetModTags.Items.RIFLE)) {
+        if (stack.is(ModTags.Items.RIFLE)) {
             stack.getOrCreateTag().putInt("max_ammo",
                     ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo));
         }
-        if (stack.is(TargetModTags.Items.HANDGUN) || stack.is(TargetModTags.Items.SMG)) {
+        if (stack.is(ModTags.Items.HANDGUN) || stack.is(ModTags.Items.SMG)) {
             stack.getOrCreateTag().putInt("max_ammo",
                     ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).handgunAmmo));
         }
-        if (stack.is(TargetModTags.Items.SHOTGUN)) {
+        if (stack.is(ModTags.Items.SHOTGUN)) {
             stack.getOrCreateTag().putInt("max_ammo",
                     ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunAmmo));
         }
-        if (stack.is(TargetModTags.Items.SNIPER_RIFLE)) {
+        if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
             stack.getOrCreateTag().putInt("max_ammo",
                     ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperAmmo));
         }
@@ -199,12 +199,12 @@ public class PlayerEventHandler {
     private static void handlePrepareZoom(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.is(TargetModTags.Items.GUN)
+        if (stack.is(ModTags.Items.GUN)
                 && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
                 && !player.isSpectator()
                 && !stack.getOrCreateTag().getBoolean("charging")
                 && !stack.getOrCreateTag().getBoolean("reloading")) {
-            if (player.getMainHandItem().getItem() != TargetModItems.MINIGUN.get()) {
+            if (player.getMainHandItem().getItem() != ModItems.MINIGUN.get()) {
                 if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zoom) {
                     player.setSprinting(false);
                     player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
@@ -219,17 +219,17 @@ public class PlayerEventHandler {
     private static void handleSpecialWeaponAmmo(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.getItem() == TargetModItems.RPG.get() && stack.getOrCreateTag().getInt("ammo") == 1) {
+        if (stack.getItem() == ModItems.RPG.get() && stack.getOrCreateTag().getInt("ammo") == 1) {
             stack.getOrCreateTag().putDouble("empty", 0);
         }
-        if (stack.getItem() == TargetModItems.BOCEK.get() && stack.getOrCreateTag().getInt("ammo") == 1) {
+        if (stack.getItem() == ModItems.BOCEK.get() && stack.getOrCreateTag().getInt("ammo") == 1) {
             stack.getOrCreateTag().putDouble("empty", 0);
         }
     }
 
     private static void handleChangeFireRate(Player player) {
         ItemStack stack = player.getMainHandItem();
-        if (stack.is(TargetModTags.Items.GUN)) {
+        if (stack.is(ModTags.Items.GUN)) {
             if (stack.getOrCreateTag().getDouble("cg") > 0) {
                 stack.getOrCreateTag().putDouble("cg", (stack.getOrCreateTag().getDouble("cg") - 1));
             }
@@ -262,7 +262,7 @@ public class PlayerEventHandler {
         CompoundTag tag = mainHandItem.getOrCreateTag();
 
         if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).bowPullHold) {
-            if (mainHandItem.getItem() == TargetModItems.BOCEK.get()
+            if (mainHandItem.getItem() == ModItems.BOCEK.get()
                     && tag.getInt("max_ammo") > 0
                     && !player.getCooldowns().isOnCooldown(mainHandItem.getItem())
                     && tag.getDouble("power") < 12
@@ -276,12 +276,12 @@ public class PlayerEventHandler {
             }
             if (tag.getDouble("power") == 1) {
                 if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, TargetModSounds.BOCEK_PULL_1P.get(), 2f, 1f);
-                    player.level().playSound(null, player.blockPosition(), TargetModSounds.BOCEK_PULL_3P.get(), SoundSource.PLAYERS, 0.5f, 1);
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.BOCEK_PULL_1P.get(), 2f, 1f);
+                    player.level().playSound(null, player.blockPosition(), ModSounds.BOCEK_PULL_3P.get(), SoundSource.PLAYERS, 0.5f, 1);
                 }
             }
         } else {
-            if (mainHandItem.getItem() == TargetModItems.BOCEK.get()) {
+            if (mainHandItem.getItem() == ModItems.BOCEK.get()) {
                 tag.putDouble("power", 0);
             }
             player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
@@ -292,7 +292,7 @@ public class PlayerEventHandler {
     }
 
     private static void handleGunRecoil(Player player) {
-        if (!player.getMainHandItem().is(TargetModTags.Items.GUN)) return;
+        if (!player.getMainHandItem().is(ModTags.Items.GUN)) return;
 
         CompoundTag tag = player.getMainHandItem().getOrCreateTag();
         float recoilX = (float) tag.getDouble("recoil_x");

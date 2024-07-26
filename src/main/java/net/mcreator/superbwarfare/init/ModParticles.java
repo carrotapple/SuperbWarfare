@@ -8,11 +8,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public class TargetModParticles {
+public class ModParticles {
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
-        event.registerSpriteSet(TargetModParticleTypes.FIRE_STAR.get(), FireStarParticle::provider);
-        event.registerSpriteSet(TargetModParticleTypes.BULLET_HOLE.get(), BulletHoleParticle::provider);
+        event.registerSpriteSet(ModParticleTypes.FIRE_STAR.get(), FireStarParticle::provider);
+        event.registerSpriteSet(ModParticleTypes.BULLET_HOLE.get(), BulletHoleParticle::provider);
     }
 }
 

@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.Ntw20;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -15,17 +16,17 @@ import software.bernie.geckolib.model.GeoModel;
 public class Ntw20Model extends GeoModel<Ntw20> {
     @Override
     public ResourceLocation getAnimationResource(Ntw20 animatable) {
-        return new ResourceLocation("target", "animations/ntw_20.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/ntw_20.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(Ntw20 animatable) {
-        return new ResourceLocation("target", "geo/ntw_20.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/ntw_20.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Ntw20 animatable) {
-        return new ResourceLocation("target", "textures/item/ntw_20.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/ntw_20.png");
     }
 
     @Override
@@ -45,7 +46,7 @@ public class Ntw20Model extends GeoModel<Ntw20> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         if (player.getPersistentData().getDouble("prone") > 0) {
             l.setRotX(-1.5f);

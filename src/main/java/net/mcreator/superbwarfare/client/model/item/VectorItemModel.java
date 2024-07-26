@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.VectorItem;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -15,17 +16,17 @@ import software.bernie.geckolib.model.GeoModel;
 public class VectorItemModel extends GeoModel<VectorItem> {
     @Override
     public ResourceLocation getAnimationResource(VectorItem animatable) {
-        return new ResourceLocation("target", "animations/vector.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/vector.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(VectorItem animatable) {
-        return new ResourceLocation("target", "geo/vector.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/vector.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(VectorItem animatable) {
-        return new ResourceLocation("target", "textures/item/vector.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/vector.png");
     }
 
     @Override
@@ -38,7 +39,7 @@ public class VectorItemModel extends GeoModel<VectorItem> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         if (stack.getOrCreateTag().getInt("fire_mode") == 0) {
             kmj.setRotX(-120 * Mth.DEG_TO_RAD);

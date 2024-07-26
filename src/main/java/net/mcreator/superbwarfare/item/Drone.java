@@ -1,6 +1,6 @@
 package net.mcreator.superbwarfare.item;
 
-import net.mcreator.superbwarfare.init.TargetModEntities;
+import net.mcreator.superbwarfare.init.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -23,7 +23,7 @@ public class Drone extends Item {
         InteractionResultHolder<ItemStack> ar = super.use(world, player, hand);
 
         if (world instanceof ServerLevel level) {
-            Entity entityToSpawn = TargetModEntities.DRONE.get().spawn(level, BlockPos.containing(player.getX() + 1.5 * player.getLookAngle().x, player.getY(), player.getZ() + 1.5 * player.getLookAngle().z), MobSpawnType.MOB_SUMMONED);
+            Entity entityToSpawn = ModEntities.DRONE.get().spawn(level, BlockPos.containing(player.getX() + 1.5 * player.getLookAngle().x, player.getY(), player.getZ() + 1.5 * player.getLookAngle().z), MobSpawnType.MOB_SUMMONED);
             if (entityToSpawn != null) {
                 entityToSpawn.setYRot(player.getYRot());
                 entityToSpawn.setYBodyRot(player.getYRot());

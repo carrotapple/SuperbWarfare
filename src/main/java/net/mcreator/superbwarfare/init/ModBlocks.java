@@ -7,7 +7,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-public class TargetModBlocks {
+public class ModBlocks {
     public static final DeferredRegister<Block> REGISTRY = DeferredRegister.create(ForgeRegistries.BLOCKS, ModUtils.MODID);
 
     public static final RegistryObject<Block> SANDBAG = REGISTRY.register("sandbag", SandbagBlock::new);

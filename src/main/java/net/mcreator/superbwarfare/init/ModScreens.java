@@ -8,11 +8,11 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public class TargetModScreens {
+public class ModScreens {
     @SubscribeEvent
     public static void clientLoad(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            MenuScreens.register(TargetModMenus.GUN_RECYCLE_GUI.get(), GunRecycleGuiScreen::new);
+            MenuScreens.register(ModMenus.GUN_RECYCLE_GUI.get(), GunRecycleGuiScreen::new);
         });
     }
 }

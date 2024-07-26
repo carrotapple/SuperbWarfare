@@ -1,5 +1,6 @@
 package net.mcreator.superbwarfare.entity.layer;
 
+import net.mcreator.superbwarfare.ModUtils;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -15,7 +16,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public class Mk42Layer extends GeoRenderLayer<Mk42Entity> {
-	private static final ResourceLocation LAYER = new ResourceLocation("target", "textures/entity/sherman_e.png");
+	private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/entity/sherman_e.png");
 
 	public Mk42Layer(GeoRenderer<Mk42Entity> entityRenderer) {
 		super(entityRenderer);

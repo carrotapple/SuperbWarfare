@@ -1,9 +1,9 @@
 package net.mcreator.superbwarfare.entity;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.init.TargetModDamageTypes;
-import net.mcreator.superbwarfare.init.TargetModEntities;
-import net.mcreator.superbwarfare.init.TargetModItems;
+import net.mcreator.superbwarfare.init.ModDamageTypes;
+import net.mcreator.superbwarfare.init.ModEntities;
+import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.minecraft.core.registries.Registries;
@@ -59,7 +59,7 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
     public String animationProcedure = "empty";
 
     public ClaymoreEntity(PlayMessages.SpawnEntity packet, Level world) {
-        this(TargetModEntities.CLAYMORE.get(), world);
+        this(ModEntities.CLAYMORE.get(), world);
     }
 
     public ClaymoreEntity(EntityType<ClaymoreEntity> type, Level world) {
@@ -134,7 +134,7 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
 
     private void destoryExplode() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 15f,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 15f,
                 this.getX(), this.getY(), this.getZ(), 7.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
@@ -196,7 +196,7 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
 
         if (this.isOwnedBy(player) && player.isShiftKeyDown()) {
             if (!this.level().isClientSide()) this.discard();
-            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(TargetModItems.CLAYMORE_MINE.get()));
+            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.CLAYMORE_MINE.get()));
         }
 
         return retval;
@@ -249,7 +249,7 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
 
     private void triggerExplode(Entity target) {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                TargetModDamageTypes.causeMineDamage(this.level().registryAccess(), this.getOwner()), 40f,
+                ModDamageTypes.causeMineDamage(this.level().registryAccess(), this.getOwner()), 40f,
                 target.getX(), target.getY(), target.getZ(), 4f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
@@ -277,7 +277,7 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
 
     @Override
     public AgeableMob getBreedOffspring(ServerLevel serverWorld, AgeableMob ageable) {
-        ClaymoreEntity retval = TargetModEntities.CLAYMORE.get().create(serverWorld);
+        ClaymoreEntity retval = ModEntities.CLAYMORE.get().create(serverWorld);
         if (retval != null) {
             retval.finalizeSpawn(serverWorld, serverWorld.getCurrentDifficultyAt(retval.blockPosition()), MobSpawnType.BREEDING, null, null);
         }

@@ -1,7 +1,7 @@
 
 package net.mcreator.superbwarfare.enchantment;
 
-import net.mcreator.superbwarfare.init.TargetModItems;
+import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.tools.EnchantmentCategoryTool;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
@@ -30,6 +30,6 @@ public class SuperRechargeEnchantment extends Enchantment {
 
 	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack itemstack) {
-		return Ingredient.of(new ItemStack(TargetModItems.TASER.get())).test(itemstack);
+		return Ingredient.of(new ItemStack(ModItems.TASER.get())).test(itemstack);
 	}
 }

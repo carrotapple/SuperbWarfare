@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.Abekiri;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -14,17 +15,17 @@ import software.bernie.geckolib.model.GeoModel;
 public class AbekiriItemModel extends GeoModel<Abekiri> {
     @Override
     public ResourceLocation getAnimationResource(Abekiri animatable) {
-        return new ResourceLocation("target", "animations/abekiri.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/abekiri.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(Abekiri animatable) {
-        return new ResourceLocation("target", "geo/abekiri.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/abekiri.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Abekiri animatable) {
-        return new ResourceLocation("target", "textures/item/abekiri.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/abekiri.png");
     }
 
     @Override
@@ -36,7 +37,7 @@ public class AbekiriItemModel extends GeoModel<Abekiri> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         double p = 0;
         p = player.getPersistentData().getDouble("zoom_pos");

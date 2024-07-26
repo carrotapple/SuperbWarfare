@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.mixins;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +20,7 @@ public class GameRendererMixin {
         Player player = mc.player;
         if (player != null) {
             ItemStack stack = player.getMainHandItem();
-            if (stack.is(TargetModTags.Items.GUN)) {
+            if (stack.is(ModTags.Items.GUN)) {
                 ci.cancel();
             }
         }

@@ -2,9 +2,9 @@ package net.mcreator.superbwarfare.event;
 
 import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.entity.Mk42Entity;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModMobEffects;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModMobEffects;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.mcreator.superbwarfare.network.message.ZoomMessage;
 import net.minecraft.client.CameraType;
@@ -57,7 +57,7 @@ public class ClientEventHandler {
         if (level != null && entity instanceof LivingEntity living && entity.isPassenger() && entity.getVehicle() instanceof Mk42Entity) {
             handleCannonCamera(event, living);
         }
-        if (level != null && entity instanceof LivingEntity living && living.getMainHandItem().is(TargetModTags.Items.GUN)) {
+        if (level != null && entity instanceof LivingEntity living && living.getMainHandItem().is(ModTags.Items.GUN)) {
             handleWeaponCrossHair(living);
             handleWeaponSway(living);
             handleWeaponMove(living);
@@ -90,12 +90,12 @@ public class ClientEventHandler {
         ItemStack stack = player.getMainHandItem();
 
         if (event.getHand() == hand) {
-            if (player.getUseItem().is(TargetModTags.Items.GUN)) {
+            if (player.getUseItem().is(ModTags.Items.GUN)) {
                 event.setCanceled(true);
             }
         }
 
-        if (stack.is(TargetModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+        if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
 
             DroneEntity drone = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
                     .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
@@ -107,7 +107,7 @@ public class ClientEventHandler {
     }
 
     private static void handleWeaponCrossHair(LivingEntity entity) {
-        if (entity.getMainHandItem().is(TargetModTags.Items.GUN)) {
+        if (entity.getMainHandItem().is(ModTags.Items.GUN)) {
             float fps = Minecraft.getInstance().getFps();
             if (fps <= 30) {
                 fps = 30f;
@@ -125,7 +125,7 @@ public class ClientEventHandler {
     }
 
     private static void handleWeaponSway(LivingEntity entity) {
-        if (entity.getMainHandItem().is(TargetModTags.Items.GUN)) {
+        if (entity.getMainHandItem().is(ModTags.Items.GUN)) {
             float fps = Minecraft.getInstance().getFps();
             if (fps <= 30) {
                 fps = 30f;
@@ -153,7 +153,7 @@ public class ClientEventHandler {
     }
 
     private static void handleWeaponMove(LivingEntity entity) {
-        if (entity.getMainHandItem().is(TargetModTags.Items.GUN)) {
+        if (entity.getMainHandItem().is(ModTags.Items.GUN)) {
             float fps = Minecraft.getInstance().getFps();
             if (fps <= 30) {
                 fps = 30f;
@@ -361,7 +361,7 @@ public class ClientEventHandler {
     }
 
     private static void handleShockCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
-        if (entity.hasEffect(TargetModMobEffects.SHOCK.get()) && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
+        if (entity.hasEffect(ModMobEffects.SHOCK.get()) && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
             event.setYaw(Minecraft.getInstance().gameRenderer.getMainCamera().getYRot() + (float) Mth.nextDouble(RandomSource.create(), -3, 3));
             event.setPitch(Minecraft.getInstance().gameRenderer.getMainCamera().getXRot() + (float) Mth.nextDouble(RandomSource.create(), -3, 3));
             event.setRoll((float) Mth.nextDouble(RandomSource.create(), 8, 12));
@@ -373,7 +373,7 @@ public class ClientEventHandler {
         double yaw = event.getYaw();
         double pitch = event.getPitch();
         double roll = event.getRoll();
-        if (entity.getMainHandItem().is(TargetModTags.Items.GUN)) {
+        if (entity.getMainHandItem().is(ModTags.Items.GUN)) {
 
             event.setPitch((float) (pitch + data.getDouble("camera_rot_x") + 0.2 * data.getDouble("xRot") + 3 * data.getDouble("vy")));
 
@@ -419,7 +419,7 @@ public class ClientEventHandler {
 
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.is(TargetModTags.Items.GUN)) {
+        if (stack.is(ModTags.Items.GUN)) {
             if (!event.usedConfiguredFov()) {
                 return;
             }
@@ -453,12 +453,12 @@ public class ClientEventHandler {
             return;
         }
 
-        if (mc.player.getMainHandItem().is(TargetModTags.Items.GUN) || (mc.player.getVehicle() != null && mc.player.getVehicle() instanceof Mk42Entity)) {
+        if (mc.player.getMainHandItem().is(ModTags.Items.GUN) || (mc.player.getVehicle() != null && mc.player.getVehicle() instanceof Mk42Entity)) {
             event.setCanceled(true);
         }
 
         ItemStack stack = mc.player.getMainHandItem();
-        if (stack.is(TargetModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+        if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
             event.setCanceled(true);
         }
     }

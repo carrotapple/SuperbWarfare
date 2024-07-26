@@ -4,9 +4,9 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.M870ItemRenderer;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModSounds;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.TooltipTool;
@@ -76,7 +76,7 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (transformType != null && transformType.firstPerson()) {
             if (this.animationProcedure.equals("empty")) {
@@ -155,7 +155,7 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(TargetModSounds.M_870_PREPARE_LOAD.get(), TargetModSounds.M_870_LOOP.get());
+        return Set.of(ModSounds.M_870_PREPARE_LOAD.get(), ModSounds.M_870_LOOP.get());
     }
 
     @Override
@@ -171,8 +171,8 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
     }
 
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(TargetModItems.M_870.get());
-        GunsTool.initCreativeGun(stack, TargetModItems.M_870.getId().getPath());
+        ItemStack stack = new ItemStack(ModItems.M_870.get());
+        GunsTool.initCreativeGun(stack, ModItems.M_870.getId().getPath());
         return stack;
     }
 

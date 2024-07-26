@@ -3,10 +3,10 @@ package net.mcreator.superbwarfare.entity;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.headshot.BoundingBoxManager;
 import net.mcreator.superbwarfare.headshot.IHeadshotBox;
-import net.mcreator.superbwarfare.init.TargetModDamageTypes;
-import net.mcreator.superbwarfare.init.TargetModEntities;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModSounds;
+import net.mcreator.superbwarfare.init.ModDamageTypes;
+import net.mcreator.superbwarfare.init.ModEntities;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
@@ -48,13 +48,13 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
     }
 
     public RpgRocketEntity(LivingEntity entity, Level level, float damage, int monsterMultiplier) {
-        super(TargetModEntities.RPG_ROCKET.get(), entity, level);
+        super(ModEntities.RPG_ROCKET.get(), entity, level);
         this.damage = damage;
         this.monsterMultiplier = monsterMultiplier;
     }
 
     public RpgRocketEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
-        this(TargetModEntities.RPG_ROCKET.get(), level);
+        this(ModEntities.RPG_ROCKET.get(), level);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
 
     @Override
     protected Item getDefaultItem() {
-        return TargetModItems.ROCKET.get();
+        return ModItems.ROCKET.get();
     }
 
     @Override
@@ -73,7 +73,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
-                living.level().playSound(null, living.blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
+                living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
 
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
             }
@@ -106,7 +106,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
                     if (headshot) {
                         if (this.getOwner() instanceof LivingEntity living) {
                             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
-                                living.playSound(TargetModSounds.HEADSHOT.get(), 1, 1);
+                                living.playSound(ModSounds.HEADSHOT.get(), 1, 1);
 
                                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(1, 5));
                             }
@@ -118,15 +118,15 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
 
         if (headshot) {
             if (entity instanceof Monster monster) {
-                monster.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 5f * damageMultiplier);
+                monster.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 5f * damageMultiplier);
             } else {
-                entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 5f);
+                entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 5f);
             }
         } else {
             if (entity instanceof Monster monster) {
-                monster.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * damageMultiplier);
+                monster.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * damageMultiplier);
             } else {
-                entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
+                entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
             }
         }
 
@@ -185,7 +185,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile {
 
     private void causeExplode() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), (float) 2 / 3 * this.damage,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), (float) 2 / 3 * this.damage,
                 this.getX(), this.getY(), this.getZ(), 10f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(this.monsterMultiplier);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);

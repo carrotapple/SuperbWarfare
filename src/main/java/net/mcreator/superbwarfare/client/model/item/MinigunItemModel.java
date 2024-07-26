@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.Minigun;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -15,17 +16,17 @@ import software.bernie.geckolib.model.GeoModel;
 public class MinigunItemModel extends GeoModel<Minigun> {
     @Override
     public ResourceLocation getAnimationResource(Minigun animatable) {
-        return new ResourceLocation("target", "animations/minigun.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/minigun.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(Minigun animatable) {
-        return new ResourceLocation("target", "geo/minigun.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/minigun.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Minigun animatable) {
-        return new ResourceLocation("target", "textures/item/minigun.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/minigun.png");
     }
 
     @Override
@@ -39,7 +40,7 @@ public class MinigunItemModel extends GeoModel<Minigun> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         float fps = Minecraft.getInstance().getFps();
         if (fps <= 0) {

@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.item;
 
 import net.mcreator.superbwarfare.entity.ClaymoreEntity;
-import net.mcreator.superbwarfare.init.TargetModEntities;
+import net.mcreator.superbwarfare.init.ModEntities;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -32,7 +32,7 @@ public class ClaymoreMine extends Item {
         ItemStack stack = player.getItemInHand(hand);
 
         if (world instanceof ServerLevel serverLevel) {
-            TamableAnimal entityToSpawn = new ClaymoreEntity(TargetModEntities.CLAYMORE.get(), serverLevel);
+            TamableAnimal entityToSpawn = new ClaymoreEntity(ModEntities.CLAYMORE.get(), serverLevel);
             entityToSpawn.moveTo(player.getX(), player.getY() + 1.1, player.getZ(), player.getYRot(), player.getXRot());
             entityToSpawn.setYBodyRot(player.getYRot());
             entityToSpawn.setYHeadRot(player.getYRot());

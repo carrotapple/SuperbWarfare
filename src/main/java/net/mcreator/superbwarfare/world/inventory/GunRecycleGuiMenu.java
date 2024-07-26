@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.world.inventory;
 
-import net.mcreator.superbwarfare.init.TargetModMenus;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModMenus;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,7 +37,7 @@ public class GunRecycleGuiMenu extends AbstractContainerMenu implements Supplier
     private BlockEntity boundBlockEntity = null;
 
     public GunRecycleGuiMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
-        super(TargetModMenus.GUN_RECYCLE_GUI.get(), id);
+        super(ModMenus.GUN_RECYCLE_GUI.get(), id);
         this.entity = inv.player;
         this.world = inv.player.level();
         this.internal = new ItemStackHandler(1);
@@ -80,7 +80,7 @@ public class GunRecycleGuiMenu extends AbstractContainerMenu implements Supplier
         this.customSlots.put(0, this.addSlot(new SlotItemHandler(internal, 0, 79, 27) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return stack.is(TargetModTags.Items.GUN);
+                return stack.is(ModTags.Items.GUN);
             }
         }));
 

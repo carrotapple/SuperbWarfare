@@ -3,7 +3,7 @@ package net.mcreator.superbwarfare.client.screens;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.superbwarfare.entity.Mk42Entity;
-import net.mcreator.superbwarfare.init.TargetModItems;
+import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -42,7 +42,7 @@ public class M79UIOverlay {
     private static boolean shouldRenderCrossHair(Player player) {
         if (player == null) return false;
         return !player.isSpectator()
-                && player.getMainHandItem().getItem() == TargetModItems.M_79.get()
+                && player.getMainHandItem().getItem() == ModItems.M_79.get()
                 && (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || (player.isPassenger() && player.getVehicle() instanceof Mk42Entity))
                 && !player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zooming).orElse(false);
     }

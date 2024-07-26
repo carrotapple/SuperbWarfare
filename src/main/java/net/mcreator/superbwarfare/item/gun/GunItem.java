@@ -1,8 +1,8 @@
 package net.mcreator.superbwarfare.item.gun;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.mcreator.superbwarfare.tools.EnchantmentCategoryTool;
 import net.mcreator.superbwarfare.tools.GunsTool;
@@ -43,7 +43,7 @@ public abstract class GunItem extends Item {
     public void inventoryTick(ItemStack itemstack, Level level, Entity entity, int slot, boolean selected) {
         if (entity instanceof LivingEntity living) {
             ItemStack mainHandItem = living.getMainHandItem();
-            if (!itemstack.is(TargetModTags.Items.GUN)) {
+            if (!itemstack.is(ModTags.Items.GUN)) {
                 return;
             }
 
@@ -62,13 +62,13 @@ public abstract class GunItem extends Item {
                     capability.syncPlayerVariables(entity);
                 });
 
-                if (itemstack.getItem() == TargetModItems.RPG.get() && itemstack.getOrCreateTag().getInt("ammo") == 0) {
+                if (itemstack.getItem() == ModItems.RPG.get() && itemstack.getOrCreateTag().getInt("ammo") == 0) {
                     itemstack.getOrCreateTag().putDouble("empty", 1);
                 }
-                if (itemstack.getItem() == TargetModItems.SKS.get() && itemstack.getOrCreateTag().getInt("ammo") == 0) {
+                if (itemstack.getItem() == ModItems.SKS.get() && itemstack.getOrCreateTag().getInt("ammo") == 0) {
                     itemstack.getOrCreateTag().putBoolean("HoldOpen", true);
                 }
-                if (itemstack.getItem() == TargetModItems.M_60.get() && itemstack.getOrCreateTag().getInt("ammo") <= 5) {
+                if (itemstack.getItem() == ModItems.M_60.get() && itemstack.getOrCreateTag().getInt("ammo") <= 5) {
                     itemstack.getOrCreateTag().putBoolean("bullet_chain", true);
                 }
             }
@@ -121,7 +121,7 @@ public abstract class GunItem extends Item {
 
     @SubscribeEvent
     public static void onPickup(EntityItemPickupEvent event) {
-        if (event.getItem().getItem().is(TargetModTags.Items.GUN)) {
+        if (event.getItem().getItem().is(ModTags.Items.GUN)) {
             event.getItem().getItem().getOrCreateTag().putBoolean("draw", true);
         }
     }

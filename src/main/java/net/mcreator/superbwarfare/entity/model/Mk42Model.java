@@ -1,5 +1,6 @@
 package net.mcreator.superbwarfare.entity.model;
 
+import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.Mk42Entity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -13,17 +14,17 @@ import software.bernie.geckolib.model.data.EntityModelData;
 public class Mk42Model extends GeoModel<Mk42Entity> {
     @Override
     public ResourceLocation getAnimationResource(Mk42Entity entity) {
-        return new ResourceLocation("target", "animations/mk_42.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/mk_42.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(Mk42Entity entity) {
-        return new ResourceLocation("target", "geo/sherman.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/sherman.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Mk42Entity entity) {
-        return new ResourceLocation("target", "textures/entity/sherman.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/entity/sherman.png");
     }
 
     @Override

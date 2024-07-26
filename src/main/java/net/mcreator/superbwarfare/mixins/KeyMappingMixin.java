@@ -1,6 +1,6 @@
 package net.mcreator.superbwarfare.mixins;
 
-import net.mcreator.superbwarfare.init.TargetModItems;
+import net.mcreator.superbwarfare.init.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.KeyboardInput;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import net.mcreator.superbwarfare.init.TargetModMobEffects;
+import net.mcreator.superbwarfare.init.ModMobEffects;
 
 @Mixin(KeyboardInput.class)
 public abstract class KeyMappingMixin extends Input {
@@ -25,7 +25,7 @@ public abstract class KeyMappingMixin extends Input {
 
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.is(TargetModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+        if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
             this.up = false;
             this.down = false;
             this.left = false;
@@ -37,7 +37,7 @@ public abstract class KeyMappingMixin extends Input {
         }
 
         if (Minecraft.getInstance().player == null
-                || !Minecraft.getInstance().player.hasEffect(TargetModMobEffects.SHOCK.get())
+                || !Minecraft.getInstance().player.hasEffect(ModMobEffects.SHOCK.get())
                 || Minecraft.getInstance().player.isSpectator()) {
             return;
         }

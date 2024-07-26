@@ -1,6 +1,6 @@
 package net.mcreator.superbwarfare.headshot;
 
-import net.mcreator.superbwarfare.init.TargetModEntities;
+import net.mcreator.superbwarfare.init.ModEntities;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -40,8 +40,8 @@ public class BoundingBoxManager {
             }
             return new AABB(headBox.minX * scale, headBox.minY * scale, headBox.minZ * scale, headBox.maxX * scale, headBox.maxY * scale, headBox.maxZ * scale);
         });
-        registerHeadshotBox(TargetModEntities.SENPAI.get(), new BasicHeadshotBox<>(8.0, 22.0));
-        registerHeadshotBox(TargetModEntities.TARGET_1.get(), new BasicHeadshotBox<>(14.0, 20.0));
+        registerHeadshotBox(ModEntities.SENPAI.get(), new BasicHeadshotBox<>(8.0, 22.0));
+        registerHeadshotBox(ModEntities.TARGET_1.get(), new BasicHeadshotBox<>(14.0, 20.0));
         registerHeadshotBox(EntityType.ENDERMAN, new BasicHeadshotBox<>(8.0, 38.0));
         registerHeadshotBox(EntityType.ZOMBIE, new ChildHeadshotBox<>(8.0, 26.0, 0.75, 0.5));
         registerHeadshotBox(EntityType.ZOMBIFIED_PIGLIN, new ChildHeadshotBox<>(8.0, 26.0, 0.75, 0.5));

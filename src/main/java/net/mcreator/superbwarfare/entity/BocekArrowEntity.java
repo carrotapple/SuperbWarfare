@@ -3,9 +3,9 @@ package net.mcreator.superbwarfare.entity;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.headshot.BoundingBoxManager;
 import net.mcreator.superbwarfare.headshot.IHeadshotBox;
-import net.mcreator.superbwarfare.init.TargetModDamageTypes;
-import net.mcreator.superbwarfare.init.TargetModEntities;
-import net.mcreator.superbwarfare.init.TargetModSounds;
+import net.mcreator.superbwarfare.init.ModDamageTypes;
+import net.mcreator.superbwarfare.init.ModEntities;
+import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -47,12 +47,12 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
     }
 
     public BocekArrowEntity(LivingEntity entity, Level level, int monsterMultiplier) {
-        super(TargetModEntities.BOCEK_ARROW.get(), entity, level);
+        super(ModEntities.BOCEK_ARROW.get(), entity, level);
         this.monsterMultiplier = monsterMultiplier;
     }
 
     public BocekArrowEntity(PlayMessages.SpawnEntity packet, Level world) {
-        super(TargetModEntities.BOCEK_ARROW.get(), world);
+        super(ModEntities.BOCEK_ARROW.get(), world);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
-                living.playSound(TargetModSounds.INDICATION.get());
+                living.playSound(ModSounds.INDICATION.get());
 
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
             }
@@ -130,7 +130,7 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
                     if (headshot) {
                         if (this.getOwner() instanceof LivingEntity living) {
                             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
-                                living.playSound(TargetModSounds.HEADSHOT.get());
+                                living.playSound(ModSounds.HEADSHOT.get());
 
                                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(1, 5));
                             }
@@ -143,15 +143,15 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
         boolean hurt;
         if (headshot) {
             if (entity instanceof Monster monster) {
-                hurt = monster.hurt(TargetModDamageTypes.causeArrowInBrainDamage(this.level().registryAccess(), this, this.getOwner()), (float) i * 2 * damageMultiplier);
+                hurt = monster.hurt(ModDamageTypes.causeArrowInBrainDamage(this.level().registryAccess(), this, this.getOwner()), (float) i * 2 * damageMultiplier);
             } else {
-                hurt = entity.hurt(TargetModDamageTypes.causeArrowInBrainDamage(this.level().registryAccess(), this, this.getOwner()), (float) i * 2);
+                hurt = entity.hurt(ModDamageTypes.causeArrowInBrainDamage(this.level().registryAccess(), this, this.getOwner()), (float) i * 2);
             }
         } else {
             if (entity instanceof Monster monster) {
-                hurt = monster.hurt(TargetModDamageTypes.causeArrowInKneeDamage(this.level().registryAccess(), this, this.getOwner()), (float) i * damageMultiplier);
+                hurt = monster.hurt(ModDamageTypes.causeArrowInKneeDamage(this.level().registryAccess(), this, this.getOwner()), (float) i * damageMultiplier);
             } else {
-                hurt = entity.hurt(TargetModDamageTypes.causeArrowInKneeDamage(this.level().registryAccess(), this, this.getOwner()), (float) i);
+                hurt = entity.hurt(ModDamageTypes.causeArrowInKneeDamage(this.level().registryAccess(), this, this.getOwner()), (float) i);
             }
         }
 

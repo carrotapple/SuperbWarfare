@@ -4,9 +4,9 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.Ntw20Renderer;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModSounds;
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.mcreator.superbwarfare.tools.GunsTool;
@@ -57,9 +57,9 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public Set<SoundEvent> getReloadSound() {
         return Set.of(
-                TargetModSounds.NTW_20_RELOAD_EMPTY.get(),
-                TargetModSounds.NTW_20_RELOAD_NORMAL.get(),
-                TargetModSounds.NTW_20_BOLT.get()
+                ModSounds.NTW_20_RELOAD_EMPTY.get(),
+                ModSounds.NTW_20_RELOAD_NORMAL.get(),
+                ModSounds.NTW_20_BOLT.get()
         );
     }
 
@@ -89,7 +89,7 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
 
@@ -122,7 +122,7 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
 
@@ -173,8 +173,8 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
     }
 
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(TargetModItems.NTW_20.get());
-        GunsTool.initCreativeGun(stack, TargetModItems.NTW_20.getId().getPath());
+        ItemStack stack = new ItemStack(ModItems.NTW_20.get());
+        GunsTool.initCreativeGun(stack, ModItems.NTW_20.getId().getPath());
         return stack;
     }
 

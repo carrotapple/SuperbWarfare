@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.RpgItem;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -15,17 +16,17 @@ import software.bernie.geckolib.model.GeoModel;
 public class RpgItemModel extends GeoModel<RpgItem> {
     @Override
     public ResourceLocation getAnimationResource(RpgItem animatable) {
-        return new ResourceLocation("target", "animations/rpg.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/rpg.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(RpgItem animatable) {
-        return new ResourceLocation("target", "geo/rpg.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/rpg.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(RpgItem animatable) {
-        return new ResourceLocation("target", "textures/item/rpg7.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/rpg7.png");
     }
 
     @Override
@@ -38,7 +39,7 @@ public class RpgItemModel extends GeoModel<RpgItem> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         rocket.setHidden(stack.getOrCreateTag().getBoolean("empty"));
 

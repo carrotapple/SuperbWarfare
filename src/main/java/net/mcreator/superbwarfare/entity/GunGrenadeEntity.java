@@ -3,10 +3,10 @@ package net.mcreator.superbwarfare.entity;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.headshot.BoundingBoxManager;
 import net.mcreator.superbwarfare.headshot.IHeadshotBox;
-import net.mcreator.superbwarfare.init.TargetModDamageTypes;
-import net.mcreator.superbwarfare.init.TargetModEntities;
-import net.mcreator.superbwarfare.init.TargetModItems;
-import net.mcreator.superbwarfare.init.TargetModSounds;
+import net.mcreator.superbwarfare.init.ModDamageTypes;
+import net.mcreator.superbwarfare.init.ModEntities;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
@@ -48,13 +48,13 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
     }
 
     public GunGrenadeEntity(LivingEntity entity, Level level, float damage, int monsterMultiplier) {
-        super(TargetModEntities.GUN_GRENADE.get(), entity, level);
+        super(ModEntities.GUN_GRENADE.get(), entity, level);
         this.damage = damage;
         this.monsterMultiplier = monsterMultiplier;
     }
 
     public GunGrenadeEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
-        this(TargetModEntities.GUN_GRENADE.get(), level);
+        this(ModEntities.GUN_GRENADE.get(), level);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
 
     @Override
     protected Item getDefaultItem() {
-        return TargetModItems.GRENADE_40MM.get();
+        return ModItems.GRENADE_40MM.get();
     }
 
     @Override
@@ -73,7 +73,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
-                living.level().playSound(null, living.blockPosition(), TargetModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
+                living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
 
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
             }
@@ -106,7 +106,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
                     if (headshot) {
                         if (this.getOwner() instanceof LivingEntity living) {
                             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
-                                living.level().playSound(null, living.getX(), living.getY(), living.getZ(), TargetModSounds.HEADSHOT.get(), SoundSource.VOICE, 1f, 1f);
+                                living.level().playSound(null, living.getX(), living.getY(), living.getZ(), ModSounds.HEADSHOT.get(), SoundSource.VOICE, 1f, 1f);
 
                                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(1, 5));
                             }
@@ -118,15 +118,15 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
 
         if (headshot) {
             if (entity instanceof Monster monster) {
-                monster.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 2f * damageMultiplier);
+                monster.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 2f * damageMultiplier);
             } else {
-                entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 2f);
+                entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 2f);
             }
         } else {
             if (entity instanceof Monster monster) {
-                monster.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * damageMultiplier);
+                monster.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * damageMultiplier);
             } else {
-                entity.hurt(TargetModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
+                entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
             }
         }
 
@@ -170,7 +170,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
 
     private void causeExplode() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 1.8f * this.damage,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 1.8f * this.damage,
                 this.getX(), this.getY(), this.getZ(), 7.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(this.monsterMultiplier);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);

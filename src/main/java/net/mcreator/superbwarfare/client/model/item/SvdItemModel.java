@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
-import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.SvdItem;
 import net.mcreator.superbwarfare.network.TargetModVariables;
 import net.minecraft.client.Minecraft;
@@ -15,17 +16,17 @@ import software.bernie.geckolib.model.GeoModel;
 public class SvdItemModel extends GeoModel<SvdItem> {
     @Override
     public ResourceLocation getAnimationResource(SvdItem animatable) {
-        return new ResourceLocation("target", "animations/svd.animation.json");
+        return new ResourceLocation(ModUtils.MODID, "animations/svd.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(SvdItem animatable) {
-        return new ResourceLocation("target", "geo/svd.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/svd.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(SvdItem animatable) {
-        return new ResourceLocation("target", "textures/item/svd.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/item/svd.png");
     }
 
     @Override
@@ -43,7 +44,7 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(TargetModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         if (stack.getOrCreateTag().getBoolean("HoldOpen")) {
             bolt.setPosZ(3.25f);

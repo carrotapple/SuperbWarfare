@@ -1,8 +1,8 @@
 package net.mcreator.superbwarfare.entity;
 
-import net.mcreator.superbwarfare.init.TargetModDamageTypes;
-import net.mcreator.superbwarfare.init.TargetModEntities;
-import net.mcreator.superbwarfare.init.TargetModItems;
+import net.mcreator.superbwarfare.init.ModDamageTypes;
+import net.mcreator.superbwarfare.init.ModEntities;
+import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.minecraft.core.particles.ParticleTypes;
@@ -42,7 +42,7 @@ public class MortarShellEntity extends ThrowableItemProjectile {
     }
 
     public MortarShellEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
-        this(TargetModEntities.MORTAR_SHELL.get(), level);
+        this(ModEntities.MORTAR_SHELL.get(), level);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class MortarShellEntity extends ThrowableItemProjectile {
 
     @Override
     protected Item getDefaultItem() {
-        return TargetModItems.MORTAR_SHELLS.get();
+        return ModItems.MORTAR_SHELLS.get();
     }
 
 
@@ -60,7 +60,7 @@ public class MortarShellEntity extends ThrowableItemProjectile {
     public void onHitEntity(EntityHitResult entityHitResult) {
         Entity entity = entityHitResult.getEntity();
 
-        entity.hurt(TargetModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
+        entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
 
         if (this.level() instanceof ServerLevel) {
             causeExplode();
@@ -94,7 +94,7 @@ public class MortarShellEntity extends ThrowableItemProjectile {
 
     private void causeExplode() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                TargetModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 150f,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 150f,
                 this.getX(), this.getY(), this.getZ(), 12.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
