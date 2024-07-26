@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "superbwarfare:block/no_tex",
+    "up": "superbwarfare:block/no_tex",
+    "north": "superbwarfare:block/no_tex",
+    "east": "superbwarfare:block/no_tex",
+    "south": "superbwarfare:block/no_tex",
+    "west": "superbwarfare:block/no_tex",
+    "particle": "superbwarfare:block/no_tex"
+  },
+  "render_type": "solid"
+}

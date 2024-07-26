@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "superbwarfare:shotgun_ammo"
+    },
+    {
+      "item": "superbwarfare:shotgun_ammo"
+    },
+    {
+      "item": "superbwarfare:shotgun_ammo"
+    },
+    {
+      "item": "superbwarfare:shotgun_ammo"
+    },
+    {
+      "item": "superbwarfare:shotgun_ammo"
+    },
+    {
+      "item": "superbwarfare:shotgun_ammo"
+    }
+  ],
+  "result": {
+    "item": "superbwarfare:shotgun_ammo_box",
+    "count": 1
+  }
+}

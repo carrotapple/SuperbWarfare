@@ -1,6 +1,0 @@
-{
-  "parent": "target:displaysettings/svd.item",
-  "textures": {
-    "layer0": "target:item/svd"
-  }
-}

@@ -1,0 +1,118 @@
+package net.mcreator.superbwarfare.client.screens;
+
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.mcreator.superbwarfare.init.TargetModItems;
+import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.minecraft.client.CameraType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderGuiEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+import static net.mcreator.superbwarfare.tools.RenderTool.preciseBlit;
+
+@Mod.EventBusSubscriber(value = Dist.CLIENT)
+public class CrossHairOverlay {
+    public static int HIT_INDICATOR = 0;
+    public static int HEAD_INDICATOR = 0;
+    public static int KILL_INDICATOR = 0;
+
+    @SubscribeEvent(priority = EventPriority.NORMAL)
+    public static void eventHandler(RenderGuiEvent.Pre event) {
+        int w = event.getWindow().getGuiScaledWidth();
+        int h = event.getWindow().getGuiScaledHeight();
+        Player player = Minecraft.getInstance().player;
+        if (player == null) {
+            return;
+        }
+        ItemStack stack = player.getMainHandItem();
+        double spread = player.getPersistentData().getDouble("crosshair");
+
+        RenderSystem.disableDepthTest();
+        RenderSystem.depthMask(false);
+        RenderSystem.enableBlend();
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+
+        if (shouldRenderCrossHair(player) || stack.is(TargetModItems.MINIGUN.get())) {
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/point.png"), w / 2f - 7.5f, h / 2f - 8, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/rexheng.png"), w / 2f - 9.5f - 2.8f * (float) spread, h / 2f - 8, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/rexheng.png"), w / 2f - 6.5f + 2.8f * (float) spread, h / 2f - 8, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/rexshu.png"), w / 2f - 7.5f, h / 2f - 7 + 2.8f * (float) spread, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/rexshu.png"), w / 2f - 7.5f, h / 2f - 10 - 2.8f * (float) spread, 0, 0, 16, 16, 16, 16);
+        }
+
+        float ww = w / 2f - 7.5f + (float) (2 * (Math.random() - 0.5f));
+        float hh = h / 2f - 8 + (float) (2 * (Math.random() - 0.5f));
+        float m = (40 - KILL_INDICATOR * 5) / 5.5f;
+
+        if (HIT_INDICATOR > 0) {
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/hit_marker.png"), ww, hh, 0, 0, 16, 16, 16, 16);
+        }
+
+        if (HEAD_INDICATOR > 0) {
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/headshotmark.png"), ww, hh, 0, 0, 16, 16, 16, 16);
+        }
+
+        if (KILL_INDICATOR > 0) {
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/kill_mark1.png"), w / 2f - 7.5f - 2 + m, h / 2f - 8 - 2 + m, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/kill_mark2.png"), w / 2f - 7.5f + 2 - m, h / 2f - 8 - 2 + m, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/kill_mark3.png"), w / 2f - 7.5f - 2 + m, h / 2f - 8 + 2 - m, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/kill_mark4.png"), w / 2f - 7.5f + 2 - m, h / 2f - 8 + 2 - m, 0, 0, 16, 16, 16, 16);
+        }
+
+        RenderSystem.depthMask(true);
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.enableDepthTest();
+        RenderSystem.disableBlend();
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+
+        if (!stack.is(TargetModTags.Items.GUN)) return;
+
+        if (stack.getOrCreateTag().getBoolean("need_bolt_action")) {
+            Font font = Minecraft.getInstance().font;
+            Component component = Component.translatable("des.superbwarfare.need_bolt_action");
+
+            event.getGuiGraphics().drawString(font, component, w / 2 - font.width(component) / 2, h / 2 + 50, 0xFF6969);
+        }
+
+    }
+
+    private static boolean shouldRenderCrossHair(Player player) {
+        if (player == null) return false;
+
+        if (player.isSpectator()) return false;
+        if (!player.getMainHandItem().is(TargetModTags.Items.GUN) || (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming)
+            return false;
+
+        return !(player.getMainHandItem().getItem() == TargetModItems.M_79.get())
+                && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
+    }
+
+    @SubscribeEvent
+    public static void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) {
+            return;
+        }
+
+        handleRenderDamageIndicator();
+    }
+
+    private static void handleRenderDamageIndicator() {
+        HEAD_INDICATOR = Math.max(0, HEAD_INDICATOR - 1);
+        HIT_INDICATOR = Math.max(0, HIT_INDICATOR - 1);
+        KILL_INDICATOR = Math.max(0, KILL_INDICATOR - 1);
+    }
+}

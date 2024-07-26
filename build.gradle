@@ -15,8 +15,8 @@ def getGitCommitHash() {
 }
 
 version = '0.1.4-SNAPSHOT-' + getGitCommitHash()
-group = 'com.Atsushio.target'
-archivesBaseName = 'target'
+group = 'com.Atsushio.superbwarfare'
+archivesBaseName = 'superbwarfare'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
@@ -62,9 +62,9 @@ dependencies {
 }
 
 mixin {
-    add sourceSets.main, 'mixins.target.refmap.json'
+    add sourceSets.main, 'mixins.superbwarfare.refmap.json'
 
-    config 'mixins.target.json'
+    config 'mixins.superbwarfare.json'
 
     debug.verbose = true
     debug.export = true

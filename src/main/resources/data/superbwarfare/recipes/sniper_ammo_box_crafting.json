@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "superbwarfare:sniper_ammo"
+    },
+    {
+      "item": "superbwarfare:sniper_ammo"
+    },
+    {
+      "item": "superbwarfare:sniper_ammo"
+    },
+    {
+      "item": "superbwarfare:sniper_ammo"
+    },
+    {
+      "item": "superbwarfare:sniper_ammo"
+    },
+    {
+      "item": "superbwarfare:sniper_ammo"
+    }
+  ],
+  "result": {
+    "item": "superbwarfare:sniper_ammo_box",
+    "count": 1
+  }
+}

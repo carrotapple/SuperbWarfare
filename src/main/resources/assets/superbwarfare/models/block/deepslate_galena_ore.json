@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "superbwarfare:block/deepslate_galena_ore",
+    "particle": "superbwarfare:block/deepslate_galena_ore"
+  },
+  "render_type": "solid"
+}

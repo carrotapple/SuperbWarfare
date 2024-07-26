@@ -1,7 +1,0 @@
-{
-  "parent": "target:custom/taser_electrode",
-  "textures": {
-    "0": "target:block/tasergun",
-    "particle": "target:item/tasergun"
-  }
-}

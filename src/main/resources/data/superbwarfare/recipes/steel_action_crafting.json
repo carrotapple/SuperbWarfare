@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "aaa",
+    "  a"
+  ],
+  "key": {
+    "a": {
+      "item": "superbwarfare:ingot_steel"
+    }
+  },
+  "result": {
+    "item": "superbwarfare:steel_action",
+    "count": 1
+  }
+}

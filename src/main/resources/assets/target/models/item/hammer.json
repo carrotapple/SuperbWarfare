@@ -1,7 +1,0 @@
-{
-  "parent": "target:custom/hammer",
-  "textures": {
-    "0": "target:block/hammer",
-    "particle": "target:item/hammer"
-  }
-}

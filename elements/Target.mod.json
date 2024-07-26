@@ -4,7 +4,7 @@
   "definition": {
     "mobName": "Target",
     "mobLabel": "",
-    "mobModelTexture": "target.png",
+    "mobModelTexture": "superbwarfare.png",
     "mobModelGlowTexture": "target_e.png",
     "visualScale": {
       "fixedValue": 1.0

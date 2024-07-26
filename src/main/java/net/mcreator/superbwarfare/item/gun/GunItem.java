@@ -1,0 +1,143 @@
+package net.mcreator.superbwarfare.item.gun;
+
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.TargetModItems;
+import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.tools.EnchantmentCategoryTool;
+import net.mcreator.superbwarfare.tools.GunsTool;
+import net.mcreator.superbwarfare.tools.ItemNBTTool;
+import net.mcreator.superbwarfare.tools.TooltipTool;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+import java.util.List;
+import java.util.Set;
+
+@Mod.EventBusSubscriber
+public abstract class GunItem extends Item {
+    public GunItem(Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    public boolean canAttackBlock(BlockState p_41441_, Level p_41442_, BlockPos p_41443_, Player p_41444_) {
+        return false;
+    }
+
+    @Override
+    public void inventoryTick(ItemStack itemstack, Level level, Entity entity, int slot, boolean selected) {
+        if (entity instanceof LivingEntity living) {
+            ItemStack mainHandItem = living.getMainHandItem();
+            if (!itemstack.is(TargetModTags.Items.GUN)) {
+                return;
+            }
+
+            if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
+                GunsTool.initGun(level, itemstack, this.getDescriptionId().substring(this.getDescriptionId().lastIndexOf('.') + 1));
+                GunsTool.genUUID(itemstack);
+                ItemNBTTool.setBoolean(itemstack, "init", true);
+            }
+            GunsTool.pvpModeCheck(itemstack, level);
+
+            if (itemstack.getOrCreateTag().getBoolean("draw")) {
+                itemstack.getOrCreateTag().putBoolean("draw", false);
+                itemstack.getOrCreateTag().putInt("draw_time", 0);
+                entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    capability.zooming = false;
+                    capability.syncPlayerVariables(entity);
+                });
+
+                if (itemstack.getItem() == TargetModItems.RPG.get() && itemstack.getOrCreateTag().getInt("ammo") == 0) {
+                    itemstack.getOrCreateTag().putDouble("empty", 1);
+                }
+                if (itemstack.getItem() == TargetModItems.SKS.get() && itemstack.getOrCreateTag().getInt("ammo") == 0) {
+                    itemstack.getOrCreateTag().putBoolean("HoldOpen", true);
+                }
+                if (itemstack.getItem() == TargetModItems.M_60.get() && itemstack.getOrCreateTag().getInt("ammo") <= 5) {
+                    itemstack.getOrCreateTag().putBoolean("bullet_chain", true);
+                }
+            }
+
+            if (mainHandItem.getItem() == itemstack.getItem()) {
+                if (itemstack.getOrCreateTag().getInt("draw_time") < 50) {
+                    itemstack.getOrCreateTag().putInt("draw_time", (itemstack.getOrCreateTag().getInt("draw_time") + 1));
+                }
+            }
+            if (itemstack.getOrCreateTag().getInt("fire_animation") > 0) {
+                itemstack.getOrCreateTag().putInt("fire_animation", (itemstack.getOrCreateTag().getInt("fire_animation") - 1));
+            }
+            if (itemstack.getOrCreateTag().getDouble("flash_time") > 0) {
+                itemstack.getOrCreateTag().putDouble("flash_time", (itemstack.getOrCreateTag().getDouble("flash_time") - 1));
+            }
+        }
+    }
+
+    @Override
+    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
+        return false;
+    }
+
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return false;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
+        TooltipTool.addGunTips(list, stack);
+    }
+
+    public Set<SoundEvent> getReloadSound() {
+        return Set.of();
+    }
+
+    public ResourceLocation getGunIcon() {
+        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/default_icon.png");
+    }
+
+    public String getGunDisplayName() {
+        return "";
+    }
+
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        return stack.getOrCreateTag().getBoolean("beast");
+    }
+
+    @SubscribeEvent
+    public static void onPickup(EntityItemPickupEvent event) {
+        if (event.getItem().getItem().is(TargetModTags.Items.GUN)) {
+            event.getItem().getItem().getOrCreateTag().putBoolean("draw", true);
+        }
+    }
+
+    @Override
+    public int getEnchantmentValue(ItemStack stack) {
+        return 15;
+    }
+
+    @Override
+    public boolean isEnchantable(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        return enchantment.category == EnchantmentCategoryTool.GUN;
+    }
+}

@@ -1,34 +1,32 @@
-modLoader="javafml"
-loaderVersion="[47,)"
-license="Academic Free License v3.0"
+modLoader = "javafml"
+loaderVersion = "[47,)"
+license = "Academic Free License v3.0"
 
 [[mods]]
-modId="target"
-version="1.0.0"
-displayName="target"
-displayURL="https://mcreator.net"
-credits="Created using mod maker MCreator - https://mcreator.net/about"
-authors="Atsuishio, MCreator"
+modId = "superbwarfare"
+version = "1.0.0"
+displayName = "Superb Warfare"
+displayURL = "https://mcreator.net"
+credits = "Created using mod maker MCreator - https://mcreator.net/about"
+authors = "Atsuishio, MCreator"
 
-[[dependencies.target]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[1.20.1]"
-    ordering="NONE"
-    side="BOTH"
+[[dependencies.superbwarfare]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20.1]"
+ordering = "NONE"
+side = "BOTH"
 
-
-
-[[dependencies.target]]
-    modId="curios_api"
-    mandatory=false
-    versionRange="[0,)"
-    ordering="NONE"
-    side="BOTH"
-[[dependencies.target]]
-    modId="geckolib"
-    mandatory=false
-    versionRange="[4.4.4,)"
-    ordering="NONE"
-    side="BOTH"
+[[dependencies.superbwarfare]]
+modId = "curios_api"
+mandatory = false
+versionRange = "[0,)"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.superbwarfare]]
+modId = "geckolib"
+mandatory = false
+versionRange = "[4.4.4,)"
+ordering = "NONE"
+side = "BOTH"
 

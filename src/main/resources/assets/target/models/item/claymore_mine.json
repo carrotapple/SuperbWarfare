@@ -1,7 +1,0 @@
-{
-  "parent": "target:custom/claymore",
-  "textures": {
-    "1": "target:block/claymore",
-    "particle": "target:item/claymore"
-  }
-}

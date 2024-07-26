@@ -1,6 +1,0 @@
-{
-  "parent": "target:displaysettings/sentinel.item",
-  "textures": {
-    "layer0": "target:item/sentinel"
-  }
-}

@@ -1,0 +1,9 @@
+{
+  "parent": "superbwarfare:custom/tiesiwang",
+  "textures": {
+    "all": "superbwarfare:block/sandbag",
+    "particle": "superbwarfare:block/sandbag",
+    "1": "superbwarfare:block/tiesiwang"
+  },
+  "render_type": "cutout"
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "superbwarfare:displaysettings/abekiri.item",
+  "textures": {
+    "layer0": "superbwarfare:item/abekiri"
+  }
+}

@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "target:projectile_boom",
-    "target:cannon_fire"
+    "superbwarfare:projectile_boom",
+    "superbwarfare:cannon_fire"
   ]
 }

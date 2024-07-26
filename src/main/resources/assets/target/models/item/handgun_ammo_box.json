@@ -1,7 +1,0 @@
-{
-  "parent": "target:custom/handgunammobox",
-  "textures": {
-    "0": "target:block/handgunammobox",
-    "particle": "target:item/hk4163d"
-  }
-}

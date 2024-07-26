@@ -1,11 +1,11 @@
 {
   "replace": false,
   "values": [
-    "target:gunfire",
-    "target:gunfire_headshot",
-    "target:arrow_in_knee",
-    "target:arrow_in_brain",
-    "target:shock",
-    "target:cannon_fire"
+    "superbwarfare:gunfire",
+    "superbwarfare:gunfire_headshot",
+    "superbwarfare:arrow_in_knee",
+    "superbwarfare:arrow_in_brain",
+    "superbwarfare:shock",
+    "superbwarfare:cannon_fire"
   ]
 }

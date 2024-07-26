@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "a",
+    "a",
+    "a"
+  ],
+  "key": {
+    "a": {
+      "item": "superbwarfare:cemented_carbide_ingot"
+    }
+  },
+  "result": {
+    "item": "superbwarfare:cemented_carbide_spring",
+    "count": 1
+  }
+}

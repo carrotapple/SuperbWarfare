@@ -1,8 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "target:block/deepslate_galena_ore",
-    "particle": "target:block/deepslate_galena_ore"
-  },
-  "render_type": "solid"
-}

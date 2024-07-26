@@ -1,6 +1,0 @@
-{
-  "parent": "target:displaysettings/bocek.item",
-  "textures": {
-    "layer0": "target:item/bocek"
-  }
-}

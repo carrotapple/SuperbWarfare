@@ -1,0 +1,9 @@
+{
+  "parent": "superbwarfare:custom/jump_pad",
+  "textures": {
+    "all": "superbwarfare:block/jump_pad",
+    "particle": "superbwarfare:block/jump_pad",
+    "0": "superbwarfare:block/jump_pad"
+  },
+  "render_type": "solid"
+}

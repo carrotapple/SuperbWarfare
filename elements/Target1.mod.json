@@ -4,7 +4,7 @@
   "definition": {
     "mobName": "Target 1",
     "mobLabel": "",
-    "mobModelTexture": "target.png",
+    "mobModelTexture": "superbwarfare.png",
     "mobModelGlowTexture": "",
     "visualScale": {
       "fixedValue": 1.0
@@ -116,9 +116,9 @@
     "hasAI": false,
     "aiBase": "(none)",
     "aixml": "<xml xmlns=\"https://developers.google.com/blockly/xml\"><block type=\"aitasks_container\" deletable=\"false\" x=\"40\" y=\"40\"></block></xml>",
-    "model": "target.geo.json",
+    "model": "superbwarfare.geo.json",
     "groupName": "",
-    "animation1": "animation.target.idle",
+    "animation1": "animation.superbwarfare.idle",
     "animation2": "",
     "animation3": "",
     "animation4": "",

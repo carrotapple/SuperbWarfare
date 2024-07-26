@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "superbwarfare:rifle_ammo"
+    },
+    {
+      "item": "superbwarfare:rifle_ammo"
+    },
+    {
+      "item": "superbwarfare:rifle_ammo"
+    },
+    {
+      "item": "superbwarfare:rifle_ammo"
+    },
+    {
+      "item": "superbwarfare:rifle_ammo"
+    },
+    {
+      "item": "superbwarfare:rifle_ammo"
+    }
+  ],
+  "result": {
+    "item": "superbwarfare:rifle_ammo_box",
+    "count": 1
+  }
+}

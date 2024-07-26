@@ -1,0 +1,195 @@
+package net.mcreator.superbwarfare.item.gun;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.renderer.item.Ntw20Renderer;
+import net.mcreator.superbwarfare.init.TargetModItems;
+import net.mcreator.superbwarfare.init.TargetModSounds;
+import net.mcreator.superbwarfare.init.TargetModTags;
+import net.mcreator.superbwarfare.item.AnimatedItem;
+import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.tools.GunsTool;
+import net.mcreator.superbwarfare.tools.RarityTool;
+import net.mcreator.superbwarfare.tools.TooltipTool;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
+
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Consumer;
+
+public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    public String animationProcedure = "empty";
+    public static ItemDisplayContext transformType;
+
+    public Ntw20() {
+        super(new Item.Properties().stacksTo(1).rarity(RarityTool.SPECIAL));
+    }
+
+    @Override
+    public Set<SoundEvent> getReloadSound() {
+        return Set.of(
+                TargetModSounds.NTW_20_RELOAD_EMPTY.get(),
+                TargetModSounds.NTW_20_RELOAD_NORMAL.get(),
+                TargetModSounds.NTW_20_BOLT.get()
+        );
+    }
+
+    @Override
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        super.initializeClient(consumer);
+        consumer.accept(new IClientItemExtensions() {
+            private final BlockEntityWithoutLevelRenderer renderer = new Ntw20Renderer();
+
+            @Override
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                return renderer;
+            }
+
+            @Override
+            public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
+                return HumanoidModel.ArmPose.BOW_AND_ARROW;
+            }
+        });
+    }
+
+    public void getTransformType(ItemDisplayContext type) {
+        transformType = type;
+    }
+
+    private PlayState fireAnimPredicate(AnimationState event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
+
+        if (this.animationProcedure.equals("empty")) {
+
+            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming && stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.shift2"));
+            }
+
+            if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.shift"));
+            }
+
+            if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.fire"));
+            }
+
+            if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.reload_empty"));
+            }
+
+            if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.reload_normal"));
+            }
+
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.idle"));
+        }
+        return PlayState.STOP;
+    }
+
+    private PlayState idlePredicate(AnimationState event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(TargetModTags.Items.GUN)) return PlayState.STOP;
+
+        if (this.animationProcedure.equals("empty")) {
+
+            if (stack.getOrCreateTag().getInt("draw_time") < 29) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.draw"));
+            }
+
+            if (player.isSprinting() && player.onGround()
+                && player.getPersistentData().getDouble("noRun") == 0
+                && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.run"));
+            }
+
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.idle"));
+        }
+        return PlayState.STOP;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        var fireAnimController = new AnimationController<>(this, "fireAnimController", 1, this::fireAnimPredicate);
+        data.add(fireAnimController);
+        var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
+        data.add(idleController);
+    }
+
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
+        TooltipTool.addGunTips(list, stack);
+    }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+        Multimap<Attribute, AttributeModifier> map = super.getAttributeModifiers(slot, stack);
+        UUID uuid = new UUID(slot.toString().hashCode(), 0);
+        if (slot == EquipmentSlot.MAINHAND) {
+            map = HashMultimap.create(map);
+            map.put(Attributes.MOVEMENT_SPEED,
+                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER, -0.15f, AttributeModifier.Operation.MULTIPLY_BASE));
+        }
+        return map;
+    }
+
+    public static ItemStack getGunInstance() {
+        ItemStack stack = new ItemStack(TargetModItems.NTW_20.get());
+        GunsTool.initCreativeGun(stack, TargetModItems.NTW_20.getId().getPath());
+        return stack;
+    }
+
+    @Override
+    public void setAnimationProcedure(String procedure) {
+        this.animationProcedure = procedure;
+    }
+
+    @Override
+    public ResourceLocation getGunIcon() {
+        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/ntw_20_icon.png");
+    }
+
+    @Override
+    public String getGunDisplayName() {
+        return "NTW-20";
+    }
+}

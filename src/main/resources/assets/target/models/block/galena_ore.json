@@ -1,8 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "target:block/galena_ore",
-    "particle": "target:block/galena_ore"
-  },
-  "render_type": "solid"
-}

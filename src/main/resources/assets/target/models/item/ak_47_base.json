@@ -1,6 +1,0 @@
-{
-  "parent": "target:displaysettings/ak47.item",
-  "textures": {
-    "layer0": "target:item/ak47"
-  }
-}

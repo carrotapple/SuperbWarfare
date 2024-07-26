@@ -1,6 +1,0 @@
-{
-  "parent": "target:displaysettings/minigun.item",
-  "textures": {
-    "layer0": "target:item/minigun"
-  }
-}

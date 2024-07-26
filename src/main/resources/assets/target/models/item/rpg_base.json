@@ -1,6 +1,0 @@
-{
-  "parent": "target:displaysettings/rpg.item",
-  "textures": {
-    "layer0": "target:item/rpg7"
-  }
-}

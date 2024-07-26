@@ -1,7 +1,0 @@
-{
-  "parent": "target:custom/ammobox",
-  "textures": {
-    "0": "target:block/creativeammobox",
-    "particle": "target:item/hk4163d"
-  }
-}
