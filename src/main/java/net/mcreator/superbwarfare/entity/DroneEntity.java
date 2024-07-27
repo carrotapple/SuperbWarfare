@@ -244,7 +244,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                     droneDrop(player);
                 }
                 if (this.entityData.get(KAMIKAZE)) {
-                    kamikazeExplosion(player);
+                    this.hurt(new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.EXPLOSION),player), 10000);
                 }
             }
             this.getPersistentData().putBoolean("firing", false);
@@ -261,17 +261,6 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
             droneGrenadeEntity.shoot(0, -1, 0, 0, 0.5f);
             level.addFreshEntity(droneGrenadeEntity);
         }
-    }
-
-    private void kamikazeExplosion(Player player) {
-        CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), player, player), 150,
-                this.getX(), this.getY(), this.getZ(), 12.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
-        explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
-        explosion.finalizeExplosion(false);
-        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-        this.hurt(new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.EXPLOSION)), 10000);
     }
 
     @Override
@@ -401,13 +390,11 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                             Monitor.disLink(stack);
                         }
                     });
-            if (this.entityData.get(KAMIKAZE)){
-                destroyExplosion(player);
-            }
-        } else {
-            if (this.entityData.get(KAMIKAZE)){
-                destroyExplosion2();
-            }
+        }
+
+
+        if (this.entityData.get(KAMIKAZE)){
+            kamikazeExplosion(source.getEntity());
         }
 
         if (level() instanceof ServerLevel) {
@@ -417,25 +404,16 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 
     }
 
-    private void destroyExplosion(Player player) {
+    private void kamikazeExplosion(Entity source) {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), player, player), 40,
-                this.getX(), this.getY(), this.getZ(), 10f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), source, source), 150,
+                this.getX(), this.getY(), this.getZ(), 12.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
         ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
     }
 
-    private void destroyExplosion2() {
-        CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this), 40,
-                this.getX(), this.getY(), this.getZ(), 10f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
-        explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
-        explosion.finalizeExplosion(false);
-        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-    }
 
     @Override
     public EntityDimensions getDimensions(Pose p_33597_) {

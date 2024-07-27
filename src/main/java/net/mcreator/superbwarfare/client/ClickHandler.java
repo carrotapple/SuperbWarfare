@@ -160,25 +160,7 @@ public class ClickHandler {
 
         setKeyState(event.getKey(), clicked ? 1 : 0);
 
-        int button = event.getKey();
-        if (button == GLFW.GLFW_KEY_A) {
-            ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(0, clicked));
-        }
-        if (button == GLFW.GLFW_KEY_D) {
-            ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(1, clicked));
-        }
-        if (button == GLFW.GLFW_KEY_W) {
-            ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(2, clicked));
-        }
-        if (button == GLFW.GLFW_KEY_S) {
-            ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(3, clicked));
-        }
-        if (button == GLFW.GLFW_KEY_SPACE) {
-            ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(4, clicked));
-        }
-        if (button == GLFW.GLFW_KEY_LEFT_SHIFT) {
-            ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(5, clicked));
-        }
+
     }
 
 }

@@ -98,6 +98,111 @@ public class ModKeyMappings {
         }
     };
 
+    public static final KeyMapping FORWARD = new KeyMapping("key.superbwarfare.forward", GLFW.GLFW_KEY_W, "key.categories.superbwarfare") {
+        private boolean isDownOld = false;
+
+        @Override
+        public void setDown(boolean isDown) {
+            super.setDown(isDown);
+            if (isDownOld != isDown && isDown) {
+                ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(2, true));
+                FORWARD_LASTPRESS = System.currentTimeMillis();
+            } else if (isDownOld != isDown) {
+                int dt = (int) (System.currentTimeMillis() - FORWARD_LASTPRESS);
+                ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(2, false));
+            }
+            isDownOld = isDown;
+        }
+    };
+    public static final KeyMapping BACKWARD = new KeyMapping("key.superbwarfare.backward", GLFW.GLFW_KEY_S, "key.categories.superbwarfare") {
+        private boolean isDownOld = false;
+
+        @Override
+        public void setDown(boolean isDown) {
+            super.setDown(isDown);
+            if (isDownOld != isDown && isDown) {
+                ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(3, true));
+                BACKWARD_LASTPRESS = System.currentTimeMillis();
+            } else if (isDownOld != isDown) {
+                int dt = (int) (System.currentTimeMillis() - BACKWARD_LASTPRESS);
+                ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(3, false));
+            }
+            isDownOld = isDown;
+        }
+    };
+    public static final KeyMapping LEFT = new KeyMapping("key.superbwarfare.left", GLFW.GLFW_KEY_A, "key.categories.superbwarfare") {
+        private boolean isDownOld = false;
+
+        @Override
+        public void setDown(boolean isDown) {
+            super.setDown(isDown);
+            if (isDownOld != isDown && isDown) {
+                ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(0, true));
+                LEFT_LASTPRESS = System.currentTimeMillis();
+            } else if (isDownOld != isDown) {
+                int dt = (int) (System.currentTimeMillis() - LEFT_LASTPRESS);
+                ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(0, false));
+            }
+            isDownOld = isDown;
+        }
+    };
+    public static final KeyMapping RIGHT = new KeyMapping("key.superbwarfare.right", GLFW.GLFW_KEY_D, "key.categories.superbwarfare") {
+        private boolean isDownOld = false;
+
+        @Override
+        public void setDown(boolean isDown) {
+            super.setDown(isDown);
+            if (isDownOld != isDown && isDown) {
+                ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(1, true));
+                RIGHT_LASTPRESS = System.currentTimeMillis();
+            } else if (isDownOld != isDown) {
+                int dt = (int) (System.currentTimeMillis() - RIGHT_LASTPRESS);
+                ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(1, false));
+            }
+            isDownOld = isDown;
+        }
+    };
+    public static final KeyMapping UP = new KeyMapping("key.superbwarfare.up", GLFW.GLFW_KEY_SPACE, "key.categories.superbwarfare") {
+        private boolean isDownOld = false;
+
+        @Override
+        public void setDown(boolean isDown) {
+            super.setDown(isDown);
+            if (isDownOld != isDown && isDown) {
+                ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(4, true));
+                UP_LASTPRESS = System.currentTimeMillis();
+            } else if (isDownOld != isDown) {
+                int dt = (int) (System.currentTimeMillis() - UP_LASTPRESS);
+                ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(4, false));
+            }
+            isDownOld = isDown;
+        }
+    };
+    public static final KeyMapping DOWN = new KeyMapping("key.superbwarfare.down", GLFW.GLFW_KEY_LEFT_SHIFT, "key.categories.superbwarfare") {
+        private boolean isDownOld = false;
+
+        @Override
+        public void setDown(boolean isDown) {
+            super.setDown(isDown);
+            if (isDownOld != isDown && isDown) {
+                ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(5, true));
+                DOWN_LASTPRESS = System.currentTimeMillis();
+            } else if (isDownOld != isDown) {
+                int dt = (int) (System.currentTimeMillis() - DOWN_LASTPRESS);
+                ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(5, false));
+            }
+            isDownOld = isDown;
+        }
+    };
+    private static long FORWARD_LASTPRESS = 0;
+    private static long BACKWARD_LASTPRESS = 0;
+    private static long LEFT_LASTPRESS = 0;
+    private static long RIGHT_LASTPRESS = 0;
+    private static long UP_LASTPRESS = 0;
+    private static long DOWN_LASTPRESS = 0;
+
+
+
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(RELOAD);
@@ -106,6 +211,13 @@ public class ModKeyMappings {
         event.register(SENSITIVITY_INCREASE);
         event.register(SENSITIVITY_REDUCE);
         event.register(INTERACT);
+        event.register(FORWARD);
+        event.register(BACKWARD);
+        event.register(LEFT);
+        event.register(RIGHT);
+        event.register(UP);
+        event.register(DOWN);
+
     }
 
     @Mod.EventBusSubscriber({Dist.CLIENT})
@@ -119,6 +231,12 @@ public class ModKeyMappings {
                 SENSITIVITY_INCREASE.consumeClick();
                 SENSITIVITY_REDUCE.consumeClick();
                 INTERACT.consumeClick();
+                FORWARD.consumeClick();
+                BACKWARD.consumeClick();
+                LEFT.consumeClick();
+                RIGHT.consumeClick();
+                UP.consumeClick();
+                DOWN.consumeClick();
             }
         }
     }

@@ -208,6 +208,12 @@
   "key.superbwarfare.sensitivity_increase": "增加灵敏度",
   "key.superbwarfare.sensitivity_reduce": "减少灵敏度",
   "key.superbwarfare.interact": "交互",
+  "key.superbwarfare.forward": "向前移动",
+  "key.superbwarfare.backward": "向后移动",
+  "key.superbwarfare.left": "向左移动",
+  "key.superbwarfare.right": "向右移动",
+  "key.superbwarfare.up": "上升",
+  "key.superbwarfare.down": "下降",
 
   "effect.superbwarfare.shock": "电击",
   "item.minecraft.potion.effect.superbwarfare_shock": "电击药水",
