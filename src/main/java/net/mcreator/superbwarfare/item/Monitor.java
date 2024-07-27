@@ -6,6 +6,7 @@ import net.mcreator.superbwarfare.tools.TooltipTool;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.ImmutableMultimap;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -80,5 +82,13 @@ public class Monitor extends Item {
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
         TooltipTool.addMonitorTips(list, stack.getOrCreateTag().getString(LINKED_DRONE));
+    }
+
+    @Override
+    public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(itemstack, world, entity, slot, selected);
+        if (!selected) {
+            itemstack.getOrCreateTag().putBoolean("Using",false);
+        }
     }
 }

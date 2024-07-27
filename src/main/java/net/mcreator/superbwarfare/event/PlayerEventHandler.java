@@ -31,6 +31,16 @@ import net.minecraftforge.network.PacketDistributor;
 public class PlayerEventHandler {
 
     @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        Player player = event.getEntity();
+        ItemStack stack = player.getMainHandItem();
+        if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using")) {
+            stack.getOrCreateTag().putBoolean("Using", false);
+        }
+        
+    }
+    
+    @SubscribeEvent
     public static void onPlayerRespawned(PlayerEvent.PlayerRespawnEvent event) {
         Player player = event.getEntity();
 
