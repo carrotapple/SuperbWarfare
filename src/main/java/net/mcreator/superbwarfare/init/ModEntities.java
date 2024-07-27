@@ -30,7 +30,7 @@ public class ModEntities {
             EntityType.Builder.<Mk42Entity>of(Mk42Entity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(Mk42Entity::new).fireImmune().sized(5.4f, 3.5f));
 
     public static final RegistryObject<EntityType<DroneEntity>> DRONE = register("drone",
-            EntityType.Builder.<DroneEntity>of(DroneEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(DroneEntity::new).sized(0.4f, 0.175f));
+            EntityType.Builder.<DroneEntity>of(DroneEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(DroneEntity::new).sized(0.7f, 0.175f));
 
     public static final RegistryObject<EntityType<TaserBulletProjectileEntity>> TASER_BULLET_PROJECTILE = register("projectile_taser_bullet_projectile",
             EntityType.Builder.<TaserBulletProjectileEntity>of(TaserBulletProjectileEntity::new, MobCategory.MISC).setCustomClientFactory(TaserBulletProjectileEntity::new).setShouldReceiveVelocityUpdates(true).setTrackingRange(64)

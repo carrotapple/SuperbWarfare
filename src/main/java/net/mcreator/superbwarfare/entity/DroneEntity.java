@@ -1,13 +1,17 @@
 package net.mcreator.superbwarfare.entity;
 
+import net.mcreator.superbwarfare.init.ModDamageTypes;
 import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.item.Monitor;
+import net.mcreator.superbwarfare.tools.CustomExplosion;
+import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -23,6 +27,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -31,6 +36,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -64,6 +70,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
     public static final EntityDataAccessor<Boolean> LINKED = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> CONTROLLER = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Boolean> KAMIKAZE = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private float moveX = 0;
     private float moveY = 0;
@@ -97,6 +104,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
         this.entityData.define(CONTROLLER, "undefined");
         this.entityData.define(LINKED, false);
         this.entityData.define(AMMO, 0);
+        this.entityData.define(KAMIKAZE, false);
     }
 
     @Override
@@ -136,6 +144,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
         compound.putBoolean("Linked", this.entityData.get(LINKED));
         compound.putString("Controller", this.entityData.get(CONTROLLER));
         compound.putInt("ammo", this.entityData.get(AMMO));
+        compound.putBoolean("Kamikaze", this.entityData.get(KAMIKAZE));
     }
 
     @Override
@@ -148,6 +157,8 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
             this.entityData.set(CONTROLLER, compound.getString("Controller"));
         if (compound.contains("ammo"))
             this.entityData.set(AMMO, compound.getInt("ammo"));
+        if (compound.contains("Kamikaze"))
+            this.entityData.set(KAMIKAZE, compound.getBoolean("Kamikaze"));
     }
 
     @Override
@@ -232,6 +243,9 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                     this.entityData.set(AMMO,this.entityData.get(AMMO) - 1);
                     droneDrop(player);
                 }
+                if (this.entityData.get(KAMIKAZE)) {
+                    kamikazeExplosion(player);
+                }
             }
             this.getPersistentData().putBoolean("firing", false);
         }
@@ -247,6 +261,17 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
             droneGrenadeEntity.shoot(0, -1, 0, 0, 0.5f);
             level.addFreshEntity(droneGrenadeEntity);
         }
+    }
+
+    private void kamikazeExplosion(Player player) {
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), player, player), 150,
+                this.getX(), this.getY(), this.getZ(), 12.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+        this.hurt(new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.EXPLOSION)), 10000);
     }
 
     @Override
@@ -298,16 +323,23 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                 ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.GRENADE_40MM.get()));
             }
             if (!this.level().isClientSide()) this.discard();
-        }  else if (stack.getItem() == ModItems.GRENADE_40MM.get()) {
+        } else if (stack.getItem() == ModItems.GRENADE_40MM.get() && !this.entityData.get(KAMIKAZE)) {
             if (!player.isCreative()) {
                 stack.shrink(1);
             }
             if (this.entityData.get(AMMO) < 6) {
                 this.entityData.set(AMMO,this.entityData.get(AMMO) + 1);
-                player.displayClientMessage(Component.literal("AMMO:" + this.entityData.get(AMMO)), true);
                 if (player instanceof ServerPlayer serverPlayer) {
                     serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 0.5F, 1);
                 }
+            }
+        } else if (stack.getItem() == ModItems.MORTAR_SHELLS.get() && this.entityData.get(AMMO) == 0 && !this.entityData.get(KAMIKAZE)) {
+            if (!player.isCreative()) {
+                stack.shrink(1);
+            }
+            this.entityData.set(KAMIKAZE,true);
+            if (player instanceof ServerPlayer serverPlayer) {
+                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 0.5F, 1);
             }
         }
 
@@ -322,12 +354,12 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
         if (control != null) {
             ItemStack stack = control.getMainHandItem();
             if (stack.getOrCreateTag().getBoolean("Using")) {
-                this.setYRot(control.getYRot() + 180);
+                this.setYRot(control.getYRot());
                 this.yRotO = this.getYRot();
                 this.setXRot(Mth.clamp(control.getXRot(), -25, 90));
                 this.setRot(this.getYRot(), this.getXRot());
-                this.yBodyRot = control.getYRot() + 180;
-                this.yHeadRot = control.getYRot() + 180;
+                this.yBodyRot = control.getYRot();
+                this.yHeadRot = control.getYRot();
                 this.setMaxUpStep(1.0F);
                 this.setSpeed(4 * (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED));
                 float forward = -moveZ;
@@ -369,11 +401,40 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                             Monitor.disLink(stack);
                         }
                     });
+            if (this.entityData.get(KAMIKAZE)){
+                destroyExplosion(player);
+            }
+        } else {
+            if (this.entityData.get(KAMIKAZE)){
+                destroyExplosion2();
+            }
         }
+
         if (level() instanceof ServerLevel) {
             level().explode(null, this.getX(), this.getY(), this.getZ(), 0, Level.ExplosionInteraction.NONE);
         }
         this.discard();
+
+    }
+
+    private void destroyExplosion(Player player) {
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), player, player), 40,
+                this.getX(), this.getY(), this.getZ(), 10f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+    }
+
+    private void destroyExplosion2() {
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this), 40,
+                this.getX(), this.getY(), this.getZ(), 10f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
     }
 
     @Override

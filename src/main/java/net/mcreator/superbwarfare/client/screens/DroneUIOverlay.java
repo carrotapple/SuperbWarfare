@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.text.DecimalFormat;
 
 import static net.mcreator.superbwarfare.entity.DroneEntity.AMMO;
+import static net.mcreator.superbwarfare.entity.DroneEntity.KAMIKAZE;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class DroneUIOverlay {
@@ -54,8 +55,11 @@ public class DroneUIOverlay {
 
                     event.getGuiGraphics().drawString(Minecraft.getInstance().font, "Distance:" + new DecimalFormat("##.#").format(distance) + "M", w / 2 + 10, h / 2 + 33, color, false);
                     event.getGuiGraphics().drawString(Minecraft.getInstance().font, "Health:" + new DecimalFormat("##.#").format(entity.getHealth()) + "/" + new DecimalFormat("##").format(entity.getMaxHealth()), w / 2 - 77, h / 2 + 33, -1, false);
-                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, "AMMO:" + new DecimalFormat("##.#").format(entity.getEntityData().get(AMMO)) + " / 6", w / 2 + 12, h / 2 + -37, -1, false);
-
+                    if (!entity.getEntityData().get(KAMIKAZE)) {
+                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, "AMMO:" + new DecimalFormat("##.#").format(entity.getEntityData().get(AMMO)) + " / 6", w / 2 + 12, h / 2 + -37, -1, false);
+                    } else {
+                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, "KAMIKAZE", w / 2 + 12, h / 2 + -37, -65536, false);
+                    }
                 }
             }
             RenderSystem.depthMask(true);

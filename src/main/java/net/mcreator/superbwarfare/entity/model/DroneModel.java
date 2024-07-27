@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.mcreator.superbwarfare.entity.DroneEntity;
 
 import static net.mcreator.superbwarfare.entity.DroneEntity.AMMO;
+import static net.mcreator.superbwarfare.entity.DroneEntity.KAMIKAZE;
 
 public class DroneModel extends GeoModel<DroneEntity> {
 	@Override
@@ -35,6 +36,7 @@ public class DroneModel extends GeoModel<DroneEntity> {
 		CoreGeoBone ammo4 = getAnimationProcessor().getBone("ammo4");
 		CoreGeoBone ammo5 = getAnimationProcessor().getBone("ammo5");
 		CoreGeoBone ammo6 = getAnimationProcessor().getBone("ammo6");
+		CoreGeoBone shell = getAnimationProcessor().getBone("shell");
 
         ammo6.setHidden(animatable.getEntityData().get(AMMO) <= 5);
 		ammo5.setHidden(animatable.getEntityData().get(AMMO) <= 4);
@@ -42,5 +44,6 @@ public class DroneModel extends GeoModel<DroneEntity> {
 		ammo3.setHidden(animatable.getEntityData().get(AMMO) <= 2);
 		ammo2.setHidden(animatable.getEntityData().get(AMMO) <= 1);
 		ammo1.setHidden(animatable.getEntityData().get(AMMO) <= 0);
+        shell.setHidden(!animatable.getEntityData().get(KAMIKAZE));
 	}
 }
