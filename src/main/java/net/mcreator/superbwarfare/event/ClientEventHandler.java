@@ -28,8 +28,8 @@ import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static net.mcreator.superbwarfare.entity.DroneEntity.ROTX;
-import static net.mcreator.superbwarfare.entity.DroneEntity.ROTZ;
+import static net.mcreator.superbwarfare.entity.DroneEntity.ROT_X;
+import static net.mcreator.superbwarfare.entity.DroneEntity.ROT_Z;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
@@ -92,16 +92,16 @@ public class ClientEventHandler {
 
         if (drone != null) {
 
-            if (data.getDouble("droneRotZ") > drone.getEntityData().get(ROTZ)) {
-                data.putDouble("droneRotZ", Mth.clamp(data.getDouble("droneRotZ") - 0.3 * Math.pow(drone.getEntityData().get(ROTZ) - data.getDouble("droneRotZ"), 2),drone.getEntityData().get(ROTZ),Double.POSITIVE_INFINITY));
+            if (data.getDouble("droneRotZ") > drone.getEntityData().get(ROT_Z)) {
+                data.putDouble("droneRotZ", Mth.clamp(data.getDouble("droneRotZ") - 0.3 * Math.pow(drone.getEntityData().get(ROT_Z) - data.getDouble("droneRotZ"), 2),drone.getEntityData().get(ROT_Z),Double.POSITIVE_INFINITY));
             } else {
-                data.putDouble("droneRotZ", Mth.clamp(data.getDouble("droneRotZ") + 0.3 * Math.pow(drone.getEntityData().get(ROTZ) - data.getDouble("droneRotZ"), 2),Double.NEGATIVE_INFINITY,drone.getEntityData().get(ROTZ)));
+                data.putDouble("droneRotZ", Mth.clamp(data.getDouble("droneRotZ") + 0.3 * Math.pow(drone.getEntityData().get(ROT_Z) - data.getDouble("droneRotZ"), 2),Double.NEGATIVE_INFINITY,drone.getEntityData().get(ROT_Z)));
             }
 
-            if (data.getDouble("droneRotX") > drone.getEntityData().get(ROTX)) {
-                data.putDouble("droneRotX", Mth.clamp(data.getDouble("droneRotX") - 0.2 * Math.pow(drone.getEntityData().get(ROTX) - data.getDouble("droneRotX"), 2),drone.getEntityData().get(ROTX),Double.POSITIVE_INFINITY));
+            if (data.getDouble("droneRotX") > drone.getEntityData().get(ROT_X)) {
+                data.putDouble("droneRotX", Mth.clamp(data.getDouble("droneRotX") - 0.2 * Math.pow(drone.getEntityData().get(ROT_X) - data.getDouble("droneRotX"), 2),drone.getEntityData().get(ROT_X),Double.POSITIVE_INFINITY));
             } else {
-                data.putDouble("droneRotX", Mth.clamp(data.getDouble("droneRotX") + 0.2 * Math.pow(drone.getEntityData().get(ROTX) - data.getDouble("droneRotX"), 2),Double.NEGATIVE_INFINITY,drone.getEntityData().get(ROTX)));
+                data.putDouble("droneRotX", Mth.clamp(data.getDouble("droneRotX") + 0.2 * Math.pow(drone.getEntityData().get(ROT_X) - data.getDouble("droneRotX"), 2),Double.NEGATIVE_INFINITY,drone.getEntityData().get(ROT_X)));
             }
 
             event.setPitch((float) (pitch + data.getDouble("droneCameraRotX") - 0.15f * Mth.RAD_TO_DEG * data.getDouble("droneRotZ")));
