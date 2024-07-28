@@ -52,7 +52,7 @@ public class ClientEventHandler {
         data.putDouble("Cannon_xRot", Mth.clamp(0.2 * xRot, -3, 3));
         data.putDouble("Cannon_yRot", Mth.clamp(1 * yRot, -15, 15));
 
-        data.putDouble("droneCameraRotX", Mth.clamp(0.5f * xRot, -10, 10));
+        data.putDouble("droneCameraRotX", Mth.clamp(0.25f * xRot, -10, 10));
         data.putDouble("droneCameraRotY", Mth.clamp(0.25f * yRot, -20, 10));
     }
 
@@ -104,8 +104,8 @@ public class ClientEventHandler {
                 data.putDouble("droneRotX", Mth.clamp(data.getDouble("droneRotX") + 0.2 * Math.pow(drone.getEntityData().get(ROTX) - data.getDouble("droneRotX"), 2),Double.NEGATIVE_INFINITY,drone.getEntityData().get(ROTX)));
             }
 
-            event.setPitch((float) (pitch + data.getDouble("droneCameraRotX") - 0.45f * Mth.RAD_TO_DEG * data.getDouble("droneRotZ")));
-            event.setRoll((float) (roll + data.getDouble("droneCameraRotY") - 0.8f * Mth.RAD_TO_DEG * data.getDouble("droneRotX")));
+            event.setPitch((float) (pitch + data.getDouble("droneCameraRotX") - 0.15f * Mth.RAD_TO_DEG * data.getDouble("droneRotZ")));
+            event.setRoll((float) (roll + data.getDouble("droneCameraRotY") - 0.5f * Mth.RAD_TO_DEG * data.getDouble("droneRotX")));
         }
 
 

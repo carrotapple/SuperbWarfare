@@ -190,17 +190,17 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 
         if (this.getPersistentData().getBoolean("left")) {
             this.entityData.set(MOVEX,-1.5f);
-            this.entityData.set(ROTX,this.entityData.get(ROTX) + 0.13f);
+            this.entityData.set(ROTX,Mth.clamp(this.entityData.get(ROTX) + 0.05f, -0.5f, 0.5f));
         }
         if (this.getPersistentData().getBoolean("right")) {
             this.entityData.set(MOVEX,1.5f);
-            this.entityData.set(ROTX,this.entityData.get(ROTX) - 0.13f);
+            this.entityData.set(ROTX,Mth.clamp(this.entityData.get(ROTX) - 0.05f, -0.5f, 0.5f));
         }
 
         if (this.entityData.get(ROTX) > 0) {
-            this.entityData.set(ROTX, Mth.clamp(this.entityData.get(ROTX) - 0.55f * (float) Math.pow(this.entityData.get(ROTX),2), 0, 1f));
+            this.entityData.set(ROTX, Mth.clamp(this.entityData.get(ROTX) - 0.025f, 0, 0.5f));
         } else {
-            this.entityData.set(ROTX, Mth.clamp(this.entityData.get(ROTX) + 0.55f * (float) Math.pow(this.entityData.get(ROTX),2), -1f, 0));
+            this.entityData.set(ROTX, Mth.clamp(this.entityData.get(ROTX) + 0.025f, -0.5f, 0));
         }
 
         if (!this.getPersistentData().getBoolean("left") && !this.getPersistentData().getBoolean("right")) {
@@ -214,17 +214,17 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 
         if (this.getPersistentData().getBoolean("forward")) {
             this.entityData.set(MOVEZ,this.entityData.get(MOVEZ) - 0.15f);
-            this.entityData.set(ROTZ,this.entityData.get(ROTZ) - 0.13f);
+            this.entityData.set(ROTZ,Mth.clamp(this.entityData.get(ROTZ) - 0.05f, -0.5f, 0.5f));
         }
         if (this.getPersistentData().getBoolean("backward")) {
             this.entityData.set(MOVEZ,this.entityData.get(MOVEZ) + 0.15f);
-            this.entityData.set(ROTZ,this.entityData.get(ROTZ) + 0.13f);
+            this.entityData.set(ROTZ,Mth.clamp(this.entityData.get(ROTZ) + 0.05f, -0.5f, 0.5f));
         }
 
         if (this.entityData.get(ROTZ) > 0) {
-            this.entityData.set(ROTZ, Mth.clamp(this.entityData.get(ROTZ) - 0.55f * (float) Math.pow(this.entityData.get(ROTZ),2), 0, 1f));
+            this.entityData.set(ROTZ, Mth.clamp(this.entityData.get(ROTZ) - 0.025f, 0, 0.5f));
         } else {
-            this.entityData.set(ROTZ, Mth.clamp(this.entityData.get(ROTZ) + 0.55f * (float) Math.pow(this.entityData.get(ROTZ),2), -1f, 0));
+            this.entityData.set(ROTZ, Mth.clamp(this.entityData.get(ROTZ) + 0.025f, -0.5f, 0));
         }
 
         if (this.entityData.get(MOVEZ) >= 0) {
