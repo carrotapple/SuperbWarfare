@@ -71,10 +71,13 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
     public static final EntityDataAccessor<String> CONTROLLER = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Boolean> KAMIKAZE = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Float> MOVEX = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> MOVEY = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> MOVEZ = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
+
+    public static final EntityDataAccessor<Float> ROTX = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> ROTZ = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private float moveX = 0;
-    private float moveY = 0;
-    private float moveZ = 0;
     private boolean move = false;
 
     public String animationprocedure = "empty";
@@ -92,9 +95,9 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 
     public DroneEntity(EntityType<? extends DroneEntity> type, Level world, float moveX, float moveY, float moveZ) {
         super(type, world);
-        this.moveX = moveX;
-        this.moveY = moveY;
-        this.moveZ = moveZ;
+//        this.moveX = moveX;
+//        this.moveY = moveY;
+//        this.moveZ = moveZ;
     }
 
     @Override
@@ -105,6 +108,11 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
         this.entityData.define(LINKED, false);
         this.entityData.define(AMMO, 0);
         this.entityData.define(KAMIKAZE, false);
+        this.entityData.define(MOVEX, 0f);
+        this.entityData.define(MOVEY, 0f);
+        this.entityData.define(MOVEZ, 0f);
+        this.entityData.define(ROTX, 0f);
+        this.entityData.define(ROTZ, 0f);
     }
 
     @Override
@@ -145,6 +153,11 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
         compound.putString("Controller", this.entityData.get(CONTROLLER));
         compound.putInt("ammo", this.entityData.get(AMMO));
         compound.putBoolean("Kamikaze", this.entityData.get(KAMIKAZE));
+        compound.putFloat("moveX", this.entityData.get(MOVEX));
+        compound.putFloat("moveY", this.entityData.get(MOVEY));
+        compound.putFloat("moveZ", this.entityData.get(MOVEZ));
+        compound.putFloat("rotX", this.entityData.get(ROTX));
+        compound.putFloat("rotZ", this.entityData.get(ROTZ));
     }
 
     @Override
@@ -159,6 +172,16 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
             this.entityData.set(AMMO, compound.getInt("ammo"));
         if (compound.contains("Kamikaze"))
             this.entityData.set(KAMIKAZE, compound.getBoolean("Kamikaze"));
+        if (compound.contains("moveX"))
+            this.entityData.set(MOVEX, compound.getFloat("moveX"));
+        if (compound.contains("moveY"))
+            this.entityData.set(MOVEY, compound.getFloat("moveY"));
+        if (compound.contains("moveZ"))
+            this.entityData.set(MOVEZ, compound.getFloat("moveZ"));
+        if (compound.contains("rotX"))
+            this.entityData.set(ROTX, compound.getFloat("rotX"));
+        if (compound.contains("rotZ"))
+            this.entityData.set(ROTZ, compound.getFloat("rotZ"));
     }
 
     @Override
@@ -166,52 +189,67 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
         super.baseTick();
 
         if (this.getPersistentData().getBoolean("left")) {
-            this.moveX = -1.5f;
+            this.entityData.set(MOVEX,-1.5f);
+            this.entityData.set(ROTX,this.entityData.get(ROTX) + 0.13f);
         }
         if (this.getPersistentData().getBoolean("right")) {
-            this.moveX = 1.5f;
+            this.entityData.set(MOVEX,1.5f);
+            this.entityData.set(ROTX,this.entityData.get(ROTX) - 0.13f);
+        }
+
+        if (this.entityData.get(ROTX) > 0) {
+            this.entityData.set(ROTX, Mth.clamp(this.entityData.get(ROTX) - 0.55f * (float) Math.pow(this.entityData.get(ROTX),2), 0, 1f));
+        } else {
+            this.entityData.set(ROTX, Mth.clamp(this.entityData.get(ROTX) + 0.55f * (float) Math.pow(this.entityData.get(ROTX),2), -1f, 0));
         }
 
         if (!this.getPersistentData().getBoolean("left") && !this.getPersistentData().getBoolean("right")) {
-            if (this.moveX >= 0) {
-                this.moveX = Mth.clamp(this.moveX - 0.3f, 0, 1);
+            if (this.entityData.get(MOVEX) >= 0) {
+                this.entityData.set(MOVEX,Mth.clamp(this.entityData.get(MOVEX) - 0.3f, 0, 1));
             } else {
-                this.moveX = Mth.clamp(this.moveX + 0.3f, -1, 0);
+                this.entityData.set(MOVEX,Mth.clamp(this.entityData.get(MOVEX) + 0.3f, -1, 0));
             }
         }
+
 
         if (this.getPersistentData().getBoolean("forward")) {
-            this.moveZ = -1.5f;
+            this.entityData.set(MOVEZ,this.entityData.get(MOVEZ) - 0.15f);
+            this.entityData.set(ROTZ,this.entityData.get(ROTZ) - 0.13f);
         }
         if (this.getPersistentData().getBoolean("backward")) {
-            this.moveZ = 1.5f;
+            this.entityData.set(MOVEZ,this.entityData.get(MOVEZ) + 0.15f);
+            this.entityData.set(ROTZ,this.entityData.get(ROTZ) + 0.13f);
         }
 
-        if (!this.getPersistentData().getBoolean("forward") && !this.getPersistentData().getBoolean("backward")) {
-            if (this.moveZ >= 0) {
-                this.moveZ = Mth.clamp(this.moveZ - 0.3f, 0, 1);
-            } else {
-                this.moveZ = Mth.clamp(this.moveZ + 0.3f, -1, 0);
-            }
+        if (this.entityData.get(ROTZ) > 0) {
+            this.entityData.set(ROTZ, Mth.clamp(this.entityData.get(ROTZ) - 0.55f * (float) Math.pow(this.entityData.get(ROTZ),2), 0, 1f));
+        } else {
+            this.entityData.set(ROTZ, Mth.clamp(this.entityData.get(ROTZ) + 0.55f * (float) Math.pow(this.entityData.get(ROTZ),2), -1f, 0));
+        }
+
+        if (this.entityData.get(MOVEZ) >= 0) {
+            this.entityData.set(MOVEZ,Mth.clamp(this.entityData.get(MOVEZ) - 0.1f, 0, 1));
+        } else {
+            this.entityData.set(MOVEZ,Mth.clamp(this.entityData.get(MOVEZ) + 0.1f, -1, 0));
         }
 
         if (this.getPersistentData().getBoolean("up")) {
-            this.moveY = -1.5f;
+            this.entityData.set(MOVEY,-1.5f);
         }
         if (this.getPersistentData().getBoolean("down")) {
-            this.moveY = 1.5f;
+            this.entityData.set(MOVEY,1.5f);
+        }
+        if (this.entityData.get(MOVEY) >= 0) {
+            this.entityData.set(MOVEY,Mth.clamp(this.entityData.get(MOVEY) - 0.3f, 0, 1));
+        } else {
+            this.entityData.set(MOVEY,Mth.clamp(this.entityData.get(MOVEY)+ 0.3f, -1, 0));
         }
 
-        if (!this.getPersistentData().getBoolean("up") && !this.getPersistentData().getBoolean("down")) {
-            if (this.moveY >= 0) {
-                this.moveY = Mth.clamp(this.moveY - 0.3f, 0, 1);
-            } else {
-                this.moveY = Mth.clamp(this.moveY + 0.3f, -1, 0);
-            }
-        }
-
-        LivingEntity control = this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(512))
-                .stream().filter(e -> e.getStringUUID().equals(this.entityData.get(CONTROLLER))).findFirst().orElse(null);
+        this.setDeltaMovement(new Vec3(
+                this.getDeltaMovement().x + -this.entityData.get(MOVEZ) * 0.1f * this.getLookAngle().x,
+                this.getDeltaMovement().y + -this.entityData.get(MOVEY) * 0.05f,
+                this.getDeltaMovement().z + -this.entityData.get(MOVEZ) * 0.1f * this.getLookAngle().z
+        ));
 
         this.move = this.getPersistentData().getBoolean("left")
                 || this.getPersistentData().getBoolean("right")
@@ -219,6 +257,16 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                 || this.getPersistentData().getBoolean("backward")
                 || this.getPersistentData().getBoolean("up")
                 || this.getPersistentData().getBoolean("down");
+
+        Vec3 vec = this.getDeltaMovement();
+        if (this.getDeltaMovement().horizontalDistanceSqr() < 0.75) {
+            if (this.move) {
+                this.setDeltaMovement(vec.multiply(1.04, 1, 1.04));
+            }
+        }
+
+        LivingEntity control = this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(512))
+                .stream().filter(e -> e.getStringUUID().equals(this.entityData.get(CONTROLLER))).findFirst().orElse(null);
 
         if (!this.onGround()) {
             this.level().playSound(null, this.getOnPos(), ModSounds.DRONE_SOUND.get(), SoundSource.AMBIENT, 3, 1);
@@ -230,12 +278,6 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
             }
         }
 
-        Vec3 vec = this.getDeltaMovement();
-        if (this.getDeltaMovement().horizontalDistanceSqr() < 1) {
-            if (this.move) {
-                this.setDeltaMovement(vec.multiply(1.04, 1, 1.04));
-            }
-        }
 
         if (this.getPersistentData().getBoolean("firing")) {
             if (control instanceof Player player) {
@@ -349,23 +391,21 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                 this.setRot(this.getYRot(), this.getXRot());
                 this.yBodyRot = control.getYRot();
                 this.yHeadRot = control.getYRot();
-                this.setMaxUpStep(1.0F);
-                this.setSpeed(4 * (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED));
-                float forward = -moveZ;
-                float upDown = -moveY;
-                float strafe = -moveX;
-                super.travel(new Vec3(2 * strafe, 2 * upDown, 2 * forward));
+                this.setSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED));
+                float strafe = -this.entityData.get(MOVEX);
+                super.travel(new Vec3(2 * strafe, -this.entityData.get(MOVEY), -this.entityData.get(MOVEZ)));
                 Vec3 vec3 = this.getDeltaMovement();
+                if (this.onGround()) {
+                    this.setDeltaMovement(vec3.multiply(0.7, 0.98, 0.7));
+                } else {
+                    this.setDeltaMovement(vec3.multiply(1.04, 0.98, 1.04));
+                }
                 if (!this.move) {
                     this.setDeltaMovement(vec3.multiply(0.9, 0.8, 0.9));
-                } else {
-                    this.setDeltaMovement(vec3.multiply(1.05, 0.99, 1.05));
                 }
                 return;
             }
         }
-
-        this.setMaxUpStep(0.5F);
         super.travel(dir);
     }
 
@@ -441,12 +481,12 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 
     public static AttributeSupplier.Builder createAttributes() {
         AttributeSupplier.Builder builder = Mob.createMobAttributes();
-        builder = builder.add(Attributes.MOVEMENT_SPEED, 0.1);
+        builder = builder.add(Attributes.MOVEMENT_SPEED, 0);
         builder = builder.add(Attributes.MAX_HEALTH, 4);
         builder = builder.add(Attributes.ARMOR, 0);
         builder = builder.add(Attributes.ATTACK_DAMAGE, 0);
         builder = builder.add(Attributes.FOLLOW_RANGE, 64);
-        builder = builder.add(Attributes.FLYING_SPEED, 0.1);
+        builder = builder.add(Attributes.FLYING_SPEED, 10);
         return builder;
     }
 

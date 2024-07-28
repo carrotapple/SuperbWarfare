@@ -4,15 +4,12 @@ import net.mcreator.superbwarfare.ModUtils;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
-
 import net.minecraft.resources.ResourceLocation;
-
 import net.mcreator.superbwarfare.entity.DroneEntity;
-
-import static net.mcreator.superbwarfare.entity.DroneEntity.AMMO;
-import static net.mcreator.superbwarfare.entity.DroneEntity.KAMIKAZE;
+import static net.mcreator.superbwarfare.entity.DroneEntity.*;
 
 public class DroneModel extends GeoModel<DroneEntity> {
+
 	@Override
 	public ResourceLocation getAnimationResource(DroneEntity entity) {
 		return new ResourceLocation(ModUtils.MODID, "animations/drone.animation.json");
@@ -37,6 +34,7 @@ public class DroneModel extends GeoModel<DroneEntity> {
 		CoreGeoBone ammo5 = getAnimationProcessor().getBone("ammo5");
 		CoreGeoBone ammo6 = getAnimationProcessor().getBone("ammo6");
 		CoreGeoBone shell = getAnimationProcessor().getBone("shell");
+		CoreGeoBone body = getAnimationProcessor().getBone("0");
 
         ammo6.setHidden(animatable.getEntityData().get(AMMO) <= 5);
 		ammo5.setHidden(animatable.getEntityData().get(AMMO) <= 4);
@@ -45,5 +43,9 @@ public class DroneModel extends GeoModel<DroneEntity> {
 		ammo2.setHidden(animatable.getEntityData().get(AMMO) <= 1);
 		ammo1.setHidden(animatable.getEntityData().get(AMMO) <= 0);
         shell.setHidden(!animatable.getEntityData().get(KAMIKAZE));
+
+
+		body.setRotZ(animatable.getEntityData().get(ROTX));
+		body.setRotX(animatable.getEntityData().get(ROTZ));
 	}
 }

@@ -28,6 +28,9 @@ import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import static net.mcreator.superbwarfare.entity.DroneEntity.ROTX;
+import static net.mcreator.superbwarfare.entity.DroneEntity.ROTZ;
+
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
 
@@ -48,6 +51,9 @@ public class ClientEventHandler {
 
         data.putDouble("Cannon_xRot", Mth.clamp(0.2 * xRot, -3, 3));
         data.putDouble("Cannon_yRot", Mth.clamp(1 * yRot, -15, 15));
+
+        data.putDouble("droneCameraRotX", Mth.clamp(0.5f * xRot, -10, 10));
+        data.putDouble("droneCameraRotY", Mth.clamp(0.25f * yRot, -20, 10));
     }
 
     @SubscribeEvent
@@ -56,6 +62,12 @@ public class ClientEventHandler {
         Entity entity = event.getCamera().getEntity();
         if (level != null && entity instanceof LivingEntity living && entity.isPassenger() && entity.getVehicle() instanceof Mk42Entity) {
             handleCannonCamera(event, living);
+        }
+        if (level != null && entity instanceof LivingEntity living
+                && living.getMainHandItem().is(ModItems.MONITOR.get())
+                && living.getMainHandItem().getOrCreateTag().getBoolean("Using")
+                && living.getMainHandItem().getOrCreateTag().getBoolean("Linked")) {
+            handleDroneCamera(event, living);
         }
         if (level != null && entity instanceof LivingEntity living && living.getMainHandItem().is(ModTags.Items.GUN)) {
             handleWeaponCrossHair(living);
@@ -69,6 +81,36 @@ public class ClientEventHandler {
         }
     }
 
+    private static void handleDroneCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
+        var data = entity.getPersistentData();
+        ItemStack stack = entity.getMainHandItem();
+        double pitch = event.getPitch();
+        double roll = event.getRoll();
+
+        DroneEntity drone = entity.level().getEntitiesOfClass(DroneEntity.class, entity.getBoundingBox().inflate(512))
+                .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
+
+        if (drone != null) {
+
+            if (data.getDouble("droneRotZ") > drone.getEntityData().get(ROTZ)) {
+                data.putDouble("droneRotZ", Mth.clamp(data.getDouble("droneRotZ") - 0.3 * Math.pow(drone.getEntityData().get(ROTZ) - data.getDouble("droneRotZ"), 2),drone.getEntityData().get(ROTZ),Double.POSITIVE_INFINITY));
+            } else {
+                data.putDouble("droneRotZ", Mth.clamp(data.getDouble("droneRotZ") + 0.3 * Math.pow(drone.getEntityData().get(ROTZ) - data.getDouble("droneRotZ"), 2),Double.NEGATIVE_INFINITY,drone.getEntityData().get(ROTZ)));
+            }
+
+            if (data.getDouble("droneRotX") > drone.getEntityData().get(ROTX)) {
+                data.putDouble("droneRotX", Mth.clamp(data.getDouble("droneRotX") - 0.2 * Math.pow(drone.getEntityData().get(ROTX) - data.getDouble("droneRotX"), 2),drone.getEntityData().get(ROTX),Double.POSITIVE_INFINITY));
+            } else {
+                data.putDouble("droneRotX", Mth.clamp(data.getDouble("droneRotX") + 0.2 * Math.pow(drone.getEntityData().get(ROTX) - data.getDouble("droneRotX"), 2),Double.NEGATIVE_INFINITY,drone.getEntityData().get(ROTX)));
+            }
+
+            event.setPitch((float) (pitch + data.getDouble("droneCameraRotX") - 0.45f * Mth.RAD_TO_DEG * data.getDouble("droneRotZ")));
+            event.setRoll((float) (roll + data.getDouble("droneCameraRotY") - 0.8f * Mth.RAD_TO_DEG * data.getDouble("droneRotX")));
+        }
+
+
+
+    }
     private static void handleCannonCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
         var data = entity.getPersistentData();
         double yaw = event.getYaw();
