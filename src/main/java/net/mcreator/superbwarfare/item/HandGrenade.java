@@ -43,8 +43,10 @@ public class HandGrenade extends Item {
     public void releaseUsing(ItemStack stack, Level worldIn, LivingEntity entityLiving, int timeLeft) {
         if (!worldIn.isClientSide) {
             if (entityLiving instanceof Player player) {
-                int usingTime = this.getUseDuration(stack) - timeLeft;
 
+                player.getCooldowns().addCooldown(stack.getItem(), 25);
+
+                int usingTime = this.getUseDuration(stack) - timeLeft;
                 float power = Math.min(usingTime / 10.0f, 1.5f);
 
                 HandGrenadeEntity handGrenade = new HandGrenadeEntity(player, worldIn, 100 - usingTime);
@@ -58,8 +60,6 @@ public class HandGrenade extends Item {
                 if (!player.isCreative()) {
                     stack.shrink(1);
                 }
-
-                player.getCooldowns().addCooldown(stack.getItem(), 25);
             }
         }
     }
@@ -74,6 +74,10 @@ public class HandGrenade extends Item {
             net.minecraftforge.event.ForgeEventFactory.onExplosionStart(pLevel, explosion);
             explosion.finalizeExplosion(false);
             ParticleTool.spawnMediumExplosionParticles(pLevel, pLivingEntity.position());
+
+            if (pLivingEntity instanceof Player player) {
+                player.getCooldowns().addCooldown(pStack.getItem(), 25);
+            }
         }
 
         return super.finishUsingItem(pStack, pLevel, pLivingEntity);
