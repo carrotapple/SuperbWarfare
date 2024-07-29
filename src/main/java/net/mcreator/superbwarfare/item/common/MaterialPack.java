@@ -1,4 +1,4 @@
-package net.mcreator.superbwarfare.item.common.material;
+package net.mcreator.superbwarfare.item.common;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
