@@ -2,14 +2,15 @@ package net.mcreator.superbwarfare.init;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.item.*;
+import net.mcreator.superbwarfare.item.common.BlueprintItem;
 import net.mcreator.superbwarfare.item.common.ammo.*;
-import net.mcreator.superbwarfare.item.common.blueprint.*;
 import net.mcreator.superbwarfare.item.common.material.*;
 import net.mcreator.superbwarfare.item.common.material.component.*;
-import net.mcreator.superbwarfare.item.common.material.pack.*;
 import net.mcreator.superbwarfare.item.gun.*;
+import net.mcreator.superbwarfare.tools.RarityTool;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -132,38 +133,37 @@ public class ModItems {
     public static final RegistryObject<Item> NETHERITE_TRIGGER = ITEMS.register("netherite_trigger", NetheriteTrigger::new);
     public static final RegistryObject<Item> NETHERITE_SPRING = ITEMS.register("netherite_spring", NetheriteSpring::new);
 
-    public static final RegistryObject<Item> COMMON_MATERIAL_PACK = ITEMS.register("common_material_pack", CommonMaterialPack::new);
-    public static final RegistryObject<Item> RARE_MATERIAL_PACK = ITEMS.register("rare_material_pack", RareMaterialPack::new);
-    public static final RegistryObject<Item> EPIC_MATERIAL_PACK = ITEMS.register("epic_material_pack", EpicMaterialPack::new);
-    public static final RegistryObject<Item> LEGENDARY_MATERIAL_PACK = ITEMS.register("legendary_material_pack", LegendaryMaterialPack::new);
-    public static final RegistryObject<Item> SPECIAL_MATERIAL_PACK = ITEMS.register("special_material_pack", SpecialMaterialPack::new);
+    public static final RegistryObject<Item> COMMON_MATERIAL_PACK = ITEMS.register("common_material_pack", () -> new MaterialPack(Rarity.COMMON));
+    public static final RegistryObject<Item> RARE_MATERIAL_PACK = ITEMS.register("rare_material_pack", () -> new MaterialPack(Rarity.RARE));
+    public static final RegistryObject<Item> EPIC_MATERIAL_PACK = ITEMS.register("epic_material_pack", () -> new MaterialPack(Rarity.EPIC));
+    public static final RegistryObject<Item> LEGENDARY_MATERIAL_PACK = ITEMS.register("legendary_material_pack", () -> new MaterialPack(RarityTool.LEGENDARY));
+    public static final RegistryObject<Item> SPECIAL_MATERIAL_PACK = ITEMS.register("special_material_pack", () -> new MaterialPack(RarityTool.SPECIAL));
 
-    public static final RegistryObject<Item> TRACHELIUM_BLUEPRINT = ITEMS.register("trachelium_blueprint", TracheliumBlueprint::new);
-    public static final RegistryObject<Item> HUNTING_RIFLE_BLUEPRINT = ITEMS.register("hunting_rifle_blueprint", HuntingRifleBlueprint::new);
-    public static final RegistryObject<Item> M_79_BLUEPRINT = ITEMS.register("m_79_blueprint", M79Blueprint::new);
-    public static final RegistryObject<Item> RPG_BLUEPRINT = ITEMS.register("rpg_blueprint", RpgBlueprint::new);
-    public static final RegistryObject<Item> BOCEK_BLUEPRINT = ITEMS.register("bocek_blueprint", BocekBlueprint::new);
-    public static final RegistryObject<Item> M_4_BLUEPRINT = ITEMS.register("m_4_blueprint", M4Blueprint::new);
-    public static final RegistryObject<Item> AA_12_BLUEPRINT = ITEMS.register("aa_12_blueprint", Aa12Blueprint::new);
-    public static final RegistryObject<Item> HK_416_BLUEPRINT = ITEMS.register("hk_416_blueprint", HK416Blueprint::new);
-    public static final RegistryObject<Item> RPK_BLUEPRINT = ITEMS.register("rpk_blueprint", RPKBlueprint::new);
-    public static final RegistryObject<Item> SKS_BLUEPRINT = ITEMS.register("sks_blueprint", SKSBlueprint::new);
-    public static final RegistryObject<Item> NTW_20_BLUEPRINT = ITEMS.register("ntw_20_blueprint", Ntw20Blueprint::new);
-    public static final RegistryObject<Item> VECTOR_BLUEPRINT = ITEMS.register("vector_blueprint", VectorBlueprint::new);
-    public static final RegistryObject<Item> MINIGUN_BLUEPRINT = ITEMS.register("minigun_blueprint", MinigunBlueprint::new);
-    public static final RegistryObject<Item> MK_14_BLUEPRINT = ITEMS.register("mk_14_blueprint", Mk14Blueprint::new);
-    public static final RegistryObject<Item> SENTINEL_BLUEPRINT = ITEMS.register("sentinel_blueprint", SentinelBlueprint::new);
-    public static final RegistryObject<Item> M_60_BLUEPRINT = ITEMS.register("m_60_blueprint", M60Blueprint::new);
-    public static final RegistryObject<Item> SVD_BLUEPRINT = ITEMS.register("svd_blueprint", SvdBlueprint::new);
-    public static final RegistryObject<Item> MARLIN_BLUEPRINT = ITEMS.register("marlin_blueprint", MarlinBlueprint::new);
-    public static final RegistryObject<Item> M_870_BLUEPRINT = ITEMS.register("m_870_blueprint", M870Blueprint::new);
-    public static final RegistryObject<Item> M_98B_BLUEPRINT = ITEMS.register("m_98b_blueprint", M98bBlueprint::new);
-    public static final RegistryObject<Item> AK_47_BLUEPRINT = ITEMS.register("ak_47_blueprint", AK47Blueprint::new);
-    public static final RegistryObject<Item> DEVOTION_BLUEPRINT = ITEMS.register("devotion_blueprint", DevotionBlueprint::new);
-    public static final RegistryObject<Item> TASER_BLUEPRINT = ITEMS.register("taser_blueprint", TaserBlueprint::new);
+    public static final RegistryObject<Item> TRACHELIUM_BLUEPRINT = ITEMS.register("trachelium_blueprint", () -> new BlueprintItem(RarityTool.LEGENDARY));
+    public static final RegistryObject<Item> HUNTING_RIFLE_BLUEPRINT = ITEMS.register("hunting_rifle_blueprint", () -> new BlueprintItem(Rarity.EPIC));
+    public static final RegistryObject<Item> M_79_BLUEPRINT = ITEMS.register("m_79_blueprint", () -> new BlueprintItem(Rarity.RARE));
+    public static final RegistryObject<Item> RPG_BLUEPRINT = ITEMS.register("rpg_blueprint", () -> new BlueprintItem(Rarity.EPIC));
+    public static final RegistryObject<Item> BOCEK_BLUEPRINT = ITEMS.register("bocek_blueprint", () -> new BlueprintItem(RarityTool.SPECIAL));
+    public static final RegistryObject<Item> M_4_BLUEPRINT = ITEMS.register("m_4_blueprint", () -> new BlueprintItem(Rarity.RARE));
+    public static final RegistryObject<Item> AA_12_BLUEPRINT = ITEMS.register("aa_12_blueprint", () -> new BlueprintItem(RarityTool.LEGENDARY));
+    public static final RegistryObject<Item> HK_416_BLUEPRINT = ITEMS.register("hk_416_blueprint", () -> new BlueprintItem(Rarity.EPIC));
+    public static final RegistryObject<Item> RPK_BLUEPRINT = ITEMS.register("rpk_blueprint", () -> new BlueprintItem(Rarity.EPIC));
+    public static final RegistryObject<Item> SKS_BLUEPRINT = ITEMS.register("sks_blueprint", () -> new BlueprintItem(Rarity.RARE));
+    public static final RegistryObject<Item> NTW_20_BLUEPRINT = ITEMS.register("ntw_20_blueprint", () -> new BlueprintItem(RarityTool.SPECIAL));
+    public static final RegistryObject<Item> VECTOR_BLUEPRINT = ITEMS.register("vector_blueprint", () -> new BlueprintItem(Rarity.EPIC));
+    public static final RegistryObject<Item> MINIGUN_BLUEPRINT = ITEMS.register("minigun_blueprint", () -> new BlueprintItem(RarityTool.SPECIAL));
+    public static final RegistryObject<Item> MK_14_BLUEPRINT = ITEMS.register("mk_14_blueprint", () -> new BlueprintItem(Rarity.EPIC));
+    public static final RegistryObject<Item> SENTINEL_BLUEPRINT = ITEMS.register("sentinel_blueprint", () -> new BlueprintItem(RarityTool.LEGENDARY));
+    public static final RegistryObject<Item> M_60_BLUEPRINT = ITEMS.register("m_60_blueprint", () -> new BlueprintItem(Rarity.EPIC));
+    public static final RegistryObject<Item> SVD_BLUEPRINT = ITEMS.register("svd_blueprint", () -> new BlueprintItem(Rarity.EPIC));
+    public static final RegistryObject<Item> MARLIN_BLUEPRINT = ITEMS.register("marlin_blueprint", () -> new BlueprintItem(Rarity.RARE));
+    public static final RegistryObject<Item> M_870_BLUEPRINT = ITEMS.register("m_870_blueprint", () -> new BlueprintItem(Rarity.RARE));
+    public static final RegistryObject<Item> M_98B_BLUEPRINT = ITEMS.register("m_98b_blueprint", () -> new BlueprintItem(Rarity.EPIC));
+    public static final RegistryObject<Item> AK_47_BLUEPRINT = ITEMS.register("ak_47_blueprint", () -> new BlueprintItem(Rarity.RARE));
+    public static final RegistryObject<Item> DEVOTION_BLUEPRINT = ITEMS.register("devotion_blueprint", () -> new BlueprintItem(Rarity.EPIC));
+    public static final RegistryObject<Item> TASER_BLUEPRINT = ITEMS.register("taser_blueprint", () -> new BlueprintItem(Rarity.COMMON));
 
     public static final RegistryObject<Item> GUN_RECYCLE = block(ModBlocks.GUN_RECYCLE);
-
 
     private static RegistryObject<Item> block(RegistryObject<Block> block) {
         return ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties()));

@@ -45,7 +45,7 @@ public class DroneModel extends GeoModel<DroneEntity> {
         shell.setHidden(!animatable.getEntityData().get(KAMIKAZE));
 
 
-		body.setRotZ(animatable.getEntityData().get(ROTX));
-		body.setRotX(animatable.getEntityData().get(ROTZ));
+		body.setRotZ(animatable.getEntityData().get(ROT_X));
+		body.setRotX(animatable.getEntityData().get(ROT_Z));
 	}
 }
