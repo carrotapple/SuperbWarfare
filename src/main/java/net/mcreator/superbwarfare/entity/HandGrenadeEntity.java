@@ -65,7 +65,7 @@ public class HandGrenadeEntity extends ThrowableItemProjectile {
                 BlockHitResult blockResult = (BlockHitResult) result;
                 BlockPos resultPos = blockResult.getBlockPos();
                 BlockState state = this.level().getBlockState(resultPos);
-                SoundEvent event = state.getBlock().getSoundType(state, this.level(), resultPos, this).getStepSound();
+                SoundEvent event = state.getBlock().getSoundType(state, this.level(), resultPos, this).getBreakSound();
                 double speed = this.getDeltaMovement().length();
                 if (speed > 0.1) {
                     this.level().playSound(null, result.getLocation().x, result.getLocation().y, result.getLocation().z, event, SoundSource.AMBIENT, 1.0F, 1.0F);
@@ -127,7 +127,7 @@ public class HandGrenadeEntity extends ThrowableItemProjectile {
     private void causeExplode() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
                 ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 90,
-                this.getX(), this.getY(), this.getZ(), 6.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(2);
+                this.getX(), this.getY(), this.getZ(), 6.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);

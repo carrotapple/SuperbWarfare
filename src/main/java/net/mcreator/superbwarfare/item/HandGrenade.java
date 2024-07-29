@@ -69,7 +69,7 @@ public class HandGrenade extends Item {
         if (!pLevel.isClientSide) {
             CustomExplosion explosion = new CustomExplosion(pLevel, null,
                     ModDamageTypes.causeProjectileBoomDamage(pLevel.registryAccess(), pLivingEntity, pLivingEntity), 90,
-                    pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), 6.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(2);
+                    pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), 6.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
             explosion.explode();
             net.minecraftforge.event.ForgeEventFactory.onExplosionStart(pLevel, explosion);
             explosion.finalizeExplosion(false);
