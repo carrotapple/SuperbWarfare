@@ -68,6 +68,7 @@
 			}
 		},
 		"animation.minigun.run": {
+			"loop": true,
 			"animation_length": 0.7917,
 			"bones": {
 				"0": {
@@ -94,22 +95,22 @@
 					},
 					"position": {
 						"0.0": {
-							"vector": [12.5, -3, 1]
+							"vector": [12.5, -2, 1]
 						},
 						"0.2083": {
-							"vector": [10.75, -2.75, 1],
+							"vector": [10.75, -1.75, 1],
 							"easing": "easeInSine"
 						},
 						"0.4167": {
-							"vector": [9.5, -3, 1],
+							"vector": [9.5, -2, 1],
 							"easing": "easeOutSine"
 						},
 						"0.5833": {
-							"vector": [10.75, -2.75, 1],
+							"vector": [10.75, -1.75, 1],
 							"easing": "easeInSine"
 						},
 						"0.7917": {
-							"vector": [12.5, -3, 1],
+							"vector": [12.5, -2, 1],
 							"easing": "easeOutSine"
 						}
 					}
@@ -129,6 +130,73 @@
 							"vector": [0.3, 0, -0.3]
 						},
 						"0.7917": {
+							"vector": [-0.3, -0.3, 0.3]
+						}
+					}
+				}
+			}
+		},
+		"animation.minigun.run_fast": {
+			"loop": true,
+			"animation_length": 0.7,
+			"bones": {
+				"0": {
+					"rotation": {
+						"0.0": {
+							"vector": [-20.28841, -26.3552, 5.35029]
+						},
+						"0.175": {
+							"vector": [-27.9856, -28.6052, 14.64973],
+							"easing": "linear"
+						},
+						"0.35": {
+							"vector": [-20.28841, -26.3552, 5.35029],
+							"easing": "linear"
+						},
+						"0.525": {
+							"vector": [-14.36141, -23.13847, -3.20665],
+							"easing": "linear"
+						},
+						"0.7": {
+							"vector": [-20.28841, -26.3552, 5.35029]
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [15.5, 1, 1]
+						},
+						"0.175": {
+							"vector": [12.75, 2.25, 1],
+							"easing": "easeInSine"
+						},
+						"0.35": {
+							"vector": [10.5, 1, 1],
+							"easing": "easeInSine"
+						},
+						"0.525": {
+							"vector": [12.75, 2.25, 1],
+							"easing": "easeInSine"
+						},
+						"0.7": {
+							"vector": [15.5, 1, 1]
+						}
+					}
+				},
+				"camera": {
+					"rotation": {
+						"0.0": {
+							"vector": [-0.3, -0.3, 0.3]
+						},
+						"0.175": {
+							"vector": [0.3, 0, -0.3]
+						},
+						"0.35": {
+							"vector": [-0.3, 0.3, 0.3]
+						},
+						"0.525": {
+							"vector": [0.3, 0, -0.3]
+						},
+						"0.7": {
 							"vector": [-0.3, -0.3, 0.3]
 						}
 					}

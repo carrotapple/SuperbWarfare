@@ -3,7 +3,7 @@ package net.mcreator.superbwarfare.network.message;
 import net.mcreator.superbwarfare.entity.*;
 import net.mcreator.superbwarfare.event.GunEventHandler;
 import net.mcreator.superbwarfare.init.*;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.ItemNBTTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.commands.CommandSource;
@@ -60,7 +60,7 @@ public class FireMessage {
         } else if (type == 1) {
             player.getPersistentData().putBoolean("firing", false);
             player.getPersistentData().putDouble("minigun_firing", 0);
-            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.bowPullHold = false;
                 capability.syncPlayerVariables(player);
             });
@@ -113,14 +113,14 @@ public class FireMessage {
         }
 
         if (handItem.getItem() == ModItems.MINIGUN.get()) {
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo == 0) {
+            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo == 0) {
                 if (!player.level().isClientSide()) {
                     SoundTool.playLocalSound(player, ModSounds.TRIGGER_CLICK.get(), 10, 1);
                 }
             }
         }
 
-        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
             capability.bowPullHold = true;
             capability.syncPlayerVariables(player);
         });
@@ -146,7 +146,7 @@ public class FireMessage {
 
         if (stack.getOrCreateTag().getDouble("power") >= 6) {
             stack.getOrCreateTag().putDouble("speed", stack.getOrCreateTag().getDouble("power"));
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
                 Level level = player.level();
                 if (!level.isClientSide()) {
                     int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), stack);
@@ -181,7 +181,7 @@ public class FireMessage {
                 }
             }
 
-            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.recoil = 0.1;
                 capability.firing = 1;
                 capability.syncPlayerVariables(player);

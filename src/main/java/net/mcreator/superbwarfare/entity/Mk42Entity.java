@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.entity;
 
 import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.item.common.ammo.CannonShellItem;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
@@ -245,7 +245,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
         }
 
         if (this.getPersistentData().getInt("fire_cooldown") > 28) {
-            gunner.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            gunner.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
 
                 if (Math.random() < 0.5) {
                     capability.recoilHorizon = -1;
@@ -449,9 +449,9 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
 
             if (this.getFirstPassenger() != null) {
                 Entity gunner = this.getFirstPassenger();
-                var capability = gunner.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null);
-                if (capability.orElse(new TargetModVariables.PlayerVariables()).cannonRecoil > 0) {
-                    if (capability.orElse(new TargetModVariables.PlayerVariables()).recoilHorizon == 1) {
+                var capability = gunner.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null);
+                if (capability.orElse(new ModVariables.PlayerVariables()).cannonRecoil > 0) {
+                    if (capability.orElse(new ModVariables.PlayerVariables()).recoilHorizon == 1) {
                         return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire"));
                     } else {
                         return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire2"));

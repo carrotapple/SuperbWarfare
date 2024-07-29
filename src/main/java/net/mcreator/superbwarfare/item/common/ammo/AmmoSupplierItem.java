@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.item.common.ammo;
 
 import net.mcreator.superbwarfare.init.ModSounds;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.GunInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
@@ -30,7 +30,7 @@ public abstract class AmmoSupplierItem extends Item {
         player.getCooldowns().addCooldown(this, 10);
         stack.shrink(count);
 
-        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
             var newAmmoCount = switch (this.type) {
                 case HANDGUN -> capability.handgunAmmo;
                 case RIFLE -> capability.rifleAmmo;

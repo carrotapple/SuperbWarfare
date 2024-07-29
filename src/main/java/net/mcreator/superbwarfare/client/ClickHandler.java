@@ -7,7 +7,7 @@ import net.mcreator.superbwarfare.entity.MortarEntity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModMobEffects;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.*;
 import net.mcreator.superbwarfare.tools.TraceTool;
 import net.minecraft.client.Minecraft;
@@ -112,7 +112,7 @@ public class ClickHandler {
 
         double scroll = event.getScrollDelta();
 
-        if (stack.is(ModTags.Items.GUN) && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zoom) {
+        if (stack.is(ModTags.Items.GUN) && (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
             var tag = stack.getOrCreateTag();
             if (tag.getDouble("min_zoom") != 0 && tag.getDouble("max_zoom") != 0) {
                 ModUtils.PACKET_HANDLER.sendToServer(new AdjustZoomFovMessage(scroll));

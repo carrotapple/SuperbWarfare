@@ -4,7 +4,7 @@ import net.mcreator.superbwarfare.entity.Mk42Entity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -50,7 +50,7 @@ public class ZoomMessage {
         }
 
         if (type == 0) {
-            entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.zoom = true;
                 capability.syncPlayerVariables(entity);
             });
@@ -74,11 +74,11 @@ public class ZoomMessage {
             }
         }
         if (type == 1) {
-            entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.zoom = false;
                 capability.syncPlayerVariables(entity);
             });
-            entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.zooming = false;
                 capability.syncPlayerVariables(entity);
             });

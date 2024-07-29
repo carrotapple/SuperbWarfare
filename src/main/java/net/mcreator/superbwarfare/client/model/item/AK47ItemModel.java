@@ -3,7 +3,7 @@ package net.mcreator.superbwarfare.client.model.item;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.AK47Item;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -67,7 +67,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         double fr = player.getPersistentData().getDouble("fire_rot");
 
 
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
             shen.setPosY(-0.01f * (float) (fp + 2 * fr));
             shen.setPosZ(0.2f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.003f * (float) (fp + fr));
@@ -78,7 +78,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
             shen.setRotX(0.07f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
         }
-        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
+        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
 
         shuan.setPosZ(2.4f * (float) fp);
 

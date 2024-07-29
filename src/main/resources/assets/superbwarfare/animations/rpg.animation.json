@@ -156,6 +156,100 @@
 				}
 			}
 		},
+		"animation.rpg.run_fast": {
+			"loop": true,
+			"animation_length": 0.7,
+			"bones": {
+				"0": {
+					"rotation": {
+						"0.0": {
+							"vector": [-13.3263, 7.54702, 1.59969],
+							"easing": "easeOutSine"
+						},
+						"0.175": {
+							"vector": [-27.62174, 12.50143, 4.04527],
+							"easing": "easeInSine"
+						},
+						"0.35": {
+							"vector": [-13.035, 17.54299, 1.66321],
+							"easing": "easeOutSine"
+						},
+						"0.525": {
+							"vector": [-23.67296, 3.37897, -3.44474],
+							"easing": "easeInSine"
+						},
+						"0.7": {
+							"vector": [-13.3263, 7.54702, 1.59969],
+							"easing": "easeOutSine"
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [-1, 2, 1]
+						},
+						"0.175": {
+							"vector": [-2, 3, 1],
+							"easing": "easeInSine"
+						},
+						"0.35": {
+							"vector": [-3, 2, 1],
+							"easing": "easeOutSine"
+						},
+						"0.525": {
+							"vector": [-2, 3, 1],
+							"easing": "easeInSine"
+						},
+						"0.7": {
+							"vector": [-1, 2, 1],
+							"easing": "easeOutSine"
+						}
+					}
+				},
+				"Rockets": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
+					"position": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"Righthand": {
+					"rotation": {
+						"vector": [6.14572, 9.14706, -6.29764]
+					},
+					"position": {
+						"vector": [1.52734, 0.09375, 1.92969]
+					}
+				},
+				"Lefthand": {
+					"rotation": {
+						"vector": [-1.41476, -16.33468, -1.66483]
+					},
+					"position": {
+						"vector": [6, -13, 49]
+					}
+				},
+				"camera": {
+					"rotation": {
+						"0.0": {
+							"vector": [-0.3, -0.3, 0.3]
+						},
+						"0.175": {
+							"vector": [0.3, 0, -0.3]
+						},
+						"0.35": {
+							"vector": [-0.3, 0.3, 0.3]
+						},
+						"0.525": {
+							"vector": [0.3, 0, -0.3]
+						},
+						"0.7": {
+							"vector": [-0.3, -0.3, 0.3]
+						}
+					}
+				}
+			}
+		},
 		"animation.rpg.fire": {
 			"animation_length": 0.1
 		},

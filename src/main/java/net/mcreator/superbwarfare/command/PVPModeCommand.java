@@ -1,7 +1,7 @@
 
 package net.mcreator.superbwarfare.command;
 
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -24,7 +24,7 @@ public class PVPModeCommand {
                 entity = FakePlayerFactory.getMinecraft(server);
             }
 
-            var mapVariables = TargetModVariables.MapVariables.get(world);
+            var mapVariables = ModVariables.MapVariables.get(world);
             mapVariables.pvpMode = !mapVariables.pvpMode;
             mapVariables.syncData(world);
 

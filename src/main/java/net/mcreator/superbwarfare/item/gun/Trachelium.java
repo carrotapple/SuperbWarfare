@@ -19,6 +19,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -102,7 +103,11 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
             }
 
             if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.run"));
+                if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.run_fast"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.run"));
+                }
             }
 
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.idle"));

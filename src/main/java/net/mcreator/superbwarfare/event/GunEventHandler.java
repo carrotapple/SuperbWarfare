@@ -3,7 +3,7 @@ package net.mcreator.superbwarfare.event;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.ProjectileEntity;
 import net.mcreator.superbwarfare.init.*;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.ZoomMessage;
 import net.mcreator.superbwarfare.tools.GunInfo;
 import net.mcreator.superbwarfare.tools.GunsTool;
@@ -146,7 +146,7 @@ public class GunEventHandler {
 
                 int zoom_add_cooldown = 0;
                 if (stack.getItem() == ModItems.MARLIN.get()) {
-                    if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+                    if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
                         zoom_add_cooldown = 5;
                         stack.getOrCreateTag().putDouble("marlin_animation_time", 15);
                         stack.getOrCreateTag().putBoolean("fastfiring", false);
@@ -195,7 +195,7 @@ public class GunEventHandler {
 
         var tag = stack.getOrCreateTag();
 
-        if ((player.getPersistentData().getBoolean("firing") || (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zoom) && !player.isSprinting()) {
+        if ((player.getPersistentData().getBoolean("firing") || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) && !player.isSprinting()) {
             if (tag.getDouble("minigun_rotation") < 10) {
                 tag.putDouble("minigun_rotation", (tag.getDouble("minigun_rotation") + 1));
             }
@@ -207,7 +207,7 @@ public class GunEventHandler {
         }
 
         if (tag.getDouble("overheat") == 0
-                && (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo > 0
+                && (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0
                 && !(player.getCooldowns().isOnCooldown(stack.getItem())) && tag.getDouble("minigun_rotation") >= 10 && player.getPersistentData().getBoolean("firing")) {
             tag.putDouble("heat", (tag.getDouble("heat") + 0.5));
             if (tag.getDouble("heat") >= 50.5) {
@@ -240,8 +240,8 @@ public class GunEventHandler {
                 gunShoot(player);
             }
 
-            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.rifleAmmo = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables()).rifleAmmo - 1;
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.rifleAmmo = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).rifleAmmo - 1;
                 capability.syncPlayerVariables(player);
             });
 
@@ -571,7 +571,7 @@ public class GunEventHandler {
         if ((tag.getDouble("prepare") == 1 || tag.getDouble("prepare_load") == 1)) {
 
             //检查备弹
-            var capability = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables());
+            var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
             if (stack.is(ModTags.Items.SHOTGUN) && capability.shotgunAmmo == 0) {
                 tag.putBoolean("force_stage3_start", true);
             } else if (stack.is(ModTags.Items.SNIPER_RIFLE) && capability.sniperAmmo == 0) {
@@ -632,7 +632,7 @@ public class GunEventHandler {
             }
 
             //备弹耗尽结束
-            var capability = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables());
+            var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
             if (stack.is(ModTags.Items.SHOTGUN) && capability.shotgunAmmo == 0) {
                 tag.putInt("reload_stage", 3);
             } else if (stack.is(ModTags.Items.SNIPER_RIFLE) && capability.sniperAmmo == 0) {
@@ -675,22 +675,22 @@ public class GunEventHandler {
         tag.putInt("ammo", tag.getInt("ammo") + 1);
 
         if (stack.is(ModTags.Items.SHOTGUN)) {
-            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.shotgunAmmo = capability.shotgunAmmo - 1;
                 capability.syncPlayerVariables(player);
             });
         } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
-            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.sniperAmmo = capability.sniperAmmo - 1;
                 capability.syncPlayerVariables(player);
             });
         } else if ((stack.is(ModTags.Items.HANDGUN) || stack.is(ModTags.Items.SMG))) {
-            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.handgunAmmo = capability.handgunAmmo - 1;
                 capability.syncPlayerVariables(player);
             });
         } else if (stack.is(ModTags.Items.RIFLE)) {
-            player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.rifleAmmo = capability.rifleAmmo - 1;
                 capability.syncPlayerVariables(player);
             });

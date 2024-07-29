@@ -3,7 +3,7 @@ package net.mcreator.superbwarfare.client.model.item;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.VectorItem;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -68,7 +68,7 @@ public class VectorItemModel extends GeoModel<VectorItem> {
         scope.setScaleZ(1f - (0.2f * (float) p));
 
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming && gun.getPosX() > 2) {
+        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming && gun.getPosX() > 2) {
             holo.setHidden(false);
         } else {
             holo.setHidden(true);
@@ -77,7 +77,7 @@ public class VectorItemModel extends GeoModel<VectorItem> {
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
 
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
             shen.setPosY(0.05f * (float) (fp + 2 * fr));
             holo.setPosY(-0.43f * (float) (fp + 2.3 * fr));
             shen.setPosZ(0.9f * (float) (fp + 0.54f * fr));
@@ -88,7 +88,7 @@ public class VectorItemModel extends GeoModel<VectorItem> {
             shen.setRotX(0.03f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
         }
-        shen.setPosX(0.5f * (float) fr * (float) ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
+        shen.setPosX(0.5f * (float) fr * (float) ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 

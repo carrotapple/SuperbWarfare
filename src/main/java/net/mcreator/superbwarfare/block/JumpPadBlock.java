@@ -3,7 +3,7 @@ package net.mcreator.superbwarfare.block;
 import net.mcreator.superbwarfare.entity.Mk42Entity;
 import net.mcreator.superbwarfare.entity.Target1Entity;
 import net.mcreator.superbwarfare.init.ModSounds;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
@@ -80,7 +80,7 @@ public class JumpPadBlock extends Block {
         // 禁止套娃
         if (entity instanceof Target1Entity || entity instanceof Mk42Entity) return;
 
-        boolean zooming = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zooming).orElse(false);
+        boolean zooming = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zooming).orElse(false);
 
         if (entity.isShiftKeyDown()) {
             if (entity.onGround()) {
@@ -102,7 +102,7 @@ public class JumpPadBlock extends Block {
             level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), ModSounds.JUMP.get(), SoundSource.BLOCKS, 1, 1, false);
         }
 
-        entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+        entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
             capability.playerDoubleJump = true;
             capability.syncPlayerVariables(entity);
         });

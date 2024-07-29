@@ -22,6 +22,7 @@ import net.minecraftforge.network.PlayMessages;
 
 public class DroneGrenadeEntity extends ThrowableItemProjectile {
 
+
     public DroneGrenadeEntity(EntityType<? extends DroneGrenadeEntity> type, Level world) {
         super(type, world);
     }

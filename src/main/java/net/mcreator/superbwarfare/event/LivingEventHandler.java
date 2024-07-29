@@ -7,7 +7,7 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.GunItem;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.mcreator.superbwarfare.network.message.PlayerGunKillMessage;
 import net.mcreator.superbwarfare.tools.SoundTool;
@@ -226,7 +226,7 @@ public class LivingEventHandler {
         LivingEntity entity = event.getEntity();
         DamageSource source = event.getSource();
 
-        if (!TargetModVariables.MapVariables.get(entity.level()).pvpMode) {
+        if (!ModVariables.MapVariables.get(entity.level()).pvpMode) {
             return;
         }
 

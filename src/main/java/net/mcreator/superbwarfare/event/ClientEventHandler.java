@@ -5,7 +5,7 @@ import net.mcreator.superbwarfare.entity.Mk42Entity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModMobEffects;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.ZoomMessage;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -28,8 +28,8 @@ import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static net.mcreator.superbwarfare.entity.DroneEntity.ROT_X;
-import static net.mcreator.superbwarfare.entity.DroneEntity.ROT_Z;
+import static net.mcreator.superbwarfare.entity.DroneEntity.ROTX;
+import static net.mcreator.superbwarfare.entity.DroneEntity.ROTZ;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
@@ -92,16 +92,16 @@ public class ClientEventHandler {
 
         if (drone != null) {
 
-            if (data.getDouble("droneRotZ") > drone.getEntityData().get(ROT_Z)) {
-                data.putDouble("droneRotZ", Mth.clamp(data.getDouble("droneRotZ") - 0.3 * Math.pow(drone.getEntityData().get(ROT_Z) - data.getDouble("droneRotZ"), 2),drone.getEntityData().get(ROT_Z),Double.POSITIVE_INFINITY));
+            if (data.getDouble("droneRotZ") > drone.getEntityData().get(ROTZ)) {
+                data.putDouble("droneRotZ", Mth.clamp(data.getDouble("droneRotZ") - 0.3 * Math.pow(drone.getEntityData().get(ROTZ) - data.getDouble("droneRotZ"), 2),drone.getEntityData().get(ROTZ),Double.POSITIVE_INFINITY));
             } else {
-                data.putDouble("droneRotZ", Mth.clamp(data.getDouble("droneRotZ") + 0.3 * Math.pow(drone.getEntityData().get(ROT_Z) - data.getDouble("droneRotZ"), 2),Double.NEGATIVE_INFINITY,drone.getEntityData().get(ROT_Z)));
+                data.putDouble("droneRotZ", Mth.clamp(data.getDouble("droneRotZ") + 0.3 * Math.pow(drone.getEntityData().get(ROTZ) - data.getDouble("droneRotZ"), 2),Double.NEGATIVE_INFINITY,drone.getEntityData().get(ROTZ)));
             }
 
-            if (data.getDouble("droneRotX") > drone.getEntityData().get(ROT_X)) {
-                data.putDouble("droneRotX", Mth.clamp(data.getDouble("droneRotX") - 0.2 * Math.pow(drone.getEntityData().get(ROT_X) - data.getDouble("droneRotX"), 2),drone.getEntityData().get(ROT_X),Double.POSITIVE_INFINITY));
+            if (data.getDouble("droneRotX") > drone.getEntityData().get(ROTX)) {
+                data.putDouble("droneRotX", Mth.clamp(data.getDouble("droneRotX") - 0.2 * Math.pow(drone.getEntityData().get(ROTX) - data.getDouble("droneRotX"), 2),drone.getEntityData().get(ROTX),Double.POSITIVE_INFINITY));
             } else {
-                data.putDouble("droneRotX", Mth.clamp(data.getDouble("droneRotX") + 0.2 * Math.pow(drone.getEntityData().get(ROT_X) - data.getDouble("droneRotX"), 2),Double.NEGATIVE_INFINITY,drone.getEntityData().get(ROT_X)));
+                data.putDouble("droneRotX", Mth.clamp(data.getDouble("droneRotX") + 0.2 * Math.pow(drone.getEntityData().get(ROTX) - data.getDouble("droneRotX"), 2),Double.NEGATIVE_INFINITY,drone.getEntityData().get(ROTX)));
             }
 
             event.setPitch((float) (pitch + data.getDouble("droneCameraRotX") - 0.15f * Mth.RAD_TO_DEG * data.getDouble("droneRotZ")));
@@ -312,7 +312,7 @@ public class ClientEventHandler {
         float times = 110f / fps;
         var data = entity.getPersistentData();
 
-        if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+        if ((entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
             if (data.getDouble("zoom_time") < 1) {
                 data.putDouble("zoom_time",
                         (data.getDouble("zoom_time") + entity.getMainHandItem().getOrCreateTag().getDouble("zoom_speed") * 0.03 * times));
@@ -348,8 +348,8 @@ public class ClientEventHandler {
                 * stack.getOrCreateTag().getDouble("recoil_x");
         var data = entity.getPersistentData();
 
-        var capability = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null);
-        if (capability.orElse(new TargetModVariables.PlayerVariables()).firing > 0) {
+        var capability = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null);
+        if (capability.orElse(new ModVariables.PlayerVariables()).firing > 0) {
             data.putDouble("firetime", 0.001);
             data.putDouble("fire_rotx_time", 0.001);
             data.putDouble("firepos2", 0.1);
@@ -377,11 +377,11 @@ public class ClientEventHandler {
         if (0 < data.getDouble("fire_rotx_time") && data.getDouble("fire_rotx_time") < 1.732) {
             data.putDouble("fire_rot",
                     (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time"), 2)));
-            if ((capability.orElse(new TargetModVariables.PlayerVariables())).recoilHorizon > 0) {
+            if ((capability.orElse(new ModVariables.PlayerVariables())).recoilHorizon > 0) {
                 event.setYaw((float) (yaw - 1.3 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time"), 2)) + 1 * Mth.clamp(0.3 - data.getDouble("fire_rotx_time"), 0, 1) * (2 * Math.random() - 1)));
                 event.setPitch((float) (pitch + 1.3 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time"), 2)) + 1 * Mth.clamp(0.3 - data.getDouble("fire_rotx_time"), 0, 1) * (2 * Math.random() - 1)));
                 event.setRoll((float) (roll + 4.2 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time"), 2)) + 3 * Mth.clamp(0.5 - data.getDouble("fire_rotx_time"), 0, 0.5) * (2 * Math.random() - 1)));
-            } else if ((capability.orElse(new TargetModVariables.PlayerVariables())).recoilHorizon <= 0) {
+            } else if ((capability.orElse(new ModVariables.PlayerVariables())).recoilHorizon <= 0) {
                 event.setYaw((float) (yaw + 1.3 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time"), 2)) + 1 * Mth.clamp(0.3 - data.getDouble("fire_rotx_time"), 0, 1) * (2 * Math.random() - 1)));
                 event.setPitch((float) (pitch - 1.3 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time"), 2)) + 1 * Mth.clamp(0.3 - data.getDouble("fire_rotx_time"), 0, 1) * (2 * Math.random() - 1)));
                 event.setRoll((float) (roll - 4.2 * amplitude * (1 / 6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * Math.sin(6.3 * (data.getDouble("fire_rotx_time") - 0.5)) * (3 - Math.pow(data.getDouble("fire_rotx_time"), 2)) + 3 * Mth.clamp(0.5 - data.getDouble("fire_rotx_time"), 0, 0.5) * (2 * Math.random() - 1)));
@@ -434,7 +434,7 @@ public class ClientEventHandler {
         float times = 90f / fps;
         CompoundTag persistentData = entity.getPersistentData();
 
-        if ((entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).bowPull) {
+        if ((entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).bowPull) {
             persistentData.putDouble("pulltime", Math.min(persistentData.getDouble("pulltime") + 0.018 * times, 1));
             persistentData.putDouble("bowtime", Math.min(persistentData.getDouble("bowtime") + 0.018 * times, 1));
             persistentData.putDouble("handtime", Math.min(persistentData.getDouble("handtime") + 0.018 * times, 1));
@@ -474,7 +474,7 @@ public class ClientEventHandler {
             return;
         }
         if (player.isPassenger() && player.getVehicle() instanceof Mk42Entity) {
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zoom) {
+            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
                 event.setFOV(event.getFOV() / 5);
             }
         }

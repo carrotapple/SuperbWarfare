@@ -18,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -99,7 +100,11 @@ public class M79Item extends GunItem implements GeoItem, AnimatedItem {
             }
 
             if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m79.run"));
+                if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m79.run_fast"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m79.run"));
+                }
             }
 
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m79.idle"));

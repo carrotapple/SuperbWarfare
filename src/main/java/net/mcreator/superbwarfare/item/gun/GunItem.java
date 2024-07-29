@@ -3,7 +3,7 @@ package net.mcreator.superbwarfare.item.gun;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.EnchantmentCategoryTool;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.ItemNBTTool;
@@ -57,7 +57,7 @@ public abstract class GunItem extends Item {
             if (itemstack.getOrCreateTag().getBoolean("draw")) {
                 itemstack.getOrCreateTag().putBoolean("draw", false);
                 itemstack.getOrCreateTag().putInt("draw_time", 0);
-                entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                     capability.zooming = false;
                     capability.syncPlayerVariables(entity);
                 });

@@ -3,7 +3,7 @@ package net.mcreator.superbwarfare.mixins;
 import net.mcreator.superbwarfare.entity.Mk42Entity;
 import net.mcreator.superbwarfare.init.ModMobEffects;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
@@ -38,7 +38,7 @@ public class MouseHandlerMixin {
         ItemStack stack = mc.player.getMainHandItem();
 
         if (player.getVehicle() != null && player.getVehicle() instanceof Mk42Entity) {
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zoom) {
+            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
                 return 0.12;
             } else {
                 return 0.23;
@@ -57,7 +57,7 @@ public class MouseHandlerMixin {
         float originalFov = mc.options.fov().get();
 
         if (!player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
                 additionalAdsSensitivity = (float) Mth.clamp((1 + 0.1f * customSens) * (1.25F * fov / originalFov) * (1 + 0.2f * Math.pow((originalFov / fov), 1.25)), 0.125F, 2F);
             } else {
                 additionalAdsSensitivity = Mth.clamp((1 + 0.1f * customSens) * 1.25F, 0.125F, 2F);

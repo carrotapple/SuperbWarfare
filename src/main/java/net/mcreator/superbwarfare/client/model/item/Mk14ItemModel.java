@@ -3,7 +3,7 @@ package net.mcreator.superbwarfare.client.model.item;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.Mk14Item;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -68,7 +68,7 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
 
         gun.setScaleZ(1f - (0.7f * (float) p));
 
-        scope.setScaleZ(1f - (0.85f * (float) p));
+        scope.setScaleZ(1f - (0.7f * (float) p));
 
         yugu.setScaleZ(1f - (0.7f * (float) p));
 
@@ -77,11 +77,11 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
 
-        if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming) {
+        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
             shen.setPosY(0.06f * (float) (fp + 2 * fr));
             shen.setPosZ(0.9f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.005f * (float) (fp + fr));
-            shen.setRotZ(0.01f * (float)((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp) * (float) fp);
+            shen.setRotZ(0.01f * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp) * (float) fp);
         } else {
             shen.setPosY(0.04f * (float) (fp + 2 * fr));
             shen.setPosZ(1.2f * (float) (fp + 0.54f * fr));
@@ -89,11 +89,11 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
             shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
         }
 
-        rex.setRotZ(0.01f * (float)((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp) * (float) fp);
+        rex.setRotZ(0.01f * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp) * (float) fp);
 
         rex.setPosY(-0.23f * (float) (fp + 2.3 * fr));
 
-        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).recoilHorizon * fp));
+        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
 
         action.setPosZ(2.5f * (float) fp);
 

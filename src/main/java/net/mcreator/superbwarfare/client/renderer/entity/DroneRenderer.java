@@ -16,27 +16,27 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public class DroneRenderer extends GeoEntityRenderer<DroneEntity> {
-    public DroneRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new DroneModel());
-        this.shadowRadius = 0.2f;
-    }
+	public DroneRenderer(EntityRendererProvider.Context renderManager) {
+		super(renderManager, new DroneModel());
+		this.shadowRadius = 0.2f;
+	}
 
-    @Override
-    public RenderType getRenderType(DroneEntity animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
-        return RenderType.entityTranslucent(getTextureLocation(animatable));
-    }
+	@Override
+	public RenderType getRenderType(DroneEntity animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+		return RenderType.entityTranslucent(getTextureLocation(animatable));
+	}
 
-    @Override
-    public void preRender(PoseStack poseStack, DroneEntity entity, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green,
-                          float blue, float alpha) {
-        float scale = 1f;
-        this.scaleHeight = scale;
-        this.scaleWidth = scale;
-        super.preRender(poseStack, entity, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-    }
+	@Override
+	public void preRender(PoseStack poseStack, DroneEntity entity, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green,
+			float blue, float alpha) {
+		float scale = 1f;
+		this.scaleHeight = scale;
+		this.scaleWidth = scale;
+		super.preRender(poseStack, entity, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+	}
 
-    @Override
-    protected float getDeathMaxRotation(DroneEntity entityLivingBaseIn) {
-        return 0.0F;
-    }
+	@Override
+	protected float getDeathMaxRotation(DroneEntity entityLivingBaseIn) {
+		return 0.0F;
+	}
 }

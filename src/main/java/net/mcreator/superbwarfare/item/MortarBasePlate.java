@@ -6,4 +6,5 @@ public class MortarBasePlate extends Item {
     public MortarBasePlate() {
         super(new Item.Properties());
     }
+
 }

@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.item.common.ammo;
 
 import net.mcreator.superbwarfare.init.ModSounds;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
@@ -47,7 +47,7 @@ public class CreativeAmmoBox extends Item {
         player.getCooldowns().addCooldown(this, 20);
         stack.shrink(1);
 
-        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
             capability.handgunAmmo = 2147483647;
             capability.rifleAmmo = 2147483647;
             capability.shotgunAmmo = 2147483647;

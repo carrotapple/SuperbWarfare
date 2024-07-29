@@ -18,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -110,7 +111,11 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
                 }
 
                 if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m870.run"));
+                    if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m870.run_fast"));
+                    } else {
+                        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m870.run"));
+                    }
                 }
 
                 event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.m870.idle"));

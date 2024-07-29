@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.network.message;
 
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -44,7 +44,7 @@ public class ReloadMessage {
             return;
         if (type == 0) {
             ItemStack stack = player.getMainHandItem();
-            var capability = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables());
+            var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
 
             if (!player.isSpectator()
                     && stack.is(ModTags.Items.GUN)

@@ -8,7 +8,7 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.RarityTool;
 import net.mcreator.superbwarfare.tools.TooltipTool;
@@ -20,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -93,7 +94,7 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
 
         if (this.animationProcedure.equals("empty")) {
 
-            if ((player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).zooming && stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming && stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.shift2"));
             }
 
@@ -133,7 +134,11 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
             if (player.isSprinting() && player.onGround()
                 && player.getPersistentData().getDouble("noRun") == 0
                 && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.run"));
+                if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.run_fast"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.run"));
+                }
             }
 
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.idle"));

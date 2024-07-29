@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-public class TargetModVariables {
+public class ModVariables {
     @SubscribeEvent
     public static void init(FMLCommonSetupEvent event) {
         ModUtils.addNetworkMessage(SavedDataSyncMessage.class, SavedDataSyncMessage::buffer, SavedDataSyncMessage::new, SavedDataSyncMessage::handler);
@@ -91,6 +91,9 @@ public class TargetModVariables {
             clone.bowPullHold = original.bowPullHold;
             clone.bowPull = original.bowPull;
             clone.playerDoubleJump = original.playerDoubleJump;
+            clone.tacticalSprint = original.tacticalSprint;
+            clone.tacticalSprintTime = original.tacticalSprintTime;
+            clone.tacticalSprintExhaustion = original.tacticalSprintExhaustion;
 
             if (event.getEntity().level().isClientSide()) return;
 
@@ -280,6 +283,10 @@ public class TargetModVariables {
         public boolean bowPullHold = false;
         public boolean bowPull = false;
         public boolean playerDoubleJump = false;
+        public boolean tacticalSprint = false;
+        public int tacticalSprintTime = 600;
+        public boolean tacticalSprintExhaustion = false;
+
 
         public void syncPlayerVariables(Entity entity) {
             if (entity instanceof ServerPlayer)
@@ -304,6 +311,9 @@ public class TargetModVariables {
             nbt.putBoolean("bow_pull_hold", bowPullHold);
             nbt.putBoolean("bow_pull", bowPull);
             nbt.putBoolean("player_double_jump", playerDoubleJump);
+            nbt.putBoolean("tacticalSprint", tacticalSprint);
+            nbt.putInt("tacticalSprintTime", tacticalSprintTime);
+            nbt.putBoolean("tacticalSprintExhaustion", tacticalSprintExhaustion);
 
             return nbt;
         }
@@ -326,6 +336,9 @@ public class TargetModVariables {
             bowPullHold = nbt.getBoolean("bow_pull_hold");
             bowPull = nbt.getBoolean("bow_pull");
             playerDoubleJump = nbt.getBoolean("player_double_jump");
+            tacticalSprint = nbt.getBoolean("tacticalSprint");
+            tacticalSprintTime = nbt.getInt("tacticalSprintTime");
+            tacticalSprintExhaustion = nbt.getBoolean("tacticalSprintExhaustion");
         }
     }
 
@@ -384,6 +397,9 @@ public class TargetModVariables {
                 variables.bowPullHold = message.data.bowPullHold;
                 variables.bowPull = message.data.bowPull;
                 variables.playerDoubleJump = message.data.playerDoubleJump;
+                variables.tacticalSprint = message.data.tacticalSprint;
+                variables.tacticalSprintTime = message.data.tacticalSprintTime;
+                variables.tacticalSprintExhaustion = message.data.tacticalSprintExhaustion;
             });
         }
     }

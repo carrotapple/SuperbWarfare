@@ -214,6 +214,7 @@
   "key.superbwarfare.right": "向右移动",
   "key.superbwarfare.up": "上升",
   "key.superbwarfare.down": "下降",
+  "key.superbwarfare.tactical_sprint": "战术冲刺",
 
   "effect.superbwarfare.shock": "电击",
   "item.minecraft.potion.effect.superbwarfare_shock": "电击药水",

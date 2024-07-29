@@ -6,7 +6,7 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModKeyMappings;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.GunItem;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -157,7 +157,7 @@ public class AmmoBarOverlay {
         ItemStack stack = player.getMainHandItem();
 
         if (stack.getItem() == ModItems.MINIGUN.get()) {
-            return (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo;
+            return (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo;
         }
 
         if (stack.getItem() == ModItems.BOCEK.get()) {
@@ -179,16 +179,16 @@ public class AmmoBarOverlay {
         }
 
         if (stack.is(ModTags.Items.RIFLE)) {
-            return "" + (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).rifleAmmo;
+            return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo;
         }
         if (stack.is(ModTags.Items.HANDGUN) || stack.is(ModTags.Items.SMG)) {
-            return "" + (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).handgunAmmo;
+            return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).handgunAmmo;
         }
         if (stack.is(ModTags.Items.SHOTGUN)) {
-            return "" + (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).shotgunAmmo;
+            return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).shotgunAmmo;
         }
         if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
-            return "" + (player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new TargetModVariables.PlayerVariables())).sniperAmmo;
+            return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).sniperAmmo;
         }
         return "";
     }

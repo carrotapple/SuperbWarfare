@@ -2,7 +2,7 @@
 package net.mcreator.superbwarfare.command;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.GunInfo;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -23,7 +23,7 @@ public class AmmoCommand {
 
                     var type = context.getArgument("type", GunInfo.Type.class);
 
-                    var value = player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c ->
+                    var value = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c ->
                             switch (type) {
                                 case HANDGUN -> c.handgunAmmo;
                                 case RIFLE -> c.rifleAmmo;
@@ -40,7 +40,7 @@ public class AmmoCommand {
                     var value = IntegerArgumentType.getInteger(context, "value");
 
                     for (var player : players) {
-                        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                             switch (type) {
                                 case HANDGUN -> capability.handgunAmmo = value;
                                 case RIFLE -> capability.rifleAmmo = value;
@@ -60,7 +60,7 @@ public class AmmoCommand {
                     var value = IntegerArgumentType.getInteger(context, "value");
 
                     for (var player : players) {
-                        player.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                             switch (type) {
                                 case HANDGUN -> capability.handgunAmmo += value;
                                 case RIFLE -> capability.rifleAmmo += value;

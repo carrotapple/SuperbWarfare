@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.tools;
 
 import com.google.gson.stream.JsonReader;
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.network.TargetModVariables;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.GunsDataMessage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -65,7 +65,7 @@ public class GunsTool {
     }
 
     public static void pvpModeCheck(ItemStack stack, Level level) {
-        if (!TargetModVariables.MapVariables.get(level).pvpMode) {
+        if (!ModVariables.MapVariables.get(level).pvpMode) {
             if (stack.getOrCreateTag().getInt("level") >= 10) {
                 stack.getOrCreateTag().putDouble("damageadd", 1 + 0.05 * (stack.getOrCreateTag().getInt("level") - 10));
             } else {
@@ -112,14 +112,14 @@ public class GunsTool {
             tag.putDouble("need_bolt_action", 0);
         }
 
-        int playerAmmo = entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> switch (type) {
+        int playerAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> switch (type) {
             case RIFLE -> c.rifleAmmo;
             case HANDGUN -> c.handgunAmmo;
             case SHOTGUN -> c.shotgunAmmo;
             case SNIPER -> c.sniperAmmo;
         }).orElse(0);
 
-        entity.getCapability(TargetModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+        entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
             var newAmmoCount = Math.max(0, playerAmmo - ammoToAdd);
             switch (type) {
                 case RIFLE -> capability.rifleAmmo = newAmmoCount;
