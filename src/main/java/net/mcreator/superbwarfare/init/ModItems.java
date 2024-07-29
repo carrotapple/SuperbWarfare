@@ -114,6 +114,7 @@ public class ModItems {
     public static final RegistryObject<Item> SCHEELITE = ITEMS.register("scheelite", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> DOG_TAG = ITEMS.register("dog_tag", DogTag::new);
     public static final RegistryObject<Item> SHIELD_CELL = ITEMS.register("shield_cell", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> HAND_GRENADE = ITEMS.register("hand_grenade", HandGrenade::new);
 
     public static final RegistryObject<Item> IRON_BARREL = ITEMS.register("iron_barrel", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> IRON_ACTION = ITEMS.register("iron_action", () -> new Item(new Item.Properties()));
