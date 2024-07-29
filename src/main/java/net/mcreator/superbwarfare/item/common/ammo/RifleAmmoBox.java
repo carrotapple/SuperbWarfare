@@ -10,7 +10,7 @@ import java.util.List;
 
 public class RifleAmmoBox extends AmmoSupplierItem {
     public RifleAmmoBox() {
-        super(GunInfo.Type.RIFLE, 30, new Item.Properties().stacksTo(64).rarity(Rarity.COMMON));
+        super(GunInfo.Type.RIFLE, 30, new Item.Properties());
     }
 
     @Override

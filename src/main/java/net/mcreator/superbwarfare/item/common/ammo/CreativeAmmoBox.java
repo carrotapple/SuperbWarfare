@@ -17,7 +17,7 @@ import java.util.List;
 
 public class CreativeAmmoBox extends Item {
     public CreativeAmmoBox() {
-        super(new Item.Properties().stacksTo(64).rarity(Rarity.EPIC));
+        super(new Item.Properties().rarity(Rarity.EPIC));
     }
 
     @Override
