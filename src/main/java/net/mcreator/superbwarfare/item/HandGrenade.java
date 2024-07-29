@@ -1,6 +1,9 @@
 package net.mcreator.superbwarfare.item;
 
 import net.mcreator.superbwarfare.entity.HandGrenadeEntity;
+import net.mcreator.superbwarfare.init.ModDamageTypes;
+import net.mcreator.superbwarfare.tools.CustomExplosion;
+import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -9,6 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,8 +37,6 @@ public class HandGrenade extends Item {
     public void releaseUsing(ItemStack stack, Level worldIn, LivingEntity entityLiving, int timeLeft) {
         if (!worldIn.isClientSide) {
             if (entityLiving instanceof Player player) {
-
-
                 int usingTime = this.getUseDuration(stack) - timeLeft;
 
                 float power = Math.min(usingTime / 10.0f, 1.5f);
@@ -50,6 +52,21 @@ public class HandGrenade extends Item {
                 player.getCooldowns().addCooldown(stack.getItem(), 25);
             }
         }
+    }
+
+    @Override
+    public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
+        if (!pLevel.isClientSide) {
+            CustomExplosion explosion = new CustomExplosion(pLevel, null,
+                    ModDamageTypes.causeProjectileBoomDamage(pLevel.registryAccess(), pLivingEntity, pLivingEntity), 90,
+                    pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), 10f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(2);
+            explosion.explode();
+            net.minecraftforge.event.ForgeEventFactory.onExplosionStart(pLevel, explosion);
+            explosion.finalizeExplosion(false);
+            ParticleTool.spawnMediumExplosionParticles(pLevel, pLivingEntity.position());
+        }
+
+        return super.finishUsingItem(pStack, pLevel, pLivingEntity);
     }
 
     @Override

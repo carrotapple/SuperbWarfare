@@ -59,18 +59,15 @@ public class HandGrenadeEntity extends ThrowableItemProjectile {
 
 
     @Override
-    protected void onHit(HitResult result)
-    {
-        switch(result.getType())
-        {
+    protected void onHit(HitResult result) {
+        switch (result.getType()) {
             case BLOCK:
                 BlockHitResult blockResult = (BlockHitResult) result;
                 BlockPos resultPos = blockResult.getBlockPos();
                 BlockState state = this.level().getBlockState(resultPos);
                 SoundEvent event = state.getBlock().getSoundType(state, this.level(), resultPos, this).getStepSound();
                 double speed = this.getDeltaMovement().length();
-                if(speed > 0.1)
-                {
+                if (speed > 0.1) {
                     this.level().playSound(null, result.getLocation().x, result.getLocation().y, result.getLocation().z, event, SoundSource.AMBIENT, 1.0F, 1.0F);
                 }
                 this.bounce(blockResult.getDirection());
@@ -81,8 +78,7 @@ public class HandGrenadeEntity extends ThrowableItemProjectile {
                 Entity entity = entityResult.getEntity();
 
                 double speed_e = this.getDeltaMovement().length();
-                if(speed_e > 0.1)
-                {
+                if (speed_e > 0.1) {
                     entity.hurt(entity.damageSources().thrown(this, this.getOwner()), 1.0F);
                 }
                 this.bounce(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
@@ -93,17 +89,14 @@ public class HandGrenadeEntity extends ThrowableItemProjectile {
         }
     }
 
-    private void bounce(Direction direction)
-    {
-        switch(direction.getAxis())
-        {
+    private void bounce(Direction direction) {
+        switch (direction.getAxis()) {
             case X:
                 this.setDeltaMovement(this.getDeltaMovement().multiply(-0.5, 0.75, 0.75));
                 break;
             case Y:
                 this.setDeltaMovement(this.getDeltaMovement().multiply(0.75, -0.25, 0.75));
-                if(this.getDeltaMovement().y() < this.getGravity())
-                {
+                if (this.getDeltaMovement().y() < this.getGravity()) {
                     this.setDeltaMovement(this.getDeltaMovement().multiply(1, 0, 1));
                 }
                 break;
