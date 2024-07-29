@@ -128,6 +128,7 @@
   "item.superbwarfare.mk42_spawn_egg": "MK-42刷怪蛋",
   "item.superbwarfare.drone": "无人机",
   "item.superbwarfare.monitor": "遥控器",
+  "item.superbwarfare.hand_grenade": "M67手榴弹",
 
   "attribute.superbwarfare.spread": "散布",
 
@@ -193,6 +194,8 @@
   "entity.superbwarfare.projectile_rpg_rocket": "RPG火箭弹",
   "entity.superbwarfare.projectile_bocekarrow": "箭矢",
   "entity.superbwarfare.projectile_taser_bullet_projectile": "电极",
+  "entity.superbwarfare.projectile_drone_grenade": "榴弹",
+  "entity.superbwarfare.projectile_hand_grenade_entity": "快爆炸的手榴弹",
   "entity.superbwarfare.mortar": "迫击炮",
   "entity.superbwarfare.target": "标靶",
   "entity.superbwarfare.target_1": "标靶",
