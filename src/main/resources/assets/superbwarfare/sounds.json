@@ -1582,5 +1582,21 @@
         "stream": false
       }
     ]
+  },
+  "grenade_throw": {
+    "sounds": [
+      {
+        "name": "superbwarfare:grenade_throw",
+        "stream": false
+      }
+    ]
+  },
+  "grenade_pull": {
+    "sounds": [
+      {
+        "name": "superbwarfare:grenade_pull",
+        "stream": false
+      }
+    ]
   }
 }
