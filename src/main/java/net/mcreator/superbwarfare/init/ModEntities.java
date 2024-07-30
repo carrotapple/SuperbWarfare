@@ -37,8 +37,7 @@ public class ModEntities {
                     .setUpdateInterval(1).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<GunGrenadeEntity>> GUN_GRENADE = register("projectile_gun_grenade",
             EntityType.Builder.<GunGrenadeEntity>of(GunGrenadeEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(GunGrenadeEntity::new).sized(0.5f, 0.5f));
-    public static final RegistryObject<EntityType<DroneGrenadeEntity>> DRONE_GRENADE = register("projectile_drone_grenade",
-            EntityType.Builder.<DroneGrenadeEntity>of(DroneGrenadeEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(DroneGrenadeEntity::new).sized(0.5f, 0.5f));
+
     public static final RegistryObject<EntityType<FragEntity>> FRAG = register("projectile_frag",
             EntityType.Builder.<FragEntity>of(FragEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(FragEntity::new).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<TargetEntity>> TARGET = register("target",
@@ -55,6 +54,8 @@ public class ModEntities {
             EntityType.Builder.<CannonShellEntity>of(CannonShellEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(CannonShellEntity::new).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<HandGrenadeEntity>> HAND_GRENADE_ENTITY = register("projectile_hand_grenade_entity",
             EntityType.Builder.<HandGrenadeEntity>of(HandGrenadeEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(HandGrenadeEntity::new).sized(0.3f, 0.3f));
+    public static final RegistryObject<EntityType<RgoGrenadeEntity>> RGO_GRENADE = register("projectile_rgo_grenade",
+            EntityType.Builder.<RgoGrenadeEntity>of(RgoGrenadeEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(RgoGrenadeEntity::new).sized(0.3f, 0.3f));
 
 
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String registryname, EntityType.Builder<T> entityTypeBuilder) {

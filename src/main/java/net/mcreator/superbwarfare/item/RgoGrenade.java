@@ -1,6 +1,6 @@
 package net.mcreator.superbwarfare.item;
 
-import net.mcreator.superbwarfare.entity.HandGrenadeEntity;
+import net.mcreator.superbwarfare.entity.RgoGrenadeEntity;
 import net.mcreator.superbwarfare.init.ModDamageTypes;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
@@ -19,8 +19,8 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public class HandGrenade extends Item {
-    public HandGrenade() {
+public class RgoGrenade extends Item {
+    public RgoGrenade() {
         super(new Properties().rarity(Rarity.UNCOMMON));
     }
 
@@ -46,12 +46,12 @@ public class HandGrenade extends Item {
 
                 int usingTime = this.getUseDuration(stack) - timeLeft;
                 if (usingTime > 3) {
-                    player.getCooldowns().addCooldown(stack.getItem(), 25);
-                    float power = Math.min(usingTime / 10.0f, 1.5f);
+                    player.getCooldowns().addCooldown(stack.getItem(), 20);
+                    float power = Math.min(usingTime / 8.0f, 1.8f);
 
-                    HandGrenadeEntity handGrenade = new HandGrenadeEntity(player, worldIn, 100 - usingTime);
-                    handGrenade.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0f, power, 0.0f);
-                    worldIn.addFreshEntity(handGrenade);
+                    RgoGrenadeEntity rgoGrenade = new RgoGrenadeEntity(player, worldIn, 80 - usingTime);
+                    rgoGrenade.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0f, power, 0.0f);
+                    worldIn.addFreshEntity(rgoGrenade);
 
                     if (player instanceof ServerPlayer serverPlayer) {
                         serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.GRENADE_THROW.get(), SoundSource.PLAYERS, 1, 1);
@@ -69,15 +69,15 @@ public class HandGrenade extends Item {
     public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
         if (!pLevel.isClientSide) {
             CustomExplosion explosion = new CustomExplosion(pLevel, null,
-                    ModDamageTypes.causeProjectileBoomDamage(pLevel.registryAccess(), pLivingEntity, pLivingEntity), 90,
-                    pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), 6.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
+                    ModDamageTypes.causeProjectileBoomDamage(pLevel.registryAccess(), pLivingEntity, pLivingEntity), 75,
+                    pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), 5.75f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
             explosion.explode();
             net.minecraftforge.event.ForgeEventFactory.onExplosionStart(pLevel, explosion);
             explosion.finalizeExplosion(false);
             ParticleTool.spawnMediumExplosionParticles(pLevel, pLivingEntity.position());
 
             if (pLivingEntity instanceof Player player) {
-                player.getCooldowns().addCooldown(pStack.getItem(), 25);
+                player.getCooldowns().addCooldown(pStack.getItem(), 20);
             }
         }
 
@@ -86,7 +86,7 @@ public class HandGrenade extends Item {
 
     @Override
     public int getUseDuration(ItemStack stack) {
-        return 100;
+        return 80;
     }
 }
 

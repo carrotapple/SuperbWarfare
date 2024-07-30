@@ -70,14 +70,14 @@ public class ModItems {
     public static final RegistryObject<Item> ROCKET = AMMO.register("rocket", Rocket::new);
     public static final RegistryObject<Item> HE_5_INCHES = AMMO.register("he_5_inches", He5Inches::new);
     public static final RegistryObject<Item> AP_5_INCHES = AMMO.register("ap_5_inches", Ap5Inches::new);
+    public static final RegistryObject<Item> HAND_GRENADE = AMMO.register("hand_grenade", HandGrenade::new);
+    public static final RegistryObject<Item> RGO_GRENADE = AMMO.register("rgo_grenade", RgoGrenade::new);
 
     /**
      * items
      */
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
 
-    public static final RegistryObject<Item> SENPAI_SPAWN_EGG = ITEMS.register("senpai_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.SENPAI, -11584987, -14014413, new Item.Properties()));
-    public static final RegistryObject<Item> MK_42_SPAWN_EGG = ITEMS.register("mk42_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.MK_42, -8348258, -2630437, new Item.Properties()));
     public static final RegistryObject<Item> DRONE = ITEMS.register("drone", Drone::new);
 
     public static final RegistryObject<Item> MONITOR = ITEMS.register("monitor", Monitor::new);
@@ -114,7 +114,8 @@ public class ModItems {
     public static final RegistryObject<Item> SCHEELITE = ITEMS.register("scheelite", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> DOG_TAG = ITEMS.register("dog_tag", DogTag::new);
     public static final RegistryObject<Item> SHIELD_CELL = ITEMS.register("shield_cell", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
-    public static final RegistryObject<Item> HAND_GRENADE = ITEMS.register("hand_grenade", HandGrenade::new);
+    public static final RegistryObject<Item> SENPAI_SPAWN_EGG = ITEMS.register("senpai_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.SENPAI, -11584987, -14014413, new Item.Properties()));
+    public static final RegistryObject<Item> MK_42_SPAWN_EGG = ITEMS.register("mk42_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.MK_42, -8348258, -2630437, new Item.Properties()));
 
     public static final RegistryObject<Item> IRON_BARREL = ITEMS.register("iron_barrel", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> IRON_ACTION = ITEMS.register("iron_action", () -> new Item(new Item.Properties()));

@@ -1,5 +1,7 @@
 package net.mcreator.superbwarfare.item;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.tools.ItemNBTTool;
 import net.mcreator.superbwarfare.tools.TooltipTool;
@@ -7,19 +9,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.EquipmentSlot;
-
-import com.google.common.collect.Multimap;
-import com.google.common.collect.ImmutableMultimap;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -89,6 +87,17 @@ public class Monitor extends Item {
         super.inventoryTick(itemstack, world, entity, slot, selected);
         if (!selected) {
             itemstack.getOrCreateTag().putBoolean("Using",false);
+            DroneEntity drone = entity.level().getEntitiesOfClass(DroneEntity.class, entity.getBoundingBox().inflate(512))
+                    .stream().filter(e -> e.getStringUUID().equals(itemstack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
+
+            if (drone != null) {
+                drone.getPersistentData().putBoolean("left", false);
+                drone.getPersistentData().putBoolean("right", false);
+                drone.getPersistentData().putBoolean("forward", false);
+                drone.getPersistentData().putBoolean("backward", false);
+                drone.getPersistentData().putBoolean("up", false);
+                drone.getPersistentData().putBoolean("down", false);
+            }
         }
     }
 }

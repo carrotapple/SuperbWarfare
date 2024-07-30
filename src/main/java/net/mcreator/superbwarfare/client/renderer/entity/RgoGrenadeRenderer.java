@@ -3,8 +3,8 @@ package net.mcreator.superbwarfare.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.mcreator.superbwarfare.client.model.entity.ModelGrenade;
-import net.mcreator.superbwarfare.entity.DroneGrenadeEntity;
+import net.mcreator.superbwarfare.client.model.entity.ModelRgoGrenade;
+import net.mcreator.superbwarfare.entity.RgoGrenadeEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -13,17 +13,17 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
-public class DroneGrenadeRenderer extends EntityRenderer<DroneGrenadeEntity> {
-    private static final ResourceLocation texture = new ResourceLocation("superbwarfare:textures/entity/grenade.png");
-    private final ModelGrenade<DroneGrenadeEntity> model;
+public class RgoGrenadeRenderer extends EntityRenderer<RgoGrenadeEntity> {
+    private static final ResourceLocation texture = new ResourceLocation("superbwarfare:textures/entity/rgo_grenade.png");
+    private final ModelRgoGrenade<RgoGrenadeEntity> model;
 
-    public DroneGrenadeRenderer(EntityRendererProvider.Context context) {
+    public RgoGrenadeRenderer(EntityRendererProvider.Context context) {
         super(context);
-        model = new ModelGrenade<>(context.bakeLayer(ModelGrenade.LAYER_LOCATION));
+        model = new ModelRgoGrenade<>(context.bakeLayer(ModelRgoGrenade.LAYER_LOCATION));
     }
 
     @Override
-    public void render(DroneGrenadeEntity entityIn, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn) {
+    public void render(RgoGrenadeEntity entityIn, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn) {
         VertexConsumer vb = bufferIn.getBuffer(RenderType.entityCutout(this.getTextureLocation(entityIn)));
         poseStack.pushPose();
         poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entityIn.yRotO, entityIn.getYRot()) - 90));
@@ -34,7 +34,7 @@ public class DroneGrenadeRenderer extends EntityRenderer<DroneGrenadeEntity> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(DroneGrenadeEntity entity) {
+    public ResourceLocation getTextureLocation(RgoGrenadeEntity entity) {
         return texture;
     }
 }

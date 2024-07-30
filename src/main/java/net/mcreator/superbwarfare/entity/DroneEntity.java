@@ -295,10 +295,10 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
     private void droneDrop(Player player) {
         Level level = player.level();
         if (!level.isClientSide()) {
-            DroneGrenadeEntity droneGrenadeEntity = new DroneGrenadeEntity(player, level);
-            droneGrenadeEntity.setPos(this.getX(), this.getY(), this.getZ());
-            droneGrenadeEntity.shoot(0, -1, 0, 0, 0.5f);
-            level.addFreshEntity(droneGrenadeEntity);
+            RgoGrenadeEntity rgoGrenadeEntity = new RgoGrenadeEntity(player, level,80);
+            rgoGrenadeEntity.setPos(this.getX(), this.getY(), this.getZ());
+            rgoGrenadeEntity.shoot(0, -1, 0, 0, 0.5f);
+            level.addFreshEntity(rgoGrenadeEntity);
         }
     }
 
@@ -347,11 +347,17 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
             }
         } else if (stack.isEmpty() && player.isCrouching()) {
             ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.DRONE.get()));
+
             for (int index0 = 0; index0 < this.entityData.get(AMMO); index0++) {
-                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.GRENADE_40MM.get()));
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.RGO_GRENADE.get()));
             }
+
+            if (this.entityData.get(KAMIKAZE)) {
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MORTAR_SHELLS.get()));
+            }
+
             if (!this.level().isClientSide()) this.discard();
-        } else if (stack.getItem() == ModItems.GRENADE_40MM.get() && !this.entityData.get(KAMIKAZE)) {
+        } else if (stack.getItem() == ModItems.RGO_GRENADE.get() && !this.entityData.get(KAMIKAZE)) {
             if (!player.isCreative()) {
                 stack.shrink(1);
             }

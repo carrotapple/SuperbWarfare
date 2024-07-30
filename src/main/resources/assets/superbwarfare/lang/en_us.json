@@ -129,6 +129,7 @@
   "item.superbwarfare.drone": "Drone",
   "item.superbwarfare.monitor": "Monitor",
   "item.superbwarfare.hand_grenade": "Hand Grenade",
+  "item.superbwarfare.rgo_grenade": "RGO Grenade",
 
   "attribute.superbwarfare.spread": "Spread",
 
@@ -194,8 +195,8 @@
   "entity.superbwarfare.projectile_rpg_rocket": "RPG Rocket",
   "entity.superbwarfare.projectile_bocekarrow": "Arrow",
   "entity.superbwarfare.projectile_taser_bullet_projectile": "Taser Electrode",
-  "entity.superbwarfare.projectile_drone_grenade": "Grenade",
-  "entity.superbwarfare.projectile_hand_grenade_entity": "Exploding Hand Grenade",
+  "entity.superbwarfare.projectile_hand_grenade_entity": "Exploding M67 Grenade",
+  "entity.superbwarfare.projectile_rgo_grenade": "Exploding RGO Grenade",
   "entity.superbwarfare.mortar": "Mortar",
   "entity.superbwarfare.target": "Target",
   "entity.superbwarfare.target_1": "Target",

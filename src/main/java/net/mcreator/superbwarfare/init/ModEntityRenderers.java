@@ -25,7 +25,7 @@ public class ModEntityRenderers {
         event.registerEntityRenderer(ModEntities.FRAG.get(), FragRenderer::new);
         event.registerEntityRenderer(ModEntities.MK_42.get(), Mk42Renderer::new);
         event.registerEntityRenderer(ModEntities.DRONE.get(), DroneRenderer::new);
-        event.registerEntityRenderer(ModEntities.DRONE_GRENADE.get(), DroneGrenadeRenderer::new);
         event.registerEntityRenderer(ModEntities.HAND_GRENADE_ENTITY.get(), HandGrenadeEntityRenderer::new);
+        event.registerEntityRenderer(ModEntities.RGO_GRENADE.get(), RgoGrenadeRenderer::new);
     }
 }

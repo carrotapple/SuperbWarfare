@@ -32,24 +32,24 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 
-public class HandGrenadeEntity extends ThrowableItemProjectile {
-    private int fuse = 100;
+public class RgoGrenadeEntity extends ThrowableItemProjectile {
+    private int fuse = 80;
 
-    public HandGrenadeEntity(EntityType<? extends HandGrenadeEntity> type, Level world) {
+    public RgoGrenadeEntity(EntityType<? extends RgoGrenadeEntity> type, Level world) {
         super(type, world);
     }
 
-    public HandGrenadeEntity(EntityType<? extends HandGrenadeEntity> type, LivingEntity entity, Level world) {
+    public RgoGrenadeEntity(EntityType<? extends RgoGrenadeEntity> type, LivingEntity entity, Level world) {
         super(type, entity, world);
     }
 
-    public HandGrenadeEntity(LivingEntity entity, Level level, int fuse) {
-        super(ModEntities.HAND_GRENADE_ENTITY.get(), entity, level);
+    public RgoGrenadeEntity(LivingEntity entity, Level level, int fuse) {
+        super(ModEntities.RGO_GRENADE.get(), entity, level);
         this.fuse = fuse;
     }
 
-    public HandGrenadeEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
-        this(ModEntities.HAND_GRENADE_ENTITY.get(), level);
+    public RgoGrenadeEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
+        this(ModEntities.RGO_GRENADE.get(), level);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class HandGrenadeEntity extends ThrowableItemProjectile {
 
     @Override
     protected Item getDefaultItem() {
-        return ModItems.HAND_GRENADE.get();
+        return ModItems.RGO_GRENADE.get();
     }
 
 
@@ -117,6 +117,7 @@ public class HandGrenadeEntity extends ThrowableItemProjectile {
                 this.setDeltaMovement(this.getDeltaMovement().multiply(0.75, 0.75, -0.5));
                 break;
         }
+        this.fuse = 2;
     }
 
     @Override
@@ -139,8 +140,8 @@ public class HandGrenadeEntity extends ThrowableItemProjectile {
 
     private void causeExplode() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 90,
-                this.getX(), this.getY(), this.getZ(), 6.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 75,
+                this.getX(), this.getY(), this.getZ(), 5.75f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
