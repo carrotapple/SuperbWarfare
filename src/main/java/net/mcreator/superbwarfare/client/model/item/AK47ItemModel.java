@@ -55,13 +55,8 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
 
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
-        if (gun.getPosX() > 1.8) {
-            holo.setScaleX(1);
-            holo.setScaleY(1);
-        } else {
-            holo.setScaleX(0);
-            holo.setScaleY(0);
-        }
+
+        holo.setHidden(!(gun.getPosX() > 1.8));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
@@ -83,13 +78,12 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         shuan.setPosZ(2.4f * (float) fp);
 
         if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (1.0 + 0.5 * (Math.random() - 0.5)));
+            flare.setHidden(false);
+            flare.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
+            flare.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
             flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
         } else {
-            flare.setScaleX(0);
-            flare.setScaleY(0);
-            flare.setRotZ(0);
+            flare.setHidden(true);
         }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");

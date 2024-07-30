@@ -43,13 +43,12 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
         if (!stack.is(ModTags.Items.GUN)) return;
 
         if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (1.0 + 0.5 * (Math.random() - 0.5)));
+            flare.setHidden(false);
+            flare.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
+            flare.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
             flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
         } else {
-            flare.setScaleX(0);
-            flare.setScaleY(0);
-            flare.setRotZ(0);
+            flare.setHidden(true);
         }
 
         double p = player.getPersistentData().getDouble("zoom_pos");
@@ -62,13 +61,7 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
 
         scope.setScaleZ(1f - (0.5f * (float) p));
 
-        if (gun.getPosX() > 3.1) {
-            holo.setScaleX(1);
-            holo.setScaleY(1);
-        } else {
-            holo.setScaleX(0);
-            holo.setScaleY(0);
-        }
+        holo.setHidden(!(gun.getPosX() > 3.1));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");

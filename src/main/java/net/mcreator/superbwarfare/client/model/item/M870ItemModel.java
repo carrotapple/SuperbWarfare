@@ -33,7 +33,6 @@ public class M870ItemModel extends GeoModel<M870Item> {
     public void setCustomAnimations(M870Item animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
-        CoreGeoBone shell = getAnimationProcessor().getBone("shell");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -72,13 +71,12 @@ public class M870ItemModel extends GeoModel<M870Item> {
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
 
         if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (1.0 + 0.5 * (Math.random() - 0.5)));
+            flare.setHidden(false);
+            flare.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
+            flare.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
             flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
         } else {
-            flare.setScaleX(0);
-            flare.setScaleY(0);
-            flare.setRotZ(0);
+            flare.setHidden(true);
         }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");

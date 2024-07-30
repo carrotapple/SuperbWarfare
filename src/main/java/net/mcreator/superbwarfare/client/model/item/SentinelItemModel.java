@@ -70,14 +70,8 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         cb.setRotZ(cb.getRotZ() + times * 0.03f * (float) (stack.getOrCreateTag().getDouble("chamber_rot")));
 
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
-        if (gun.getPosX() > 1.8) {
-            holo.setPosY(0.09f);
-            holo.setScaleX(1);
-            holo.setScaleY(1);
-        } else {
-            holo.setScaleX(0);
-            holo.setScaleY(0);
-        }
+        holo.setPosY(0.09f);
+        holo.setHidden(!(gun.getPosX() > 1.8));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
@@ -104,13 +98,7 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
                 iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() > 0)
         );
 
-        if (flag.get()) {
-            charge.setScaleX(1);
-            charge.setScaleY(1);
-        } else {
-            charge.setScaleX(0);
-            charge.setScaleY(0);
-        }
+        charge.setHidden(!flag.get());
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
@@ -157,13 +145,12 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
 
         if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (1.0 + 0.5 * (Math.random() - 0.5)));
+            flare.setHidden(false);
+            flare.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
+            flare.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
             flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
         } else {
-            flare.setScaleX(0);
-            flare.setScaleY(0);
-            flare.setRotZ(0);
+            flare.setHidden(true);
         }
 
         if ((stack.getOrCreateTag().getDouble("ammo") <= 5)) {

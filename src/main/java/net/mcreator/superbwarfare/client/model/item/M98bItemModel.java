@@ -56,11 +56,8 @@ public class M98bItemModel extends GeoModel<M98bItem> {
         }
         shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
 
-        double p = 0;
-        p = player.getPersistentData().getDouble("zoom_pos");
-
-        double zp = 0;
-        zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double p = player.getPersistentData().getDouble("zoom_pos");
+        double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(2.245f * (float) p);
 
@@ -74,25 +71,20 @@ public class M98bItemModel extends GeoModel<M98bItem> {
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
         CoreGeoBone qiang = getAnimationProcessor().getBone("qiang");
         if (gun.getPosX() > 1.9) {
-            holo.setScaleX(1);
-            holo.setScaleY(1);
-            qiang.setScaleX(0);
-            qiang.setScaleY(0);
+            holo.setHidden(false);
+            qiang.setHidden(true);
         } else {
-            holo.setScaleX(0);
-            holo.setScaleY(0);
-            qiang.setScaleX(1);
-            qiang.setScaleY(1);
+            holo.setHidden(true);
+            qiang.setHidden(false);
         }
 
         if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (1.0 + 0.5 * (Math.random() - 0.5)));
+            flare.setHidden(false);
+            flare.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
+            flare.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
             flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
         } else {
-            flare.setScaleX(0);
-            flare.setScaleY(0);
-            flare.setRotZ(0);
+            flare.setHidden(true);
         }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
@@ -101,10 +93,8 @@ public class M98bItemModel extends GeoModel<M98bItem> {
         float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
         float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
 
-        double y = 0;
-        double x = 0;
-        y = player.getPersistentData().getDouble("y");
-        x = player.getPersistentData().getDouble("x");
+        double y = player.getPersistentData().getDouble("y");
+        double x = player.getPersistentData().getDouble("x");
 
         root.setPosX(PosX);
 

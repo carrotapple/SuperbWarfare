@@ -70,21 +70,11 @@ public class RpkItemModel extends GeoModel<RpkItem> {
 
 
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
-        if (gun.getPosX() > 1.65f) {
-            holo.setScaleX(0.9f);
-            holo.setScaleY(0.9f);
-            hide.setScaleX(0);
-            hide.setScaleY(0);
-            hide.setScaleZ(0);
 
-        } else {
-            holo.setScaleX(0);
-            holo.setScaleY(0);
-            hide.setScaleX(1);
-            hide.setScaleY(1);
-            hide.setScaleZ(1);
+        holo.setScaleX(0.9f);
+        holo.setScaleY(0.9f);
 
-        }
+        holo.setHidden(!(gun.getPosX() > 1.65));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
@@ -105,13 +95,12 @@ public class RpkItemModel extends GeoModel<RpkItem> {
         shuan.setPosZ(2.4f * (float) fp);
 
         if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (1.0 + 0.5 * (Math.random() - 0.5)));
+            flare.setHidden(false);
+            flare.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
+            flare.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
             flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
         } else {
-            flare.setScaleX(0);
-            flare.setScaleY(0);
-            flare.setRotZ(0);
+            flare.setHidden(true);
         }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
