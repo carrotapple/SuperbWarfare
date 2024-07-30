@@ -117,7 +117,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile {
                 this.setDeltaMovement(this.getDeltaMovement().multiply(0.75, 0.75, -0.5));
                 break;
         }
-        this.fuse = 2;
+        this.fuse = 1;
     }
 
     @Override

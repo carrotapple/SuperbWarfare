@@ -295,7 +295,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
     private void droneDrop(Player player) {
         Level level = player.level();
         if (!level.isClientSide()) {
-            RgoGrenadeEntity rgoGrenadeEntity = new RgoGrenadeEntity(player, level,80);
+            RgoGrenadeEntity rgoGrenadeEntity = new RgoGrenadeEntity(player, level,160);
             rgoGrenadeEntity.setPos(this.getX(), this.getY(), this.getZ());
             rgoGrenadeEntity.shoot(0, -1, 0, 0, 0.5f);
             level.addFreshEntity(rgoGrenadeEntity);
@@ -358,11 +358,11 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 
             if (!this.level().isClientSide()) this.discard();
         } else if (stack.getItem() == ModItems.RGO_GRENADE.get() && !this.entityData.get(KAMIKAZE)) {
-            if (!player.isCreative()) {
-                stack.shrink(1);
-            }
             if (this.entityData.get(AMMO) < 6) {
                 this.entityData.set(AMMO, this.entityData.get(AMMO) + 1);
+                if (!player.isCreative()) {
+                    stack.shrink(1);
+                }
                 if (player instanceof ServerPlayer serverPlayer) {
                     serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 0.5F, 1);
                 }
