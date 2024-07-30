@@ -2,7 +2,10 @@ package net.mcreator.superbwarfare.entity;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.block.BarbedWireBlock;
-import net.mcreator.superbwarfare.init.*;
+import net.mcreator.superbwarfare.init.ModDamageTypes;
+import net.mcreator.superbwarfare.init.ModEntities;
+import net.mcreator.superbwarfare.init.ModParticleTypes;
+import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.mcreator.superbwarfare.network.message.PlayerGunKillMessage;
 import net.mcreator.superbwarfare.tools.ExtendedEntityRayTraceResult;
@@ -16,6 +19,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -39,6 +45,10 @@ import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.entity.PartEntity;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -47,7 +57,12 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnData {
+public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnData, GeoEntity, AnimatedEntity {
+
+    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(ProjectileEntity.class, EntityDataSerializers.STRING);
+
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    public String animationProcedure = "empty";
     private static final Predicate<Entity> PROJECTILE_TARGETS = input -> input != null && input.isPickable() && !input.isSpectator() && input.isAlive();
 
     private static final Predicate<BlockState> IGNORE_LEAVES = input -> input != null && (input.getBlock() instanceof LeavesBlock
@@ -586,5 +601,27 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         public boolean isLegshot() {
             return this.legshot;
         }
+    }
+
+    public String getSyncedAnimation() {
+        return this.entityData.get(ANIMATION);
+    }
+
+    public void setAnimation(String animation) {
+        this.entityData.set(ANIMATION, animation);
+    }
+
+    @Override
+    public void setAnimationProcedure(String procedure) {
+        this.animationProcedure = procedure;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 }

@@ -40,7 +40,7 @@ import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity{
-    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(RgoGrenadeEntity.class, EntityDataSerializers.STRING);
     private int fuse = 80;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);

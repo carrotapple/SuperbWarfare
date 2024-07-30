@@ -21,7 +21,7 @@ public class ModEntityRenderers {
         event.registerEntityRenderer(ModEntities.MORTAR_SHELL.get(), MortarShellRenderer::new);
         event.registerEntityRenderer(ModEntities.CANNON_SHELL.get(), CannonShellRenderer::new);
         event.registerEntityRenderer(ModEntities.BOCEK_ARROW.get(), BocekArrowRenderer::new);
-        event.registerEntityRenderer(ModEntities.PROJECTILE.get(), ProjectileRenderer::new);
+        event.registerEntityRenderer(ModEntities.PROJECTILE.get(), ProjectileEntityRenderer::new);
         event.registerEntityRenderer(ModEntities.FRAG.get(), FragRenderer::new);
         event.registerEntityRenderer(ModEntities.MK_42.get(), Mk42Renderer::new);
         event.registerEntityRenderer(ModEntities.DRONE.get(), DroneRenderer::new);
