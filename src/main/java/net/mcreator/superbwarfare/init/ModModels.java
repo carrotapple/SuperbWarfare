@@ -18,6 +18,5 @@ public class ModModels {
         event.registerLayerDefinition(ModelBocekArrow.LAYER_LOCATION, ModelBocekArrow::createBodyLayer);
         event.registerLayerDefinition(ModelClaymore.LAYER_LOCATION, ModelClaymore::createBodyLayer);
         event.registerLayerDefinition(ModelHandGrenade.LAYER_LOCATION, ModelHandGrenade::createBodyLayer);
-        event.registerLayerDefinition(ModelRgoGrenade.LAYER_LOCATION, ModelRgoGrenade::createBodyLayer);
     }
 }
