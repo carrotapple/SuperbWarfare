@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.event;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.ProjectileEntity;
+import net.mcreator.superbwarfare.event.modevent.ReloadEvent;
 import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.ZoomMessage;
@@ -20,6 +21,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -47,6 +49,20 @@ public class GunEventHandler {
             handleGunSingleReload(player);
             handleSentinelCharge(player);
         }
+    }
+
+    @SubscribeEvent
+    public static void onReload(ReloadEvent event) {
+        Player player = event.player;
+        ItemStack stack = event.stack;
+        if (player == null || !stack.is(ModTags.Items.GUN)) {
+            return;
+        }
+
+        if (player.level().isClientSide) {
+            return;
+        }
+
     }
 
     /**
@@ -451,6 +467,8 @@ public class GunEventHandler {
         }
         stack.getOrCreateTag().putBoolean("is_normal_reloading", false);
         stack.getOrCreateTag().putBoolean("is_empty_reloading", false);
+
+        MinecraftForge.EVENT_BUS.post(new ReloadEvent(player, stack));
     }
 
     public static void playGunEmptyReload(Player player) {
@@ -477,6 +495,8 @@ public class GunEventHandler {
 
         stack.getOrCreateTag().putBoolean("is_normal_reloading", false);
         stack.getOrCreateTag().putBoolean("is_empty_reloading", false);
+
+        MinecraftForge.EVENT_BUS.post(new ReloadEvent(player, stack));
     }
 
     public static void playGunEmptyReloadSounds(Player player) {
@@ -520,8 +540,7 @@ public class GunEventHandler {
         ItemStack stack = player.getMainHandItem();
         CompoundTag tag = stack.getOrCreateTag();
 
-        //换弹流程计时器
-
+        // 换弹流程计时器
         if (tag.getDouble("prepare") > 0) {
             tag.putDouble("prepare", tag.getDouble("prepare") - 1);
         }
@@ -535,11 +554,10 @@ public class GunEventHandler {
             tag.putDouble("finish", tag.getDouble("finish") - 1);
         }
 
-        //一阶段
-
+        // 一阶段
         if (tag.getBoolean("start_single_reload")) {
 
-            //此处判断空仓换弹的时候，是否在准备阶段就需要装填一发，如M870
+            // 此处判断空仓换弹的时候，是否在准备阶段就需要装填一发，如M870
             if (tag.getDouble("prepare_load_time") != 0 && tag.getInt("ammo") == 0) {
                 playGunPrepareLoadReloadSounds(player);
                 tag.putInt("prepare_load", (int) tag.getDouble("prepare_load_time"));
@@ -556,7 +574,6 @@ public class GunEventHandler {
             tag.putInt("reload_stage", 1);
             tag.putBoolean("reloading", true);
             tag.putBoolean("start_single_reload", false);
-
         }
 
         if (stack.getItem() == ModItems.M_870.get()) {
@@ -565,12 +582,10 @@ public class GunEventHandler {
             }
         }
 
-        //一阶段结束，检查备弹，如果有则二阶段启动，无则直接跳到三阶段
-
-
+        // 一阶段结束，检查备弹，如果有则二阶段启动，无则直接跳到三阶段
         if ((tag.getDouble("prepare") == 1 || tag.getDouble("prepare_load") == 1)) {
 
-            //检查备弹
+            // 检查备弹
             var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
             if (stack.is(ModTags.Items.SHOTGUN) && capability.shotgunAmmo == 0) {
                 tag.putBoolean("force_stage3_start", true);
@@ -585,13 +600,12 @@ public class GunEventHandler {
             }
         }
 
-        //强制停止换弹，进入三阶段
+        // 强制停止换弹，进入三阶段
         if (tag.getBoolean("force_stop")) {
             tag.putBoolean("stop", true);
         }
 
-        //二阶段
-
+        // 二阶段
         if ((tag.getDouble("prepare") == 0 || tag.getDouble("prepare_load") == 0)
                 && tag.getInt("reload_stage") == 2
                 && tag.getInt("iterative") == 0
@@ -601,7 +615,7 @@ public class GunEventHandler {
             playGunLoopReloadSounds(player);
             tag.putDouble("iterative", (int) tag.getDouble("iterative_time"));
             player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("iterative_time"));
-            //动画播放nbt
+            // 动画播放nbt
             if (tag.getDouble("load_index") == 1) {
                 tag.putDouble("load_index", 0);
             } else {
@@ -609,8 +623,7 @@ public class GunEventHandler {
             }
         }
 
-        //装填
-
+        // 装填
         if (stack.getItem() == ModItems.M_870.get()) {
             if (tag.getInt("iterative") == 3) {
                 singleLoad(player);
@@ -623,15 +636,15 @@ public class GunEventHandler {
             }
         }
 
-        //二阶段结束
+        // 二阶段结束
         if (tag.getInt("iterative") == 1) {
 
-            //装满结束
+            // 装满结束
             if (tag.getInt("ammo") >= (int) tag.getDouble("mag")) {
                 tag.putInt("reload_stage", 3);
             }
 
-            //备弹耗尽结束
+            // 备弹耗尽结束
             var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
             if (stack.is(ModTags.Items.SHOTGUN) && capability.shotgunAmmo == 0) {
                 tag.putInt("reload_stage", 3);
@@ -643,7 +656,7 @@ public class GunEventHandler {
                 tag.putInt("reload_stage", 3);
             }
 
-            //强制结束
+            // 强制结束
             if (tag.getBoolean("stop")) {
                 tag.putInt("reload_stage", 3);
                 tag.putBoolean("force_stop", false);
@@ -651,17 +664,15 @@ public class GunEventHandler {
             }
         }
 
-        //三阶段
-
+        // 三阶段
         if ((tag.getInt("iterative") == 1 && tag.getInt("reload_stage") == 3) || tag.getBoolean("force_stage3_start")) {
             tag.putBoolean("force_stage3_start", false);
             tag.putDouble("finish", (int) tag.getDouble("finish_time"));
             player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("finish_time"));
             playGunEndReloadSounds(player);
-
         }
 
-        //三阶段结束
+        // 三阶段结束
         if (tag.getInt("finish") == 1) {
             tag.putInt("reload_stage", 0);
             tag.putBoolean("reloading", false);
@@ -695,6 +706,8 @@ public class GunEventHandler {
                 capability.syncPlayerVariables(player);
             });
         }
+
+        MinecraftForge.EVENT_BUS.post(new ReloadEvent(player, stack));
     }
 
     public static void playGunPrepareReloadSounds(Player player) {
