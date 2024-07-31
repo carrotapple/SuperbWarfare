@@ -20,6 +20,7 @@ public class ModTags {
         public static final TagKey<Item> LEGENDARY_GUN = tag("legendary_gun");
         public static final TagKey<Item> SPECIAL_GUN = tag("special_gun");
         public static final TagKey<Item> OPEN_BOLT = tag("open_bolt");
+        public static final TagKey<Item> CAN_RELOAD = tag("can_reload");
 
         private static TagKey<Item> tag(String name) {
             return ItemTags.create(new ResourceLocation(ModUtils.MODID, name));
