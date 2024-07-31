@@ -817,12 +817,18 @@ public class GunEventHandler {
     }
 
     private static void handleHealClip(Player player, ItemStack stack) {
+        int healClipLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.HEAL_CLIP.get(), stack);
+        if (healClipLevel == 0) {
+            healClipLevel = 1;
+        }
+
         int time = stack.getOrCreateTag().getInt("HealClipTime");
         if (time > 0) {
-            player.heal(player.getMaxHealth() * .6f);
+            player.heal(12.0f * (0.8f + 0.2f * healClipLevel));
             List<Player> players = player.level().getEntitiesOfClass(Player.class, player.getBoundingBox().inflate(5))
                     .stream().filter(p -> p.isAlliedTo(player)).toList();
-            players.forEach(p -> p.heal(p.getMaxHealth() * .3f));
+            int finalHealClipLevel = healClipLevel;
+            players.forEach(p -> p.heal(6.0f * (0.8f + 0.2f * finalHealClipLevel)));
 
             stack.getOrCreateTag().putInt("HealClipTime", 0);
         }

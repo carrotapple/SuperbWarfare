@@ -269,9 +269,9 @@ public class LivingEventHandler {
                 return;
             }
 
-            int level = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.HEAL_CLIP.get(), stack);
-            if (level != 0) {
-                stack.getOrCreateTag().putInt("HealClipTime", 80 + level * 20);
+            int healClipLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.HEAL_CLIP.get(), stack);
+            if (healClipLevel != 0) {
+                stack.getOrCreateTag().putInt("HealClipTime", 80 + healClipLevel * 20);
             }
         }
     }
