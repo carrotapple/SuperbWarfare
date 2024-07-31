@@ -91,6 +91,10 @@ public abstract class GunItem extends Item {
                 itemstack.getOrCreateTag().putInt("HealClipTime", Math.max(0, itemstack.getOrCreateTag().getInt("HealClipTime") - 1));
             }
 
+            if (itemstack.getOrCreateTag().getInt("KillClipReloadTime") > 0) {
+                itemstack.getOrCreateTag().putInt("KillClipReloadTime", Math.max(0, itemstack.getOrCreateTag().getInt("KillClipReloadTime") - 1));
+            }
+
             if (itemstack.getOrCreateTag().getInt("KillClipTime") > 0) {
                 itemstack.getOrCreateTag().putInt("KillClipTime", Math.max(0, itemstack.getOrCreateTag().getInt("KillClipTime") - 1));
             }

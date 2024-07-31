@@ -38,6 +38,7 @@ public class LivingEventHandler {
             return;
         }
 
+        handleKillClipDamage(event);
         renderDamageIndicator(event);
         reduceBulletDamage(event, event.getSource(), event.getEntity(), event.getSource().getEntity(), event.getAmount());
     }
@@ -50,7 +51,7 @@ public class LivingEventHandler {
 
         killIndication(event.getSource().getEntity());
         handlePlayerKillEntity(event);
-        handleHealClip(event);
+        handleClipEnchantments(event);
     }
 
     private static void reduceBulletDamage(LivingHurtEvent event, DamageSource damagesource, LivingEntity entity, Entity sourceentity, double amount) {
@@ -248,7 +249,7 @@ public class LivingEventHandler {
         }
     }
 
-    private static void handleHealClip(LivingDeathEvent event) {
+    private static void handleClipEnchantments(LivingDeathEvent event) {
         DamageSource source = event.getSource();
 
         Player attacker = null;
@@ -263,7 +264,9 @@ public class LivingEventHandler {
             return;
         }
 
-        if (source.is(ModDamageTypes.GUN_FIRE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)) {
+        if (source.is(ModDamageTypes.GUN_FIRE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT) ||
+                source.is(ModDamageTypes.ARROW_IN_BRAIN) || source.is(ModDamageTypes.ARROW_IN_KNEE)
+                || source.is(ModDamageTypes.PROJECTILE_BOOM)) {
             ItemStack stack = attacker.getMainHandItem();
             if (!stack.is(ModTags.Items.GUN)) {
                 return;
@@ -272,6 +275,40 @@ public class LivingEventHandler {
             int healClipLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.HEAL_CLIP.get(), stack);
             if (healClipLevel != 0) {
                 stack.getOrCreateTag().putInt("HealClipTime", 80 + healClipLevel * 20);
+            }
+
+            int killClipLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.KILL_CLIP.get(), stack);
+            if (killClipLevel != 0) {
+                stack.getOrCreateTag().putInt("KillClipReloadTime", 80);
+            }
+        }
+    }
+
+    private static void handleKillClipDamage(LivingHurtEvent event) {
+        DamageSource source = event.getSource();
+
+        Player attacker = null;
+        if (source.getEntity() instanceof Player player) {
+            attacker = player;
+        }
+        if (source.getDirectEntity() instanceof Projectile projectile && projectile.getOwner() instanceof Player player) {
+            attacker = player;
+        }
+
+        if (attacker == null) {
+            return;
+        }
+
+        if (source.is(ModDamageTypes.GUN_FIRE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT) ||
+                source.is(ModDamageTypes.ARROW_IN_BRAIN) || source.is(ModDamageTypes.ARROW_IN_KNEE)
+                || source.is(ModDamageTypes.PROJECTILE_BOOM)) {
+            ItemStack stack = attacker.getMainHandItem();
+            if (!stack.is(ModTags.Items.GUN)) {
+                return;
+            }
+
+            if (stack.getOrCreateTag().getInt("KillClipTime") > 0) {
+                event.setAmount(event.getAmount() * 1.25f);
             }
         }
     }

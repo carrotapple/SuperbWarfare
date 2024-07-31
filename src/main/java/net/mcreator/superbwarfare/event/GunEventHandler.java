@@ -65,6 +65,7 @@ public class GunEventHandler {
         }
 
         handleHealClip(player, stack);
+        handleKillClip(stack);
     }
 
     /**
@@ -831,6 +832,16 @@ public class GunEventHandler {
             players.forEach(p -> p.heal(6.0f * (0.8f + 0.2f * finalHealClipLevel)));
 
             stack.getOrCreateTag().putInt("HealClipTime", 0);
+        }
+    }
+
+    private static void handleKillClip(ItemStack stack) {
+        int level = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.KILL_CLIP.get(), stack);
+
+        int time = stack.getOrCreateTag().getInt("KillClipReloadTime");
+        if (time > 0) {
+            stack.getOrCreateTag().putInt("KillClipTime", 90 + 10 * level);
+            stack.getOrCreateTag().putInt("KillClipReloadTime", 0);
         }
     }
 }
