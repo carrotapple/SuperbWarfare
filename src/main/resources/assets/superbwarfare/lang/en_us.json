@@ -126,6 +126,7 @@
   "curios.identifier.dog_tag": "Dog Tag",
   "item.superbwarfare.shield_cell": "Cell",
   "item.superbwarfare.mk42_spawn_egg": "MK-42 Spawn Egg",
+  "item.superbwarfare.mle1934_spawn_egg": "138.6mm50 Mle1934 R1938 Spawn Egg",
   "item.superbwarfare.drone": "Drone",
   "item.superbwarfare.monitor": "Monitor",
   "item.superbwarfare.hand_grenade": "Hand Grenade",
@@ -203,6 +204,7 @@
   "entity.superbwarfare.claymore": "Claymore",
   "entity.superbwarfare.senpai": "Senpai",
   "entity.superbwarfare.mk_42": "5''/54 Mk42",
+  "entity.superbwarfare.mle_1934": "138.6mm50 Mle1934 R1938",
   "entity.superbwarfare.drone": "Drone",
 
   "key.categories.superbwarfare": "Superb Warfare",

@@ -126,6 +126,7 @@
   "curios.identifier.dog_tag": "狗牌",
   "item.superbwarfare.shield_cell": "电池",
   "item.superbwarfare.mk42_spawn_egg": "MK-42刷怪蛋",
+  "item.superbwarfare.mle1934_spawn_egg": "138.6mm50 Mle1934 R1938刷怪蛋",
   "item.superbwarfare.drone": "无人机",
   "item.superbwarfare.monitor": "遥控器",
   "item.superbwarfare.hand_grenade": "M67手榴弹",
@@ -203,6 +204,7 @@
   "entity.superbwarfare.claymore": "阔剑地雷",
   "entity.superbwarfare.senpai": "野兽先辈",
   "entity.superbwarfare.mk_42": "5''/54 Mk42",
+  "entity.superbwarfare.mle_1934": "138.6mm50 Mle1934 R1938",
   "entity.superbwarfare.drone": "无人机",
 
   "key.categories.superbwarfare": "卓越前线",

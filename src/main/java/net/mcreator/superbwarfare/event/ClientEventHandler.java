@@ -61,7 +61,7 @@ public class ClientEventHandler {
     public static void computeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
         ClientLevel level = Minecraft.getInstance().level;
         Entity entity = event.getCamera().getEntity();
-        if (level != null && entity instanceof LivingEntity living && entity.isPassenger() && entity.getVehicle() instanceof Mk42Entity) {
+        if (level != null && entity instanceof LivingEntity living && entity.isPassenger() && (entity.getVehicle() instanceof Mk42Entity || entity.getVehicle() instanceof Mle1934Entity)) {
             handleCannonCamera(event, living);
         }
         if (level != null && entity instanceof LivingEntity living

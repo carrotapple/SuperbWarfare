@@ -3,6 +3,7 @@ package net.mcreator.superbwarfare.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.entity.Mle1934Entity;
+import net.mcreator.superbwarfare.entity.layer.Mle1934Layer;
 import net.mcreator.superbwarfare.entity.model.Mle1934Model;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -15,7 +16,7 @@ public class Mle1934Renderer extends GeoEntityRenderer<Mle1934Entity> {
     public Mle1934Renderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new Mle1934Model());
         this.shadowRadius = 3f;
-//        this.addRenderLayer(new Mk42Layer(this));
+        this.addRenderLayer(new Mle1934Layer(this));
     }
 
     @Override

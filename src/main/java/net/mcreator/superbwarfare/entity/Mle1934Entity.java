@@ -1,5 +1,6 @@
 package net.mcreator.superbwarfare.entity;
 
+import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModDamageTypes;
 import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;
@@ -104,7 +105,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity {
 
     @Override
     public double getPassengersRidingOffset() {
-        return super.getPassengersRidingOffset() - 0.1;
+        return super.getPassengersRidingOffset() - 0.075;
     }
 
     @Override
@@ -215,15 +216,8 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity {
             this.getPersistentData().putInt("fire_cooldown", this.getPersistentData().getInt("fire_cooldown") - 1);
         }
 
-        if (this.getPersistentData().getInt("fire_cooldown") > 28) {
+        if (this.getPersistentData().getInt("fire_cooldown") > 72) {
             gunner.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-
-                if (Math.random() < 0.5) {
-                    capability.recoilHorizon = -1;
-                } else {
-                    capability.recoilHorizon = 1;
-                }
-
                 capability.cannonRecoil = 10;
                 capability.syncPlayerVariables(gunner);
             });
@@ -251,45 +245,71 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity {
             float fireProbability = 0;
             int fireTime = 0;
             int durability = 0;
+            boolean salvoShoot = false;
 
             if (stack.is(ModItems.HE_5_INCHES.get())) {
-                hitDamage = 100;
-                explosionRadius = 10;
-                explosionDamage = 200;
-                fireProbability = 0.18F;
+                hitDamage = 130;
+                explosionRadius = 13;
+                explosionDamage = 250;
+                fireProbability = 0.24F;
                 fireTime = 5;
+                salvoShoot = stack.getCount() > 1 || player.isCreative();
             }
 
             if (stack.is(ModItems.AP_5_INCHES.get())) {
-                hitDamage = 450;
-                explosionRadius = 3;
-                explosionDamage = 250;
+                hitDamage = 550;
+                explosionRadius = 3.8f;
+                explosionDamage = 300;
                 fireProbability = 0;
                 fireTime = 0;
-                durability = 25;
+                durability = 35;
+                salvoShoot = stack.getCount() > 1 || player.isCreative();
             }
 
             if (!player.isCreative()) {
-                stack.shrink(1);
+                stack.shrink(salvoShoot? 2 : 1);
             }
 
-            CannonShellEntity entityToSpawn = new CannonShellEntity(ModEntities.CANNON_SHELL.get(),
+            // TODO 将炮弹生成在正确的位置（现在均在中心）
+
+            //左炮管
+            CannonShellEntity entityToSpawnLeft = new CannonShellEntity(ModEntities.CANNON_SHELL.get(),
                     player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime).durability(durability);
 
-            entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
-            entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 15, 0.1f);
-            level.addFreshEntity(entityToSpawn);
+            entityToSpawnLeft.setPos(this.getX(), this.getEyeY(), this.getZ());
+            entityToSpawnLeft.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 18, 0.1f);
+            level.addFreshEntity(entityToSpawnLeft);
+
+            //右炮管
+            if (salvoShoot) {
+                CannonShellEntity entityToSpawnRight = new CannonShellEntity(ModEntities.CANNON_SHELL.get(),
+                        player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime).durability(durability);
+
+                entityToSpawnRight.setPos(this.getX(), this.getEyeY(), this.getZ());
+                entityToSpawnRight.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 18, 0.1f);
+                level.addFreshEntity(entityToSpawnRight);
+
+                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    capability.recoilHorizon = 1;
+                });
+            } else {
+                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    capability.recoilHorizon = -1;
+                });
+            }
 
 
             if (player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, ModSounds.MK_42_FIRE_1P.get(), 2, 1);
-                SoundTool.playLocalSound(serverPlayer, ModSounds.MK_42_RELOAD.get(), 2, 1);
+                ModUtils.queueServerWork(40, () -> {
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.MK_42_RELOAD.get(), 2, 1);
+                });
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_FIRE_3P.get(), SoundSource.PLAYERS, 6, 1);
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_FAR.get(), SoundSource.PLAYERS, 16, 1);
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_VERYFAR.get(), SoundSource.PLAYERS, 32, 1);
             }
 
-            this.getPersistentData().putInt("fire_cooldown", 30);
+            this.getPersistentData().putInt("fire_cooldown", 74);
 
             server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
                     this.getX() + 5 * this.getLookAngle().x,
@@ -351,7 +371,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity {
         if (this.isVehicle()) {
             this.setYRot(entity.getYRot());
             this.yRotO = this.getYRot();
-            this.setXRot(Mth.clamp(entity.getXRot() - 1.35f, -30, 4));
+            this.setXRot(Mth.clamp(entity.getXRot() - 1f, -30, 4));
             this.setRot(this.getYRot(), this.getXRot());
             this.yBodyRot = entity.getYRot();
             this.yHeadRot = entity.getYRot();
@@ -408,11 +428,11 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity {
                 Entity gunner = this.getFirstPassenger();
                 var capability = gunner.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null);
                 if (capability.orElse(new ModVariables.PlayerVariables()).cannonRecoil > 0) {
-//                    if (capability.orElse(new ModVariables.PlayerVariables()).recoilHorizon == 1) {
-//                        return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire"));
-//                    } else {
-//                        return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire2"));
-//                    }
+                    if (capability.orElse(new ModVariables.PlayerVariables()).recoilHorizon == 1) {
+                        return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mle1934.salvo_fire"));
+                    } else {
+                        return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mle1934.fire"));
+                    }
                 }
             }
 

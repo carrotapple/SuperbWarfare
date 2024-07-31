@@ -80,7 +80,7 @@ public class ModItems {
 
     public static final RegistryObject<Item> SENPAI_SPAWN_EGG = ITEMS.register("senpai_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.SENPAI, -11584987, -14014413, new Item.Properties()));
     public static final RegistryObject<Item> MK_42_SPAWN_EGG = ITEMS.register("mk42_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.MK_42, -8348258, -2630437, new Item.Properties()));
-    public static final RegistryObject<Item> MLE_1934_SPAWN_EGG = ITEMS.register("mle1934_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.MLE_1934, -8348258, -2630437, new Item.Properties()));
+    public static final RegistryObject<Item> MLE_1934_SPAWN_EGG = ITEMS.register("mle1934_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.MLE_1934, -3355444, -14146005, new Item.Properties()));
     public static final RegistryObject<Item> DRONE = ITEMS.register("drone", Drone::new);
 
     public static final RegistryObject<Item> MONITOR = ITEMS.register("monitor", Monitor::new);
