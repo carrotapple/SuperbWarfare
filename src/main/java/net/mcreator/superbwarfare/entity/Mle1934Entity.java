@@ -104,7 +104,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity {
 
     @Override
     public double getPassengersRidingOffset() {
-        return super.getPassengersRidingOffset() - 0.25;
+        return super.getPassengersRidingOffset() - 0.1;
     }
 
     @Override

@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.mixins;
 
 import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.entity.Mk42Entity;
+import net.mcreator.superbwarfare.entity.Mle1934Entity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -51,6 +52,9 @@ public abstract class CameraMixin {
     public void ia$setup(BlockGetter area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
         if (thirdPerson && entity.getVehicle() instanceof Mk42Entity) {
             move(-getMaxZoom(8), 1.0, 0.0);
+        }
+        if (thirdPerson && entity.getVehicle() instanceof Mle1934Entity) {
+            move(-getMaxZoom(10), 1.3, 0.0);
         }
     }
 
