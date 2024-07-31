@@ -53,7 +53,7 @@ public class GunEventHandler {
     }
 
     @SubscribeEvent
-    public static void onReload(ReloadEvent event) {
+    public static void onPreReload(ReloadEvent.Pre event) {
         Player player = event.player;
         ItemStack stack = event.stack;
         if (player == null || !stack.is(ModTags.Items.GUN)) {
@@ -64,8 +64,29 @@ public class GunEventHandler {
             return;
         }
 
-        handleHealClip(player, stack);
-        handleKillClip(stack);
+        System.out.println("Pre Reload: " + stack);
+
+        handleHealClipPre(stack);
+        handleKillClipPre(stack);
+    }
+
+    @SubscribeEvent
+    public static void onPostReload(ReloadEvent.Post event) {
+        Player player = event.player;
+        ItemStack stack = event.stack;
+        if (player == null || !stack.is(ModTags.Items.GUN)) {
+            return;
+        }
+
+        if (player.level().isClientSide) {
+            return;
+        }
+
+        System.out.println("Post Reload: " + stack);
+        System.out.println();
+
+        handleHealClipPost(player, stack);
+        handleKillClipPost(stack);
     }
 
     /**
@@ -386,6 +407,8 @@ public class GunEventHandler {
         CompoundTag tag = stack.getOrCreateTag();
         //启动换弹
         if (tag.getBoolean("start_reload")) {
+            MinecraftForge.EVENT_BUS.post(new ReloadEvent.Pre(player, stack));
+
             if (stack.is(ModTags.Items.OPEN_BOLT)) {
                 if (tag.getInt("ammo") == 0) {
                     tag.putInt("gun_reloading_time", (int) tag.getDouble("empty_reload_time"));
@@ -471,7 +494,7 @@ public class GunEventHandler {
         stack.getOrCreateTag().putBoolean("is_normal_reloading", false);
         stack.getOrCreateTag().putBoolean("is_empty_reloading", false);
 
-        MinecraftForge.EVENT_BUS.post(new ReloadEvent(player, stack));
+        MinecraftForge.EVENT_BUS.post(new ReloadEvent.Post(player, stack));
     }
 
     public static void playGunEmptyReload(Player player) {
@@ -499,7 +522,7 @@ public class GunEventHandler {
         stack.getOrCreateTag().putBoolean("is_normal_reloading", false);
         stack.getOrCreateTag().putBoolean("is_empty_reloading", false);
 
-        MinecraftForge.EVENT_BUS.post(new ReloadEvent(player, stack));
+        MinecraftForge.EVENT_BUS.post(new ReloadEvent.Post(player, stack));
     }
 
     public static void playGunEmptyReloadSounds(Player player) {
@@ -559,6 +582,7 @@ public class GunEventHandler {
 
         // 一阶段
         if (tag.getBoolean("start_single_reload")) {
+            MinecraftForge.EVENT_BUS.post(new ReloadEvent.Pre(player, stack));
 
             // 此处判断空仓换弹的时候，是否在准备阶段就需要装填一发，如M870
             if (tag.getDouble("prepare_load_time") != 0 && tag.getInt("ammo") == 0) {
@@ -679,6 +703,8 @@ public class GunEventHandler {
         if (tag.getInt("finish") == 1) {
             tag.putInt("reload_stage", 0);
             tag.putBoolean("reloading", false);
+
+            MinecraftForge.EVENT_BUS.post(new ReloadEvent.Post(player, stack));
         }
     }
 
@@ -709,8 +735,6 @@ public class GunEventHandler {
                 capability.syncPlayerVariables(player);
             });
         }
-
-        MinecraftForge.EVENT_BUS.post(new ReloadEvent(player, stack));
     }
 
     public static void playGunPrepareReloadSounds(Player player) {
@@ -817,31 +841,35 @@ public class GunEventHandler {
         }
     }
 
-    private static void handleHealClip(Player player, ItemStack stack) {
+    private static void handleHealClipPre(ItemStack stack) {
+        int time = stack.getOrCreateTag().getInt("HealClipTime");
+        if (time > 0) {
+            stack.getOrCreateTag().putInt("HealClipTime", 0);
+        }
+    }
+
+    private static void handleHealClipPost(Player player, ItemStack stack) {
         int healClipLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.HEAL_CLIP.get(), stack);
         if (healClipLevel == 0) {
             healClipLevel = 1;
         }
 
-        int time = stack.getOrCreateTag().getInt("HealClipTime");
-        if (time > 0) {
-            player.heal(12.0f * (0.8f + 0.2f * healClipLevel));
-            List<Player> players = player.level().getEntitiesOfClass(Player.class, player.getBoundingBox().inflate(5))
-                    .stream().filter(p -> p.isAlliedTo(player)).toList();
-            int finalHealClipLevel = healClipLevel;
-            players.forEach(p -> p.heal(6.0f * (0.8f + 0.2f * finalHealClipLevel)));
+        player.heal(12.0f * (0.8f + 0.2f * healClipLevel));
+        List<Player> players = player.level().getEntitiesOfClass(Player.class, player.getBoundingBox().inflate(5))
+                .stream().filter(p -> p.isAlliedTo(player)).toList();
+        int finalHealClipLevel = healClipLevel;
+        players.forEach(p -> p.heal(6.0f * (0.8f + 0.2f * finalHealClipLevel)));
+    }
 
-            stack.getOrCreateTag().putInt("HealClipTime", 0);
+    private static void handleKillClipPre(ItemStack stack) {
+        int time = stack.getOrCreateTag().getInt("KillClipReloadTime");
+        if (time > 0) {
+            stack.getOrCreateTag().putInt("KillClipReloadTime", 0);
         }
     }
 
-    private static void handleKillClip(ItemStack stack) {
+    private static void handleKillClipPost(ItemStack stack) {
         int level = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.KILL_CLIP.get(), stack);
-
-        int time = stack.getOrCreateTag().getInt("KillClipReloadTime");
-        if (time > 0) {
-            stack.getOrCreateTag().putInt("KillClipTime", 90 + 10 * level);
-            stack.getOrCreateTag().putInt("KillClipReloadTime", 0);
-        }
+        stack.getOrCreateTag().putInt("KillClipTime", 90 + 10 * level);
     }
 }
