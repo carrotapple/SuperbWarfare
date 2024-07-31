@@ -3,6 +3,7 @@ package net.mcreator.superbwarfare.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.Mk42Entity;
+import net.mcreator.superbwarfare.entity.Mle1934Entity;
 import net.mcreator.superbwarfare.entity.MortarEntity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModMobEffects;
@@ -73,7 +74,7 @@ public class ClickHandler {
                 event.setCanceled(true);
                 ModUtils.PACKET_HANDLER.sendToServer(new DroneFireMessage(0));
             }
-            if (player.getVehicle() != null && player.getVehicle() instanceof Mk42Entity) {
+            if (player.getVehicle() != null && (player.getVehicle() instanceof Mk42Entity || player.getVehicle() instanceof Mle1934Entity)) {
                 event.setCanceled(true);
                 ModUtils.PACKET_HANDLER.sendToServer(new VehicleFireMessage(0));
                 return;
@@ -88,7 +89,7 @@ public class ClickHandler {
             if (Minecraft.getInstance().player.hasEffect(ModMobEffects.SHOCK.get())) {
                 event.setCanceled(true);
             }
-            if (player.getMainHandItem().is(ModTags.Items.GUN) || (player.isPassenger() && player.getVehicle() instanceof Mk42Entity)) {
+            if (player.getMainHandItem().is(ModTags.Items.GUN) || (player.isPassenger() && (player.getVehicle() instanceof Mk42Entity || player.getVehicle() instanceof Mle1934Entity))) {
                 event.setCanceled(true);
                 ModUtils.PACKET_HANDLER.sendToServer(new ZoomMessage(0));
             }

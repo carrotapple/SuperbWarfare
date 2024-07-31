@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.network.message;
 
 import net.mcreator.superbwarfare.entity.Mk42Entity;
+import net.mcreator.superbwarfare.entity.Mle1934Entity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
@@ -67,7 +68,7 @@ public class ZoomMessage {
                 zoom_spread = 0.00001;
             }
 
-            if (entity.isPassenger() && entity.getVehicle() instanceof Mk42Entity) {
+            if (entity.isPassenger() && (entity.getVehicle() instanceof Mk42Entity || entity.getVehicle() instanceof Mle1934Entity)) {
                 if (entity instanceof ServerPlayer serverPlayer) {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.CANNON_ZOOM_IN.get(), 2, 1);
                 }
@@ -84,7 +85,7 @@ public class ZoomMessage {
             });
 
             zoom_spread = 1;
-            if (entity.isPassenger() && entity.getVehicle() instanceof Mk42Entity) {
+            if (entity.isPassenger() && (entity.getVehicle() instanceof Mk42Entity || entity.getVehicle() instanceof Mle1934Entity)) {
                 if (entity instanceof ServerPlayer serverPlayer) {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.CANNON_ZOOM_OUT.get(), 2, 1);
                 }

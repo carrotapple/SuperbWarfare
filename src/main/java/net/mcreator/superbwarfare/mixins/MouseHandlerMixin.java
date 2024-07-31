@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.mixins;
 
 import net.mcreator.superbwarfare.entity.Mk42Entity;
+import net.mcreator.superbwarfare.entity.Mle1934Entity;
 import net.mcreator.superbwarfare.init.ModMobEffects;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -37,7 +38,7 @@ public class MouseHandlerMixin {
 
         ItemStack stack = mc.player.getMainHandItem();
 
-        if (player.getVehicle() != null && player.getVehicle() instanceof Mk42Entity) {
+        if (player.getVehicle() != null && (player.getVehicle() instanceof Mk42Entity || player.getVehicle() instanceof Mle1934Entity)) {
             if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
                 return 0.12;
             } else {

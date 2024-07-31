@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.block;
 
 import net.mcreator.superbwarfare.entity.Mk42Entity;
+import net.mcreator.superbwarfare.entity.Mle1934Entity;
 import net.mcreator.superbwarfare.entity.Target1Entity;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -78,7 +79,7 @@ public class JumpPadBlock extends Block {
         super.entityInside(blockstate, level, pos, entity);
 
         // 禁止套娃
-        if (entity instanceof Target1Entity || entity instanceof Mk42Entity) return;
+        if (entity instanceof Target1Entity || entity instanceof Mk42Entity || entity instanceof Mle1934Entity) return;
 
         boolean zooming = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zooming).orElse(false);
 

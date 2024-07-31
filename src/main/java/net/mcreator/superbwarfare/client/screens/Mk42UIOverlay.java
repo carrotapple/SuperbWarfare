@@ -3,6 +3,7 @@ package net.mcreator.superbwarfare.client.screens;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.superbwarfare.entity.Mk42Entity;
+import net.mcreator.superbwarfare.entity.Mle1934Entity;
 import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.RenderTool;
@@ -50,7 +51,7 @@ public class Mk42UIOverlay {
         return !player.isSpectator()
                 && !(player.getMainHandItem().getItem() instanceof GunItem)
 //                && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON
-                && (player.getVehicle() != null && player.getVehicle() instanceof Mk42Entity)
+                && (player.getVehicle() != null && (player.getVehicle() instanceof Mk42Entity || player.getVehicle() instanceof Mle1934Entity))
                 && (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom;
     }
 }

@@ -49,19 +49,17 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class Mk42Entity extends PathfinderMob implements GeoEntity {
-    public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.STRING);
-    public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.STRING);
+public class Mle1934Entity extends PathfinderMob implements GeoEntity {
+    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public String animationprocedure = "empty";
 
-    public Mk42Entity(PlayMessages.SpawnEntity packet, Level world) {
-        this(ModEntities.MK_42.get(), world);
+    public Mle1934Entity(PlayMessages.SpawnEntity packet, Level world) {
+        this(ModEntities.MLE_1934.get(), world);
     }
 
-    public Mk42Entity(EntityType<Mk42Entity> type, Level world) {
+    public Mle1934Entity(EntityType<Mle1934Entity> type, Level world) {
         super(type, world);
         xpReward = 0;
         setNoAi(true);
@@ -71,22 +69,12 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(SHOOT, false);
         this.entityData.define(ANIMATION, "undefined");
-        this.entityData.define(TEXTURE, "sherman");
     }
 
     @Override
     protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
         return 2.16F;
-    }
-
-    public void setTexture(String texture) {
-        this.entityData.set(TEXTURE, texture);
-    }
-
-    public String getTexture() {
-        return this.entityData.get(TEXTURE);
     }
 
     @Override
@@ -208,14 +196,11 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        compound.putString("Texture", this.getTexture());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.contains("Texture"))
-            this.setTexture(compound.getString("Texture"));
     }
 
     @Override
@@ -366,7 +351,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
         if (this.isVehicle()) {
             this.setYRot(entity.getYRot());
             this.yRotO = this.getYRot();
-            this.setXRot(Mth.clamp(entity.getXRot() - 1.35f, -85, 15));
+            this.setXRot(Mth.clamp(entity.getXRot() - 1.35f, -30, 4));
             this.setRot(this.getYRot(), this.getXRot());
             this.yBodyRot = entity.getYRot();
             this.yHeadRot = entity.getYRot();
@@ -409,7 +394,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0)
-                .add(Attributes.MAX_HEALTH, 500)
+                .add(Attributes.MAX_HEALTH, 800)
                 .add(Attributes.ARMOR, 30)
                 .add(Attributes.ATTACK_DAMAGE, 0)
                 .add(Attributes.FOLLOW_RANGE, 32)
@@ -423,15 +408,15 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
                 Entity gunner = this.getFirstPassenger();
                 var capability = gunner.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null);
                 if (capability.orElse(new ModVariables.PlayerVariables()).cannonRecoil > 0) {
-                    if (capability.orElse(new ModVariables.PlayerVariables()).recoilHorizon == 1) {
-                        return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire"));
-                    } else {
-                        return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire2"));
-                    }
+//                    if (capability.orElse(new ModVariables.PlayerVariables()).recoilHorizon == 1) {
+//                        return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire"));
+//                    } else {
+//                        return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire2"));
+//                    }
                 }
             }
 
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mk42.idle"));
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mle1934.idle"));
         }
         return PlayState.STOP;
     }
@@ -453,7 +438,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
     protected void tickDeath() {
         ++this.deathTime;
         if (this.deathTime == 1) {
-            this.remove(Mk42Entity.RemovalReason.KILLED);
+            this.remove(RemovalReason.KILLED);
             this.dropExperience();
         }
     }
@@ -486,9 +471,9 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
         var sourceentity = damagesource.getEntity();
         if (sourceentity == null) return;
 
-        if (entity instanceof Mk42Entity mk42) {
-            if (mk42.getFirstPassenger() == null) return;
-            Entity gunner = mk42.getFirstPassenger();
+        if (entity instanceof Mle1934Entity mle1934) {
+            if (mle1934.getFirstPassenger() == null) return;
+            Entity gunner = mle1934.getFirstPassenger();
             if (event.getSource().getDirectEntity() == gunner){
                 event.setCanceled(true);
             }

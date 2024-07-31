@@ -3,6 +3,7 @@ package net.mcreator.superbwarfare.client.screens;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.superbwarfare.entity.Mk42Entity;
+import net.mcreator.superbwarfare.entity.Mle1934Entity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.CameraType;
@@ -43,7 +44,7 @@ public class M79UIOverlay {
         if (player == null) return false;
         return !player.isSpectator()
                 && player.getMainHandItem().getItem() == ModItems.M_79.get()
-                && (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || (player.isPassenger() && player.getVehicle() instanceof Mk42Entity))
+                && (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || (player.isPassenger() && (player.getVehicle() instanceof Mk42Entity || player.getVehicle() instanceof Mle1934Entity)))
                 && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zooming).orElse(false);
     }
 
@@ -51,6 +52,6 @@ public class M79UIOverlay {
         if (player == null) return false;
         return !player.isSpectator()
                 && !(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom
-                && player.isPassenger() && player.getVehicle() instanceof Mk42Entity;
+                && player.isPassenger() && (player.getVehicle() instanceof Mk42Entity || player.getVehicle() instanceof Mle1934Entity);
     }
 }

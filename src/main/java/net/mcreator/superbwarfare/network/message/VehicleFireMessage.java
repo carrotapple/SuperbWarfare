@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.network.message;
 
-import net.mcreator.superbwarfare.entity.*;
+import net.mcreator.superbwarfare.entity.Mk42Entity;
+import net.mcreator.superbwarfare.entity.Mle1934Entity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -41,7 +42,7 @@ public class VehicleFireMessage {
             return;
         }
 
-        if (player.getVehicle() != null && player.getVehicle() instanceof Mk42Entity) {
+        if (player.getVehicle() != null && (player.getVehicle() instanceof Mk42Entity || player.getVehicle() instanceof Mle1934Entity)) {
             Entity cannon = player.getVehicle();
             cannon.getPersistentData().putBoolean("firing",true);
             if (type == 0) {

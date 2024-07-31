@@ -28,6 +28,8 @@ public class ModEntities {
             EntityType.Builder.<ClaymoreEntity>of(ClaymoreEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(ClaymoreEntity::new).fireImmune().sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<Mk42Entity>> MK_42 = register("mk_42",
             EntityType.Builder.<Mk42Entity>of(Mk42Entity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(Mk42Entity::new).fireImmune().sized(5.4f, 3.5f));
+    public static final RegistryObject<EntityType<Mle1934Entity>> MLE_1934 = register("mle_1934",
+            EntityType.Builder.<Mle1934Entity>of(Mle1934Entity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(Mle1934Entity::new).fireImmune().sized(5.4f, 3.5f));
 
     public static final RegistryObject<EntityType<DroneEntity>> DRONE = register("drone",
             EntityType.Builder.<DroneEntity>of(DroneEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(DroneEntity::new).sized(0.7f, 0.175f));
@@ -76,5 +78,6 @@ public class ModEntities {
         event.put(TARGET.get(), TargetEntity.createAttributes().build());
         event.put(MK_42.get(), Mk42Entity.createAttributes().build());
         event.put(DRONE.get(), DroneEntity.createAttributes().build());
+        event.put(MLE_1934.get(), Mle1934Entity.createAttributes().build());
     }
 }
