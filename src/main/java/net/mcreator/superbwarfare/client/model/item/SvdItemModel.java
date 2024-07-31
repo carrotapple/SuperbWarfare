@@ -109,8 +109,8 @@ public class SvdItemModel extends GeoModel<SvdItem> {
 
         if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
             flare.setHidden(false);
-            flare.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
+            flare.setScaleX((float) (0.8 + 0.5 * (Math.random() - 0.5)));
+            flare.setScaleY((float) (0.8 + 0.5 * (Math.random() - 0.5)));
             flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
         } else {
             flare.setHidden(true);

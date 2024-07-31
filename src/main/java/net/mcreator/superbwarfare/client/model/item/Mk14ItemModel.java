@@ -115,9 +115,14 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
 
         if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
             flare.setHidden(false);
-            flare.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
+            flare.setScaleX((float) (0.5 + 0.5 * (Math.random() - 0.5)));
+            flare.setScaleY((float) (0.5 + 0.5 * (Math.random() - 0.5)));
             flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
+            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
+                flare.setPosY(-3.5f);
+            } else {
+                flare.setPosY(0);
+            }
         } else {
             flare.setHidden(true);
         }
