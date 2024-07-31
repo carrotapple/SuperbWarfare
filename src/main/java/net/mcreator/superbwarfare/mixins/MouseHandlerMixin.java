@@ -38,11 +38,18 @@ public class MouseHandlerMixin {
 
         ItemStack stack = mc.player.getMainHandItem();
 
-        if (player.getVehicle() != null && (player.getVehicle() instanceof Mk42Entity || player.getVehicle() instanceof Mle1934Entity)) {
+        if (player.getVehicle() != null && player.getVehicle() instanceof Mk42Entity) {
             if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
                 return 0.12;
             } else {
                 return 0.23;
+            }
+        }
+        if (player.getVehicle() != null && player.getVehicle() instanceof Mle1934Entity) {
+            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
+                return 0.09;
+            } else {
+                return 0.19;
             }
         }
 

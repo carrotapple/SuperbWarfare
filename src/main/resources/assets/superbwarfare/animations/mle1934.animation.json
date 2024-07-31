@@ -2,7 +2,19 @@
 	"format_version": "1.8.0",
 	"animations": {
 		"animation.mle1934.idle": {
-			"loop": true
+			"loop": true,
+			"bones": {
+				"flare": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"flare2": {
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
 		},
 		"animation.mle1934.fire": {
 			"loop": "hold_on_last_frame",
