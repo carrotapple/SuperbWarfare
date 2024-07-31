@@ -239,6 +239,8 @@
   "enchantment.superbwarfare.longer_wire.desc": "增加泰瑟枪的射程",
   "enchantment.superbwarfare.monster_hunter": "怪物猎人",
   "enchantment.superbwarfare.monster_hunter.desc": "增加对怪物的子弹伤害",
+  "enchantment.superbwarfare.heal_clip": "治疗弹匣",
+  "enchantment.superbwarfare.heal_clip.desc": "最后一击后短时间内填装，可治疗自身和附近队友",
 
   "des.superbwarfare.sensitivity": "当前枪械的灵敏度为：%1$s",
   "des.superbwarfare.need_bolt_action": "【需要拉栓】",

@@ -1,17 +1,15 @@
-
 package net.mcreator.superbwarfare.enchantment;
 
-import net.mcreator.superbwarfare.tools.EnchantmentCategoryTool;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.entity.EquipmentSlot;
-
 import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.tools.EnchantmentCategoryTool;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.enchantment.Enchantment;
 
-public class VoltOverloadEnchantment extends Enchantment {
-	public VoltOverloadEnchantment(EquipmentSlot... slots) {
-		super(Enchantment.Rarity.UNCOMMON, EnchantmentCategoryTool.TASER, slots);
+public class LongerWire extends Enchantment {
+	public LongerWire(EquipmentSlot... slots) {
+		super(Rarity.UNCOMMON, EnchantmentCategoryTool.TASER, slots);
 	}
 
 	@Override

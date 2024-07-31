@@ -78,18 +78,24 @@ public abstract class GunItem extends Item {
                     itemstack.getOrCreateTag().putInt("draw_time", (itemstack.getOrCreateTag().getInt("draw_time") + 1));
                 }
             }
+
             if (itemstack.getOrCreateTag().getInt("fire_animation") > 0) {
                 itemstack.getOrCreateTag().putInt("fire_animation", (itemstack.getOrCreateTag().getInt("fire_animation") - 1));
             }
+
             if (itemstack.getOrCreateTag().getDouble("flash_time") > 0) {
                 itemstack.getOrCreateTag().putDouble("flash_time", (itemstack.getOrCreateTag().getDouble("flash_time") - 1));
+            }
+
+            if (itemstack.getOrCreateTag().contains("HealClipTime")) {
+                itemstack.getOrCreateTag().putInt("HealClipTime", Math.max(0, itemstack.getOrCreateTag().getInt("HealClipTime") - 1));
             }
         }
     }
 
     @Override
     public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        return false;
+        return super.onEntitySwing(stack, entity);
     }
 
     @Override

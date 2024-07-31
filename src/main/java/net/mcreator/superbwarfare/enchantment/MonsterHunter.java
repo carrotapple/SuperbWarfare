@@ -1,12 +1,11 @@
-
 package net.mcreator.superbwarfare.enchantment;
 
 import net.mcreator.superbwarfare.tools.EnchantmentCategoryTool;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;
 
-public class MonsterHunterEnchantment extends Enchantment {
-	public MonsterHunterEnchantment(EquipmentSlot... slots) {
+public class MonsterHunter extends Enchantment {
+	public MonsterHunter(EquipmentSlot... slots) {
 		super(Rarity.UNCOMMON, EnchantmentCategoryTool.GUN, slots);
 	}
 

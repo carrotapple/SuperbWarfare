@@ -239,6 +239,8 @@
   "enchantment.superbwarfare.longer_wire.desc": "Increases the range of TaserGun",
   "enchantment.superbwarfare.monster_hunter": "Monster Hunter",
   "enchantment.superbwarfare.monster_hunter.desc": "Increases bullet damage against monsters",
+  "enchantment.superbwarfare.heal_clip": "Heal Clip",
+  "enchantment.superbwarfare.heal_clip.desc": "Reloading after dealing a final blow will heal you and your nearby allies",
 
   "des.superbwarfare.sensitivity": "Current Sensitivity of This Gun: %1$s",
   "des.superbwarfare.need_bolt_action": "[ Need Bolt Action ]",

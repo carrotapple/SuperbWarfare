@@ -1,4 +1,3 @@
-
 package net.mcreator.superbwarfare.enchantment;
 
 import net.mcreator.superbwarfare.init.ModItems;
@@ -8,8 +7,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 
-public class SuperRechargeEnchantment extends Enchantment {
-	public SuperRechargeEnchantment(EquipmentSlot... slots) {
+public class SuperRecharge extends Enchantment {
+	public SuperRecharge(EquipmentSlot... slots) {
 		super(Rarity.UNCOMMON, EnchantmentCategoryTool.TASER, slots);
 	}
 

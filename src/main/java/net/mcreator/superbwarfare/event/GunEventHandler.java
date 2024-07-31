@@ -28,6 +28,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Mod.EventBusSubscriber
@@ -63,6 +64,7 @@ public class GunEventHandler {
             return;
         }
 
+        handleHealClip(player, stack);
     }
 
     /**
@@ -811,6 +813,18 @@ public class GunEventHandler {
 
         if (tag.getInt("sentinel_charge_time") == 1) {
             tag.putBoolean("sentinel_is_charging", false);
+        }
+    }
+
+    private static void handleHealClip(Player player, ItemStack stack) {
+        int time = stack.getOrCreateTag().getInt("HealClipTime");
+        if (time > 0) {
+            player.heal(player.getMaxHealth() * .6f);
+            List<Player> players = player.level().getEntitiesOfClass(Player.class, player.getBoundingBox().inflate(5))
+                    .stream().filter(p -> p.isAlliedTo(player)).toList();
+            players.forEach(p -> p.heal(p.getMaxHealth() * .3f));
+
+            stack.getOrCreateTag().putInt("HealClipTime", 0);
         }
     }
 }

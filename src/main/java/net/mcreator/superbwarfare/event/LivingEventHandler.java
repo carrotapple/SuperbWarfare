@@ -2,10 +2,7 @@ package net.mcreator.superbwarfare.event;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.Target1Entity;
-import net.mcreator.superbwarfare.init.ModDamageTypes;
-import net.mcreator.superbwarfare.init.ModItems;
-import net.mcreator.superbwarfare.init.ModSounds;
-import net.mcreator.superbwarfare.init.ModTags;
+import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
@@ -25,6 +22,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -52,6 +50,7 @@ public class LivingEventHandler {
 
         killIndication(event.getSource().getEntity());
         handlePlayerKillEntity(event);
+        handleHealClip(event);
     }
 
     private static void reduceBulletDamage(LivingHurtEvent event, DamageSource damagesource, LivingEntity entity, Entity sourceentity, double amount) {
@@ -167,7 +166,7 @@ public class LivingEventHandler {
 
                         oldTags.putBoolean("force_stop", false);
                         oldTags.putBoolean("stop", false);
-                        oldTags.putInt("reload_stage",0);
+                        oldTags.putInt("reload_stage", 0);
                         oldTags.putBoolean("reloading", false);
                         oldTags.putDouble("prepare", 0);
                         oldTags.putDouble("prepare_load", 0);
@@ -189,7 +188,7 @@ public class LivingEventHandler {
 
                         newStack.getOrCreateTag().putBoolean("force_stop", false);
                         newStack.getOrCreateTag().putBoolean("stop", false);
-                        newStack.getOrCreateTag().putInt("reload_stage",0);
+                        newStack.getOrCreateTag().putInt("reload_stage", 0);
                         newStack.getOrCreateTag().putBoolean("reloading", false);
                         newStack.getOrCreateTag().putDouble("prepare", 0);
                         newStack.getOrCreateTag().putDouble("prepare_load", 0);
@@ -245,6 +244,34 @@ public class LivingEventHandler {
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(attacker.getId(), entity.getId(), true, damageTypeResourceKey));
             } else {
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(attacker.getId(), entity.getId(), false, damageTypeResourceKey));
+            }
+        }
+    }
+
+    private static void handleHealClip(LivingDeathEvent event) {
+        DamageSource source = event.getSource();
+
+        Player attacker = null;
+        if (source.getEntity() instanceof Player player) {
+            attacker = player;
+        }
+        if (source.getDirectEntity() instanceof Projectile projectile && projectile.getOwner() instanceof Player player) {
+            attacker = player;
+        }
+
+        if (attacker == null) {
+            return;
+        }
+
+        if (source.is(ModDamageTypes.GUN_FIRE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)) {
+            ItemStack stack = attacker.getMainHandItem();
+            if (!stack.is(ModTags.Items.GUN)) {
+                return;
+            }
+
+            int level = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.HEAL_CLIP.get(), stack);
+            if (level != 0) {
+                stack.getOrCreateTag().putInt("HealClipTime", 80 + level * 20);
             }
         }
     }
