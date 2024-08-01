@@ -79,6 +79,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     private int monster_multiple = 0;
     private float legShot = 0.5f;
     private boolean beast = false;
+    private boolean zoom = false;
 
     public ProjectileEntity(EntityType<? extends ProjectileEntity> p_i50159_1_, Level p_i50159_2_) {
         super(p_i50159_1_, p_i50159_2_);
@@ -107,8 +108,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         return this;
     }
 
-    public ProjectileEntity monster_multiple(int monster_multiple) {
-        this.monster_multiple = monster_multiple;
+    public ProjectileEntity monsterMultiple(int monsterMultiple) {
+        this.monster_multiple = monsterMultiple;
         return this;
     }
 
@@ -119,6 +120,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     public ProjectileEntity beast() {
         this.beast = true;
+        return this;
+    }
+
+    public ProjectileEntity zoom(boolean zoom) {
+        this.zoom = zoom;
         return this;
     }
 
@@ -153,7 +159,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 hitEntity = entity;
                 closestDistance = distanceToHit;
                 headshot = result.isHeadshot();
-                legshot = result.isLegshot();
+                legshot = result.isLegShot();
             }
         }
         return hitEntity != null ? new EntityResult(hitEntity, hitVec, headshot, legshot) : null;
@@ -304,6 +310,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     protected void onProjectileTick() {
     }
+
     private void onHit(HitResult result) {
         if (result instanceof BlockHitResult blockHitResult) {
             if (blockHitResult.getType() == HitResult.Type.MISS) {
@@ -413,15 +420,14 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             }
 
             if (entity instanceof LivingEntity living) {
-                if (living instanceof Player player && player.isCreative()){
+                if (living instanceof Player player && player.isCreative()) {
                     return;
                 }
                 if (!living.level().isClientSide()) {
-                    living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,20,2,false,false));
+                    living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 2, false, false));
                 }
             }
-        }
-        else {
+        } else {
             if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
                 var holder = Holder.direct(ModSounds.INDICATION.get());
                 player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
@@ -568,13 +574,13 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         private final Entity entity;
         private final Vec3 hitVec;
         private final boolean headshot;
-        private final boolean legshot;
+        private final boolean legShot;
 
-        public EntityResult(Entity entity, Vec3 hitVec, boolean headshot, boolean legshot) {
+        public EntityResult(Entity entity, Vec3 hitVec, boolean headshot, boolean legShot) {
             this.entity = entity;
             this.hitVec = hitVec;
             this.headshot = headshot;
-            this.legshot = legshot;
+            this.legShot = legShot;
         }
 
         /**
@@ -598,8 +604,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             return this.headshot;
         }
 
-        public boolean isLegshot() {
-            return this.legshot;
+        public boolean isLegShot() {
+            return this.legShot;
         }
     }
 
@@ -623,5 +629,9 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    public boolean isZoom() {
+        return this.zoom;
     }
 }

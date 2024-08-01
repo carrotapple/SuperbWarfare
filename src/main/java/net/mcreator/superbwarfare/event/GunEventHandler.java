@@ -86,10 +86,10 @@ public class GunEventHandler {
                     player.getPersistentData().putBoolean("firing", false);
                 }
 
-                int burst_cooldown = 0;
+                int burstCooldown = 0;
                 if (mode == 1) {
                     stack.getOrCreateTag().putInt("burst_fire", (stack.getOrCreateTag().getInt("burst_fire") - 1));
-                    burst_cooldown = stack.getOrCreateTag().getInt("burst_fire") == 0 ? interval + 4 : 0;
+                    burstCooldown = stack.getOrCreateTag().getInt("burst_fire") == 0 ? interval + 4 : 0;
                 }
 
                 if (stack.getOrCreateTag().getDouble("animindex") == 1) {
@@ -149,10 +149,10 @@ public class GunEventHandler {
                     stack.getOrCreateTag().putDouble("chamber_rot", 20);
                 }
 
-                int zoom_add_cooldown = 0;
+                int zoomAddCooldown = 0;
                 if (stack.getItem() == ModItems.MARLIN.get()) {
                     if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
-                        zoom_add_cooldown = 5;
+                        zoomAddCooldown = 5;
                         stack.getOrCreateTag().putDouble("marlin_animation_time", 15);
                         stack.getOrCreateTag().putBoolean("fastfiring", false);
                     } else {
@@ -161,7 +161,7 @@ public class GunEventHandler {
                     }
                 }
 
-                int cooldown = interval + (int) stack.getOrCreateTag().getDouble("fire_sequence") - (int) stack.getOrCreateTag().getDouble("fire_increase") + burst_cooldown + zoom_add_cooldown;
+                int cooldown = interval + (int) stack.getOrCreateTag().getDouble("fire_sequence") - (int) stack.getOrCreateTag().getDouble("fire_increase") + burstCooldown + zoomAddCooldown;
                 player.getCooldowns().addCooldown(stack.getItem(), cooldown);
 
                 for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {
@@ -343,19 +343,22 @@ public class GunEventHandler {
 
         if (!player.level().isClientSide()) {
             float headshot = (float) heldItem.getOrCreateTag().getDouble("headshot");
-            int monster_multiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), heldItem);
+            int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), heldItem);
             float damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("add_damage")) * (float) heldItem.getOrCreateTag().getDouble("damageadd");
+
+            boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
 
             ProjectileEntity projectile = new ProjectileEntity(player.level())
                     .shooter(player)
                     .damage(damage)
-                    .headShot(headshot);
+                    .headShot(headshot)
+                    .zoom(zoom);
 
             if (heldItem.getOrCreateTag().getBoolean("beast")) {
                 projectile.beast();
             }
 
-            projectile.monster_multiple(monster_multiple);
+            projectile.monsterMultiple(monsterMultiple);
 
             projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
             projectile.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.0005f, player.getLookAngle().z, 1 * (float) heldItem.getOrCreateTag().getDouble("velocity"),

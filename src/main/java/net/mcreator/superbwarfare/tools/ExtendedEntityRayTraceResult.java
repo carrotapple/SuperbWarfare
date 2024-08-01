@@ -13,7 +13,7 @@ public class ExtendedEntityRayTraceResult extends EntityHitResult {
     public ExtendedEntityRayTraceResult(ProjectileEntity.EntityResult result) {
         super(result.getEntity(), result.getHitPos());
         this.headshot = result.isHeadshot();
-        this.legshot = result.isLegshot();
+        this.legshot = result.isLegShot();
     }
 
     public boolean isHeadshot() {

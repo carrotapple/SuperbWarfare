@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.event;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.entity.ProjectileEntity;
 import net.mcreator.superbwarfare.entity.Target1Entity;
 import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.item.gun.GunItem;
@@ -40,6 +41,7 @@ public class LivingEventHandler {
 
         handleKillClipDamage(event);
         renderDamageIndicator(event);
+        handleGutshotStraightDamage(event);
         reduceBulletDamage(event, event.getSource(), event.getEntity(), event.getSource().getEntity(), event.getAmount());
     }
 
@@ -310,6 +312,32 @@ public class LivingEventHandler {
             if (stack.getOrCreateTag().getInt("KillClipTime") > 0) {
                 event.setAmount(event.getAmount() * 1.25f);
             }
+        }
+    }
+
+    private static void handleGutshotStraightDamage(LivingHurtEvent event) {
+        DamageSource source = event.getSource();
+        if (!source.is(ModDamageTypes.GUN_FIRE)) {
+            return;
+        }
+
+        Entity directSource = source.getDirectEntity();
+        if (directSource instanceof ProjectileEntity projectile && projectile.getShooter() instanceof Player player) {
+            if (!projectile.isZoom()) {
+                return;
+            }
+
+            ItemStack stack = player.getMainHandItem();
+            if (!stack.is(ModTags.Items.GUN)) {
+                return;
+            }
+
+            int enchantmentLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.GUTSHOT_STRAIGHT.get(), stack);
+            if (enchantmentLevel == 0) {
+                return;
+            }
+
+            event.setAmount(event.getAmount() * 1.2f);
         }
     }
 }

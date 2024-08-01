@@ -245,6 +245,8 @@
   "enchantment.superbwarfare.heal_clip.desc": "Reloading after dealing a final blow will heal you and your nearby allies",
   "enchantment.superbwarfare.kill_clip": "Kill Clip",
   "enchantment.superbwarfare.kill_clip.desc": "Increases the damage of weapon after dealing a final blow",
+  "enchantment.superbwarfare.gutshot_straight": "Gutshot Straight",
+  "enchantment.superbwarfare.gutshot_straight.desc": "Aiming down sights increases body shot damage",
 
   "des.superbwarfare.sensitivity": "Current Sensitivity of This Gun: %1$s",
   "des.superbwarfare.need_bolt_action": "[ Need Bolt Action ]",

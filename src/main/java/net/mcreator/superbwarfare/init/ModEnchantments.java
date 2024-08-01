@@ -1,4 +1,3 @@
-
 package net.mcreator.superbwarfare.init;
 
 import net.mcreator.superbwarfare.ModUtils;
@@ -18,4 +17,5 @@ public class ModEnchantments {
 	public static final RegistryObject<Enchantment> MONSTER_HUNTER = REGISTRY.register("monster_hunter", MonsterHunter::new);
 	public static final RegistryObject<Enchantment> HEAL_CLIP = REGISTRY.register("heal_clip", HealClip::new);
 	public static final RegistryObject<Enchantment> KILL_CLIP = REGISTRY.register("kill_clip", KillClip::new);
+	public static final RegistryObject<Enchantment> GUTSHOT_STRAIGHT = REGISTRY.register("gutshot_straight", GutshotStraight::new);
 }

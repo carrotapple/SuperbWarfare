@@ -207,16 +207,18 @@ public class FireMessage {
         double damage;
         float headshot = (float) tag.getDouble("headshot");
         float velocity = 4 * (float) tag.getDouble("speed");
-        int monster_multiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), heldItem);
+        int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), heldItem);
+        boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
 
         var projectile = new ProjectileEntity(player.level())
                 .shooter(player)
-                .headShot(headshot);
+                .headShot(headshot)
+                .monsterMultiple(monsterMultiple)
+                .zoom(zoom);
+
         if (tag.getBoolean("beast")) {
             projectile.beast();
         }
-
-        projectile.monster_multiple(monster_multiple);
 
         projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
 
