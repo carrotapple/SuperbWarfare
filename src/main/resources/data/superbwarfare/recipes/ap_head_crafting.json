@@ -2,26 +2,26 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    " a ",
-    "bcb",
-    " d "
+    " b ",
+    "bdb",
+    "cac"
   ],
   "key": {
     "a": {
-      "item": "superbwarfare:fusee"
+      "item": "superbwarfare:high_energy_explosives"
     },
     "b": {
       "item": "minecraft:iron_ingot"
     },
     "c": {
-      "item": "superbwarfare:high_energy_explosives"
+      "item": "superbwarfare:ingot_steel"
     },
     "d": {
-      "item": "superbwarfare:primer"
+      "item": "superbwarfare:tungsten_rod"
     }
   },
   "result": {
-    "item": "superbwarfare:grenade_40mm",
-    "count": 6
+    "item": "superbwarfare:ap_head",
+    "count": 2
   }
 }

@@ -122,6 +122,8 @@
   "item.superbwarfare.claymore_mine": "Claymore",
   "item.superbwarfare.fusee": "Fusee",
   "item.superbwarfare.primer": "Primer",
+  "item.superbwarfare.ap_head": "AP Warhead",
+  "item.superbwarfare.he_head": "HE Warhead",
   "item.superbwarfare.dog_tag": "Dog Tag",
   "curios.identifier.dog_tag": "Dog Tag",
   "item.superbwarfare.shield_cell": "Cell",
@@ -143,6 +145,9 @@
   "block.superbwarfare.deepslate_scheelite_ore": "Deepslate Scheelite 0re",
   "block.superbwarfare.deepslate_galena_ore": "Deepslate Galena 0re",
 
+  "item.superbwarfare.high_energy_explosives": "High Energy Explosives",
+  "item.superbwarfare.grain": "Grain",
+  "item.superbwarfare.tungsten_rod": "Tungsten Rod",
   "item.superbwarfare.coal_powder": "Coal Powder",
   "item.superbwarfare.iron_powder": "Iron Powder",
   "item.superbwarfare.coal_iron_powder": "Coal-Iron Powder",

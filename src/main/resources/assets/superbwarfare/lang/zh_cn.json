@@ -122,6 +122,8 @@
   "item.superbwarfare.claymore_mine": "阔剑地雷",
   "item.superbwarfare.fusee": "引信",
   "item.superbwarfare.primer": "底火",
+  "item.superbwarfare.ap_head": "穿甲弹头",
+  "item.superbwarfare.he_head": "高爆弹头",
   "item.superbwarfare.dog_tag": "狗牌",
   "curios.identifier.dog_tag": "狗牌",
   "item.superbwarfare.shield_cell": "电池",
@@ -143,6 +145,9 @@
   "block.superbwarfare.deepslate_scheelite_ore": "深层白钨矿石",
   "block.superbwarfare.deepslate_galena_ore": "深层方铅矿石",
 
+  "item.superbwarfare.high_energy_explosives": "高能炸药",
+  "item.superbwarfare.grain": "推进药柱",
+  "item.superbwarfare.tungsten_rod": "钨棒",
   "item.superbwarfare.coal_powder": "煤粉",
   "item.superbwarfare.iron_powder": "铁粉",
   "item.superbwarfare.coal_iron_powder": "煤铁混合粉末",

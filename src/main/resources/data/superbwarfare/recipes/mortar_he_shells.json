@@ -11,13 +11,13 @@
       "item": "superbwarfare:fusee"
     },
     "b": {
-      "item": "minecraft:iron_ingot"
+      "item": "superbwarfare:ingot_steel"
     },
     "c": {
-      "item": "minecraft:tnt"
+      "item": "superbwarfare:high_energy_explosives"
     },
     "d": {
-      "item": "superbwarfare:primer"
+      "item": "superbwarfare:grain"
     }
   },
   "result": {

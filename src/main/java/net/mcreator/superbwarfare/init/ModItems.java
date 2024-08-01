@@ -97,6 +97,8 @@ public class ModItems {
     public static final RegistryObject<Item> MORTAR_BIPOD = ITEMS.register("mortar_bipod", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> FUSEE = ITEMS.register("fusee", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> PRIMER = ITEMS.register("primer", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> AP_HEAD = ITEMS.register("ap_head", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> HE_HEAD = ITEMS.register("he_head", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> SOUL_STEEL_NUGGET = ITEMS.register("soul_steel_nugget", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> COPPERPLATE = ITEMS.register("copperplate", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> INGOT_STEEL = ITEMS.register("ingot_steel", () -> new Item(new Item.Properties()));
@@ -104,6 +106,8 @@ public class ModItems {
     public static final RegistryObject<Item> TUNGSTEN_INGOT = ITEMS.register("tungsten_ingot", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> CEMENTED_CARBIDE_INGOT = ITEMS.register("cemented_carbide_ingot", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> SOUL_STEEL_INGOT = ITEMS.register("soul_steel_ingot", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> HIGH_ENERGY_EXPLOSIVES = ITEMS.register("high_energy_explosives", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> GRAIN = ITEMS.register("grain", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> IRON_POWDER = ITEMS.register("iron_powder", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TUNGSTEN_POWDER = ITEMS.register("tungsten_powder", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> COAL_POWDER = ITEMS.register("coal_powder", () -> new Item(new Item.Properties()));
@@ -118,6 +122,7 @@ public class ModItems {
     public static final RegistryObject<Item> DOG_TAG = ITEMS.register("dog_tag", DogTag::new);
     public static final RegistryObject<Item> SHIELD_CELL = ITEMS.register("shield_cell", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
 
+    public static final RegistryObject<Item> TUNGSTEN_ROD = ITEMS.register("tungsten_rod", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> IRON_BARREL = ITEMS.register("iron_barrel", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> IRON_ACTION = ITEMS.register("iron_action", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> IRON_TRIGGER = ITEMS.register("iron_trigger", () -> new Item(new Item.Properties()));
