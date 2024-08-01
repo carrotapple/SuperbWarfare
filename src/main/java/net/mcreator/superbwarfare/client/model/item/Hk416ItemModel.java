@@ -56,7 +56,7 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
 
         gun.setPosX(3.28f * (float) p);
         gun.setPosY(1.04f * (float) p - (float) (0.2f * zp));
-        gun.setPosZ(4f * (float) p + (float) (0.3f * zp));
+        gun.setPosZ(6f * (float) p + (float) (0.3f * zp));
         gun.setRotZ((float) (0.05f * zp));
 
         scope.setScaleZ(1f - (0.5f * (float) p));
@@ -67,17 +67,17 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
         double fr = player.getPersistentData().getDouble("fire_rot");
 
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
-            shen.setPosY(0.05f * (float) (fp + 2 * fr));
-            holo.setPosY(-0.43f * (float) (fp + 2.3 * fr));
-            shen.setPosZ(1.1f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.015f * (float) (fp + fr));
+            shen.setPosY(-0.01f * (float) (fp + 2 * fr));
+            shen.setPosZ(0.2f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.003f * (float) (fp + fr));
+            shen.setRotZ(0f);
         } else {
-            shen.setPosY(0.04f * (float) (fp + 2 * fr));
-            shen.setPosZ(1.2f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.03f * (float) (0.18f * fp + fr));
-            shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
+            shen.setPosY(-0.03f * (float) (fp + 2 * fr));
+            shen.setPosZ(0.8f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.07f * (float) (0.18f * fp + fr));
+            shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
         }
-        shen.setPosX(0.5f * (float) fr * (float) ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
+        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
