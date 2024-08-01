@@ -1,0 +1,29 @@
+package net.mcreator.superbwarfare.entity.model;
+
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.entity.RpgRocketEntity;
+import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.model.GeoModel;
+
+public class RpgRocketModel extends GeoModel<RpgRocketEntity> {
+	@Override
+	public ResourceLocation getAnimationResource(RpgRocketEntity entity) {
+		return new ResourceLocation(ModUtils.MODID, "animations/rpg_rocket.animation.json");
+	}
+
+	@Override
+	public ResourceLocation getModelResource(RpgRocketEntity entity) {
+		return new ResourceLocation(ModUtils.MODID, "geo/rpg_rocket.geo.json");
+	}
+
+	@Override
+	public ResourceLocation getTextureResource(RpgRocketEntity entity) {
+		return new ResourceLocation(ModUtils.MODID, "textures/entity/rpg_rocket.png");
+	}
+
+//	@Override
+//	public void setCustomAnimations(RpgRocketEntity animatable, long instanceId, AnimationState animationState) {
+//		CoreGeoBone bone = getAnimationProcessor().getBone("bone");
+//		bone.setHidden(animatable.tickCount <= 1);
+//	}
+}

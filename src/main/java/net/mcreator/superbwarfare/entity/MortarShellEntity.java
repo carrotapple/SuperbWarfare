@@ -55,6 +55,10 @@ public class MortarShellEntity extends ThrowableItemProjectile {
         return ModItems.MORTAR_SHELLS.get();
     }
 
+    @Override
+    public boolean shouldRenderAtSqrDistance(double pDistance) {
+        return true;
+    }
 
     @Override
     public void onHitEntity(EntityHitResult entityHitResult) {
@@ -81,7 +85,7 @@ public class MortarShellEntity extends ThrowableItemProjectile {
     public void tick() {
         super.tick();
         if (this.level() instanceof ServerLevel serverLevel) {
-            ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(),
+            ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.xo, this.yo, this.zo,
                     2, 0, 0, 0, 0.02, true);
         }
         if (this.tickCount > 600 || this.isInWater()) {

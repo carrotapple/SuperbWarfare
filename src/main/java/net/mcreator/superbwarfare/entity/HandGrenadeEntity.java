@@ -62,6 +62,10 @@ public class HandGrenadeEntity extends ThrowableItemProjectile {
         return ModItems.HAND_GRENADE.get();
     }
 
+    @Override
+    public boolean shouldRenderAtSqrDistance(double pDistance) {
+        return true;
+    }
 
     @Override
     protected void onHit(HitResult result) {

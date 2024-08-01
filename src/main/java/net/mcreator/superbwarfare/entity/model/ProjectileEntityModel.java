@@ -34,8 +34,6 @@ public class ProjectileEntityModel extends GeoModel<ProjectileEntity> {
 	@Override
 	public void setCustomAnimations(ProjectileEntity animatable, long instanceId, AnimationState animationState) {
 		CoreGeoBone bone = getAnimationProcessor().getBone("bone");
-
         bone.setHidden(animatable.tickCount <= 1);
-
 	}
 }

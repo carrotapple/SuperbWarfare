@@ -68,6 +68,11 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
     }
 
     @Override
+    public boolean shouldRenderAtSqrDistance(double pDistance) {
+        return true;
+    }
+
+    @Override
     protected void onHitEntity(EntityHitResult result) {
         float damageMultiplier = 1 + 0.2f * this.monsterMultiplier;
         Entity entity = result.getEntity();
@@ -156,7 +161,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         super.tick();
 
         if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
-            ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(),
+            ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, this.xo, this.yo, this.zo,
                     1, 0, 0, 0, 0.02, true);
         }
 

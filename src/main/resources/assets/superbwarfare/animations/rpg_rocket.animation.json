@@ -1,0 +1,111 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.rpg.idle": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 6,
+			"bones": {
+				"wing1": {
+					"rotation": {
+						"0.2417": {
+							"vector": [0, 0, 0]
+						},
+						"0.6": {
+							"vector": [0, 67.5, 0],
+							"easing": "easeInElastic"
+						}
+					}
+				},
+				"wing2": {
+					"rotation": {
+						"0.2417": {
+							"vector": [0, 0, 0]
+						},
+						"0.6": {
+							"vector": [0, 67.5, 0],
+							"easing": "easeInElastic"
+						}
+					}
+				},
+				"wing3": {
+					"rotation": {
+						"0.2417": {
+							"vector": [0, 0, 0]
+						},
+						"0.6": {
+							"vector": [0, 67.5, 0],
+							"easing": "easeInElastic"
+						}
+					}
+				},
+				"wing4": {
+					"rotation": {
+						"0.2417": {
+							"vector": [0, 0, 0]
+						},
+						"0.6": {
+							"vector": [0, 67.5, 0],
+							"easing": "easeInElastic"
+						}
+					}
+				},
+				"wing5": {
+					"rotation": {
+						"0.2417": {
+							"vector": [0, 0, 0]
+						},
+						"0.6": {
+							"vector": [0, 67.5, 0],
+							"easing": "easeInElastic"
+						}
+					}
+				},
+				"wing6": {
+					"rotation": {
+						"0.2417": {
+							"vector": [0, 0, 0]
+						},
+						"0.6": {
+							"vector": [0, 67.5, 0],
+							"easing": "easeInElastic"
+						}
+					}
+				},
+				"wing7": {
+					"rotation": {
+						"0.2417": {
+							"vector": [0, 0, 0]
+						},
+						"0.6": {
+							"vector": [0, 67.5, 0],
+							"easing": "easeInElastic"
+						}
+					}
+				},
+				"wing8": {
+					"rotation": {
+						"0.2417": {
+							"vector": [0, 0, 0]
+						},
+						"0.6": {
+							"vector": [0, 67.5, 0],
+							"easing": "easeInElastic"
+						}
+					}
+				},
+				"body": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"6.0": {
+							"vector": [0, 10800, 0],
+							"easing": "easeInSine"
+						}
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

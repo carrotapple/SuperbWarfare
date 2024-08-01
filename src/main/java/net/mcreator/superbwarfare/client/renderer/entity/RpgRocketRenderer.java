@@ -3,38 +3,47 @@ package net.mcreator.superbwarfare.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.mcreator.superbwarfare.client.model.entity.ModelRPGRocket;
 import net.mcreator.superbwarfare.entity.RpgRocketEntity;
+import net.mcreator.superbwarfare.entity.model.RpgRocketModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class RpgRocketRenderer extends EntityRenderer<RpgRocketEntity> {
-    private static final ResourceLocation texture = new ResourceLocation("superbwarfare:textures/entity/rocket.png");
-    private final ModelRPGRocket<RpgRocketEntity> model;
+public class RpgRocketRenderer extends GeoEntityRenderer<RpgRocketEntity> {
+    public RpgRocketRenderer(EntityRendererProvider.Context renderManager) {
+        super(renderManager, new RpgRocketModel());
+        this.shadowRadius = 0.1f;
+    }
 
-    public RpgRocketRenderer(EntityRendererProvider.Context context) {
-        super(context);
-        model = new ModelRPGRocket<>(context.bakeLayer(ModelRPGRocket.LAYER_LOCATION));
+    @Override
+    public RenderType getRenderType(RpgRocketEntity animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.entityTranslucent(getTextureLocation(animatable));
+    }
+
+    @Override
+    public void preRender(PoseStack poseStack, RpgRocketEntity entity, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green,
+                          float blue, float alpha) {
+        float scale = 1f;
+        this.scaleHeight = scale;
+        this.scaleWidth = scale;
+        super.preRender(poseStack, entity, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @Override
     public void render(RpgRocketEntity entityIn, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn) {
-        VertexConsumer vb = bufferIn.getBuffer(RenderType.entityCutout(this.getTextureLocation(entityIn)));
         poseStack.pushPose();
         poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entityIn.yRotO, entityIn.getYRot()) - 90));
         poseStack.mulPose(Axis.ZP.rotationDegrees(90 + Mth.lerp(partialTicks, entityIn.xRotO, entityIn.getXRot())));
-        model.renderToBuffer(poseStack, vb, packedLightIn, OverlayTexture.NO_OVERLAY, 1, 1, 1, 0.0625f);
-        poseStack.popPose();
         super.render(entityIn, entityYaw, partialTicks, poseStack, bufferIn, packedLightIn);
+        poseStack.popPose();
     }
 
     @Override
-    public ResourceLocation getTextureLocation(RpgRocketEntity entity) {
-        return texture;
+    protected float getDeathMaxRotation(RpgRocketEntity entityLivingBaseIn) {
+        return 0.0F;
     }
 }

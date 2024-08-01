@@ -73,6 +73,10 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
         return ModItems.RGO_GRENADE.get();
     }
 
+    @Override
+    public boolean shouldRenderAtSqrDistance(double pDistance) {
+        return true;
+    }
 
     @Override
     protected void onHit(HitResult result) {
