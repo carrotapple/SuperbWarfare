@@ -2,12 +2,15 @@ package net.mcreator.superbwarfare.network.message;
 
 import net.mcreator.superbwarfare.entity.*;
 import net.mcreator.superbwarfare.event.GunEventHandler;
-import net.mcreator.superbwarfare.init.*;
+import net.mcreator.superbwarfare.init.ModEnchantments;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.ItemNBTTool;
+import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
@@ -283,13 +286,11 @@ public class FireMessage {
                     level.addFreshEntity(gunGrenadeEntity);
                 }
 
-                // TODO 移除指令
-                if (!player.level().isClientSide() && player.getServer() != null) {
-                    player.getServer().getCommands().performPrefixedCommand(
-                            new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4, player.getName().getString(), player.getDisplayName(),
-                                    player.getServer(), player),
-                            ("particle minecraft:cloud" + (" " + (player.getX() + 1.8 * player.getLookAngle().x)) + (" " + (player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y))
-                                    + (" " + (player.getZ() + 1.8 * player.getLookAngle().z)) + " 0.1 0.1 0.1 0.002 4 force @s"));
+                if (player.level() instanceof ServerLevel serverLevel) {
+                    ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, player.getX() + 1.8 * player.getLookAngle().x,
+                            player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y,
+                            player.getZ() + 1.8 * player.getLookAngle().z,
+                            4, 0.1, 0.1, 0.1, 0.002, true);
                 }
                 player.getCooldowns().addCooldown(stack.getItem(), 2);
 
@@ -326,13 +327,11 @@ public class FireMessage {
                 level.addFreshEntity(rocketEntity);
             }
 
-            // TODO 移除指令
-            if (player.getServer() != null) {
-                player.getServer().getCommands().performPrefixedCommand(
-                        new CommandSourceStack(CommandSource.NULL, player.position(), player.getRotationVector(), (ServerLevel) player.level(), 4, player.getName().getString(), player.getDisplayName(),
-                                player.level().getServer(), player),
-                        ("particle minecraft:cloud" + (" " + (player.getX() + 1.8 * player.getLookAngle().x)) + (" " + (player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y))
-                                + (" " + (player.getZ() + 1.8 * player.getLookAngle().z)) + " 0.4 0.4 0.4 0.005 30 force @s"));
+            if (player.level() instanceof ServerLevel serverLevel) {
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, player.getX() + 1.8 * player.getLookAngle().x,
+                        player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y,
+                        player.getZ() + 1.8 * player.getLookAngle().z,
+                        30, 0.4, 0.4, 0.4, 0.005, true);
             }
 
             if (tag.getInt("ammo") == 1) {
