@@ -26,39 +26,50 @@ minecraft {
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     copyIdeResources = true
-
     runs {
         client {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                examplemod {
-                    source sourceSets.main
-                }
-            }
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
         }
 
         server {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                examplemod {
-                    source sourceSets.main
-                }
-            }
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
         }
+        data {
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+        }
+    }
+}
+
+repositories {
+    maven {
+        url = "https://maven.theillusivec4.top/"
+    }
+    maven {
+        url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+    }
+    maven {
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
     }
 }
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.20.1-47.2.0'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.4.2+1.20.1")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.4.2+1.20.1:api")
+
+    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.20.1:4.4.6')
+
+    // compile against the JEI API but do not include it at runtime
+    compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}"))
+    compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}"))
+    // at runtime, use the full JEI jar for Forge
+    runtimeOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}"))
 }
 
 mixin {
@@ -76,5 +87,3 @@ mixin {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
-
-apply from: 'mcreator.gradle'
