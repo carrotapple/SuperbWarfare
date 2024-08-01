@@ -125,6 +125,17 @@ public class PlayerEventHandler {
                 capability.tacticalSprint = false;
                 capability.syncPlayerVariables(player);
             });
+            player.getPersistentData().putBoolean("canTacticalSprint", true);
+        }
+
+        if (player.isSprinting()
+                && !(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).tacticalSprintExhaustion
+                && player.getPersistentData().getBoolean("canTacticalSprint")) {
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.tacticalSprint = true;
+                capability.syncPlayerVariables(player);
+            });
+            player.getPersistentData().putBoolean("canTacticalSprint", false);
         }
 
         if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprint) {
@@ -132,7 +143,7 @@ public class PlayerEventHandler {
                 capability.tacticalSprintTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime - sprint_cost,0,600);
                 capability.syncPlayerVariables(player);
             });
-            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2, 1, false, false));
+            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2, 0, false, false));
 
         } else {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {

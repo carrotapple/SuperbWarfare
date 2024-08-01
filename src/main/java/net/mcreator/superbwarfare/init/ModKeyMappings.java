@@ -194,31 +194,13 @@ public class ModKeyMappings {
             isDownOld = isDown;
         }
     };
-    public static final KeyMapping TACTICAL_SPRINT = new KeyMapping("key.superbwarfare.tactical_sprint", GLFW.GLFW_KEY_LEFT_CONTROL, "key.categories.superbwarfare") {
-        private boolean isDownOld = false;
 
-        @Override
-        public void setDown(boolean isDown) {
-            super.setDown(isDown);
-            if (isDownOld != isDown && isDown) {
-                ModUtils.PACKET_HANDLER.sendToServer(new TacticalSprintMessage(true));
-                TACTICAL_SPRINT_LASTPRESS = System.currentTimeMillis();
-            } else if (isDownOld != isDown) {
-                int dt = (int) (System.currentTimeMillis() - TACTICAL_SPRINT_LASTPRESS);
-                ModUtils.PACKET_HANDLER.sendToServer(new TacticalSprintMessage(false));
-            }
-            isDownOld = isDown;
-        }
-    };
     private static long FORWARD_LASTPRESS = 0;
     private static long BACKWARD_LASTPRESS = 0;
     private static long LEFT_LASTPRESS = 0;
     private static long RIGHT_LASTPRESS = 0;
     private static long UP_LASTPRESS = 0;
     private static long DOWN_LASTPRESS = 0;
-    private static long TACTICAL_SPRINT_LASTPRESS = 0;
-
-
 
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
@@ -234,8 +216,6 @@ public class ModKeyMappings {
         event.register(RIGHT);
         event.register(UP);
         event.register(DOWN);
-        event.register(TACTICAL_SPRINT);
-
     }
 
     @Mod.EventBusSubscriber({Dist.CLIENT})
@@ -255,7 +235,6 @@ public class ModKeyMappings {
                 RIGHT.consumeClick();
                 UP.consumeClick();
                 DOWN.consumeClick();
-                TACTICAL_SPRINT.consumeClick();
             }
         }
     }
