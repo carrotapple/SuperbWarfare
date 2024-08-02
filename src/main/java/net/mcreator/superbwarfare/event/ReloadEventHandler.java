@@ -28,6 +28,7 @@ public class ReloadEventHandler {
 
         handleHealClipPre(stack);
         handleKillClipPre(stack);
+        handleKillingTallyPre(stack);
     }
 
     @SubscribeEvent
@@ -92,4 +93,14 @@ public class ReloadEventHandler {
         stack.getOrCreateTag().putInt("KillClipTime", 90 + 10 * level);
     }
 
+    private static void handleKillingTallyPre(ItemStack stack) {
+        int level = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.KILLING_TALLY.get(), stack);
+        if (level == 0) {
+            return;
+        }
+
+        if (stack.getOrCreateTag().contains("KillingTally")) {
+            stack.getOrCreateTag().putInt("KillingTally", 0);
+        }
+    }
 }

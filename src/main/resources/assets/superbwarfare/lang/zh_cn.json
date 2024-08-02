@@ -253,6 +253,8 @@
   "enchantment.superbwarfare.kill_clip.desc": "完成击杀后填装可提升武器伤害",
   "enchantment.superbwarfare.gutshot_straight": "直击要害",
   "enchantment.superbwarfare.gutshot_straight.desc": "瞄准时增加身体射击伤害",
+  "enchantment.superbwarfare.killing_tally": "击杀记录",
+  "enchantment.superbwarfare.killing_tally.desc": "完成击杀可提高此武器的伤害，效果持续至切换或填装武器",
 
   "des.superbwarfare.sensitivity": "当前枪械的灵敏度为：%1$s",
   "des.superbwarfare.need_bolt_action": "【需要拉栓】",

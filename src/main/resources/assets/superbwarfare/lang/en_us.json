@@ -253,6 +253,8 @@
   "enchantment.superbwarfare.kill_clip.desc": "Increases the damage of weapon after dealing a final blow",
   "enchantment.superbwarfare.gutshot_straight": "Gutshot Straight",
   "enchantment.superbwarfare.gutshot_straight.desc": "Aiming down sights increases body shot damage",
+  "enchantment.superbwarfare.killing_tally": "Killing Tally",
+  "enchantment.superbwarfare.killing_tally.desc": "Kill increases the weapon's damage until it is stowed or reloaded",
 
   "des.superbwarfare.sensitivity": "Current Sensitivity of This Gun: %1$s",
   "des.superbwarfare.need_bolt_action": "[ Need Bolt Action ]",

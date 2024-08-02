@@ -39,9 +39,8 @@ public class LivingEventHandler {
             return;
         }
 
-        handleKillClipDamage(event);
+        handleGunEnchantmentsWhenHurt(event);
         renderDamageIndicator(event);
-        handleGutshotStraightDamage(event);
         reduceBulletDamage(event, event.getSource(), event.getEntity(), event.getSource().getEntity(), event.getAmount());
     }
 
@@ -52,8 +51,8 @@ public class LivingEventHandler {
         }
 
         killIndication(event.getSource().getEntity());
+        handleGunEnchantmentsWhenDeath(event);
         handlePlayerKillEntity(event);
-        handleClipEnchantments(event);
     }
 
     private static void reduceBulletDamage(LivingHurtEvent event, DamageSource damagesource, LivingEntity entity, Entity sourceentity, double amount) {
@@ -201,6 +200,11 @@ public class LivingEventHandler {
                         newStack.getOrCreateTag().putBoolean("sentinel_is_charging", false);
                         newStack.getOrCreateTag().putInt("sentinel_charge_time", 0);
 
+                        int level = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.KILLING_TALLY.get(), newStack);
+                        if (level != 0) {
+                            newStack.getOrCreateTag().putInt("KillingTally", 0);
+                        }
+
                         double weight = newStack.getOrCreateTag().getDouble("weight");
 
                         if (weight == 0) {
@@ -251,7 +255,7 @@ public class LivingEventHandler {
         }
     }
 
-    private static void handleClipEnchantments(LivingDeathEvent event) {
+    private static void handleGunEnchantmentsWhenHurt(LivingHurtEvent event) {
         DamageSource source = event.getSource();
 
         Player attacker = null;
@@ -266,27 +270,27 @@ public class LivingEventHandler {
             return;
         }
 
+        ItemStack stack = attacker.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) {
+            return;
+        }
+
         if (source.is(ModDamageTypes.GUN_FIRE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT) ||
                 source.is(ModDamageTypes.ARROW_IN_BRAIN) || source.is(ModDamageTypes.ARROW_IN_KNEE)
                 || source.is(ModDamageTypes.PROJECTILE_BOOM)) {
-            ItemStack stack = attacker.getMainHandItem();
-            if (!stack.is(ModTags.Items.GUN)) {
-                return;
-            }
+            handleKillClipDamage(stack, event);
+        }
 
-            int healClipLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.HEAL_CLIP.get(), stack);
-            if (healClipLevel != 0) {
-                stack.getOrCreateTag().putInt("HealClipTime", 80 + healClipLevel * 20);
-            }
+        if (source.is(ModDamageTypes.GUN_FIRE) && source.getDirectEntity() instanceof ProjectileEntity projectile && projectile.isZoom()) {
+            handleGutshotStraightDamage(stack, event);
+        }
 
-            int killClipLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.KILL_CLIP.get(), stack);
-            if (killClipLevel != 0) {
-                stack.getOrCreateTag().putInt("KillClipReloadTime", 80);
-            }
+        if (source.is(ModDamageTypes.GUN_FIRE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)) {
+            handleKillingTallyDamage(stack, event);
         }
     }
 
-    private static void handleKillClipDamage(LivingHurtEvent event) {
+    private static void handleGunEnchantmentsWhenDeath(LivingDeathEvent event) {
         DamageSource source = event.getSource();
 
         Player attacker = null;
@@ -301,48 +305,73 @@ public class LivingEventHandler {
             return;
         }
 
-        if (source.is(ModDamageTypes.GUN_FIRE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT) ||
-                source.is(ModDamageTypes.ARROW_IN_BRAIN) || source.is(ModDamageTypes.ARROW_IN_KNEE)
-                || source.is(ModDamageTypes.PROJECTILE_BOOM)) {
-            ItemStack stack = attacker.getMainHandItem();
-            if (!stack.is(ModTags.Items.GUN)) {
-                return;
-            }
-
-            if (stack.getOrCreateTag().getInt("KillClipTime") > 0) {
-                int enchantmentLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.GUTSHOT_STRAIGHT.get(), stack);
-                if (enchantmentLevel == 0) {
-                    return;
-                }
-
-                event.setAmount(event.getAmount() * (1.2f + 0.05f * enchantmentLevel));
-            }
-        }
-    }
-
-    private static void handleGutshotStraightDamage(LivingHurtEvent event) {
-        DamageSource source = event.getSource();
-        if (!source.is(ModDamageTypes.GUN_FIRE)) {
+        ItemStack stack = attacker.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) {
             return;
         }
 
-        Entity directSource = source.getDirectEntity();
-        if (directSource instanceof ProjectileEntity projectile && projectile.getShooter() instanceof Player player) {
-            if (!projectile.isZoom()) {
-                return;
-            }
+        if (source.is(ModDamageTypes.GUN_FIRE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT) ||
+                source.is(ModDamageTypes.ARROW_IN_BRAIN) || source.is(ModDamageTypes.ARROW_IN_KNEE)
+                || source.is(ModDamageTypes.PROJECTILE_BOOM)) {
+            handleClipEnchantments(stack);
+        }
 
-            ItemStack stack = player.getMainHandItem();
-            if (!stack.is(ModTags.Items.GUN)) {
-                return;
-            }
+        if (source.is(ModDamageTypes.GUN_FIRE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)) {
+            handleKillingTallyAddCount(stack);
+        }
+    }
 
+    private static void handleClipEnchantments(ItemStack stack) {
+        int healClipLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.HEAL_CLIP.get(), stack);
+        if (healClipLevel != 0) {
+            stack.getOrCreateTag().putInt("HealClipTime", 80 + healClipLevel * 20);
+        }
+
+        int killClipLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.KILL_CLIP.get(), stack);
+        if (killClipLevel != 0) {
+            stack.getOrCreateTag().putInt("KillClipReloadTime", 80);
+        }
+    }
+
+    private static void handleKillClipDamage(ItemStack stack, LivingHurtEvent event) {
+        if (stack.getOrCreateTag().getInt("KillClipTime") > 0) {
             int enchantmentLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.GUTSHOT_STRAIGHT.get(), stack);
             if (enchantmentLevel == 0) {
                 return;
             }
 
-            event.setAmount(event.getAmount() * (1.15f + 0.05f * enchantmentLevel));
+            event.setAmount(event.getAmount() * (1.2f + 0.05f * enchantmentLevel));
         }
     }
+
+    private static void handleGutshotStraightDamage(ItemStack stack, LivingHurtEvent event) {
+        int enchantmentLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.GUTSHOT_STRAIGHT.get(), stack);
+        if (enchantmentLevel == 0) {
+            return;
+        }
+
+        event.setAmount(event.getAmount() * (1.15f + 0.05f * enchantmentLevel));
+    }
+
+    private static void handleKillingTallyDamage(ItemStack stack, LivingHurtEvent event) {
+        int level = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.KILLING_TALLY.get(), stack);
+        if (level == 0) {
+            return;
+        }
+
+        int killTally = stack.getOrCreateTag().getInt("KillingTally");
+        if (killTally == 0) {
+            return;
+        }
+
+        event.setAmount(event.getAmount() * (1.0f + (0.1f * level) * killTally));
+    }
+
+    private static void handleKillingTallyAddCount(ItemStack stack) {
+        int level = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.KILLING_TALLY.get(), stack);
+        if (level != 0) {
+            stack.getOrCreateTag().putInt("KillingTally", Math.min(3, stack.getOrCreateTag().getInt("KillingTally") + 1));
+        }
+    }
+
 }
