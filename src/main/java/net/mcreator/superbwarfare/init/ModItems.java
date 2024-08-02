@@ -26,6 +26,7 @@ public class ModItems {
     public static final DeferredRegister<Item> GUNS = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
 
     public static final RegistryObject<Item> TASER = GUNS.register("taser", Taser::new);
+    public static final RegistryObject<Item> GLOCK_17 = GUNS.register("glock_17", Glock17Item::new);
     public static final RegistryObject<Item> ABEKIRI = GUNS.register("abekiri", Abekiri::new);
     public static final RegistryObject<Item> TRACHELIUM = GUNS.register("trachelium", Trachelium::new);
     public static final RegistryObject<Item> VECTOR = GUNS.register("vector", VectorItem::new);
@@ -147,6 +148,7 @@ public class ModItems {
     public static final RegistryObject<Item> SPECIAL_MATERIAL_PACK = ITEMS.register("special_material_pack", () -> new MaterialPack(RarityTool.SPECIAL));
 
     public static final RegistryObject<Item> TRACHELIUM_BLUEPRINT = ITEMS.register("trachelium_blueprint", () -> new BlueprintItem(RarityTool.LEGENDARY));
+    public static final RegistryObject<Item> GLOCK_17_BLUEPRINT = ITEMS.register("glock_17_blueprint", () -> new BlueprintItem(Rarity.COMMON));
     public static final RegistryObject<Item> HUNTING_RIFLE_BLUEPRINT = ITEMS.register("hunting_rifle_blueprint", () -> new BlueprintItem(Rarity.EPIC));
     public static final RegistryObject<Item> M_79_BLUEPRINT = ITEMS.register("m_79_blueprint", () -> new BlueprintItem(Rarity.RARE));
     public static final RegistryObject<Item> RPG_BLUEPRINT = ITEMS.register("rpg_blueprint", () -> new BlueprintItem(Rarity.EPIC));

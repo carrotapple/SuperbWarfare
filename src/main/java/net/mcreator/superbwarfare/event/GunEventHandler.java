@@ -426,6 +426,12 @@ public class GunEventHandler {
             }
         }
 
+        if (stack.getItem() == ModItems.GLOCK_17.get()) {
+            if (tag.getInt("gun_reloading_time") == 5) {
+                tag.putBoolean("HoldOpen", false);
+            }
+        }
+
         if (tag.getInt("gun_reloading_time") == 1) {
             if (stack.is(ModTags.Items.OPEN_BOLT)) {
                 if (tag.getInt("ammo") == 0) {

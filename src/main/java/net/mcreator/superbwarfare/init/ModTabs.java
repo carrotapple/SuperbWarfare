@@ -24,6 +24,7 @@ public class ModTabs {
                     .displayItems(
                             (param, output) -> {
                                 output.accept(Taser.getGunInstance());
+                                output.accept(Glock17Item.getGunInstance());
                                 output.accept(Abekiri.getGunInstance());
                                 output.accept(Trachelium.getGunInstance());
                                 output.accept(VectorItem.getGunInstance());

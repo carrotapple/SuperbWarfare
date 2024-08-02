@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.entity.model;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.ProjectileEntity;
+import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +20,7 @@ public class ProjectileEntityModel extends GeoModel<ProjectileEntity> {
 	@Override
 	public ResourceLocation getModelResource(ProjectileEntity entity) {
 		Player player = Minecraft.getInstance().player;
-		if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
+		if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming || player.getMainHandItem().is(ModItems.GLOCK_17.get())) {
 			return new ResourceLocation(ModUtils.MODID, "geo/projectile_entity.geo.json");
 		} else {
 			return new ResourceLocation(ModUtils.MODID, "geo/projectile_entity2.geo.json");

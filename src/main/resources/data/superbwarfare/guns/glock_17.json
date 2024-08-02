@@ -1,0 +1,21 @@
+{
+  "zoom_speed": 1.9,
+  "zoom": 1.25,
+  "dev": 2.5,
+  "recoil_x": 0.003,
+  "recoil_y": 0.013,
+  "damage": 5.5,
+  "headshot": 1.5,
+  "velocity": 16,
+  "mag": 17,
+  "projectile_amount": 1,
+  "fire_interval": 3,
+  "weight": 0,
+  "fire_mode": 0,
+  "semi": 1,
+  "burst": 0,
+  "auto": 0,
+  "burst_size": 1,
+  "normal_reload_time": 30,
+  "empty_reload_time": 35
+}

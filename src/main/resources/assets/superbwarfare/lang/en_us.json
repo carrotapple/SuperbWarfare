@@ -36,6 +36,7 @@
   "item.superbwarfare.hunting_rifle": "HUNTING RIFLE",
   "item.superbwarfare.svd": "SVD",
   "item.superbwarfare.ntw_20": "NTW-20",
+  "item.superbwarfare.glock_17": "GLOCK-17",
 
   "des.superbwarfare.tips.damage": "Damage: ",
   "des.superbwarfare.tips.level": "Level: ",
@@ -63,6 +64,7 @@
   "item.superbwarfare.m_4_blueprint": "M4A1 Blueprint",
   "item.superbwarfare.devotion_blueprint": "DEVOTION Blueprint",
   "item.superbwarfare.taser_blueprint": "TASER Blueprint",
+  "item.superbwarfare.glock_17_blueprint": "GLOCK-17 Blueprint",
 
   "item.superbwarfare.common_material_pack": "Common Material Pack",
   "item.superbwarfare.rare_material_pack": "Rare Material Pack",

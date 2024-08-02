@@ -1167,6 +1167,54 @@
       }
     ]
   },
+  "glock_17_fire_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:glock_17/glock_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "glock_17_fire_3p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:glock_17/glock_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "glock_17_far": {
+    "sounds": [
+      {
+        "name": "superbwarfare:glock_17/glock_far",
+        "stream": false
+      }
+    ]
+  },
+  "glock_17_veryfar": {
+    "sounds": [
+      {
+        "name": "superbwarfare:glock_17/glock_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "glock_17_reload_normal": {
+    "sounds": [
+      {
+        "name": "superbwarfare:glock_17/glock_reload_normal",
+        "stream": false
+      }
+    ]
+  },
+  "glock_17_reload_empty": {
+    "sounds": [
+      {
+        "name": "superbwarfare:glock_17/glock_reload_empty",
+        "stream": false
+      }
+    ]
+  },
   "lightsaber": {
     "sounds": [
       {
