@@ -310,7 +310,12 @@ public class LivingEventHandler {
             }
 
             if (stack.getOrCreateTag().getInt("KillClipTime") > 0) {
-                event.setAmount(event.getAmount() * 1.25f);
+                int enchantmentLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.GUTSHOT_STRAIGHT.get(), stack);
+                if (enchantmentLevel == 0) {
+                    return;
+                }
+
+                event.setAmount(event.getAmount() * (1.2f + 0.05f * enchantmentLevel));
             }
         }
     }
@@ -337,7 +342,7 @@ public class LivingEventHandler {
                 return;
             }
 
-            event.setAmount(event.getAmount() * 1.2f);
+            event.setAmount(event.getAmount() * (1.15f + 0.05f * enchantmentLevel));
         }
     }
 }
