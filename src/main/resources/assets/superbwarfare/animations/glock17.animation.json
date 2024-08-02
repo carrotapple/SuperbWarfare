@@ -160,7 +160,7 @@
 		},
 		"animation.glock.fire": {
 			"loop": "hold_on_last_frame",
-			"animation_length": 0.0417,
+			"animation_length": 0.0833,
 			"override_previous_animation": true,
 			"bones": {
 				"lun": {
@@ -178,6 +178,17 @@
 						},
 						"0.0417": {
 							"vector": [0, 0, 0]
+						}
+					}
+				},
+				"roll": {
+					"rotation": {
+						"0.0": {
+							"vector": [-5, 0, 0]
+						},
+						"0.0833": {
+							"vector": [0, 0, 0],
+							"easing": "easeInElastic"
 						}
 					}
 				}
@@ -522,14 +533,14 @@
 							"easing": "easeInOutSine"
 						},
 						"0.225": {
-							"vector": [-4.16, -1.54, 0]
+							"vector": [-6.16, -1.54, 0]
 						},
 						"0.325": {
 							"vector": [-7.2, 0, 0],
 							"easing": "easeInElastic"
 						},
 						"0.4": {
-							"vector": [-4, 0.3, 0]
+							"vector": [-6, 0.3, 0]
 						},
 						"0.525": {
 							"vector": [-5.3, 1.1, 1.4],
@@ -691,11 +702,6 @@
 							"vector": [0, 0, 0]
 						}
 					}
-				}
-			},
-			"sound_effects": {
-				"0.0": {
-					"effect": "glock_reload_normal"
 				}
 			}
 		},
@@ -977,14 +983,14 @@
 							"easing": "easeInOutSine"
 						},
 						"0.225": {
-							"vector": [-4.16, -1.54, 0]
+							"vector": [-6.16, -1.54, 0]
 						},
 						"0.325": {
 							"vector": [-7.2, 0, 0],
 							"easing": "easeInElastic"
 						},
 						"0.4": {
-							"vector": [-4, 0.3, 0]
+							"vector": [-6, 0.3, 0]
 						},
 						"0.525": {
 							"vector": [-5.3, 1.1, 1.4],
@@ -1221,11 +1227,6 @@
 							"vector": [1, 1, 1]
 						}
 					}
-				}
-			},
-			"sound_effects": {
-				"0.0": {
-					"effect": "glock_reload_normal"
 				}
 			}
 		}

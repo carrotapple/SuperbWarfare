@@ -59,12 +59,12 @@ public class Glock17ItemModel extends GeoModel<Glock17Item> {
 
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
             shen.setPosY(0.05f * (float) (fp + 2 * fr));
-            shen.setPosZ(0.3f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.05f * (float) (fp + fr));
+            shen.setPosZ(-0.05f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.01f * (float) (fp + fr));
         } else {
             shen.setPosY(0.08f * (float) (fp + 2 * fr));
             shen.setPosZ(0.9f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.17f * (float) (0.18f * fp + fr));
+            shen.setRotX(0.27f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
         }
         shen.setPosX(0.5f * (float) fr * (float) ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));

@@ -48,6 +48,17 @@
 			"loop": "hold_on_last_frame",
 			"animation_length": 0.7917,
 			"bones": {
+				"0": {
+					"rotation": {
+						"0.0": {
+							"vector": [-5, 0, 0]
+						},
+						"0.1667": {
+							"vector": [0, 0, 0],
+							"easing": "easeInElastic"
+						}
+					}
+				},
 				"action": {
 					"position": {
 						"0.0": {
