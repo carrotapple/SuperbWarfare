@@ -7,6 +7,4 @@ public class RarityTool {
 
     public static final Rarity LEGENDARY = Rarity.create("target_legendary", ChatFormatting.GOLD);
 
-    public static final Rarity SPECIAL = Rarity.create("target_special", ChatFormatting.RED);
-
 }
