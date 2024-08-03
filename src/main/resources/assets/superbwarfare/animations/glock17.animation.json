@@ -160,9 +160,29 @@
 		},
 		"animation.glock.fire": {
 			"loop": "hold_on_last_frame",
-			"animation_length": 0.0833,
+			"animation_length": 0.0417,
 			"override_previous_animation": true,
 			"bones": {
+				"0": {
+					"rotation": {
+						"0.0": {
+							"vector": [-5, 0, 0]
+						},
+						"0.0417": {
+							"vector": [0, 0, 0],
+							"easing": "easeInElastic"
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0.5]
+						},
+						"0.0417": {
+							"vector": [0, 0, 0],
+							"easing": "easeInElastic"
+						}
+					}
+				},
 				"lun": {
 					"rotation": {
 						"0.0": {
@@ -178,17 +198,6 @@
 						},
 						"0.0417": {
 							"vector": [0, 0, 0]
-						}
-					}
-				},
-				"roll": {
-					"rotation": {
-						"0.0": {
-							"vector": [-5, 0, 0]
-						},
-						"0.0833": {
-							"vector": [0, 0, 0],
-							"easing": "easeInElastic"
 						}
 					}
 				}

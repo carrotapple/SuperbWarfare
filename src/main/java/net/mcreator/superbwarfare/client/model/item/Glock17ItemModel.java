@@ -50,7 +50,7 @@ public class Glock17ItemModel extends GeoModel<Glock17Item> {
 
         gun.setPosZ(5f * (float) p + (float) (0.3f * zp));
 
-        gun.setScaleZ(1f - (0.5f * (float) p));
+        gun.setScaleZ(1f - (0.35f * (float) p));
 
         gun.setRotZ(-11 * Mth.DEG_TO_RAD * (float) p + (float) (0.05f * zp));
 
@@ -58,14 +58,14 @@ public class Glock17ItemModel extends GeoModel<Glock17Item> {
         double fr = player.getPersistentData().getDouble("fire_rot");
 
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
-            shen.setPosY(0.05f * (float) (fp + 2 * fr));
-            shen.setPosZ(-0.05f * (float) (fp + 0.54f * fr));
+            shen.setPosY(0.03f * (float) (fp + 2 * fr));
+            shen.setPosZ(2.6f * (float) (fp + 0.84f * fr));
             shen.setRotY(0.05f * (float) ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
-            shen.setRotX(-0.05f * (float) (fp + fr));
+            shen.setRotX(0.005f * (float) (fp + fr));
         } else {
             shen.setPosY(0.08f * (float) (fp + 2 * fr));
-            shen.setPosZ(0.9f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.27f * (float) (0.18f * fp + fr));
+            shen.setPosZ(1.9f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.17f * (float) (0.18f * fp + fr));
             shen.setRotY(0.1f * (float) ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
         }
