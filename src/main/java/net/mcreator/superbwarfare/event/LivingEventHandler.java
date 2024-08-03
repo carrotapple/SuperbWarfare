@@ -286,8 +286,15 @@ public class LivingEventHandler {
             handleKillingTallyDamage(stack, event);
         }
 
-        if (DamageTypeTool.isGunHeadshotDamage(source)) {
-            handleFourthTimesCharm(stack);
+        if (source.getDirectEntity() instanceof ProjectileEntity projectile) {
+            if (EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.FOURTH_TIMES_CHARM.get(), stack) > 0) {
+                float bypassArmorRate = projectile.getBypassArmorRate();
+                if (bypassArmorRate >= 1.0f && source.is(ModDamageTypes.GUN_FIRE_HEADSHOT_ABSOLUTE)) {
+                    handleFourthTimesCharm(stack);
+                } else if (source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)) {
+                    handleFourthTimesCharm(stack);
+                }
+            }
         }
     }
 

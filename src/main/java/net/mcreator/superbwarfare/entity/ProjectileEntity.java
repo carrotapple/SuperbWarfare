@@ -558,6 +558,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         return this.shooterId;
     }
 
+    public float getBypassArmorRate() {
+        return this.bypassArmorRate;
+    }
+
     public void updateHeading() {
         double horizontalDistance = this.getDeltaMovement().horizontalDistance();
         this.setYRot((float) (Mth.atan2(this.getDeltaMovement().x(), this.getDeltaMovement().z()) * (180D / Math.PI)));

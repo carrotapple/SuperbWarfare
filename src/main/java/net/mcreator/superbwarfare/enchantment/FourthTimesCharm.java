@@ -35,6 +35,6 @@ public class FourthTimesCharm extends Enchantment {
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack itemstack) {
-        return itemstack.is(ModTags.Items.CAN_SHOOT_BULLET) && !itemstack.is(ModItems.MINIGUN.get());
+        return itemstack.is(ModTags.Items.CAN_SHOOT_BULLET) && !itemstack.is(ModItems.MINIGUN.get()) && !itemstack.is(ModTags.Items.SHOTGUN);
     }
 }

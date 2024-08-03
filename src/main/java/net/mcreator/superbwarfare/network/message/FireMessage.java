@@ -154,8 +154,9 @@ public class FireMessage {
                 if (!level.isClientSide()) {
                     int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), stack);
                     float damage = (float) (0.02 * stack.getOrCreateTag().getDouble("damage") * (1 + 0.05 * stack.getOrCreateTag().getInt("level")));
+                    float bypassArmorRate = (float) stack.getOrCreateTag().getDouble("BypassArmor");
 
-                    BocekArrowEntity arrow = new BocekArrowEntity(player, level, monsterMultiple);
+                    BocekArrowEntity arrow = new BocekArrowEntity(player, level, monsterMultiple).bypassArmorRate(bypassArmorRate);
                     arrow.setBaseDamage(damage);
                     arrow.setKnockback(0);
                     arrow.setSilent(true);

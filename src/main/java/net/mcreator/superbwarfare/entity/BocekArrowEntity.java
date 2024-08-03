@@ -37,6 +37,7 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
     public static final ItemStack PROJECTILE_ITEM = new ItemStack(Items.ARROW);
 
     private int monsterMultiplier = 0;
+    private float bypassArmorRate = 0.0f;
 
     public BocekArrowEntity(EntityType<? extends BocekArrowEntity> type, Level world) {
         super(type, world);
@@ -53,6 +54,11 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
 
     public BocekArrowEntity(PlayMessages.SpawnEntity packet, Level world) {
         super(ModEntities.BOCEK_ARROW.get(), world);
+    }
+
+    public BocekArrowEntity bypassArmorRate(float bypassArmorRate) {
+        this.bypassArmorRate = bypassArmorRate;
+        return this;
     }
 
     @Override
@@ -141,18 +147,10 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
         }
 
         boolean hurt;
-        if (headshot) {
-            if (entity instanceof Monster monster) {
-                hurt = monster.hurt(ModDamageTypes.causeArrowInBrainDamage(this.level().registryAccess(), this, this.getOwner()), (float) i * 2 * damageMultiplier);
-            } else {
-                hurt = entity.hurt(ModDamageTypes.causeArrowInBrainDamage(this.level().registryAccess(), this, this.getOwner()), (float) i * 2);
-            }
+        if (entity instanceof Monster) {
+            hurt = performHurt(entity, i * damageMultiplier, headshot);
         } else {
-            if (entity instanceof Monster monster) {
-                hurt = monster.hurt(ModDamageTypes.causeArrowInKneeDamage(this.level().registryAccess(), this, this.getOwner()), (float) i * damageMultiplier);
-            } else {
-                hurt = entity.hurt(ModDamageTypes.causeArrowInKneeDamage(this.level().registryAccess(), this, this.getOwner()), (float) i);
-            }
+            hurt = performHurt(entity, i, headshot);
         }
 
         if (!hurt) {
@@ -178,6 +176,22 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
         super.tick();
         if (this.tickCount > 100) {
             this.discard();
+        }
+    }
+
+    private boolean performHurt(Entity entity, float damage, boolean headshot) {
+        float normalDamage = damage * Mth.clamp(1 - bypassArmorRate, 0, 1);
+        float absoluteDamage = damage * Mth.clamp(bypassArmorRate, 0, 1);
+
+        entity.invulnerableTime = 0;
+        if (headshot) {
+            entity.hurt(ModDamageTypes.causeArrowInBrainDamage(this.level().registryAccess(), this, this.getOwner()), normalDamage * 2);
+            entity.invulnerableTime = 0;
+            return entity.hurt(ModDamageTypes.causeArrowInBrainAbsoluteDamage(this.level().registryAccess(), this, this.getOwner()), absoluteDamage * 2);
+        } else {
+            entity.hurt(ModDamageTypes.causeArrowInKneeDamage(this.level().registryAccess(), this, this.getOwner()), normalDamage);
+            entity.invulnerableTime = 0;
+            return entity.hurt(ModDamageTypes.causeArrowInKneeAbsoluteDamage(this.level().registryAccess(), this, this.getOwner()), absoluteDamage);
         }
     }
 
