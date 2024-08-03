@@ -570,11 +570,14 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         float normalDamage = damage * Mth.clamp(1 - bypassArmorRate, 0, 1);
         float absoluteDamage = damage * Mth.clamp(bypassArmorRate, 0, 1);
 
+        entity.invulnerableTime = 0;
         if (headshot) {
             entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.shooter), normalDamage * this.headShot);
+            entity.invulnerableTime = 0;
             entity.hurt(ModDamageTypes.causeGunFireHeadshotAbsoluteDamage(this.level().registryAccess(), this, this.shooter), absoluteDamage * this.headShot);
         } else {
             entity.hurt(ModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), normalDamage);
+            entity.invulnerableTime = 0;
             entity.hurt(ModDamageTypes.causeGunFireAbsoluteDamage(this.level().registryAccess(), this, this.shooter), absoluteDamage);
         }
     }
