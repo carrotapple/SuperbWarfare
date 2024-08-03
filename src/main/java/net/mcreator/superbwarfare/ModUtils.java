@@ -97,7 +97,6 @@ public class ModUtils {
         addNetworkMessage(FireMessage.class, FireMessage::buffer, FireMessage::new, FireMessage::handler);
         addNetworkMessage(VehicleFireMessage.class, VehicleFireMessage::buffer, VehicleFireMessage::new, VehicleFireMessage::handler);
         addNetworkMessage(FireModeMessage.class, FireModeMessage::buffer, FireModeMessage::new, FireModeMessage::handler);
-        addNetworkMessage(GunRecycleGuiButtonMessage.class, GunRecycleGuiButtonMessage::buffer, GunRecycleGuiButtonMessage::new, GunRecycleGuiButtonMessage::handler);
         addNetworkMessage(ReloadMessage.class, ReloadMessage::encode, ReloadMessage::decode, ReloadMessage::handler);
         addNetworkMessage(PlayerGunKillMessage.class, PlayerGunKillMessage::encode, PlayerGunKillMessage::decode, PlayerGunKillMessage::handler, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         addNetworkMessage(ClientIndicatorMessage.class, ClientIndicatorMessage::encode, ClientIndicatorMessage::decode, ClientIndicatorMessage::handler, Optional.of(NetworkDirection.PLAY_TO_CLIENT));

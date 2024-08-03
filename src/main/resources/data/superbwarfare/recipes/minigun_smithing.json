@@ -4,7 +4,7 @@
     "item": "superbwarfare:minigun_blueprint"
   },
   "base": {
-    "item": "superbwarfare:special_material_pack"
+    "item": "superbwarfare:legendary_material_pack"
   },
   "addition": {
     "item": "minecraft:netherite_ingot"

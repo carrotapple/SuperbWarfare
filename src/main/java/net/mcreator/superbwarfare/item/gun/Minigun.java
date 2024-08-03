@@ -53,7 +53,7 @@ public class Minigun extends GunItem implements GeoItem, AnimatedItem {
     public static ItemDisplayContext transformType;
 
     public Minigun() {
-        super(new Item.Properties().stacksTo(1).rarity(RarityTool.SPECIAL));
+        super(new Item.Properties().stacksTo(1).rarity(RarityTool.LEGENDARY));
     }
 
     @Override

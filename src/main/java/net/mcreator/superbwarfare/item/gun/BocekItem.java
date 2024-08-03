@@ -48,7 +48,7 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
     public static ItemDisplayContext transformType;
 
     public BocekItem() {
-        super(new Item.Properties().stacksTo(1).rarity(RarityTool.SPECIAL));
+        super(new Item.Properties().stacksTo(1).rarity(RarityTool.LEGENDARY));
     }
 
     @Override

@@ -17,5 +17,4 @@ public class ModBlocks {
     public static final RegistryObject<Block> DEEPSLATE_GALENA_ORE = REGISTRY.register("deepslate_galena_ore", DeepslateGalenaOreBlock::new);
     public static final RegistryObject<Block> SCHEELITE_ORE = REGISTRY.register("scheelite_ore", ScheeliteOreBlock::new);
     public static final RegistryObject<Block> DEEPSLATE_SCHEELITE_ORE = REGISTRY.register("deepslate_scheelite_ore", DeepslateScheeliteOreBlock::new);
-    public static final RegistryObject<Block> GUN_RECYCLE = REGISTRY.register("gun_recycle", GunRecycleBlock::new);
 }

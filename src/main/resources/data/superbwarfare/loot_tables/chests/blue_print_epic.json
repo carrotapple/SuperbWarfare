@@ -189,7 +189,7 @@
         {
           "type": "minecraft:item",
           "name": "superbwarfare:ntw_20_blueprint",
-          "weight": 30,
+          "weight": 50,
           "functions": [
             {
               "function": "set_count",
@@ -203,7 +203,7 @@
         {
           "type": "minecraft:item",
           "name": "superbwarfare:bocek_blueprint",
-          "weight": 30,
+          "weight": 50,
           "functions": [
             {
               "function": "set_count",
@@ -217,7 +217,7 @@
         {
           "type": "minecraft:item",
           "name": "superbwarfare:minigun_blueprint",
-          "weight": 30,
+          "weight": 50,
           "functions": [
             {
               "function": "set_count",

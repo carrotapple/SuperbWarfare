@@ -52,7 +52,7 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
     public static ItemDisplayContext transformType;
 
     public Ntw20() {
-        super(new Item.Properties().stacksTo(1).rarity(RarityTool.SPECIAL));
+        super(new Item.Properties().stacksTo(1).rarity(RarityTool.LEGENDARY));
     }
 
     @Override
