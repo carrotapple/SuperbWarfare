@@ -20,7 +20,9 @@ public class ProjectileEntityModel extends GeoModel<ProjectileEntity> {
 	@Override
 	public ResourceLocation getModelResource(ProjectileEntity entity) {
 		Player player = Minecraft.getInstance().player;
-		if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming || player.getMainHandItem().is(ModItems.GLOCK_17.get())) {
+		if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming
+				|| player.getMainHandItem().is(ModItems.GLOCK_17.get())
+				|| player.getMainHandItem().is(ModItems.GLOCK_18.get())) {
 			return new ResourceLocation(ModUtils.MODID, "geo/projectile_entity.geo.json");
 		} else {
 			return new ResourceLocation(ModUtils.MODID, "geo/projectile_entity2.geo.json");

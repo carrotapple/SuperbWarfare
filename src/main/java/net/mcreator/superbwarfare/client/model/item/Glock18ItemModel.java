@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.item.gun.Glock17Item;
+import net.mcreator.superbwarfare.item.gun.Glock18Item;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -13,33 +13,41 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class Glock17ItemModel extends GeoModel<Glock17Item> {
+public class Glock18ItemModel extends GeoModel<Glock18Item> {
     @Override
-    public ResourceLocation getAnimationResource(Glock17Item animatable) {
+    public ResourceLocation getAnimationResource(Glock18Item animatable) {
         return new ResourceLocation(ModUtils.MODID, "animations/glock17.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(Glock17Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/glock17.geo.json");
+    public ResourceLocation getModelResource(Glock18Item animatable) {
+        return new ResourceLocation(ModUtils.MODID, "geo/glock18.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(Glock17Item animatable) {
+    public ResourceLocation getTextureResource(Glock18Item animatable) {
         return new ResourceLocation(ModUtils.MODID, "textures/item/glock17.png");
     }
 
     @Override
-    public void setCustomAnimations(Glock17Item animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(Glock18Item animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone slide = getAnimationProcessor().getBone("huatao");
         CoreGeoBone bullet = getAnimationProcessor().getBone("bullet");
+        CoreGeoBone switch_ = getAnimationProcessor().getBone("kuaimanji");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
+
+        if (stack.getOrCreateTag().getInt("fire_mode") == 0) {
+            switch_.setRotX(35 * Mth.DEG_TO_RAD);
+        }
+        if (stack.getOrCreateTag().getInt("fire_mode") == 2) {
+            switch_.setRotX(0);
+        }
 
         double p = player.getPersistentData().getDouble("zoom_pos");
         double zp = player.getPersistentData().getDouble("zoom_pos_z");
