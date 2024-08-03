@@ -1,5 +1,6 @@
 package net.mcreator.superbwarfare.enchantment;
 
+import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.tools.EnchantmentCategoryTool;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -24,7 +25,7 @@ public class FourthTimesCharm extends Enchantment {
 
     @Override
     public int getMinCost(int pLevel) {
-        return 20 + 5 * pLevel;
+        return 20 + 8 * pLevel;
     }
 
     @Override
@@ -34,6 +35,6 @@ public class FourthTimesCharm extends Enchantment {
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack itemstack) {
-        return itemstack.is(ModTags.Items.CAN_SHOOT_BULLET);
+        return itemstack.is(ModTags.Items.CAN_SHOOT_BULLET) && !itemstack.is(ModItems.MINIGUN.get());
     }
 }
