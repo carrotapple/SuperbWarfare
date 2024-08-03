@@ -257,6 +257,8 @@
   "enchantment.superbwarfare.gutshot_straight.desc": "Aiming down sights increases body shot damage",
   "enchantment.superbwarfare.killing_tally": "Killing Tally",
   "enchantment.superbwarfare.killing_tally.desc": "Kill increases the weapon's damage until it is stowed or reloaded",
+  "enchantment.superbwarfare.fourth_times_charm": "Fourth Time's The Charm",
+  "enchantment.superbwarfare.fourth_times_charm.desc": "Rapidly landing precision hits will return two rounds to the magazine",
 
   "des.superbwarfare.sensitivity": "Current Sensitivity of This Gun: %1$s",
   "des.superbwarfare.need_bolt_action": "[ Need Bolt Action ]",

@@ -47,7 +47,7 @@ public class GunsTool {
                 reader.endObject();
                 reader.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                ModUtils.LOGGER.error(e.getMessage());
             }
         }
     }

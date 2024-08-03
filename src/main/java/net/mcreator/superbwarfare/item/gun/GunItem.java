@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.item.gun;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModEnchantments;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -87,17 +89,7 @@ public abstract class GunItem extends Item {
                 itemstack.getOrCreateTag().putDouble("flash_time", (itemstack.getOrCreateTag().getDouble("flash_time") - 1));
             }
 
-            if (itemstack.getOrCreateTag().getInt("HealClipTime") > 0) {
-                itemstack.getOrCreateTag().putInt("HealClipTime", Math.max(0, itemstack.getOrCreateTag().getInt("HealClipTime") - 1));
-            }
-
-            if (itemstack.getOrCreateTag().getInt("KillClipReloadTime") > 0) {
-                itemstack.getOrCreateTag().putInt("KillClipReloadTime", Math.max(0, itemstack.getOrCreateTag().getInt("KillClipReloadTime") - 1));
-            }
-
-            if (itemstack.getOrCreateTag().getInt("KillClipTime") > 0) {
-                itemstack.getOrCreateTag().putInt("KillClipTime", Math.max(0, itemstack.getOrCreateTag().getInt("KillClipTime") - 1));
-            }
+            handleEnchantments(itemstack);
         }
     }
 
@@ -153,5 +145,35 @@ public abstract class GunItem extends Item {
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
         return enchantment.category == EnchantmentCategoryTool.GUN;
+    }
+
+    private void handleEnchantments(ItemStack stack) {
+        if (stack.getOrCreateTag().getInt("HealClipTime") > 0) {
+            stack.getOrCreateTag().putInt("HealClipTime", Math.max(0, stack.getOrCreateTag().getInt("HealClipTime") - 1));
+        }
+
+        if (stack.getOrCreateTag().getInt("KillClipReloadTime") > 0) {
+            stack.getOrCreateTag().putInt("KillClipReloadTime", Math.max(0, stack.getOrCreateTag().getInt("KillClipReloadTime") - 1));
+        }
+
+        if (stack.getOrCreateTag().getInt("KillClipTime") > 0) {
+            stack.getOrCreateTag().putInt("KillClipTime", Math.max(0, stack.getOrCreateTag().getInt("KillClipTime") - 1));
+        }
+
+        if (stack.getOrCreateTag().getInt("FourthTimesCharmTick") > 0) {
+            stack.getOrCreateTag().putInt("FourthTimesCharmTick",
+                    Math.max(0, stack.getOrCreateTag().getInt("FourthTimesCharmTick") - 1));
+        }
+
+        if (EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.FOURTH_TIMES_CHARM.get(), stack) > 0) {
+            int count = stack.getOrCreateTag().getInt("FourthTimesCharmCount");
+            if (count >= 4) {
+                stack.getOrCreateTag().putInt("FourthTimesCharmTick", 0);
+                stack.getOrCreateTag().putInt("FourthTimesCharmCount", 0);
+
+                int mag = stack.getOrCreateTag().getInt("mag");
+                stack.getOrCreateTag().putInt("ammo", Math.min(mag, stack.getOrCreateTag().getInt("ammo") + 2));
+            }
+        }
     }
 }

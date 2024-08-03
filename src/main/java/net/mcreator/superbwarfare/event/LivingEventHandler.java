@@ -288,6 +288,10 @@ public class LivingEventHandler {
         if (source.is(ModDamageTypes.GUN_FIRE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)) {
             handleKillingTallyDamage(stack, event);
         }
+
+        if (source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)) {
+            handleFourthTimesCharm(stack);
+        }
     }
 
     private static void handleGunEnchantmentsWhenDeath(LivingDeathEvent event) {
@@ -371,6 +375,24 @@ public class LivingEventHandler {
         int level = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.KILLING_TALLY.get(), stack);
         if (level != 0) {
             stack.getOrCreateTag().putInt("KillingTally", Math.min(3, stack.getOrCreateTag().getInt("KillingTally") + 1));
+        }
+    }
+
+    private static void handleFourthTimesCharm(ItemStack stack) {
+        int level = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.FOURTH_TIMES_CHARM.get(), stack);
+        if (level == 0) {
+            return;
+        }
+
+        int fourthTimesCharmTick = stack.getOrCreateTag().getInt("FourthTimesCharmTick");
+        if (fourthTimesCharmTick <= 0) {
+            stack.getOrCreateTag().putInt("FourthTimesCharmTick", 60);
+            stack.getOrCreateTag().putInt("FourthTimesCharmCount", 1);
+        } else {
+            int count = stack.getOrCreateTag().getInt("FourthTimesCharmCount");
+            if (count < 4) {
+                stack.getOrCreateTag().putInt("FourthTimesCharmCount", Math.min(4, count + 1));
+            }
         }
     }
 
