@@ -17,20 +17,18 @@ import javax.annotation.Nullable;
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 public class ModDamageTypes {
     public static final ResourceKey<DamageType> GUN_FIRE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "gunfire"));
-    public static final ResourceKey<DamageType> GUN_FIRE_BYPASS = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "gunfire_bypass"));
+    public static final ResourceKey<DamageType> GUN_FIRE_ABSOLUTE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "gunfire_absolute"));
+    public static final ResourceKey<DamageType> GUN_FIRE_HEADSHOT = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "gunfire_headshot"));
+    public static final ResourceKey<DamageType> GUN_FIRE_HEADSHOT_ABSOLUTE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "gunfire_headshot_absolute"));
     public static final ResourceKey<DamageType> ARROW_IN_KNEE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "arrow_in_knee"));
+    public static final ResourceKey<DamageType> ARROW_IN_KNEE_ABSOLUTE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "arrow_in_knee_absolute"));
     public static final ResourceKey<DamageType> ARROW_IN_BRAIN = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "arrow_in_brain"));
+    public static final ResourceKey<DamageType> ARROW_IN_BRAIN_ABSOLUTE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "arrow_in_brain_absolute"));
     public static final ResourceKey<DamageType> MINE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "mine"));
     public static final ResourceKey<DamageType> BEAST = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "beast"));
     public static final ResourceKey<DamageType> SHOCK = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "shock"));
     public static final ResourceKey<DamageType> PROJECTILE_BOOM = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "projectile_boom"));
     public static final ResourceKey<DamageType> CANNON_FIRE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "cannon_fire"));
-
-
-    public static final ResourceKey<DamageType> GUN_FIRE_HEADSHOT = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "gunfire_headshot"));
-    public static final ResourceKey<DamageType> GUN_FIRE_HEADSHOT_BYPASS = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "gunfire_headshot_bypass"));
-    public static final ResourceKey<DamageType> ARROW_IN_KNEE_BYPASS = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "arrow_in_knee_bypass"));
-    public static final ResourceKey<DamageType> ARROW_IN_BRAIN_BYPASS = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "arrow_in_brain_bypass"));
 
     public static DamageSource causeGunFireDamage(RegistryAccess registryAccess, @Nullable Entity directEntity, @Nullable Entity attacker) {
         return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(GUN_FIRE), directEntity, attacker);
@@ -64,20 +62,20 @@ public class ModDamageTypes {
         return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(CANNON_FIRE), directEntity, attacker);
     }
 
-    public static DamageSource causeGunFireDamageBypass(RegistryAccess registryAccess, @Nullable Entity directEntity, @Nullable Entity attacker) {
-        return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(GUN_FIRE_BYPASS), directEntity, attacker);
+    public static DamageSource causeGunFireAbsoluteDamage(RegistryAccess registryAccess, @Nullable Entity directEntity, @Nullable Entity attacker) {
+        return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(GUN_FIRE_ABSOLUTE), directEntity, attacker);
     }
 
-    public static DamageSource causeGunFireHeadshotDamageBypass(RegistryAccess registryAccess, @Nullable Entity directEntity, @Nullable Entity attacker) {
-        return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(GUN_FIRE_HEADSHOT_BYPASS), directEntity, attacker);
+    public static DamageSource causeGunFireHeadshotAbsoluteDamage(RegistryAccess registryAccess, @Nullable Entity directEntity, @Nullable Entity attacker) {
+        return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(GUN_FIRE_HEADSHOT_ABSOLUTE), directEntity, attacker);
     }
 
-    public static DamageSource causeArrowInKneeDamageBypass(RegistryAccess registryAccess, @Nullable Entity directEntity, @Nullable Entity attacker) {
-        return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(ARROW_IN_KNEE_BYPASS), directEntity, attacker);
+    public static DamageSource causeArrowInKneeAbsoluteDamage(RegistryAccess registryAccess, @Nullable Entity directEntity, @Nullable Entity attacker) {
+        return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(ARROW_IN_KNEE_ABSOLUTE), directEntity, attacker);
     }
 
-    public static DamageSource causeArrowInBrainDamageBypass(RegistryAccess registryAccess, @Nullable Entity directEntity, @Nullable Entity attacker) {
-        return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(ARROW_IN_BRAIN_BYPASS), directEntity, attacker);
+    public static DamageSource causeArrowInBrainAbsoluteDamage(RegistryAccess registryAccess, @Nullable Entity directEntity, @Nullable Entity attacker) {
+        return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(ARROW_IN_BRAIN_ABSOLUTE), directEntity, attacker);
     }
 
     private static class DamageMessages extends DamageSource {

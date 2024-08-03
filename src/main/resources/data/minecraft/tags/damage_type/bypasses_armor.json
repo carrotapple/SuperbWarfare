@@ -1,10 +1,10 @@
 {
   "replace": false,
   "values": [
-    "superbwarfare:gunfire_bypass",
-    "superbwarfare:gunfire_headshot_bypass",
-    "superbwarfare:arrow_in_knee_bypass",
-    "superbwarfare:arrow_in_brain_bypass",
+    "superbwarfare:gunfire_absolute",
+    "superbwarfare:gunfire_headshot_absolute",
+    "superbwarfare:arrow_in_knee_absolute",
+    "superbwarfare:arrow_in_brain_absolute",
     "superbwarfare:shock",
     "superbwarfare:cannon_fire"
   ]
