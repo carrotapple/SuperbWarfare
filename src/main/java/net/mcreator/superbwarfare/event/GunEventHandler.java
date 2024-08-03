@@ -345,6 +345,7 @@ public class GunEventHandler {
             float headshot = (float) heldItem.getOrCreateTag().getDouble("headshot");
             int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), heldItem);
             float damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("add_damage")) * (float) heldItem.getOrCreateTag().getDouble("damageadd");
+            float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
 
             boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
 
@@ -352,7 +353,8 @@ public class GunEventHandler {
                     .shooter(player)
                     .damage(damage)
                     .headShot(headshot)
-                    .zoom(zoom);
+                    .zoom(zoom)
+                    .bypassArmorRate(bypassArmorRate);
 
             if (heldItem.getOrCreateTag().getBoolean("beast")) {
                 projectile.beast();

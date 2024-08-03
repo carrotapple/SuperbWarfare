@@ -7,6 +7,7 @@ import net.mcreator.superbwarfare.event.KillMessageHandler;
 import net.mcreator.superbwarfare.init.ModDamageTypes;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.item.gun.GunItem;
+import net.mcreator.superbwarfare.tools.DamageTypeTool;
 import net.mcreator.superbwarfare.tools.PlayerKillRecord;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -111,8 +112,6 @@ public class KillMessageOverlay {
                 GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE,
                 GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE
         );
-
-        // TODO 实现图标半透明渲染
 
         // 入场效果
         if (record.tick < 3) {
@@ -247,8 +246,7 @@ public class KillMessageOverlay {
         if (record.headshot) {
             icon = HEADSHOT;
         } else {
-            if (record.damageType == ModDamageTypes.GUN_FIRE || record.damageType == ModDamageTypes.GUN_FIRE_HEADSHOT
-                    || record.damageType == ModDamageTypes.ARROW_IN_KNEE || record.damageType == ModDamageTypes.ARROW_IN_BRAIN) {
+            if (DamageTypeTool.isArrowDamage(record.damageType) || DamageTypeTool.isGunDamage(record.damageType)) {
                 icon = null;
             } else {
                 // 如果是其他伤害，则渲染对应图标

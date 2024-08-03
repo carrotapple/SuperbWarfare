@@ -212,12 +212,14 @@ public class FireMessage {
         float velocity = 4 * (float) tag.getDouble("speed");
         int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), heldItem);
         boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
+        float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
 
         var projectile = new ProjectileEntity(player.level())
                 .shooter(player)
                 .headShot(headshot)
                 .monsterMultiple(monsterMultiple)
-                .zoom(zoom);
+                .zoom(zoom)
+                .bypassArmorRate(bypassArmorRate);
 
         if (tag.getBoolean("beast")) {
             projectile.beast();

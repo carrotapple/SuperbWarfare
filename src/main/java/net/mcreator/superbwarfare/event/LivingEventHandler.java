@@ -8,6 +8,7 @@ import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.mcreator.superbwarfare.network.message.PlayerGunKillMessage;
+import net.mcreator.superbwarfare.tools.DamageTypeTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
@@ -55,25 +56,23 @@ public class LivingEventHandler {
         handlePlayerKillEntity(event);
     }
 
-    private static void reduceBulletDamage(LivingHurtEvent event, DamageSource damagesource, LivingEntity entity, Entity sourceentity, double amount) {
-        if (damagesource == null || entity == null || sourceentity == null) {
+    private static void reduceBulletDamage(LivingHurtEvent event, DamageSource damageSource, LivingEntity entity, Entity sourceentity, double amount) {
+        if (damageSource == null || entity == null || sourceentity == null) {
             return;
         }
 
         double damage = amount;
         ItemStack stack = sourceentity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
-        if ((damagesource.is(ModDamageTypes.ARROW_IN_KNEE) || damagesource.is(ModDamageTypes.ARROW_IN_BRAIN)
-                && stack.getItem() == ModItems.BOCEK.get())) {
+        if (DamageTypeTool.isArrowDamage(damageSource) && stack.getItem() == ModItems.BOCEK.get()) {
             stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
         }
 
-        if ((damagesource.is(ModDamageTypes.PROJECTILE_BOOM) || damagesource.is(DamageTypes.ARROW))
-                && (stack.getItem() == ModItems.M_79.get() || stack.getItem() == ModItems.RPG.get())
-        ) {
+        if ((damageSource.is(ModDamageTypes.PROJECTILE_BOOM) || damageSource.is(DamageTypes.ARROW))
+                && (stack.getItem() == ModItems.M_79.get() || stack.getItem() == ModItems.RPG.get())) {
             stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
         }
 
-        if (damagesource.is(ModDamageTypes.GUN_FIRE) || damagesource.is(ModDamageTypes.GUN_FIRE_HEADSHOT)) {
+        if (DamageTypeTool.isGunDamage(damageSource)) {
             double distance = entity.position().distanceTo(sourceentity.position());
 
             if (stack.is(ModTags.Items.SHOTGUN) || stack.getItem() == ModItems.BOCEK.get()) {
@@ -247,7 +246,7 @@ public class LivingEventHandler {
         }
 
         if (attacker != null) {
-            if (source.is(ModDamageTypes.GUN_FIRE_HEADSHOT) || source.is(ModDamageTypes.ARROW_IN_BRAIN)) {
+            if (DamageTypeTool.isHeadshotDamage(source)) {
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(attacker.getId(), entity.getId(), true, damageTypeResourceKey));
             } else {
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new PlayerGunKillMessage(attacker.getId(), entity.getId(), false, damageTypeResourceKey));
@@ -275,21 +274,19 @@ public class LivingEventHandler {
             return;
         }
 
-        if (source.is(ModDamageTypes.GUN_FIRE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT) ||
-                source.is(ModDamageTypes.ARROW_IN_BRAIN) || source.is(ModDamageTypes.ARROW_IN_KNEE)
-                || source.is(ModDamageTypes.PROJECTILE_BOOM)) {
+        if (DamageTypeTool.isGunDamage(source) || source.is(ModDamageTypes.PROJECTILE_BOOM)) {
             handleKillClipDamage(stack, event);
         }
 
-        if (source.is(ModDamageTypes.GUN_FIRE) && source.getDirectEntity() instanceof ProjectileEntity projectile && projectile.isZoom()) {
+        if (DamageTypeTool.isGunFireDamage(source) && source.getDirectEntity() instanceof ProjectileEntity projectile && projectile.isZoom()) {
             handleGutshotStraightDamage(stack, event);
         }
 
-        if (source.is(ModDamageTypes.GUN_FIRE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)) {
+        if (DamageTypeTool.isGunDamage(source)) {
             handleKillingTallyDamage(stack, event);
         }
 
-        if (source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)) {
+        if (DamageTypeTool.isGunHeadshotDamage(source)) {
             handleFourthTimesCharm(stack);
         }
     }
@@ -314,13 +311,11 @@ public class LivingEventHandler {
             return;
         }
 
-        if (source.is(ModDamageTypes.GUN_FIRE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT) ||
-                source.is(ModDamageTypes.ARROW_IN_BRAIN) || source.is(ModDamageTypes.ARROW_IN_KNEE)
-                || source.is(ModDamageTypes.PROJECTILE_BOOM)) {
+        if (DamageTypeTool.isGunDamage(source) || source.is(ModDamageTypes.PROJECTILE_BOOM)) {
             handleClipEnchantments(stack);
         }
 
-        if (source.is(ModDamageTypes.GUN_FIRE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)) {
+        if (DamageTypeTool.isGunDamage(source)) {
             handleKillingTallyAddCount(stack);
         }
     }
@@ -339,7 +334,7 @@ public class LivingEventHandler {
 
     private static void handleKillClipDamage(ItemStack stack, LivingHurtEvent event) {
         if (stack.getOrCreateTag().getInt("KillClipTime") > 0) {
-            int enchantmentLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.GUTSHOT_STRAIGHT.get(), stack);
+            int enchantmentLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.KILL_CLIP.get(), stack);
             if (enchantmentLevel == 0) {
                 return;
             }

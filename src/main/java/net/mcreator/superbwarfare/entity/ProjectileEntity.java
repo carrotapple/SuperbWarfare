@@ -76,10 +76,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     protected int shooterId;
     private float damage = 1f;
     private float headShot = 1f;
-    private int monster_multiple = 0;
+    private int monsterMultiple = 0;
     private float legShot = 0.5f;
     private boolean beast = false;
     private boolean zoom = false;
+    private float bypassArmorRate = 0.0f;
 
     public ProjectileEntity(EntityType<? extends ProjectileEntity> p_i50159_1_, Level p_i50159_2_) {
         super(p_i50159_1_, p_i50159_2_);
@@ -109,7 +110,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     }
 
     public ProjectileEntity monsterMultiple(int monsterMultiple) {
-        this.monster_multiple = monsterMultiple;
+        this.monsterMultiple = monsterMultiple;
         return this;
     }
 
@@ -125,6 +126,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     public ProjectileEntity zoom(boolean zoom) {
         this.zoom = zoom;
+        return this;
+    }
+
+    public ProjectileEntity bypassArmorRate(float bypassArmorRate) {
+        this.bypassArmorRate = bypassArmorRate;
         return this;
     }
 
@@ -352,8 +358,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         }
     }
 
-    protected void onHitEntity(Entity entity, boolean headshot, boolean legshot) {
-        float m_multiple = 1 + 0.2f * this.monster_multiple;
+    protected void onHitEntity(Entity entity, boolean headshot, boolean legShot) {
+        float mMultiple = 1 + 0.2f * this.monsterMultiple;
 
         if (entity == null) return;
 
@@ -401,11 +407,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(1, 5));
             }
             if (entity instanceof Monster monster) {
-                monster.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.headShot * m_multiple);
+                performDamage(monster, this.damage * mMultiple, true);
             } else {
-                entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.headShot);
+                performDamage(entity, this.damage, true);
             }
-        } else if (legshot) {
+        } else if (legShot) {
             if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
                 var holder = Holder.direct(ModSounds.INDICATION.get());
                 player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
@@ -414,9 +420,9 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             }
 
             if (entity instanceof Monster monster) {
-                monster.hurt(ModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.legShot * m_multiple);
+                performDamage(monster, this.damage * mMultiple * this.legShot, false);
             } else {
-                entity.hurt(ModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage * this.legShot);
+                performDamage(entity, this.damage * this.legShot, false);
             }
 
             if (entity instanceof LivingEntity living) {
@@ -436,9 +442,9 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             }
 
             if (entity instanceof Monster monster) {
-                monster.hurt(ModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage * m_multiple);
+                performDamage(monster, this.damage * mMultiple, false);
             } else {
-                entity.hurt(ModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), this.damage);
+                performDamage(entity, this.damage, false);
             }
         }
         this.discard();
@@ -560,14 +566,25 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         this.xRotO = this.getXRot();
     }
 
+    private void performDamage(Entity entity, float damage, boolean headshot) {
+        float normalDamage = damage * Mth.clamp(1 - bypassArmorRate, 0, 1);
+        float absoluteDamage = damage * Mth.clamp(bypassArmorRate, 0, 1);
+
+        if (headshot) {
+            entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.shooter), normalDamage * this.headShot);
+            entity.hurt(ModDamageTypes.causeGunFireHeadshotAbsoluteDamage(this.level().registryAccess(), this, this.shooter), absoluteDamage * this.headShot);
+        } else {
+            entity.hurt(ModDamageTypes.causeGunFireDamage(this.level().registryAccess(), this, this.shooter), normalDamage);
+            entity.hurt(ModDamageTypes.causeGunFireAbsoluteDamage(this.level().registryAccess(), this, this.shooter), absoluteDamage);
+        }
+    }
+
     @Override
     public void writeSpawnData(FriendlyByteBuf buffer) {
-
     }
 
     @Override
     public void readSpawnData(FriendlyByteBuf additionalData) {
-
     }
 
     public static class EntityResult {

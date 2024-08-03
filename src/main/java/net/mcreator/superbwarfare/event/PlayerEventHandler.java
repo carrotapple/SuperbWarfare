@@ -491,7 +491,7 @@ public class PlayerEventHandler {
                 try {
                     Thread.sleep(sleepTime);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    ModUtils.LOGGER.error(e.getLocalizedMessage());
                 }
             }
         };
