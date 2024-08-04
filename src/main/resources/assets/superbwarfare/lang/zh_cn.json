@@ -41,6 +41,8 @@
 
   "des.superbwarfare.tips.damage": "伤害: ",
   "des.superbwarfare.tips.level": "等级: ",
+  "des.superbwarfare.tips.bypass": "护甲穿透: ",
+  "des.superbwarfare.tips.distance": "无人机距离你: ",
 
   "item.superbwarfare.vector_blueprint": "短剑冲锋枪蓝图",
   "item.superbwarfare.m_60_blueprint": "M60通用机枪蓝图",
@@ -272,5 +274,12 @@
   "des.superbwarfare.monitor.linked": "连接成功！",
   "des.superbwarfare.monitor.monitor_already_linked": "这个遥控器已连接到一个设备！",
   "des.superbwarfare.monitor.already_linked": "这个设备已被连接！",
-  "des.superbwarfare.monitor.unlinked": "断开连接！"
+  "des.superbwarfare.monitor.unlinked": "断开连接！",
+
+  "des.superbwarfare.drone.distance": "飞手距离:",
+  "des.superbwarfare.drone.health": "耐久值:",
+  "des.superbwarfare.drone.ammo": "弹药:",
+  "des.superbwarfare.drone.range": "测距:",
+  "des.superbwarfare.drone.kamikaze": "自爆模式",
+  "des.superbwarfare.drone.warning": "警告!"
 }

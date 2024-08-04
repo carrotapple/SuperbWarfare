@@ -356,6 +356,13 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                 ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MORTAR_SHELLS.get()));
             }
 
+            player.getInventory().items.stream().filter(stack_ -> stack_.getItem() == ModItems.MONITOR.get())
+                    .forEach(stack_ -> {
+                        if (stack_.getOrCreateTag().getString(Monitor.LINKED_DRONE).equals(this.getStringUUID())) {
+                            Monitor.disLink(stack_);
+                        }
+                    });
+
             if (!this.level().isClientSide()) this.discard();
         } else if (stack.getItem() == ModItems.RGO_GRENADE.get() && !this.entityData.get(KAMIKAZE)) {
             if (this.entityData.get(AMMO) < 6) {

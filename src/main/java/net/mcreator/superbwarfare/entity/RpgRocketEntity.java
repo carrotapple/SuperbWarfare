@@ -1,8 +1,6 @@
 package net.mcreator.superbwarfare.entity;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.headshot.BoundingBoxManager;
-import net.mcreator.superbwarfare.headshot.IHeadshotBox;
 import net.mcreator.superbwarfare.init.ModDamageTypes;
 import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;
@@ -27,7 +25,6 @@ import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -42,8 +39,6 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
-import java.util.Optional;
 
 public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity{
 
@@ -99,51 +94,10 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
             entity.invulnerableTime = 0;
         }
 
-        AABB boundingBox = entity.getBoundingBox();
-        Vec3 startVec = this.position();
-        Vec3 endVec = startVec.add(this.getDeltaMovement());
-        Vec3 hitPos = boundingBox.clip(startVec, endVec).orElse(null);
-        /* Check for headshot */
-        boolean headshot = false;
-        if (entity instanceof LivingEntity) {
-            IHeadshotBox<LivingEntity> headshotBox = (IHeadshotBox<LivingEntity>) BoundingBoxManager.getHeadshotBoxes(entity.getType());
-            if (headshotBox != null) {
-                AABB box = headshotBox.getHeadshotBox((LivingEntity) entity);
-                if (box != null) {
-                    box = box.move(boundingBox.getCenter().x, boundingBox.minY, boundingBox.getCenter().z);
-                    Optional<Vec3> headshotHitPos = box.clip(startVec, endVec);
-                    if (headshotHitPos.isEmpty()) {
-                        box = box.inflate(0.2, 0.2, 0.2);
-                        headshotHitPos = box.clip(startVec, endVec);
-                    }
-                    if (headshotHitPos.isPresent() && (hitPos == null || headshotHitPos.get().distanceTo(hitPos) < 0.55)) {
-                        headshot = true;
-                    }
-                    if (headshot) {
-                        if (this.getOwner() instanceof LivingEntity living) {
-                            if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
-                                living.playSound(ModSounds.HEADSHOT.get(), 1, 1);
-
-                                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(1, 5));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (headshot) {
-            if (entity instanceof Monster monster) {
-                monster.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 5f * damageMultiplier);
-            } else {
-                entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * 5f);
-            }
+        if (entity instanceof Monster monster) {
+            monster.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * damageMultiplier);
         } else {
-            if (entity instanceof Monster monster) {
-                monster.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * damageMultiplier);
-            } else {
-                entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
-            }
+            entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
         }
 
         if (this.tickCount > 1) {

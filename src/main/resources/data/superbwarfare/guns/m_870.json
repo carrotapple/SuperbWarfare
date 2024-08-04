@@ -21,5 +21,5 @@
   "prepare_load_time": 36,
   "iterative_time": 16,
   "finish_time": 12,
-  "BypassesArmor": 0.1
+  "BypassesArmor": 0.05
 }

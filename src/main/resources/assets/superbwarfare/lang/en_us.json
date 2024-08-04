@@ -41,6 +41,8 @@
 
   "des.superbwarfare.tips.damage": "Damage: ",
   "des.superbwarfare.tips.level": "Level: ",
+  "des.superbwarfare.tips.bypass": "Armor Piercing: ",
+  "des.superbwarfare.tips.distance": "Drone Distance: ",
 
   "item.superbwarfare.vector_blueprint": "VECTOR Blueprint",
   "item.superbwarfare.m_60_blueprint": "M60 Blueprint",
@@ -272,5 +274,12 @@
   "des.superbwarfare.monitor.linked": "Connect！",
   "des.superbwarfare.monitor.monitor_already_linked": "This monitor has been connected！",
   "des.superbwarfare.monitor.already_linked": "This device has been connected！",
-  "des.superbwarfare.monitor.unlinked": "Disconnect！"
+  "des.superbwarfare.monitor.unlinked": "Disconnect！",
+
+  "des.superbwarfare.drone.distance": "DISTANCE:",
+  "des.superbwarfare.drone.health": "HEALTH:",
+  "des.superbwarfare.drone.ammo": "AMMO:",
+  "des.superbwarfare.drone.range": "RANGE:",
+  "des.superbwarfare.drone.kamikaze": "KAMIKAZE",
+  "des.superbwarfare.drone.warning": "WARNING!"
 }

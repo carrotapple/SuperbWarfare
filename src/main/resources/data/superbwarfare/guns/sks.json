@@ -18,5 +18,5 @@
   "burst_size": 1,
   "normal_reload_time": 54,
   "empty_reload_time": 75,
-  "BypassesArmor": 0.35
+  "BypassesArmor": 0.23
 }

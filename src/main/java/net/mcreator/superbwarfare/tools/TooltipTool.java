@@ -24,29 +24,29 @@ public class TooltipTool {
     public static void addGunTips(List<Component> tooltip, ItemStack stack) {
         tooltip.add(Component.literal(""));
 
-        double damage = (ItemNBTTool.getDouble(stack, "damage", 0) +
-                ItemNBTTool.getDouble(stack, "add_damage", 0))
-                * ItemNBTTool.getDouble(stack, "damageadd", 1);
+        double damage = ItemNBTTool.getDouble(stack, "damage", 0)
+                * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1);
 
         tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.#").format(damage)).withStyle(ChatFormatting.GREEN)));
 
         addLevelTips(tooltip, stack);
+        addBypassTips(tooltip, stack);
     }
 
     public static void addShotgunTips(List<Component> tooltip, ItemStack stack, int count) {
         tooltip.add(Component.literal(""));
 
-        double damage = (ItemNBTTool.getDouble(stack, "damage", 0) +
-                ItemNBTTool.getDouble(stack, "add_damage", 0))
-                * ItemNBTTool.getDouble(stack, "damageadd", 1);
+        double damage = ItemNBTTool.getDouble(stack, "damage", 0)
+                * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1);
 
         tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.#").format(damage) + " * " + count).withStyle(ChatFormatting.GREEN)));
 
         addLevelTips(tooltip, stack);
+        addBypassTips(tooltip, stack);
     }
 
     private static void addLevelTips(List<Component> tooltip, ItemStack stack) {
@@ -72,10 +72,19 @@ public class TooltipTool {
 
     }
 
+    private static void addBypassTips(List<Component> tooltip, ItemStack stack) {
+        double byPassRate = ItemNBTTool.getDouble(stack, "BypassesArmor", 0);
+
+        tooltip.add(Component.translatable("des.superbwarfare.tips.bypass").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.literal(new DecimalFormat("##.##").format(byPassRate * 100) + "%").withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD)));
+
+    }
+
     public static void addBocekTips(List<Component> tooltip, ItemStack stack) {
         tooltip.add(Component.literal(""));
 
-        double total = ItemNBTTool.getDouble(stack, "damage", 0) * ItemNBTTool.getDouble(stack, "damageadd", 1);
+        double total = ItemNBTTool.getDouble(stack, "damage", 0) * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1);
 
         tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
@@ -84,6 +93,7 @@ public class TooltipTool {
                 .append(Component.literal(new DecimalFormat("##.#").format(total)).withStyle(ChatFormatting.GREEN)));
 
         addLevelTips(tooltip, stack);
+        addBypassTips(tooltip, stack);
     }
 
     public static void addSentinelTips(List<Component> tooltip, ItemStack stack) {
@@ -97,14 +107,14 @@ public class TooltipTool {
 
         if (flag.get()) {
             double damage = (ItemNBTTool.getDouble(stack, "damage", 0) +
-                    ItemNBTTool.getDouble(stack, "add_damage", 0))
-                    * ItemNBTTool.getDouble(stack, "damageadd", 1);
+                    ItemNBTTool.getDouble(stack, "sentinelChargeDamage", 0))
+                    * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1);
 
             tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.literal(new DecimalFormat("##.#").format(damage)).withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.BOLD)));
         } else {
-            double damage = ItemNBTTool.getDouble(stack, "damage", 0) * ItemNBTTool.getDouble(stack, "damageadd", 1);
+            double damage = ItemNBTTool.getDouble(stack, "damage", 0) * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1);
 
             tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
@@ -112,6 +122,7 @@ public class TooltipTool {
         }
 
         addLevelTips(tooltip, stack);
+        addBypassTips(tooltip, stack);
 
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                 e -> tooltip.add(Component.literal(e.getEnergyStored() + " / " + e.getMaxEnergyStored() + " FE").withStyle(ChatFormatting.GRAY))
@@ -129,6 +140,8 @@ public class TooltipTool {
 
         if (entity == null) return;
 
-        tooltip.add(Component.literal("Distance:" + new DecimalFormat("##.#").format(player.distanceTo(entity)) + "M").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("des.superbwarfare.tips.distance").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.literal("Distance:" + new DecimalFormat("##.#").format(player.distanceTo(entity)) + "M").withStyle(ChatFormatting.GRAY)));
     }
 }

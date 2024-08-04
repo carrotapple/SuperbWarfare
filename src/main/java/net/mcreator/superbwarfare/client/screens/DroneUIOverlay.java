@@ -7,6 +7,7 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.tools.TraceTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -68,22 +69,51 @@ public class DroneUIOverlay {
 
 
                     if (distance > MAX_DISTANCE - 48) {
-                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, "WARNING", w / 2 + -18, h / 2 + -47, -65536, false);
+                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.warning")
+                                , w / 2 + -18, h / 2 + -47, -65536, false);
                         color = -65536;
                     }
 
-                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, "Distance:" + new DecimalFormat("##.#").format(distance) + "M", w / 2 + 10, h / 2 + 33, color, false);
-                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, "Health:" + new DecimalFormat("##.#").format(entity.getHealth()) + "/" + new DecimalFormat("##").format(entity.getMaxHealth()), w / 2 - 77, h / 2 + 33, -1, false);
+                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.distance")
+                            .append(Component.literal(new DecimalFormat("##.#").format(distance) + "M"))
+                            , w / 2 + 10, h / 2 + 33, color, false);
+
+                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.health")
+                            .append(Component.literal(new DecimalFormat("##.#").format(entity.getHealth()) + "/" + new DecimalFormat("##.#").format(entity.getMaxHealth())))
+                            , w / 2 - 77, h / 2 + 33, -1, false);
+
                     if (!entity.getEntityData().get(KAMIKAZE)) {
-                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, "AMMO:" + new DecimalFormat("##.#").format(entity.getEntityData().get(AMMO)) + " / 6", w / 2 + 12, h / 2 + -37, -1, false);
+
+                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.ammo")
+                                .append(Component.literal(new DecimalFormat("##.#").format(entity.getEntityData().get(AMMO)) + " / 6"))
+                                , w / 2 + 12, h / 2 + -37, -1, false);
+
                     } else {
-                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, "KAMIKAZE", w / 2 + 12, h / 2 + -37, -65536, false);
+
+                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.kamikaze")
+                                , w / 2 + 12, h / 2 + -37, -65536, false);
+
                     }
 
                     if (lookAtEntity) {
-                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, "Range：" + new DecimalFormat("##.#").format(entity_range) + "M " + lookingEntity.getDisplayName().getString(), w / 2 + 12, h / 2 - 28, color, false);
+
+                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
+                                .append(Component.literal(new DecimalFormat("##.#").format(entity_range) + "M " + lookingEntity.getDisplayName().getString()))
+                                , w / 2 + 12, h / 2 - 28, color, false);
+
                     } else {
-                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, block_range > 512 ? "Range：---M" : "Range：" + new DecimalFormat("##.#").format(block_range) + "M", w / 2 + 12, h / 2 - 28, color, false);
+                        if (block_range > 512) {
+
+                            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
+                                    .append(Component.literal("---M"))
+                                    , w / 2 + 12, h / 2 - 28, color, false);
+
+                        } else {
+                            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
+                                    .append(Component.literal(new DecimalFormat("##.#").format(block_range) + "M"))
+                                    , w / 2 + 12, h / 2 - 28, color, false);
+                        }
+
                     }
                 }
             }
