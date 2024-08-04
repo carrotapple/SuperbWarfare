@@ -383,8 +383,10 @@ public class PlayerEventHandler {
         CompoundTag tag = player.getMainHandItem().getOrCreateTag();
         float recoilX = (float) tag.getDouble("recoil_x");
         float recoilY = (float) tag.getDouble("recoil_y");
+        float recoilPitch = 3f;
+        float recoilYaw = 2f;
 
-        float recoilYaw = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.recoilHorizon).orElse(0d).floatValue();
+        float horizonRecoil = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.recoilHorizon).orElse(0d).floatValue();
 
         if (tag.getBoolean("shoot")) {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
@@ -472,11 +474,11 @@ public class PlayerEventHandler {
                 }
 
                 if (0 < recoil && recoil < 2.5) {
-                    float newPitch = (float) (player.getXRot() - 6f * recoilY * ry * (sinRes + Mth.clamp(0.8 - recoil, 0, 0.8)));
+                    float newPitch = (float) (player.getXRot() - recoilPitch * recoilY * ry * (sinRes + Mth.clamp(0.8 - recoil, 0, 0.8)));
                     player.setXRot(newPitch);
                     player.xRotO = player.getXRot();
 
-                    float newYaw = (float) (player.getYRot() - 4f * recoilYaw * recoilX * rx * sinRes);
+                    float newYaw = (float) (player.getYRot() - recoilYaw * horizonRecoil * recoilX * rx * sinRes);
                     player.setYRot(newYaw);
                     player.yRotO = player.getYRot();
                 }
