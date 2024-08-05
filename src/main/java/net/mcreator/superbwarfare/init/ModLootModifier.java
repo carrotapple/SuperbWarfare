@@ -46,14 +46,12 @@ public class ModLootModifier {
         }
     }
 
-    public static final DeferredRegister<Codec<? extends IGlobalLootModifier>> LOOT_MODIFIERS = DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, "target");
-    public static final RegistryObject<Codec<TargetModLootTableModifier>> LOOT_MODIFIER = LOOT_MODIFIERS.register("target_loot_modifier", TargetModLootTableModifier.CODEC);
+    public static final DeferredRegister<Codec<? extends IGlobalLootModifier>> LOOT_MODIFIERS = DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, ModUtils.MODID);
+    public static final RegistryObject<Codec<TargetModLootTableModifier>> LOOT_MODIFIER = LOOT_MODIFIERS.register(ModUtils.MODID + "_loot_modifier", TargetModLootTableModifier.CODEC);
 
     @SubscribeEvent
     public static void register(FMLConstructModEvent event) {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        event.enqueueWork(() -> {
-            LOOT_MODIFIERS.register(bus);
-        });
+        event.enqueueWork(() -> LOOT_MODIFIERS.register(bus));
     }
 }
