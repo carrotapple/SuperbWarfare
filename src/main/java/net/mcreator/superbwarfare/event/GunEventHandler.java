@@ -8,7 +8,6 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
-import net.mcreator.superbwarfare.network.message.ZoomMessage;
 import net.mcreator.superbwarfare.tools.GunInfo;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.ParticleTool;
@@ -347,7 +346,9 @@ public class GunEventHandler {
             float damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("sentinelChargeDamage")) * (float) heldItem.getOrCreateTag().getDouble("levelDamageMultiple");
             float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
 
-            boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
+            boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming;
+            double spread = heldItem.getOrCreateTag().getDouble("spread");
+            double zoomSpread = heldItem.getOrCreateTag().getDouble("zoomSpread");
 
             ProjectileEntity projectile = new ProjectileEntity(player.level())
                     .shooter(player)
@@ -364,7 +365,7 @@ public class GunEventHandler {
 
             projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
             projectile.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.0005f, player.getLookAngle().z, 1 * (float) heldItem.getOrCreateTag().getDouble("velocity"),
-                    (float) (heldItem.getOrCreateTag().getDouble("dev") * ZoomMessage.zoom_spread));
+                    (float) (zoom? zoomSpread : spread));
             player.level().addFreshEntity(projectile);
         }
     }

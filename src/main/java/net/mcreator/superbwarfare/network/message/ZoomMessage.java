@@ -2,15 +2,12 @@ package net.mcreator.superbwarfare.network.message;
 
 import net.mcreator.superbwarfare.entity.Mk42Entity;
 import net.mcreator.superbwarfare.entity.Mle1934Entity;
-import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
-import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -19,7 +16,6 @@ import java.util.function.Supplier;
 public class ZoomMessage {
     private final int type;
 
-    public static double zoom_spread = 1;
 
     public ZoomMessage(int type) {
         this.type = type;
@@ -56,18 +52,6 @@ public class ZoomMessage {
                 capability.syncPlayerVariables(entity);
             });
 
-            ItemStack stack = entity.getMainHandItem();
-
-            if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
-                zoom_spread = 0;
-            } else if (stack.is(ModTags.Items.SHOTGUN)) {
-                zoom_spread = 0.9;
-            }  else if (stack.is(ModItems.MINIGUN.get())) {
-                zoom_spread = 1;
-            } else {
-                zoom_spread = 0.00001;
-            }
-
             if (entity.isPassenger() && (entity.getVehicle() instanceof Mk42Entity || entity.getVehicle() instanceof Mle1934Entity)) {
                 if (entity instanceof ServerPlayer serverPlayer) {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.CANNON_ZOOM_IN.get(), 2, 1);
@@ -84,7 +68,6 @@ public class ZoomMessage {
                 capability.syncPlayerVariables(entity);
             });
 
-            zoom_spread = 1;
             if (entity.isPassenger() && (entity.getVehicle() instanceof Mk42Entity || entity.getVehicle() instanceof Mle1934Entity)) {
                 if (entity instanceof ServerPlayer serverPlayer) {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.CANNON_ZOOM_OUT.get(), 2, 1);

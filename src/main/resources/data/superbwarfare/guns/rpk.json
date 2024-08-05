@@ -1,7 +1,8 @@
 {
   "zoom_speed": 1,
   "zoom": 1.25,
-  "dev": 5,
+  "spread": 5.5,
+  "zoomSpread": 0.1,
   "bipod": 1,
   "recoil_x": 0.0035,
   "recoil_y": 0.012,

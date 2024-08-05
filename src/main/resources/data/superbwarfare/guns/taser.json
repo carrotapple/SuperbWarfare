@@ -1,5 +1,6 @@
 {
-  "dev": 2,
+  "spread": 2,
+  "zoomSpread": 0.1,
   "recoil_x": 0.0001,
   "recoil_y": 0.002,
   "zoom_speed": 2,

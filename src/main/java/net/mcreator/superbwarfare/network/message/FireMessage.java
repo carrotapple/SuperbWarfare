@@ -252,13 +252,17 @@ public class FireMessage {
                 int volt = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.VOLT_OVERLOAD.get(), stack);
                 int wire_length = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.LONGER_WIRE.get(), stack);
 
+                boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming;
+                double spread = stack.getOrCreateTag().getDouble("spread");
+                double zoomSpread = stack.getOrCreateTag().getDouble("zoomSpread");
+
                 Level level = player.level();
                 if (!level.isClientSide()) {
                     TaserBulletProjectileEntity taserBulletProjectile = new TaserBulletProjectileEntity(player, level, (float) stack.getOrCreateTag().getDouble("damage"), volt, wire_length);
 
                     taserBulletProjectile.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                     taserBulletProjectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) stack.getOrCreateTag().getDouble("velocity"),
-                            (float) (stack.getOrCreateTag().getDouble("dev") * ZoomMessage.zoom_spread));
+                            (float) (zoom? zoomSpread : spread));
                     level.addFreshEntity(taserBulletProjectile);
                 }
 
@@ -278,6 +282,10 @@ public class FireMessage {
         if (!stack.getOrCreateTag().getBoolean("reloading")) {
             if (!player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getInt("ammo") > 0) {
 
+                boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming;
+                double spread = stack.getOrCreateTag().getDouble("spread");
+                double zoomSpread = stack.getOrCreateTag().getDouble("zoomSpread");
+
                 Level level = player.level();
                 if (!level.isClientSide()) {
                     int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), stack);
@@ -285,7 +293,7 @@ public class FireMessage {
 
                     gunGrenadeEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                     gunGrenadeEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) stack.getOrCreateTag().getDouble("velocity"),
-                            (float) (stack.getOrCreateTag().getDouble("dev") * ZoomMessage.zoom_spread));
+                            (float) (zoom? zoomSpread : spread));
                     level.addFreshEntity(gunGrenadeEntity);
                 }
 
@@ -321,12 +329,16 @@ public class FireMessage {
 
         if (!tag.getBoolean("reloading") && !player.getCooldowns().isOnCooldown(mainHandItem.getItem()) && tag.getInt("ammo") > 0) {
 
+            boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming;
+            double spread = mainHandItem.getOrCreateTag().getDouble("spread");
+            double zoomSpread = mainHandItem.getOrCreateTag().getDouble("zoomSpread");
+
             if (!level.isClientSide()) {
                 int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), mainHandItem);
                 RpgRocketEntity rocketEntity = new RpgRocketEntity(player, level, (float) tag.getDouble("damage") * (float) tag.getDouble("levelDamageMultiple"), monsterMultiple);
                 rocketEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                 rocketEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) tag.getDouble("velocity"),
-                        (float) (mainHandItem.getOrCreateTag().getDouble("dev") * ZoomMessage.zoom_spread));
+                        (float) (zoom? zoomSpread : spread));
                 level.addFreshEntity(rocketEntity);
             }
 

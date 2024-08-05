@@ -1,7 +1,8 @@
 {
   "zoom_speed": 1.7,
   "zoom": 1.25,
-  "dev": 3,
+  "spread": 3,
+  "zoomSpread": 0.1,
   "recoil_x": 0.005,
   "recoil_y": 0.032,
   "damage": 18,

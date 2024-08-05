@@ -25,12 +25,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -131,45 +129,10 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source.getDirectEntity() instanceof ThrownPotion
-                || source.getDirectEntity() instanceof AreaEffectCloud
-                || source.is(DamageTypes.IN_FIRE)
-                || source.is(DamageTypes.ON_FIRE)
-                || source.is(DamageTypes.FALL)
-                || source.is(DamageTypes.CACTUS)
-                || source.is(DamageTypes.DROWN)
-                || source.is(DamageTypes.LIGHTNING_BOLT)
-                || source.is(DamageTypes.FALLING_ANVIL)
-                || source.is(DamageTypes.DRAGON_BREATH)
-                || source.is(DamageTypes.WITHER)
-                || source.is(DamageTypes.WITHER_SKULL)
-                || source.is(DamageTypes.GENERIC)
-                || source.is(DamageTypes.MAGIC)
-                || source.is(DamageTypes.ARROW)
-                || source.is(DamageTypes.IN_WALL)
-                || source.is(DamageTypes.MOB_ATTACK)
-                || source.is(DamageTypes.MOB_ATTACK_NO_AGGRO)
-                || source.is(DamageTypes.PLAYER_ATTACK)
-                || source.is(DamageTypes.THORNS)
-                || source.is(DamageTypes.STING)
-                || source.is(DamageTypes.SWEET_BERRY_BUSH)
-                || source.is(DamageTypes.TRIDENT)
-                || source.is(DamageTypes.THROWN)) {
+        if (amount < 32) {
             return false;
         }
-
-        if (source.is(ModDamageTypes.GUN_FIRE)
-                || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)
-                || source.is(ModDamageTypes.ARROW_IN_BRAIN)
-                || source.is(ModDamageTypes.ARROW_IN_KNEE)) {
-            return super.hurt(source, 0.125f * amount);
-        }
-
-        if (source.getDirectEntity() instanceof Player player && this.getFirstPassenger() != null && player == this.getFirstPassenger()) {
-            return false;
-        }
-
-        return super.hurt(source, amount);
+        return super.hurt(source, amount - 32);
     }
 
 

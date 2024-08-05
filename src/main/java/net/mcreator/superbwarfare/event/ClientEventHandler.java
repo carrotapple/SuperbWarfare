@@ -7,7 +7,6 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModMobEffects;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
-import net.mcreator.superbwarfare.network.message.ZoomMessage;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -154,12 +153,18 @@ public class ClientEventHandler {
             }
             float times = 90f / fps;
             var data = entity.getPersistentData();
-            double spread = (float) (entity.getMainHandItem().getOrCreateTag().getDouble("dev") * ZoomMessage.zoom_spread);
+            ItemStack stack = entity.getMainHandItem();
 
-            if (data.getDouble("crosshair") > spread) {
-                data.putDouble("crosshair", data.getDouble("crosshair") - 0.05 * Math.pow(spread - data.getDouble("crosshair"), 2) * times);
+            boolean zoom = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming;
+            double spread = stack.getOrCreateTag().getDouble("spread");
+            double zoomSpread = stack.getOrCreateTag().getDouble("zoomSpread");
+
+            double gunSpread = (float) (zoom? zoomSpread : spread);
+
+            if (data.getDouble("crosshair") > gunSpread) {
+                data.putDouble("crosshair", data.getDouble("crosshair") - 0.05 * Math.pow(gunSpread - data.getDouble("crosshair"), 2) * times);
             } else {
-                data.putDouble("crosshair", data.getDouble("crosshair") + 0.05 * Math.pow(spread - data.getDouble("crosshair"), 2) * times);
+                data.putDouble("crosshair", data.getDouble("crosshair") + 0.05 * Math.pow(gunSpread - data.getDouble("crosshair"), 2) * times);
             }
         }
     }
