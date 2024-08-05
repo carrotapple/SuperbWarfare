@@ -1263,6 +1263,54 @@
       }
     ]
   },
+  "m_1911_fire_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:m1911/m1911_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "m_1911_fire_3p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:m1911/m1911_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "m_1911_far": {
+    "sounds": [
+      {
+        "name": "superbwarfare:m1911/m1911_far",
+        "stream": false
+      }
+    ]
+  },
+  "m_1911_veryfar": {
+    "sounds": [
+      {
+        "name": "superbwarfare:m1911/m1911_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "m_1911_reload_normal": {
+    "sounds": [
+      {
+        "name": "superbwarfare:glock_17/glock_reload_normal",
+        "stream": false
+      }
+    ]
+  },
+  "m_1911_reload_empty": {
+    "sounds": [
+      {
+        "name": "superbwarfare:glock_17/glock_reload_empty",
+        "stream": false
+      }
+    ]
+  },
   "lightsaber": {
     "sounds": [
       {

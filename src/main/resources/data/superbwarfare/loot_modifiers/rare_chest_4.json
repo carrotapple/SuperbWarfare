@@ -1,5 +1,5 @@
 {
-  "type": "superbwarfare:target_loot_modifier",
+  "type": "superbwarfare:superbwarfare_loot_modifier",
   "conditions": [
     {
       "condition": "forge:loot_table_id",

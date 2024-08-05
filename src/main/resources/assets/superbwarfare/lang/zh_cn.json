@@ -38,6 +38,7 @@
   "item.superbwarfare.ntw_20": "NTW-20反器材狙击步枪",
   "item.superbwarfare.glock_17": "格洛克17手枪",
   "item.superbwarfare.glock_18": "格洛克18手枪",
+  "item.superbwarfare.m_1911": "M1911手枪",
 
   "des.superbwarfare.tips.damage": "伤害: ",
   "des.superbwarfare.tips.level": "等级: ",
@@ -69,6 +70,7 @@
   "item.superbwarfare.taser_blueprint": "泰瑟枪蓝图",
   "item.superbwarfare.glock_17_blueprint": "格洛克17手枪蓝图",
   "item.superbwarfare.glock_18_blueprint": "格洛克18手枪蓝图",
+  "item.superbwarfare.m_1911_blueprint": "M1911手枪蓝图",
 
   "item.superbwarfare.common_material_pack": "普通材料包",
   "item.superbwarfare.rare_material_pack": "稀有材料包",

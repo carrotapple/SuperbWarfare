@@ -28,6 +28,7 @@ public class ModItems {
     public static final RegistryObject<Item> TASER = GUNS.register("taser", Taser::new);
     public static final RegistryObject<Item> GLOCK_17 = GUNS.register("glock_17", Glock17Item::new);
     public static final RegistryObject<Item> GLOCK_18 = GUNS.register("glock_18", Glock18Item::new);
+    public static final RegistryObject<Item> M_1911 = GUNS.register("m_1911", M1911Item::new);
     public static final RegistryObject<Item> ABEKIRI = GUNS.register("abekiri", Abekiri::new);
     public static final RegistryObject<Item> TRACHELIUM = GUNS.register("trachelium", Trachelium::new);
     public static final RegistryObject<Item> VECTOR = GUNS.register("vector", VectorItem::new);
@@ -170,6 +171,7 @@ public class ModItems {
     public static final RegistryObject<Item> AK_47_BLUEPRINT = ITEMS.register("ak_47_blueprint", () -> new BlueprintItem(Rarity.RARE));
     public static final RegistryObject<Item> DEVOTION_BLUEPRINT = ITEMS.register("devotion_blueprint", () -> new BlueprintItem(Rarity.EPIC));
     public static final RegistryObject<Item> TASER_BLUEPRINT = ITEMS.register("taser_blueprint", () -> new BlueprintItem(Rarity.COMMON));
+    public static final RegistryObject<Item> M_1911_BLUEPRINT = ITEMS.register("m_1911_blueprint", () -> new BlueprintItem(Rarity.COMMON));
 
 
     private static RegistryObject<Item> block(RegistryObject<Block> block) {

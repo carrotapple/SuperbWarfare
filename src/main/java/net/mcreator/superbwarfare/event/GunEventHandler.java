@@ -428,7 +428,7 @@ public class GunEventHandler {
             }
         }
 
-        if (stack.getItem() == ModItems.GLOCK_17.get() || stack.getItem() == ModItems.GLOCK_18.get()) {
+        if (stack.getItem() == ModItems.GLOCK_17.get() || stack.getItem() == ModItems.GLOCK_18.get() || stack.getItem() == ModItems.M_1911.get()) {
             if (tag.getInt("gun_reloading_time") == 5) {
                 tag.putBoolean("HoldOpen", false);
             }
