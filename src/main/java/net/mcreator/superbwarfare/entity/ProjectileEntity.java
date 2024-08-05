@@ -24,6 +24,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -322,6 +323,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             if (blockHitResult.getType() == HitResult.Type.MISS) {
                 return;
             }
+            BlockPos resultPos = blockHitResult.getBlockPos();
+            BlockState state = this.level().getBlockState(resultPos);
+            SoundEvent event = state.getBlock().getSoundType(state, this.level(), resultPos, this).getBreakSound();
+            this.level().playSound(null, result.getLocation().x, result.getLocation().y, result.getLocation().z, event, SoundSource.AMBIENT, 1.0F, 1.0F);
             Vec3 hitVec = result.getLocation();
             this.onHitBlock(hitVec);
         }
