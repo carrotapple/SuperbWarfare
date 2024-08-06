@@ -50,6 +50,7 @@ public class ModUtils {
         ModPotion.POTIONS.register(bus);
         ModMenus.REGISTRY.register(bus);
         ModEnchantments.REGISTRY.register(bus);
+        ModPerks.PERKS.register(bus);
 
         bus.addListener(this::onCommonSetup);
 
