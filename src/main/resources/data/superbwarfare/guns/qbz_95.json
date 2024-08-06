@@ -1,0 +1,23 @@
+{
+  "zoom_speed": 1.25,
+  "zoom": 1.25,
+  "spread": 3.7,
+  "zoomSpread": 0.1,
+  "recoil_x": 0.0013,
+  "recoil_y": 0.009,
+  "damage": 7.5,
+  "headshot": 2,
+  "velocity": 48,
+  "mag": 30,
+  "projectile_amount": 1,
+  "fire_interval": 1,
+  "weight": 1,
+  "fire_mode": 2,
+  "semi": 1,
+  "burst": 0,
+  "auto": 1,
+  "burst_size": 1,
+  "normal_reload_time": 58,
+  "empty_reload_time": 74,
+  "BypassesArmor": 0.28
+}

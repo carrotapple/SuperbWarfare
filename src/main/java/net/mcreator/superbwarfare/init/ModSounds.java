@@ -202,6 +202,13 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> M_1911_RELOAD_NORMAL = REGISTRY.register("m_1911_reload_normal", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("superbwarfare", "m_1911_reload_normal")));
     public static final RegistryObject<SoundEvent> M_1911_RELOAD_EMPTY = REGISTRY.register("m_1911_reload_empty", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("superbwarfare", "m_1911_reload_empty")));
 
+    public static final RegistryObject<SoundEvent> QBZ_95_FIRE_1P = REGISTRY.register("qbz_95_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("superbwarfare", "qbz_95_fire_1p")));
+    public static final RegistryObject<SoundEvent> QBZ_95_FIRE_3P = REGISTRY.register("qbz_95_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("superbwarfare", "qbz_95_fire_3p")));
+    public static final RegistryObject<SoundEvent> QBZ_95_FAR = REGISTRY.register("qbz_95_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("superbwarfare", "qbz_95_far")));
+    public static final RegistryObject<SoundEvent> QBZ_95_VERYFAR = REGISTRY.register("qbz_95_veryfar", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("superbwarfare", "qbz_95_veryfar")));
+    public static final RegistryObject<SoundEvent> QBZ_95_RELOAD_NORMAL = REGISTRY.register("qbz_95_reload_normal", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("superbwarfare", "qbz_95_reload_normal")));
+    public static final RegistryObject<SoundEvent> QBZ_95_RELOAD_EMPTY = REGISTRY.register("qbz_95_reload_empty", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("superbwarfare", "qbz_95_reload_empty")));
+
     public static final RegistryObject<SoundEvent> MK_42_FIRE_1P = REGISTRY.register("mk_42_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("superbwarfare", "mk_42_fire_1p")));
     public static final RegistryObject<SoundEvent> MK_42_FIRE_3P = REGISTRY.register("mk_42_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("superbwarfare", "mk_42_fire_3p")));
     public static final RegistryObject<SoundEvent> MK_42_FAR = REGISTRY.register("mk_42_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("superbwarfare", "mk_42_far")));

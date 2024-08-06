@@ -121,7 +121,7 @@ public class GunEventHandler {
                     stack.getOrCreateTag().putBoolean("bullet_chain", true);
                 }
 
-                if (stack.getItem() == ModItems.M_4.get() || player.getMainHandItem().getItem() == ModItems.HK_416.get()) {
+                if (stack.getItem() == ModItems.M_4.get() || player.getMainHandItem().getItem() == ModItems.HK_416.get() || player.getMainHandItem().getItem() == ModItems.QBZ_95.get()) {
                     if (stack.getOrCreateTag().getDouble("fire_sequence") == 1) {
                         stack.getOrCreateTag().putDouble("fire_sequence", 0);
                     } else {
@@ -431,6 +431,12 @@ public class GunEventHandler {
 
         if (stack.getItem() == ModItems.GLOCK_17.get() || stack.getItem() == ModItems.GLOCK_18.get() || stack.getItem() == ModItems.M_1911.get()) {
             if (tag.getInt("gun_reloading_time") == 5) {
+                tag.putBoolean("HoldOpen", false);
+            }
+        }
+
+        if (stack.getItem() == ModItems.QBZ_95.get()) {
+            if (tag.getInt("gun_reloading_time") == 14) {
                 tag.putBoolean("HoldOpen", false);
             }
         }

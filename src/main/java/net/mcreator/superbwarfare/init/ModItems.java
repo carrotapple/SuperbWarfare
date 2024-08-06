@@ -36,6 +36,7 @@ public class ModItems {
     public static final RegistryObject<Item> SKS = GUNS.register("sks", SksItem::new);
     public static final RegistryObject<Item> M_4 = GUNS.register("m_4", M4Item::new);
     public static final RegistryObject<Item> HK_416 = GUNS.register("hk_416", Hk416Item::new);
+    public static final RegistryObject<Item> QBZ_95 = GUNS.register("qbz_95", Qbz95Item::new);
     public static final RegistryObject<Item> MK_14 = GUNS.register("mk_14", Mk14Item::new);
     public static final RegistryObject<Item> MARLIN = GUNS.register("marlin", MarlinItem::new);
     public static final RegistryObject<Item> SVD = GUNS.register("svd", SvdItem::new);
@@ -172,6 +173,7 @@ public class ModItems {
     public static final RegistryObject<Item> DEVOTION_BLUEPRINT = ITEMS.register("devotion_blueprint", () -> new BlueprintItem(Rarity.EPIC));
     public static final RegistryObject<Item> TASER_BLUEPRINT = ITEMS.register("taser_blueprint", () -> new BlueprintItem(Rarity.COMMON));
     public static final RegistryObject<Item> M_1911_BLUEPRINT = ITEMS.register("m_1911_blueprint", () -> new BlueprintItem(Rarity.COMMON));
+    public static final RegistryObject<Item> QBZ_95_BLUEPRINT = ITEMS.register("qbz_95_blueprint", () -> new BlueprintItem(Rarity.EPIC));
 
 
     private static RegistryObject<Item> block(RegistryObject<Block> block) {
