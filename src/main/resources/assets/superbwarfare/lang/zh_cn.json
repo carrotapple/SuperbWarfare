@@ -1,6 +1,7 @@
 {
   "item_group.superbwarfare.guns": "卓越前线：枪械",
   "item_group.superbwarfare.item": "卓越前线：物品",
+  "item_group.superbwarfare.block": "卓越前线：方块",
   "item_group.superbwarfare.ammo": "卓越前线：弹药",
 
   "item.superbwarfare.ammo.shotgun": "霰弹枪",
@@ -154,6 +155,7 @@
   "block.superbwarfare.scheelite_ore": "白钨矿石",
   "block.superbwarfare.deepslate_scheelite_ore": "深层白钨矿石",
   "block.superbwarfare.deepslate_galena_ore": "深层方铅矿石",
+  "block.superbwarfare.dragon_teeth": "龙牙",
 
   "item.superbwarfare.high_energy_explosives": "高能炸药",
   "item.superbwarfare.grain": "推进药柱",

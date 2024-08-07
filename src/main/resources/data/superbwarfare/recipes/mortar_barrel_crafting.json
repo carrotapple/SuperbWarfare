@@ -3,18 +3,15 @@
   "category": "misc",
   "pattern": [
     "a a",
-    "aba",
-    " c "
+    "a a",
+    "aba"
   ],
   "key": {
     "a": {
-      "tag": "forge:ingots/steel"
+      "item": "minecraft:iron_ingot"
     },
     "b": {
       "item": "minecraft:green_dye"
-    },
-    "c": {
-      "item": "minecraft:netherite_ingot"
     }
   },
   "result": {

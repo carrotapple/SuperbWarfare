@@ -1,6 +1,7 @@
 {
   "item_group.superbwarfare.guns": "Superb Warfare Guns",
   "item_group.superbwarfare.item": "Superb Warfare Items",
+  "item_group.superbwarfare.block": "Superb Warfare Blocks",
   "item_group.superbwarfare.ammo": "Superb Warfare Ammo",
 
   "item.superbwarfare.ammo.shotgun": "Shotgun",
@@ -154,6 +155,7 @@
   "block.superbwarfare.scheelite_ore": "Scheelite 0re",
   "block.superbwarfare.deepslate_scheelite_ore": "Deepslate Scheelite 0re",
   "block.superbwarfare.deepslate_galena_ore": "Deepslate Galena 0re",
+  "block.superbwarfare.dragon_teeth": "Dragon Teeth",
 
   "item.superbwarfare.high_energy_explosives": "High Energy Explosives",
   "item.superbwarfare.grain": "Grain",

@@ -89,8 +89,6 @@ public class ModItems {
 
     public static final RegistryObject<Item> MONITOR = ITEMS.register("monitor", Monitor::new);
     public static final RegistryObject<Item> TARGET_DEPLOYER = ITEMS.register("target_deployer", TargetDeployer::new);
-    public static final RegistryObject<Item> SANDBAG = block(ModBlocks.SANDBAG);
-    public static final RegistryObject<Item> BARBED_WIRE = block(ModBlocks.BARBED_WIRE);
     public static final RegistryObject<Item> CLAYMORE_MINE = ITEMS.register("claymore_mine", ClaymoreMine::new);
     public static final RegistryObject<Item> JUMP_PAD = block(ModBlocks.JUMP_PAD);
     public static final RegistryObject<Item> LIGHT_SABER = ITEMS.register("light_saber", LightSaber::new);
@@ -123,6 +121,8 @@ public class ModItems {
     public static final RegistryObject<Item> SCHEELITE = ITEMS.register("scheelite", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> DOG_TAG = ITEMS.register("dog_tag", DogTag::new);
     public static final RegistryObject<Item> SHIELD_CELL = ITEMS.register("shield_cell", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> DRAGON_TEETH = block(ModBlocks.DRAGON_TEETH);
+
 
     public static final RegistryObject<Item> TUNGSTEN_ROD = ITEMS.register("tungsten_rod", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> IRON_BARREL = ITEMS.register("iron_barrel", () -> new Item(new Item.Properties()));
@@ -175,6 +175,13 @@ public class ModItems {
     public static final RegistryObject<Item> M_1911_BLUEPRINT = ITEMS.register("m_1911_blueprint", () -> new BlueprintItem(Rarity.COMMON));
     public static final RegistryObject<Item> QBZ_95_BLUEPRINT = ITEMS.register("qbz_95_blueprint", () -> new BlueprintItem(Rarity.EPIC));
 
+    /**
+     * Block
+     */
+    public static final DeferredRegister<Item> BLOCKS = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
+    public static final RegistryObject<Item> SANDBAG = block(ModBlocks.SANDBAG);
+    public static final RegistryObject<Item> BARBED_WIRE = block(ModBlocks.BARBED_WIRE);
+
 
     private static RegistryObject<Item> block(RegistryObject<Block> block) {
         return ITEMS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties()));
@@ -184,5 +191,6 @@ public class ModItems {
         ITEMS.register(bus);
         GUNS.register(bus);
         AMMO.register(bus);
+        BLOCKS.register(bus);
     }
 }

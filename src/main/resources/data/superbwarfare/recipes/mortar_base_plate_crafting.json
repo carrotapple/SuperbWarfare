@@ -3,7 +3,7 @@
   "category": "equipment",
   "pattern": [
     " a ",
-    "bcb"
+    "bbb"
   ],
   "key": {
     "a": {
@@ -11,9 +11,6 @@
     },
     "b": {
       "item": "minecraft:iron_ingot"
-    },
-    "c": {
-      "item": "minecraft:iron_block"
     }
   },
   "result": {
