@@ -171,8 +171,6 @@
   "item.superbwarfare.ingot_steel": "Steel Ingot",
   "item.superbwarfare.tungsten_ingot": "Tungsten Ingot",
   "item.superbwarfare.cemented_carbide_ingot": "Cemented Carbide Ingot",
-  "item.superbwarfare.soul_steel_ingot": "Soul Steel Ingot",
-  "item.superbwarfare.soul_steel_nugget": "Soul Steel Nugget",
   "item.superbwarfare.galena": "Raw Galena",
   "item.superbwarfare.scheelite": "Raw Galena",
 
@@ -184,6 +182,8 @@
   "des.superbwarfare.killing_tally": "Kill increases the weapon's damage until it is stowed or reloaded",
   "item.superbwarfare.gutshot_straight": "Gutshot Straight",
   "des.superbwarfare.gutshot_straight": "Aiming down sights increases body shot damage",
+  "item.superbwarfare.fourth_times_charm": "Fourth Time's The Charm",
+  "des.superbwarfare.fourth_times_charm": "Rapidly landing precision hits will return two rounds to the magazine",
 
   "perk.superbwarfare.tips": "[Perks]",
   "perk.superbwarfare.slot": "Type: ",
@@ -217,10 +217,7 @@
   "death.attack.cannon_fire.entity": "%1$s was cracked by %2$s",
   "death.attack.cannon_fire.item": "%1$s was cracked by %2$s using %3$s",
 
-  "gui.superbwarfare.gun_recycle_gui.tooltip_if_guns_level_10you_will_get": "If gun\u0027s level \u003e 10,you will get soul nuggets",
-  "gui.superbwarfare.gun_recycle_gui.button_dismantle": "Dismantle",
   "gui.superbwarfare.mortar_gui.button_set": "Confirm",
-  "gui.superbwarfare.gun_recycle_gui.label_gun_recycle": "Gun Dismantle",
 
   "entity.superbwarfare.projectile": "Bullet",
   "entity.superbwarfare.projectile_frag": "Frag",
@@ -273,8 +270,6 @@
   "enchantment.superbwarfare.longer_wire.desc": "Increases the range of TaserGun",
   "enchantment.superbwarfare.monster_hunter": "Monster Hunter",
   "enchantment.superbwarfare.monster_hunter.desc": "Increases bullet damage against monsters",
-  "enchantment.superbwarfare.fourth_times_charm": "Fourth Time's The Charm",
-  "enchantment.superbwarfare.fourth_times_charm.desc": "Rapidly landing precision hits will return two rounds to the magazine",
 
   "des.superbwarfare.sensitivity": "Current Sensitivity of This Gun: %1$s",
   "des.superbwarfare.need_bolt_action": "[ Need Bolt Action ]",

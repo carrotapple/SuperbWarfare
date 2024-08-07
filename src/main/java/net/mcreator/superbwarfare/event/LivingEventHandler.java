@@ -25,7 +25,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -41,7 +40,7 @@ public class LivingEventHandler {
             return;
         }
 
-        handleGunEnchantmentsWhenHurt(event);
+        handleGunPerksWhenHurt(event);
         renderDamageIndicator(event);
         reduceBulletDamage(event, event.getSource(), event.getEntity(), event.getSource().getEntity(), event.getAmount());
     }
@@ -255,7 +254,7 @@ public class LivingEventHandler {
         }
     }
 
-    private static void handleGunEnchantmentsWhenHurt(LivingHurtEvent event) {
+    private static void handleGunPerksWhenHurt(LivingHurtEvent event) {
         DamageSource source = event.getSource();
 
         Player attacker = null;
@@ -288,7 +287,7 @@ public class LivingEventHandler {
         }
 
         if (source.getDirectEntity() instanceof ProjectileEntity projectile) {
-            if (EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.FOURTH_TIMES_CHARM.get(), stack) > 0) {
+            if (PerkHelper.getItemPerkLevel(ModPerks.FOURTH_TIMES_CHARM.get(), stack) > 0) {
                 float bypassArmorRate = projectile.getBypassArmorRate();
                 if (bypassArmorRate >= 1.0f && source.is(ModDamageTypes.GUN_FIRE_HEADSHOT_ABSOLUTE)) {
                     handleFourthTimesCharm(stack);
@@ -382,7 +381,7 @@ public class LivingEventHandler {
     }
 
     private static void handleFourthTimesCharm(ItemStack stack) {
-        int level = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.FOURTH_TIMES_CHARM.get(), stack);
+        int level = PerkHelper.getItemPerkLevel(ModPerks.FOURTH_TIMES_CHARM.get(), stack);
         if (level == 0) {
             return;
         }

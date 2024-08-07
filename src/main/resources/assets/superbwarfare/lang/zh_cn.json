@@ -171,8 +171,6 @@
   "item.superbwarfare.ingot_steel": "钢锭",
   "item.superbwarfare.tungsten_ingot": "钨锭",
   "item.superbwarfare.cemented_carbide_ingot": "硬质合金锭",
-  "item.superbwarfare.soul_steel_ingot": "魂钢锭",
-  "item.superbwarfare.soul_steel_nugget": "魂钢粒",
   "item.superbwarfare.galena": "粗方铅矿",
   "item.superbwarfare.scheelite": "白钨矿",
 
@@ -184,6 +182,8 @@
   "des.superbwarfare.killing_tally": "完成击杀可提高此武器的伤害，效果持续至切换或填装武器",
   "item.superbwarfare.gutshot_straight": "直击要害",
   "des.superbwarfare.gutshot_straight": "瞄准时增加身体射击伤害",
+  "item.superbwarfare.fourth_times_charm": "事不过四",
+  "des.superbwarfare.fourth_times_charm": "快速精准命中目标会向弹匣中返还两枚弹药",
 
   "perk.superbwarfare.tips": "[武器模组]",
   "perk.superbwarfare.slot": "类型: ",
@@ -217,10 +217,7 @@
   "death.attack.cannon_fire.entity": "%1$s被%2$s用炮弹打得四分五裂",
   "death.attack.cannon_fire.item": "%1$s被%2$s用%3$s打得四分五裂",
 
-  "gui.superbwarfare.gun_recycle_gui.tooltip_if_guns_level_10you_will_get": "如果枪械熟练度大于10级，你将会获得魂钢粒",
-  "gui.superbwarfare.gun_recycle_gui.button_dismantle": "拆解",
   "gui.superbwarfare.mortar_gui.button_set": "确认",
-  "gui.superbwarfare.gun_recycle_gui.label_gun_recycle": "枪械拆解",
 
   "entity.superbwarfare.projectile": "子弹",
   "entity.superbwarfare.projectile_frag": "破片",
@@ -273,8 +270,6 @@
   "enchantment.superbwarfare.longer_wire.desc": "增加泰瑟枪的射程",
   "enchantment.superbwarfare.monster_hunter": "怪物猎人",
   "enchantment.superbwarfare.monster_hunter.desc": "增加对怪物的子弹伤害",
-  "enchantment.superbwarfare.fourth_times_charm": "事不过四",
-  "enchantment.superbwarfare.fourth_times_charm.desc": "快速精准命中目标会向弹匣中返还两枚弹药",
 
   "des.superbwarfare.sensitivity": "当前枪械的灵敏度为：%1$s",
   "des.superbwarfare.need_bolt_action": "【需要拉栓】",

@@ -15,5 +15,4 @@ public class ModEnchantments {
 	public static final RegistryObject<Enchantment> SUPER_RECHARGE = REGISTRY.register("super_recharge", SuperRecharge::new);
 	public static final RegistryObject<Enchantment> LONGER_WIRE = REGISTRY.register("longer_wire", LongerWire::new);
 	public static final RegistryObject<Enchantment> MONSTER_HUNTER = REGISTRY.register("monster_hunter", MonsterHunter::new);
-	public static final RegistryObject<Enchantment> FOURTH_TIMES_CHARM = REGISTRY.register("fourth_times_charm", FourthTimesCharm::new);
 }

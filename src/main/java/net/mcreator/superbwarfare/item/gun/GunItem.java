@@ -1,11 +1,12 @@
 package net.mcreator.superbwarfare.item.gun;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.init.ModEnchantments;
 import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.perk.Perk;
+import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.EnchantmentCategoryTool;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.ItemNBTTool;
@@ -21,7 +22,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
@@ -90,7 +90,7 @@ public abstract class GunItem extends Item {
                 itemstack.getOrCreateTag().putDouble("flash_time", (itemstack.getOrCreateTag().getDouble("flash_time") - 1));
             }
 
-            handleEnchantments(itemstack);
+            handleGunPerks(itemstack);
         }
     }
 
@@ -148,7 +148,7 @@ public abstract class GunItem extends Item {
         return enchantment.category == EnchantmentCategoryTool.GUN;
     }
 
-    private void handleEnchantments(ItemStack stack) {
+    private void handleGunPerks(ItemStack stack) {
         if (stack.getOrCreateTag().getInt("HealClipTime") > 0) {
             stack.getOrCreateTag().putInt("HealClipTime", Math.max(0, stack.getOrCreateTag().getInt("HealClipTime") - 1));
         }
@@ -166,7 +166,7 @@ public abstract class GunItem extends Item {
                     Math.max(0, stack.getOrCreateTag().getInt("FourthTimesCharmTick") - 1));
         }
 
-        if (EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.FOURTH_TIMES_CHARM.get(), stack) > 0) {
+        if (PerkHelper.getItemPerkLevel(ModPerks.FOURTH_TIMES_CHARM.get(), stack) > 0) {
             int count = stack.getOrCreateTag().getInt("FourthTimesCharmCount");
             if (count >= 4) {
                 stack.getOrCreateTag().putInt("FourthTimesCharmTick", 0);
