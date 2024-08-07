@@ -13,7 +13,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class DragonTeethBlock extends Block {
     public DragonTeethBlock() {
-        super(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.BASEDRUM).sound(SoundType.STONE).strength(13f, 28f).requiresCorrectToolForDrops().noOcclusion().isRedstoneConductor((bs, br, bp) -> false));
+        super(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.BASEDRUM).sound(SoundType.STONE).strength(25f, 500f).requiresCorrectToolForDrops().noOcclusion().isRedstoneConductor((bs, br, bp) -> false));
     }
 
     @Override
@@ -33,12 +33,7 @@ public class DragonTeethBlock extends Block {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return Shapes.or(box(1, 0, 1, 15, 3, 15),
-                box(2, 3, 2, 14, 6, 14),
-                box(3, 6, 3, 13, 9, 13),
-                box(4, 9, 4, 12, 12, 12),
-                box(5, 12, 5, 11, 15, 11),
-                box(6, 15, 6, 10, 16, 10));
+        return Shapes.or(box(2, 0, 2, 14, 24, 14));
     }
 
 }
