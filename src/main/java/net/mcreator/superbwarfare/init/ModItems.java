@@ -76,6 +76,7 @@ public class ModItems {
     public static final RegistryObject<Item> AP_5_INCHES = AMMO.register("ap_5_inches", Ap5Inches::new);
     public static final RegistryObject<Item> HAND_GRENADE = AMMO.register("hand_grenade", HandGrenade::new);
     public static final RegistryObject<Item> RGO_GRENADE = AMMO.register("rgo_grenade", RgoGrenade::new);
+    public static final RegistryObject<Item> CLAYMORE_MINE = AMMO.register("claymore_mine", ClaymoreMine::new);
 
     /**
      * items
@@ -89,7 +90,6 @@ public class ModItems {
 
     public static final RegistryObject<Item> MONITOR = ITEMS.register("monitor", Monitor::new);
     public static final RegistryObject<Item> TARGET_DEPLOYER = ITEMS.register("target_deployer", TargetDeployer::new);
-    public static final RegistryObject<Item> CLAYMORE_MINE = ITEMS.register("claymore_mine", ClaymoreMine::new);
     public static final RegistryObject<Item> LIGHT_SABER = ITEMS.register("light_saber", LightSaber::new);
     public static final RegistryObject<Item> HAMMER = ITEMS.register("hammer", Hammer::new);
     public static final RegistryObject<Item> MORTAR_DEPLOYER = ITEMS.register("mortar_deployer", MortarDeployer::new);
