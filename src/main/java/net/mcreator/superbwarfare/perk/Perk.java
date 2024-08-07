@@ -1,6 +1,11 @@
 package net.mcreator.superbwarfare.perk;
 
-public record Perk(net.mcreator.superbwarfare.perk.Perk.Type type) {
+public class Perk {
+    public Type type;
+
+    public Perk(Type type) {
+        this.type = type;
+    }
 
     public enum Type {
         AMMO(0),

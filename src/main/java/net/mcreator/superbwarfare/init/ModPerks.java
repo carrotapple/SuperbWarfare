@@ -20,15 +20,10 @@ public class ModPerks {
 
     public static final DeferredRegister<Perk> PERKS = DeferredRegister.create(new ResourceLocation(ModUtils.MODID, "perk"), ModUtils.MODID);
 
-
     public static final RegistryObject<Perk> FOURTH_TIMES_CHARM = PERKS.register("fourth_times_charm", () -> new Perk(Perk.Type.FUNCTIONAL));
     public static final RegistryObject<Perk> GUTSHOT_STRAIGHT = PERKS.register("gutshot_straight", () -> new Perk(Perk.Type.DAMAGE));
     public static final RegistryObject<Perk> HEAL_CLIP = PERKS.register("heal_clip", () -> new Perk(Perk.Type.FUNCTIONAL));
     public static final RegistryObject<Perk> KILL_CLIP = PERKS.register("kill_clip", () -> new Perk(Perk.Type.DAMAGE));
     public static final RegistryObject<Perk> KILLING_TALLY = PERKS.register("killing_tally", () -> new Perk(Perk.Type.DAMAGE));
-    public static final RegistryObject<Perk> LONGER_WIRE = PERKS.register("longer_wire", () -> new Perk(Perk.Type.DAMAGE));
-    public static final RegistryObject<Perk> MONSTER_HUNTER = PERKS.register("monster_hunter", () -> new Perk(Perk.Type.FUNCTIONAL));
-    public static final RegistryObject<Perk> SUPER_RECHARGE = PERKS.register("super_recharge", () -> new Perk(Perk.Type.DAMAGE));
-    public static final RegistryObject<Perk> VOLT_OVERLOAD = PERKS.register("volt_overload", () -> new Perk(Perk.Type.DAMAGE));
-
+    public static final RegistryObject<Perk> MONSTER_HUNTER = PERKS.register("monster_hunter", () -> new Perk(Perk.Type.DAMAGE));
 }
