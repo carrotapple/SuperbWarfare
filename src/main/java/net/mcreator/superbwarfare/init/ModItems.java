@@ -186,10 +186,19 @@ public class ModItems {
         return BLOCKS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties()));
     }
 
+    /**
+     * Perk Items
+     */
+    public static final DeferredRegister<Item> PERKS = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
+
+    public static final RegistryObject<Item> KILL_CLIP = PERKS.register("kill_clip", () -> new PerkItem(ModPerks.KILL_CLIP));
+
+
     public static void register(IEventBus bus) {
         ITEMS.register(bus);
         GUNS.register(bus);
         AMMO.register(bus);
         BLOCKS.register(bus);
+        PERKS.register(bus);
     }
 }

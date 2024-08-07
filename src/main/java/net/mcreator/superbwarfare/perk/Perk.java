@@ -1,9 +1,11 @@
 package net.mcreator.superbwarfare.perk;
 
 public class Perk {
+    public String descriptionId;
     public Type type;
 
-    public Perk(Type type) {
+    public Perk(String descriptionId, Type type) {
+        this.descriptionId = descriptionId;
         this.type = type;
     }
 

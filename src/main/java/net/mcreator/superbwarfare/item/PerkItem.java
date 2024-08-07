@@ -1,10 +1,46 @@
 package net.mcreator.superbwarfare.item;
 
+import net.mcreator.superbwarfare.perk.Perk;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 public class PerkItem extends Item {
+    private final Supplier<Perk> perk;
 
-    public PerkItem(Properties pProperties) {
-        super(pProperties);
+    public PerkItem(Supplier<Perk> perk) {
+        super(new Properties());
+        this.perk = perk;
+    }
+
+    public PerkItem(Supplier<Perk> perk, Rarity rarity) {
+        super(new Properties().rarity(rarity));
+        this.perk = perk;
+    }
+
+    public Perk getPerk() {
+        return this.perk.get();
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltips, TooltipFlag isAdvanced) {
+        ChatFormatting chatFormatting = switch (this.getPerk().type.getSlot()) {
+            case 0 -> ChatFormatting.YELLOW;
+            case 1 -> ChatFormatting.GREEN;
+            default -> ChatFormatting.RED;
+        };
+
+        tooltips.add(Component.translatable("perk.superbwarfare." + this.getPerk().descriptionId + ".desc").withStyle(ChatFormatting.GRAY));
+        tooltips.add(Component.literal(""));
+        tooltips.add(Component.translatable("perk.superbwarfare.slot").withStyle(ChatFormatting.GOLD)
+                .append(Component.translatable("perk.superbwarfare.slot_" + this.getPerk().type.getSlot()).withStyle(chatFormatting)));
     }
 }

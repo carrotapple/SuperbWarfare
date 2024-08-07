@@ -175,6 +175,14 @@
   "item.superbwarfare.galena": "粗方铅矿",
   "item.superbwarfare.scheelite": "白钨矿",
 
+  "item.superbwarfare.kill_clip": "杀戮弹匣",
+
+  "perk.superbwarfare.slot": "类型: ",
+  "perk.superbwarfare.slot_0": "子弹模组",
+  "perk.superbwarfare.slot_1": "功能模组",
+  "perk.superbwarfare.slot_2": "伤害模组",
+  "perk.superbwarfare.kill_clip.desc": "完成击杀后填装可提升武器伤害",
+
   "death.attack.gunfire": "%1$s被%2$s射爆了",
   "death.attack.gunfire.entity": "%1$s被%2$s射爆了",
   "death.attack.gunfire.item": "%1$s被%2$s用%3$s射爆了",

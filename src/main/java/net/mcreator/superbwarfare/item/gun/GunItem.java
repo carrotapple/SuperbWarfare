@@ -5,6 +5,7 @@ import net.mcreator.superbwarfare.init.ModEnchantments;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
+import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.tools.EnchantmentCategoryTool;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.ItemNBTTool;
@@ -175,5 +176,9 @@ public abstract class GunItem extends Item {
                 stack.getOrCreateTag().putInt("ammo", Math.min(mag, stack.getOrCreateTag().getInt("ammo") + 2));
             }
         }
+    }
+
+    public boolean canApplyPerk(ItemStack stack, Perk perk, int slot) {
+        return perk.type.getSlot() == slot;
     }
 }
