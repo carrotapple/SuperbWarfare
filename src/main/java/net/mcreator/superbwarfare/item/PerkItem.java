@@ -32,15 +32,15 @@ public class PerkItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltips, TooltipFlag isAdvanced) {
-        ChatFormatting chatFormatting = switch (this.getPerk().type.getSlot()) {
-            case 0 -> ChatFormatting.YELLOW;
-            case 1 -> ChatFormatting.GREEN;
-            default -> ChatFormatting.RED;
+        ChatFormatting chatFormatting = switch (this.getPerk().type) {
+            case AMMO -> ChatFormatting.YELLOW;
+            case FUNCTIONAL -> ChatFormatting.GREEN;
+            case DAMAGE -> ChatFormatting.RED;
         };
 
         tooltips.add(Component.translatable("perk.superbwarfare." + this.getPerk().descriptionId + ".desc").withStyle(ChatFormatting.GRAY));
         tooltips.add(Component.literal(""));
         tooltips.add(Component.translatable("perk.superbwarfare.slot").withStyle(ChatFormatting.GOLD)
-                .append(Component.translatable("perk.superbwarfare.slot_" + this.getPerk().type.getSlot()).withStyle(chatFormatting)));
+                .append(Component.translatable("perk.superbwarfare.slot_" + this.getPerk().type.getName()).withStyle(chatFormatting)));
     }
 }

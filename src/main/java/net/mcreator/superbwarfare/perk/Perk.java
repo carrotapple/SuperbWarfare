@@ -10,17 +10,17 @@ public class Perk {
     }
 
     public enum Type {
-        AMMO(0),
-        FUNCTIONAL(1),
-        DAMAGE(2);
-        private final int slot;
+        AMMO("Ammo"),
+        FUNCTIONAL("Func"),
+        DAMAGE("Damage");
+        private final String type;
 
-        Type(int slot) {
-            this.slot = slot;
+        Type(String type) {
+            this.type = type;
         }
 
-        public int getSlot() {
-            return slot;
+        public String getName() {
+            return type;
         }
     }
 }

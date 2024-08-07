@@ -2,7 +2,6 @@ package net.mcreator.superbwarfare.perk;
 
 import net.mcreator.superbwarfare.init.ModPerks;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -50,22 +49,16 @@ public class PerkHelper {
             return 0;
         }
 
-        ResourceLocation perkId = getPerkId(perk);
-        ListTag perkTags = getPerkTags(stack);
-
-        for (int i = 0; i < perkTags.size(); ++i) {
-            CompoundTag compoundtag = perkTags.getCompound(i);
-            ResourceLocation tagPerkId = getPerkId(compoundtag);
-            if (tagPerkId != null && tagPerkId.equals(perkId)) {
-                return getPerkLevel(compoundtag);
-            }
-        }
-
-        return 0;
+        return getPerkLevel(getPerkTag(stack, perk.type));
     }
 
-    public static ListTag getPerkTags(ItemStack stack) {
-        return stack.getTag() != null ? stack.getTag().getList(TAG_PERK, 10) : new ListTag();
+    public static CompoundTag getPerkTag(ItemStack stack, Perk.Type type) {
+        var tag = stack.getTag();
+        if (tag == null) return new CompoundTag();
+
+        var tagPerk = tag.getCompound(TAG_PERK);
+        if (!tagPerk.contains(type.getName())) return new CompoundTag();
+        return tag.getCompound(type.getName());
     }
 
 }
