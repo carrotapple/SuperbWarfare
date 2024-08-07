@@ -14,6 +14,9 @@ public class PerkHelper {
     private static final String TAG_PERK_LEVEL = "level";
     private static final String TAG_PERK = "Perks";
 
+    /**
+     * 把一个Perk封装成nbt进行存储
+     */
     public static CompoundTag makePerk(@Nullable ResourceLocation pId, int pLevel) {
         CompoundTag compoundtag = new CompoundTag();
         compoundtag.putString(TAG_PERK_ID, String.valueOf(pId));
@@ -38,7 +41,7 @@ public class PerkHelper {
     @Nullable
     public static ResourceLocation getPerkId(Perk perk) {
         return ModPerks.PERKS.getEntries().stream()
-                .filter(p -> p.get().type == perk.type)
+                .filter(p -> p.get().descriptionId.equals(perk.descriptionId))
                 .findFirst()
                 .map(RegistryObject::getId)
                 .orElse(null);
@@ -59,6 +62,17 @@ public class PerkHelper {
         var tagPerk = tag.getCompound(TAG_PERK);
         if (!tagPerk.contains(type.getName())) return new CompoundTag();
         return tag.getCompound(type.getName());
+    }
+
+    public static void setPerk(ItemStack stack, Perk perk, int level) {
+        CompoundTag perkTag = new CompoundTag();
+        perkTag.put(perk.type.getName(), makePerk(getPerkId(perk), level));
+
+        stack.addTagElement(TAG_PERK, perkTag);
+    }
+
+    public static void setPerk(ItemStack stack, Perk perk) {
+        setPerk(stack, perk, 1);
     }
 
 }

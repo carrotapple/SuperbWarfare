@@ -177,10 +177,11 @@
 
   "item.superbwarfare.kill_clip": "Kill Clip",
 
+  "perk.superbwarfare.tips": "[Perks]",
   "perk.superbwarfare.slot": "Type: ",
-  "perk.superbwarfare.slot_0": "Ammo Perk",
-  "perk.superbwarfare.slot_1": "Functional Perk",
-  "perk.superbwarfare.slot_2": "Damage Perk",
+  "perk.superbwarfare.slot_Ammo": "子弹模组",
+  "perk.superbwarfare.slot_Functional": "功能模组",
+  "perk.superbwarfare.slot_Damage": "伤害模组",
   "perk.superbwarfare.kill_clip.desc": "Increases the damage of weapon after dealing a final blow",
 
   "death.attack.gunfire": "%1$s was shoot by %2$s",

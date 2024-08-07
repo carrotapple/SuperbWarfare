@@ -1,0 +1,28 @@
+package net.mcreator.superbwarfare.event;
+
+import net.mcreator.superbwarfare.item.PerkItem;
+import net.mcreator.superbwarfare.perk.PerkHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.event.AnvilUpdateEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
+public class TempEventHandler {
+
+    @SubscribeEvent
+    public static void onAnvilUpdate(AnvilUpdateEvent event) {
+        ItemStack left = event.getLeft();
+        ItemStack right = event.getRight();
+
+        if (right.getItem() instanceof PerkItem perkItem) {
+            ItemStack output = left.copy();
+
+            PerkHelper.setPerk(output, perkItem.getPerk());
+
+            event.setOutput(output);
+            event.setCost(10);
+            event.setMaterialCost(1);
+        }
+    }
+}

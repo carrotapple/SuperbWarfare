@@ -1,9 +1,12 @@
 package net.mcreator.superbwarfare.tools;
 
 import net.mcreator.superbwarfare.entity.DroneEntity;
+import net.mcreator.superbwarfare.perk.Perk;
+import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -33,6 +36,7 @@ public class TooltipTool {
 
         addLevelTips(tooltip, stack);
         addBypassTips(tooltip, stack);
+        addPerkTips(tooltip, stack);
     }
 
     public static void addShotgunTips(List<Component> tooltip, ItemStack stack, int count) {
@@ -78,7 +82,46 @@ public class TooltipTool {
         tooltip.add(Component.translatable("des.superbwarfare.tips.bypass").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.##").format(byPassRate * 100) + "%").withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD)));
+    }
 
+    // TODO 实现正确的nbt获取
+    private static void addPerkTips(List<Component> tooltip, ItemStack stack) {
+        CompoundTag ammoTag = PerkHelper.getPerkTag(stack, Perk.Type.AMMO);
+        CompoundTag functionalTag = PerkHelper.getPerkTag(stack, Perk.Type.FUNCTIONAL);
+        CompoundTag damageTag = PerkHelper.getPerkTag(stack, Perk.Type.DAMAGE);
+
+        tooltip.add(Component.literal(damageTag.toString()));
+
+        if (!ammoTag.isEmpty() || !functionalTag.isEmpty() || !damageTag.isEmpty()) {
+            tooltip.add(Component.translatable("perk.superbwarfare.tips").withStyle(ChatFormatting.WHITE));
+        }
+
+        if (!ammoTag.isEmpty()) {
+            tooltip.add(Component.translatable("perk.superbwarfare.slot_Ammo").withStyle(ChatFormatting.YELLOW)
+                    .append(Component.literal(" >> "))
+                    .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                    .append(Component.translatable("item.superbwarfare." + ammoTag.getString("id")).withStyle(ChatFormatting.GRAY))
+                    .append(Component.literal("Lvl. " + ammoTag.getInt("level")).withStyle(ChatFormatting.GRAY)));
+            addHideText(tooltip, Component.translatable("perk.superbwarfare." + ammoTag.getString("id") + ".desc").withStyle(ChatFormatting.GRAY));
+        }
+
+        if (!functionalTag.isEmpty()) {
+            tooltip.add(Component.translatable("perk.superbwarfare.slot_Functional").withStyle(ChatFormatting.GREEN)
+                    .append(Component.literal(" >> "))
+                    .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                    .append(Component.translatable("item.superbwarfare." + functionalTag.getString("id")).withStyle(ChatFormatting.GRAY))
+                    .append(Component.literal("Lvl. " + functionalTag.getInt("level")).withStyle(ChatFormatting.GRAY)));
+            addHideText(tooltip, Component.translatable("perk.superbwarfare." + functionalTag.getString("id") + ".desc").withStyle(ChatFormatting.GRAY));
+        }
+
+        if (!damageTag.isEmpty()) {
+            tooltip.add(Component.translatable("perk.superbwarfare.slot_Damage").withStyle(ChatFormatting.RED)
+                    .append(Component.literal(" >> "))
+                    .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                    .append(Component.translatable("item.superbwarfare." + damageTag.getString("id")).withStyle(ChatFormatting.GRAY))
+                    .append(Component.literal("Lvl. " + damageTag.getInt("level")).withStyle(ChatFormatting.GRAY)));
+            addHideText(tooltip, Component.translatable("perk.superbwarfare." + damageTag.getString("id") + ".desc").withStyle(ChatFormatting.GRAY));
+        }
     }
 
     public static void addBocekTips(List<Component> tooltip, ItemStack stack) {

@@ -11,7 +11,7 @@ public class Perk {
 
     public enum Type {
         AMMO("Ammo"),
-        FUNCTIONAL("Func"),
+        FUNCTIONAL("Functional"),
         DAMAGE("Damage");
         private final String type;
 
