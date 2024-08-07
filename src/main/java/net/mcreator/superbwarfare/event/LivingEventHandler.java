@@ -8,6 +8,7 @@ import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.mcreator.superbwarfare.network.message.PlayerGunKillMessage;
+import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.DamageTypeTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.network.chat.Component;
@@ -333,7 +334,7 @@ public class LivingEventHandler {
             stack.getOrCreateTag().putInt("HealClipTime", 80 + healClipLevel * 20);
         }
 
-        int killClipLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.KILL_CLIP.get(), stack);
+        int killClipLevel = PerkHelper.getItemPerkLevel(ModPerks.KILL_CLIP.get(), stack);
         if (killClipLevel != 0) {
             stack.getOrCreateTag().putInt("KillClipReloadTime", 80);
         }
@@ -341,12 +342,12 @@ public class LivingEventHandler {
 
     private static void handleKillClipDamage(ItemStack stack, LivingHurtEvent event) {
         if (stack.getOrCreateTag().getInt("KillClipTime") > 0) {
-            int enchantmentLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.KILL_CLIP.get(), stack);
-            if (enchantmentLevel == 0) {
+            int level = PerkHelper.getItemPerkLevel(ModPerks.KILL_CLIP.get(), stack);
+            if (level == 0) {
                 return;
             }
 
-            event.setAmount(event.getAmount() * (1.2f + 0.05f * enchantmentLevel));
+            event.setAmount(event.getAmount() * (1.2f + 0.05f * level));
         }
     }
 

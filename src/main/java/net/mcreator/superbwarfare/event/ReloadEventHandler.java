@@ -2,7 +2,9 @@ package net.mcreator.superbwarfare.event;
 
 import net.mcreator.superbwarfare.event.modevent.ReloadEvent;
 import net.mcreator.superbwarfare.init.ModEnchantments;
+import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
+import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -89,7 +91,7 @@ public class ReloadEventHandler {
             return;
         }
 
-        int level = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.KILL_CLIP.get(), stack);
+        int level = PerkHelper.getItemPerkLevel(ModPerks.KILL_CLIP.get(), stack);
         stack.getOrCreateTag().putInt("KillClipTime", 90 + 10 * level);
     }
 
