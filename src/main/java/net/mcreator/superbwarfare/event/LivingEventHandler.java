@@ -53,7 +53,7 @@ public class LivingEventHandler {
         }
 
         killIndication(event.getSource().getEntity());
-        handleGunEnchantmentsWhenDeath(event);
+        handleGunPerksWhenDeath(event);
         handlePlayerKillEntity(event);
     }
 
@@ -200,7 +200,7 @@ public class LivingEventHandler {
                         newStack.getOrCreateTag().putBoolean("sentinel_is_charging", false);
                         newStack.getOrCreateTag().putInt("sentinel_charge_time", 0);
 
-                        int level = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.KILLING_TALLY.get(), newStack);
+                        int level = PerkHelper.getItemPerkLevel(ModPerks.KILLING_TALLY.get(), newStack);
                         if (level != 0) {
                             newStack.getOrCreateTag().putInt("KillingTally", 0);
                         }
@@ -299,7 +299,7 @@ public class LivingEventHandler {
         }
     }
 
-    private static void handleGunEnchantmentsWhenDeath(LivingDeathEvent event) {
+    private static void handleGunPerksWhenDeath(LivingDeathEvent event) {
         DamageSource source = event.getSource();
 
         Player attacker = null;
@@ -320,7 +320,7 @@ public class LivingEventHandler {
         }
 
         if (DamageTypeTool.isGunDamage(source) || source.is(ModDamageTypes.PROJECTILE_BOOM)) {
-            handleClipEnchantments(stack);
+            handleClipPerks(stack);
         }
 
         if (DamageTypeTool.isGunDamage(source)) {
@@ -328,8 +328,8 @@ public class LivingEventHandler {
         }
     }
 
-    private static void handleClipEnchantments(ItemStack stack) {
-        int healClipLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.HEAL_CLIP.get(), stack);
+    private static void handleClipPerks(ItemStack stack) {
+        int healClipLevel = PerkHelper.getItemPerkLevel(ModPerks.HEAL_CLIP.get(), stack);
         if (healClipLevel != 0) {
             stack.getOrCreateTag().putInt("HealClipTime", 80 + healClipLevel * 20);
         }
@@ -352,16 +352,16 @@ public class LivingEventHandler {
     }
 
     private static void handleGutshotStraightDamage(ItemStack stack, LivingHurtEvent event) {
-        int enchantmentLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.GUTSHOT_STRAIGHT.get(), stack);
-        if (enchantmentLevel == 0) {
+        int level = PerkHelper.getItemPerkLevel(ModPerks.GUTSHOT_STRAIGHT.get(), stack);
+        if (level == 0) {
             return;
         }
 
-        event.setAmount(event.getAmount() * (1.15f + 0.05f * enchantmentLevel));
+        event.setAmount(event.getAmount() * (1.15f + 0.05f * level));
     }
 
     private static void handleKillingTallyDamage(ItemStack stack, LivingHurtEvent event) {
-        int level = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.KILLING_TALLY.get(), stack);
+        int level = PerkHelper.getItemPerkLevel(ModPerks.KILLING_TALLY.get(), stack);
         if (level == 0) {
             return;
         }
@@ -375,7 +375,7 @@ public class LivingEventHandler {
     }
 
     private static void handleKillingTallyAddCount(ItemStack stack) {
-        int level = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.KILLING_TALLY.get(), stack);
+        int level = PerkHelper.getItemPerkLevel(ModPerks.KILLING_TALLY.get(), stack);
         if (level != 0) {
             stack.getOrCreateTag().putInt("KillingTally", Math.min(3, stack.getOrCreateTag().getInt("KillingTally") + 1));
         }

@@ -1,5 +1,6 @@
 {
   "item_group.superbwarfare.guns": "卓越前线：枪械",
+  "item_group.superbwarfare.perk": "卓越前线：模组",
   "item_group.superbwarfare.item": "卓越前线：物品",
   "item_group.superbwarfare.block": "卓越前线：方块",
   "item_group.superbwarfare.ammo": "卓越前线：弹药",
@@ -179,6 +180,10 @@
   "des.superbwarfare.kill_clip": "完成击杀后填装可提升武器伤害",
   "item.superbwarfare.heal_clip": "治疗弹匣",
   "des.superbwarfare.heal_clip": "最后一击后短时间内填装，可治疗自身和附近队友",
+  "item.superbwarfare.killing_tally": "击杀记录",
+  "des.superbwarfare.killing_tally": "完成击杀可提高此武器的伤害，效果持续至切换或填装武器",
+  "item.superbwarfare.gutshot_straight": "直击要害",
+  "des.superbwarfare.gutshot_straight": "瞄准时增加身体射击伤害",
 
   "perk.superbwarfare.tips": "[武器模组]",
   "perk.superbwarfare.slot": "类型: ",
@@ -268,12 +273,6 @@
   "enchantment.superbwarfare.longer_wire.desc": "增加泰瑟枪的射程",
   "enchantment.superbwarfare.monster_hunter": "怪物猎人",
   "enchantment.superbwarfare.monster_hunter.desc": "增加对怪物的子弹伤害",
-  "enchantment.superbwarfare.heal_clip": "治疗弹匣",
-  "enchantment.superbwarfare.heal_clip.desc": "最后一击后短时间内填装，可治疗自身和附近队友",
-  "enchantment.superbwarfare.gutshot_straight": "直击要害",
-  "enchantment.superbwarfare.gutshot_straight.desc": "瞄准时增加身体射击伤害",
-  "enchantment.superbwarfare.killing_tally": "击杀记录",
-  "enchantment.superbwarfare.killing_tally.desc": "完成击杀可提高此武器的伤害，效果持续至切换或填装武器",
   "enchantment.superbwarfare.fourth_times_charm": "事不过四",
   "enchantment.superbwarfare.fourth_times_charm.desc": "快速精准命中目标会向弹匣中返还两枚弹药",
 

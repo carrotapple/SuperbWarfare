@@ -1,13 +1,11 @@
 package net.mcreator.superbwarfare.event;
 
 import net.mcreator.superbwarfare.event.modevent.ReloadEvent;
-import net.mcreator.superbwarfare.init.ModEnchantments;
 import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -64,7 +62,7 @@ public class ReloadEventHandler {
             return;
         }
 
-        int healClipLevel = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.HEAL_CLIP.get(), stack);
+        int healClipLevel = PerkHelper.getItemPerkLevel(ModPerks.HEAL_CLIP.get(), stack);
         if (healClipLevel == 0) {
             healClipLevel = 1;
         }
@@ -96,7 +94,7 @@ public class ReloadEventHandler {
     }
 
     private static void handleKillingTallyPre(ItemStack stack) {
-        int level = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.KILLING_TALLY.get(), stack);
+        int level = PerkHelper.getItemPerkLevel(ModPerks.KILLING_TALLY.get(), stack);
         if (level == 0) {
             return;
         }

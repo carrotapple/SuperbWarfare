@@ -55,11 +55,19 @@ public class ModTabs {
                     )
                     .build());
 
+    public static final RegistryObject<CreativeModeTab> PERK_TAB = TABS.register("perk",
+            () -> CreativeModeTab.builder()
+                    .title(Component.translatable("item_group.superbwarfare.perk"))
+                    .icon(() -> new ItemStack(ModItems.TRACHELIUM_BLUEPRINT.get()))
+                    .withTabsBefore(GUN_TAB.getKey())
+                    .displayItems((param, output) -> ModItems.PERKS.getEntries().forEach(registryObject -> output.accept(registryObject.get())))
+                    .build());
+
     public static final RegistryObject<CreativeModeTab> AMMO_TAB = TABS.register("ammo",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("item_group.superbwarfare.ammo"))
                     .icon(() -> new ItemStack(ModItems.SHOTGUN_AMMO_BOX.get()))
-                    .withTabsBefore(GUN_TAB.getKey())
+                    .withTabsBefore(PERK_TAB.getKey())
                     .displayItems((param, output) -> ModItems.AMMO.getEntries().forEach(registryObject -> output.accept(registryObject.get())))
                     .build());
 

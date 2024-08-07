@@ -1,5 +1,6 @@
 {
   "item_group.superbwarfare.guns": "Superb Warfare Guns",
+  "item_group.superbwarfare.perk": "Superb Warfare Perks",
   "item_group.superbwarfare.item": "Superb Warfare Items",
   "item_group.superbwarfare.block": "Superb Warfare Blocks",
   "item_group.superbwarfare.ammo": "Superb Warfare Ammo",
@@ -179,6 +180,10 @@
   "des.superbwarfare.kill_clip": "Increases the damage of weapon after dealing a final blow",
   "item.superbwarfare.heal_clip": "Heal Clip",
   "des.superbwarfare.heal_clip": "Reloading after dealing a final blow will heal you and your nearby allies",
+  "item.superbwarfare.killing_tally": "Killing Tally",
+  "des.superbwarfare.killing_tally": "Kill increases the weapon's damage until it is stowed or reloaded",
+  "item.superbwarfare.gutshot_straight": "Gutshot Straight",
+  "des.superbwarfare.gutshot_straight": "Aiming down sights increases body shot damage",
 
   "perk.superbwarfare.tips": "[Perks]",
   "perk.superbwarfare.slot": "Type: ",
@@ -268,12 +273,6 @@
   "enchantment.superbwarfare.longer_wire.desc": "Increases the range of TaserGun",
   "enchantment.superbwarfare.monster_hunter": "Monster Hunter",
   "enchantment.superbwarfare.monster_hunter.desc": "Increases bullet damage against monsters",
-  "enchantment.superbwarfare.heal_clip": "Heal Clip",
-  "enchantment.superbwarfare.heal_clip.desc": "Reloading after dealing a final blow will heal you and your nearby allies",
-  "enchantment.superbwarfare.gutshot_straight": "Gutshot Straight",
-  "enchantment.superbwarfare.gutshot_straight.desc": "Aiming down sights increases body shot damage",
-  "enchantment.superbwarfare.killing_tally": "Killing Tally",
-  "enchantment.superbwarfare.killing_tally.desc": "Kill increases the weapon's damage until it is stowed or reloaded",
   "enchantment.superbwarfare.fourth_times_charm": "Fourth Time's The Charm",
   "enchantment.superbwarfare.fourth_times_charm.desc": "Rapidly landing precision hits will return two rounds to the magazine",
 
