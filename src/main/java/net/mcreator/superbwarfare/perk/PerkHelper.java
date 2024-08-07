@@ -61,7 +61,7 @@ public class PerkHelper {
 
         var tagPerk = tag.getCompound(TAG_PERK);
         if (!tagPerk.contains(type.getName())) return new CompoundTag();
-        return tag.getCompound(type.getName());
+        return tagPerk.getCompound(type.getName());
     }
 
     public static void setPerk(ItemStack stack, Perk perk, int level) {
