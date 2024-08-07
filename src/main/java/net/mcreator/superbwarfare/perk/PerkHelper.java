@@ -65,9 +65,17 @@ public class PerkHelper {
     }
 
     public static void setPerk(ItemStack stack, Perk perk, int level) {
-        CompoundTag perkTag = new CompoundTag();
-        perkTag.put(perk.type.getName(), makePerk(getPerkId(perk), level));
+        var tag = stack.getTag();
+        if (tag == null) {
+            tag = new CompoundTag();
+        }
 
+        var perkTag = tag.getCompound(TAG_PERK);
+        if (perkTag.isEmpty()) {
+            perkTag = new CompoundTag();
+        }
+
+        perkTag.put(perk.type.getName(), makePerk(getPerkId(perk), level));
         stack.addTagElement(TAG_PERK, perkTag);
     }
 

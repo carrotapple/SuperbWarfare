@@ -101,7 +101,7 @@ public class TooltipTool {
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.translatable("item.superbwarfare." + id).withStyle(ChatFormatting.WHITE))
                     .append(Component.literal(" Lvl. " + ammoTag.getInt("level")).withStyle(ChatFormatting.WHITE)));
-            addHideText(tooltip, Component.translatable("perk.superbwarfare." + id + ".desc").withStyle(ChatFormatting.GRAY));
+            addHideText(tooltip, Component.translatable("des.superbwarfare." + id).withStyle(ChatFormatting.GRAY));
         }
 
         if (!functionalTag.isEmpty()) {
@@ -111,7 +111,7 @@ public class TooltipTool {
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.translatable("item.superbwarfare." + id).withStyle(ChatFormatting.WHITE))
                     .append(Component.literal(" Lvl. " + functionalTag.getInt("level")).withStyle(ChatFormatting.WHITE)));
-            addHideText(tooltip, Component.translatable("perk.superbwarfare." + id + ".desc").withStyle(ChatFormatting.GRAY));
+            addHideText(tooltip, Component.translatable("des.superbwarfare." + id).withStyle(ChatFormatting.GRAY));
         }
 
         if (!damageTag.isEmpty()) {
@@ -121,7 +121,7 @@ public class TooltipTool {
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.translatable("item.superbwarfare." + id).withStyle(ChatFormatting.WHITE))
                     .append(Component.literal(" Lvl. " + damageTag.getInt("level")).withStyle(ChatFormatting.WHITE)));
-            addHideText(tooltip, Component.translatable("perk.superbwarfare." + id + ".desc").withStyle(ChatFormatting.GRAY));
+            addHideText(tooltip, Component.translatable("des.superbwarfare." + id).withStyle(ChatFormatting.GRAY));
         }
     }
 

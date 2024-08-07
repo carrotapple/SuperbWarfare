@@ -176,13 +176,15 @@
   "item.superbwarfare.scheelite": "白钨矿",
 
   "item.superbwarfare.kill_clip": "杀戮弹匣",
+  "des.superbwarfare.kill_clip": "完成击杀后填装可提升武器伤害",
+  "item.superbwarfare.heal_clip": "治疗弹匣",
+  "des.superbwarfare.heal_clip": "最后一击后短时间内填装，可治疗自身和附近队友",
 
   "perk.superbwarfare.tips": "[武器模组]",
   "perk.superbwarfare.slot": "类型: ",
   "perk.superbwarfare.slot_Ammo": "子弹模组",
   "perk.superbwarfare.slot_Functional": "功能模组",
   "perk.superbwarfare.slot_Damage": "伤害模组",
-  "perk.superbwarfare.kill_clip.desc": "完成击杀后填装可提升武器伤害",
 
   "death.attack.gunfire": "%1$s被%2$s射爆了",
   "death.attack.gunfire.entity": "%1$s被%2$s射爆了",

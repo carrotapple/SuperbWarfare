@@ -38,7 +38,7 @@ public class PerkItem extends Item {
             case DAMAGE -> ChatFormatting.RED;
         };
 
-        tooltips.add(Component.translatable("perk.superbwarfare." + this.getPerk().descriptionId + ".desc").withStyle(ChatFormatting.GRAY));
+        tooltips.add(Component.translatable("des.superbwarfare." + this.getPerk().descriptionId).withStyle(ChatFormatting.GRAY));
         tooltips.add(Component.literal(""));
         tooltips.add(Component.translatable("perk.superbwarfare.slot").withStyle(ChatFormatting.GOLD)
                 .append(Component.translatable("perk.superbwarfare.slot_" + this.getPerk().type.getName()).withStyle(chatFormatting)));
