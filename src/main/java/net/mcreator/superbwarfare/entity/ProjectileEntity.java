@@ -60,7 +60,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnData, GeoEntity, AnimatedEntity {
-
+    public static final EntityDataAccessor<Float> COLOR_R = SynchedEntityData.defineId(ProjectileEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> COLOR_G = SynchedEntityData.defineId(ProjectileEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> COLOR_B = SynchedEntityData.defineId(ProjectileEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(ProjectileEntity.class, EntityDataSerializers.STRING);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -85,7 +87,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     private float bypassArmorRate = 0.0f;
     private float undeadMultiple = 1.0f;
 
-    public float[] rgb = {1, 222 / 255f, 39 / 255f};
+    public float colorR = 1, colorG = 222 / 255f, colorB = 39 / 255f;
 
     public ProjectileEntity(EntityType<? extends ProjectileEntity> p_i50159_1_, Level p_i50159_2_) {
         super(p_i50159_1_, p_i50159_2_);
@@ -218,7 +220,9 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     @Override
     protected void defineSynchedData() {
-
+        this.entityData.define(COLOR_R, this.colorR);
+        this.entityData.define(COLOR_G, this.colorG);
+        this.entityData.define(COLOR_B, this.colorB);
     }
 
     @Override
@@ -280,13 +284,17 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag p_20052_) {
-
+    protected void readAdditionalSaveData(CompoundTag compoundTag) {
+        this.colorR = compoundTag.getFloat("ColorR");
+        this.colorG = compoundTag.getFloat("ColorG");
+        this.colorB = compoundTag.getFloat("ColorB");
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag p_20139_) {
-
+    protected void addAdditionalSaveData(CompoundTag compoundTag) {
+        compoundTag.putFloat("ColorR", this.colorR);
+        compoundTag.putFloat("ColorG", this.colorG);
+        compoundTag.putFloat("ColorB", this.colorB);
     }
 
     protected void onProjectileTick() {
@@ -303,7 +311,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             this.level().playSound(null, result.getLocation().x, result.getLocation().y, result.getLocation().z, event, SoundSource.AMBIENT, 1.0F, 1.0F);
             Vec3 hitVec = result.getLocation();
 
-            if(state.getBlock() instanceof BellBlock bell) {
+            if (state.getBlock() instanceof BellBlock bell) {
                 bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
             }
 
@@ -682,8 +690,9 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         return this;
     }
 
-    public ProjectileEntity rgb(float[] rgb) {
-        this.rgb = rgb;
-        return this;
+    public void setRGB(float[] rgb) {
+        this.colorR = rgb[0];
+        this.colorG = rgb[1];
+        this.colorB = rgb[2];
     }
 }

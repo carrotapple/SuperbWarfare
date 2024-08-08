@@ -345,13 +345,6 @@ public class GunEventHandler {
             float headshot = (float) heldItem.getOrCreateTag().getDouble("headshot");
             int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), heldItem);
             float damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("sentinelChargeDamage")) * (float) heldItem.getOrCreateTag().getDouble("levelDamageMultiple");
-            float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
-
-            var perk = PerkHelper.getPerkByType(heldItem, Perk.Type.AMMO);
-            if (perk instanceof AmmoPerk ammoPerk) {
-                bypassArmorRate += ammoPerk.bypassArmorRate;
-            }
-            bypassArmorRate = Mth.clamp(bypassArmorRate, 0, 1);
 
             boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming;
             double spread = heldItem.getOrCreateTag().getDouble("spread");
@@ -362,8 +355,17 @@ public class GunEventHandler {
                     .damage(damage)
                     .headShot(headshot)
                     .zoom(zoom)
-                    .bypassArmorRate(bypassArmorRate)
                     .monsterMultiple(monsterMultiple);
+
+            float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
+            var perk = PerkHelper.getPerkByType(heldItem, Perk.Type.AMMO);
+            if (perk instanceof AmmoPerk ammoPerk) {
+                bypassArmorRate += ammoPerk.bypassArmorRate;
+                projectile.setRGB(ammoPerk.rgb);
+            }
+            bypassArmorRate = Mth.clamp(bypassArmorRate, 0, 1);
+
+            projectile.bypassArmorRate(bypassArmorRate);
 
             if (heldItem.getOrCreateTag().getBoolean("beast")) {
                 projectile.beast();

@@ -24,6 +24,6 @@ public class ProjectileEntityInsideLayer extends GeoRenderLayer<ProjectileEntity
         RenderType glowRenderType = RenderType.eyes(LAYER);
         getRenderer().reRender(getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, glowRenderType, bufferSource.getBuffer(glowRenderType),
                 partialTick, packedLight, OverlayTexture.NO_OVERLAY,
-                animatable.rgb[0], animatable.rgb[1], animatable.rgb[2], 0.5f);
+                1, 1, 1, 0.5f);
     }
 }

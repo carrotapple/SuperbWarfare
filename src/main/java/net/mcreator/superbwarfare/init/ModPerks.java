@@ -21,7 +21,8 @@ public class ModPerks {
 
     public static final DeferredRegister<Perk> PERKS = DeferredRegister.create(new ResourceLocation(ModUtils.MODID, "perk"), ModUtils.MODID);
 
-    public static final RegistryObject<AmmoPerk> SILVER_BULLET = PERKS.register("silver_bullet", () -> new AmmoPerk("silver_bullet", Perk.Type.AMMO, 0.1f));
+    public static final RegistryObject<AmmoPerk> SILVER_BULLET = PERKS.register("silver_bullet",
+            () -> new AmmoPerk(new AmmoPerk.Builder("silver_bullet", Perk.Type.AMMO).bypassArmorRate(0.1f).rgb(231, 251, 255)));
 
     public static final RegistryObject<Perk> FOURTH_TIMES_CHARM = PERKS.register("fourth_times_charm", () -> new Perk("fourth_times_charm", Perk.Type.FUNCTIONAL));
     public static final RegistryObject<Perk> HEAL_CLIP = PERKS.register("heal_clip", () -> new Perk("heal_clip", Perk.Type.FUNCTIONAL));

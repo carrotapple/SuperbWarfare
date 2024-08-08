@@ -19,12 +19,15 @@ public class ProjectileEntityLayer extends GeoRenderLayer<ProjectileEntity> {
         super(entityRenderer);
     }
 
-    // TODO 实现更合理的layer渲染
+    // TODO 解决RGB颜色问题
     @Override
     public void render(PoseStack poseStack, ProjectileEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         RenderType glowRenderType = RenderType.eyes(LAYER);
-        getRenderer().reRender(getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, glowRenderType, bufferSource.getBuffer(glowRenderType),
-                partialTick, packedLight, OverlayTexture.NO_OVERLAY,
-                animatable.rgb[0], animatable.rgb[1], animatable.rgb[2], 0.8f);
+        getRenderer().reRender(getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, glowRenderType,
+                bufferSource.getBuffer(glowRenderType), partialTick, packedLight, OverlayTexture.NO_OVERLAY,
+                animatable.getEntityData().get(ProjectileEntity.COLOR_R),
+                animatable.getEntityData().get(ProjectileEntity.COLOR_G),
+                animatable.getEntityData().get(ProjectileEntity.COLOR_B),
+                0.8f);
     }
 }
