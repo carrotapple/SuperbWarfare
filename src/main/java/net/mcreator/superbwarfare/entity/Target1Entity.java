@@ -150,7 +150,6 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
                 player.displayClientMessage(Component.literal(("Target Down " + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceEntity.position()))) + "M")), true);
                 SoundTool.playLocalSound(player, ModSounds.TARGET_DOWN.get(), 100, 1);
                 ((Target1Entity) entity).entityData.set(DOWN_TIME,90);
-                entity.setPose(Pose.SLEEPING);
             }
         }
     }
@@ -195,8 +194,6 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
         super.baseTick();
         if (this.entityData.get(DOWN_TIME) > 0) {
             this.entityData.set(DOWN_TIME,this.entityData.get(DOWN_TIME) - 1);
-        } else {
-            this.setPose(Pose.STANDING);
         }
     }
 
