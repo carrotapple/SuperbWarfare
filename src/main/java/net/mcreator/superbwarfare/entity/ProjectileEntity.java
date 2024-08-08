@@ -186,6 +186,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             boundingBox = boundingBox.move(velocity.multiply(-2.5, -2.5, -2.5));
         }
         boundingBox = boundingBox.move(velocity.multiply(-5, -5, -5));
+
+        if (this.beast) {
+            boundingBox = boundingBox.inflate(3);
+        }
+
         Vec3 hitPos = boundingBox.clip(startVec, endVec).orElse(null);
 
         if (hitPos == null) {
