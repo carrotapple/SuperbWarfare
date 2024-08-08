@@ -24,8 +24,10 @@ public class LivingEntityMixin {
     private double modifyApplyKnockbackArgs(double original) {
         if (this.target$source.is(ModDamageTypes.GUN_FIRE) || this.target$source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)
                 || this.target$source.is(ModDamageTypes.ARROW_IN_KNEE) || this.target$source.is(ModDamageTypes.ARROW_IN_BRAIN)
-                || this.target$source.is(ModDamageTypes.SHOCK)) {
-            return 0.1 * original;
+                || this.target$source.is(ModDamageTypes.SHOCK) || this.target$source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE)
+                || this.target$source.is(ModDamageTypes.GUN_FIRE_HEADSHOT_ABSOLUTE) || this.target$source.is(ModDamageTypes.ARROW_IN_BRAIN_ABSOLUTE)
+                || this.target$source.is(ModDamageTypes.ARROW_IN_KNEE_ABSOLUTE)) {
+            return 0.05 * original;
         }
         return original;
     }
