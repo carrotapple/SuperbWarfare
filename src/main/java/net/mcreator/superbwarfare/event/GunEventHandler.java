@@ -367,13 +367,11 @@ public class GunEventHandler {
 
             projectile.bypassArmorRate(bypassArmorRate);
 
-            if (heldItem.getOrCreateTag().getBoolean("beast")) {
-                projectile.beast();
-            }
-
             if (perk == ModPerks.SILVER_BULLET.get()) {
                 int level = PerkHelper.getItemPerkLevel(perk, heldItem);
                 projectile.undeadMultiple(1.0f + 0.5f * level);
+            } else if (perk == ModPerks.BEAST_BULLET.get()) {
+                projectile.beast();
             }
 
             projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);

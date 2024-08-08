@@ -23,9 +23,11 @@ public class ModPerks {
 
     public static final RegistryObject<AmmoPerk> SILVER_BULLET = PERKS.register("silver_bullet",
             () -> new AmmoPerk(new AmmoPerk.Builder("silver_bullet", Perk.Type.AMMO).bypassArmorRate(0.1f).rgb(231, 251, 255)));
+    public static final RegistryObject<AmmoPerk> BEAST_BULLET = PERKS.register("beast_bullet",
+            () -> new AmmoPerk(new AmmoPerk.Builder("beast_bullet", Perk.Type.AMMO).bypassArmorRate(0.0f).rgb(134, 65, 14)));
 
-    public static final RegistryObject<Perk> FOURTH_TIMES_CHARM = PERKS.register("fourth_times_charm", () -> new Perk("fourth_times_charm", Perk.Type.FUNCTIONAL));
     public static final RegistryObject<Perk> HEAL_CLIP = PERKS.register("heal_clip", () -> new Perk("heal_clip", Perk.Type.FUNCTIONAL));
+    public static final RegistryObject<Perk> FOURTH_TIMES_CHARM = PERKS.register("fourth_times_charm", () -> new Perk("fourth_times_charm", Perk.Type.FUNCTIONAL));
 
     public static final RegistryObject<Perk> KILL_CLIP = PERKS.register("kill_clip", () -> new Perk("kill_clip", Perk.Type.DAMAGE));
     public static final RegistryObject<Perk> GUTSHOT_STRAIGHT = PERKS.register("gutshot_straight", () -> new Perk("gutshot_straight", Perk.Type.DAMAGE));

@@ -174,18 +174,22 @@
   "item.superbwarfare.galena": "Raw Galena",
   "item.superbwarfare.scheelite": "Raw Galena",
 
-  "item.superbwarfare.kill_clip": "Kill Clip",
-  "des.superbwarfare.kill_clip": "Increases the damage of weapon after dealing a final blow",
+  "item.superbwarfare.silver_bullet": "Silver Bullet",
+  "des.superbwarfare.silver_bullet": "Causes extra damage to undead entities",
+  "item.superbwarfare.beast_bullet": "Beast Bullet",
+  "des.superbwarfare.beast_bullet": "Kills every living entity",
+
   "item.superbwarfare.heal_clip": "Heal Clip",
   "des.superbwarfare.heal_clip": "Reloading after dealing a final blow will heal you and your nearby allies",
+  "item.superbwarfare.fourth_times_charm": "Fourth Time's The Charm",
+  "des.superbwarfare.fourth_times_charm": "Rapidly landing precision hits will return two rounds to the magazine",
+
+  "item.superbwarfare.kill_clip": "Kill Clip",
+  "des.superbwarfare.kill_clip": "Increases the damage of weapon after dealing a final blow",
   "item.superbwarfare.killing_tally": "Killing Tally",
   "des.superbwarfare.killing_tally": "Kill increases the weapon's damage until it is stowed or reloaded",
   "item.superbwarfare.gutshot_straight": "Gutshot Straight",
   "des.superbwarfare.gutshot_straight": "Aiming down sights increases body shot damage",
-  "item.superbwarfare.fourth_times_charm": "Fourth Time's The Charm",
-  "des.superbwarfare.fourth_times_charm": "Rapidly landing precision hits will return two rounds to the magazine",
-  "item.superbwarfare.silver_bullet": "Silver Bullet",
-  "des.superbwarfare.silver_bullet": "Causes extra damage to undead entities",
 
   "perk.superbwarfare.tips": "[Perks]",
   "perk.superbwarfare.slot": "Type: ",
