@@ -85,6 +85,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     private float bypassArmorRate = 0.0f;
     private float undeadMultiple = 1.0f;
 
+    public float[] rgb = {1, 222 / 255f, 39 / 255f};
+
     public ProjectileEntity(EntityType<? extends ProjectileEntity> p_i50159_1_, Level p_i50159_2_) {
         super(p_i50159_1_, p_i50159_2_);
     }
@@ -677,6 +679,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     public ProjectileEntity undeadMultiple(float undeadMultiple) {
         this.undeadMultiple = undeadMultiple;
+        return this;
+    }
+
+    public ProjectileEntity rgb(float[] rgb) {
+        this.rgb = rgb;
         return this;
     }
 }
