@@ -58,6 +58,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnData, GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Float> COLOR_R = SynchedEntityData.defineId(ProjectileEntity.class, EntityDataSerializers.FLOAT);
@@ -86,6 +87,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     private boolean zoom = false;
     private float bypassArmorRate = 0.0f;
     private float undeadMultiple = 1.0f;
+    private Supplier<MobEffectInstance> mobEffect = () -> null;
 
     public ProjectileEntity(EntityType<? extends ProjectileEntity> p_i50159_1_, Level p_i50159_2_) {
         super(p_i50159_1_, p_i50159_2_);
@@ -335,7 +337,6 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     }
 
     protected void onHitBlock(Vec3 location) {
-
         if (this.level() instanceof ServerLevel serverLevel) {
             if (this.beast) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.END_ROD, location.x, location.y, location.z, 15, 0.1, 0.1, 0.1, 0.05, true);
@@ -429,6 +430,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
             performDamage(entity, this.damage, false);
         }
+
+        if (this.mobEffect.get() != null && entity instanceof LivingEntity living) {
+            living.addEffect(this.mobEffect.get(), this.shooter);
+        }
+
         this.discard();
     }
 
@@ -686,6 +692,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     public ProjectileEntity undeadMultiple(float undeadMultiple) {
         this.undeadMultiple = undeadMultiple;
+        return this;
+    }
+
+    public ProjectileEntity effect(Supplier<MobEffectInstance> supplier) {
+        this.mobEffect = supplier;
         return this;
     }
 

@@ -21,6 +21,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -362,6 +363,11 @@ public class GunEventHandler {
             if (perk instanceof AmmoPerk ammoPerk) {
                 bypassArmorRate += ammoPerk.bypassArmorRate;
                 projectile.setRGB(ammoPerk.rgb);
+
+                if (ammoPerk.mobEffect.get() != null) {
+                    int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+                    projectile.effect(() -> new MobEffectInstance(ammoPerk.mobEffect.get(), 100, level - 1));
+                }
             }
             bypassArmorRate = Mth.clamp(bypassArmorRate, 0, 1);
 

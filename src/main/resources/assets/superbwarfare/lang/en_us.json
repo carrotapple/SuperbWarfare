@@ -178,6 +178,8 @@
   "des.superbwarfare.silver_bullet": "Causes extra damage to undead entities",
   "item.superbwarfare.beast_bullet": "Beast Bullet",
   "des.superbwarfare.beast_bullet": "Ignore obstacles, Increase criteria area, Kill every living entity",
+  "item.superbwarfare.poisonous_bullet": "Poisonous Bullet",
+  "des.superbwarfare.poisonous_bullet": "Makes the target poison after landing a hit",
 
   "item.superbwarfare.heal_clip": "Heal Clip",
   "des.superbwarfare.heal_clip": "Reloading after dealing a final blow will heal you and your nearby allies",
