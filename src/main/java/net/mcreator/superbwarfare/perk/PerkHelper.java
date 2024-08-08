@@ -83,4 +83,27 @@ public class PerkHelper {
         setPerk(stack, perk, 1);
     }
 
+    @Nullable
+    public static Perk getPerkByType(ItemStack stack, Perk.Type type) {
+        var tag = stack.getTag();
+        if (tag == null) {
+            return null;
+        }
+
+        var tagPerk = tag.getCompound(TAG_PERK);
+        if (!tagPerk.contains(type.getName())) {
+            return null;
+        }
+
+        return ModPerks.PERKS.getEntries().stream()
+                .filter(p -> makeId(p.getId()).equals(tagPerk.getCompound(type.getName()).getString(TAG_PERK_ID)))
+                .findFirst()
+                .map(RegistryObject::get)
+                .orElse(null);
+    }
+
+    public static String makeId(ResourceLocation resourceLocation) {
+        return resourceLocation.getNamespace() + ":" + resourceLocation.getPath();
+    }
+
 }

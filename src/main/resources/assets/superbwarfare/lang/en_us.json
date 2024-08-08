@@ -184,6 +184,8 @@
   "des.superbwarfare.gutshot_straight": "Aiming down sights increases body shot damage",
   "item.superbwarfare.fourth_times_charm": "Fourth Time's The Charm",
   "des.superbwarfare.fourth_times_charm": "Rapidly landing precision hits will return two rounds to the magazine",
+  "item.superbwarfare.silver_bullet": "Silver Bullet",
+  "des.superbwarfare.silver_bullet": "Causes extra damage to undead entities",
 
   "perk.superbwarfare.tips": "[Perks]",
   "perk.superbwarfare.slot": "Type: ",

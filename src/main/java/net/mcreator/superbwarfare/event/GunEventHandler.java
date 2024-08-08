@@ -3,11 +3,11 @@ package net.mcreator.superbwarfare.event;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.ProjectileEntity;
 import net.mcreator.superbwarfare.event.modevent.ReloadEvent;
-import net.mcreator.superbwarfare.init.ModEnchantments;
-import net.mcreator.superbwarfare.init.ModItems;
-import net.mcreator.superbwarfare.init.ModSounds;
-import net.mcreator.superbwarfare.init.ModTags;
+import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.network.ModVariables;
+import net.mcreator.superbwarfare.perk.AmmoPerk;
+import net.mcreator.superbwarfare.perk.Perk;
+import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunInfo;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.ParticleTool;
@@ -19,6 +19,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -346,6 +347,12 @@ public class GunEventHandler {
             float damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("sentinelChargeDamage")) * (float) heldItem.getOrCreateTag().getDouble("levelDamageMultiple");
             float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
 
+            var perk = PerkHelper.getPerkByType(heldItem, Perk.Type.AMMO);
+            if (perk instanceof AmmoPerk ammoPerk) {
+                bypassArmorRate += ammoPerk.bypassArmorRate;
+            }
+            bypassArmorRate = Mth.clamp(bypassArmorRate, 0, 1);
+
             boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming;
             double spread = heldItem.getOrCreateTag().getDouble("spread");
             double zoomSpread = heldItem.getOrCreateTag().getDouble("zoomSpread");
@@ -355,17 +362,21 @@ public class GunEventHandler {
                     .damage(damage)
                     .headShot(headshot)
                     .zoom(zoom)
-                    .bypassArmorRate(bypassArmorRate);
+                    .bypassArmorRate(bypassArmorRate)
+                    .monsterMultiple(monsterMultiple);
 
             if (heldItem.getOrCreateTag().getBoolean("beast")) {
                 projectile.beast();
             }
 
-            projectile.monsterMultiple(monsterMultiple);
+            if (perk == ModPerks.SILVER_BULLET.get()) {
+                int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+                projectile.undeadMultiple(1.0f + 0.5f * level);
+            }
 
             projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
             projectile.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.0005f, player.getLookAngle().z, 1 * (float) heldItem.getOrCreateTag().getDouble("velocity"),
-                    (float) (zoom? zoomSpread : spread));
+                    (float) (zoom ? zoomSpread : spread));
             player.level().addFreshEntity(projectile);
         }
     }

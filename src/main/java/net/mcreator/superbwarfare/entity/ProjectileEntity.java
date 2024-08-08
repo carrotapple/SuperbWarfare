@@ -32,6 +32,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
@@ -82,6 +83,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     private boolean beast = false;
     private boolean zoom = false;
     private float bypassArmorRate = 0.0f;
+    private float undeadMultiple = 1.0f;
 
     public ProjectileEntity(EntityType<? extends ProjectileEntity> p_i50159_1_, Level p_i50159_2_) {
         super(p_i50159_1_, p_i50159_2_);
@@ -93,46 +95,6 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     public ProjectileEntity(PlayMessages.SpawnEntity packet, Level world) {
         super(ModEntities.PROJECTILE.get(), world);
-    }
-
-    public ProjectileEntity shooter(LivingEntity shooter) {
-        this.shooter = shooter;
-        return this;
-    }
-
-    public ProjectileEntity damage(float damage) {
-        this.damage = damage;
-        return this;
-    }
-
-    public ProjectileEntity headShot(float headShot) {
-        this.headShot = headShot;
-        return this;
-    }
-
-    public ProjectileEntity monsterMultiple(int monsterMultiple) {
-        this.monsterMultiple = monsterMultiple;
-        return this;
-    }
-
-    public ProjectileEntity legShot(float legShot) {
-        this.legShot = legShot;
-        return this;
-    }
-
-    public ProjectileEntity beast() {
-        this.beast = true;
-        return this;
-    }
-
-    public ProjectileEntity zoom(boolean zoom) {
-        this.zoom = zoom;
-        return this;
-    }
-
-    public ProjectileEntity bypassArmorRate(float bypassArmorRate) {
-        this.bypassArmorRate = bypassArmorRate;
-        return this;
     }
 
     @Nullable
@@ -237,7 +199,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 || entity instanceof Mle1934Entity
                 || entity instanceof Mk42Entity
                 || entity instanceof DroneEntity
-                )) {
+        )) {
             headshot = true;
         }
         if (hitBoxPos.y < (0.33 * BodyHeight) && !(entity instanceof ClaymoreEntity
@@ -414,6 +376,14 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             return;
         }
 
+        if (entity instanceof Monster) {
+            this.damage *= mMultiple;
+        }
+
+        if (entity instanceof LivingEntity living && living.getMobType() == MobType.UNDEAD) {
+            this.damage *= this.undeadMultiple;
+        }
+
         if (headshot) {
             if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
                 var holder = Holder.direct(ModSounds.HEADSHOT.get());
@@ -421,33 +391,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(1, 5));
             }
-            if (entity instanceof Monster monster) {
-                performDamage(monster, this.damage * mMultiple, true);
-            } else {
-                performDamage(entity, this.damage, true);
-            }
-        } else if (legShot) {
-            if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
-                var holder = Holder.direct(ModSounds.INDICATION.get());
-                player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
 
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
-            }
-
-            if (entity instanceof Monster monster) {
-                performDamage(monster, this.damage * mMultiple * this.legShot, false);
-            } else {
-                performDamage(entity, this.damage * this.legShot, false);
-            }
-
-            if (entity instanceof LivingEntity living) {
-                if (living instanceof Player player && player.isCreative()) {
-                    return;
-                }
-                if (!living.level().isClientSide()) {
-                    living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 2, false, false));
-                }
-            }
+            performDamage(entity, this.damage, true);
         } else {
             if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
                 var holder = Holder.direct(ModSounds.INDICATION.get());
@@ -456,11 +401,19 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
             }
 
-            if (entity instanceof Monster monster) {
-                performDamage(monster, this.damage * mMultiple, false);
-            } else {
-                performDamage(entity, this.damage, false);
+            if (legShot) {
+                if (entity instanceof LivingEntity living) {
+                    if (living instanceof Player player && player.isCreative()) {
+                        return;
+                    }
+                    if (!living.level().isClientSide()) {
+                        living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20, 2, false, false));
+                    }
+                }
+                this.damage *= this.legShot;
             }
+
+            performDamage(entity, this.damage, false);
         }
         this.discard();
     }
@@ -672,5 +625,53 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     public boolean isZoom() {
         return this.zoom;
+    }
+
+    /**
+     * Builders
+     */
+    public ProjectileEntity shooter(LivingEntity shooter) {
+        this.shooter = shooter;
+        return this;
+    }
+
+    public ProjectileEntity damage(float damage) {
+        this.damage = damage;
+        return this;
+    }
+
+    public ProjectileEntity headShot(float headShot) {
+        this.headShot = headShot;
+        return this;
+    }
+
+    public ProjectileEntity monsterMultiple(int monsterMultiple) {
+        this.monsterMultiple = monsterMultiple;
+        return this;
+    }
+
+    public ProjectileEntity legShot(float legShot) {
+        this.legShot = legShot;
+        return this;
+    }
+
+    public ProjectileEntity beast() {
+        this.beast = true;
+        return this;
+    }
+
+    public ProjectileEntity zoom(boolean zoom) {
+        this.zoom = zoom;
+        return this;
+    }
+
+    public ProjectileEntity bypassArmorRate(float bypassArmorRate) {
+        this.bypassArmorRate = bypassArmorRate;
+        return this;
+    }
+
+    public ProjectileEntity undeadMultiple(float undeadMultiple) {
+        this.undeadMultiple = undeadMultiple;
+        return this;
     }
 }
