@@ -87,8 +87,6 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     private float bypassArmorRate = 0.0f;
     private float undeadMultiple = 1.0f;
 
-    public float colorR = 1, colorG = 222 / 255f, colorB = 39 / 255f;
-
     public ProjectileEntity(EntityType<? extends ProjectileEntity> p_i50159_1_, Level p_i50159_2_) {
         super(p_i50159_1_, p_i50159_2_);
     }
@@ -220,9 +218,9 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     @Override
     protected void defineSynchedData() {
-        this.entityData.define(COLOR_R, this.colorR);
-        this.entityData.define(COLOR_G, this.colorG);
-        this.entityData.define(COLOR_B, this.colorB);
+        this.entityData.define(COLOR_R, 1.0f);
+        this.entityData.define(COLOR_G, 222 / 255f);
+        this.entityData.define(COLOR_B, 39 / 255f);
     }
 
     @Override
@@ -285,16 +283,12 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     @Override
     protected void readAdditionalSaveData(CompoundTag compoundTag) {
-        this.colorR = compoundTag.getFloat("ColorR");
-        this.colorG = compoundTag.getFloat("ColorG");
-        this.colorB = compoundTag.getFloat("ColorB");
+
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag compoundTag) {
-        compoundTag.putFloat("ColorR", this.colorR);
-        compoundTag.putFloat("ColorG", this.colorG);
-        compoundTag.putFloat("ColorB", this.colorB);
+
     }
 
     protected void onProjectileTick() {
@@ -691,8 +685,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     }
 
     public void setRGB(float[] rgb) {
-        this.colorR = rgb[0];
-        this.colorG = rgb[1];
-        this.colorB = rgb[2];
+        this.entityData.set(COLOR_R, rgb[0]);
+        this.entityData.set(COLOR_G, rgb[1]);
+        this.entityData.set(COLOR_B, rgb[2]);
     }
 }
