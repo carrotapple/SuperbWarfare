@@ -7,6 +7,7 @@ import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+// TODO 移除此类，功能移动到枪械重铸台
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class TempEventHandler {
 
@@ -18,7 +19,8 @@ public class TempEventHandler {
         if (right.getItem() instanceof PerkItem perkItem) {
             ItemStack output = left.copy();
 
-            PerkHelper.setPerk(output, perkItem.getPerk());
+            int level = PerkHelper.getItemPerkLevel(perkItem.getPerk(), output);
+            PerkHelper.setPerk(output, perkItem.getPerk(), level + 1);
 
             event.setOutput(output);
             event.setCost(10);

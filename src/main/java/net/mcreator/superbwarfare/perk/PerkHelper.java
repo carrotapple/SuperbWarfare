@@ -52,6 +52,26 @@ public class PerkHelper {
             return 0;
         }
 
+        var tag = stack.getTag();
+        if (tag == null) {
+            return 0;
+        }
+
+        var tagPerk = tag.getCompound(TAG_PERK);
+        if (!tagPerk.contains(perk.type.getName())) {
+            return 0;
+        }
+
+        var pt = tagPerk.getCompound(perk.type.getName());
+        ResourceLocation id = getPerkId(perk);
+        if (id == null) {
+            return 0;
+        }
+
+        if (!pt.getString(TAG_PERK_ID).equals(makeId(id))) {
+            return 0;
+        }
+
         return getPerkLevel(getPerkTag(stack, perk.type));
     }
 
