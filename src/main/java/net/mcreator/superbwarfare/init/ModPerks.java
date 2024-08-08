@@ -22,7 +22,7 @@ public class ModPerks {
     public static final DeferredRegister<Perk> PERKS = DeferredRegister.create(new ResourceLocation(ModUtils.MODID, "perk"), ModUtils.MODID);
 
     public static final RegistryObject<AmmoPerk> SILVER_BULLET = PERKS.register("silver_bullet",
-            () -> new AmmoPerk(new AmmoPerk.Builder("silver_bullet", Perk.Type.AMMO).bypassArmorRate(0.1f).rgb(231, 251, 255)));
+            () -> new AmmoPerk(new AmmoPerk.Builder("silver_bullet", Perk.Type.AMMO).bypassArmorRate(0.1f).rgb(87, 166, 219)));
     public static final RegistryObject<AmmoPerk> BEAST_BULLET = PERKS.register("beast_bullet",
             () -> new AmmoPerk(new AmmoPerk.Builder("beast_bullet", Perk.Type.AMMO).bypassArmorRate(0.0f).rgb(134, 65, 14)));
 
