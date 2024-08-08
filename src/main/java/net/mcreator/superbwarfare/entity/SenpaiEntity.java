@@ -207,7 +207,6 @@ public class SenpaiEntity extends Spider implements GeoEntity, AnimatedEntity {
     @Override
     public void die(DamageSource source) {
         super.die(source);
-        this.setPose(Pose.SLEEPING);
     }
 
     @Override

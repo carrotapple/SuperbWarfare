@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.tools;
 
 import net.mcreator.superbwarfare.entity.DroneEntity;
+import net.mcreator.superbwarfare.perk.AmmoPerk;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.minecraft.ChatFormatting;
@@ -51,6 +52,7 @@ public class TooltipTool {
 
         addLevelTips(tooltip, stack);
         addBypassTips(tooltip, stack);
+        addPerkTips(tooltip, stack);
     }
 
     private static void addLevelTips(List<Component> tooltip, ItemStack stack) {
@@ -77,7 +79,13 @@ public class TooltipTool {
     }
 
     private static void addBypassTips(List<Component> tooltip, ItemStack stack) {
-        double byPassRate = ItemNBTTool.getDouble(stack, "BypassesArmor", 0);
+
+        double perkbypassArmorRate = 0;
+        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+        if (perk instanceof AmmoPerk ammoPerk) {
+            perkbypassArmorRate = ammoPerk.bypassArmorRate;
+        }
+        double byPassRate = ItemNBTTool.getDouble(stack, "BypassesArmor", 0) + perkbypassArmorRate;
 
         tooltip.add(Component.translatable("des.superbwarfare.tips.bypass").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
@@ -138,6 +146,7 @@ public class TooltipTool {
 
         addLevelTips(tooltip, stack);
         addBypassTips(tooltip, stack);
+        addPerkTips(tooltip, stack);
     }
 
     public static void addSentinelTips(List<Component> tooltip, ItemStack stack) {
@@ -167,6 +176,7 @@ public class TooltipTool {
 
         addLevelTips(tooltip, stack);
         addBypassTips(tooltip, stack);
+        addPerkTips(tooltip, stack);
 
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                 e -> tooltip.add(Component.literal(e.getEnergyStored() + " / " + e.getMaxEnergyStored() + " FE").withStyle(ChatFormatting.GRAY))

@@ -119,20 +119,6 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
         return super.hurt(source, amount);
     }
 
-//    @Override
-//    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
-//        SpawnGroupData data = super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
-//
-//        this.setYRot(0);
-//        this.setXRot(0);
-//        this.setYBodyRot(this.getYRot());
-//        this.setYHeadRot(this.getYRot());
-//        this.yRotO = this.getYRot();
-//        this.xRotO = this.getXRot();
-//
-//        return data;
-//    }
-
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
