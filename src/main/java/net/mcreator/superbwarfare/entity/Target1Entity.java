@@ -15,7 +15,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -23,14 +22,12 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -41,19 +38,13 @@ import net.minecraftforge.network.PlayMessages;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
-import javax.annotation.Nullable;
 
 // TODO 重置靶子
 @Mod.EventBusSubscriber
 public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedEntity {
-    public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(Target1Entity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(Target1Entity.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<Integer> DOWN_TIME = SynchedEntityData.defineId(Target1Entity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public String animationProcedure = "empty";
@@ -67,14 +58,13 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
         xpReward = 0;
         setNoAi(true);
         setPersistenceRequired();
-        this.moveControl = new FlyingMoveControl(this, 10, true);
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(SHOOT, false);
         this.entityData.define(ANIMATION, "undefined");
+        this.entityData.define(DOWN_TIME, 0);
     }
 
     @Override
@@ -117,7 +107,7 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
                 || source.is(DamageTypes.WITHER)
                 || source.is(DamageTypes.WITHER_SKULL)
                 || source.is(DamageTypes.MAGIC)
-                || this.getPersistentData().getDouble("target_down") > 0) {
+                || this.entityData.get(DOWN_TIME) > 0) {
             return false;
         }
 
@@ -129,28 +119,31 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
         return super.hurt(source, amount);
     }
 
-    @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
-        SpawnGroupData data = super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
-
-        this.setYRot(0);
-        this.setXRot(0);
-        this.setYBodyRot(this.getYRot());
-        this.setYHeadRot(this.getYRot());
-        this.yRotO = this.getYRot();
-        this.xRotO = this.getXRot();
-
-        return data;
-    }
+//    @Override
+//    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
+//        SpawnGroupData data = super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
+//
+//        this.setYRot(0);
+//        this.setXRot(0);
+//        this.setYBodyRot(this.getYRot());
+//        this.setYHeadRot(this.getYRot());
+//        this.yRotO = this.getYRot();
+//        this.xRotO = this.getXRot();
+//
+//        return data;
+//    }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
+        compound.putInt("DownTime", this.entityData.get(DOWN_TIME));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
+        if (compound.contains("DownTime"))
+            this.entityData.set(DOWN_TIME, compound.getInt("DownTime"));
     }
 
     @SubscribeEvent
@@ -170,9 +163,16 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
             if (sourceEntity instanceof Player player) {
                 player.displayClientMessage(Component.literal(("Target Down " + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceEntity.position()))) + "M")), true);
                 SoundTool.playLocalSound(player, ModSounds.TARGET_DOWN.get(), 100, 1);
-                entity.getPersistentData().putDouble("target_down", 100);
+                ((Target1Entity) entity).entityData.set(DOWN_TIME,90);
+                entity.setPose(Pose.SLEEPING);
             }
         }
+    }
+
+    @Override
+    public void die(DamageSource source) {
+        super.die(source);
+
     }
 
     @Override
@@ -197,7 +197,7 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
                 this.yRotO = this.getYRot();
                 this.xRotO = this.getXRot();
 
-                this.getPersistentData().putDouble("target_down", 0);
+                this.entityData.set(DOWN_TIME, 0);
             }
         }
 
@@ -207,28 +207,10 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
     @Override
     public void baseTick() {
         super.baseTick();
-        if (this.getPersistentData().getDouble("target_down") > 0) {
-            this.getPersistentData().putDouble("target_down", this.getPersistentData().getDouble("target_down") - 1);
-        }
-        if (this.getPersistentData().getDouble("target_down") >= 98) {
-            this.setYRot(this.getYRot());
-            this.setXRot((float) (100 - this.getPersistentData().getDouble("target_down")) * -45f);
-            this.setYBodyRot(this.getYRot());
-            this.setYHeadRot(this.getYRot());
-            this.yRotO = this.getYRot();
-            this.xRotO = this.getXRot();
-            this.yBodyRotO = this.getYRot();
-            this.yHeadRotO = this.getYRot();
-        }
-        if (this.getPersistentData().getDouble("target_down") <= 5 && this.getPersistentData().getDouble("target_down") > 0) {
-            this.setYRot(this.getYRot());
-            this.setXRot((float) (-90 + (5 - this.getPersistentData().getDouble("target_down")) * 18f * 1.25f));
-            this.setYBodyRot(this.getYRot());
-            this.setYHeadRot(this.getYRot());
-            this.yRotO = this.getYRot();
-            this.xRotO = this.getXRot();
-            this.yBodyRotO = this.getYRot();
-            this.yHeadRotO = this.getYRot();
+        if (this.entityData.get(DOWN_TIME) > 0) {
+            this.entityData.set(DOWN_TIME,this.entityData.get(DOWN_TIME) - 1);
+        } else {
+            this.setPose(Pose.STANDING);
         }
     }
 
@@ -276,25 +258,6 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
                 .add(Attributes.FLYING_SPEED, 0);
     }
 
-    private PlayState movementPredicate(AnimationState<Target1Entity> event) {
-        if (this.animationProcedure.equals("empty")) {
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.superbwarfare.idle"));
-        }
-        return PlayState.STOP;
-    }
-
-    private PlayState procedurePredicate(AnimationState<Target1Entity> event) {
-        if (!animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
-            if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                this.animationProcedure = "empty";
-                event.getController().forceAnimationReset();
-            }
-        } else if (animationProcedure.equals("empty")) {
-            return PlayState.STOP;
-        }
-        return PlayState.CONTINUE;
-    }
 
     @Override
     protected void tickDeath() {
@@ -320,22 +283,10 @@ public class Target1Entity extends PathfinderMob implements GeoEntity, AnimatedE
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "movement", 0, this::movementPredicate));
-        data.add(new AnimationController<>(this, "procedure", 0, this::procedurePredicate));
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public EntityDimensions getDimensions(Pose p_33597_) {
-        Entity entity = this;
-        float num = 0;
-        if (entity.getPersistentData().getDouble("target_down") > 0) {
-            num = 0.1f;
-        }
-        return super.getDimensions(p_33597_).scale(0.1f);
     }
 }

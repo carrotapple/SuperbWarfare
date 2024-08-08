@@ -7,6 +7,7 @@ import net.mcreator.superbwarfare.init.ModDamageTypes;
 import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,6 +21,8 @@ import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BellBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -86,6 +89,11 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
     @Override
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
+        BlockPos resultPos = blockHitResult.getBlockPos();
+        BlockState state = this.level().getBlockState(resultPos);
+        if(state.getBlock() instanceof BellBlock bell) {
+            bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
+        }
     }
 
     @Override

@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkEvent;
@@ -57,7 +58,11 @@ public class InteractMessage {
 
                 Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(block_range)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
                 BlockPos blockPos = BlockPos.containing(looking.x(), looking.y(), looking.z());
-                player.level().getBlockState(blockPos).use(player.level(), player, InteractionHand.MAIN_HAND, BlockHitResult.miss(new Vec3(blockPos.getX(), blockPos.getY(), blockPos.getZ()), Direction.UP, blockPos));
+                level.getBlockState(blockPos).use(player.level(), player, InteractionHand.MAIN_HAND, BlockHitResult.miss(new Vec3(blockPos.getX(), blockPos.getY(), blockPos.getZ()), Direction.UP, blockPos));
+
+                if ((level.getBlockState(BlockPos.containing(looking.x(), looking.y(), looking.z()))).getBlock() instanceof BellBlock bell) {
+                    bell.attemptToRing(level, blockPos, player.getDirection().getOpposite());
+                }
 
                 Entity lookingEntity = TraceTool.findLookingEntity(player, entity_range);
                 if (lookingEntity == null)

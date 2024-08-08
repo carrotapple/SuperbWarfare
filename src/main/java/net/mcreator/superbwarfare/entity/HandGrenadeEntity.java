@@ -24,6 +24,7 @@ import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -80,6 +81,11 @@ public class HandGrenadeEntity extends ThrowableItemProjectile {
                     this.level().playSound(null, result.getLocation().x, result.getLocation().y, result.getLocation().z, event, SoundSource.AMBIENT, 1.0F, 1.0F);
                 }
                 this.bounce(blockResult.getDirection());
+
+                if(state.getBlock() instanceof BellBlock bell) {
+                    bell.attemptToRing(this.level(), resultPos, blockResult.getDirection());
+                }
+
                 break;
 
             case ENTITY:

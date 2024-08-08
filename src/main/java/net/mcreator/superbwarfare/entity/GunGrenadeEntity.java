@@ -8,6 +8,7 @@ import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -22,6 +23,8 @@ import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BellBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.network.NetworkHooks;
@@ -100,6 +103,11 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
     @Override
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
+        BlockPos resultPos = blockHitResult.getBlockPos();
+        BlockState state = this.level().getBlockState(resultPos);
+        if(state.getBlock() instanceof BellBlock bell) {
+            bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
+        }
         if (this.tickCount > 0) {
             if (this.level() instanceof ServerLevel) {
                 causeExplode();

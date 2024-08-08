@@ -9,19 +9,19 @@
 			"parent": "superbwarfare:item/qbz_95_icon"
 		},
 		"thirdperson_righthand": {
-			"parent": "superbwarfare:item/m8703d"
+			"parent": "superbwarfare:item/qbz95_3d"
 		},
 		"thirdperson_lefthand": {
-			"parent": "superbwarfare:item/m8703d"
+			"parent": "superbwarfare:item/qbz95_3d"
 		},
 		"ground": {
-			"parent": "superbwarfare:item/m8703d"
+			"parent": "superbwarfare:item/qbz95_3d"
 		},
 		"fixed": {
-			"parent": "superbwarfare:item/m8703d"
+			"parent": "superbwarfare:item/qbz95_3d"
 		},
 		"head": {
-			"parent": "superbwarfare:item/m8703d"
+			"parent": "superbwarfare:item/qbz95_3d"
 		}
 	}
 }

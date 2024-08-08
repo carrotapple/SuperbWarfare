@@ -300,6 +300,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             SoundEvent event = state.getBlock().getSoundType(state, this.level(), resultPos, this).getBreakSound();
             this.level().playSound(null, result.getLocation().x, result.getLocation().y, result.getLocation().z, event, SoundSource.AMBIENT, 1.0F, 1.0F);
             Vec3 hitVec = result.getLocation();
+
+            if(state.getBlock() instanceof BellBlock bell) {
+                bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
+            }
+
             this.onHitBlock(hitVec);
         }
 
