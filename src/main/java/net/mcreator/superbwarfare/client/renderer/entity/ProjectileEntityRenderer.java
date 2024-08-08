@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.mcreator.superbwarfare.entity.ProjectileEntity;
+import net.mcreator.superbwarfare.entity.layer.ProjectileEntityInsideLayer;
 import net.mcreator.superbwarfare.entity.layer.ProjectileEntityLayer;
 import net.mcreator.superbwarfare.entity.model.ProjectileEntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -19,6 +20,7 @@ public class ProjectileEntityRenderer extends GeoEntityRenderer<ProjectileEntity
         super(renderManager, new ProjectileEntityModel());
         this.shadowRadius = 0f;
         this.addRenderLayer(new ProjectileEntityLayer(this));
+        this.addRenderLayer(new ProjectileEntityInsideLayer(this));
     }
 
     @Override
