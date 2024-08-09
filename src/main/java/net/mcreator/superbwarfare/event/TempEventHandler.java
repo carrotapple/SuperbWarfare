@@ -1,5 +1,6 @@
 package net.mcreator.superbwarfare.event;
 
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.PerkItem;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.minecraft.world.item.ItemStack;
@@ -16,7 +17,7 @@ public class TempEventHandler {
         ItemStack left = event.getLeft();
         ItemStack right = event.getRight();
 
-        if (right.getItem() instanceof PerkItem perkItem) {
+        if (right.getItem() instanceof PerkItem perkItem && left.is(ModTags.Items.GUN)) {
             ItemStack output = left.copy();
 
             int level = PerkHelper.getItemPerkLevel(perkItem.getPerk(), output);

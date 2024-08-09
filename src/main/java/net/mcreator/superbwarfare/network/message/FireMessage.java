@@ -168,11 +168,11 @@ public class FireMessage {
                     if (perk instanceof AmmoPerk ammoPerk) {
                         int pLevel = PerkHelper.getItemPerkLevel(perk, stack);
 
-                        bypassArmorRate = bypassArmorRate + ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get()? 0.05f * (pLevel - 1) : 0);
+                        bypassArmorRate += ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (pLevel - 1) : 0);
                         projectile.setRGB(ammoPerk.rgb);
 
                         if (ammoPerk.mobEffect.get() != null) {
-                            projectile.effect(() -> new MobEffectInstance(ammoPerk.mobEffect.get(), 100, pLevel - 1));
+                            projectile.effect(() -> new MobEffectInstance(ammoPerk.mobEffect.get(), 70 + 30 * pLevel, pLevel - 1));
                         }
                     }
 
@@ -252,7 +252,6 @@ public class FireMessage {
         boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
         float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
 
-
         ProjectileEntity projectile = new ProjectileEntity(player.level())
                 .shooter(player)
                 .headShot(headshot)
@@ -263,15 +262,15 @@ public class FireMessage {
         if (perk instanceof AmmoPerk ammoPerk) {
             int level = PerkHelper.getItemPerkLevel(perk, heldItem);
 
-            bypassArmorRate = bypassArmorRate + ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get()? 0.05f * (level - 1) : 0);
+            bypassArmorRate += ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (level - 1) : 0);
             projectile.setRGB(ammoPerk.rgb);
 
             if (ammoPerk.mobEffect.get() != null) {
-                projectile.effect(() -> new MobEffectInstance(ammoPerk.mobEffect.get(), 100, level - 1));
+                projectile.effect(() -> new MobEffectInstance(ammoPerk.mobEffect.get(), 70 + 30 * level, level - 1));
             }
         }
-        bypassArmorRate = Mth.clamp(bypassArmorRate, 0, 1);
 
+        bypassArmorRate = Mth.clamp(bypassArmorRate, 0, 1);
         projectile.bypassArmorRate(bypassArmorRate);
 
         if (perk == ModPerks.SILVER_BULLET.get()) {
@@ -317,7 +316,7 @@ public class FireMessage {
 
                     taserBulletProjectile.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                     taserBulletProjectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) stack.getOrCreateTag().getDouble("velocity"),
-                            (float) (zoom? zoomSpread : spread));
+                            (float) (zoom ? zoomSpread : spread));
                     level.addFreshEntity(taserBulletProjectile);
                 }
 
@@ -348,7 +347,7 @@ public class FireMessage {
 
                     gunGrenadeEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                     gunGrenadeEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) stack.getOrCreateTag().getDouble("velocity"),
-                            (float) (zoom? zoomSpread : spread));
+                            (float) (zoom ? zoomSpread : spread));
                     level.addFreshEntity(gunGrenadeEntity);
                 }
 
@@ -393,7 +392,7 @@ public class FireMessage {
                 RpgRocketEntity rocketEntity = new RpgRocketEntity(player, level, (float) tag.getDouble("damage") * (float) tag.getDouble("levelDamageMultiple"), monsterMultiple);
                 rocketEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                 rocketEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) tag.getDouble("velocity"),
-                        (float) (zoom? zoomSpread : spread));
+                        (float) (zoom ? zoomSpread : spread));
                 level.addFreshEntity(rocketEntity);
             }
 

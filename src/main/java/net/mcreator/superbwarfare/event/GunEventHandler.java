@@ -371,11 +371,11 @@ public class GunEventHandler {
             if (perk instanceof AmmoPerk ammoPerk) {
                 int level = PerkHelper.getItemPerkLevel(perk, heldItem);
 
-                bypassArmorRate = bypassArmorRate + ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get()? 0.05f * (level - 1) : 0);
+                bypassArmorRate += ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (level - 1) : 0);
                 projectile.setRGB(ammoPerk.rgb);
 
                 if (ammoPerk.mobEffect.get() != null) {
-                    projectile.effect(() -> new MobEffectInstance(ammoPerk.mobEffect.get(), 100, level - 1));
+                    projectile.effect(() -> new MobEffectInstance(ammoPerk.mobEffect.get(), 70 + 30 * level, level - 1));
                 }
             }
             bypassArmorRate = Mth.clamp(bypassArmorRate, 0, 1);
