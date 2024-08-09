@@ -80,15 +80,14 @@ public class TooltipTool {
     }
 
     private static void addBypassTips(List<Component> tooltip, ItemStack stack) {
-
         double perkbypassArmorRate = 0;
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
         if (perk instanceof AmmoPerk ammoPerk) {
             int level = PerkHelper.getItemPerkLevel(perk, stack);
-            perkbypassArmorRate = ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get()? 0.05f * (level - 1) : 0);
+            perkbypassArmorRate = ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (level - 1) : 0);
         }
-        double byPassRate = ItemNBTTool.getDouble(stack, "BypassesArmor", 0) + perkbypassArmorRate;
+        double byPassRate = Math.max(ItemNBTTool.getDouble(stack, "BypassesArmor", 0) + perkbypassArmorRate, 0);
 
         tooltip.add(Component.translatable("des.superbwarfare.tips.bypass").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
