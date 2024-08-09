@@ -83,7 +83,6 @@ public class TooltipTool {
 
         double perkbypassArmorRate = 0;
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
-        if (perk == null) return;
 
         if (perk instanceof AmmoPerk ammoPerk) {
             int level = PerkHelper.getItemPerkLevel(perk, stack);

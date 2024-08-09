@@ -155,10 +155,45 @@ public class FireMessage {
                 Level level = player.level();
                 if (!level.isClientSide()) {
                     int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), stack);
-                    float damage = (float) (0.02 * stack.getOrCreateTag().getDouble("damage") * (1 + 0.05 * stack.getOrCreateTag().getInt("level")));
+                    float damage = (float) (0.04 * stack.getOrCreateTag().getDouble("damage") * (1 + 0.05 * stack.getOrCreateTag().getInt("level")));
                     float bypassArmorRate = (float) stack.getOrCreateTag().getDouble("BypassArmor");
 
-                    BocekArrowEntity arrow = new BocekArrowEntity(player, level, monsterMultiple).bypassArmorRate(bypassArmorRate);
+                    ProjectileEntity projectile = new ProjectileEntity(player.level())
+                            .shooter(player)
+                            .headShot(1)
+                            .zoom(true)
+                            .monsterMultiple(1);
+
+                    var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+                    if (perk instanceof AmmoPerk ammoPerk) {
+                        int pLevel = PerkHelper.getItemPerkLevel(perk, stack);
+
+                        bypassArmorRate = bypassArmorRate + ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get()? 0.05f * (pLevel - 1) : 0);
+                        projectile.setRGB(ammoPerk.rgb);
+
+                        if (ammoPerk.mobEffect.get() != null) {
+                            projectile.effect(() -> new MobEffectInstance(ammoPerk.mobEffect.get(), 100, pLevel - 1));
+                        }
+                    }
+
+                    float undeadMultiple = 1;
+
+                    if (perk == ModPerks.SILVER_BULLET.get()) {
+                        int level_ = PerkHelper.getItemPerkLevel(perk, stack);
+                        undeadMultiple = 1.0f + 0.5f * level_;
+                    } else if (perk == ModPerks.BEAST_BULLET.get()) {
+                        projectile.beast();
+                    }
+
+                    projectile.bypassArmorRate(0);
+                    projectile.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
+                    projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) (2 * power), 0);
+                    projectile.damage(0);
+                    player.level().addFreshEntity(projectile);
+
+                    bypassArmorRate = Mth.clamp(bypassArmorRate, 0, 1);
+
+                    BocekArrowEntity arrow = new BocekArrowEntity(player, level, monsterMultiple).bypassArmorRate(bypassArmorRate).undeadMultiple(undeadMultiple);
                     arrow.setBaseDamage(damage);
                     arrow.setKnockback(0);
                     arrow.setSilent(true);
@@ -166,7 +201,7 @@ public class FireMessage {
                     arrow.pickup = AbstractArrow.Pickup.ALLOWED;
 
                     arrow.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
-                    arrow.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) (4 * power), (float) 0.02);
+                    arrow.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) (2 * power), 0);
                     level.addFreshEntity(arrow);
                 }
 
@@ -212,7 +247,7 @@ public class FireMessage {
         CompoundTag tag = heldItem.getOrCreateTag();
         double damage;
         float headshot = (float) tag.getDouble("headshot");
-        float velocity = 4 * (float) tag.getDouble("speed");
+        float velocity = 2 * (float) tag.getDouble("speed");
         int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), heldItem);
         boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
         float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
@@ -248,7 +283,7 @@ public class FireMessage {
 
         projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
 
-        damage = 0.008333333 * tag.getDouble("damage") * tag.getDouble("speed") * tag.getDouble("levelDamageMultiple");
+        damage = 2 * 0.008333333 * tag.getDouble("damage") * tag.getDouble("speed") * tag.getDouble("levelDamageMultiple");
         projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, velocity, 2.5f);
         projectile.damage((float) damage);
         player.level().addFreshEntity(projectile);

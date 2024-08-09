@@ -15,6 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ItemSupplier;
@@ -41,6 +42,7 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
 
     private int monsterMultiplier = 0;
     private float bypassArmorRate = 0.0f;
+    private float undeadMultiple = 1.0f;
 
     public BocekArrowEntity(EntityType<? extends BocekArrowEntity> type, Level world) {
         super(type, world);
@@ -61,6 +63,11 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
 
     public BocekArrowEntity bypassArmorRate(float bypassArmorRate) {
         this.bypassArmorRate = bypassArmorRate;
+        return this;
+    }
+
+    public BocekArrowEntity undeadMultiple(float undeadMultiple) {
+        this.undeadMultiple = undeadMultiple;
         return this;
     }
 
@@ -156,9 +163,9 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
 
         boolean hurt;
         if (entity instanceof Monster) {
-            hurt = performHurt(entity, i * damageMultiplier, headshot);
+            hurt = performHurt(entity, i * damageMultiplier * (entity instanceof LivingEntity living && living.getMobType() == MobType.UNDEAD? this.undeadMultiple : 1), headshot);
         } else {
-            hurt = performHurt(entity, i, headshot);
+            hurt = performHurt(entity, i * (entity instanceof LivingEntity living && living.getMobType() == MobType.UNDEAD? this.undeadMultiple : 1), headshot);
         }
 
         if (!hurt) {

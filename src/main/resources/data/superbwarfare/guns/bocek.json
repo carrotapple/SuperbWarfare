@@ -1,6 +1,8 @@
 {
   "zoom_speed": 1,
   "zoom": 2,
+  "spread": 3,
+  "zoomSpread": 0,
   "recoil_x": 0.005,
   "recoil_y": 0.003,
   "headshot": 1.5,
