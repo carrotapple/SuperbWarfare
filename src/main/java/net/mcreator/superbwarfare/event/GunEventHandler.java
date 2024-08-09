@@ -369,11 +369,12 @@ public class GunEventHandler {
             float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
             var perk = PerkHelper.getPerkByType(heldItem, Perk.Type.AMMO);
             if (perk instanceof AmmoPerk ammoPerk) {
-                bypassArmorRate += ammoPerk.bypassArmorRate;
+                int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+
+                bypassArmorRate = bypassArmorRate + ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get()? 0.05f * (level - 1) : 0);
                 projectile.setRGB(ammoPerk.rgb);
 
                 if (ammoPerk.mobEffect.get() != null) {
-                    int level = PerkHelper.getItemPerkLevel(perk, heldItem);
                     projectile.effect(() -> new MobEffectInstance(ammoPerk.mobEffect.get(), 100, level - 1));
                 }
             }

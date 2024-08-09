@@ -174,6 +174,8 @@
   "item.superbwarfare.galena": "Raw Galena",
   "item.superbwarfare.scheelite": "Raw Galena",
 
+  "item.superbwarfare.ap_bullet": "Ap Bullet",
+  "des.superbwarfare.ap_bullet": "Increased the armor-piercing ratio of bullets",
   "item.superbwarfare.silver_bullet": "Silver Bullet",
   "des.superbwarfare.silver_bullet": "Causes extra damage to undead entities",
   "item.superbwarfare.beast_bullet": "Beast Bullet",
@@ -195,9 +197,9 @@
 
   "perk.superbwarfare.tips": "[Perks]",
   "perk.superbwarfare.slot": "Type: ",
-  "perk.superbwarfare.slot_Ammo": "子弹模组",
-  "perk.superbwarfare.slot_Functional": "功能模组",
-  "perk.superbwarfare.slot_Damage": "伤害模组",
+  "perk.superbwarfare.slot_Ammo": "Bullet Perk",
+  "perk.superbwarfare.slot_Functional": "Functional Perk",
+  "perk.superbwarfare.slot_Damage": "Damage Perk",
 
   "death.attack.gunfire": "%1$s was shoot by %2$s",
   "death.attack.gunfire.entity": "%1$s was shoot by %2$s",

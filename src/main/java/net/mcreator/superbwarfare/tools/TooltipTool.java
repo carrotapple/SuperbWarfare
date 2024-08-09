@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.tools;
 
 import net.mcreator.superbwarfare.entity.DroneEntity;
+import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.perk.AmmoPerk;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
@@ -82,8 +83,11 @@ public class TooltipTool {
 
         double perkbypassArmorRate = 0;
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+        if (perk == null) return;
+
         if (perk instanceof AmmoPerk ammoPerk) {
-            perkbypassArmorRate = ammoPerk.bypassArmorRate;
+            int level = PerkHelper.getItemPerkLevel(perk, stack);
+            perkbypassArmorRate = ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get()? 0.05f * (level - 1) : 0);
         }
         double byPassRate = ItemNBTTool.getDouble(stack, "BypassesArmor", 0) + perkbypassArmorRate;
 
