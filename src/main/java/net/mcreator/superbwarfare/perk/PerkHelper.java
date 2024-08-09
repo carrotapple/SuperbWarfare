@@ -40,11 +40,23 @@ public class PerkHelper {
 
     @Nullable
     public static ResourceLocation getPerkId(Perk perk) {
-        return ModPerks.PERKS.getEntries().stream()
-                .filter(p -> p.get().descriptionId.equals(perk.descriptionId))
-                .findFirst()
-                .map(RegistryObject::getId)
-                .orElse(null);
+        return switch (perk.type) {
+            case AMMO -> ModPerks.AMMO_PERKS.getEntries().stream()
+                    .filter(p -> p.get().descriptionId.equals(perk.descriptionId))
+                    .findFirst()
+                    .map(RegistryObject::getId)
+                    .orElse(null);
+            case FUNCTIONAL -> ModPerks.FUNC_PERKS.getEntries().stream()
+                    .filter(p -> p.get().descriptionId.equals(perk.descriptionId))
+                    .findFirst()
+                    .map(RegistryObject::getId)
+                    .orElse(null);
+            case DAMAGE -> ModPerks.DAMAGE_PERKS.getEntries().stream()
+                    .filter(p -> p.get().descriptionId.equals(perk.descriptionId))
+                    .findFirst()
+                    .map(RegistryObject::getId)
+                    .orElse(null);
+        };
     }
 
     public static int getItemPerkLevel(Perk perk, ItemStack stack) {
@@ -115,11 +127,23 @@ public class PerkHelper {
             return null;
         }
 
-        return ModPerks.PERKS.getEntries().stream()
-                .filter(p -> makeId(p.getId()).equals(tagPerk.getCompound(type.getName()).getString(TAG_PERK_ID)))
-                .findFirst()
-                .map(RegistryObject::get)
-                .orElse(null);
+        return switch (type) {
+            case AMMO -> ModPerks.AMMO_PERKS.getEntries().stream()
+                    .filter(p -> makeId(p.getId()).equals(tagPerk.getCompound(type.getName()).getString(TAG_PERK_ID)))
+                    .findFirst()
+                    .map(RegistryObject::get)
+                    .orElse(null);
+            case FUNCTIONAL -> ModPerks.FUNC_PERKS.getEntries().stream()
+                    .filter(p -> makeId(p.getId()).equals(tagPerk.getCompound(type.getName()).getString(TAG_PERK_ID)))
+                    .findFirst()
+                    .map(RegistryObject::get)
+                    .orElse(null);
+            case DAMAGE -> ModPerks.DAMAGE_PERKS.getEntries().stream()
+                    .filter(p -> makeId(p.getId()).equals(tagPerk.getCompound(type.getName()).getString(TAG_PERK_ID)))
+                    .findFirst()
+                    .map(RegistryObject::get)
+                    .orElse(null);
+        };
     }
 
     public static String makeId(ResourceLocation resourceLocation) {

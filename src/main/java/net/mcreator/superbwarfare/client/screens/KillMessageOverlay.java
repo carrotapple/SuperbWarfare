@@ -41,7 +41,7 @@ public class KillMessageOverlay {
     private static final ResourceLocation SHOCK = new ResourceLocation(ModUtils.MODID, "textures/screens/damage_types/shock.png");
     private static final ResourceLocation BLOOD_CRYSTAL = new ResourceLocation(ModUtils.MODID, "textures/screens/damage_types/blood_crystal.png");
 
-    private static final ResourceLocation WORLD_PEACE_STAFF = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/compat/world_peace_staff.png");
+    private static final ResourceLocation WORLD_PEACE_STAFF = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/registerCompatPerks/world_peace_staff.png");
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {

@@ -182,6 +182,10 @@
   "des.superbwarfare.beast_bullet": "无视障碍物，增大判定范围，秒杀一切生物",
   "item.superbwarfare.poisonous_bullet": "淬毒弹",
   "des.superbwarfare.poisonous_bullet": "命中后会使目标中毒",
+  "item.superbwarfare.blade_bullet": "刀片弹",
+  "des.superbwarfare.blade_bullet": "命中后会使目标流血",
+  "item.superbwarfare.curse_flame_bullet": "咒火弹",
+  "des.superbwarfare.curse_flame_bullet": "命中后会使目标受到咒火效果",
 
   "item.superbwarfare.heal_clip": "治疗弹匣",
   "des.superbwarfare.heal_clip": "最后一击后短时间内填装，可治疗自身和附近队友",

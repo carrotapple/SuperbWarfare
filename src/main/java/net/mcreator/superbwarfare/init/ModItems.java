@@ -184,7 +184,6 @@ public class ModItems {
     public static final RegistryObject<Item> BARBED_WIRE = block(ModBlocks.BARBED_WIRE);
     public static final RegistryObject<Item> DRAGON_TEETH = block(ModBlocks.DRAGON_TEETH);
 
-
     private static RegistryObject<Item> block(RegistryObject<Block> block) {
         return BLOCKS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties()));
     }
@@ -195,8 +194,10 @@ public class ModItems {
     public static final DeferredRegister<Item> PERKS = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
 
     public static void registerPerkItems() {
-        ModPerks.PERKS.getEntries().stream().filter(p -> p != ModPerks.AP_BULLET)
+        ModPerks.AMMO_PERKS.getEntries().stream().filter(p -> p != ModPerks.AP_BULLET)
                 .forEach(registryObject -> PERKS.register(registryObject.getId().getPath(), () -> new PerkItem(registryObject)));
+        ModPerks.FUNC_PERKS.getEntries().forEach(registryObject -> PERKS.register(registryObject.getId().getPath(), () -> new PerkItem(registryObject)));
+        ModPerks.DAMAGE_PERKS.getEntries().forEach(registryObject -> PERKS.register(registryObject.getId().getPath(), () -> new PerkItem(registryObject)));
     }
 
     /**
