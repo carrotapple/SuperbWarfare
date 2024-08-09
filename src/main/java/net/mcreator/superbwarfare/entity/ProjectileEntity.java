@@ -389,6 +389,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 living.gameEvent(GameEvent.ENTITY_DIE);
             }
 
+            level().playSound(living, new BlockPos((int) living.getX(), (int) living.getY(), (int) living.getZ()), ModSounds.OUCH.get(), SoundSource.PLAYERS, 2.0F, 1.0F);
             return;
         }
 

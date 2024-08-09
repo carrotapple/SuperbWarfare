@@ -58,7 +58,7 @@ public class ModTabs {
     public static final RegistryObject<CreativeModeTab> PERK_TAB = TABS.register("perk",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("item_group.superbwarfare.perk"))
-                    .icon(() -> new ItemStack(ModItems.TRACHELIUM_BLUEPRINT.get()))
+                    .icon(() -> new ItemStack(ModItems.EXAMPLE_PERK.get()))
                     .withTabsBefore(GUN_TAB.getKey())
                     .displayItems((param, output) -> ModItems.PERKS.getEntries().forEach(registryObject -> output.accept(registryObject.get())))
                     .build());

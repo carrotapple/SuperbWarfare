@@ -20,6 +20,9 @@ import net.minecraftforge.registries.RegistryObject;
 @SuppressWarnings("unused")
 public class ModItems {
 
+    public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
+    public static final RegistryObject<Item> EXAMPLE_PERK = REGISTRY.register("example_perk", ExamplePerk::new);
+
     /**
      * guns
      */
@@ -182,6 +185,7 @@ public class ModItems {
     public static final RegistryObject<Item> BARBED_WIRE = block(ModBlocks.BARBED_WIRE);
     public static final RegistryObject<Item> DRAGON_TEETH = block(ModBlocks.DRAGON_TEETH);
 
+
     private static RegistryObject<Item> block(RegistryObject<Block> block) {
         return BLOCKS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties()));
     }
@@ -202,5 +206,6 @@ public class ModItems {
         BLOCKS.register(bus);
         registerPerkItems();
         PERKS.register(bus);
+        REGISTRY.register(bus);
     }
 }
