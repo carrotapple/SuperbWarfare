@@ -21,7 +21,6 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModItems {
 
     public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
-    public static final RegistryObject<Item> EXAMPLE_PERK = REGISTRY.register("example_perk", ExamplePerk::new);
 
     /**
      * guns
@@ -196,8 +195,14 @@ public class ModItems {
     public static final DeferredRegister<Item> PERKS = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
 
     public static void registerPerkItems() {
-        ModPerks.PERKS.getEntries().forEach(registryObject -> PERKS.register(registryObject.getId().getPath(), () -> new PerkItem(registryObject)));
+        ModPerks.PERKS.getEntries().stream().filter(p -> p != ModPerks.AP_BULLET)
+                .forEach(registryObject -> PERKS.register(registryObject.getId().getPath(), () -> new PerkItem(registryObject)));
     }
+
+    /**
+     * 单独注册，用于Tab图标，不要删
+     */
+    public static final RegistryObject<Item> AP_BULLET = PERKS.register("ap_bullet", () -> new PerkItem(ModPerks.AP_BULLET));
 
     public static void register(IEventBus bus) {
         ITEMS.register(bus);

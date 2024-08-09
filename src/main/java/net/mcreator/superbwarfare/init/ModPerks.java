@@ -22,14 +22,14 @@ public class ModPerks {
 
     public static final DeferredRegister<Perk> PERKS = DeferredRegister.create(new ResourceLocation(ModUtils.MODID, "perk"), ModUtils.MODID);
 
-    public static final RegistryObject<AmmoPerk> AP_BULLET = PERKS.register("ap_bullet",
+    public static final RegistryObject<Perk> AP_BULLET = PERKS.register("ap_bullet",
             () -> new AmmoPerk(new AmmoPerk.Builder("ap_bullet", Perk.Type.AMMO).bypassArmorRate(0.4f).rgb(230, 0, 0)));
-    public static final RegistryObject<AmmoPerk> SILVER_BULLET = PERKS.register("silver_bullet",
+    public static final RegistryObject<Perk> SILVER_BULLET = PERKS.register("silver_bullet",
             () -> new AmmoPerk(new AmmoPerk.Builder("silver_bullet", Perk.Type.AMMO).bypassArmorRate(0.05f).rgb(87, 166, 219)));
-    public static final RegistryObject<AmmoPerk> POISONOUS_BULLET = PERKS.register("poisonous_bullet",
+    public static final RegistryObject<Perk> POISONOUS_BULLET = PERKS.register("poisonous_bullet",
             () -> new AmmoPerk(new AmmoPerk.Builder("poisonous_bullet", Perk.Type.AMMO).bypassArmorRate(0.0f).rgb(48, 131, 6)
                     .mobEffect(() -> MobEffects.POISON)));
-    public static final RegistryObject<AmmoPerk> BEAST_BULLET = PERKS.register("beast_bullet",
+    public static final RegistryObject<Perk> BEAST_BULLET = PERKS.register("beast_bullet",
             () -> new AmmoPerk(new AmmoPerk.Builder("beast_bullet", Perk.Type.AMMO).bypassArmorRate(0.0f).rgb(134, 65, 14)));
 
     public static final RegistryObject<Perk> HEAL_CLIP = PERKS.register("heal_clip", () -> new Perk("heal_clip", Perk.Type.FUNCTIONAL));
