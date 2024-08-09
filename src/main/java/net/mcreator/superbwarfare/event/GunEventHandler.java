@@ -304,6 +304,10 @@ public class GunEventHandler {
 
             if (perk == ModPerks.BEAST_BULLET.get()) {
                 player.playSound(ModSounds.HENG.get(), 5f, 1f);
+
+                if (player instanceof ServerPlayer serverPlayer) {
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.HENG.get(), 5f, 1f);
+                }
             }
 
             SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, name + "_fire_1p"));
