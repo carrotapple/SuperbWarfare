@@ -65,6 +65,8 @@ public class PlayerEventHandler {
         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
             capability.zoom = false;
             capability.zooming = false;
+            capability.tacticalSprintExhaustion = false;
+            capability.tacticalSprintTime = 600;
             capability.syncPlayerVariables(player);
         });
     }
