@@ -300,6 +300,14 @@ public class GunEventHandler {
                 }
             }
 
+            var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+
+            if (perk == ModPerks.BEAST_BULLET.get()) {
+                if (player instanceof ServerPlayer serverPlayer) {
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.HENG.get(), 5, 1);
+                }
+            }
+
             SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, name + "_fire_1p"));
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 2f, 1f);

@@ -40,6 +40,7 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> STEP = REGISTRY.register("step", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("superbwarfare", "step")));
     public static final RegistryObject<SoundEvent> GROWL = REGISTRY.register("growl", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("superbwarfare", "growl")));
     public static final RegistryObject<SoundEvent> IDLE = REGISTRY.register("idle", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("superbwarfare", "idle")));
+    public static final RegistryObject<SoundEvent> HENG = REGISTRY.register("heng", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("superbwarfare", "heng")));
     public static final RegistryObject<SoundEvent> M_79_FIRE_1P = REGISTRY.register("m_79_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("superbwarfare", "m_79_fire_1p")));
     public static final RegistryObject<SoundEvent> M_79_FIRE_3P = REGISTRY.register("m_79_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("superbwarfare", "m_79_fire_3p")));
     public static final RegistryObject<SoundEvent> M_79_FAR = REGISTRY.register("m_79_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("superbwarfare", "m_79_far")));

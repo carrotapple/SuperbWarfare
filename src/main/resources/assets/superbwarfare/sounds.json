@@ -1793,5 +1793,13 @@
         "stream": false
       }
     ]
+  },
+  "heng": {
+    "sounds": [
+      {
+        "name": "superbwarfare:heng",
+        "stream": false
+      }
+    ]
   }
 }

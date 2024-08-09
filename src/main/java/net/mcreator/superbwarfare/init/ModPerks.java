@@ -23,12 +23,12 @@ public class ModPerks {
     public static final DeferredRegister<Perk> PERKS = DeferredRegister.create(new ResourceLocation(ModUtils.MODID, "perk"), ModUtils.MODID);
 
     public static final RegistryObject<AmmoPerk> SILVER_BULLET = PERKS.register("silver_bullet",
-            () -> new AmmoPerk(new AmmoPerk.Builder("silver_bullet", Perk.Type.AMMO).bypassArmorRate(0.1f).rgb(87, 166, 219)));
-    public static final RegistryObject<AmmoPerk> BEAST_BULLET = PERKS.register("beast_bullet",
-            () -> new AmmoPerk(new AmmoPerk.Builder("beast_bullet", Perk.Type.AMMO).bypassArmorRate(0.0f).rgb(134, 65, 14)));
+            () -> new AmmoPerk(new AmmoPerk.Builder("silver_bullet", Perk.Type.AMMO).bypassArmorRate(0.05f).rgb(87, 166, 219)));
     public static final RegistryObject<AmmoPerk> POISONOUS_BULLET = PERKS.register("poisonous_bullet",
             () -> new AmmoPerk(new AmmoPerk.Builder("poisonous_bullet", Perk.Type.AMMO).bypassArmorRate(0.0f).rgb(48, 131, 6)
                     .mobEffect(() -> MobEffects.POISON)));
+    public static final RegistryObject<AmmoPerk> BEAST_BULLET = PERKS.register("beast_bullet",
+            () -> new AmmoPerk(new AmmoPerk.Builder("beast_bullet", Perk.Type.AMMO).bypassArmorRate(0.0f).rgb(134, 65, 14)));
 
     public static final RegistryObject<Perk> HEAL_CLIP = PERKS.register("heal_clip", () -> new Perk("heal_clip", Perk.Type.FUNCTIONAL));
     public static final RegistryObject<Perk> FOURTH_TIMES_CHARM = PERKS.register("fourth_times_charm", () -> new Perk("fourth_times_charm", Perk.Type.FUNCTIONAL));

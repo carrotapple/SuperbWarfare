@@ -2,11 +2,11 @@ package net.mcreator.superbwarfare.network.message;
 
 import net.mcreator.superbwarfare.entity.*;
 import net.mcreator.superbwarfare.event.GunEventHandler;
-import net.mcreator.superbwarfare.init.ModEnchantments;
-import net.mcreator.superbwarfare.init.ModItems;
-import net.mcreator.superbwarfare.init.ModSounds;
-import net.mcreator.superbwarfare.init.ModTags;
+import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.network.ModVariables;
+import net.mcreator.superbwarfare.perk.AmmoPerk;
+import net.mcreator.superbwarfare.perk.Perk;
+import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.ItemNBTTool;
 import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
@@ -16,6 +16,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
@@ -215,14 +217,31 @@ public class FireMessage {
         boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
         float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
 
-        var projectile = new ProjectileEntity(player.level())
+
+        ProjectileEntity projectile = new ProjectileEntity(player.level())
                 .shooter(player)
                 .headShot(headshot)
-                .monsterMultiple(monsterMultiple)
                 .zoom(zoom)
-                .bypassArmorRate(bypassArmorRate);
+                .monsterMultiple(monsterMultiple);
 
-        if (tag.getBoolean("beast")) {
+        var perk = PerkHelper.getPerkByType(heldItem, Perk.Type.AMMO);
+        if (perk instanceof AmmoPerk ammoPerk) {
+            bypassArmorRate += ammoPerk.bypassArmorRate;
+            projectile.setRGB(ammoPerk.rgb);
+
+            if (ammoPerk.mobEffect.get() != null) {
+                int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+                projectile.effect(() -> new MobEffectInstance(ammoPerk.mobEffect.get(), 100, level - 1));
+            }
+        }
+        bypassArmorRate = Mth.clamp(bypassArmorRate, 0, 1);
+
+        projectile.bypassArmorRate(bypassArmorRate);
+
+        if (perk == ModPerks.SILVER_BULLET.get()) {
+            int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+            projectile.undeadMultiple(1.0f + 0.5f * level);
+        } else if (perk == ModPerks.BEAST_BULLET.get()) {
             projectile.beast();
         }
 
