@@ -16,7 +16,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -191,7 +190,7 @@ public class FireMessage {
                     projectile.damage(0);
                     player.level().addFreshEntity(projectile);
 
-                    bypassArmorRate = Mth.clamp(bypassArmorRate, 0, 1);
+                    bypassArmorRate = Math.max(bypassArmorRate, 0);
 
                     BocekArrowEntity arrow = new BocekArrowEntity(player, level, monsterMultiple).bypassArmorRate(bypassArmorRate).undeadMultiple(undeadMultiple);
                     arrow.setBaseDamage(damage);
@@ -270,7 +269,7 @@ public class FireMessage {
             }
         }
 
-        bypassArmorRate = Mth.clamp(bypassArmorRate, 0, 1);
+        bypassArmorRate = Math.max(bypassArmorRate, 0);
         projectile.bypassArmorRate(bypassArmorRate);
 
         if (perk == ModPerks.SILVER_BULLET.get()) {

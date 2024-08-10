@@ -19,7 +19,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
@@ -387,8 +386,8 @@ public class GunEventHandler {
                     projectile.effect(() -> new MobEffectInstance(ammoPerk.mobEffect.get(), 70 + 30 * level, amplifier));
                 }
             }
-            bypassArmorRate = Mth.clamp(bypassArmorRate, 0, 1);
 
+            bypassArmorRate = Math.max(bypassArmorRate, 0);
             projectile.bypassArmorRate(bypassArmorRate);
 
             if (perk == ModPerks.SILVER_BULLET.get()) {

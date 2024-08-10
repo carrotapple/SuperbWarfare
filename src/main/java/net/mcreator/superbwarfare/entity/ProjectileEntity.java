@@ -106,7 +106,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         Vec3 hitVec = null;
         Entity hitEntity = null;
         boolean headshot = false;
-        boolean legshot = false;
+        boolean legShot = false;
         List<Entity> entities = this.level()
                 .getEntities(this,
                         this.getBoundingBox()
@@ -132,10 +132,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 hitEntity = entity;
                 closestDistance = distanceToHit;
                 headshot = result.isHeadshot();
-                legshot = result.isLegShot();
+                legShot = result.isLegShot();
             }
         }
-        return hitEntity != null ? new EntityResult(hitEntity, hitVec, headshot, legshot) : null;
+        return hitEntity != null ? new EntityResult(hitEntity, hitVec, headshot, legShot) : null;
     }
 
     @Nullable
@@ -276,10 +276,6 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             this.setPosRaw(this.getX() + vec.x, this.getY() + vec.y, this.getZ() + vec.z);
         }
 
-        double x = vec.x;
-        double y = vec.y;
-        double z = vec.z;
-
         this.setDeltaMovement(vec.x, vec.y - 0.05000000074505806, vec.z);
 
         this.tickCount++;
@@ -350,6 +346,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         }
     }
 
+    // TODO 实现穿甲比例大于1时的穿透生物效果
     protected void onHitEntity(Entity entity, boolean headshot, boolean legShot) {
         float mMultiple = 1 + 0.2f * this.monsterMultiple;
 
@@ -561,8 +558,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     }
 
     private void performDamage(Entity entity, float damage, boolean headshot) {
-        float normalDamage = damage * Mth.clamp(1 - bypassArmorRate, 0, 1);
-        float absoluteDamage = damage * Mth.clamp(bypassArmorRate, 0, 1);
+        float rate = Mth.clamp(this.bypassArmorRate, 0, 1);
+
+        float normalDamage = damage * Mth.clamp(1 - rate, 0, 1);
+        float absoluteDamage = damage * Mth.clamp(rate, 0, 1);
 
         entity.invulnerableTime = 0;
         if (headshot) {
