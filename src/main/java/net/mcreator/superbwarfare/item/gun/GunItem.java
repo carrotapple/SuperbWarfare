@@ -123,7 +123,7 @@ public abstract class GunItem extends Item {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        return stack.getOrCreateTag().getBoolean("beast");
+        return false;
     }
 
     @SubscribeEvent
@@ -175,6 +175,10 @@ public abstract class GunItem extends Item {
                 int mag = stack.getOrCreateTag().getInt("mag");
                 stack.getOrCreateTag().putInt("ammo", Math.min(mag, stack.getOrCreateTag().getInt("ammo") + 2));
             }
+        }
+
+        if (stack.getOrCreateTag().getInt("HeadSeeker") > 0) {
+            stack.getOrCreateTag().putInt("HeadSeeker", Math.max(0, stack.getOrCreateTag().getInt("HeadSeeker") - 1));
         }
     }
 

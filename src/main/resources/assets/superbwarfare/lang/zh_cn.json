@@ -202,6 +202,8 @@
   "des.superbwarfare.killing_tally": "完成击杀可提高此武器的伤害，效果持续至切换或填装武器",
   "item.superbwarfare.gutshot_straight": "直击要害",
   "des.superbwarfare.gutshot_straight": "瞄准时增加身体射击伤害",
+  "item.superbwarfare.head_seeker": "死亡寻觅者",
+  "des.superbwarfare.head_seeker": "使用此武器命中身体可在短时间内提高精准伤害",
 
   "perk.superbwarfare.tips": "[武器模组]",
   "perk.superbwarfare.slot": "类型: ",

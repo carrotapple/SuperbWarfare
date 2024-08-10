@@ -202,6 +202,8 @@
   "des.superbwarfare.killing_tally": "Kill increases the weapon's damage until it is stowed or reloaded",
   "item.superbwarfare.gutshot_straight": "Gutshot Straight",
   "des.superbwarfare.gutshot_straight": "Aiming down sights increases body shot damage",
+  "item.superbwarfare.head_seeker": "Head Seeker",
+  "des.superbwarfare.head_seeker": "Body shots landed with this weapon increase precision damage for a short time",
 
   "perk.superbwarfare.tips": "[Perks]",
   "perk.superbwarfare.slot": "Type: ",

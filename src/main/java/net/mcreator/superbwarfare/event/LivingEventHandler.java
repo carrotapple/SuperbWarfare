@@ -286,6 +286,10 @@ public class LivingEventHandler {
             handleKillingTallyDamage(stack, event);
         }
 
+        if (DamageTypeTool.isGunFireDamage(source)) {
+            handleHeadSeekerTime(stack);
+        }
+
         if (source.getDirectEntity() instanceof ProjectileEntity projectile) {
             if (PerkHelper.getItemPerkLevel(ModPerks.FOURTH_TIMES_CHARM.get(), stack) > 0) {
                 float bypassArmorRate = projectile.getBypassArmorRate();
@@ -299,6 +303,10 @@ public class LivingEventHandler {
             if (!projectile.isZoom()) {
                 handleFieldDoctor(stack, event, attacker);
             }
+        }
+
+        if (DamageTypeTool.isGunHeadshotDamage(source)) {
+            handleHeadSeekerDamage(stack, event);
         }
     }
 
@@ -443,4 +451,23 @@ public class LivingEventHandler {
         }
     }
 
+    private static void handleHeadSeekerTime(ItemStack stack) {
+        int level = PerkHelper.getItemPerkLevel(ModPerks.HEAD_SEEKER.get(), stack);
+        if (level == 0) {
+            return;
+        }
+
+        stack.getOrCreateTag().putInt("HeadSeeker", 11 + level * 2);
+    }
+
+    private static void handleHeadSeekerDamage(ItemStack stack, LivingHurtEvent event) {
+        int level = PerkHelper.getItemPerkLevel(ModPerks.HEAD_SEEKER.get(), stack);
+        if (level == 0) {
+            return;
+        }
+
+        if (stack.getOrCreateTag().getInt("HeadSeeker") > 0) {
+            event.setAmount(event.getAmount() * (1.095f + 0.0225f * level));
+        }
+    }
 }
