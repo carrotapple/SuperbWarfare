@@ -93,7 +93,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
 
         if (this.tickCount > 0) {
             if (this.level() instanceof ServerLevel) {
-                causeExplode();
+                causeEntityhitExplode(entity);
             }
         }
 
@@ -146,6 +146,17 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         for (int index0 = 0; index0 < 100; index0++) {
             fragShoot();
         }
+    }
+
+    private void causeEntityhitExplode(Entity entity) {
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 1.8f * this.damage,
+                entity.getX(), entity.getY(), entity.getZ(), 7.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(this.monsterMultiplier);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+        this.discard();
     }
 
     public void fragShoot() {

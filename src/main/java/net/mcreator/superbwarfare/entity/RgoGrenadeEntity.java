@@ -9,7 +9,6 @@ import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -18,7 +17,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -86,16 +84,10 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                 BlockHitResult blockResult = (BlockHitResult) result;
                 BlockPos resultPos = blockResult.getBlockPos();
                 BlockState state = this.level().getBlockState(resultPos);
-                SoundEvent event = state.getBlock().getSoundType(state, this.level(), resultPos, this).getBreakSound();
-                double speed = this.getDeltaMovement().length();
-                if (speed > 0.1) {
-                    this.level().playSound(null, result.getLocation().x, result.getLocation().y, result.getLocation().z, event, SoundSource.AMBIENT, 1.0F, 1.0F);
-                }
-                this.bounce(blockResult.getDirection());
-
                 if(state.getBlock() instanceof BellBlock bell) {
                     bell.attemptToRing(this.level(), resultPos, blockResult.getDirection());
                 }
+                causeExplode();
                 break;
 
             case ENTITY:
@@ -110,34 +102,11 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                     }
                 }
 
-                double speed_e = this.getDeltaMovement().length();
-                if (speed_e > 0.1) {
-                    entity.hurt(entity.damageSources().thrown(this, this.getOwner()), 1.0F);
-                }
-                this.bounce(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
-                this.setDeltaMovement(this.getDeltaMovement().multiply(0.25, 1.0, 0.25));
+                causeEntityhitExplode(entity);
                 break;
             default:
                 break;
         }
-    }
-
-    private void bounce(Direction direction) {
-        switch (direction.getAxis()) {
-            case X:
-                this.setDeltaMovement(this.getDeltaMovement().multiply(-0.5, 0.75, 0.75));
-                break;
-            case Y:
-                this.setDeltaMovement(this.getDeltaMovement().multiply(0.75, -0.25, 0.75));
-                if (this.getDeltaMovement().y() < this.getGravity()) {
-                    this.setDeltaMovement(this.getDeltaMovement().multiply(1, 0, 1));
-                }
-                break;
-            case Z:
-                this.setDeltaMovement(this.getDeltaMovement().multiply(0.75, 0.75, -0.5));
-                break;
-        }
-        this.fuse = 1;
     }
 
     @Override
@@ -156,6 +125,16 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
             ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, this.xo, this.yo, this.zo,
                     1, 0, 0, 0, 0.01, true);
         }
+    }
+    private void causeEntityhitExplode(Entity entity) {
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 75,
+                entity.getX(), entity.getY(), entity.getZ(), 5.75f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+        this.discard();
     }
 
     private void causeExplode() {

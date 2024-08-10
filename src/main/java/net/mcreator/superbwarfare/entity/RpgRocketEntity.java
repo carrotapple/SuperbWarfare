@@ -105,7 +105,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
         if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
-                causeExplode();
+                causeEntityhitExplode(entity);
             }
         }
 
@@ -169,6 +169,17 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
         explosion.finalizeExplosion(false);
 
         ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+    }
+
+    private void causeEntityhitExplode(Entity entity) {
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), (float) 2 / 3 * this.damage,
+                entity.getX(), entity.getY(), entity.getZ(), 10f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(this.monsterMultiplier);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+        this.discard();
     }
 
     private PlayState movementPredicate(AnimationState event) {
