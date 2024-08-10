@@ -275,8 +275,8 @@ public class ModVariables {
         public double cannonFiring = 0;
         public int cannonRecoil = 0;
         public double targetAngle = 0;
-        public int rifleAmmo = 0;
         public boolean refresh = false;
+        public int rifleAmmo = 0;
         public int handgunAmmo = 0;
         public int shotgunAmmo = 0;
         public int sniperAmmo = 0;
@@ -286,7 +286,6 @@ public class ModVariables {
         public boolean tacticalSprint = false;
         public int tacticalSprintTime = 600;
         public boolean tacticalSprintExhaustion = false;
-
 
         public void syncPlayerVariables(Entity entity) {
             if (entity instanceof ServerPlayer)

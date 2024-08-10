@@ -492,17 +492,17 @@ public class GunEventHandler {
     public static void playGunNormalReload(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.is(ModTags.Items.SHOTGUN)) {
+        if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
             if (stack.getItem() == ModItems.ABEKIRI.get()) {
                 GunsTool.reload(player, GunInfo.Type.SHOTGUN);
             } else {
                 GunsTool.reload(player, GunInfo.Type.SHOTGUN, true);
             }
-        } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
+        } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
             GunsTool.reload(player, GunInfo.Type.SNIPER, true);
-        } else if (stack.is(ModTags.Items.HANDGUN) || stack.is(ModTags.Items.SMG)) {
+        } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
             GunsTool.reload(player, GunInfo.Type.HANDGUN, true);
-        } else if (stack.is(ModTags.Items.RIFLE)) {
+        } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
             if (stack.getItem() == ModItems.M_60.get()) {
                 GunsTool.reload(player, GunInfo.Type.RIFLE);
             } else {
@@ -518,13 +518,13 @@ public class GunEventHandler {
     public static void playGunEmptyReload(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.is(ModTags.Items.SHOTGUN)) {
+        if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
             GunsTool.reload(player, GunInfo.Type.SHOTGUN);
-        } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
+        } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
             GunsTool.reload(player, GunInfo.Type.SNIPER);
-        } else if (stack.is(ModTags.Items.HANDGUN) || stack.is(ModTags.Items.SMG)) {
+        } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
             GunsTool.reload(player, GunInfo.Type.HANDGUN);
-        } else if (stack.is(ModTags.Items.RIFLE)) {
+        } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
             GunsTool.reload(player, GunInfo.Type.RIFLE);
         } else if (stack.getItem() == ModItems.TASER.get()) {
             stack.getOrCreateTag().putInt("ammo", 1);
@@ -632,13 +632,13 @@ public class GunEventHandler {
 
             // 检查备弹
             var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
-            if (stack.is(ModTags.Items.SHOTGUN) && capability.shotgunAmmo == 0) {
+            if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
                 tag.putBoolean("force_stage3_start", true);
-            } else if (stack.is(ModTags.Items.SNIPER_RIFLE) && capability.sniperAmmo == 0) {
+            } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && capability.sniperAmmo == 0) {
                 tag.putBoolean("force_stage3_start", true);
-            } else if ((stack.is(ModTags.Items.HANDGUN) || stack.is(ModTags.Items.SMG)) && capability.handgunAmmo == 0) {
+            } else if ((stack.is(ModTags.Items.USE_HANDGUN_AMMO) || stack.is(ModTags.Items.SMG)) && capability.handgunAmmo == 0) {
                 tag.putBoolean("force_stage3_start", true);
-            } else if (stack.is(ModTags.Items.RIFLE) && capability.rifleAmmo == 0) {
+            } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && capability.rifleAmmo == 0) {
                 tag.putBoolean("force_stage3_start", true);
             } else {
                 tag.putInt("reload_stage", 2);
@@ -691,13 +691,13 @@ public class GunEventHandler {
 
             // 备弹耗尽结束
             var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
-            if (stack.is(ModTags.Items.SHOTGUN) && capability.shotgunAmmo == 0) {
+            if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
                 tag.putInt("reload_stage", 3);
-            } else if (stack.is(ModTags.Items.SNIPER_RIFLE) && capability.sniperAmmo == 0) {
+            } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && capability.sniperAmmo == 0) {
                 tag.putInt("reload_stage", 3);
-            } else if ((stack.is(ModTags.Items.HANDGUN) || stack.is(ModTags.Items.SMG)) && capability.handgunAmmo == 0) {
+            } else if ((stack.is(ModTags.Items.USE_HANDGUN_AMMO) || stack.is(ModTags.Items.SMG)) && capability.handgunAmmo == 0) {
                 tag.putInt("reload_stage", 3);
-            } else if (stack.is(ModTags.Items.RIFLE) && capability.rifleAmmo == 0) {
+            } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && capability.rifleAmmo == 0) {
                 tag.putInt("reload_stage", 3);
             }
 
@@ -732,24 +732,24 @@ public class GunEventHandler {
 
         tag.putInt("ammo", tag.getInt("ammo") + 1);
 
-        if (stack.is(ModTags.Items.SHOTGUN)) {
+        if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.shotgunAmmo = capability.shotgunAmmo - 1;
+                capability.shotgunAmmo -= 1;
                 capability.syncPlayerVariables(player);
             });
-        } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
+        } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.sniperAmmo = capability.sniperAmmo - 1;
+                capability.sniperAmmo -= 1;
                 capability.syncPlayerVariables(player);
             });
-        } else if ((stack.is(ModTags.Items.HANDGUN) || stack.is(ModTags.Items.SMG))) {
+        } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.handgunAmmo = capability.handgunAmmo - 1;
+                capability.handgunAmmo -= 1;
                 capability.syncPlayerVariables(player);
             });
-        } else if (stack.is(ModTags.Items.RIFLE)) {
+        } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.rifleAmmo = capability.rifleAmmo - 1;
+                capability.rifleAmmo -= 1;
                 capability.syncPlayerVariables(player);
             });
         }

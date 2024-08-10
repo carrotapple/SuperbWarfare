@@ -75,15 +75,15 @@ public class LivingEventHandler {
         if (DamageTypeTool.isGunDamage(damageSource)) {
             double distance = entity.position().distanceTo(sourceentity.position());
 
-            if (stack.is(ModTags.Items.SHOTGUN) || stack.getItem() == ModItems.BOCEK.get()) {
+            if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) || stack.getItem() == ModItems.BOCEK.get()) {
                 damage = reduceDamageByDistance(amount, distance, 0.03, 25);
-            } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
+            } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
                 damage = reduceDamageByDistance(amount, distance, 0.001, 200);
-            } else if (stack.is(ModTags.Items.HANDGUN)) {
+            } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
                 damage = reduceDamageByDistance(amount, distance, 0.03, 50);
             } else if (stack.is(ModTags.Items.SMG)) {
                 damage = reduceDamageByDistance(amount, distance, 0.03, 50);
-            } else if (stack.is(ModTags.Items.RIFLE)) {
+            } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
                 damage = reduceDamageByDistance(amount, distance, 0.0025, 150);
             }
             event.setAmount((float) damage);
@@ -405,20 +405,19 @@ public class LivingEventHandler {
             return;
         }
 
-        float rate = level * 0.1f + (stack.is(ModTags.Items.SMG) || stack.is(ModTags.Items.RIFLE) ? 0.17f : 0f);
+        float rate = level * 0.1f + (stack.is(ModTags.Items.SMG) || stack.is(ModTags.Items.RIFLE) ? 0.07f : 0f);
         int mag = stack.getOrCreateTag().getInt("mag");
         int ammoReload = (int) Math.min(mag, mag * rate);
 
-        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null)
-                .ifPresent(capability -> {
-                    if (stack.is(ModTags.Items.RIFLE)) {
+        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
                         capability.rifleAmmo -= Math.min(capability.rifleAmmo, ammoReload);
-                    } else if (stack.is(ModTags.Items.SMG) || stack.is(ModTags.Items.HANDGUN)) {
+                    } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
                         capability.handgunAmmo -= Math.min(capability.handgunAmmo, ammoReload);
                     }
                     capability.syncPlayerVariables(player);
 
-                    stack.getOrCreateTag().putInt("ammo", ammoReload);
+                    stack.getOrCreateTag().putInt("ammo", mag + ammoReload);
                 }
         );
     }

@@ -60,13 +60,13 @@ public class ReloadMessage {
                 boolean can_single_reload = tag.getDouble("iterative_time") != 0;
 
                 //检查备弹
-                if (stack.is(ModTags.Items.SHOTGUN) && capability.shotgunAmmo == 0) {
+                if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
                     return;
-                } else if (stack.is(ModTags.Items.SNIPER_RIFLE) && capability.sniperAmmo == 0) {
+                } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && capability.sniperAmmo == 0) {
                     return;
-                } else if ((stack.is(ModTags.Items.HANDGUN) || stack.is(ModTags.Items.SMG)) && capability.handgunAmmo == 0) {
+                } else if ((stack.is(ModTags.Items.USE_HANDGUN_AMMO) || stack.is(ModTags.Items.SMG)) && capability.handgunAmmo == 0) {
                     return;
-                } else if (stack.is(ModTags.Items.RIFLE) && capability.rifleAmmo == 0) {
+                } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && capability.rifleAmmo == 0) {
                     return;
                 } else if (stack.getItem() == ModItems.TASER.get() && tag.getInt("max_ammo") == 0) {
                     return;

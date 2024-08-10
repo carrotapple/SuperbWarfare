@@ -1,10 +1,14 @@
 {
   "replace": false,
   "values": [
+    "superbwarfare:devotion",
     "superbwarfare:m_4",
     "superbwarfare:hk_416",
+    "superbwarfare:rpk",
     "superbwarfare:sks",
+    "superbwarfare:minigun",
     "superbwarfare:mk_14",
+    "superbwarfare:m_60",
     "superbwarfare:marlin",
     "superbwarfare:ak_47",
     "superbwarfare:qbz_95"

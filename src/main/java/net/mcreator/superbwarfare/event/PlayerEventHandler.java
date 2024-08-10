@@ -257,19 +257,19 @@ public class PlayerEventHandler {
     public static void handleAmmoCount(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.is(ModTags.Items.RIFLE)) {
+        if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
             stack.getOrCreateTag().putInt("max_ammo",
                     ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo));
         }
-        if (stack.is(ModTags.Items.HANDGUN) || stack.is(ModTags.Items.SMG)) {
+        if (stack.is(ModTags.Items.USE_HANDGUN_AMMO) || stack.is(ModTags.Items.SMG)) {
             stack.getOrCreateTag().putInt("max_ammo",
                     ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).handgunAmmo));
         }
-        if (stack.is(ModTags.Items.SHOTGUN)) {
+        if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
             stack.getOrCreateTag().putInt("max_ammo",
                     ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).shotgunAmmo));
         }
-        if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
+        if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
             stack.getOrCreateTag().putInt("max_ammo",
                     ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).sniperAmmo));
         }
