@@ -406,18 +406,23 @@ public class LivingEventHandler {
         }
 
         float rate = level * 0.1f + (stack.is(ModTags.Items.SMG) || stack.is(ModTags.Items.RIFLE) ? 0.07f : 0f);
-        int mag = stack.getOrCreateTag().getInt("mag");
-        int ammoReload = (int) Math.min(mag, mag * rate);
 
         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    int mag = stack.getOrCreateTag().getInt("mag");
+                    int ammo = stack.getOrCreateTag().getInt("ammo");
+                    int ammoReload = (int) Math.min(mag, mag * rate);
+                    int ammoNeed = Math.min(mag - ammo, ammoReload);
+
                     if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-                        capability.rifleAmmo -= Math.min(capability.rifleAmmo, ammoReload);
+                        int ammoFinal = Math.min(capability.rifleAmmo, ammoNeed);
+                        capability.rifleAmmo -= ammoFinal;
+                        stack.getOrCreateTag().putInt("ammo", Math.min(mag, ammo + ammoFinal));
                     } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-                        capability.handgunAmmo -= Math.min(capability.handgunAmmo, ammoReload);
+                        int ammoFinal = Math.min(capability.handgunAmmo, ammoNeed);
+                        capability.handgunAmmo -= ammoFinal;
+                        stack.getOrCreateTag().putInt("ammo", Math.min(mag, ammo + ammoFinal));
                     }
                     capability.syncPlayerVariables(player);
-
-                    stack.getOrCreateTag().putInt("ammo", mag + ammoReload);
                 }
         );
     }
