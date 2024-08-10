@@ -264,7 +264,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity {
 
             if (player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, ModSounds.MK_42_FIRE_1P.get(), 2, 1);
-                ModUtils.queueServerWork(40, () -> {
+                ModUtils.queueServerWork(44, () -> {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.MK_42_RELOAD.get(), 2, 1);
                 });
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_FIRE_3P.get(), SoundSource.PLAYERS, 6, 1);
