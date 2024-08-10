@@ -358,7 +358,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
         if (beast && entity instanceof LivingEntity living) {
             if (living.isDeadOrDying()) return;
-            if (living instanceof Target1Entity) return;
+            if (living instanceof TargetEntity) return;
 
             if (this.shooter instanceof ServerPlayer player) {
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));

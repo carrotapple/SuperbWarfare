@@ -224,7 +224,7 @@ public class ClaymoreEntity extends TamableAnimal implements GeoEntity, Animated
                 var condition = this.getOwner() != target
                         && target instanceof LivingEntity
                         && !(target instanceof ClaymoreEntity)
-                        && !(target instanceof Target1Entity)
+                        && !(target instanceof TargetEntity)
                         && !(target instanceof Player player && (player.isCreative() || player.isSpectator()))
                         && (!this.isAlliedTo(target) || target.getTeam() == null || target.getTeam().getName().equals("TDM"))
                         && !target.isShiftKeyDown();

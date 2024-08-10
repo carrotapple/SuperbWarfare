@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.event;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.ProjectileEntity;
-import net.mcreator.superbwarfare.entity.Target1Entity;
+import net.mcreator.superbwarfare.entity.TargetEntity;
 import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -90,7 +90,7 @@ public class LivingEventHandler {
             stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
         }
 
-        if (entity instanceof Target1Entity && sourceentity instanceof Player player) {
+        if (entity instanceof TargetEntity && sourceentity instanceof Player player) {
             player.displayClientMessage(Component.literal("Damage:" + new java.text.DecimalFormat("##.#").format(damage) + " Distance:" + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceentity.position()))) + "M"), false);
         }
     }

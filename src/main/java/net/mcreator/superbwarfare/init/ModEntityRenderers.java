@@ -10,7 +10,6 @@ import net.minecraftforge.fml.common.Mod;
 public class ModEntityRenderers {
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(ModEntities.TARGET_1.get(), Target1Renderer::new);
         event.registerEntityRenderer(ModEntities.MORTAR.get(), MortarRenderer::new);
         event.registerEntityRenderer(ModEntities.SENPAI.get(), SenpaiRenderer::new);
         event.registerEntityRenderer(ModEntities.CLAYMORE.get(), ClaymoreRenderer::new);
