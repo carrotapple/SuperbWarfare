@@ -193,6 +193,8 @@
   "des.superbwarfare.fourth_times_charm": "快速精准命中目标会向弹匣中返还两枚弹药",
   "item.superbwarfare.subsistence": "维持生计",
   "des.superbwarfare.subsistence": "消灭目标会使弹药从备弹中转移并填装部分弹匣",
+  "item.superbwarfare.field_doctor": "役医师",
+  "des.superbwarfare.field_doctor": "腰射时发射的子弹可以治疗队友",
 
   "item.superbwarfare.kill_clip": "杀戮弹匣",
   "des.superbwarfare.kill_clip": "完成击杀后填装可提升武器伤害",

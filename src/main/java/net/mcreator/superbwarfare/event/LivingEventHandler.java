@@ -295,6 +295,10 @@ public class LivingEventHandler {
                     handleFourthTimesCharm(stack);
                 }
             }
+
+            if (!projectile.isZoom()) {
+                handleFieldDoctor(stack, event, attacker);
+            }
         }
     }
 
@@ -425,6 +429,18 @@ public class LivingEventHandler {
                     capability.syncPlayerVariables(player);
                 }
         );
+    }
+
+    private static void handleFieldDoctor(ItemStack stack, LivingHurtEvent event, Player player) {
+        int level = PerkHelper.getItemPerkLevel(ModPerks.FIELD_DOCTOR.get(), stack);
+        if (level == 0) {
+            return;
+        }
+
+        if (event.getEntity().isAlliedTo(player)) {
+            event.getEntity().heal(event.getAmount() * Math.min(1.0f, 0.25f + 0.05f * level));
+            event.setCanceled(true);
+        }
     }
 
 }

@@ -193,6 +193,8 @@
   "des.superbwarfare.fourth_times_charm": "Rapidly landing precision hits will return two rounds to the magazine",
   "item.superbwarfare.subsistence": "Subsistence",
   "des.superbwarfare.subsistence": "Defeating targets partially reloads the magazine from reserves",
+  "item.superbwarfare.field_doctor": "Field Doctor",
+  "des.superbwarfare.field_doctor": "腰射时发射的子弹可以治疗队友",
 
   "item.superbwarfare.kill_clip": "Kill Clip",
   "des.superbwarfare.kill_clip": "Increases the damage of weapon after dealing a final blow",
