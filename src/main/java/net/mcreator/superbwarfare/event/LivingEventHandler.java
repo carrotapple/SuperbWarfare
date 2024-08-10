@@ -324,6 +324,7 @@ public class LivingEventHandler {
 
         if (DamageTypeTool.isGunDamage(source)) {
             handleKillingTallyAddCount(stack);
+            handleSubsistence(stack, attacker);
         }
     }
 
@@ -388,7 +389,7 @@ public class LivingEventHandler {
 
         int fourthTimesCharmTick = stack.getOrCreateTag().getInt("FourthTimesCharmTick");
         if (fourthTimesCharmTick <= 0) {
-            stack.getOrCreateTag().putInt("FourthTimesCharmTick", 60);
+            stack.getOrCreateTag().putInt("FourthTimesCharmTick", 40 + 10 * level);
             stack.getOrCreateTag().putInt("FourthTimesCharmCount", 1);
         } else {
             int count = stack.getOrCreateTag().getInt("FourthTimesCharmCount");
@@ -396,6 +397,30 @@ public class LivingEventHandler {
                 stack.getOrCreateTag().putInt("FourthTimesCharmCount", Math.min(4, count + 1));
             }
         }
+    }
+
+    private static void handleSubsistence(ItemStack stack, Player player) {
+        int level = PerkHelper.getItemPerkLevel(ModPerks.SUBSISTENCE.get(), stack);
+        if (level == 0) {
+            return;
+        }
+
+        float rate = level * 0.1f + (stack.is(ModTags.Items.SMG) || stack.is(ModTags.Items.RIFLE) ? 0.17f : 0f);
+        int mag = stack.getOrCreateTag().getInt("mag");
+        int ammoReload = (int) Math.min(mag, mag * rate);
+
+        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null)
+                .ifPresent(capability -> {
+                    if (stack.is(ModTags.Items.RIFLE)) {
+                        capability.rifleAmmo -= Math.min(capability.rifleAmmo, ammoReload);
+                    } else if (stack.is(ModTags.Items.SMG) || stack.is(ModTags.Items.HANDGUN)) {
+                        capability.handgunAmmo -= Math.min(capability.handgunAmmo, ammoReload);
+                    }
+                    capability.syncPlayerVariables(player);
+
+                    stack.getOrCreateTag().putInt("ammo", ammoReload);
+                }
+        );
     }
 
 }

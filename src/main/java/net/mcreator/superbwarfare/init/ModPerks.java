@@ -45,6 +45,7 @@ public class ModPerks {
 
     public static final RegistryObject<Perk> HEAL_CLIP = FUNC_PERKS.register("heal_clip", () -> new Perk("heal_clip", Perk.Type.FUNCTIONAL));
     public static final RegistryObject<Perk> FOURTH_TIMES_CHARM = FUNC_PERKS.register("fourth_times_charm", () -> new Perk("fourth_times_charm", Perk.Type.FUNCTIONAL));
+    public static final RegistryObject<Perk> SUBSISTENCE = FUNC_PERKS.register("subsistence", () -> new Perk("subsistence", Perk.Type.FUNCTIONAL));
 
     /**
      * Damage Perks

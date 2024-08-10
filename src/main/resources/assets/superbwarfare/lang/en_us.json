@@ -191,6 +191,8 @@
   "des.superbwarfare.heal_clip": "Reloading after dealing a final blow will heal you and your nearby allies",
   "item.superbwarfare.fourth_times_charm": "Fourth Time's The Charm",
   "des.superbwarfare.fourth_times_charm": "Rapidly landing precision hits will return two rounds to the magazine",
+  "item.superbwarfare.subsistence": "Subsistence",
+  "des.superbwarfare.subsistence": "Defeating targets partially reloads the magazine from reserves",
 
   "item.superbwarfare.kill_clip": "Kill Clip",
   "des.superbwarfare.kill_clip": "Increases the damage of weapon after dealing a final blow",
