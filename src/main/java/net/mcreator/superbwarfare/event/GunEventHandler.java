@@ -377,7 +377,14 @@ public class GunEventHandler {
                 projectile.setRGB(ammoPerk.rgb);
 
                 if (ammoPerk.mobEffect.get() != null) {
-                    projectile.effect(() -> new MobEffectInstance(ammoPerk.mobEffect.get(), 70 + 30 * level, level - 1));
+                    int amplifier;
+                    if (perk.descriptionId.equals("blade_bullet")) {
+                        amplifier = level / 3;
+                    } else {
+                        amplifier = level - 1;
+                    }
+
+                    projectile.effect(() -> new MobEffectInstance(ammoPerk.mobEffect.get(), 70 + 30 * level, amplifier));
                 }
             }
             bypassArmorRate = Mth.clamp(bypassArmorRate, 0, 1);
