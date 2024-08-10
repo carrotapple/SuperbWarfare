@@ -20,6 +20,7 @@ public class ModTags {
         public static final TagKey<Item> HANDGUN = tag("handgun");
         public static final TagKey<Item> RIFLE = tag("rifle");
         public static final TagKey<Item> SNIPER_RIFLE = tag("sniper_rifle");
+        public static final TagKey<Item> MG = tag("mg");
 
         public static final TagKey<Item> NORMAL_GUN = tag("normal_gun");
         public static final TagKey<Item> LEGENDARY_GUN = tag("legendary_gun");

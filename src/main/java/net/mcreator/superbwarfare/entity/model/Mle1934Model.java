@@ -2,9 +2,11 @@ package net.mcreator.superbwarfare.entity.model;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.Mle1934Entity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -19,7 +21,21 @@ public class Mle1934Model extends GeoModel<Mle1934Entity> {
 
     @Override
     public ResourceLocation getModelResource(Mle1934Entity entity) {
-        return new ResourceLocation(ModUtils.MODID, "geo/mle1934.geo.json");
+        Player player = Minecraft.getInstance().player;
+
+        int distance = 0;
+
+        if (player != null) {
+            distance = (int) player.position().distanceTo(entity.position());
+        }
+
+        if (distance < 32) {
+            return new ResourceLocation(ModUtils.MODID, "geo/mle1934.geo.json");
+        } else if (distance < 64){
+            return new ResourceLocation(ModUtils.MODID, "geo/mle1934_lod1.geo.json");
+        } else {
+            return new ResourceLocation(ModUtils.MODID, "geo/mle1934_lod2.geo.json");
+        }
     }
 
     @Override
