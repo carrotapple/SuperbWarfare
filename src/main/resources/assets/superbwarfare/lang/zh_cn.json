@@ -42,6 +42,7 @@
   "item.superbwarfare.glock_18": "格洛克18手枪",
   "item.superbwarfare.m_1911": "M1911手枪",
   "item.superbwarfare.qbz_95": "95-1式自动步枪",
+  "item.superbwarfare.k_98": "KAR-98K",
 
   "des.superbwarfare.tips.damage": "伤害: ",
   "des.superbwarfare.tips.level": "等级: ",
@@ -75,6 +76,7 @@
   "item.superbwarfare.glock_18_blueprint": "格洛克18手枪蓝图",
   "item.superbwarfare.m_1911_blueprint": "M1911手枪蓝图",
   "item.superbwarfare.qbz_95_blueprint": "95-1式自动步枪蓝图",
+  "item.superbwarfare.k_98_blueprint": "KAR-98K蓝图",
 
   "item.superbwarfare.common_material_pack": "普通材料包",
   "item.superbwarfare.rare_material_pack": "稀有材料包",

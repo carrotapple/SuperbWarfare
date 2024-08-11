@@ -3,7 +3,7 @@ package net.mcreator.superbwarfare.item.gun;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.client.renderer.item.Glock18ItemRenderer;
+import net.mcreator.superbwarfare.client.renderer.item.K98ItemRenderer;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
@@ -44,12 +44,12 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class Glock18Item extends GunItem implements GeoItem, AnimatedItem {
+public class K98Item extends GunItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
-    public Glock18Item() {
+    public K98Item() {
         super(new Properties().stacksTo(1).rarity(Rarity.RARE));
     }
 
@@ -57,7 +57,7 @@ public class Glock18Item extends GunItem implements GeoItem, AnimatedItem {
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
-            private final BlockEntityWithoutLevelRenderer renderer = new Glock18ItemRenderer();
+            private final BlockEntityWithoutLevelRenderer renderer = new K98ItemRenderer();
 
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
@@ -82,32 +82,26 @@ public class Glock18Item extends GunItem implements GeoItem, AnimatedItem {
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
+
+            if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.shift"));
+            }
+
             if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.fire"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.fire"));
             }
 
             if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.reload_empty"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.reload_empty"));
             }
 
-            if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.reload_normal"));
-            }
 
-            if (stack.getOrCreateTag().getInt("fire_mode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.change_fire_rate"));
-            }
-
-            if (stack.getOrCreateTag().getInt("fire_mode") == 2 && stack.getOrCreateTag().getDouble("cg") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.change_fire_rate2"));
-            }
-
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.idle"));
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.idle"));
         }
         return PlayState.STOP;
     }
 
-    private PlayState idlePredicate(AnimationState<Glock18Item> event) {
+    private PlayState idlePredicate(AnimationState<K98Item> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
@@ -115,25 +109,39 @@ public class Glock18Item extends GunItem implements GeoItem, AnimatedItem {
 
         if (this.animationProcedure.equals("empty")) {
 
-            if (stack.getOrCreateTag().getInt("draw_time") < 10) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.draw"));
+            if (stack.getOrCreateTag().getInt("draw_time") < 16) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.draw"));
             }
 
             if (player.isSprinting() && player.onGround()
                     && player.getPersistentData().getDouble("noRun") == 0
-                    && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))) {
+                    && !(stack.getOrCreateTag().getBoolean("is_empty_reloading"))) {
                 if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.run_fast"));
+                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.run_fast"));
                 } else {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.run"));
+                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.run"));
                 }
             }
 
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.idle"));
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.idle"));
         }
         return PlayState.STOP;
     }
 
+    private PlayState procedurePredicate(AnimationState<K98Item> event) {
+        if (transformType != null && transformType.firstPerson()) {
+            if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
+                if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+                    this.animationProcedure = "empty";
+                    event.getController().forceAnimationReset();
+                }
+            } else if (this.animationProcedure.equals("empty")) {
+                return PlayState.STOP;
+            }
+        }
+        return PlayState.CONTINUE;
+    }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
@@ -160,7 +168,7 @@ public class Glock18Item extends GunItem implements GeoItem, AnimatedItem {
         if (slot == EquipmentSlot.MAINHAND) {
             map = HashMultimap.create(map);
             map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER, -0.01f, AttributeModifier.Operation.MULTIPLY_BASE));
+                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER, -0.05f, AttributeModifier.Operation.MULTIPLY_BASE));
         }
         return map;
     }
@@ -168,14 +176,14 @@ public class Glock18Item extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public Set<SoundEvent> getReloadSound() {
         return Set.of(
-                ModSounds.GLOCK_18_RELOAD_EMPTY.get(),
-                ModSounds.GLOCK_18_RELOAD_NORMAL.get()
+                ModSounds.K_98_RELOAD_EMPTY.get(),
+                ModSounds.K_98_BOLT.get()
         );
     }
 
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.GLOCK_18.get());
-        GunsTool.initCreativeGun(stack, ModItems.GLOCK_18.getId().getPath());
+        ItemStack stack = new ItemStack(ModItems.K_98.get());
+        GunsTool.initCreativeGun(stack, ModItems.K_98.getId().getPath());
         return stack;
     }
 
@@ -186,11 +194,11 @@ public class Glock18Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/glock_icon.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/k98_icon.png");
     }
 
     @Override
     public String getGunDisplayName() {
-        return " GLOCK-18";
+        return " KAR-98K";
     }
 }

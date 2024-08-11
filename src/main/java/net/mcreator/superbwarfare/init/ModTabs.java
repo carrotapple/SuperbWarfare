@@ -37,6 +37,7 @@ public class ModTabs {
                                 output.accept(Qbz95Item.getGunInstance());
                                 output.accept(Mk14Item.getGunInstance());
                                 output.accept(MarlinItem.getGunInstance());
+                                output.accept(K98Item.getGunInstance());
                                 output.accept(SvdItem.getGunInstance());
                                 output.accept(HuntingRifle.getGunInstance());
                                 output.accept(M98bItem.getGunInstance());

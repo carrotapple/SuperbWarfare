@@ -41,6 +41,7 @@ public class ModItems {
     public static final RegistryObject<Item> QBZ_95 = GUNS.register("qbz_95", Qbz95Item::new);
     public static final RegistryObject<Item> MK_14 = GUNS.register("mk_14", Mk14Item::new);
     public static final RegistryObject<Item> MARLIN = GUNS.register("marlin", MarlinItem::new);
+    public static final RegistryObject<Item> K_98 = GUNS.register("k_98", K98Item::new);
     public static final RegistryObject<Item> SVD = GUNS.register("svd", SvdItem::new);
     public static final RegistryObject<Item> M_98B = GUNS.register("m_98b", M98bItem::new);
     public static final RegistryObject<Item> SENTINEL = GUNS.register("sentinel", SentinelItem::new);
@@ -144,7 +145,7 @@ public class ModItems {
 
     public static final RegistryObject<Item> TRACHELIUM_BLUEPRINT = ITEMS.register("trachelium_blueprint", () -> new BlueprintItem(RarityTool.LEGENDARY));
     public static final RegistryObject<Item> GLOCK_17_BLUEPRINT = ITEMS.register("glock_17_blueprint", () -> new BlueprintItem(Rarity.COMMON));
-    public static final RegistryObject<Item> GLOCK_18_BLUEPRINT = ITEMS.register("glock_18_blueprint", () -> new BlueprintItem(Rarity.COMMON));
+    public static final RegistryObject<Item> GLOCK_18_BLUEPRINT = ITEMS.register("glock_18_blueprint", () -> new BlueprintItem(Rarity.RARE));
     public static final RegistryObject<Item> HUNTING_RIFLE_BLUEPRINT = ITEMS.register("hunting_rifle_blueprint", () -> new BlueprintItem(Rarity.EPIC));
     public static final RegistryObject<Item> M_79_BLUEPRINT = ITEMS.register("m_79_blueprint", () -> new BlueprintItem(Rarity.RARE));
     public static final RegistryObject<Item> RPG_BLUEPRINT = ITEMS.register("rpg_blueprint", () -> new BlueprintItem(Rarity.EPIC));
@@ -169,6 +170,7 @@ public class ModItems {
     public static final RegistryObject<Item> TASER_BLUEPRINT = ITEMS.register("taser_blueprint", () -> new BlueprintItem(Rarity.COMMON));
     public static final RegistryObject<Item> M_1911_BLUEPRINT = ITEMS.register("m_1911_blueprint", () -> new BlueprintItem(Rarity.COMMON));
     public static final RegistryObject<Item> QBZ_95_BLUEPRINT = ITEMS.register("qbz_95_blueprint", () -> new BlueprintItem(Rarity.EPIC));
+    public static final RegistryObject<Item> K_98_BLUEPRINT = ITEMS.register("k_98_blueprint", () -> new BlueprintItem(Rarity.RARE));
 
     /**
      * Block

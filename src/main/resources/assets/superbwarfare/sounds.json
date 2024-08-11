@@ -1362,6 +1362,55 @@
     ]
   },
 
+  "k_98_fire_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:k_98/k_98_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "k_98_fire_3p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:k_98/k_98_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "k_98_far": {
+    "sounds": [
+      {
+        "name": "superbwarfare:k_98/k_98_far",
+        "stream": false
+      }
+    ]
+  },
+  "k_98_veryfar": {
+    "sounds": [
+      {
+        "name": "superbwarfare:k_98/k_98_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "k_98_reload_empty": {
+    "sounds": [
+      {
+        "name": "superbwarfare:k_98/k_98_reload_empty",
+        "stream": false
+      }
+    ]
+  },
+  "k_98_bolt": {
+    "sounds": [
+      {
+        "name": "superbwarfare:k_98/k_98_bolt",
+        "stream": false
+      }
+    ]
+  },
+
   "lightsaber": {
     "sounds": [
       {
