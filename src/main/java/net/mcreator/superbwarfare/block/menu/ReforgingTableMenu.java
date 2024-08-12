@@ -4,7 +4,9 @@ import net.mcreator.superbwarfare.init.ModBlocks;
 import net.mcreator.superbwarfare.init.ModMenuTypes;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.PerkItem;
+import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.perk.Perk;
+import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -44,6 +46,10 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
 
         this.container = container;
         this.access = pContainerLevelAccess;
+
+        this.ammoPerkLevel.set(1);
+        this.funcPerkLevel.set(1);
+        this.damagePerkLevel.set(1);
 
         this.addDataSlot(ammoPerkLevel);
         this.addDataSlot(funcPerkLevel);
@@ -140,6 +146,47 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
             }
             this.clearContainer(pPlayer, this.container);
         });
+    }
+
+    public void generateResult() {
+        ItemStack gun = this.container.getItem(INPUT_SLOT);
+        if (!(gun.getItem() instanceof GunItem gunItem)) {
+            return;
+        }
+
+        ItemStack ammo = this.container.getItem(AMMO_PERK_SLOT);
+        ItemStack func = this.container.getItem(FUNC_PERK_SLOT);
+        ItemStack damage = this.container.getItem(DAMAGE_PERK_SLOT);
+        if (ammo.isEmpty() && func.isEmpty() && damage.isEmpty()) {
+            return;
+        }
+
+        ItemStack result = gun.copy();
+
+        if (!ammo.isEmpty() && ammo.getItem() instanceof PerkItem perkItem) {
+            if (gunItem.canApplyPerk(result, perkItem.getPerk(), Perk.Type.AMMO)) {
+                PerkHelper.setPerk(result, perkItem.getPerk(), this.ammoPerkLevel.get());
+                this.container.setItem(AMMO_PERK_SLOT, ItemStack.EMPTY);
+            }
+        }
+
+        if (!func.isEmpty() && func.getItem() instanceof PerkItem perkItem) {
+            if (gunItem.canApplyPerk(result, perkItem.getPerk(), Perk.Type.FUNCTIONAL)) {
+                PerkHelper.setPerk(result, perkItem.getPerk(), this.funcPerkLevel.get());
+                this.container.setItem(FUNC_PERK_SLOT, ItemStack.EMPTY);
+            }
+        }
+
+        if (!damage.isEmpty() && damage.getItem() instanceof PerkItem perkItem) {
+            if (gunItem.canApplyPerk(result, perkItem.getPerk(), Perk.Type.DAMAGE)) {
+                PerkHelper.setPerk(result, perkItem.getPerk(), this.damagePerkLevel.get());
+                this.container.setItem(DAMAGE_PERK_SLOT, ItemStack.EMPTY);
+            }
+        }
+
+        this.container.setItem(INPUT_SLOT, ItemStack.EMPTY);
+        this.container.setItem(RESULT_SLOT, result);
+        this.container.setChanged();
     }
 
     static class InputSlot extends Slot {

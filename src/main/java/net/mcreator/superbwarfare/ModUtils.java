@@ -108,6 +108,7 @@ public class ModUtils {
         addNetworkMessage(DroneMovementMessage.class, DroneMovementMessage::encode, DroneMovementMessage::decode, DroneMovementMessage::handler);
         addNetworkMessage(DroneFireMessage.class, DroneFireMessage::buffer, DroneFireMessage::new, DroneFireMessage::handler);
         addNetworkMessage(SimulationDistanceMessage.class, SimulationDistanceMessage::encode, SimulationDistanceMessage::decode, SimulationDistanceMessage::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        addNetworkMessage(GunReforgeMessage.class, GunReforgeMessage::encode, GunReforgeMessage::decode, GunReforgeMessage::handler);
 
         event.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)),
                 Ingredient.of(Items.LIGHTNING_ROD), PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotion.SHOCK.get())));

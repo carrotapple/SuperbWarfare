@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.client.screens;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.block.menu.ReforgingTableMenu;
+import net.mcreator.superbwarfare.network.message.GunReforgeMessage;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -66,7 +67,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
     }
 
     @OnlyIn(Dist.CLIENT)
-    static class ReforgeButton extends AbstractButton {
+    class ReforgeButton extends AbstractButton {
 
         public ReforgeButton(int pX, int pY) {
             super(pX, pY, 40, 16, Component.translatable("button.superbwarfare.reforge"));
@@ -84,7 +85,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
 
         @Override
         public void onPress() {
-
+            ModUtils.PACKET_HANDLER.sendToServer(new GunReforgeMessage(0));
         }
 
         @Override
@@ -94,7 +95,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
     }
 
     @OnlyIn(Dist.CLIENT)
-    static class UpgradeButton extends AbstractButton {
+    class UpgradeButton extends AbstractButton {
         public Perk.Type type;
 
         public UpgradeButton(int pX, int pY, Perk.Type type) {
@@ -118,7 +119,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
     }
 
     @OnlyIn(Dist.CLIENT)
-    static class DowngradeButton extends AbstractButton {
+    class DowngradeButton extends AbstractButton {
         public Perk.Type type;
 
         public DowngradeButton(int pX, int pY, Perk.Type type) {
