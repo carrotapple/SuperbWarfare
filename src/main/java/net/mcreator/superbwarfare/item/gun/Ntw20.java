@@ -134,7 +134,7 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
             if (player.isSprinting() && player.onGround()
                 && player.getPersistentData().getDouble("noRun") == 0
                 && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))) {
-                if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && stack.getOrCreateTag().getInt("bolt_action_anim") == 0) {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.run_fast"));
                 } else {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.run"));

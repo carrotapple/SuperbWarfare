@@ -33,6 +33,7 @@ public class K98ItemModel extends GeoModel<K98Item> {
     public void setCustomAnimations(K98Item animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
+        CoreGeoBone zhuangzhen = getAnimationProcessor().getBone("zhuangzhen");
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
 
         Player player = Minecraft.getInstance().player;
@@ -63,13 +64,13 @@ public class K98ItemModel extends GeoModel<K98Item> {
 
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
             shen.setPosY(0.1f * (float) (fp + 2 * fr));
-            shen.setPosZ(4.6f * (float) (fp + 0.54f * fr));
+            shen.setPosZ(5.6f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.03f * (float) (fp + fr));
             shen.setRotZ(0f);
         } else {
-            shen.setPosY(0.18f * (float) (fp + 2 * fr));
-            shen.setPosZ(4.8f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.27f * (float) (0.18f * fp + fr));
+            shen.setPosY(0.28f * (float) (fp + 2 * fr));
+            shen.setPosZ(5.8f * (float) (fp + 0.54f * fr));
+            shen.setRotX(0.17f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
         }
         shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));

@@ -55,9 +55,11 @@ public class ReloadMessage {
             ) {
                 CompoundTag tag = stack.getOrCreateTag();
 
-                boolean can_reload = tag.getDouble("normal_reload_time") != 0 || tag.getDouble("empty_reload_time") != 0;
-
                 boolean can_single_reload = tag.getDouble("iterative_time") != 0;
+
+                boolean can_reload = (tag.getDouble("normal_reload_time") != 0 || tag.getDouble("empty_reload_time") != 0) && tag.getDouble("clipLoad") != 1;
+
+                boolean clipLoad = tag.getInt("ammo") == 0 && tag.getDouble("clipLoad") == 1;
 
                 //检查备弹
                 if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
@@ -75,7 +77,8 @@ public class ReloadMessage {
                 } else if (stack.getItem() == ModItems.RPG.get() && tag.getInt("max_ammo") == 0) {
                     return;
                 }
-                if (can_reload) {
+
+                if (can_reload || clipLoad) {
                     if (stack.is(ModTags.Items.OPEN_BOLT)) {
                         if (stack.getItem() == ModItems.M_60.get() || stack.getItem() == ModItems.ABEKIRI.get()) {
                             if (tag.getInt("ammo") < tag.getDouble("mag")) {
@@ -91,6 +94,7 @@ public class ReloadMessage {
                     }
                     return;
                 }
+
                 if (can_single_reload) {
                     if (tag.getInt("ammo") < tag.getDouble("mag")) {
                         tag.putBoolean("start_single_reload", true);

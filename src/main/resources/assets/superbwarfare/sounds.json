@@ -1410,6 +1410,30 @@
       }
     ]
   },
+  "k_98_loop": {
+    "sounds": [
+      {
+        "name": "superbwarfare:k_98/k_98_loop",
+        "stream": false
+      }
+    ]
+  },
+  "k_98_prepare": {
+    "sounds": [
+      {
+        "name": "superbwarfare:k_98/k_98_prepare",
+        "stream": false
+      }
+    ]
+  },
+  "k_98_end": {
+    "sounds": [
+      {
+        "name": "superbwarfare:k_98/k_98_finish",
+        "stream": false
+      }
+    ]
+  },
 
   "lightsaber": {
     "sounds": [

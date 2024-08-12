@@ -8,7 +8,8 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
-import net.mcreator.superbwarfare.tools.*;
+import net.mcreator.superbwarfare.tools.GunsTool;
+import net.mcreator.superbwarfare.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -100,7 +101,7 @@ public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
             }
 
             if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
-                if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && stack.getOrCreateTag().getInt("bolt_action_anim") == 0) {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.run_fast"));
                 } else {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.run"));

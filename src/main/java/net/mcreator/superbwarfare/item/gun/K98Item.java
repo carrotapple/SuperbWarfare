@@ -95,6 +95,21 @@ public class K98Item extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.reload_empty"));
             }
 
+            if (stack.getOrCreateTag().getInt("reload_stage") == 1 && stack.getOrCreateTag().getDouble("prepare") > 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.prepare"));
+            }
+
+            if (stack.getOrCreateTag().getDouble("load_index") == 0 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.iterativeload"));
+            }
+
+            if (stack.getOrCreateTag().getDouble("load_index") == 1 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.iterativeload2"));
+            }
+
+            if (stack.getOrCreateTag().getInt("reload_stage") == 3) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.finish"));
+            }
 
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.idle"));
         }
@@ -115,8 +130,11 @@ public class K98Item extends GunItem implements GeoItem, AnimatedItem {
 
             if (player.isSprinting() && player.onGround()
                     && player.getPersistentData().getDouble("noRun") == 0
-                    && !(stack.getOrCreateTag().getBoolean("is_empty_reloading"))) {
-                if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                    && !(stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+                    && stack.getOrCreateTag().getInt("reload_stage") != 1
+                    && stack.getOrCreateTag().getInt("reload_stage") != 2
+                    && stack.getOrCreateTag().getInt("reload_stage") != 3) {
+                if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && stack.getOrCreateTag().getInt("bolt_action_anim") == 0) {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.run_fast"));
                 } else {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.run"));
@@ -177,7 +195,10 @@ public class K98Item extends GunItem implements GeoItem, AnimatedItem {
     public Set<SoundEvent> getReloadSound() {
         return Set.of(
                 ModSounds.K_98_RELOAD_EMPTY.get(),
-                ModSounds.K_98_BOLT.get()
+                ModSounds.K_98_BOLT.get(),
+                ModSounds.K_98_PREPARE.get(),
+                ModSounds.K_98_LOOP.get(),
+                ModSounds.K_98_END.get()
         );
     }
 

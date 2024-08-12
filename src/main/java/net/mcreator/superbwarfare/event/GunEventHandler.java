@@ -668,14 +668,14 @@ public class GunEventHandler {
         }
 
         // 装填
-        if (stack.getItem() == ModItems.M_870.get()) {
+        if (stack.getItem() == ModItems.M_870.get() || stack.getItem() == ModItems.MARLIN.get()) {
             if (tag.getInt("iterative") == 3) {
                 singleLoad(player);
             }
         }
 
-        if (stack.getItem() == ModItems.MARLIN.get()) {
-            if (tag.getInt("iterative") == 3) {
+        if (stack.getItem() == ModItems.K_98.get()) {
+            if (tag.getInt("iterative") == 1) {
                 singleLoad(player);
             }
         }
@@ -719,6 +719,9 @@ public class GunEventHandler {
         // 三阶段结束
         if (tag.getInt("finish") == 1) {
             tag.putInt("reload_stage", 0);
+            if (tag.getDouble("bolt_action_time") > 0) {
+                stack.getOrCreateTag().putBoolean("need_bolt_action", false);
+            }
             tag.putBoolean("reloading", false);
 
             MinecraftForge.EVENT_BUS.post(new ReloadEvent.Post(player, stack));
