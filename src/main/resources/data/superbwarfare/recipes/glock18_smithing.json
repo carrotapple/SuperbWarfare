@@ -4,7 +4,7 @@
     "item": "superbwarfare:glock_18_blueprint"
   },
   "base": {
-    "item": "superbwarfare:common_material_pack"
+    "item": "superbwarfare:rare_material_pack"
   },
   "addition": {
     "item": "minecraft:gold_ingot"
