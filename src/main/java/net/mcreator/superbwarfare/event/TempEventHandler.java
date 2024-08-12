@@ -27,5 +27,15 @@ public class TempEventHandler {
             event.setCost(10);
             event.setMaterialCost(1);
         }
+
+        if (right.is(ModTags.Items.GUN) && left.getItem() instanceof PerkItem perkItem) {
+            ItemStack output = right.copy();
+
+            PerkHelper.removePerkByType(output, perkItem.getPerk().type);
+
+            event.setOutput(output);
+            event.setCost(10);
+            event.setMaterialCost(0);
+        }
     }
 }

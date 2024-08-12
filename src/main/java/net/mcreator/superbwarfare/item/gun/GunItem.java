@@ -182,7 +182,7 @@ public abstract class GunItem extends Item {
         }
     }
 
-    public boolean canApplyPerk(ItemStack stack, Perk perk, Perk.Type slot) {
-        return perk.type == slot;
+    public boolean canApplyPerk(ItemStack stack, Perk perk) {
+        return true;
     }
 }

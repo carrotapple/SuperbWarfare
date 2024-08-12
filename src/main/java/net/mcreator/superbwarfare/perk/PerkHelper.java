@@ -1,13 +1,17 @@
 package net.mcreator.superbwarfare.perk;
 
+import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModPerks;
+import net.mcreator.superbwarfare.item.PerkItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class PerkHelper {
     private static final String TAG_PERK_ID = "id";
@@ -144,6 +148,30 @@ public class PerkHelper {
                     .map(RegistryObject::get)
                     .orElse(null);
         };
+    }
+
+    public static void removePerkByType(ItemStack stack, Perk.Type type) {
+        var tag = stack.getTag();
+        if (tag == null) {
+            return;
+        }
+
+        var tagPerk = tag.getCompound(TAG_PERK);
+        if (!tagPerk.contains(type.getName())) {
+            return;
+        }
+
+        tagPerk.remove(type.getName());
+        stack.addTagElement(TAG_PERK, tagPerk);
+    }
+
+    public static Optional<RegistryObject<Item>> getPerkItem(Perk perk) {
+        return ModItems.PERKS.getEntries().stream().filter(p -> {
+            if (p.get() instanceof PerkItem perkItem) {
+                return perkItem.getPerk() == perk;
+            }
+            return false;
+        }).findFirst();
     }
 
     public static String makeId(ResourceLocation resourceLocation) {

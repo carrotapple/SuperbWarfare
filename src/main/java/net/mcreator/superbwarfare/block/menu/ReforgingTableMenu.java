@@ -79,15 +79,21 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         if (slot.hasItem()) {
             ItemStack stack = slot.getItem();
             itemstack = stack.copy();
-            if (pIndex == RESULT_SLOT) {
-                if (!this.moveItemStackTo(stack, RESULT_SLOT, RESULT_SLOT + 36, false)) {
+
+            if (pIndex == INPUT_SLOT) {
+                onTakeGun(stack);
+                if (!this.moveItemStackTo(stack, RESULT_SLOT + 1, RESULT_SLOT + 37, false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (pIndex >= AMMO_PERK_SLOT && pIndex <= DAMAGE_PERK_SLOT) {
                 if (!this.moveItemStackTo(stack, RESULT_SLOT + 1, RESULT_SLOT + 37, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (pIndex != INPUT_SLOT) {
+            } else if (pIndex == RESULT_SLOT) {
+                if (!this.moveItemStackTo(stack, RESULT_SLOT, RESULT_SLOT + 36, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else {
                 if (stack.is(ModTags.Items.GUN)) {
                     if (!this.moveItemStackTo(stack, INPUT_SLOT, INPUT_SLOT + 1, false)) {
                         return ItemStack.EMPTY;
@@ -108,8 +114,6 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
                         }
                     }
                 }
-            } else if (!this.moveItemStackTo(stack, RESULT_SLOT + 1, RESULT_SLOT + 37, false)) {
-                return ItemStack.EMPTY;
             }
 
             if (stack.isEmpty()) {
@@ -159,6 +163,9 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         }
     }
 
+    /**
+     * 根据输入槽的枪械和Perk槽中的物品与等级，生成重铸后的武器，并放入输出槽中
+     */
     public void generateResult() {
         ItemStack gun = this.container.getItem(INPUT_SLOT);
         if (!(gun.getItem() instanceof GunItem gunItem)) {
@@ -175,21 +182,21 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         ItemStack result = gun.copy();
 
         if (!ammo.isEmpty() && ammo.getItem() instanceof PerkItem perkItem) {
-            if (gunItem.canApplyPerk(result, perkItem.getPerk(), Perk.Type.AMMO)) {
+            if (gunItem.canApplyPerk(result, perkItem.getPerk())) {
                 PerkHelper.setPerk(result, perkItem.getPerk(), this.ammoPerkLevel.get());
                 this.container.setItem(AMMO_PERK_SLOT, ItemStack.EMPTY);
             }
         }
 
         if (!func.isEmpty() && func.getItem() instanceof PerkItem perkItem) {
-            if (gunItem.canApplyPerk(result, perkItem.getPerk(), Perk.Type.FUNCTIONAL)) {
+            if (gunItem.canApplyPerk(result, perkItem.getPerk())) {
                 PerkHelper.setPerk(result, perkItem.getPerk(), this.funcPerkLevel.get());
                 this.container.setItem(FUNC_PERK_SLOT, ItemStack.EMPTY);
             }
         }
 
         if (!damage.isEmpty() && damage.getItem() instanceof PerkItem perkItem) {
-            if (gunItem.canApplyPerk(result, perkItem.getPerk(), Perk.Type.DAMAGE)) {
+            if (gunItem.canApplyPerk(result, perkItem.getPerk())) {
                 PerkHelper.setPerk(result, perkItem.getPerk(), this.damagePerkLevel.get());
                 this.container.setItem(DAMAGE_PERK_SLOT, ItemStack.EMPTY);
             }
@@ -200,21 +207,145 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         this.container.setChanged();
     }
 
-    static class InputSlot extends Slot {
+    /**
+     * 从Perk槽中取出对应的Perk物品时，根据其类型移除输入槽中枪械的Perk
+     *
+     * @param type Perk类型
+     */
+    private void onTakePerk(Perk.Type type) {
+        ItemStack gun = this.container.getItem(INPUT_SLOT);
+        if (!(gun.getItem() instanceof GunItem)) {
+            return;
+        }
+
+        ItemStack perk = switch (type) {
+            case AMMO -> this.container.getItem(AMMO_PERK_SLOT);
+            case FUNCTIONAL -> this.container.getItem(FUNC_PERK_SLOT);
+            case DAMAGE -> this.container.getItem(DAMAGE_PERK_SLOT);
+        };
+
+        if (perk.getItem() instanceof PerkItem perkItem) {
+            if (PerkHelper.getItemPerkLevel(perkItem.getPerk(), gun) <= 0) {
+                return;
+            }
+
+            switch (type) {
+                case AMMO -> this.ammoPerkLevel.set(1);
+                case FUNCTIONAL -> this.funcPerkLevel.set(1);
+                case DAMAGE -> this.damagePerkLevel.set(1);
+            }
+
+            PerkHelper.removePerkByType(gun, perkItem.getPerk().type);
+            this.container.setItem(INPUT_SLOT, gun);
+            this.container.setChanged();
+        }
+    }
+
+    /**
+     * 将枪械放入输入槽中时，根据枪械上已有的Perk生成对应的Perk物品，并将等级调整为当前的等级
+     *
+     * @param pStack 输入的枪械
+     */
+    private void onPlaceGun(ItemStack pStack) {
+        if (!(pStack.getItem() instanceof GunItem)) {
+            return;
+        }
+
+        var ammoPerk = PerkHelper.getPerkByType(pStack, Perk.Type.AMMO);
+        if (ammoPerk != null) {
+            this.ammoPerkLevel.set(PerkHelper.getItemPerkLevel(ammoPerk, pStack));
+            var ammoPerkItem = PerkHelper.getPerkItem(ammoPerk);
+            ammoPerkItem.ifPresent(registryObject -> this.container.setItem(AMMO_PERK_SLOT, registryObject.get().getDefaultInstance()));
+        }
+
+        var funcPerk = PerkHelper.getPerkByType(pStack, Perk.Type.FUNCTIONAL);
+        if (funcPerk != null) {
+            this.funcPerkLevel.set(PerkHelper.getItemPerkLevel(funcPerk, pStack));
+            var funcPerkItem = PerkHelper.getPerkItem(funcPerk);
+            funcPerkItem.ifPresent(registryObject -> this.container.setItem(FUNC_PERK_SLOT, registryObject.get().getDefaultInstance()));
+        }
+
+        var damagePerk = PerkHelper.getPerkByType(pStack, Perk.Type.DAMAGE);
+        if (damagePerk != null) {
+            this.damagePerkLevel.set(PerkHelper.getItemPerkLevel(damagePerk, pStack));
+            var damagePerkItem = PerkHelper.getPerkItem(damagePerk);
+            damagePerkItem.ifPresent(registryObject -> this.container.setItem(DAMAGE_PERK_SLOT, registryObject.get().getDefaultInstance()));
+        }
+    }
+
+    /**
+     * 拿走输入槽中的枪械时，如果Perk槽中存在放入枪械时生成的Perk物品，则将其移除，如果是没有的Perk则无视
+     *
+     * @param pStack 输入的枪械
+     */
+    private void onTakeGun(ItemStack pStack) {
+        if (!(pStack.getItem() instanceof GunItem)) {
+            return;
+        }
+
+        var ammoPerk = PerkHelper.getPerkByType(pStack, Perk.Type.AMMO);
+        if (ammoPerk != null) {
+            if (this.container.getItem(AMMO_PERK_SLOT).getItem() instanceof PerkItem perkItem && perkItem.getPerk() == ammoPerk) {
+                this.container.setItem(AMMO_PERK_SLOT, ItemStack.EMPTY);
+                this.container.setChanged();
+            }
+        }
+
+        var funcPerk = PerkHelper.getPerkByType(pStack, Perk.Type.FUNCTIONAL);
+        if (funcPerk != null) {
+            if (this.container.getItem(FUNC_PERK_SLOT).getItem() instanceof PerkItem perkItem && perkItem.getPerk() == funcPerk) {
+                this.container.setItem(FUNC_PERK_SLOT, ItemStack.EMPTY);
+                this.container.setChanged();
+            }
+        }
+
+        var damagePerk = PerkHelper.getPerkByType(pStack, Perk.Type.DAMAGE);
+        if (damagePerk != null) {
+            if (this.container.getItem(DAMAGE_PERK_SLOT).getItem() instanceof PerkItem perkItem && perkItem.getPerk() == damagePerk) {
+                this.container.setItem(DAMAGE_PERK_SLOT, ItemStack.EMPTY);
+                this.container.setChanged();
+            }
+        }
+    }
+
+    class InputSlot extends Slot {
         public InputSlot(Container pContainer, int pSlot, int pX, int pY) {
             super(pContainer, pSlot, pX, pY);
         }
 
         public boolean mayPlace(ItemStack pStack) {
-            return pStack.is(ModTags.Items.GUN);
+            if (pStack.getItem() instanceof GunItem gunItem) {
+                ItemStack ammoPerk = this.container.getItem(AMMO_PERK_SLOT);
+                ItemStack funcPerk = this.container.getItem(FUNC_PERK_SLOT);
+                ItemStack damagePerk = this.container.getItem(DAMAGE_PERK_SLOT);
+
+                boolean flag1 = ammoPerk.isEmpty() || (ammoPerk.getItem() instanceof PerkItem perkItem && gunItem.canApplyPerk(pStack, perkItem.getPerk()));
+                boolean flag2 = funcPerk.isEmpty() || (funcPerk.getItem() instanceof PerkItem perkItem && gunItem.canApplyPerk(pStack, perkItem.getPerk()));
+                boolean flag3 = damagePerk.isEmpty() || (damagePerk.getItem() instanceof PerkItem perkItem && gunItem.canApplyPerk(pStack, perkItem.getPerk()));
+
+                return flag1 && flag2 && flag3 && this.container.getItem(RESULT_SLOT).isEmpty();
+            }
+            return false;
         }
 
         public int getMaxStackSize() {
             return 1;
         }
+
+        @Override
+        public void onTake(Player pPlayer, ItemStack pStack) {
+            super.onTake(pPlayer, pStack);
+            onTakeGun(pStack);
+        }
+
+        @Override
+        public void setByPlayer(ItemStack pStack) {
+            super.setByPlayer(pStack);
+            onPlaceGun(pStack);
+        }
     }
 
-    static class PerkSlot extends Slot {
+    class PerkSlot extends Slot {
         public Perk.Type type;
 
         public PerkSlot(Container pContainer, int pSlot, Perk.Type type, int pX, int pY) {
@@ -223,11 +354,17 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         }
 
         public boolean mayPlace(ItemStack pStack) {
-            return pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == type;
+            return pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == type && !container.getItem(INPUT_SLOT).isEmpty();
         }
 
         public int getMaxStackSize() {
             return 1;
+        }
+
+        @Override
+        public void onTake(Player pPlayer, ItemStack pStack) {
+            onTakePerk(type);
+            super.onTake(pPlayer, pStack);
         }
     }
 
