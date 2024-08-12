@@ -20,7 +20,7 @@
   "burst_size": 1,
   "empty_reload_time": 59,
   "clipLoad": 1,
-  "prepare_time": 31,
+  "prepare_time": 29,
   "iterative_time": 11,
   "finish_time": 18,
   "BypassesArmor": 0.5

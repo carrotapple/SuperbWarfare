@@ -33,13 +33,20 @@ public class K98ItemModel extends GeoModel<K98Item> {
     public void setCustomAnimations(K98Item animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
-        CoreGeoBone zhuangzhen = getAnimationProcessor().getBone("zhuangzhen");
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
+        CoreGeoBone clip = getAnimationProcessor().getBone("mag");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
+
+
+        if (stack.getOrCreateTag().getDouble("prepare") > 13 && stack.getOrCreateTag().getInt("ammo") == 1) {
+            clip.setHidden(true);
+        } else {
+            clip.setHidden(false);
+        }
 
         if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
             flare.setHidden(false);
