@@ -77,6 +77,10 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
                 if (!this.moveItemStackTo(stack, RESULT_SLOT, RESULT_SLOT + 36, false)) {
                     return ItemStack.EMPTY;
                 }
+            } else if (pIndex >= AMMO_PERK_SLOT && pIndex <= DAMAGE_PERK_SLOT) {
+                if (!this.moveItemStackTo(stack, RESULT_SLOT + 1, RESULT_SLOT + 37, false)) {
+                    return ItemStack.EMPTY;
+                }
             } else if (pIndex != INPUT_SLOT) {
                 if (stack.is(ModTags.Items.GUN)) {
                     if (!this.moveItemStackTo(stack, INPUT_SLOT, INPUT_SLOT + 1, false)) {
@@ -84,21 +88,21 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
                     }
                 } else if (stack.getItem() instanceof PerkItem perkItem) {
                     Perk.Type type = perkItem.getPerk().type;
-                    if (pIndex == AMMO_PERK_SLOT && type == Perk.Type.AMMO) {
+                    if (type == Perk.Type.AMMO) {
                         if (!this.moveItemStackTo(stack, AMMO_PERK_SLOT, AMMO_PERK_SLOT + 1, false)) {
                             return ItemStack.EMPTY;
                         }
-                    } else if (pIndex == FUNC_PERK_SLOT && type == Perk.Type.FUNCTIONAL) {
+                    } else if (type == Perk.Type.FUNCTIONAL) {
                         if (!this.moveItemStackTo(stack, FUNC_PERK_SLOT, FUNC_PERK_SLOT + 1, false)) {
                             return ItemStack.EMPTY;
                         }
-                    } else if (pIndex == DAMAGE_PERK_SLOT && type == Perk.Type.DAMAGE) {
+                    } else if (type == Perk.Type.DAMAGE) {
                         if (!this.moveItemStackTo(stack, DAMAGE_PERK_SLOT, DAMAGE_PERK_SLOT + 1, false)) {
                             return ItemStack.EMPTY;
                         }
                     }
                 }
-            } else if (!this.moveItemStackTo(stack, RESULT_SLOT, RESULT_SLOT + 36, false)) {
+            } else if (!this.moveItemStackTo(stack, RESULT_SLOT + 1, RESULT_SLOT + 37, false)) {
                 return ItemStack.EMPTY;
             }
 
