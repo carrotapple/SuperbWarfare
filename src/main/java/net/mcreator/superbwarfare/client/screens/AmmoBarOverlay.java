@@ -19,7 +19,6 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class AmmoBarOverlay {
-    //    private static final ResourceLocation BUTTON = new ResourceLocation(TargetMod.MODID, "textures/gun_icon/fire_mode/button.png");
     private static final ResourceLocation LINE = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/fire_mode/line.png");
     private static final ResourceLocation SEMI = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/fire_mode/semi.png");
     private static final ResourceLocation BURST = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/fire_mode/burst.png");
@@ -32,6 +31,10 @@ public class AmmoBarOverlay {
         Player player = Minecraft.getInstance().player;
 
         if (player == null) {
+            return;
+        }
+
+        if (player.isSpectator()) {
             return;
         }
 
@@ -51,16 +54,6 @@ public class AmmoBarOverlay {
                     16);
 
             // 渲染开火模式切换按键
-//            event.getGuiGraphics().blit(BUTTON,
-//                    w - 115,
-//                    h - 20,
-//                    0,
-//                    0,
-//                    10,
-//                    10,
-//                    10,
-//                    10);
-
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     "[" + ModKeyMappings.FIRE_MODE.getKey().getDisplayName().getString() + "]",
@@ -92,7 +85,6 @@ public class AmmoBarOverlay {
                     8,
                     8,
                     8);
-
 
             // 渲染当前弹药量
             poseStack.pushPose();

@@ -93,24 +93,22 @@ public class ClientEventHandler {
         if (drone != null) {
 
             if (data.getDouble("droneRotZ") > drone.getEntityData().get(ROT_Z)) {
-                data.putDouble("droneRotZ", Mth.clamp(data.getDouble("droneRotZ") - 0.3 * Math.pow(drone.getEntityData().get(ROT_Z) - data.getDouble("droneRotZ"), 2),drone.getEntityData().get(ROT_Z),Double.POSITIVE_INFINITY));
+                data.putDouble("droneRotZ", Mth.clamp(data.getDouble("droneRotZ") - 0.3 * Math.pow(drone.getEntityData().get(ROT_Z) - data.getDouble("droneRotZ"), 2), drone.getEntityData().get(ROT_Z), Double.POSITIVE_INFINITY));
             } else {
-                data.putDouble("droneRotZ", Mth.clamp(data.getDouble("droneRotZ") + 0.3 * Math.pow(drone.getEntityData().get(ROT_Z) - data.getDouble("droneRotZ"), 2),Double.NEGATIVE_INFINITY,drone.getEntityData().get(ROT_Z)));
+                data.putDouble("droneRotZ", Mth.clamp(data.getDouble("droneRotZ") + 0.3 * Math.pow(drone.getEntityData().get(ROT_Z) - data.getDouble("droneRotZ"), 2), Double.NEGATIVE_INFINITY, drone.getEntityData().get(ROT_Z)));
             }
 
             if (data.getDouble("droneRotX") > drone.getEntityData().get(ROT_X)) {
-                data.putDouble("droneRotX", Mth.clamp(data.getDouble("droneRotX") - 0.2 * Math.pow(drone.getEntityData().get(ROT_X) - data.getDouble("droneRotX"), 2),drone.getEntityData().get(ROT_X),Double.POSITIVE_INFINITY));
+                data.putDouble("droneRotX", Mth.clamp(data.getDouble("droneRotX") - 0.2 * Math.pow(drone.getEntityData().get(ROT_X) - data.getDouble("droneRotX"), 2), drone.getEntityData().get(ROT_X), Double.POSITIVE_INFINITY));
             } else {
-                data.putDouble("droneRotX", Mth.clamp(data.getDouble("droneRotX") + 0.2 * Math.pow(drone.getEntityData().get(ROT_X) - data.getDouble("droneRotX"), 2),Double.NEGATIVE_INFINITY,drone.getEntityData().get(ROT_X)));
+                data.putDouble("droneRotX", Mth.clamp(data.getDouble("droneRotX") + 0.2 * Math.pow(drone.getEntityData().get(ROT_X) - data.getDouble("droneRotX"), 2), Double.NEGATIVE_INFINITY, drone.getEntityData().get(ROT_X)));
             }
 
             event.setPitch((float) (pitch + data.getDouble("droneCameraRotX") - 0.15f * Mth.RAD_TO_DEG * data.getDouble("droneRotZ")));
             event.setRoll((float) (roll + data.getDouble("droneCameraRotY") - 0.5f * Mth.RAD_TO_DEG * data.getDouble("droneRotX")));
         }
-
-
-
     }
+
     private static void handleCannonCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
         var data = entity.getPersistentData();
         double yaw = event.getYaw();
@@ -120,7 +118,6 @@ public class ClientEventHandler {
         event.setPitch((float) (pitch + 1 * data.getDouble("Cannon_xRot") + data.getDouble("cannon_camera_rot_x")));
         event.setYaw((float) (yaw + 1 * data.getDouble("Cannon_yRot") + data.getDouble("cannon_camera_rot_y")));
         event.setRoll((float) (roll + data.getDouble("cannon_camera_rot_z")));
-
     }
 
     @SubscribeEvent
@@ -159,7 +156,7 @@ public class ClientEventHandler {
             double spread = stack.getOrCreateTag().getDouble("spread");
             double zoomSpread = stack.getOrCreateTag().getDouble("zoomSpread");
 
-            double gunSpread = (float) (zoom? zoomSpread : spread);
+            double gunSpread = (float) (zoom ? zoomSpread : spread);
 
             if (data.getDouble("crosshair") > gunSpread) {
                 data.putDouble("crosshair", data.getDouble("crosshair") - 0.05 * Math.pow(gunSpread - data.getDouble("crosshair"), 2) * times);

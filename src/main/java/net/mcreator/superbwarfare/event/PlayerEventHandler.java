@@ -30,7 +30,6 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.text.DecimalFormat;
 
-
 @Mod.EventBusSubscriber
 public class PlayerEventHandler {
 
@@ -41,9 +40,8 @@ public class PlayerEventHandler {
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using")) {
             stack.getOrCreateTag().putBoolean("Using", false);
         }
-        
     }
-    
+
     @SubscribeEvent
     public static void onPlayerRespawned(PlayerEvent.PlayerRespawnEvent event) {
         Player player = event.getEntity();
@@ -142,14 +140,14 @@ public class PlayerEventHandler {
 
         if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprint) {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.tacticalSprintTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime - sprint_cost,0,600);
+                capability.tacticalSprintTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime - sprint_cost, 0, 600);
                 capability.syncPlayerVariables(player);
             });
             player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2, 0, false, false));
 
         } else {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.tacticalSprintTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime + 5,0,600);
+                capability.tacticalSprintTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime + 5, 0, 600);
                 capability.syncPlayerVariables(player);
             });
         }

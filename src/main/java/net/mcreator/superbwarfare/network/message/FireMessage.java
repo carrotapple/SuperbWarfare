@@ -84,7 +84,6 @@ public class FireMessage {
 
         var tag = handItem.getOrCreateTag();
 
-
         if (handItem.getItem() == ModItems.TASER.get()) {
             handleTaserFire(player);
         }

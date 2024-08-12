@@ -61,6 +61,9 @@ public class ClickHandler {
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
+
+        if (player.isSpectator()) return;
+
         ItemStack stack = player.getMainHandItem();
 
         int button = event.getButton();
@@ -160,8 +163,6 @@ public class ClickHandler {
         }
 
         setKeyState(event.getKey(), clicked ? 1 : 0);
-
-
     }
 
 }
