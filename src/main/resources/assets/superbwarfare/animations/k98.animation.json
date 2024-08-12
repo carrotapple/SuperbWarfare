@@ -1207,11 +1207,6 @@
 						}
 					}
 				}
-			},
-			"sound_effects": {
-				"0.0": {
-					"effect": "reload_1p_m40a5_boltopen_wave000"
-				}
 			}
 		},
 		"animation.k98.prepare": {
@@ -2334,11 +2329,6 @@
 							"vector": [0, 0, 0]
 						}
 					}
-				}
-			},
-			"sound_effects": {
-				"0.0": {
-					"effect": "k98_finish"
 				}
 			}
 		}
