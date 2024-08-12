@@ -3,6 +3,7 @@ package net.mcreator.superbwarfare.client.screens;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.block.menu.ReforgingTableMenu;
 import net.mcreator.superbwarfare.network.message.GunReforgeMessage;
+import net.mcreator.superbwarfare.network.message.SetPerkLevelMessage;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -67,7 +68,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
     }
 
     @OnlyIn(Dist.CLIENT)
-    class ReforgeButton extends AbstractButton {
+    static class ReforgeButton extends AbstractButton {
 
         public ReforgeButton(int pX, int pY) {
             super(pX, pY, 40, 16, Component.translatable("button.superbwarfare.reforge"));
@@ -95,7 +96,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
     }
 
     @OnlyIn(Dist.CLIENT)
-    class UpgradeButton extends AbstractButton {
+    static class UpgradeButton extends AbstractButton {
         public Perk.Type type;
 
         public UpgradeButton(int pX, int pY, Perk.Type type) {
@@ -105,11 +106,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
 
         @Override
         public void onPress() {
-            switch (type) {
-                case AMMO -> {
-
-                }
-            }
+            ModUtils.PACKET_HANDLER.sendToServer(new SetPerkLevelMessage(type.ordinal(), true));
         }
 
         @Override
@@ -119,7 +116,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
     }
 
     @OnlyIn(Dist.CLIENT)
-    class DowngradeButton extends AbstractButton {
+    static class DowngradeButton extends AbstractButton {
         public Perk.Type type;
 
         public DowngradeButton(int pX, int pY, Perk.Type type) {
@@ -129,11 +126,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
 
         @Override
         public void onPress() {
-            switch (type) {
-                case AMMO -> {
-
-                }
-            }
+            ModUtils.PACKET_HANDLER.sendToServer(new SetPerkLevelMessage(type.ordinal(), false));
         }
 
         @Override

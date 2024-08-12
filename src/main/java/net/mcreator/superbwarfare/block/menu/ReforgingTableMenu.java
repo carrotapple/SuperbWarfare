@@ -148,6 +148,17 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         });
     }
 
+    public void setPerkLevel(Perk.Type type, boolean add) {
+        switch (type) {
+            case AMMO ->
+                    this.ammoPerkLevel.set(add ? Math.min(10, this.ammoPerkLevel.get() + 1) : Math.max(1, this.ammoPerkLevel.get() - 1));
+            case FUNCTIONAL ->
+                    this.funcPerkLevel.set(add ? Math.min(10, this.funcPerkLevel.get() + 1) : Math.max(1, this.funcPerkLevel.get() - 1));
+            case DAMAGE ->
+                    this.damagePerkLevel.set(add ? Math.min(10, this.damagePerkLevel.get() + 1) : Math.max(1, this.damagePerkLevel.get() - 1));
+        }
+    }
+
     public void generateResult() {
         ItemStack gun = this.container.getItem(INPUT_SLOT);
         if (!(gun.getItem() instanceof GunItem gunItem)) {
