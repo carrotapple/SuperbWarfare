@@ -2,7 +2,10 @@ package net.mcreator.superbwarfare.client.screens;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.block.menu.ReforgingTableMenu;
+import net.mcreator.superbwarfare.perk.Perk;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -41,5 +44,100 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         this.titleLabelY = 2;
         this.inventoryLabelX = 8;
         this.inventoryLabelY = 85;
+
+        int i = (this.width - this.imageWidth) / 2;
+        int j = (this.height - this.imageHeight) / 2;
+
+        ReforgeButton button = new ReforgeButton(i + 124, j + 70);
+        UpgradeButton ammoUpgrade = new UpgradeButton(i + 100, j + 32, Perk.Type.AMMO);
+        DowngradeButton ammoDowngrade = new DowngradeButton(i + 86, j + 32, Perk.Type.AMMO);
+        UpgradeButton funcUpgrade = new UpgradeButton(i + 100, j + 52, Perk.Type.FUNCTIONAL);
+        DowngradeButton funcDowngrade = new DowngradeButton(i + 86, j + 52, Perk.Type.FUNCTIONAL);
+        UpgradeButton damageUpgrade = new UpgradeButton(i + 100, j + 72, Perk.Type.DAMAGE);
+        DowngradeButton damageDowngrade = new DowngradeButton(i + 86, j + 72, Perk.Type.DAMAGE);
+
+        this.addRenderableWidget(button);
+        this.addRenderableWidget(ammoUpgrade);
+        this.addRenderableWidget(ammoDowngrade);
+        this.addRenderableWidget(funcUpgrade);
+        this.addRenderableWidget(funcDowngrade);
+        this.addRenderableWidget(damageUpgrade);
+        this.addRenderableWidget(damageDowngrade);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    static class ReforgeButton extends AbstractButton {
+
+        public ReforgeButton(int pX, int pY) {
+            super(pX, pY, 40, 16, Component.translatable("button.superbwarfare.reforge"));
+        }
+
+        @Override
+        public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+            super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        }
+
+//        @Override
+//        public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+//
+//        }
+
+        @Override
+        public void onPress() {
+
+        }
+
+        @Override
+        protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    static class UpgradeButton extends AbstractButton {
+        public Perk.Type type;
+
+        public UpgradeButton(int pX, int pY, Perk.Type type) {
+            super(pX, pY, 12, 12, Component.translatable("button.superbwarfare.upgrade"));
+            this.type = type;
+        }
+
+        @Override
+        public void onPress() {
+            switch (type) {
+                case AMMO -> {
+
+                }
+            }
+        }
+
+        @Override
+        protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    static class DowngradeButton extends AbstractButton {
+        public Perk.Type type;
+
+        public DowngradeButton(int pX, int pY, Perk.Type type) {
+            super(pX, pY, 12, 12, Component.translatable("button.superbwarfare.downgrade"));
+            this.type = type;
+        }
+
+        @Override
+        public void onPress() {
+            switch (type) {
+                case AMMO -> {
+
+                }
+            }
+        }
+
+        @Override
+        protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+
+        }
     }
 }

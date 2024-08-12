@@ -22,9 +22,9 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
     public static final int DAMAGE_PERK_SLOT = 3;
     public static final int RESULT_SLOT = 4;
 
-    private final DataSlot AMMO_PERK_LEVEL = DataSlot.standalone();
-    private final DataSlot FUNC_PERK_LEVEL = DataSlot.standalone();
-    private final DataSlot DAMAGE_PERK_LEVEL = DataSlot.standalone();
+    private final DataSlot ammoPerkLevel = DataSlot.standalone();
+    private final DataSlot funcPerkLevel = DataSlot.standalone();
+    private final DataSlot damagePerkLevel = DataSlot.standalone();
 
     public static final int X_OFFSET = 0;
     public static final int Y_OFFSET = 11;
@@ -45,15 +45,15 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         this.container = container;
         this.access = pContainerLevelAccess;
 
-        this.addDataSlot(AMMO_PERK_LEVEL);
-        this.addDataSlot(FUNC_PERK_LEVEL);
-        this.addDataSlot(DAMAGE_PERK_LEVEL);
+        this.addDataSlot(ammoPerkLevel);
+        this.addDataSlot(funcPerkLevel);
+        this.addDataSlot(damagePerkLevel);
 
         this.addSlot(new InputSlot(container, INPUT_SLOT, 20, 20));
         this.addSlot(new PerkSlot(container, AMMO_PERK_SLOT, Perk.Type.AMMO, 60, 30));
         this.addSlot(new PerkSlot(container, FUNC_PERK_SLOT, Perk.Type.FUNCTIONAL, 60, 50));
         this.addSlot(new PerkSlot(container, DAMAGE_PERK_SLOT, Perk.Type.DAMAGE, 60, 70));
-        this.addSlot(new ResultSlot(container, RESULT_SLOT, 130, 50));
+        this.addSlot(new ResultSlot(container, RESULT_SLOT, 136, 40));
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
