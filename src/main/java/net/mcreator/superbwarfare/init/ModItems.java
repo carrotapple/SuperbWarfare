@@ -185,6 +185,7 @@ public class ModItems {
     public static final RegistryObject<Item> SANDBAG = block(ModBlocks.SANDBAG);
     public static final RegistryObject<Item> BARBED_WIRE = block(ModBlocks.BARBED_WIRE);
     public static final RegistryObject<Item> DRAGON_TEETH = block(ModBlocks.DRAGON_TEETH);
+    public static final RegistryObject<Item> REFORGING_TABLE = block(ModBlocks.REFORGING_TABLE);
 
     private static RegistryObject<Item> block(RegistryObject<Block> block) {
         return BLOCKS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties()));

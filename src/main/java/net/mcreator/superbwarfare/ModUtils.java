@@ -49,7 +49,7 @@ public class ModUtils {
         ModMobEffects.REGISTRY.register(bus);
         ModParticleTypes.REGISTRY.register(bus);
         ModPotion.POTIONS.register(bus);
-        ModMenus.REGISTRY.register(bus);
+        ModMenuTypes.REGISTRY.register(bus);
         ModEnchantments.REGISTRY.register(bus);
 
         bus.addListener(this::onCommonSetup);

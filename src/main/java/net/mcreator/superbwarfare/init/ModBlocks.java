@@ -18,5 +18,6 @@ public class ModBlocks {
     public static final RegistryObject<Block> SCHEELITE_ORE = REGISTRY.register("scheelite_ore", ScheeliteOreBlock::new);
     public static final RegistryObject<Block> DEEPSLATE_SCHEELITE_ORE = REGISTRY.register("deepslate_scheelite_ore", DeepslateScheeliteOreBlock::new);
     public static final RegistryObject<Block> DRAGON_TEETH = REGISTRY.register("dragon_teeth", DragonTeethBlock::new);
+    public static final RegistryObject<Block> REFORGING_TABLE = REGISTRY.register("reforging_table", ReforgingTableBlock::new);
 
 }
