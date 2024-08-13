@@ -17,6 +17,8 @@ import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.Nullable;
+
 public class ReforgingTableMenu extends AbstractContainerMenu {
     protected final Container container;
     protected final ContainerLevelAccess access;
@@ -50,9 +52,9 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         this.container = container;
         this.access = pContainerLevelAccess;
 
-        this.ammoPerkLevel.set(1);
-        this.funcPerkLevel.set(1);
-        this.damagePerkLevel.set(1);
+        this.ammoPerkLevel.set(0);
+        this.funcPerkLevel.set(0);
+        this.damagePerkLevel.set(0);
 
         this.addDataSlot(ammoPerkLevel);
         this.addDataSlot(funcPerkLevel);
@@ -206,6 +208,10 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
             }
         }
 
+        this.ammoPerkLevel.set(0);
+        this.funcPerkLevel.set(0);
+        this.damagePerkLevel.set(0);
+
         this.container.setItem(INPUT_SLOT, ItemStack.EMPTY);
         this.container.setItem(RESULT_SLOT, result);
         this.container.setChanged();
@@ -223,14 +229,14 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         }
 
         if (perk.getItem() instanceof PerkItem perkItem) {
-            if (PerkHelper.getItemPerkLevel(perkItem.getPerk(), gun) <= 0) {
-                return;
+            switch (perkItem.getPerk().type) {
+                case AMMO -> this.ammoPerkLevel.set(0);
+                case FUNCTIONAL -> this.funcPerkLevel.set(0);
+                case DAMAGE -> this.damagePerkLevel.set(0);
             }
 
-            switch (perkItem.getPerk().type) {
-                case AMMO -> this.ammoPerkLevel.set(1);
-                case FUNCTIONAL -> this.funcPerkLevel.set(1);
-                case DAMAGE -> this.damagePerkLevel.set(1);
+            if (PerkHelper.getItemPerkLevel(perkItem.getPerk(), gun) <= 0) {
+                return;
             }
 
             ItemStack output = gun.copy();
@@ -238,6 +244,23 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
 
             this.container.setItem(INPUT_SLOT, output);
             this.container.setChanged();
+        }
+    }
+
+    /**
+     * 放置perk物品时，将对应位置的level设置为1
+     *
+     * @param pStack Perk物品
+     */
+    private void onPlacePerk(ItemStack pStack) {
+        if (!(pStack.getItem() instanceof PerkItem perkItem)) {
+            return;
+        }
+
+        switch (perkItem.getPerk().type) {
+            case AMMO -> this.ammoPerkLevel.set(1);
+            case FUNCTIONAL -> this.funcPerkLevel.set(1);
+            case DAMAGE -> this.damagePerkLevel.set(1);
         }
     }
 
@@ -291,6 +314,7 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         if (ammoPerk != null) {
             if (this.container.getItem(AMMO_PERK_SLOT).getItem() instanceof PerkItem perkItem && perkItem.getPerk() == ammoPerk) {
                 this.container.setItem(AMMO_PERK_SLOT, ItemStack.EMPTY);
+                this.ammoPerkLevel.set(0);
             }
         }
 
@@ -298,6 +322,7 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         if (funcPerk != null) {
             if (this.container.getItem(FUNC_PERK_SLOT).getItem() instanceof PerkItem perkItem && perkItem.getPerk() == funcPerk) {
                 this.container.setItem(FUNC_PERK_SLOT, ItemStack.EMPTY);
+                this.funcPerkLevel.set(0);
             }
         }
 
@@ -305,10 +330,20 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         if (damagePerk != null) {
             if (this.container.getItem(DAMAGE_PERK_SLOT).getItem() instanceof PerkItem perkItem && perkItem.getPerk() == damagePerk) {
                 this.container.setItem(DAMAGE_PERK_SLOT, ItemStack.EMPTY);
+                this.damagePerkLevel.set(0);
             }
         }
 
         this.container.setChanged();
+    }
+
+    @Nullable
+    public ItemStack getPerkItemBySlot(Perk.Type type) {
+        return switch (type) {
+            case AMMO -> this.container.getItem(AMMO_PERK_SLOT);
+            case FUNCTIONAL -> this.container.getItem(FUNC_PERK_SLOT);
+            case DAMAGE -> this.container.getItem(DAMAGE_PERK_SLOT);
+        };
     }
 
     class InputSlot extends Slot {
@@ -368,6 +403,12 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         public void onTake(Player pPlayer, ItemStack pStack) {
             onTakePerk(pStack);
             super.onTake(pPlayer, pStack);
+        }
+
+        @Override
+        public void setByPlayer(ItemStack pStack) {
+            onPlacePerk(pStack);
+            super.setByPlayer(pStack);
         }
     }
 

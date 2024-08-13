@@ -13,6 +13,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -90,7 +91,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
 
         @Override
         protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-            pGuiGraphics.blit(TEXTURE, this.getX(), this.getY(), this.isHoveredOrFocused() ? 81 : 51, 184, 29, 15, 200, 200);
+            pGuiGraphics.blit(TEXTURE, this.getX(), this.getY(), this.isHovered() ? 81 : 51, 184, 29, 15, 200, 200);
         }
 
         public ReforgeButton(int pX, int pY) {
@@ -114,7 +115,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
     }
 
     @OnlyIn(Dist.CLIENT)
-    static class UpgradeButton extends AbstractButton {
+    class UpgradeButton extends AbstractButton {
         public Perk.Type type;
 
         public UpgradeButton(int pX, int pY, Perk.Type type) {
@@ -124,11 +125,15 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
 
         @Override
         protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-            pGuiGraphics.blit(TEXTURE, this.getX(), this.getY(), 187, this.isHoveredOrFocused() ? 10 : 0, 9, 9, 200, 200);
+            pGuiGraphics.blit(TEXTURE, this.getX(), this.getY(), 187, this.isHovered() ? 10 : 0, 9, 9, 200, 200);
         }
 
         @Override
         public void onPress() {
+            if (ReforgingTableScreen.this.menu.getPerkItemBySlot(type) == ItemStack.EMPTY) {
+                return;
+            }
+
             ModUtils.PACKET_HANDLER.sendToServer(new SetPerkLevelMessage(type.ordinal(), true));
         }
 
@@ -139,12 +144,12 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
     }
 
     @OnlyIn(Dist.CLIENT)
-    static class DowngradeButton extends AbstractButton {
+    class DowngradeButton extends AbstractButton {
         public Perk.Type type;
 
         @Override
         protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-            pGuiGraphics.blit(TEXTURE, this.getX(), this.getY(), 177, this.isHoveredOrFocused() ? 10 : 0, 9, 9, 200, 200);
+            pGuiGraphics.blit(TEXTURE, this.getX(), this.getY(), 177, this.isHovered() ? 10 : 0, 9, 9, 200, 200);
         }
 
         public DowngradeButton(int pX, int pY, Perk.Type type) {
@@ -154,6 +159,10 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
 
         @Override
         public void onPress() {
+            if (ReforgingTableScreen.this.menu.getPerkItemBySlot(type) == ItemStack.EMPTY) {
+                return;
+            }
+
             ModUtils.PACKET_HANDLER.sendToServer(new SetPerkLevelMessage(type.ordinal(), false));
         }
 
