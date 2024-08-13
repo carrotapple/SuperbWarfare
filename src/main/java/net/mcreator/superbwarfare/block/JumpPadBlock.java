@@ -1,7 +1,6 @@
 package net.mcreator.superbwarfare.block;
 
-import net.mcreator.superbwarfare.entity.Mk42Entity;
-import net.mcreator.superbwarfare.entity.Mle1934Entity;
+import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.entity.TargetEntity;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -23,6 +22,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+@SuppressWarnings("deprecation")
 public class JumpPadBlock extends Block {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
@@ -30,7 +30,6 @@ public class JumpPadBlock extends Block {
         super(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.BASEDRUM).sound(SoundType.STONE).strength(-1, 3600000).noCollission().noOcclusion().isRedstoneConductor((bs, br, bp) -> false));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
-
 
     @Override
     public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
@@ -79,7 +78,7 @@ public class JumpPadBlock extends Block {
         super.entityInside(blockstate, level, pos, entity);
 
         // 禁止套娃
-        if (entity instanceof TargetEntity || entity instanceof Mk42Entity || entity instanceof Mle1934Entity) return;
+        if (entity instanceof TargetEntity || entity instanceof ICannonEntity) return;
 
         boolean zooming = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zooming).orElse(false);
 

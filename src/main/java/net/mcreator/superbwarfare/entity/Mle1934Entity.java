@@ -17,7 +17,6 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -38,7 +37,6 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
-import net.minecraftforge.registries.ForgeRegistries;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -108,12 +106,12 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
 
     @Override
     public SoundEvent getHurtSound(DamageSource ds) {
-        return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("superbwarfare:hit"));
+        return ModSounds.HIT.get();
     }
 
     @Override
     public SoundEvent getDeathSound() {
-        return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("superbwarfare:hit"));
+        return ModSounds.HIT.get();
     }
 
     @Override
@@ -232,13 +230,22 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
                 stack.shrink(salvoShoot ? 2 : 1);
             }
 
-            // TODO 将炮弹生成在正确的位置（现在均在中心）
+            // TODO 将炮弹生成在正确的位置（现在偏差值很大）
+            // 中心点距离发射位置（炮口）的距离
+            final float radius = 1.5f;
+            // 两个炮管之间的距离
+            final float length = 0.15f;
+            // 可能用的偏差值
+            final float offset = 0.0f;
+            float yRot = this.getYRot();
 
             //左炮管
             CannonShellEntity entityToSpawnLeft = new CannonShellEntity(ModEntities.CANNON_SHELL.get(),
                     player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime).durability(durability);
 
-            entityToSpawnLeft.setPos(this.getX(), this.getEyeY(), this.getZ());
+            entityToSpawnLeft.setPos(this.getX() + this.getBbWidth() / 2 + (radius - length) * Mth.cos(yRot) - offset,
+                    this.getEyeY(),
+                    this.getZ() + this.getBbWidth() / 2 + (radius + length) * Mth.sin(yRot));
             entityToSpawnLeft.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 18, 0.1f);
             level.addFreshEntity(entityToSpawnLeft);
 
@@ -247,24 +254,20 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
                 CannonShellEntity entityToSpawnRight = new CannonShellEntity(ModEntities.CANNON_SHELL.get(),
                         player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime).durability(durability);
 
-                entityToSpawnRight.setPos(this.getX(), this.getEyeY(), this.getZ());
+                entityToSpawnRight.setPos(this.getX() + this.getBbWidth() / 2 + (radius + length) * Mth.cos(yRot) + offset,
+                        this.getEyeY(),
+                        this.getZ() + this.getBbWidth() / 2 + (radius - length) * Mth.sin(yRot));
                 entityToSpawnRight.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 18, 0.1f);
                 level.addFreshEntity(entityToSpawnRight);
 
-                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.recoilHorizon = 1;
-                });
+                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> capability.recoilHorizon = 1);
             } else {
-                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.recoilHorizon = -1;
-                });
+                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> capability.recoilHorizon = -1);
             }
 
             if (player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, ModSounds.MK_42_FIRE_1P.get(), 2, 1);
-                ModUtils.queueServerWork(44, () -> {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.MK_42_RELOAD.get(), 2, 1);
-                });
+                ModUtils.queueServerWork(44, () -> SoundTool.playLocalSound(serverPlayer, ModSounds.MK_42_RELOAD.get(), 2, 1));
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_FIRE_3P.get(), SoundSource.PLAYERS, 6, 1);
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_FAR.get(), SoundSource.PLAYERS, 16, 1);
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_VERYFAR.get(), SoundSource.PLAYERS, 32, 1);
