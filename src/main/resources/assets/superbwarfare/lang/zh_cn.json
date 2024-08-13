@@ -311,5 +311,10 @@
   "des.superbwarfare.drone.ammo": "弹药:",
   "des.superbwarfare.drone.range": "测距:",
   "des.superbwarfare.drone.kamikaze": "自爆模式",
-  "des.superbwarfare.drone.warning": "警告!"
+  "des.superbwarfare.drone.warning": "警告!",
+
+  "container.superbwarfare.reforging_table": "枪械重铸台",
+  "button.superbwarfare.downgrade": "↓",
+  "button.superbwarfare.upgrade": "↑",
+  "button.superbwarfare.reforge": "重铸"
 }

@@ -311,5 +311,10 @@
   "des.superbwarfare.drone.ammo": "AMMO:",
   "des.superbwarfare.drone.range": "RANGE:",
   "des.superbwarfare.drone.kamikaze": "KAMIKAZE",
-  "des.superbwarfare.drone.warning": "WARNING!"
+  "des.superbwarfare.drone.warning": "WARNING!",
+
+  "container.superbwarfare.reforging_table": "Gun Reforge Table",
+  "button.superbwarfare.downgrade": "↓",
+  "button.superbwarfare.upgrade": "↑",
+  "button.superbwarfare.reforge": "Reforge"
 }
