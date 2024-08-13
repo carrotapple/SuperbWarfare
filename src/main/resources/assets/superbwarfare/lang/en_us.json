@@ -125,6 +125,7 @@
   "item.superbwarfare.he_5_inches": "HE Shell",
   "item.superbwarfare.ap_5_inches": "AP Shell",
 
+  "item.superbwarfare.ancient_cpu": "Ancient CPU",
   "item.superbwarfare.target_deployer": "Target",
   "item.superbwarfare.senpai_spawn_egg": "Senpai Spawn Egg",
   "item.superbwarfare.light_saber": "Light Saber",
@@ -150,7 +151,6 @@
 
   "attribute.superbwarfare.spread": "Spread",
 
-  "block.superbwarfare.gun_recycle": "Gun Recycle Table",
   "block.superbwarfare.jump_pad": "Jump Pad",
   "block.superbwarfare.sandbag": "Sandbag",
   "block.superbwarfare.barbed_wire": "Barbed Wire",
@@ -314,8 +314,5 @@
   "des.superbwarfare.drone.kamikaze": "KAMIKAZE",
   "des.superbwarfare.drone.warning": "WARNING!",
 
-  "container.superbwarfare.reforging_table": "Gun Reforge Table",
-  "button.superbwarfare.downgrade": "↓",
-  "button.superbwarfare.upgrade": "↑",
-  "button.superbwarfare.reforge": "Reforge"
+  "container.superbwarfare.reforging_table": "Gun Reforge Table"
 }

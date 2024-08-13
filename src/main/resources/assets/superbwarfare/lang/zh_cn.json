@@ -125,6 +125,7 @@
   "item.superbwarfare.he_5_inches": "高爆弹",
   "item.superbwarfare.ap_5_inches": "穿甲弹",
 
+  "item.superbwarfare.ancient_cpu": "古代处理器",
   "item.superbwarfare.target_deployer": "标靶",
   "item.superbwarfare.senpai_spawn_egg": "野兽先辈刷怪蛋",
   "item.superbwarfare.light_saber": "光剑",
@@ -150,7 +151,6 @@
 
   "attribute.superbwarfare.spread": "散布",
 
-  "block.superbwarfare.gun_recycle": "枪械拆解台",
   "block.superbwarfare.jump_pad": "弹射台",
   "block.superbwarfare.sandbag": "沙袋",
   "block.superbwarfare.barbed_wire": "铁丝网",
@@ -314,8 +314,5 @@
   "des.superbwarfare.drone.kamikaze": "自爆模式",
   "des.superbwarfare.drone.warning": "警告!",
 
-  "container.superbwarfare.reforging_table": "枪械重铸台",
-  "button.superbwarfare.downgrade": "↓",
-  "button.superbwarfare.upgrade": "↑",
-  "button.superbwarfare.reforge": "重铸"
+  "container.superbwarfare.reforging_table": "枪械重铸台"
 }
