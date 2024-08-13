@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "superbwarfare:block/reforging_table"
+    },
+    "facing=east": {
+      "model": "superbwarfare:block/reforging_table",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "superbwarfare:block/reforging_table",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "superbwarfare:block/reforging_table",
+      "y": 270
+    }
+  }
+}
