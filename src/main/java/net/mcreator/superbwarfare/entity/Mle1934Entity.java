@@ -48,7 +48,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class Mle1934Entity extends PathfinderMob implements GeoEntity {
+public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEntity {
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -124,17 +124,15 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity {
         return super.hurt(source, amount - 34);
     }
 
-
     @Override
-    public InteractionResult mobInteract(Player sourceentity, InteractionHand hand) {
-        InteractionResult retval = InteractionResult.sidedSuccess(this.level().isClientSide());
-        super.mobInteract(sourceentity, hand);
-        sourceentity.setXRot(this.getXRot());
-        sourceentity.setYRot(this.getYRot());
-        sourceentity.startRiding(this);
-        return retval;
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        InteractionResult result = InteractionResult.sidedSuccess(this.level().isClientSide());
+        super.mobInteract(player, hand);
+        player.setXRot(this.getXRot());
+        player.setYRot(this.getYRot());
+        player.startRiding(this);
+        return result;
     }
-
 
     @Override
     public void die(DamageSource source) {
@@ -175,25 +173,26 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity {
 
         Entity gunner = this.getFirstPassenger();
 
-        if (this.getPersistentData().getInt("fire_cooldown") > 0) {
-            this.getPersistentData().putInt("fire_cooldown", this.getPersistentData().getInt("fire_cooldown") - 1);
+        if (this.getPersistentData().getInt("FireCooldown") > 0) {
+            this.getPersistentData().putInt("FireCooldown", this.getPersistentData().getInt("FireCooldown") - 1);
         }
 
-        if (this.getPersistentData().getInt("fire_cooldown") > 72) {
+        if (this.getPersistentData().getInt("FireCooldown") > 72) {
             gunner.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.cannonRecoil = 10;
                 capability.syncPlayerVariables(gunner);
             });
         }
 
-        if (this.getPersistentData().getBoolean("firing") && gunner instanceof Player player && this.getPersistentData().getInt("fire_cooldown") == 0) {
-            cannonShoot(player);
-        }
-
         this.refreshDimensions();
     }
 
+    @Override
     public void cannonShoot(Player player) {
+        if (this.getPersistentData().getInt("FireCooldown") > 0) {
+            return;
+        }
+
         Level level = player.level();
         if (level instanceof ServerLevel server) {
             ItemStack stack = player.getMainHandItem();
@@ -230,7 +229,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity {
             }
 
             if (!player.isCreative()) {
-                stack.shrink(salvoShoot? 2 : 1);
+                stack.shrink(salvoShoot ? 2 : 1);
             }
 
             // TODO 将炮弹生成在正确的位置（现在均在中心）
@@ -261,7 +260,6 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity {
                 });
             }
 
-
             if (player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, ModSounds.MK_42_FIRE_1P.get(), 2, 1);
                 ModUtils.queueServerWork(44, () -> {
@@ -272,7 +270,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_VERYFAR.get(), SoundSource.PLAYERS, 32, 1);
             }
 
-            this.getPersistentData().putInt("fire_cooldown", 74);
+            this.getPersistentData().putInt("FireCooldown", 74);
 
             server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
                     this.getX() + 5 * this.getLookAngle().x,
@@ -287,7 +285,6 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity {
             server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 10, 0.4, 0.4, 0.4, 0.0075);
 
             server.sendParticles(ParticleTypes.CLOUD, x, y, z, 10, 0.4, 0.4, 0.4, 0.0075);
-
 
             server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
                     this.getX() + 9.5 * this.getLookAngle().x,
@@ -324,14 +321,13 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity {
                     this.getEyeY() + 13 * this.getLookAngle().y,
                     this.getZ() + 13 * this.getLookAngle().z,
                     1, 0.15, 0.15, 0.15, 0.0075);
-
         }
     }
 
     @Override
     public void travel(Vec3 dir) {
         Entity entity = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
-        if (this.isVehicle()) {
+        if (this.isVehicle() && entity != null) {
             this.setYRot(entity.getYRot());
             this.yRotO = this.getYRot();
             this.setXRot(Mth.clamp(entity.getXRot() - 1f, -30, 4));
@@ -358,7 +354,6 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity {
         this.setMaxUpStep(0.5F);
         super.travel(dir);
     }
-
 
     @Override
     public EntityDimensions getDimensions(Pose p_33597_) {
@@ -457,7 +452,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity {
         if (entity instanceof Mle1934Entity mle1934) {
             if (mle1934.getFirstPassenger() == null) return;
             Entity gunner = mle1934.getFirstPassenger();
-            if (event.getSource().getDirectEntity() == gunner){
+            if (event.getSource().getDirectEntity() == gunner) {
                 event.setCanceled(true);
             }
         }

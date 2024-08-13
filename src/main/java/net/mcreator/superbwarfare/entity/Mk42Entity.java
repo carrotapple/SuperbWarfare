@@ -47,7 +47,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class Mk42Entity extends PathfinderMob implements GeoEntity {
+public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntity {
     public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.STRING);
@@ -135,17 +135,15 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
         return super.hurt(source, amount - 32);
     }
 
-
     @Override
-    public InteractionResult mobInteract(Player sourceentity, InteractionHand hand) {
-        InteractionResult retval = InteractionResult.sidedSuccess(this.level().isClientSide());
-        super.mobInteract(sourceentity, hand);
-        sourceentity.setXRot(this.getXRot());
-        sourceentity.setYRot(this.getYRot());
-        sourceentity.startRiding(this);
-        return retval;
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        InteractionResult result = InteractionResult.sidedSuccess(this.level().isClientSide());
+        super.mobInteract(player, hand);
+        player.setXRot(this.getXRot());
+        player.setYRot(this.getYRot());
+        player.startRiding(this);
+        return result;
     }
-
 
     @Override
     public void die(DamageSource source) {
@@ -189,11 +187,11 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
 
         Entity gunner = this.getFirstPassenger();
 
-        if (this.getPersistentData().getInt("fire_cooldown") > 0) {
-            this.getPersistentData().putInt("fire_cooldown", this.getPersistentData().getInt("fire_cooldown") - 1);
+        if (this.getPersistentData().getInt("FireCooldown") > 0) {
+            this.getPersistentData().putInt("FireCooldown", this.getPersistentData().getInt("FireCooldown") - 1);
         }
 
-        if (this.getPersistentData().getInt("fire_cooldown") > 28) {
+        if (this.getPersistentData().getInt("FireCooldown") > 28) {
             gunner.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
 
                 if (Math.random() < 0.5) {
@@ -207,14 +205,15 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
             });
         }
 
-        if (this.getPersistentData().getBoolean("firing") && gunner instanceof Player player && this.getPersistentData().getInt("fire_cooldown") == 0) {
-            cannonShoot(player);
-        }
-
         this.refreshDimensions();
     }
 
+    @Override
     public void cannonShoot(Player player) {
+        if (this.getPersistentData().getInt("FireCooldown") > 0) {
+            return;
+        }
+
         Level level = player.level();
         if (level instanceof ServerLevel server) {
             ItemStack stack = player.getMainHandItem();
@@ -258,7 +257,6 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
             entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 15, 0.1f);
             level.addFreshEntity(entityToSpawn);
 
-
             if (player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, ModSounds.MK_42_FIRE_1P.get(), 2, 1);
                 SoundTool.playLocalSound(serverPlayer, ModSounds.MK_42_RELOAD.get(), 2, 1);
@@ -267,7 +265,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_VERYFAR.get(), SoundSource.PLAYERS, 32, 1);
             }
 
-            this.getPersistentData().putInt("fire_cooldown", 30);
+            this.getPersistentData().putInt("FireCooldown", 30);
 
             server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
                     this.getX() + 5 * this.getLookAngle().x,
@@ -319,14 +317,13 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
                     this.getEyeY() + 13 * this.getLookAngle().y,
                     this.getZ() + 13 * this.getLookAngle().z,
                     1, 0.15, 0.15, 0.15, 0.0075);
-
         }
     }
 
     @Override
     public void travel(Vec3 dir) {
         Entity entity = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
-        if (this.isVehicle()) {
+        if (this.isVehicle() && entity != null) {
             this.setYRot(entity.getYRot());
             this.yRotO = this.getYRot();
             this.setXRot(Mth.clamp(entity.getXRot() - 1.35f, -85, 15));
@@ -353,7 +350,6 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
         this.setMaxUpStep(0.5F);
         super.travel(dir);
     }
-
 
     @Override
     public EntityDimensions getDimensions(Pose p_33597_) {
@@ -452,7 +448,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity {
         if (entity instanceof Mk42Entity mk42) {
             if (mk42.getFirstPassenger() == null) return;
             Entity gunner = mk42.getFirstPassenger();
-            if (event.getSource().getDirectEntity() == gunner){
+            if (event.getSource().getDirectEntity() == gunner) {
                 event.setCanceled(true);
             }
         }

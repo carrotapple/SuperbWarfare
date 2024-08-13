@@ -1,9 +1,7 @@
 package net.mcreator.superbwarfare.network.message;
 
-import net.mcreator.superbwarfare.entity.Mk42Entity;
-import net.mcreator.superbwarfare.entity.Mle1934Entity;
+import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
@@ -36,20 +34,14 @@ public class VehicleFireMessage {
     }
 
     public static void pressAction(Player player, int type) {
-        Level world = player.level();
+        Level level = player.level();
 
-        if (!world.isLoaded(player.blockPosition())) {
+        if (!level.isLoaded(player.blockPosition())) {
             return;
         }
 
-        if (player.getVehicle() != null && (player.getVehicle() instanceof Mk42Entity || player.getVehicle() instanceof Mle1934Entity)) {
-            Entity cannon = player.getVehicle();
-            cannon.getPersistentData().putBoolean("firing",true);
-            if (type == 0) {
-                cannon.getPersistentData().putBoolean("firing",true);
-            } else if (type == 1) {
-                cannon.getPersistentData().putBoolean("firing",false);
-            }
+        if (player.getVehicle() instanceof ICannonEntity entity) {
+            entity.cannonShoot(player);
         }
     }
 }
