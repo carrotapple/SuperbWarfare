@@ -7,6 +7,7 @@ import net.mcreator.superbwarfare.item.PerkItem;
 import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -32,6 +33,7 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
     public final DataSlot ammoPerkLevel = DataSlot.standalone();
     public final DataSlot funcPerkLevel = DataSlot.standalone();
     public final DataSlot damagePerkLevel = DataSlot.standalone();
+    public final DataSlot upgradePoint = DataSlot.standalone();
 
     public static final int X_OFFSET = 0;
     public static final int Y_OFFSET = 11;
@@ -55,10 +57,12 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         this.ammoPerkLevel.set(0);
         this.funcPerkLevel.set(0);
         this.damagePerkLevel.set(0);
+        this.upgradePoint.set(0);
 
         this.addDataSlot(ammoPerkLevel);
         this.addDataSlot(funcPerkLevel);
         this.addDataSlot(damagePerkLevel);
+        this.addDataSlot(upgradePoint);
 
         this.addSlot(new InputSlot(container, INPUT_SLOT, 20, 22));
         this.addSlot(new PerkSlot(container, AMMO_PERK_SLOT, Perk.Type.AMMO, 80, 25));
@@ -158,14 +162,39 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         });
     }
 
-    public void setPerkLevel(Perk.Type type, boolean add) {
+    public void setPerkLevel(Perk.Type type, boolean upgrade) {
+        if (upgrade && this.upgradePoint.get() <= 0) {
+            return;
+        }
+
+        if (!upgrade && this.upgradePoint.get() >= 100) {
+            return;
+        }
+
         switch (type) {
             case AMMO ->
-                    this.ammoPerkLevel.set(add ? Math.min(10, this.ammoPerkLevel.get() + 1) : Math.max(1, this.ammoPerkLevel.get() - 1));
+                    this.ammoPerkLevel.set(upgrade ? Math.min(10, this.ammoPerkLevel.get() + 1) : Math.max(1, this.ammoPerkLevel.get() - 1));
             case FUNCTIONAL ->
-                    this.funcPerkLevel.set(add ? Math.min(10, this.funcPerkLevel.get() + 1) : Math.max(1, this.funcPerkLevel.get() - 1));
+                    this.funcPerkLevel.set(upgrade ? Math.min(10, this.funcPerkLevel.get() + 1) : Math.max(1, this.funcPerkLevel.get() - 1));
             case DAMAGE ->
-                    this.damagePerkLevel.set(add ? Math.min(10, this.damagePerkLevel.get() + 1) : Math.max(1, this.damagePerkLevel.get() - 1));
+                    this.damagePerkLevel.set(upgrade ? Math.min(10, this.damagePerkLevel.get() + 1) : Math.max(1, this.damagePerkLevel.get() - 1));
+        }
+
+        this.upgradePoint.set(Mth.clamp(this.upgradePoint.get() + (upgrade ? -1 : 1), 0, 100));
+    }
+
+    public void handleUpgradePoint(ItemStack stack) {
+        if (!(stack.getItem() instanceof GunItem)) {
+            return;
+        }
+
+        double oldPoint = stack.getOrCreateTag().getDouble("UpgradePoint");
+        int point = (int) oldPoint;
+        int newPoint = this.upgradePoint.get();
+        int delta = newPoint - point;
+
+        if (delta != 0) {
+            stack.getOrCreateTag().putDouble("UpgradePoint", oldPoint + delta);
         }
     }
 
@@ -208,9 +237,12 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
             }
         }
 
+        handleUpgradePoint(result);
+
         this.ammoPerkLevel.set(0);
         this.funcPerkLevel.set(0);
         this.damagePerkLevel.set(0);
+        this.upgradePoint.set(0);
 
         this.container.setItem(INPUT_SLOT, ItemStack.EMPTY);
         this.container.setItem(RESULT_SLOT, result);
@@ -274,7 +306,8 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
             return;
         }
 
-        this.container.setChanged();
+        int point = (int) pStack.getOrCreateTag().getDouble("UpgradePoint");
+        this.upgradePoint.set(Mth.clamp(point, 0, 100));
 
         var ammoPerk = PerkHelper.getPerkByType(pStack, Perk.Type.AMMO);
         if (ammoPerk != null) {
@@ -297,6 +330,7 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
             damagePerkItem.ifPresent(registryObject -> this.container.setItem(DAMAGE_PERK_SLOT, registryObject.get().getDefaultInstance()));
         }
 
+        this.container.setChanged();
         this.broadcastChanges();
     }
 
@@ -333,6 +367,9 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
                 this.damagePerkLevel.set(0);
             }
         }
+
+        handleUpgradePoint(pStack);
+        this.upgradePoint.set(0);
 
         this.container.setChanged();
     }

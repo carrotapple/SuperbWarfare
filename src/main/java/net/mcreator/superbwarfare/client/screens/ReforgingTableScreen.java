@@ -56,6 +56,12 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         if (damagePerkLevel > 0) {
             pGuiGraphics.blit(TEXTURE, this.leftPos + 156, this.topPos + 31, 5 * damagePerkLevel - 5, 190, 5, 5, 200, 200);
         }
+
+        var upgradePoint = ReforgingTableScreen.this.menu.upgradePoint.get();
+        int pointG = upgradePoint / 10;
+        int pointS = upgradePoint % 10;
+        pGuiGraphics.blit(TEXTURE, this.leftPos + 43, this.topPos + 20, 51 + 5 * pointG, 178, 5, 5, 200, 200);
+        pGuiGraphics.blit(TEXTURE, this.leftPos + 47, this.topPos + 20, 51 + 5 * pointS, 178, 5, 5, 200, 200);
     }
 
     @Override
@@ -133,6 +139,23 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
             if (ReforgingTableScreen.this.menu.getPerkItemBySlot(type) == ItemStack.EMPTY) {
                 return;
             }
+            switch (type) {
+                case AMMO -> {
+                    if (ReforgingTableScreen.this.menu.ammoPerkLevel.get() >= 10) {
+                        return;
+                    }
+                }
+                case FUNCTIONAL -> {
+                    if (ReforgingTableScreen.this.menu.funcPerkLevel.get() >= 10) {
+                        return;
+                    }
+                }
+                case DAMAGE -> {
+                    if (ReforgingTableScreen.this.menu.damagePerkLevel.get() >= 10) {
+                        return;
+                    }
+                }
+            }
 
             ModUtils.PACKET_HANDLER.sendToServer(new SetPerkLevelMessage(type.ordinal(), true));
         }
@@ -161,6 +184,23 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         public void onPress() {
             if (ReforgingTableScreen.this.menu.getPerkItemBySlot(type) == ItemStack.EMPTY) {
                 return;
+            }
+            switch (type) {
+                case AMMO -> {
+                    if (ReforgingTableScreen.this.menu.ammoPerkLevel.get() <= 1) {
+                        return;
+                    }
+                }
+                case FUNCTIONAL -> {
+                    if (ReforgingTableScreen.this.menu.funcPerkLevel.get() <= 1) {
+                        return;
+                    }
+                }
+                case DAMAGE -> {
+                    if (ReforgingTableScreen.this.menu.damagePerkLevel.get() <= 1) {
+                        return;
+                    }
+                }
             }
 
             ModUtils.PACKET_HANDLER.sendToServer(new SetPerkLevelMessage(type.ordinal(), false));
