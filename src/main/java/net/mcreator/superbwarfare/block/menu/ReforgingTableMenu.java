@@ -11,7 +11,10 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class ReforgingTableMenu extends AbstractContainerMenu {
@@ -24,9 +27,9 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
     public static final int DAMAGE_PERK_SLOT = 3;
     public static final int RESULT_SLOT = 4;
 
-    private final DataSlot ammoPerkLevel = DataSlot.standalone();
-    private final DataSlot funcPerkLevel = DataSlot.standalone();
-    private final DataSlot damagePerkLevel = DataSlot.standalone();
+    public final DataSlot ammoPerkLevel = DataSlot.standalone();
+    public final DataSlot funcPerkLevel = DataSlot.standalone();
+    public final DataSlot damagePerkLevel = DataSlot.standalone();
 
     public static final int X_OFFSET = 0;
     public static final int Y_OFFSET = 11;
@@ -55,11 +58,11 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         this.addDataSlot(funcPerkLevel);
         this.addDataSlot(damagePerkLevel);
 
-        this.addSlot(new InputSlot(container, INPUT_SLOT, 20, 20));
-        this.addSlot(new PerkSlot(container, AMMO_PERK_SLOT, Perk.Type.AMMO, 60, 30));
-        this.addSlot(new PerkSlot(container, FUNC_PERK_SLOT, Perk.Type.FUNCTIONAL, 60, 50));
-        this.addSlot(new PerkSlot(container, DAMAGE_PERK_SLOT, Perk.Type.DAMAGE, 60, 70));
-        this.addSlot(new ResultSlot(container, RESULT_SLOT, 136, 40));
+        this.addSlot(new InputSlot(container, INPUT_SLOT, 20, 22));
+        this.addSlot(new PerkSlot(container, AMMO_PERK_SLOT, Perk.Type.AMMO, 80, 25));
+        this.addSlot(new PerkSlot(container, FUNC_PERK_SLOT, Perk.Type.FUNCTIONAL, 80, 45));
+        this.addSlot(new PerkSlot(container, DAMAGE_PERK_SLOT, Perk.Type.DAMAGE, 80, 65));
+        this.addSlot(new ResultSlot(container, RESULT_SLOT, 142, 45));
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {

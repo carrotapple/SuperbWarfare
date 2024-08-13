@@ -31,7 +31,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        guiGraphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight);
+        guiGraphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 200, 200);
         RenderSystem.disableBlend();
     }
 
@@ -40,6 +40,21 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         this.renderBackground(pGuiGraphics);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+        var ammoPerkLevel = ReforgingTableScreen.this.menu.ammoPerkLevel.get();
+        var funcPerkLevel = ReforgingTableScreen.this.menu.funcPerkLevel.get();
+        var damagePerkLevel = ReforgingTableScreen.this.menu.damagePerkLevel.get();
+
+        if (ammoPerkLevel > 0) {
+            pGuiGraphics.blit(TEXTURE, this.leftPos + 140, this.topPos + 31, 5 * ammoPerkLevel - 5, 178, 5, 5, 200, 200);
+        }
+
+        if (funcPerkLevel > 0) {
+            pGuiGraphics.blit(TEXTURE, this.leftPos + 148, this.topPos + 31, 5 * funcPerkLevel - 5, 184, 5, 5, 200, 200);
+        }
+
+        if (damagePerkLevel > 0) {
+            pGuiGraphics.blit(TEXTURE, this.leftPos + 156, this.topPos + 31, 5 * damagePerkLevel - 5, 190, 5, 5, 200, 200);
+        }
     }
 
     @Override
@@ -54,12 +69,12 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         int j = (this.height - this.imageHeight) / 2;
 
         ReforgeButton button = new ReforgeButton(i + 124, j + 70);
-        UpgradeButton ammoUpgrade = new UpgradeButton(i + 100, j + 32, Perk.Type.AMMO);
-        DowngradeButton ammoDowngrade = new DowngradeButton(i + 86, j + 32, Perk.Type.AMMO);
-        UpgradeButton funcUpgrade = new UpgradeButton(i + 100, j + 52, Perk.Type.FUNCTIONAL);
-        DowngradeButton funcDowngrade = new DowngradeButton(i + 86, j + 52, Perk.Type.FUNCTIONAL);
-        UpgradeButton damageUpgrade = new UpgradeButton(i + 100, j + 72, Perk.Type.DAMAGE);
-        DowngradeButton damageDowngrade = new DowngradeButton(i + 86, j + 72, Perk.Type.DAMAGE);
+        UpgradeButton ammoUpgrade = new UpgradeButton(i + 98, j + 21, Perk.Type.AMMO);
+        DowngradeButton ammoDowngrade = new DowngradeButton(i + 69, j + 21, Perk.Type.AMMO);
+        UpgradeButton funcUpgrade = new UpgradeButton(i + 98, j + 41, Perk.Type.FUNCTIONAL);
+        DowngradeButton funcDowngrade = new DowngradeButton(i + 69, j + 41, Perk.Type.FUNCTIONAL);
+        UpgradeButton damageUpgrade = new UpgradeButton(i + 98, j + 61, Perk.Type.DAMAGE);
+        DowngradeButton damageDowngrade = new DowngradeButton(i + 69, j + 61, Perk.Type.DAMAGE);
 
         this.addRenderableWidget(button);
         this.addRenderableWidget(ammoUpgrade);
@@ -73,6 +88,11 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
     @OnlyIn(Dist.CLIENT)
     static class ReforgeButton extends AbstractButton {
 
+        @Override
+        protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+            pGuiGraphics.blit(TEXTURE, this.getX(), this.getY(), this.isHoveredOrFocused() ? 81 : 51, 184, 29, 15, 200, 200);
+        }
+
         public ReforgeButton(int pX, int pY) {
             super(pX, pY, 40, 16, Component.translatable("button.superbwarfare.reforge"));
         }
@@ -81,11 +101,6 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
             super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         }
-
-//        @Override
-//        public void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-//
-//        }
 
         @Override
         public void onPress() {
@@ -103,8 +118,13 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         public Perk.Type type;
 
         public UpgradeButton(int pX, int pY, Perk.Type type) {
-            super(pX, pY, 12, 12, Component.translatable("button.superbwarfare.upgrade"));
+            super(pX, pY, 9, 9, Component.translatable("button.superbwarfare.upgrade"));
             this.type = type;
+        }
+
+        @Override
+        protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+            pGuiGraphics.blit(TEXTURE, this.getX(), this.getY(), 187, this.isHoveredOrFocused() ? 10 : 0, 9, 9, 200, 200);
         }
 
         @Override
@@ -121,6 +141,11 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
     @OnlyIn(Dist.CLIENT)
     static class DowngradeButton extends AbstractButton {
         public Perk.Type type;
+
+        @Override
+        protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+            pGuiGraphics.blit(TEXTURE, this.getX(), this.getY(), 177, this.isHoveredOrFocused() ? 10 : 0, 9, 9, 200, 200);
+        }
 
         public DowngradeButton(int pX, int pY, Perk.Type type) {
             super(pX, pY, 12, 12, Component.translatable("button.superbwarfare.downgrade"));
