@@ -246,7 +246,7 @@ public class PlayerEventHandler {
             if (tag.getDouble("damagetotal") >= tag.getDouble("exp2")) {
                 tag.putDouble("exp1", (tag.getDouble("exp2")));
                 tag.putInt("level", tag.getInt("level") + 1);
-                tag.putDouble("UpgradePoint", tag.getDouble("UpgradePoint") + 0.2);
+                tag.putDouble("UpgradePoint", tag.getDouble("UpgradePoint") + 0.33334);
             }
             tag.putDouble("damagenow", (tag.getDouble("damagetotal") - tag.getDouble("exp1")));
             tag.putDouble("damageneed", (tag.getDouble("exp2") - tag.getDouble("exp1")));
