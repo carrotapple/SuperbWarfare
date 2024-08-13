@@ -77,9 +77,16 @@ public class ReforgingTableBlock extends Block {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return Shapes.or(box(0, 0, 0, 16, 1, 16),
-                box(1, 1, 1, 15, 3, 15),
-                box(6.5, 4, 5, 9.5, 16.6, 11));
+        Direction direction = state.getValue(FACING);
+        if (direction == Direction.NORTH || direction == Direction.SOUTH) {
+            return Shapes.or(box(0, 0, 0, 16, 1, 16),
+                    box(1, 1, 1, 15, 3, 15),
+                    box(5, 4, 6.5, 11, 16.6, 9.5));
+        } else {
+            return Shapes.or(box(0, 0, 0, 16, 1, 16),
+                    box(1, 1, 1, 15, 3, 15),
+                    box(6.5, 4, 5, 9.5, 16.6, 11));
+        }
     }
 
     @Override
