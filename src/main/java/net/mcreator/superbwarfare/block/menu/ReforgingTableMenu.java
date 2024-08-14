@@ -150,15 +150,25 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
 
     @Override
     public void removed(Player pPlayer) {
-        super.removed(pPlayer);
-        this.access.execute((p_39796_, p_39797_) -> {
+        this.access.execute((level, pos) -> {
+            ItemStack gun = this.container.getItem(INPUT_SLOT);
+            ItemStack copy = gun.copy();
+
             for (int i = 0; i < this.container.getContainerSize(); ++i) {
                 ItemStack itemstack = this.container.getItem(i);
+
+                if (itemstack.getItem() instanceof PerkItem perkItem) {
+                    if (!copy.isEmpty() && PerkHelper.getItemPerkLevel(perkItem.getPerk(), copy) > 0) {
+                        continue;
+                    }
+                }
+
                 if (!itemstack.isEmpty()) {
                     pPlayer.getInventory().placeItemBackInInventory(itemstack);
                 }
+
+                this.container.removeItemNoUpdate(i);
             }
-            this.clearContainer(pPlayer, this.container);
         });
     }
 
@@ -267,12 +277,15 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
                 case DAMAGE -> this.damagePerkLevel.set(0);
             }
 
-            if (PerkHelper.getItemPerkLevel(perkItem.getPerk(), gun) <= 0) {
+            int level = PerkHelper.getItemPerkLevel(perkItem.getPerk(), gun);
+
+            if (level <= 0) {
                 return;
             }
 
             ItemStack output = gun.copy();
             PerkHelper.removePerkByType(output, perkItem.getPerk().type);
+            output.getOrCreateTag().putDouble("UpgradePoint", Math.min(100, level + output.getOrCreateTag().getDouble("UpgradePoint")));
 
             this.container.setItem(INPUT_SLOT, output);
             this.container.setChanged();
