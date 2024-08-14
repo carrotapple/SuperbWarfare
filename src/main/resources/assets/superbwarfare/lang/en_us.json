@@ -149,6 +149,11 @@
   "item.superbwarfare.monitor": "Monitor",
   "item.superbwarfare.hand_grenade": "Hand Grenade",
   "item.superbwarfare.rgo_grenade": "RGO Grenade",
+  "item.superbwarfare.transcript": "Transcript",
+  "des.superbwarfare.transcript": "Recent 10 shooting records:",
+  "des.superbwarfare.transcript.score": "Score: ",
+  "des.superbwarfare.transcript.distance": "Distance: ",
+  "des.superbwarfare.transcript.total": "Total: ",
 
   "attribute.superbwarfare.spread": "Spread",
 

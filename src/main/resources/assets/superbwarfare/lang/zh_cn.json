@@ -149,6 +149,11 @@
   "item.superbwarfare.monitor": "遥控器",
   "item.superbwarfare.hand_grenade": "M67手榴弹",
   "item.superbwarfare.rgo_grenade": "RGO手榴弹",
+  "item.superbwarfare.transcript": "成绩单",
+  "des.superbwarfare.transcript": "最近10次的射击成绩：",
+  "des.superbwarfare.transcript.score": "环数：",
+  "des.superbwarfare.transcript.distance": "距离：",
+  "des.superbwarfare.transcript.total": "总环数：",
 
   "attribute.superbwarfare.spread": "散布",
 

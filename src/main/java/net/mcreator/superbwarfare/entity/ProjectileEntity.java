@@ -2,10 +2,8 @@ package net.mcreator.superbwarfare.entity;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.block.BarbedWireBlock;
-import net.mcreator.superbwarfare.init.ModDamageTypes;
-import net.mcreator.superbwarfare.init.ModEntities;
-import net.mcreator.superbwarfare.init.ModParticleTypes;
-import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.*;
+import net.mcreator.superbwarfare.item.Transcript;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.mcreator.superbwarfare.network.message.PlayerGunKillMessage;
 import net.mcreator.superbwarfare.tools.ExtendedEntityRayTraceResult;
@@ -16,6 +14,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
@@ -35,6 +35,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -55,8 +56,10 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.text.DecimalFormat;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -317,19 +320,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             if (state.getBlock() instanceof TargetBlock) {
                 int rings = getRings(blockHitResult, hitVec);
                 double dis = shooter.position().distanceTo(hitVec);
-
-                if (shooter instanceof Player player) {
-                    player.displayClientMessage(Component.literal(String.valueOf(rings))
-                            .append(Component.translatable("des.superbwarfare.shoot.rings"))
-                            .append(Component.literal(new DecimalFormat("##.#").format(dis) + "M")), false);
-
-                    if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer splayer) {
-                        var holder = rings == 10 ? Holder.direct(ModSounds.HEADSHOT.get()) : Holder.direct(ModSounds.INDICATION.get());
-                        splayer.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
-                        ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new ClientIndicatorMessage(rings == 10 ? 1 : 0, 5));
-                    }
-
-                }
+                recordHitScore(rings, dis);
             }
 
             this.onHitBlock(hitVec);
@@ -353,21 +344,63 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     }
 
     private static int getRings(@NotNull BlockHitResult blockHitResult, @NotNull Vec3 hitVec) {
-        Direction $$2 = blockHitResult.getDirection();
-        double $$3 = Math.abs(Mth.frac(hitVec.x) - 0.5);
-        double $$4 = Math.abs(Mth.frac(hitVec.y) - 0.5);
-        double $$5 = Math.abs(Mth.frac(hitVec.z) - 0.5);
-        Direction.Axis $$6 = $$2.getAxis();
-        double $$9;
-        if ($$6 == Direction.Axis.Y) {
-            $$9 = Math.max($$3, $$5);
-        } else if ($$6 == Direction.Axis.Z) {
-            $$9 = Math.max($$3, $$4);
+        Direction direction = blockHitResult.getDirection();
+        double x = Math.abs(Mth.frac(hitVec.x) - 0.5);
+        double y = Math.abs(Mth.frac(hitVec.y) - 0.5);
+        double z = Math.abs(Mth.frac(hitVec.z) - 0.5);
+        Direction.Axis axis = direction.getAxis();
+        double v;
+        if (axis == Direction.Axis.Y) {
+            v = Math.max(x, z);
+        } else if (axis == Direction.Axis.Z) {
+            v = Math.max(x, y);
         } else {
-            $$9 = Math.max($$4, $$5);
+            v = Math.max(y, z);
         }
 
-        return Math.max(1, Mth.ceil(10.0 * Mth.clamp((0.5 - $$9) / 0.5, 0.0, 1.0)));
+        return Math.max(1, Mth.ceil(10.0 * Mth.clamp((0.5 - v) / 0.5, 0.0, 1.0)));
+    }
+
+    private void recordHitScore(int score, double distance) {
+        if (!(shooter instanceof Player player)) {
+            return;
+        }
+
+        player.displayClientMessage(Component.literal(String.valueOf(score))
+                .append(Component.translatable("des.superbwarfare.shoot.rings"))
+                .append(Component.literal(new DecimalFormat("##.#").format(distance) + "m")), false);
+
+        if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer serverPlayer) {
+            var holder = score == 10 ? Holder.direct(ModSounds.HEADSHOT.get()) : Holder.direct(ModSounds.INDICATION.get());
+            serverPlayer.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
+            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new ClientIndicatorMessage(score == 10 ? 1 : 0, 5));
+        }
+
+        ItemStack stack = player.getOffhandItem();
+        if (stack.is(ModItems.TRANSCRIPT.get())) {
+            final int size = 10;
+
+            ListTag tags = stack.getOrCreateTag().getList(Transcript.TAG_SCORES, Tag.TAG_COMPOUND);
+
+            Queue<CompoundTag> queue = new ArrayDeque<>();
+            for (int i = 0; i < tags.size(); i++) {
+                queue.add(tags.getCompound(i));
+            }
+
+            CompoundTag tag = new CompoundTag();
+            tag.putInt("Score", score);
+            tag.putDouble("Distance", distance);
+            queue.offer(tag);
+
+            while (queue.size() > size) {
+                queue.poll();
+            }
+
+            ListTag newTags = new ListTag();
+            newTags.addAll(queue);
+
+            stack.getOrCreateTag().put(Transcript.TAG_SCORES, newTags);
+        }
     }
 
     protected void onHitBlock(Vec3 location) {
