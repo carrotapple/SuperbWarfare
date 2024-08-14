@@ -125,20 +125,21 @@ public class ClientEventHandler {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
 
-        InteractionHand hand = Minecraft.getInstance().options.mainHand().get() == HumanoidArm.RIGHT ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
-        ItemStack stack = player.getMainHandItem();
+        InteractionHand leftHand = Minecraft.getInstance().options.mainHand().get() == HumanoidArm.RIGHT ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
+        InteractionHand rightHand = Minecraft.getInstance().options.mainHand().get() == HumanoidArm.RIGHT ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
 
-        if (event.getHand() == hand) {
-            if (player.getUseItem().is(ModTags.Items.GUN)) {
+        ItemStack rightHandItem = player.getItemInHand(rightHand);
+
+        if (event.getHand() == leftHand) {
+            if (rightHandItem.is(ModTags.Items.GUN)) {
                 event.setCanceled(true);
             }
         }
 
+        ItemStack stack = player.getMainHandItem();
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
-
             player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
                     .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().ifPresent(drone -> event.setCanceled(true));
-
         }
     }
 
