@@ -40,7 +40,7 @@ public class SetPerkLevelMessage {
                     return;
                 }
 
-                menu.setPerkLevel(Perk.Type.values()[message.type], message.add);
+                menu.setPerkLevel(Perk.Type.values()[message.type], message.add, player.getAbilities().instabuild);
             }
         });
         ctx.get().setPacketHandled(true);

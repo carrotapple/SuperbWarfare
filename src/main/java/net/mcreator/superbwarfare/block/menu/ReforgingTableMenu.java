@@ -172,12 +172,12 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         });
     }
 
-    public void setPerkLevel(Perk.Type type, boolean upgrade) {
-        if (upgrade && this.upgradePoint.get() <= 0) {
+    public void setPerkLevel(Perk.Type type, boolean upgrade, boolean isCreative) {
+        if (upgrade && this.upgradePoint.get() <= 0 && !isCreative) {
             return;
         }
 
-        if (!upgrade && this.upgradePoint.get() >= 100) {
+        if (!upgrade && this.upgradePoint.get() >= 100 && !isCreative) {
             return;
         }
 
@@ -190,7 +190,9 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
                     this.damagePerkLevel.set(upgrade ? Math.min(10, this.damagePerkLevel.get() + 1) : Math.max(1, this.damagePerkLevel.get() - 1));
         }
 
-        this.upgradePoint.set(Mth.clamp(this.upgradePoint.get() + (upgrade ? -1 : 1), 0, 100));
+        if (!isCreative) {
+            this.upgradePoint.set(Mth.clamp(this.upgradePoint.get() + (upgrade ? -1 : 1), 0, 100));
+        }
     }
 
     public void handleUpgradePoint(ItemStack stack) {
@@ -285,7 +287,8 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
 
             ItemStack output = gun.copy();
             PerkHelper.removePerkByType(output, perkItem.getPerk().type);
-            output.getOrCreateTag().putDouble("UpgradePoint", Math.min(100, level + output.getOrCreateTag().getDouble("UpgradePoint")));
+            output.getOrCreateTag().putDouble("UpgradePoint", Math.min(100, level - 1 + output.getOrCreateTag().getDouble("UpgradePoint")));
+            this.upgradePoint.set((int) output.getOrCreateTag().getDouble("UpgradePoint"));
 
             this.container.setItem(INPUT_SLOT, output);
             this.container.setChanged();
