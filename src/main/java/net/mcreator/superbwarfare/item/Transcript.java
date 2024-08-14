@@ -5,6 +5,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -44,5 +47,15 @@ public class Transcript extends Item {
 
         tooltip.add(Component.translatable("des.superbwarfare.transcript.total").withStyle(ChatFormatting.YELLOW)
                 .append(Component.literal(total + " ").withStyle(total == 100 ? ChatFormatting.GOLD : ChatFormatting.WHITE)));
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+        if (pPlayer.isCrouching()) {
+            ItemStack stack = pPlayer.getItemInHand(pUsedHand);
+            stack.getOrCreateTag().put(TAG_SCORES, new ListTag());
+            return InteractionResultHolder.success(stack);
+        }
+        return super.use(pLevel, pPlayer, pUsedHand);
     }
 }
