@@ -47,12 +47,14 @@ import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.entity.PartEntity;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -312,6 +314,24 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
             }
 
+            if (state.getBlock() instanceof TargetBlock) {
+                int rings = getRings(blockHitResult, hitVec);
+                double dis = shooter.position().distanceTo(hitVec);
+
+                if (shooter instanceof Player player) {
+                    player.displayClientMessage(Component.literal(String.valueOf(rings))
+                            .append(Component.translatable("des.superbwarfare.shoot.rings"))
+                            .append(Component.literal(new DecimalFormat("##.#").format(dis) + "M")), false);
+
+                    if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer splayer) {
+                        var holder = rings == 10 ? Holder.direct(ModSounds.HEADSHOT.get()) : Holder.direct(ModSounds.INDICATION.get());
+                        splayer.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
+                        ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new ClientIndicatorMessage(rings == 10 ? 1 : 0, 5));
+                    }
+
+                }
+            }
+
             this.onHitBlock(hitVec);
         }
 
@@ -330,6 +350,24 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             this.onHitEntity(entity, entityHitResult.isHeadshot(), entityHitResult.isLegshot());
             entity.invulnerableTime = 0;
         }
+    }
+
+    private static int getRings(@NotNull BlockHitResult blockHitResult, @NotNull Vec3 hitVec) {
+        Direction $$2 = blockHitResult.getDirection();
+        double $$3 = Math.abs(Mth.frac(hitVec.x) - 0.5);
+        double $$4 = Math.abs(Mth.frac(hitVec.y) - 0.5);
+        double $$5 = Math.abs(Mth.frac(hitVec.z) - 0.5);
+        Direction.Axis $$6 = $$2.getAxis();
+        double $$9;
+        if ($$6 == Direction.Axis.Y) {
+            $$9 = Math.max($$3, $$5);
+        } else if ($$6 == Direction.Axis.Z) {
+            $$9 = Math.max($$3, $$4);
+        } else {
+            $$9 = Math.max($$4, $$5);
+        }
+
+        return Math.max(1, Mth.ceil(10.0 * Mth.clamp((0.5 - $$9) / 0.5, 0.0, 1.0)));
     }
 
     protected void onHitBlock(Vec3 location) {
@@ -382,7 +420,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             } else {
                 living.setHealth(0);
                 living.level().broadcastEntityEvent(living, (byte) 60);
-                living.remove(Entity.RemovalReason.KILLED);
+                living.remove(RemovalReason.KILLED);
                 living.gameEvent(GameEvent.ENTITY_DIE);
             }
 
