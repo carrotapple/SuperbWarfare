@@ -43,7 +43,6 @@ public class M4ItemRenderer extends GeoItemRenderer<M4Item> {
     public ItemDisplayContext transformType;
     protected M4Item animatable;
     private final Set<String> hiddenBones = new HashSet<>();
-    private final Set<String> suppressedBones = new HashSet<>();
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {
@@ -111,11 +110,12 @@ public class M4ItemRenderer extends GeoItemRenderer<M4Item> {
                 stack.translate(-1.0f * SCALE_RECIPROCAL, 2.0f * SCALE_RECIPROCAL, 0.0f);
                 AnimUtils.renderPartOverBone(model.leftArm, bone, stack, armBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
                 AnimUtils.renderPartOverBone(model.leftSleeve, bone, stack, sleeveBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
-            } else if (name.equals("Righthand")) {
-                stack.translate(1.0f * SCALE_RECIPROCAL, 2.0f * SCALE_RECIPROCAL, 0.0f);
+            } else {
+                stack.translate(SCALE_RECIPROCAL, 2.0f * SCALE_RECIPROCAL, 0.0f);
                 AnimUtils.renderPartOverBone(model.rightArm, bone, stack, armBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
                 AnimUtils.renderPartOverBone(model.rightSleeve, bone, stack, sleeveBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
             }
+
             this.currentBuffer.getBuffer(this.renderType);
             stack.popPose();
         }
