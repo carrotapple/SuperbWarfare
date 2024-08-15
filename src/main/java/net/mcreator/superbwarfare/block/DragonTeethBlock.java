@@ -1,19 +1,22 @@
 package net.mcreator.superbwarfare.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class DragonTeethBlock extends Block {
     public DragonTeethBlock() {
-        super(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.BASEDRUM).sound(SoundType.STONE).strength(25f, 500f).requiresCorrectToolForDrops().noOcclusion().isRedstoneConductor((bs, br, bp) -> false));
+        super(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.BASEDRUM).sound(SoundType.STONE).strength(25f, 500f).requiresCorrectToolForDrops().pushReaction(PushReaction.BLOCK).noOcclusion().isRedstoneConductor((bs, br, bp) -> false));
     }
 
     @Override
@@ -36,5 +39,9 @@ public class DragonTeethBlock extends Block {
         return Shapes.or(box(2, 0, 2, 14, 24, 14));
     }
 
+    @Override
+    public BlockPathTypes getBlockPathType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
+        return BlockPathTypes.LAVA;
+    }
 }
 
