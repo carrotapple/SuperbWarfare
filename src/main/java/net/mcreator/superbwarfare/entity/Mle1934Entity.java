@@ -37,6 +37,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
+import org.joml.Vector3d;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -230,33 +231,38 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
                 stack.shrink(salvoShoot ? 2 : 1);
             }
 
-            // TODO 将炮弹生成在正确的位置（现在偏差值很大）
-            // 中心点距离发射位置（炮口）的距离
-            final float radius = 1.5f;
-            // 两个炮管之间的距离
-            final float length = 0.15f;
-            // 可能用的偏差值
-            final float offset = 0.0f;
             float yRot = this.getYRot();
+            if (yRot < 0) {
+                yRot += 360;
+            }
+            yRot = yRot + 90 % 360;
+
+            var leftPos = new Vector3d(7.2, 0, -0.45);
+            leftPos.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
+            leftPos.rotateY(-yRot * Mth.DEG_TO_RAD);
 
             //左炮管
             CannonShellEntity entityToSpawnLeft = new CannonShellEntity(ModEntities.CANNON_SHELL.get(),
                     player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime).durability(durability);
 
-            entityToSpawnLeft.setPos(this.getX() + this.getBbWidth() / 2 + (radius - length) * Mth.cos(yRot) - offset,
-                    this.getEyeY(),
-                    this.getZ() + this.getBbWidth() / 2 + (radius + length) * Mth.sin(yRot));
+            entityToSpawnLeft.setPos(this.getX() + leftPos.x,
+                    this.getEyeY() - 0.2 + leftPos.y,
+                    this.getZ() + leftPos.z);
             entityToSpawnLeft.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 18, 0.1f);
             level.addFreshEntity(entityToSpawnLeft);
 
             //右炮管
             if (salvoShoot) {
+                var rightPos = new Vector3d(7.2, 0, 0.45);
+                rightPos.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
+                rightPos.rotateY(-yRot * Mth.DEG_TO_RAD);
+
                 CannonShellEntity entityToSpawnRight = new CannonShellEntity(ModEntities.CANNON_SHELL.get(),
                         player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime).durability(durability);
 
-                entityToSpawnRight.setPos(this.getX() + this.getBbWidth() / 2 + (radius + length) * Mth.cos(yRot) + offset,
-                        this.getEyeY(),
-                        this.getZ() + this.getBbWidth() / 2 + (radius - length) * Mth.sin(yRot));
+                entityToSpawnRight.setPos(this.getX() + rightPos.x,
+                        this.getEyeY() - 0.2 + rightPos.y,
+                        this.getZ() + rightPos.z);
                 entityToSpawnRight.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 18, 0.1f);
                 level.addFreshEntity(entityToSpawnRight);
 
