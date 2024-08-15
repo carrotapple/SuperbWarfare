@@ -3,6 +3,7 @@ package net.mcreator.superbwarfare.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.model.entity.ModelTaserRod;
 import net.mcreator.superbwarfare.entity.TaserBulletProjectileEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -14,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class TaserBulletProjectileRenderer extends EntityRenderer<TaserBulletProjectileEntity> {
-    private static final ResourceLocation texture = new ResourceLocation("superbwarfare:textures/entity/taser_rod.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(ModUtils.MODID, "textures/entity/taser_rod.png");
     private final ModelTaserRod<TaserBulletProjectileEntity> model;
 
     public TaserBulletProjectileRenderer(EntityRendererProvider.Context context) {
@@ -35,6 +36,6 @@ public class TaserBulletProjectileRenderer extends EntityRenderer<TaserBulletPro
 
     @Override
     public ResourceLocation getTextureLocation(TaserBulletProjectileEntity entity) {
-        return texture;
+        return TEXTURE;
     }
 }

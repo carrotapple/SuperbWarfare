@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.client.screens;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -31,7 +32,7 @@ public class M79UIOverlay {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
         if (shouldRenderCrossHair(player) || shouldRenderCrossHair2(player)) {
-            event.getGuiGraphics().blit(new ResourceLocation("superbwarfare:textures/screens/rex.png"), w / 2 - 16, h / 2 - 16, 0, 0, 32, 32, 32, 32);
+            event.getGuiGraphics().blit(new ResourceLocation(ModUtils.MODID, "textures/screens/rex.png"), w / 2 - 16, h / 2 - 16, 0, 0, 32, 32, 32, 32);
         }
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();

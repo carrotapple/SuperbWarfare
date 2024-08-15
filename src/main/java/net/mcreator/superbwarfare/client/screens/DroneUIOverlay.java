@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.client.screens;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.tools.TraceTool;
@@ -34,6 +35,7 @@ public class DroneUIOverlay {
         int w = event.getWindow().getGuiScaledWidth();
         int h = event.getWindow().getGuiScaledHeight();
         Player player = Minecraft.getInstance().player;
+
         if (player != null) {
             ItemStack stack = player.getMainHandItem();
             RenderSystem.disableDepthTest();
@@ -43,13 +45,12 @@ public class DroneUIOverlay {
             RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
             RenderSystem.setShaderColor(1, 1, 1, 1);
             if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
-                event.getGuiGraphics().blit(new ResourceLocation("superbwarfare:textures/screens/drone.png"), w / 2 - 16, h / 2 - 16, 0, 0, 32, 32, 32, 32);
+                event.getGuiGraphics().blit(new ResourceLocation(ModUtils.MODID, "textures/screens/drone.png"), w / 2 - 16, h / 2 - 16, 0, 0, 32, 32, 32, 32);
 
                 DroneEntity entity = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
                         .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
 
                 if (entity != null) {
-
                     boolean lookAtEntity = false;
                     double distance = player.distanceTo(entity);
                     double block_range = entity.position().distanceTo((Vec3.atLowerCornerOf(entity.level().clip(
@@ -67,56 +68,45 @@ public class DroneUIOverlay {
 
                     int color = -1;
 
-
                     if (distance > MAX_DISTANCE - 48) {
-                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.warning")
-                                , w / 2 + -18, h / 2 + -47, -65536, false);
+                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.warning"),
+                                w / 2 - 18, h / 2 - 47, -65536, false);
                         color = -65536;
                     }
 
                     event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.distance")
-                            .append(Component.literal(new DecimalFormat("##.#").format(distance) + "M"))
-                            , w / 2 + 10, h / 2 + 33, color, false);
+                                    .append(Component.literal(new DecimalFormat("##.#").format(distance) + "M")),
+                            w / 2 + 10, h / 2 + 33, color, false);
 
                     event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.health")
-                            .append(Component.literal(new DecimalFormat("##.#").format(entity.getHealth()) + "/" + new DecimalFormat("##.#").format(entity.getMaxHealth())))
-                            , w / 2 - 77, h / 2 + 33, -1, false);
-
+                                    .append(Component.literal(new DecimalFormat("##.#").format(entity.getHealth()) + "/" + new DecimalFormat("##.#").format(entity.getMaxHealth()))),
+                            w / 2 - 77, h / 2 + 33, -1, false);
                     if (!entity.getEntityData().get(KAMIKAZE)) {
-
                         event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.ammo")
-                                .append(Component.literal(new DecimalFormat("##.#").format(entity.getEntityData().get(AMMO)) + " / 6"))
-                                , w / 2 + 12, h / 2 + -37, -1, false);
-
+                                        .append(Component.literal(new DecimalFormat("##.#").format(entity.getEntityData().get(AMMO)) + " / 6")),
+                                w / 2 + 12, h / 2 - 37, -1, false);
                     } else {
-
-                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.kamikaze")
-                                , w / 2 + 12, h / 2 + -37, -65536, false);
-
+                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.kamikaze"),
+                                w / 2 + 12, h / 2 - 37, -65536, false);
                     }
 
                     if (lookAtEntity) {
-
                         event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
-                                .append(Component.literal(new DecimalFormat("##.#").format(entity_range) + "M " + lookingEntity.getDisplayName().getString()))
-                                , w / 2 + 12, h / 2 - 28, color, false);
-
+                                        .append(Component.literal(new DecimalFormat("##.#").format(entity_range) + "M " + lookingEntity.getDisplayName().getString())),
+                                w / 2 + 12, h / 2 - 28, color, false);
                     } else {
                         if (block_range > 512) {
-
                             event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
-                                    .append(Component.literal("---M"))
-                                    , w / 2 + 12, h / 2 - 28, color, false);
-
+                                    .append(Component.literal("---M")), w / 2 + 12, h / 2 - 28, color, false);
                         } else {
                             event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
-                                    .append(Component.literal(new DecimalFormat("##.#").format(block_range) + "M"))
-                                    , w / 2 + 12, h / 2 - 28, color, false);
+                                            .append(Component.literal(new DecimalFormat("##.#").format(block_range) + "M")),
+                                    w / 2 + 12, h / 2 - 28, color, false);
                         }
-
                     }
                 }
             }
+
             RenderSystem.depthMask(true);
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableDepthTest();

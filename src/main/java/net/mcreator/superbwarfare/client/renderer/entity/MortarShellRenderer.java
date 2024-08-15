@@ -3,6 +3,7 @@ package net.mcreator.superbwarfare.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.model.entity.ModelMortarShell;
 import net.mcreator.superbwarfare.entity.MortarShellEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -14,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class MortarShellRenderer extends EntityRenderer<MortarShellEntity> {
-    private static final ResourceLocation texture = new ResourceLocation("superbwarfare:textures/entity/mortar_shell.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(ModUtils.MODID, "textures/entity/mortar_shell.png");
     private final ModelMortarShell<MortarShellEntity> model;
 
     public MortarShellRenderer(EntityRendererProvider.Context context) {
@@ -35,6 +36,6 @@ public class MortarShellRenderer extends EntityRenderer<MortarShellEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(MortarShellEntity entity) {
-        return texture;
+        return TEXTURE;
     }
 }

@@ -22,7 +22,7 @@ public class SpyglassRangeOverlay {
         int w = event.getWindow().getGuiScaledWidth();
         int h = event.getWindow().getGuiScaledHeight();
         Player player = Minecraft.getInstance().player;
-        if (player != null && (player.getMainHandItem().getItem() == Items.SPYGLASS || player.getOffhandItem().getItem() == Items.SPYGLASS ) && player.isUsingItem()) {
+        if (player != null && (player.getMainHandItem().getItem() == Items.SPYGLASS || player.getOffhandItem().getItem() == Items.SPYGLASS) && player.isUsingItem()) {
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     getDistanceString(player),

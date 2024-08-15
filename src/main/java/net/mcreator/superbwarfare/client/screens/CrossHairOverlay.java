@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.client.screens;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -47,11 +48,11 @@ public class CrossHairOverlay {
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
         if (shouldRenderCrossHair(player) || stack.is(ModItems.MINIGUN.get())) {
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/point.png"), w / 2f - 7.5f, h / 2f - 8, 0, 0, 16, 16, 16, 16);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/rexheng.png"), w / 2f - 9.5f - 2.8f * (float) spread, h / 2f - 8, 0, 0, 16, 16, 16, 16);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/rexheng.png"), w / 2f - 6.5f + 2.8f * (float) spread, h / 2f - 8, 0, 0, 16, 16, 16, 16);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/rexshu.png"), w / 2f - 7.5f, h / 2f - 7 + 2.8f * (float) spread, 0, 0, 16, 16, 16, 16);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/rexshu.png"), w / 2f - 7.5f, h / 2f - 10 - 2.8f * (float) spread, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/point.png"), w / 2f - 7.5f, h / 2f - 8, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexheng.png"), w / 2f - 9.5f - 2.8f * (float) spread, h / 2f - 8, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexheng.png"), w / 2f - 6.5f + 2.8f * (float) spread, h / 2f - 8, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexshu.png"), w / 2f - 7.5f, h / 2f - 7 + 2.8f * (float) spread, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexshu.png"), w / 2f - 7.5f, h / 2f - 10 - 2.8f * (float) spread, 0, 0, 16, 16, 16, 16);
         }
 
         float ww = w / 2f - 7.5f + (float) (2 * (Math.random() - 0.5f));
@@ -59,18 +60,18 @@ public class CrossHairOverlay {
         float m = (40 - KILL_INDICATOR * 5) / 5.5f;
 
         if (HIT_INDICATOR > 0) {
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/hit_marker.png"), ww, hh, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/hit_marker.png"), ww, hh, 0, 0, 16, 16, 16, 16);
         }
 
         if (HEAD_INDICATOR > 0) {
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/headshotmark.png"), ww, hh, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/headshotmark.png"), ww, hh, 0, 0, 16, 16, 16, 16);
         }
 
         if (KILL_INDICATOR > 0) {
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/kill_mark1.png"), w / 2f - 7.5f - 2 + m, h / 2f - 8 - 2 + m, 0, 0, 16, 16, 16, 16);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/kill_mark2.png"), w / 2f - 7.5f + 2 - m, h / 2f - 8 - 2 + m, 0, 0, 16, 16, 16, 16);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/kill_mark3.png"), w / 2f - 7.5f - 2 + m, h / 2f - 8 + 2 - m, 0, 0, 16, 16, 16, 16);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation("superbwarfare:textures/screens/kill_mark4.png"), w / 2f - 7.5f + 2 - m, h / 2f - 8 + 2 - m, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/kill_mark1.png"), w / 2f - 7.5f - 2 + m, h / 2f - 8 - 2 + m, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/kill_mark2.png"), w / 2f - 7.5f + 2 - m, h / 2f - 8 - 2 + m, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/kill_mark3.png"), w / 2f - 7.5f - 2 + m, h / 2f - 8 + 2 - m, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/kill_mark4.png"), w / 2f - 7.5f + 2 - m, h / 2f - 8 + 2 - m, 0, 0, 16, 16, 16, 16);
         }
 
         RenderSystem.depthMask(true);

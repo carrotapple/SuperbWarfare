@@ -40,10 +40,6 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         super(type, world);
     }
 
-    public GunGrenadeEntity(EntityType<? extends GunGrenadeEntity> type, LivingEntity entity, Level world) {
-        super(type, entity, world);
-    }
-
     public GunGrenadeEntity(LivingEntity entity, Level level, float damage, int monsterMultiplier) {
         super(ModEntities.GUN_GRENADE.get(), entity, level);
         this.damage = damage;
@@ -93,7 +89,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
 
         if (this.tickCount > 0) {
             if (this.level() instanceof ServerLevel) {
-                causeEntityhitExplode(entity);
+                causeEntityHitExplode(entity);
             }
         }
 
@@ -148,7 +144,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         }
     }
 
-    private void causeEntityhitExplode(Entity entity) {
+    private void causeEntityHitExplode(Entity entity) {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
                 ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 1.8f * this.damage,
                 entity.getX(), entity.getY(), entity.getZ(), 7.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(this.monsterMultiplier);

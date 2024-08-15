@@ -98,7 +98,7 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
         super.onHitBlock(blockHitResult);
         BlockPos resultPos = blockHitResult.getBlockPos();
         BlockState state = this.level().getBlockState(resultPos);
-        if(state.getBlock() instanceof BellBlock bell) {
+        if (state.getBlock() instanceof BellBlock bell) {
             bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
         }
     }
@@ -162,10 +162,10 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
         }
 
         boolean hurt;
-        if (entity instanceof Monster) {
-            hurt = performHurt(entity, i * damageMultiplier * (entity instanceof LivingEntity living && living.getMobType() == MobType.UNDEAD? this.undeadMultiple : 1), headshot);
+        if (entity instanceof Monster monster) {
+            hurt = performHurt(entity, i * damageMultiplier * (monster.getMobType() == MobType.UNDEAD ? this.undeadMultiple : 1), headshot);
         } else {
-            hurt = performHurt(entity, i * (entity instanceof LivingEntity living && living.getMobType() == MobType.UNDEAD? this.undeadMultiple : 1), headshot);
+            hurt = performHurt(entity, i * (entity instanceof LivingEntity living && living.getMobType() == MobType.UNDEAD ? this.undeadMultiple : 1), headshot);
         }
 
         if (!hurt) {

@@ -34,10 +34,6 @@ public class FragEntity extends ThrowableItemProjectile {
         super(type, world);
     }
 
-    public FragEntity(EntityType<? extends FragEntity> type, LivingEntity entity, Level world) {
-        super(type, entity, world);
-    }
-
     public FragEntity(LivingEntity entity, Level level) {
         super(ModEntities.FRAG.get(), entity, level);
     }
@@ -88,7 +84,7 @@ public class FragEntity extends ThrowableItemProjectile {
         super.onHitBlock(blockHitResult);
         BlockPos resultPos = blockHitResult.getBlockPos();
         BlockState state = this.level().getBlockState(resultPos);
-        if(state.getBlock() instanceof BellBlock bell) {
+        if (state.getBlock() instanceof BellBlock bell) {
             bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
         }
 

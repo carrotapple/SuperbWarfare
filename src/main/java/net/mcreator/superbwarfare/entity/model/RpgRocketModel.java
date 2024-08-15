@@ -21,9 +21,4 @@ public class RpgRocketModel extends GeoModel<RpgRocketEntity> {
 		return new ResourceLocation(ModUtils.MODID, "textures/entity/rpg_rocket.png");
 	}
 
-//	@Override
-//	public void setCustomAnimations(RpgRocketEntity animatable, long instanceId, AnimationState animationState) {
-//		CoreGeoBone bone = getAnimationProcessor().getBone("bone");
-//		bone.setHidden(animatable.tickCount <= 1);
-//	}
 }

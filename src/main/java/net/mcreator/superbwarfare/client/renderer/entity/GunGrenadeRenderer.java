@@ -3,6 +3,7 @@ package net.mcreator.superbwarfare.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.model.entity.ModelGrenade;
 import net.mcreator.superbwarfare.entity.GunGrenadeEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -14,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class GunGrenadeRenderer extends EntityRenderer<GunGrenadeEntity> {
-    private static final ResourceLocation texture = new ResourceLocation("superbwarfare:textures/entity/grenade.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(ModUtils.MODID, "textures/entity/grenade.png");
     private final ModelGrenade<GunGrenadeEntity> model;
 
     public GunGrenadeRenderer(EntityRendererProvider.Context context) {
@@ -35,6 +36,6 @@ public class GunGrenadeRenderer extends EntityRenderer<GunGrenadeEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(GunGrenadeEntity entity) {
-        return texture;
+        return TEXTURE;
     }
 }

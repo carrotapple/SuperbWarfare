@@ -3,6 +3,7 @@ package net.mcreator.superbwarfare.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.model.entity.ModelBullet;
 import net.mcreator.superbwarfare.entity.FragEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -15,7 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class FragRenderer extends EntityRenderer<FragEntity> {
-    private static final ResourceLocation texture = new ResourceLocation("superbwarfare:textures/entity/bullet_tex.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(ModUtils.MODID, "textures/entity/bullet_tex.png");
     private final ModelBullet<FragEntity> model;
 
     public FragRenderer(EntityRendererProvider.Context context) {
@@ -40,6 +41,6 @@ public class FragRenderer extends EntityRenderer<FragEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(FragEntity entity) {
-        return texture;
+        return TEXTURE;
     }
 }

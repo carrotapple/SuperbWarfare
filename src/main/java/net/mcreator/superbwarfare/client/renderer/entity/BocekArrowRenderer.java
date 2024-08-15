@@ -3,6 +3,7 @@ package net.mcreator.superbwarfare.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.model.entity.ModelBocekArrow;
 import net.mcreator.superbwarfare.entity.BocekArrowEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -14,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class BocekArrowRenderer extends EntityRenderer<BocekArrowEntity> {
-    private static final ResourceLocation texture = new ResourceLocation("superbwarfare:textures/entity/bocek_arrow.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(ModUtils.MODID, "textures/entity/bocek_arrow.png");
     private final ModelBocekArrow<BocekArrowEntity> model;
 
     public BocekArrowRenderer(EntityRendererProvider.Context context) {
@@ -35,6 +36,6 @@ public class BocekArrowRenderer extends EntityRenderer<BocekArrowEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(BocekArrowEntity entity) {
-        return texture;
+        return TEXTURE;
     }
 }
