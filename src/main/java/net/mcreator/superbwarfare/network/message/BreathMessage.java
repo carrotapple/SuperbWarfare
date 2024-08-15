@@ -53,7 +53,7 @@ public class BreathMessage {
             if (entity instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, ModSounds.BREATH_IN.get(), 1, 1);
             }
-            entity.getPersistentData().putDouble("NoBreath", 20);
+            entity.getPersistentData().putInt("NoBreath", 20);
         }
 
         if (!type) {

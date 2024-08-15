@@ -99,9 +99,6 @@ public class PlayerEventHandler {
             handleCannonTime(player);
             handleTacticalSprint(player);
             handleBreath(player);
-            if (player.getPersistentData().getDouble("NoBreath") > 0) {
-                player.getPersistentData().putDouble("NoBreath", (player.getPersistentData().getDouble("NoBreath") - 1));
-            }
         }
     }
 
@@ -118,8 +115,8 @@ public class PlayerEventHandler {
                 pose = 1;
             }
 
-            if (!player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breath && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming) {
-
+            if (!player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breath &&
+                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming) {
                 float newPitch = (float) (player.getXRot() - 0.03f * Mth.sin((float) (0.08 * player.tickCount)) * pose * Mth.nextDouble(RandomSource.create(), 0.1, 1));
                 player.setXRot(newPitch);
                 player.xRotO = player.getXRot();
@@ -132,17 +129,21 @@ public class PlayerEventHandler {
     }
 
     private static void handleBreath(Player player) {
-
+        if (player.getPersistentData().getInt("NoBreath") > 0) {
+            player.getPersistentData().putInt("NoBreath", player.getPersistentData().getInt("NoBreath") - 1);
+        }
 
         if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breath) {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.breathTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breathTime - 1, 0, 100);
+                capability.breathTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null)
+                        .orElse(new ModVariables.PlayerVariables()).breathTime - 1, 0, 100);
                 capability.syncPlayerVariables(player);
             });
             player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 2, 3, false, false));
         } else {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.breathTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breathTime + 1, 0, 100);
+                capability.breathTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null)
+                        .orElse(new ModVariables.PlayerVariables()).breathTime + 1, 0, 100);
                 capability.syncPlayerVariables(player);
             });
         }
@@ -167,7 +168,6 @@ public class PlayerEventHandler {
     }
 
     private static void handleTacticalSprint(Player player) {
-
         ItemStack stack = player.getMainHandItem();
 
         int sprint_cost;
