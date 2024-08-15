@@ -226,13 +226,6 @@ public class PlayerEventHandler {
         if (player.getPersistentData().getDouble("prone") > 0) {
             player.getPersistentData().putDouble("prone", (player.getPersistentData().getDouble("prone") - 1));
         }
-
-//        boolean flag = !(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).refresh;
-//
-//        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-//            capability.refresh = flag;
-//            capability.syncPlayerVariables(player);
-//        });
     }
 
     /**
@@ -271,7 +264,7 @@ public class PlayerEventHandler {
             if (tag.getDouble("damagetotal") >= tag.getDouble("exp2")) {
                 tag.putDouble("exp1", (tag.getDouble("exp2")));
                 tag.putInt("level", tag.getInt("level") + 1);
-                tag.putDouble("UpgradePoint", tag.getDouble("UpgradePoint") + 0.33334);
+                tag.putDouble("UpgradePoint", tag.getDouble("UpgradePoint") + 0.25);
             }
             tag.putDouble("damagenow", (tag.getDouble("damagetotal") - tag.getDouble("exp1")));
             tag.putDouble("damageneed", (tag.getDouble("exp2") - tag.getDouble("exp1")));

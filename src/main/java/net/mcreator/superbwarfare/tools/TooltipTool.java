@@ -62,13 +62,13 @@ public class TooltipTool {
         double rate = ItemNBTTool.getDouble(stack, "damagenow", 0) / ItemNBTTool.getDouble(stack, "damageneed", 1);
 
         ChatFormatting formatting;
-        if (level < 4) {
+        if (level < 10) {
             formatting = ChatFormatting.WHITE;
-        } else if (level < 6) {
+        } else if (level < 20) {
             formatting = ChatFormatting.AQUA;
-        } else if (level < 8) {
+        } else if (level < 30) {
             formatting = ChatFormatting.LIGHT_PURPLE;
-        } else if (level < 10) {
+        } else if (level < 40) {
             formatting = ChatFormatting.GOLD;
         } else {
             formatting = ChatFormatting.RED;
