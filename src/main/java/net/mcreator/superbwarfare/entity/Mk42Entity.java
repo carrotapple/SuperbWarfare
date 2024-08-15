@@ -46,9 +46,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntity {
-    public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.STRING);
-    public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public String animationprocedure = "empty";
@@ -67,22 +65,12 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(SHOOT, false);
         this.entityData.define(ANIMATION, "undefined");
-        this.entityData.define(TEXTURE, "sherman");
     }
 
     @Override
     protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
         return 2.16F;
-    }
-
-    public void setTexture(String texture) {
-        this.entityData.set(TEXTURE, texture);
-    }
-
-    public String getTexture() {
-        return this.entityData.get(TEXTURE);
     }
 
     @Override
@@ -167,14 +155,11 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        compound.putString("Texture", this.getTexture());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.contains("Texture"))
-            this.setTexture(compound.getString("Texture"));
     }
 
     @Override
@@ -373,7 +358,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1);
     }
 
-    private PlayState movementPredicate(AnimationState event) {
+    private PlayState movementPredicate(AnimationState<Mk42Entity> event) {
         if (this.animationprocedure.equals("empty")) {
 
             if (this.getFirstPassenger() != null) {
@@ -393,7 +378,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState event) {
+    private PlayState procedurePredicate(AnimationState<Mk42Entity> event) {
         if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
             event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
             if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {

@@ -2,8 +2,7 @@ package net.mcreator.superbwarfare.client.screens;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.mcreator.superbwarfare.entity.Mk42Entity;
-import net.mcreator.superbwarfare.entity.Mle1934Entity;
+import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.CameraType;
@@ -17,8 +16,9 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber({Dist.CLIENT})
+@Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class M79UIOverlay {
+
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
         int w = event.getWindow().getGuiScaledWidth();
@@ -44,7 +44,7 @@ public class M79UIOverlay {
         if (player == null) return false;
         return !player.isSpectator()
                 && player.getMainHandItem().getItem() == ModItems.M_79.get()
-                && (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || (player.isPassenger() && (player.getVehicle() instanceof Mk42Entity || player.getVehicle() instanceof Mle1934Entity)))
+                && (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || (player.isPassenger() && player.getVehicle() instanceof ICannonEntity))
                 && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zooming).orElse(false);
     }
 
@@ -52,6 +52,6 @@ public class M79UIOverlay {
         if (player == null) return false;
         return !player.isSpectator()
                 && !(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom
-                && player.isPassenger() && (player.getVehicle() instanceof Mk42Entity || player.getVehicle() instanceof Mle1934Entity);
+                && player.isPassenger() && player.getVehicle() instanceof ICannonEntity;
     }
 }

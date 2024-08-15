@@ -41,7 +41,6 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class SenpaiEntity extends Monster implements GeoEntity, AnimatedEntity {
-    public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(SenpaiEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(SenpaiEntity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -60,7 +59,6 @@ public class SenpaiEntity extends Monster implements GeoEntity, AnimatedEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(SHOOT, false);
         this.entityData.define(ANIMATION, "undefined");
     }
 
@@ -97,11 +95,13 @@ public class SenpaiEntity extends Monster implements GeoEntity, AnimatedEntity {
 
     protected void dropCustomDeathLoot(DamageSource source, int looting, boolean recentlyHitIn) {
         super.dropCustomDeathLoot(source, looting, recentlyHitIn);
-        if (Math.random() < 0.01) {
+
+        double random = Math.random();
+        if (random < 0.01) {
             this.spawnAtLocation(new ItemStack(Items.ENCHANTED_GOLDEN_APPLE));
-        } else if (0.01 <= Math.random() && Math.random() < 0.2) {
+        } else if (random < 0.2) {
             this.spawnAtLocation(new ItemStack(Items.GOLDEN_APPLE));
-        } else if (Math.random() >= 0.2) {
+        } else {
             this.spawnAtLocation(new ItemStack(Items.APPLE));
         }
     }

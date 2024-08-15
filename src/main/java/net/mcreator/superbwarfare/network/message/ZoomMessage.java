@@ -1,7 +1,6 @@
 package net.mcreator.superbwarfare.network.message;
 
-import net.mcreator.superbwarfare.entity.Mk42Entity;
-import net.mcreator.superbwarfare.entity.Mle1934Entity;
+import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.SoundTool;
@@ -15,7 +14,6 @@ import java.util.function.Supplier;
 
 public class ZoomMessage {
     private final int type;
-
 
     public ZoomMessage(int type) {
         this.type = type;
@@ -52,12 +50,13 @@ public class ZoomMessage {
                 capability.syncPlayerVariables(entity);
             });
 
-            if (entity.isPassenger() && (entity.getVehicle() instanceof Mk42Entity || entity.getVehicle() instanceof Mle1934Entity)) {
+            if (entity.isPassenger() && entity.getVehicle() instanceof ICannonEntity) {
                 if (entity instanceof ServerPlayer serverPlayer) {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.CANNON_ZOOM_IN.get(), 2, 1);
                 }
             }
         }
+
         if (type == 1) {
             entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.zoom = false;
@@ -68,7 +67,7 @@ public class ZoomMessage {
                 capability.syncPlayerVariables(entity);
             });
 
-            if (entity.isPassenger() && (entity.getVehicle() instanceof Mk42Entity || entity.getVehicle() instanceof Mle1934Entity)) {
+            if (entity.isPassenger() && entity.getVehicle() instanceof ICannonEntity) {
                 if (entity instanceof ServerPlayer serverPlayer) {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.CANNON_ZOOM_OUT.get(), 2, 1);
                 }

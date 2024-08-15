@@ -2,8 +2,8 @@ package net.mcreator.superbwarfare.client.screens;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.mcreator.superbwarfare.entity.Mk42Entity;
-import net.mcreator.superbwarfare.entity.Mle1934Entity;
+import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.RenderTool;
@@ -35,9 +35,9 @@ public class Mk42UIOverlay {
         RenderSystem.setShaderColor(1, 1, 1, 1);
         if (shouldRenderCrossHair(player)) {
             RenderTool.preciseBlit(event.getGuiGraphics(),
-                new ResourceLocation("superbwarfare:textures/screens/mk_42_rex.png"),
-                (float) w / 2 - (float) TEXTURE_WIDTH / 10f, (float) h / 2 - (float) TEXTURE_HEIGHT / 10f,
-                0, 0, TEXTURE_WIDTH / 5f, TEXTURE_HEIGHT / 5f, TEXTURE_WIDTH / 5f, TEXTURE_HEIGHT / 5f);
+                    new ResourceLocation(ModUtils.MODID, "textures/screens/mk_42_rex.png"),
+                    (float) w / 2 - (float) TEXTURE_WIDTH / 10f, (float) h / 2 - (float) TEXTURE_HEIGHT / 10f,
+                    0, 0, TEXTURE_WIDTH / 5f, TEXTURE_HEIGHT / 5f, TEXTURE_WIDTH / 5f, TEXTURE_HEIGHT / 5f);
         }
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();
@@ -50,8 +50,7 @@ public class Mk42UIOverlay {
         if (player == null) return false;
         return !player.isSpectator()
                 && !(player.getMainHandItem().getItem() instanceof GunItem)
-//                && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON
-                && (player.getVehicle() != null && (player.getVehicle() instanceof Mk42Entity || player.getVehicle() instanceof Mle1934Entity))
+                && (player.getVehicle() != null && (player.getVehicle() instanceof ICannonEntity))
                 && (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom;
     }
 }

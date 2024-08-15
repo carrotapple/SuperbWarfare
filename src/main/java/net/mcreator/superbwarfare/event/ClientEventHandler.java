@@ -1,8 +1,7 @@
 package net.mcreator.superbwarfare.event;
 
 import net.mcreator.superbwarfare.entity.DroneEntity;
-import net.mcreator.superbwarfare.entity.Mk42Entity;
-import net.mcreator.superbwarfare.entity.Mle1934Entity;
+import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModMobEffects;
 import net.mcreator.superbwarfare.init.ModTags;
@@ -60,7 +59,7 @@ public class ClientEventHandler {
     public static void computeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
         ClientLevel level = Minecraft.getInstance().level;
         Entity entity = event.getCamera().getEntity();
-        if (level != null && entity instanceof LivingEntity living && entity.isPassenger() && (entity.getVehicle() instanceof Mk42Entity || entity.getVehicle() instanceof Mle1934Entity)) {
+        if (level != null && entity instanceof LivingEntity living && entity.isPassenger() && entity.getVehicle() instanceof ICannonEntity) {
             handleCannonCamera(event, living);
         }
         if (level != null && entity instanceof LivingEntity living
@@ -470,7 +469,7 @@ public class ClientEventHandler {
             player.getPersistentData().putDouble("fov", event.getFOV());
             return;
         }
-        if (player.isPassenger() && (player.getVehicle() instanceof Mk42Entity || player.getVehicle() instanceof Mle1934Entity)) {
+        if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity) {
             if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
                 event.setFOV(event.getFOV() / 5);
             }
@@ -492,7 +491,7 @@ public class ClientEventHandler {
             return;
         }
 
-        if (mc.player.getMainHandItem().is(ModTags.Items.GUN) || (mc.player.getVehicle() != null && (mc.player.getVehicle() instanceof Mk42Entity || mc.player.getVehicle() instanceof Mle1934Entity))) {
+        if (mc.player.getMainHandItem().is(ModTags.Items.GUN) || (mc.player.getVehicle() != null && mc.player.getVehicle() instanceof ICannonEntity)) {
             event.setCanceled(true);
         }
 
