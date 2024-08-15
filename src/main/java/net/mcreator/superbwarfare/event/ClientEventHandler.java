@@ -180,11 +180,7 @@ public class ClientEventHandler {
             if (entity.isShiftKeyDown() && entity.getBbHeight() >= 1 && data.getDouble("prone") == 0) {
                 pose = 0.85;
             } else if (data.getDouble("prone") > 0) {
-                if (entity.getMainHandItem().getOrCreateTag().getDouble("bipod") == 1) {
-                    pose = 0;
-                } else {
-                    pose = 0.25;
-                }
+                pose = entity.getMainHandItem().getOrCreateTag().getDouble("bipod") == 1 ? 0 : 0.25f;
             } else {
                 pose = 1;
             }

@@ -14,6 +14,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
@@ -81,6 +82,7 @@ public class PlayerEventHandler {
 
         if (event.phase == TickEvent.Phase.END) {
             if (stack.is(ModTags.Items.GUN)) {
+                handleWeaponSway(player);
                 handlePlayerProne(player);
                 handlePlayerSprint(player);
                 handleWeaponLevel(player);
@@ -96,6 +98,29 @@ public class PlayerEventHandler {
             handleSimulationDistance(player);
             handleCannonTime(player);
             handleTacticalSprint(player);
+        }
+    }
+
+    private static void handleWeaponSway(Player player) {
+        if (player.getMainHandItem().is(ModTags.Items.GUN)) {
+            float pose;
+            var data = player.getPersistentData();
+
+            if (player.isCrouching() && player.getBbHeight() >= 1 && data.getDouble("prone") == 0) {
+                pose = 0.85f;
+            } else if (player.getPersistentData().getDouble("prone") > 0) {
+                pose = player.getMainHandItem().getOrCreateTag().getDouble("bipod") == 1 ? 0 : 0.25f;
+            } else {
+                pose = 1;
+            }
+
+            float newPitch = (float) (player.getXRot() - 0.03f * Mth.sin((float) (0.08 * player.tickCount)) * pose * Mth.nextDouble(RandomSource.create(), 0.1, 1));
+            player.setXRot(newPitch);
+            player.xRotO = player.getXRot();
+
+            float newYaw = (float) (player.getYRot() - 0.015f * Mth.cos((float) (0.07 * (player.tickCount + 2 * Math.PI))) * pose * Mth.nextDouble(RandomSource.create(), 0.05, 1.25));
+            player.setYRot(newYaw);
+            player.yRotO = player.getYRot();
         }
     }
 
@@ -193,7 +218,7 @@ public class PlayerEventHandler {
             player.getPersistentData().putDouble("prone", 3);
         }
 
-        if (player.isShiftKeyDown() && level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 0.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude()
+        if (player.isCrouching() && level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 0.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude()
                 && !level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 1.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude()) {
             player.getPersistentData().putDouble("prone", 3);
         }
@@ -202,12 +227,12 @@ public class PlayerEventHandler {
             player.getPersistentData().putDouble("prone", (player.getPersistentData().getDouble("prone") - 1));
         }
 
-        boolean flag = !(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).refresh;
-
-        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            capability.refresh = flag;
-            capability.syncPlayerVariables(player);
-        });
+//        boolean flag = !(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).refresh;
+//
+//        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+//            capability.refresh = flag;
+//            capability.syncPlayerVariables(player);
+//        });
     }
 
     /**
