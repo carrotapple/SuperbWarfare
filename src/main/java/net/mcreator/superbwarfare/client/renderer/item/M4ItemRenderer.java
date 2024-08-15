@@ -79,11 +79,11 @@ public class M4ItemRenderer extends GeoItemRenderer<M4Item> {
 
         if (name.equals("flare")) {
             Player player = Minecraft.getInstance().player;
-            ItemStack pstack = null;
+            ItemStack itemStack = null;
             if (player != null) {
-                pstack = player.getMainHandItem();
+                itemStack = player.getMainHandItem();
             }
-            if (pstack != null && pstack.getOrCreateTag().getDouble("flash_time") > 0) {
+            if (itemStack != null && itemStack.getOrCreateTag().getDouble("flash_time") > 0) {
                 bone.setHidden(false);
                 bone.setScaleX((float) (0.55 + 0.5 * (Math.random() - 0.5)));
                 bone.setScaleY((float) (0.55 + 0.5 * (Math.random() - 0.5)));
@@ -95,6 +95,11 @@ public class M4ItemRenderer extends GeoItemRenderer<M4Item> {
 
         if (this.transformType.firstPerson() && renderingArms) {
             AbstractClientPlayer player = mc.player;
+
+            if (player == null) {
+                return;
+            }
+
             PlayerRenderer playerRenderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(player);
             PlayerModel<AbstractClientPlayer> model = playerRenderer.getModel();
             stack.pushPose();

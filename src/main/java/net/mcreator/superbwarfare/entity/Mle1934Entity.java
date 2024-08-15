@@ -388,7 +388,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1);
     }
 
-    private PlayState movementPredicate(AnimationState event) {
+    private PlayState movementPredicate(AnimationState<Mle1934Entity> event) {
         if (this.animationprocedure.equals("empty")) {
 
             if (this.getFirstPassenger() != null) {
@@ -408,7 +408,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState event) {
+    private PlayState procedurePredicate(AnimationState<Mle1934Entity> event) {
         if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
             event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
             if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
