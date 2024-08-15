@@ -195,12 +195,30 @@ public class ModKeyMappings {
         }
     };
 
+    public static final KeyMapping BREATH = new KeyMapping("key.superbwarfare.breath", GLFW.GLFW_KEY_LEFT_CONTROL, "key.categories.superbwarfare") {
+        private boolean isDownOld = false;
+
+        @Override
+        public void setDown(boolean isDown) {
+            super.setDown(isDown);
+            if (isDownOld != isDown && isDown) {
+                ModUtils.PACKET_HANDLER.sendToServer(new BreathMessage(true));
+                BREATH_LASTPRESS = System.currentTimeMillis();
+            } else if (isDownOld != isDown) {
+                int dt = (int) (System.currentTimeMillis() - BREATH_LASTPRESS);
+                ModUtils.PACKET_HANDLER.sendToServer(new BreathMessage(false));
+            }
+            isDownOld = isDown;
+        }
+    };
+
     private static long FORWARD_LASTPRESS = 0;
     private static long BACKWARD_LASTPRESS = 0;
     private static long LEFT_LASTPRESS = 0;
     private static long RIGHT_LASTPRESS = 0;
     private static long UP_LASTPRESS = 0;
     private static long DOWN_LASTPRESS = 0;
+    private static long BREATH_LASTPRESS = 0;
 
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
@@ -216,6 +234,7 @@ public class ModKeyMappings {
         event.register(RIGHT);
         event.register(UP);
         event.register(DOWN);
+        event.register(BREATH);
     }
 
     @Mod.EventBusSubscriber({Dist.CLIENT})
@@ -235,6 +254,7 @@ public class ModKeyMappings {
                 RIGHT.consumeClick();
                 UP.consumeClick();
                 DOWN.consumeClick();
+                BREATH.consumeClick();
             }
         }
     }

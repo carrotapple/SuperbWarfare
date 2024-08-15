@@ -98,6 +98,10 @@ public class PlayerEventHandler {
             handleSimulationDistance(player);
             handleCannonTime(player);
             handleTacticalSprint(player);
+            handleBreath(player);
+            if (player.getPersistentData().getDouble("NoBreath") > 0) {
+                player.getPersistentData().putDouble("NoBreath", (player.getPersistentData().getDouble("NoBreath") - 1));
+            }
         }
     }
 
@@ -114,13 +118,51 @@ public class PlayerEventHandler {
                 pose = 1;
             }
 
-            float newPitch = (float) (player.getXRot() - 0.03f * Mth.sin((float) (0.08 * player.tickCount)) * pose * Mth.nextDouble(RandomSource.create(), 0.1, 1));
-            player.setXRot(newPitch);
-            player.xRotO = player.getXRot();
+            if (!player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breath && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming) {
 
-            float newYaw = (float) (player.getYRot() - 0.015f * Mth.cos((float) (0.07 * (player.tickCount + 2 * Math.PI))) * pose * Mth.nextDouble(RandomSource.create(), 0.05, 1.25));
-            player.setYRot(newYaw);
-            player.yRotO = player.getYRot();
+                float newPitch = (float) (player.getXRot() - 0.03f * Mth.sin((float) (0.08 * player.tickCount)) * pose * Mth.nextDouble(RandomSource.create(), 0.1, 1));
+                player.setXRot(newPitch);
+                player.xRotO = player.getXRot();
+
+                float newYaw = (float) (player.getYRot() - 0.015f * Mth.cos((float) (0.07 * (player.tickCount + 2 * Math.PI))) * pose * Mth.nextDouble(RandomSource.create(), 0.05, 1.25));
+                player.setYRot(newYaw);
+                player.yRotO = player.getYRot();
+            }
+        }
+    }
+
+    private static void handleBreath(Player player) {
+
+
+        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breath) {
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.breathTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breathTime - 1, 0, 100);
+                capability.syncPlayerVariables(player);
+            });
+            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 2, 3, false, false));
+        } else {
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.breathTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breathTime + 1, 0, 100);
+                capability.syncPlayerVariables(player);
+            });
+        }
+
+        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breathTime == 0) {
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.breathExhaustion = true;
+                capability.breath = false;
+                capability.syncPlayerVariables(player);
+            });
+            if (player instanceof ServerPlayer serverPlayer) {
+                SoundTool.playLocalSound(serverPlayer, ModSounds.BREATH_EXHAUSTION.get(), 1, 1);
+            }
+        }
+
+        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breathTime == 100) {
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.breathExhaustion = false;
+                capability.syncPlayerVariables(player);
+            });
         }
     }
 

@@ -82,9 +82,7 @@ public class ModVariables {
             clone.recoilHorizon = original.recoilHorizon;
             clone.firing = original.firing;
             clone.cannonFiring = original.cannonFiring;
-            clone.targetAngle = original.targetAngle;
             clone.rifleAmmo = original.rifleAmmo;
-            clone.refresh = original.refresh;
             clone.handgunAmmo = original.handgunAmmo;
             clone.shotgunAmmo = original.shotgunAmmo;
             clone.sniperAmmo = original.sniperAmmo;
@@ -94,6 +92,9 @@ public class ModVariables {
             clone.tacticalSprint = original.tacticalSprint;
             clone.tacticalSprintTime = original.tacticalSprintTime;
             clone.tacticalSprintExhaustion = original.tacticalSprintExhaustion;
+            clone.breath = original.breath;
+            clone.breathTime = original.breathTime;
+            clone.breathExhaustion = original.breathExhaustion;
 
             if (event.getEntity().level().isClientSide()) return;
 
@@ -274,8 +275,7 @@ public class ModVariables {
         public double firing = 0;
         public double cannonFiring = 0;
         public int cannonRecoil = 0;
-        public double targetAngle = 0;
-        public boolean refresh = false;
+
         public int rifleAmmo = 0;
         public int handgunAmmo = 0;
         public int shotgunAmmo = 0;
@@ -286,6 +286,10 @@ public class ModVariables {
         public boolean tacticalSprint = false;
         public int tacticalSprintTime = 600;
         public boolean tacticalSprintExhaustion = false;
+
+        public boolean breath = false;
+        public int breathTime = 160;
+        public boolean breathExhaustion = false;
 
         public void syncPlayerVariables(Entity entity) {
             if (entity instanceof ServerPlayer)
@@ -301,9 +305,7 @@ public class ModVariables {
             nbt.putDouble("firing", firing);
             nbt.putDouble("cannonFiring", cannonFiring);
             nbt.putInt("cannonRecoil", cannonRecoil);
-            nbt.putDouble("target_angle", targetAngle);
             nbt.putInt("rifle_ammo", rifleAmmo);
-            nbt.putBoolean("refresh", refresh);
             nbt.putInt("handgun_ammo", handgunAmmo);
             nbt.putInt("shotgun_ammo", shotgunAmmo);
             nbt.putInt("sniper_ammo", sniperAmmo);
@@ -313,6 +315,9 @@ public class ModVariables {
             nbt.putBoolean("tacticalSprint", tacticalSprint);
             nbt.putInt("tacticalSprintTime", tacticalSprintTime);
             nbt.putBoolean("tacticalSprintExhaustion", tacticalSprintExhaustion);
+            nbt.putBoolean("breath", breath);
+            nbt.putInt("breathTime", breathTime);
+            nbt.putBoolean("breathExhaustion", breathExhaustion);
 
             return nbt;
         }
@@ -326,9 +331,7 @@ public class ModVariables {
             firing = nbt.getDouble("firing");
             cannonFiring = nbt.getDouble("cannonFiring");
             cannonRecoil = nbt.getInt("cannonRecoil");
-            targetAngle = nbt.getDouble("target_angle");
             rifleAmmo = nbt.getInt("rifle_ammo");
-            refresh = nbt.getBoolean("refresh");
             handgunAmmo = nbt.getInt("handgun_ammo");
             shotgunAmmo = nbt.getInt("shotgun_ammo");
             sniperAmmo = nbt.getInt("sniper_ammo");
@@ -338,6 +341,9 @@ public class ModVariables {
             tacticalSprint = nbt.getBoolean("tacticalSprint");
             tacticalSprintTime = nbt.getInt("tacticalSprintTime");
             tacticalSprintExhaustion = nbt.getBoolean("tacticalSprintExhaustion");
+            breath = nbt.getBoolean("breath");
+            breathTime = nbt.getInt("breathTime");
+            breathExhaustion = nbt.getBoolean("breathExhaustion");
         }
     }
 
@@ -387,9 +393,7 @@ public class ModVariables {
                 variables.firing = message.data.firing;
                 variables.cannonFiring = message.data.cannonFiring;
                 variables.cannonRecoil = message.data.cannonRecoil;
-                variables.targetAngle = message.data.targetAngle;
                 variables.rifleAmmo = message.data.rifleAmmo;
-                variables.refresh = message.data.refresh;
                 variables.handgunAmmo = message.data.handgunAmmo;
                 variables.shotgunAmmo = message.data.shotgunAmmo;
                 variables.sniperAmmo = message.data.sniperAmmo;
@@ -399,6 +403,9 @@ public class ModVariables {
                 variables.tacticalSprint = message.data.tacticalSprint;
                 variables.tacticalSprintTime = message.data.tacticalSprintTime;
                 variables.tacticalSprintExhaustion = message.data.tacticalSprintExhaustion;
+                variables.breath = message.data.breath;
+                variables.breathTime = message.data.breathTime;
+                variables.breathExhaustion = message.data.breathExhaustion;
             });
         }
     }

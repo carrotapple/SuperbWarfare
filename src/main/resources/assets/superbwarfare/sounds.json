@@ -1874,5 +1874,21 @@
         "stream": false
       }
     ]
+  },
+  "breath_in": {
+    "sounds": [
+      {
+        "name": "superbwarfare:breath_in",
+        "stream": false
+      }
+    ]
+  },
+  "breath_exhaustion": {
+    "sounds": [
+      {
+        "name": "superbwarfare:breath_exhaustion",
+        "stream": false
+      }
+    ]
   }
 }
