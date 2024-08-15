@@ -222,22 +222,21 @@ public class GunEventHandler {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_OVERHEAT.get(), 2f, 1f);
                 }
             }
+            var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+            float pitch = tag.getDouble("heat") <= 40 ? 1 : (float) (1 - 0.025 * Math.abs(40 - tag.getDouble("heat")));
 
             if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
-                if (tag.getDouble("heat") <= 40) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_FIRE_1P.get(), 2f, 1f);
-                    player.playSound(ModSounds.MINIGUN_FIRE_3P.get(), 4f, 1f);
-                    player.playSound(ModSounds.MINIGUN_FAR.get(), 12f, 1f);
-                    player.playSound(ModSounds.MINIGUN_VERYFAR.get(), 24f, 1f);
-                } else {
-                    float pitch = (float) (1 - 0.025 * Math.abs(40 - tag.getDouble("heat")));
+                SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_FIRE_1P.get(), 2f, pitch);
+                player.playSound(ModSounds.MINIGUN_FIRE_3P.get(), 4f, pitch);
+                player.playSound(ModSounds.MINIGUN_FAR.get(), 12f, pitch);
+                player.playSound(ModSounds.MINIGUN_VERYFAR.get(), 24f, pitch);
 
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_FIRE_1P.get(), 2f, pitch);
-                    player.playSound(ModSounds.MINIGUN_FIRE_3P.get(), 4f, pitch);
-                    player.playSound(ModSounds.MINIGUN_FAR.get(), 12f, pitch);
-                    player.playSound(ModSounds.MINIGUN_VERYFAR.get(), 24f, pitch);
+                if (perk == ModPerks.BEAST_BULLET.get()) {
+                    player.playSound(ModSounds.HENG.get(), 5f, pitch);
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.HENG.get(), 5f, pitch);
                 }
             }
+
 
             stack.getOrCreateTag().putBoolean("shoot", true);
 

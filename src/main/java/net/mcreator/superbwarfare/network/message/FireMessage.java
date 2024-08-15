@@ -220,6 +220,16 @@ public class FireMessage {
                 }
             }
 
+            var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+
+            if (perk == ModPerks.BEAST_BULLET.get()) {
+                player.playSound(ModSounds.HENG.get(), 5f, 1f);
+
+                if (player instanceof ServerPlayer serverPlayer) {
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.HENG.get(), 5f, 1f);
+                }
+            }
+
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.recoil = 0.1;
                 capability.firing = 1;

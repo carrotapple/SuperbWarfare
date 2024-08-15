@@ -4,8 +4,12 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.LightSaberItemRenderer;
+import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -125,4 +129,16 @@ public class LightSaber extends SwordItem implements GeoItem, AnimatedItem {
     public boolean isDamageable(ItemStack stack) {
         return false;
     }
+
+    @Override
+    public boolean onEntitySwing(ItemStack itemstack, LivingEntity entity) {
+        boolean retval = super.onEntitySwing(itemstack, entity);
+        entity.playSound(ModSounds.LIGHT_SABER.get(), 1f, 1f);
+
+        if (entity instanceof ServerPlayer serverPlayer) {
+            SoundTool.playLocalSound(serverPlayer, ModSounds.LIGHT_SABER.get(), 1f, 1f);
+        }
+        return retval;
+    }
+
 }

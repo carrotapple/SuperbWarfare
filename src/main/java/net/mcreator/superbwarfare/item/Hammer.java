@@ -1,16 +1,13 @@
 package net.mcreator.superbwarfare.item;
 
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 
 public class Hammer extends SwordItem {
     public Hammer() {
         super(new Tier() {
             public int getUses() {
-                return 800;
+                return 400;
             }
 
             public float getSpeed() {
@@ -18,7 +15,7 @@ public class Hammer extends SwordItem {
             }
 
             public float getAttackDamageBonus() {
-                return 10f;
+                return 8f;
             }
 
             public int getLevel() {
@@ -26,11 +23,11 @@ public class Hammer extends SwordItem {
             }
 
             public int getEnchantmentValue() {
-                return 14;
+                return 9;
             }
 
             public Ingredient getRepairIngredient() {
-                return Ingredient.of();
+                return Ingredient.of(new ItemStack(Items.IRON_INGOT));
             }
         }, 3, -3.2f, new Item.Properties());
     }
@@ -52,7 +49,7 @@ public class Hammer extends SwordItem {
 
     @Override
     public boolean isRepairable(ItemStack itemstack) {
-        return false;
+        return true;
     }
 
 }
