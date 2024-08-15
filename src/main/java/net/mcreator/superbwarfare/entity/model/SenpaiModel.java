@@ -21,5 +21,4 @@ public class SenpaiModel extends GeoModel<SenpaiEntity> {
         return new ResourceLocation(ModUtils.MODID, "textures/entity/senpai.png");
     }
 
-
 }
