@@ -35,7 +35,6 @@ public class RpkItemModel extends GeoModel<RpkItem> {
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone scope = getAnimationProcessor().getBone("pka");
         CoreGeoBone flare = getAnimationProcessor().getBone("flare");
-        CoreGeoBone hide = getAnimationProcessor().getBone("hide");
         CoreGeoBone button = getAnimationProcessor().getBone("button");
         CoreGeoBone shuan = getAnimationProcessor().getBone("shuan");
 
@@ -44,11 +43,8 @@ public class RpkItemModel extends GeoModel<RpkItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        double p = 0;
-        p = player.getPersistentData().getDouble("zoom_pos");
-
-        double zp = 0;
-        zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double p = player.getPersistentData().getDouble("zoom_pos");
+        double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(1.69f * (float) p);
 
@@ -69,24 +65,19 @@ public class RpkItemModel extends GeoModel<RpkItem> {
         button.setScaleZ(1f - (0.3f * (float) p));
 
 
-        CoreGeoBone holo = getAnimationProcessor().getBone("holo");
-
-        holo.setScaleX(0.9f);
-        holo.setScaleY(0.9f);
-
-        holo.setHidden(!(gun.getPosX() > 1.65));
+        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.65));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
 
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
             shen.setPosY(-0.01f * (float) (fp + 2 * fr));
-            shen.setPosZ(0.2f * (float) (fp + 0.54f * fr));
+            shen.setPosZ(0.7f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.003f * (float) (fp + fr));
             shen.setRotZ(0f);
         } else {
             shen.setPosY(-0.03f * (float) (fp + 2 * fr));
-            shen.setPosZ(0.8f * (float) (fp + 0.54f * fr));
+            shen.setPosZ(0.6f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.04f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
         }
@@ -94,24 +85,12 @@ public class RpkItemModel extends GeoModel<RpkItem> {
 
         shuan.setPosZ(2.4f * (float) fp);
 
-        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (0.7 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (0.7 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-        } else {
-            flare.setHidden(true);
-        }
-
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
         float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
         float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
-
-        double y = 0;
-        double x = 0;
-        y = player.getPersistentData().getDouble("y");
-        x = player.getPersistentData().getDouble("x");
+        double y = player.getPersistentData().getDouble("y");
+        double x = player.getPersistentData().getDouble("x");
 
         root.setPosX(PosX);
 

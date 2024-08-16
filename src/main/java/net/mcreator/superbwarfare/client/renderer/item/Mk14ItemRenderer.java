@@ -2,16 +2,26 @@ package net.mcreator.superbwarfare.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mcreator.superbwarfare.item.gun.Mk14Item;
 import net.mcreator.superbwarfare.client.layer.Mk14Layer;
 import net.mcreator.superbwarfare.client.model.item.Mk14ItemModel;
+import net.mcreator.superbwarfare.item.gun.Mk14Item;
+import net.mcreator.superbwarfare.network.ModVariables;
+import net.mcreator.superbwarfare.tools.AnimUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
+import software.bernie.geckolib.util.RenderUtils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -54,6 +64,88 @@ public class Mk14ItemRenderer extends GeoItemRenderer<Mk14Item> {
         if (this.renderArms) {
             this.renderArms = false;
         }
+    }
+
+    @Override
+    public void renderRecursively(PoseStack stack, Mk14Item animatable, GeoBone bone, RenderType type, MultiBufferSource buffer, VertexConsumer bufferIn, boolean isReRender, float partialTick, int packedLightIn, int packedOverlayIn, float red,
+                                  float green, float blue, float alpha) {
+        Minecraft mc = Minecraft.getInstance();
+        String name = bone.getName();
+        boolean renderingArms = false;
+        if (name.equals("Lefthand") || name.equals("Righthand")) {
+            bone.setHidden(true);
+            renderingArms = true;
+        } else {
+            bone.setHidden(this.hiddenBones.contains(name));
+        }
+
+        Player player_ = Minecraft.getInstance().player;
+        ItemStack itemStack = null;
+        if (player_ != null) {
+            itemStack = player_.getMainHandItem();
+        }
+
+        if (name.equals("flare")) {
+            if (itemStack != null && itemStack.getOrCreateTag().getDouble("flash_time") > 0) {
+                bone.setHidden(false);
+                bone.setScaleX((float) (0.55 + 0.5 * (Math.random() - 0.5)));
+                bone.setScaleY((float) (0.55 + 0.5 * (Math.random() - 0.5)));
+                bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
+            } else {
+                bone.setHidden(true);
+            }
+        }
+
+        if (name.equals("rex")) {
+            if (player_ != null) {
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || !player_.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming);
+            }
+        }
+
+        if (name.equals("jing")) {
+            if (player_ != null) {
+                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && player_.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming);
+            }
+        }
+
+        if (name.equals("qiangguan")) {
+            if (player_ != null) {
+                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && player_.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming);
+            }
+        }
+
+        if (this.transformType.firstPerson() && renderingArms) {
+            AbstractClientPlayer player = mc.player;
+
+            if (player == null) {
+                return;
+            }
+
+            PlayerRenderer playerRenderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(player);
+            PlayerModel<AbstractClientPlayer> model = playerRenderer.getModel();
+            stack.pushPose();
+            RenderUtils.translateMatrixToBone(stack, bone);
+            RenderUtils.translateToPivotPoint(stack, bone);
+            RenderUtils.rotateMatrixAroundBone(stack, bone);
+            RenderUtils.scaleMatrixForBone(stack, bone);
+            RenderUtils.translateAwayFromPivotPoint(stack, bone);
+            ResourceLocation loc = player.getSkinTextureLocation();
+            VertexConsumer armBuilder = this.currentBuffer.getBuffer(RenderType.entitySolid(loc));
+            VertexConsumer sleeveBuilder = this.currentBuffer.getBuffer(RenderType.entityTranslucent(loc));
+            if (name.equals("Lefthand")) {
+                stack.translate(-1.0f * SCALE_RECIPROCAL, 2.0f * SCALE_RECIPROCAL, 0.0f);
+                AnimUtils.renderPartOverBone(model.leftArm, bone, stack, armBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
+                AnimUtils.renderPartOverBone(model.leftSleeve, bone, stack, sleeveBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
+            } else {
+                stack.translate(SCALE_RECIPROCAL, 2.0f * SCALE_RECIPROCAL, 0.0f);
+                AnimUtils.renderPartOverBone(model.rightArm, bone, stack, armBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
+                AnimUtils.renderPartOverBone(model.rightSleeve, bone, stack, sleeveBuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 1);
+            }
+
+            this.currentBuffer.getBuffer(this.renderType);
+            stack.popPose();
+        }
+        super.renderRecursively(stack, animatable, bone, type, buffer, bufferIn, isReRender, partialTick, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }
 
     @Override

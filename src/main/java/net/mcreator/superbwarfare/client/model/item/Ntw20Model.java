@@ -34,14 +34,8 @@ public class Ntw20Model extends GeoModel<Ntw20> {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone scope = getAnimationProcessor().getBone("scope");
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
         CoreGeoBone l = getAnimationProcessor().getBone("l");
         CoreGeoBone r = getAnimationProcessor().getBone("r");
-        CoreGeoBone action = getAnimationProcessor().getBone("action");
-        CoreGeoBone body = getAnimationProcessor().getBone("body");
-        CoreGeoBone jing = getAnimationProcessor().getBone("jing");
-        CoreGeoBone base = getAnimationProcessor().getBone("base");
-        CoreGeoBone rex = getAnimationProcessor().getBone("rex");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -85,38 +79,15 @@ public class Ntw20Model extends GeoModel<Ntw20> {
 
         scope.setScaleZ(1f - (0.85f * (float) p));
 
-        if (gun.getPosX() > 4.3f) {
-            rex.setHidden(false);
-            action.setHidden(true);
-            body.setHidden(true);
-            jing.setHidden(true);
-            base.setHidden(true);
-        } else {
-            rex.setHidden(true);
-            action.setHidden(false);
-            body.setHidden(false);
-            jing.setHidden(false);
-            base.setHidden(false);
-        }
-
-        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-        } else {
-            flare.setHidden(true);
-        }
+        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 4.3));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
         float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
         float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
 
-        double y = 0;
-        double x = 0;
-        y = player.getPersistentData().getDouble("y");
-        x = player.getPersistentData().getDouble("x");
+        double y = player.getPersistentData().getDouble("y");
+        double x = player.getPersistentData().getDouble("x");
 
         root.setPosX(PosX);
 

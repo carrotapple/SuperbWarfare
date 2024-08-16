@@ -51,11 +51,8 @@ public class VectorItemModel extends GeoModel<VectorItem> {
             kmj.setRotX(0);
         }
 
-        double p = 0;
-        p = player.getPersistentData().getDouble("zoom_pos");
-
-        double zp = 0;
-        zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double p = player.getPersistentData().getDouble("zoom_pos");
+        double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(2.35f * (float) p);
 
@@ -68,11 +65,8 @@ public class VectorItemModel extends GeoModel<VectorItem> {
         scope.setScaleZ(1f - (0.2f * (float) p));
 
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
-        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming && gun.getPosX() > 2) {
-            holo.setHidden(false);
-        } else {
-            holo.setHidden(true);
-        }
+
+        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 2));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
@@ -95,10 +89,8 @@ public class VectorItemModel extends GeoModel<VectorItem> {
         float PosX = (float) player.getPersistentData().getDouble("gun_move_posX");
         float PosY = (float) player.getPersistentData().getDouble("gun_move_posY");
 
-        double y = 0;
-        double x = 0;
-        y = player.getPersistentData().getDouble("y");
-        x = player.getPersistentData().getDouble("x");
+        double y = player.getPersistentData().getDouble("y");
+        double x = player.getPersistentData().getDouble("x");
 
         root.setPosX(PosX);
 

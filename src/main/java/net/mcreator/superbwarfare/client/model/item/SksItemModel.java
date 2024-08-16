@@ -46,11 +46,8 @@ public class SksItemModel extends GeoModel<SksItem> {
             bolt.setPosZ(2.5f);
         }
 
-        double p = 0;
-        p = player.getPersistentData().getDouble("zoom_pos");
-
-        double zp = 0;
-        zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double p = player.getPersistentData().getDouble("zoom_pos");
+        double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(1.53f * (float) p);
 
@@ -62,7 +59,7 @@ public class SksItemModel extends GeoModel<SksItem> {
 
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
 
-        holo.setHidden(!(gun.getPosX() > 1.2));
+        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.2));
 
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
 
@@ -84,24 +81,12 @@ public class SksItemModel extends GeoModel<SksItem> {
 
         shuan.setPosZ(2f * (float) fp);
 
-        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (0.55 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (0.55 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-        } else {
-            flare.setHidden(true);
-        }
-
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
         float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
         float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
-
-        double y = 0;
-        double x = 0;
-        y = player.getPersistentData().getDouble("y");
-        x = player.getPersistentData().getDouble("x");
+        double y = player.getPersistentData().getDouble("y");
+        double x = player.getPersistentData().getDouble("x");
 
         root.setPosX(PosX);
 

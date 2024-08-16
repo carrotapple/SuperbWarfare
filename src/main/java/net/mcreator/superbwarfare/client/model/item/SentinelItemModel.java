@@ -9,12 +9,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SentinelItemModel extends GeoModel<SentinelItem> {
     @Override
@@ -71,7 +68,6 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
 
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
         holo.setPosY(0.09f);
-        holo.setHidden(!(gun.getPosX() > 1.8));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
@@ -92,13 +88,6 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         CoreGeoBone charge = getAnimationProcessor().getBone("charge");
 
         charge.setRotZ(charge.getRotZ() + times * 0.05f);
-
-        AtomicBoolean flag = new AtomicBoolean(false);
-        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() > 0)
-        );
-
-        charge.setHidden(!flag.get());
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
@@ -141,17 +130,6 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         move.setRotY(1.4f * Mth.DEG_TO_RAD * (float) yRot);
 
         move.setRotZ(2.7f * (float) m + Mth.DEG_TO_RAD * (float) zRot);
-
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
-
-        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-        } else {
-            flare.setHidden(true);
-        }
 
         if ((stack.getOrCreateTag().getDouble("ammo") <= 5)) {
             ammo.setScaleX((float) (stack.getOrCreateTag().getDouble("ammo") / 5));

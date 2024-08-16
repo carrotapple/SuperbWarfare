@@ -33,13 +33,10 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
     public void setCustomAnimations(Mk14Item animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bones");
         CoreGeoBone scope = getAnimationProcessor().getBone("scope");
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
         CoreGeoBone rex = getAnimationProcessor().getBone("rex");
         CoreGeoBone l = getAnimationProcessor().getBone("l");
         CoreGeoBone r = getAnimationProcessor().getBone("r");
         CoreGeoBone yugu = getAnimationProcessor().getBone("yugu");
-        CoreGeoBone jing = getAnimationProcessor().getBone("jing");
-        CoreGeoBone qiangguan = getAnimationProcessor().getBone("qiangguan");
         CoreGeoBone action = getAnimationProcessor().getBone("action");
 
         Player player = Minecraft.getInstance().player;
@@ -52,11 +49,8 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
             r.setRotX(-1.5f);
         }
 
-        double p = 0;
-        p = player.getPersistentData().getDouble("zoom_pos");
-
-        double zp = 0;
-        zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double p = player.getPersistentData().getDouble("zoom_pos");
+        double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(3.105f * (float) p);
 
@@ -97,15 +91,7 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
 
         action.setPosZ(2.5f * (float) fp);
 
-        if (gun.getPosX() > 2.5f) {
-            rex.setHidden(false);
-            jing.setHidden(true);
-            qiangguan.setHidden(true);
-        } else {
-            rex.setHidden(true);
-            jing.setHidden(false);
-            qiangguan.setHidden(false);
-        }
+        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 2.5));
 
         CoreGeoBone bolt = getAnimationProcessor().getBone("bolt");
 
@@ -113,29 +99,13 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
             bolt.setPosZ(2.5f);
         }
 
-        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (0.5 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (0.5 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
-                flare.setPosY(-3.5f);
-            } else {
-                flare.setPosY(0);
-            }
-        } else {
-            flare.setHidden(true);
-        }
-
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
         float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
         float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
 
-        double y = 0;
-        double x = 0;
-        y = player.getPersistentData().getDouble("y");
-        x = player.getPersistentData().getDouble("x");
+        double y = player.getPersistentData().getDouble("y");
+        double x = player.getPersistentData().getDouble("x");
 
         root.setPosX(PosX);
 

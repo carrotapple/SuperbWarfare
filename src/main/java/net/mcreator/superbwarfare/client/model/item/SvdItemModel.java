@@ -32,14 +32,13 @@ public class SvdItemModel extends GeoModel<SvdItem> {
     @Override
     public void setCustomAnimations(SvdItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
         CoreGeoBone bolt = getAnimationProcessor().getBone("bolt");
         CoreGeoBone scope = getAnimationProcessor().getBone("pso1");
-        CoreGeoBone sight = getAnimationProcessor().getBone("handguard");
         CoreGeoBone bt1 = getAnimationProcessor().getBone("bullton1");
         CoreGeoBone bt2 = getAnimationProcessor().getBone("bullton2");
-        CoreGeoBone shuan = getAnimationProcessor().getBone("shuan");
         CoreGeoBone glass = getAnimationProcessor().getBone("glass");
+        CoreGeoBone holo = getAnimationProcessor().getBone("holo");
+        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -50,11 +49,8 @@ public class SvdItemModel extends GeoModel<SvdItem> {
             bolt.setPosZ(3.25f);
         }
 
-        double p = 0;
-        p = player.getPersistentData().getDouble("zoom_pos");
-
-        double zp = 0;
-        zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double p = player.getPersistentData().getDouble("zoom_pos");
+        double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(2.02f * (float) p);
 
@@ -72,18 +68,7 @@ public class SvdItemModel extends GeoModel<SvdItem> {
 
         bt2.setScaleX(1f - (0.5f * (float) p));
 
-        CoreGeoBone holo = getAnimationProcessor().getBone("holo");
-        if (gun.getPosX() > 1.9) {
-            holo.setPosY(0.05f);
-            holo.setScaleX(0.45f);
-            holo.setScaleY(0.45f);
-            holo.setHidden(false);
-            sight.setHidden(true);
-        } else {
-            holo.setHidden(true);
-            sight.setHidden(false);
-            glass.setHidden(true);
-        }
+        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.9));
 
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
 
@@ -95,6 +80,7 @@ public class SvdItemModel extends GeoModel<SvdItem> {
             shen.setPosZ(1.6f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.003f * (float) (fp + fr));
             shen.setRotZ(0f);
+            flare.setPosY(-2.5f);
         } else {
             shen.setPosY(0.04f * (float) (fp + 2 * fr));
             shen.setPosZ(1.8f * (float) (fp + 0.54f * fr));
@@ -103,28 +89,17 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         }
         shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
 
-        holo.setPosY(1.1f * (float) fp);
-
+        holo.setPosY(0.05f + 1.1f * (float) fp);
         holo.setRotZ(-0.04f * (float) fp);
-
-        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (0.8 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (0.8 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-        } else {
-            flare.setHidden(true);
-        }
+        holo.setScaleX(0.75f);
+        holo.setScaleY(0.75f);
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
         float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
         float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
-
-        double y = 0;
-        double x = 0;
-        y = player.getPersistentData().getDouble("y");
-        x = player.getPersistentData().getDouble("x");
+        double y = player.getPersistentData().getDouble("y");
+        double x = player.getPersistentData().getDouble("x");
 
         root.setPosX(PosX);
 

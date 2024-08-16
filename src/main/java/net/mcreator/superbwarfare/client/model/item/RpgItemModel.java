@@ -32,7 +32,6 @@ public class RpgItemModel extends GeoModel<RpgItem> {
     @Override
     public void setCustomAnimations(RpgItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
-        CoreGeoBone rocket = getAnimationProcessor().getBone("Rockets");
         CoreGeoBone shen = getAnimationProcessor().getBone("rpg");
         CoreGeoBone hammer = getAnimationProcessor().getBone("hammer");
 
@@ -40,8 +39,6 @@ public class RpgItemModel extends GeoModel<RpgItem> {
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
-
-        rocket.setHidden(stack.getOrCreateTag().getBoolean("empty"));
 
         if (stack.getOrCreateTag().getBoolean("close_hammer")) {
             hammer.setRotX(-90 * Mth.DEG_TO_RAD);
@@ -63,11 +60,8 @@ public class RpgItemModel extends GeoModel<RpgItem> {
         }
         shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
 
-        double p = 0;
-        p = player.getPersistentData().getDouble("zoom_pos");
-
-        double zp = 0;
-        zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double p = player.getPersistentData().getDouble("zoom_pos");
+        double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(0.91f * (float) p);
 
@@ -77,26 +71,13 @@ public class RpgItemModel extends GeoModel<RpgItem> {
 
         gun.setRotZ(0.45f * (float) p + (float) (0.02f * zp));
 
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
-
-        if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (1.0 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (1.0 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-        } else {
-            flare.setHidden(true);
-        }
-
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
         float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
         float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
 
-        double y = 0;
-        double x = 0;
-        y = player.getPersistentData().getDouble("y");
-        x = player.getPersistentData().getDouble("x");
+        double y = player.getPersistentData().getDouble("y");
+        double x = player.getPersistentData().getDouble("x");
 
         root.setPosX(PosX);
 

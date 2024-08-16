@@ -39,11 +39,8 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        double p = 0;
-        p = player.getPersistentData().getDouble("zoom_pos");
-
-        double zp = 0;
-        zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double p = player.getPersistentData().getDouble("zoom_pos");
+        double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(1.712f * (float) p);
 
@@ -65,19 +62,9 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
         shen.setRotZ(-0.03f * (float) (fp + 1.3 * fr));
         shen.setRotY(-0.05f * (float) fr);
 
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
 
         if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
             jichui.setRotX(-0.52f);
-        }
-
-        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-        } else {
-            flare.setHidden(true);
         }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
@@ -85,10 +72,8 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
         float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
         float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
 
-        double y = 0;
-        double x = 0;
-        y = player.getPersistentData().getDouble("y");
-        x = player.getPersistentData().getDouble("x");
+        double y = player.getPersistentData().getDouble("y");
+        double x = player.getPersistentData().getDouble("x");
 
         root.setPosX(PosX);
 

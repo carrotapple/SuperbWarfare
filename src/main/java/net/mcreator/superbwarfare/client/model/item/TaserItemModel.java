@@ -48,11 +48,19 @@ public class TaserItemModel extends GeoModel<Taser> {
         bar.setScaleX((float) ItemNBTTool.getInt(stack, TAG_POWER, 1200) / 1200);
 
         if (ItemNBTTool.getInt(stack, TAG_POWER, 1200) >= 400) {
-            bluecover.setHidden(false);
-            redcover.setHidden(true);
+            bluecover.setScaleX(1);
+            bluecover.setScaleY(1);
+            bluecover.setScaleZ(1);
+            redcover.setScaleX(0);
+            redcover.setScaleY(0);
+            redcover.setScaleZ(0);
         } else {
-            bluecover.setHidden(true);
-            redcover.setHidden(false);
+            bluecover.setScaleX(0);
+            bluecover.setScaleY(0);
+            bluecover.setScaleZ(0);
+            redcover.setScaleX(1);
+            redcover.setScaleY(1);
+            redcover.setScaleZ(1);
         }
 
         double fp = player.getPersistentData().getDouble("fire_pos");
