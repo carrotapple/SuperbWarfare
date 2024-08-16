@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.layer.Hk416Layer;
 import net.mcreator.superbwarfare.client.model.item.Hk416ItemModel;
 import net.mcreator.superbwarfare.item.gun.Hk416Item;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
@@ -99,7 +100,9 @@ public class Hk416ItemRenderer extends GeoItemRenderer<Hk416Item> {
             if (player != null) {
                 itemStack = player.getMainHandItem();
             }
-            bone.setHidden(itemStack != null && itemStack.getOrCreateTag().getBoolean("HoloHidden"));
+            if (player != null) {
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming);
+            }
         }
 
 

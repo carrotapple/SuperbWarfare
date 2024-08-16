@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.layer.M98bLayer;
 import net.mcreator.superbwarfare.client.model.item.M98bItemModel;
 import net.mcreator.superbwarfare.item.gun.M98bItem;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
@@ -99,7 +100,7 @@ public class M98bItemRenderer extends GeoItemRenderer<M98bItem> {
             if (player != null) {
                 itemStack = player.getMainHandItem();
             }
-            bone.setHidden(itemStack != null && itemStack.getOrCreateTag().getBoolean("HoloHidden"));
+            bone.setHidden((itemStack != null && itemStack.getOrCreateTag().getBoolean("HoloHidden")) || !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming);
         }
 
         if (name.equals("qiang")) {

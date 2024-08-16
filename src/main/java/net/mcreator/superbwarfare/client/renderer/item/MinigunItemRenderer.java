@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -74,6 +75,27 @@ public class MinigunItemRenderer extends GeoItemRenderer<Minigun> {
             renderingArms = true;
         } else {
             bone.setHidden(this.hiddenBones.contains(name));
+        }
+
+        Player player_ = Minecraft.getInstance().player;
+        ItemStack itemStack = null;
+        if (player_ != null) {
+            itemStack = player_.getMainHandItem();
+        }
+
+        if (name.equals("flare")) {
+            if (itemStack != null && itemStack.getOrCreateTag().getDouble("flash_time") > 0) {
+                bone.setHidden(false);
+                bone.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
+                bone.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
+                bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
+            } else {
+                bone.setHidden(true);
+            }
+        }
+
+        if (name.equals("light")) {
+            bone.setHidden(itemStack == null || !(itemStack.getOrCreateTag().getDouble("flash_time") > 0));
         }
 
         if (this.transformType.firstPerson() && renderingArms) {

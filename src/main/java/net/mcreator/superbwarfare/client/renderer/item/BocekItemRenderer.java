@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.layer.BocekLayer;
 import net.mcreator.superbwarfare.client.model.item.BocekItemModel;
 import net.mcreator.superbwarfare.item.gun.BocekItem;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
@@ -84,7 +85,9 @@ public class BocekItemRenderer extends GeoItemRenderer<BocekItem> {
         }
 
         if (name.equals("holo")) {
-            bone.setHidden(itemStack != null && itemStack.getOrCreateTag().getBoolean("HoloHidden"));
+            if (player_ != null) {
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || !player_.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming);
+            }
         }
 
         if (name.equals("arrow")) {

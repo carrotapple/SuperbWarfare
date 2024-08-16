@@ -64,24 +64,6 @@ public class MinigunItemModel extends GeoModel<Minigun> {
         shen.setRotZ(-0.02f * (float) (fp + 1.3 * fr));
         shen.setPosX(0.5f * (float) fr * (float) ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
 
-        if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
-            flare.setScaleZ(1);
-            light.setScaleX(1);
-            light.setScaleY(1);
-            light.setScaleZ(1);
-            flare.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-        } else {
-            flare.setScaleX(0);
-            flare.setScaleY(0);
-            flare.setScaleZ(0);
-            light.setScaleX(0);
-            light.setScaleY(0);
-            light.setScaleZ(0);
-
-        }
-
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
         float PosX = (float) player.getPersistentData().getDouble("gun_move_posX");
