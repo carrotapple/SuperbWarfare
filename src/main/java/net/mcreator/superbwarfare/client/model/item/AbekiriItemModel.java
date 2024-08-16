@@ -63,17 +63,6 @@ public class AbekiriItemModel extends GeoModel<Abekiri> {
         shen.setRotZ(-0.1f * (float) (fp + 1.3 * fr));
         shen.setRotY(-0.15f * (float) fr);
 
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
-
-        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-        } else {
-            flare.setHidden(true);
-        }
-
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
         float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");

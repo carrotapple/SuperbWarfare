@@ -82,11 +82,9 @@ public class M60ItemModel extends GeoModel<M60Item> {
             b1.setScaleZ(0);
         }
 
-        double p = 0;
-        p = player.getPersistentData().getDouble("zoom_pos");
+        double p = player.getPersistentData().getDouble("zoom_pos");
 
-        double zp = 0;
-        zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
         gun.setPosX(3.74f * (float) p);
 
@@ -114,26 +112,12 @@ public class M60ItemModel extends GeoModel<M60Item> {
 
         tiba.setRotZ((float) (-0.25f * fp + 0.4 * fr));
 
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
-
-        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-        } else {
-            flare.setHidden(true);
-        }
-
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
         float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
         float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
-
-        double y = 0;
-        double x = 0;
-        y = player.getPersistentData().getDouble("y");
-        x = player.getPersistentData().getDouble("x");
+        double y = player.getPersistentData().getDouble("y");
+        double x = player.getPersistentData().getDouble("x");
 
         root.setPosX(PosX);
 

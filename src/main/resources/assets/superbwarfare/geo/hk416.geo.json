@@ -6,7 +6,7 @@
 				"identifier": "geometry.hk416",
 				"texture_width": 128,
 				"texture_height": 128,
-				"visible_bounds_width": 18,
+				"visible_bounds_width": 11,
 				"visible_bounds_height": 6,
 				"visible_bounds_offset": [0, 0, 0]
 			},
@@ -39,7 +39,7 @@
 					"name": "Righthand",
 					"parent": "0",
 					"pivot": [-2.7, -6.7, 10.6],
-					"rotation": [70.17995, -12.39135, -1.6575],
+					"rotation": [109.82005, 12.39135, 178.3425],
 					"cubes": [
 						{
 							"origin": [-4.7, -6.7, 8.6],
@@ -8954,12 +8954,12 @@
 				{
 					"name": "Lefthand",
 					"parent": "magazine",
-					"pivot": [5.2, -4.7, 0],
-					"rotation": [65.81754, 23.7695, -7.98205],
+					"pivot": [5.56456, -4.97884, -0.31913],
+					"rotation": [123.91904, -8.99551, 153.59632],
 					"cubes": [
 						{
-							"origin": [3.2, -8.7, -2],
-							"size": [4, 16, 4],
+							"origin": [3.56456, -4.97884, -2.31913],
+							"size": [4, 12, 4],
 							"uv": {
 								"north": {"uv": [0, 92], "uv_size": [4, 12]},
 								"east": {"uv": [0, 92], "uv_size": [4, 12]},

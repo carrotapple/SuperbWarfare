@@ -42,13 +42,11 @@ public class DevotionItemModel extends GeoModel<Devotion> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        double p = 0;
-        p = player.getPersistentData().getDouble("zoom_pos");
+        double p = player.getPersistentData().getDouble("zoom_pos");
 
-        double zp = 0;
-        zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-        gun.setPosX(2.19f * (float) p);
+        gun.setPosX(2.17f * (float) p);
 
         gun.setPosY(0.17f * (float) p - (float) (0.5f * zp));
 
@@ -67,14 +65,15 @@ public class DevotionItemModel extends GeoModel<Devotion> {
         bolt.setPosZ(-2f * (float) bp);
 
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
         if (gun.getPosX() > 1.2) {
-            holo.setHidden(false);
-            number.setHidden(false);
+            number.setScaleX(1);
+            number.setScaleY(1);
         } else {
-            holo.setHidden(true);
-            number.setHidden(true);
+            number.setScaleX(0);
+            number.setScaleY(0);
         }
+
+        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.8));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
@@ -92,14 +91,6 @@ public class DevotionItemModel extends GeoModel<Devotion> {
         }
         shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
 
-        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (0.6 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (0.6 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-        } else {
-            flare.setHidden(true);
-        }
 
 
         CoreGeoBone n0 = getAnimationProcessor().getBone("00");

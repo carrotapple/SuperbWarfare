@@ -42,8 +42,8 @@ public class Aa12ItemModel extends GeoModel<Aa12Item> {
         double p = player.getPersistentData().getDouble("zoom_pos");
         double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-        gun.setPosX(3.48f * (float) p);
-        gun.setPosY(-0.92f * (float) p - (float) (0.2f * zp));
+        gun.setPosX(2.105f * (float) p);
+        gun.setPosY(0.17f * (float) p - (float) (0.2f * zp));
 
         gun.setPosZ(0.1f * (float) p + (float) (0.3f * zp));
         gun.setRotZ((float) (0.02f * zp));
@@ -64,17 +64,6 @@ public class Aa12ItemModel extends GeoModel<Aa12Item> {
             shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
         }
         shen.setPosX(0.5f * (float) fr * (float) ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
-
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
-
-        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-        } else {
-            flare.setHidden(true);
-        }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 

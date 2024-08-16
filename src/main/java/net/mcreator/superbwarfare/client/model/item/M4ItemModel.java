@@ -57,7 +57,7 @@ public class M4ItemModel extends GeoModel<M4Item> {
 
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
             shen.setPosY(0.02f * (float) (fp + 2 * fr));
-            shen.setPosZ(0.6f * (float) (fp + 0.54f * fr));
+            shen.setPosZ(1.6f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.003f * (float) (fp + fr));
             shen.setRotZ(0f);
         } else {
@@ -68,26 +68,13 @@ public class M4ItemModel extends GeoModel<M4Item> {
         }
         shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
 
-//        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
-
-//        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-//            flare.setHidden(false);
-//            flare.setScaleX((float) (0.55 + 0.5 * (Math.random() - 0.5)));
-//            flare.setScaleY((float) (0.55 + 0.5 * (Math.random() - 0.5)));
-//            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-//        } else {
-//            flare.setHidden(true);
-//        }
-
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
         float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
         float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
 
-        double y = 0;
-        double x = 0;
-        y = player.getPersistentData().getDouble("y");
-        x = player.getPersistentData().getDouble("x");
+        double y = player.getPersistentData().getDouble("y");
+        double x = player.getPersistentData().getDouble("x");
 
         root.setPosX(PosX);
 

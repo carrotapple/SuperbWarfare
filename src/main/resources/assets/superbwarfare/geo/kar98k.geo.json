@@ -7,8 +7,8 @@
 				"texture_width": 64,
 				"texture_height": 64,
 				"visible_bounds_width": 4,
-				"visible_bounds_height": 3,
-				"visible_bounds_offset": [0, 0.5, 0]
+				"visible_bounds_height": 6,
+				"visible_bounds_offset": [0, 0, 0]
 			},
 			"bones": [
 				{
@@ -5034,12 +5034,12 @@
 				{
 					"name": "Lefthand",
 					"parent": "gun",
-					"pivot": [3.2, -5.8, 0.3],
-					"rotation": [55.2967, 9.58766, -16.41323],
+					"pivot": [3.50236, -5.65119, 1.01805],
+					"rotation": [98.98829, -29.92401, -133.94309],
 					"cubes": [
 						{
-							"origin": [1.9, -5.8, -1.4],
-							"size": [3.5, 12, 3.5],
+							"origin": [1.20236, -5.65119, -0.93195],
+							"size": [4, 12, 4],
 							"uv": {
 								"north": {"uv": [63, 63], "uv_size": [1, 1]},
 								"east": {"uv": [63, 63], "uv_size": [1, 1]},
@@ -5054,12 +5054,12 @@
 				{
 					"name": "Righthand",
 					"parent": "gun",
-					"pivot": [-3.5, -5.2, 15.3],
-					"rotation": [71.43885, -15.99996, -3.28813],
+					"pivot": [-3.5, -4.45, 15.3],
+					"rotation": [108.56115, 15.99996, 176.71187],
 					"cubes": [
 						{
-							"origin": [-5.3, -5.2, 14.5],
-							"size": [3.5, 12, 3.5],
+							"origin": [-5.55, -4.45, 13.25],
+							"size": [4, 12, 4],
 							"uv": {
 								"north": {"uv": [63, 63], "uv_size": [1, 1]},
 								"east": {"uv": [63, 63], "uv_size": [1, 1]},

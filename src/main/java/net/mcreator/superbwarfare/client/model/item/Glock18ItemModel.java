@@ -83,9 +83,13 @@ public class Glock18ItemModel extends GeoModel<Glock18Item> {
 
         if (stack.getOrCreateTag().getBoolean("HoldOpen")) {
             slide.setPosZ(1.5f);
-            bullet.setHidden(true);
+            bullet.setScaleX(0);
+            bullet.setScaleY(0);
+            bullet.setScaleZ(0);
         } else {
-            bullet.setHidden(false);
+            bullet.setScaleX(1);
+            bullet.setScaleY(1);
+            bullet.setScaleZ(1);
         }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
@@ -95,17 +99,6 @@ public class Glock18ItemModel extends GeoModel<Glock18Item> {
 
         double y = player.getPersistentData().getDouble("y");
         double x = player.getPersistentData().getDouble("x");
-
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
-
-        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (0.55 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (0.55 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-        } else {
-            flare.setHidden(true);
-        }
 
         root.setPosX(PosX);
 

@@ -33,42 +33,31 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
     public void setCustomAnimations(Hk416Item animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
-        CoreGeoBone holo = getAnimationProcessor().getBone("holo");
         CoreGeoBone scope = getAnimationProcessor().getBone("eotech");
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (0.6 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (0.6 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-        } else {
-            flare.setHidden(true);
-        }
-
         double p = player.getPersistentData().getDouble("zoom_pos");
         double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-        gun.setPosX(3.28f * (float) p);
-        gun.setPosY(1.04f * (float) p - (float) (0.2f * zp));
-        gun.setPosZ(6f * (float) p + (float) (0.3f * zp));
+        gun.setPosX(3.34f * (float) p);
+        gun.setPosY(0.54f * (float) p - (float) (0.2f * zp));
+        gun.setPosZ(2.5f * (float) p + (float) (0.3f * zp));
         gun.setRotZ((float) (0.05f * zp));
 
-        scope.setScaleZ(1f - (0.5f * (float) p));
+        scope.setScaleZ(1f - (0.7f * (float) p));
 
-        holo.setHidden(!(gun.getPosX() > 3.1));
+        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 3.1));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
 
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
             shen.setPosY(-0.01f * (float) (fp + 2 * fr));
-            shen.setPosZ(0.2f * (float) (fp + 0.54f * fr));
+            shen.setPosZ(1.2f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.003f * (float) (fp + fr));
             shen.setRotZ(0f);
         } else {

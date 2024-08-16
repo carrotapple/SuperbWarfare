@@ -44,16 +44,13 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         CoreGeoBone deng = getAnimationProcessor().getBone("deng");
         CoreGeoBone deng2 = getAnimationProcessor().getBone("deng2");
         CoreGeoBone deng3 = getAnimationProcessor().getBone("deng3");
-        CoreGeoBone holo = getAnimationProcessor().getBone("holo");
+        CoreGeoBone lh = getAnimationProcessor().getBone("lh");
         CoreGeoBone r = getAnimationProcessor().getBone("r");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
-
-        arrow.setHidden(stack.getOrCreateTag().getInt("arrow_empty") > 0);
-        jian.setHidden(stack.getOrCreateTag().getInt("max_ammo") == 0);
 
         double pp = player.getPersistentData().getDouble("pullpos");
         double bp = player.getPersistentData().getDouble("bowpos");
@@ -80,19 +77,20 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         deng2.setPosZ(0.05f * (float) bp);
         deng3.setRotX(-1.6f * (float) bp);
         deng3.setPosZ(0.05f * (float) bp);
-
-        deng.setHidden(!(arrow.getPosZ() > 8.5));
+        deng.setScaleZ(1f + (0.07f * (float) bp));
 
         double p = player.getPersistentData().getDouble("zoom_pos");
         double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
+        lh.setRotX(0.2f * (float) p);
         shen_pos.setPosX(-3.4f * (float) p);
         shen_pos.setPosY(6.76f * (float) p - (float) (0.2f * zp));
         shen_pos.setPosZ(6.4f * (float) p + (float) (0.3f * zp));
         r.setScaleZ(1f - (0.31f * (float) p));
         shen.setRotZ(60 * Mth.DEG_TO_RAD * (float) p + (float) (0.05f * zp) - 0.2f);
 
-        holo.setHidden(!(shen_pos.getPosX() < -0.7 && gun.getPosZ() < -2.5));
+        stack.getOrCreateTag().putBoolean("HoloHidden", !((shen_pos.getPosX() < -0.7 && gun.getPosZ() < -2.5)));
+
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");

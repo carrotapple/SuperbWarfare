@@ -33,23 +33,12 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
     public void setCustomAnimations(Qbz95Item animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
-        CoreGeoBone holo = getAnimationProcessor().getBone("holo");
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
         CoreGeoBone bolt = getAnimationProcessor().getBone("bolt2");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
-
-        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (0.6 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (0.6 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-        } else {
-            flare.setHidden(true);
-        }
 
         double p = player.getPersistentData().getDouble("zoom_pos");
         double zp = player.getPersistentData().getDouble("zoom_pos_z");
@@ -60,7 +49,7 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         gun.setRotZ((float) (0.05f * zp));
         gun.setScaleZ(1f - (0.7f * (float) p));
 
-        holo.setHidden(!(gun.getPosX() > 3.1));
+        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 3.1));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");

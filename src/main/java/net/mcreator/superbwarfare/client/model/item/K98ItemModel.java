@@ -33,7 +33,6 @@ public class K98ItemModel extends GeoModel<K98Item> {
     public void setCustomAnimations(K98Item animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
         CoreGeoBone clip = getAnimationProcessor().getBone("mag");
 
         Player player = Minecraft.getInstance().player;
@@ -42,19 +41,14 @@ public class K98ItemModel extends GeoModel<K98Item> {
         if (!stack.is(ModTags.Items.GUN)) return;
 
 
-        if (stack.getOrCreateTag().getDouble("prepare") > 13 && stack.getOrCreateTag().getInt("ammo") == 1) {
-            clip.setHidden(true);
+        if (stack.getOrCreateTag().getDouble("prepare") > 11 && stack.getOrCreateTag().getInt("ammo") == 1) {
+            clip.setScaleX(0);
+            clip.setScaleY(0);
+            clip.setScaleZ(0);
         } else {
-            clip.setHidden(false);
-        }
-
-        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (0.6 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (0.6 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-        } else {
-            flare.setHidden(true);
+            clip.setScaleX(1);
+            clip.setScaleY(1);
+            clip.setScaleZ(1);
         }
 
         double p = player.getPersistentData().getDouble("zoom_pos");

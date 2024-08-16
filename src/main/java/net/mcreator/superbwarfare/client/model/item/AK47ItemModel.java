@@ -53,10 +53,8 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         scope.setScaleZ(1f - (0.4f * (float) p));
 
 
-        CoreGeoBone holo = getAnimationProcessor().getBone("holo");
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
+        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.8));
 
-        holo.setHidden(!(gun.getPosX() > 1.8));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
@@ -76,20 +74,6 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
 
         shuan.setPosZ(2.4f * (float) fp);
-
-        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (0.7 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (0.7 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
-                flare.setPosY(-0.75f);
-            } else {
-                flare.setPosY(0);
-            }
-        } else {
-            flare.setHidden(true);
-        }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 

@@ -67,25 +67,18 @@ public class M98bItemModel extends GeoModel<M98bItem> {
 
         gun.setRotZ((float) (0.02f * zp));
 
-        CoreGeoBone holo = getAnimationProcessor().getBone("scope2");
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
-        CoreGeoBone qiang = getAnimationProcessor().getBone("qiang");
-        if (gun.getPosX() > 1.9) {
-            holo.setHidden(false);
-            qiang.setHidden(true);
-        } else {
-            holo.setHidden(true);
-            qiang.setHidden(false);
-        }
+//        CoreGeoBone holo = getAnimationProcessor().getBone("scope2");
+//        CoreGeoBone qiang = getAnimationProcessor().getBone("qiang");
 
-        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-        } else {
-            flare.setHidden(true);
-        }
+        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.9));
+
+//        if (gun.getPosX() > 1.9) {
+//            holo.setHidden(false);
+//            qiang.setHidden(true);
+//        } else {
+//            holo.setHidden(true);
+//            qiang.setHidden(false);
+//        }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         CoreGeoBone zhunxing = getAnimationProcessor().getBone("shi");
