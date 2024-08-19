@@ -84,7 +84,7 @@ public class MinigunItemRenderer extends GeoItemRenderer<Minigun> {
         }
 
         if (name.equals("flare")) {
-            if (itemStack != null && itemStack.getOrCreateTag().getDouble("flash_time") > 0) {
+            if (itemStack != null && itemStack.getOrCreateTag().getDouble("fire_animation") > 0) {
                 bone.setHidden(false);
                 bone.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
                 bone.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
@@ -95,7 +95,7 @@ public class MinigunItemRenderer extends GeoItemRenderer<Minigun> {
         }
 
         if (name.equals("light")) {
-            bone.setHidden(itemStack == null || !(itemStack.getOrCreateTag().getDouble("flash_time") > 0));
+            bone.setHidden(itemStack == null || !(itemStack.getOrCreateTag().getDouble("fire_animation") > 0));
         }
 
         if (this.transformType.firstPerson() && renderingArms) {

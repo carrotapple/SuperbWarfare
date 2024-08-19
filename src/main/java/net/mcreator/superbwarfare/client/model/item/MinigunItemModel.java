@@ -33,8 +33,6 @@ public class MinigunItemModel extends GeoModel<Minigun> {
     public void setCustomAnimations(Minigun animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("barrel");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
-        CoreGeoBone light = getAnimationProcessor().getBone("light");
         CoreGeoBone heat_barrels = getAnimationProcessor().getBone("heatbarrels");
 
         Player player = Minecraft.getInstance().player;
