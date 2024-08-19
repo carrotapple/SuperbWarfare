@@ -139,7 +139,6 @@ public class PlayerEventHandler {
                         .orElse(new ModVariables.PlayerVariables()).breathTime - 1, 0, 100);
                 capability.syncPlayerVariables(player);
             });
-            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 2, 3, false, false));
         } else {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.breathTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null)
@@ -175,16 +174,16 @@ public class PlayerEventHandler {
         if (stack.is(ModTags.Items.GUN)) {
             double weight = stack.getOrCreateTag().getDouble("weight");
             if (weight == 0) {
-                sprint_cost = 4;
-            } else if (weight == 1) {
-                sprint_cost = 6;
-            } else if (weight == 2) {
-                sprint_cost = 8;
-            } else {
                 sprint_cost = 3;
+            } else if (weight == 1) {
+                sprint_cost = 4;
+            } else if (weight == 2) {
+                sprint_cost = 5;
+            } else {
+                sprint_cost = 2;
             }
         } else {
-            sprint_cost = 3;
+            sprint_cost = 2;
         }
 
         if (!player.isSprinting()) {
@@ -207,14 +206,14 @@ public class PlayerEventHandler {
 
         if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprint) {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.tacticalSprintTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime - sprint_cost, 0, 600);
+                capability.tacticalSprintTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime - sprint_cost, 0, 1000);
                 capability.syncPlayerVariables(player);
             });
             player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2, 0, false, false));
 
         } else {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.tacticalSprintTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime + 5, 0, 600);
+                capability.tacticalSprintTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime + 7, 0, 1000);
                 capability.syncPlayerVariables(player);
             });
         }
@@ -227,11 +226,12 @@ public class PlayerEventHandler {
             });
         }
 
-        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime == 600) {
+        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime == 1000) {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.tacticalSprintExhaustion = false;
                 capability.syncPlayerVariables(player);
             });
+            player.getPersistentData().putBoolean("canTacticalSprint", true);
         }
     }
 
