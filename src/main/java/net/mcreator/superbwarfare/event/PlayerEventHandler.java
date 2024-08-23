@@ -347,10 +347,11 @@ public class PlayerEventHandler {
         ItemStack stack = player.getMainHandItem();
 
         if (stack.is(ModTags.Items.GUN)
-                && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+//                && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
                 && !player.isSpectator()
-                && !stack.getOrCreateTag().getBoolean("charging")
-                && !stack.getOrCreateTag().getBoolean("reloading")) {
+//                && !stack.getOrCreateTag().getBoolean("charging")
+//                && !stack.getOrCreateTag().getBoolean("reloading")
+        ) {
             if (player.getMainHandItem().getItem() != ModItems.MINIGUN.get()) {
                 if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
                     player.setSprinting(false);

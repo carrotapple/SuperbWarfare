@@ -123,5 +123,18 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
 
         player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
+
+        CoreGeoBone main = getAnimationProcessor().getBone("0");
+        var data = player.getPersistentData();
+        float num = (float) (1 - 0.9 * data.getDouble("zoom_time"));
+
+        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
+            main.setRotX(num * main.getRotX());
+            main.setRotY(num * main.getRotY());
+            main.setRotZ(num * main.getRotZ());
+            main.setPosX(num * main.getPosX());
+            main.setPosY(num * main.getPosY());
+            main.setPosZ(num * main.getPosZ());
+        }
     }
 }
