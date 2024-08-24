@@ -13,24 +13,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class PoseTool {
 
-    private static final HumanoidModel.ArmPose ReloadPose = HumanoidModel.ArmPose.create("ReloadPose", false, (model, entity, arm) -> {
-        if (arm == HumanoidArm.RIGHT) {
-            model.rightArm.xRot = -45F * Mth.DEG_TO_RAD;
-            model.rightArm.yRot = model.head.yRot - 22.5F * Mth.DEG_TO_RAD;
-            model.leftArm.xRot = -60F * Mth.DEG_TO_RAD;
-            model.leftArm.yRot = model.head.yRot + 22.5F * Mth.DEG_TO_RAD;
-        }
-    });
-
-    private static final HumanoidModel.ArmPose SprintPose = HumanoidModel.ArmPose.create("SprintPose", false, (model, entity, arm) -> {
-        if (arm == HumanoidArm.RIGHT) {
-            model.rightArm.xRot = -45F * Mth.DEG_TO_RAD;
-            model.rightArm.yRot = model.head.yRot - 50F * Mth.DEG_TO_RAD;
-            model.leftArm.xRot = -45F * Mth.DEG_TO_RAD;
-            model.leftArm.yRot = model.head.yRot + 22.5F * Mth.DEG_TO_RAD;
-        }
-    });
-
     private static final HumanoidModel.ArmPose TacticalSprintPose = HumanoidModel.ArmPose.create("TacticalSprintPose", false, (model, entity, arm) -> {
         if (arm == HumanoidArm.RIGHT) {
             model.rightArm.xRot = 0.2f * model.rightArm.xRot - 155F * Mth.DEG_TO_RAD;
@@ -43,12 +25,12 @@ public class PoseTool {
                 || stack.getOrCreateTag().getBoolean("is_normal_reloading")
                 || stack.getOrCreateTag().getBoolean("reloading")
                 || stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
-            return ReloadPose;
+            return HumanoidModel.ArmPose.CROSSBOW_CHARGE;
         } else if (entityLiving.isSprinting() && entityLiving.onGround() && entityLiving.getPersistentData().getDouble("noRun") == 0) {
             if (entityLiving.hasEffect(MobEffects.MOVEMENT_SPEED)) {
                 return TacticalSprintPose;
             } else {
-                return SprintPose;
+                return HumanoidModel.ArmPose.CROSSBOW_CHARGE;
             }
         } else {
             return HumanoidModel.ArmPose.BOW_AND_ARROW;
