@@ -6,109 +6,193 @@ import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
-import net.minecraft.core.Direction;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.players.OldUsersConverter;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
-import net.minecraftforge.network.PlayMessages;
+import net.minecraftforge.items.ItemHandlerHelper;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.Nullable;
 import java.util.Comparator;
+import java.util.Optional;
+import java.util.UUID;
 
-public class ClaymoreEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity {
+public class ClaymoreEntity extends LivingEntity implements GeoEntity, AnimatedEntity, OwnableEntity {
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.STRING);
-    public static final EntityDataAccessor<Float> ROT_Y = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.FLOAT);
-
+    protected static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
     public String animationProcedure = "empty";
 
-    public ClaymoreEntity(EntityType<? extends ClaymoreEntity> type, Level world) {
+    public ClaymoreEntity(EntityType<ClaymoreEntity> type, Level world) {
         super(type, world);
     }
 
-    public ClaymoreEntity(EntityType<? extends ClaymoreEntity> type, LivingEntity entity, Level world) {
-        super(type, entity, world);
-    }
-
-    public ClaymoreEntity(LivingEntity entity, Level level) {
-        super(ModEntities.CLAYMORE.get(), entity, level);
-    }
-
-    public ClaymoreEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
-        this(ModEntities.CLAYMORE.get(), level);
+    public ClaymoreEntity(LivingEntity owner, Level level) {
+        super(ModEntities.CLAYMORE.get(), level);
+        this.setOwnerUUID(owner.getUUID());
     }
 
     @Override
     protected void defineSynchedData() {
-        this.entityData.define(ROT_Y, 0f);
-    }
-
-    public void setRotY(float rotY) {
-        this.entityData.set(ROT_Y, rotY);
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+        super.defineSynchedData();
+        this.entityData.define(ANIMATION, "undefined");
+        this.entityData.define(OWNER_UUID, Optional.empty());
     }
 
     @Override
-    protected Item getDefaultItem() {
-        return ModItems.CLAYMORE_MINE.get();
+    public boolean isCustomNameVisible() {
+        return false;
     }
 
     @Override
-    public boolean shouldRenderAtSqrDistance(double pDistance) {
-        return true;
+    public MobType getMobType() {
+        return super.getMobType();
     }
 
     @Override
-    protected void onHit(HitResult result) {
-        switch (result.getType()) {
-            case BLOCK:
-                BlockHitResult blockResult = (BlockHitResult) result;
-                this.bounce(blockResult.getDirection());
-                break;
-            case ENTITY:
-                this.bounce(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
-                this.setDeltaMovement(this.getDeltaMovement().multiply(0.25, 1.0, 0.25));
-                break;
-            default:
-                break;
+    public Iterable<ItemStack> getArmorSlots() {
+        return NonNullList.withSize(1, ItemStack.EMPTY);
+    }
+
+    @Override
+    public ItemStack getItemBySlot(EquipmentSlot pSlot) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void setItemSlot(EquipmentSlot pSlot, ItemStack pStack) {
+
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if (source.is(DamageTypes.IN_FIRE))
+            return false;
+        if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
+            return false;
+        if (source.is(DamageTypes.FALL))
+            return false;
+        if (source.is(DamageTypes.CACTUS))
+            return false;
+        if (source.is(DamageTypes.DROWN))
+            return false;
+        if (source.is(DamageTypes.LIGHTNING_BOLT))
+            return false;
+        if (source.is(DamageTypes.EXPLOSION))
+            return false;
+        if (source.is(DamageTypes.DRAGON_BREATH))
+            return false;
+        if (source.is(DamageTypes.WITHER))
+            return false;
+        if (source.is(DamageTypes.WITHER_SKULL))
+            return false;
+        return super.hurt(source, amount);
+    }
+
+    @Override
+    public void die(DamageSource source) {
+        super.die(source);
+
+        if (level() instanceof ServerLevel) {
+            destroyExplode();
+            this.discard();
         }
     }
 
-    private void bounce(Direction direction) {
-        switch (direction.getAxis()) {
-            case X:
-                this.setDeltaMovement(this.getDeltaMovement().multiply(-0.5, 0.75, 0.75));
-                break;
-            case Y:
-                this.setDeltaMovement(this.getDeltaMovement().multiply(0.75, -0.01, 0.75));
-                if (this.getDeltaMovement().y() < this.getGravity()) {
-                    this.setDeltaMovement(this.getDeltaMovement().multiply(1, 0, 1));
-                }
-                break;
-            case Z:
-                this.setDeltaMovement(this.getDeltaMovement().multiply(0.75, 0.75, -0.5));
-                break;
+    private void destroyExplode() {
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 15f,
+                this.getX(), this.getY(), this.getZ(), 7.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+
+        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+    }
+
+    public void setOwnerUUID(@Nullable UUID pUuid) {
+        this.entityData.set(OWNER_UUID, Optional.ofNullable(pUuid));
+    }
+
+    @Nullable
+    public UUID getOwnerUUID() {
+        return this.entityData.get(OWNER_UUID).orElse(null);
+    }
+
+    public boolean isOwnedBy(LivingEntity pEntity) {
+        return pEntity == this.getOwner();
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+
+        if (this.getOwnerUUID() != null) {
+            compound.putUUID("Owner", this.getOwnerUUID());
         }
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+
+        UUID uuid;
+        if (compound.hasUUID("Owner")) {
+            uuid = compound.getUUID("Owner");
+        } else {
+            String s = compound.getString("Owner");
+
+            assert this.getServer() != null;
+            uuid = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), s);
+        }
+
+        if (uuid != null) {
+            try {
+                this.setOwnerUUID(uuid);
+            } catch (Throwable ignored) {
+            }
+        }
+    }
+
+    @Override
+    public InteractionResult interact(Player player, InteractionHand hand) {
+        if (this.isOwnedBy(player) && player.isShiftKeyDown()) {
+            if (!this.level().isClientSide()) {
+                this.discard();
+            }
+
+            if (!player.getAbilities().instabuild) {
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.CLAYMORE_MINE.get()));
+            }
+        }
+
+        return InteractionResult.sidedSuccess(this.level().isClientSide());
     }
 
     @Override
@@ -123,11 +207,15 @@ public class ClaymoreEntity extends ThrowableItemProjectile implements GeoEntity
             if (!this.level().isClientSide()) this.discard();
         }
 
-        if (this.tickCount >= 20) {
+        this.removeAllEffects();
+        this.clearFire();
+
+        if (this.tickCount >= 40) {
             final Vec3 center = new Vec3(x + 1.5 * this.getLookAngle().x, y + 1.5 * this.getLookAngle().y, z + 1.5 * this.getLookAngle().z);
             for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(2.5 / 2d), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
                 var condition = this.getOwner() != target
                         && target instanceof LivingEntity
+                        && !(target instanceof ClaymoreEntity)
                         && !(target instanceof TargetEntity)
                         && !(target instanceof Player player && (player.isCreative() || player.isSpectator()))
                         && (!this.isAlliedTo(target) || target.getTeam() == null || target.getTeam().getName().equals("TDM"))
@@ -153,17 +241,11 @@ public class ClaymoreEntity extends ThrowableItemProjectile implements GeoEntity
 
     private void triggerExplode(Entity target) {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeMineDamage(this.level().registryAccess(), this.getOwner()), 80f,
-                target.getX(), target.getY(), target.getZ(), 6f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                ModDamageTypes.causeMineDamage(this.level().registryAccess(), this.getOwner()), 40f,
+                target.getX(), target.getY(), target.getZ(), 4f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
-    }
-
-    @Override
-    protected void updateRotation() {
-        this.setXRot(0);
-        this.setYRot(this.entityData.get(ROT_Y));
     }
 
     @Override
@@ -172,8 +254,47 @@ public class ClaymoreEntity extends ThrowableItemProjectile implements GeoEntity
     }
 
     @Override
-    protected float getGravity() {
-        return 0.07F;
+    public boolean isPushable() {
+        return false;
+    }
+
+    @Override
+    public HumanoidArm getMainArm() {
+        return HumanoidArm.RIGHT;
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        this.updateSwingTime();
+    }
+
+    private PlayState movementPredicate(software.bernie.geckolib.core.animation.AnimationState<ClaymoreEntity> event) {
+        if (this.animationProcedure.equals("empty")) {
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.claymore.idle"));
+        }
+        return PlayState.STOP;
+    }
+
+    private PlayState procedurePredicate(AnimationState<ClaymoreEntity> event) {
+        if (!animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
+            if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+                this.animationProcedure = "empty";
+                event.getController().forceAnimationReset();
+            }
+        } else if (animationProcedure.equals("empty")) {
+            return PlayState.STOP;
+        }
+        return PlayState.CONTINUE;
+    }
+
+    @Override
+    protected void tickDeath() {
+        ++this.deathTime;
+        if (this.deathTime == 1) {
+            this.remove(ClaymoreEntity.RemovalReason.KILLED);
+        }
     }
 
     public String getSyncedAnimation() {
@@ -191,10 +312,20 @@ public class ClaymoreEntity extends ThrowableItemProjectile implements GeoEntity
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        data.add(new AnimationController<>(this, "movement", 4, this::movementPredicate));
+        data.add(new AnimationController<>(this, "procedure", 4, this::procedurePredicate));
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0)
+                .add(Attributes.MAX_HEALTH, 5)
+                .add(Attributes.FOLLOW_RANGE, 64)
+                .add(Attributes.ATTACK_DAMAGE, 0)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 10);
     }
 }

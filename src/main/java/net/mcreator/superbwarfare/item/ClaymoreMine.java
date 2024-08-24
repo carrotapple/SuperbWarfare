@@ -14,17 +14,24 @@ public class ClaymoreMine extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
-        ClaymoreEntity claymore = new ClaymoreEntity(player, world);
-        claymore.setPos(player.getX(), player.getEyeY() - 0.3, player.getZ());
-        claymore.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, 0.2f,0);
-        claymore.setRotY(player.getYRot());
-        world.addFreshEntity(claymore);
+        if (!level.isClientSide) {
+            ClaymoreEntity entity = new ClaymoreEntity(player, level);
+            entity.moveTo(player.getX(), player.getY() + 1.1, player.getZ(), player.getYRot(), 0);
+            entity.setYBodyRot(player.getYRot());
+            entity.setYHeadRot(player.getYRot());
+            entity.setDeltaMovement(0.5 * player.getLookAngle().x, 0.5 * player.getLookAngle().y, 0.5 * player.getLookAngle().z);
+
+            level.addFreshEntity(entity);
+        }
 
         player.getCooldowns().addCooldown(this, 20);
-        stack.shrink(1);
+
+        if (!player.getAbilities().instabuild) {
+            stack.shrink(1);
+        }
 
         return InteractionResultHolder.consume(stack);
     }

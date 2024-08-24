@@ -45,4 +45,9 @@ public class ClaymoreRenderer extends GeoEntityRenderer<ClaymoreEntity> {
     protected float getDeathMaxRotation(ClaymoreEntity entityLivingBaseIn) {
         return 0.0F;
     }
+
+    @Override
+    public boolean shouldShowName(ClaymoreEntity animatable) {
+        return false;
+    }
 }
