@@ -7,24 +7,23 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class DoubleJumpMessage {
-    private final int type;
+    private final boolean canDoubleJump;
 
-    public DoubleJumpMessage(int type) {
-        this.type = type;
+    public DoubleJumpMessage(boolean canDoubleJump) {
+        this.canDoubleJump = canDoubleJump;
     }
 
     public static DoubleJumpMessage decode(FriendlyByteBuf buffer) {
-        return new DoubleJumpMessage(buffer.readInt());
+        return new DoubleJumpMessage(buffer.readBoolean());
     }
 
     public static void encode(DoubleJumpMessage message, FriendlyByteBuf buffer) {
-        buffer.writeInt(message.type);
+        buffer.writeBoolean(message.canDoubleJump);
     }
 
     public static void handler(DoubleJumpMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
@@ -42,21 +41,12 @@ public class DoubleJumpMessage {
                     return;
                 }
 
-                if (message.type == 0) {
-                    if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).playerDoubleJump) {
-                        player.setDeltaMovement(new Vec3(player.getLookAngle().x, 0.8, player.getLookAngle().z));
-                        if (!level.isClientSide()) {
-                            level.playSound(null, BlockPos.containing(x, y, z), ModSounds.DOUBLE_JUMP.get(), SoundSource.BLOCKS, 1, 1);
-                        } else {
-                            level.playLocalSound(x, y, z, ModSounds.DOUBLE_JUMP.get(), SoundSource.BLOCKS, 1, 1, false);
-                        }
+                level.playSound(null, BlockPos.containing(x, y, z), ModSounds.DOUBLE_JUMP.get(), SoundSource.BLOCKS, 1, 1);
 
-                        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                            capability.playerDoubleJump = false;
-                            capability.syncPlayerVariables(player);
-                        });
-                    }
-                }
+                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    capability.playerDoubleJump = message.canDoubleJump;
+                    capability.syncPlayerVariables(player);
+                });
             }
         });
         context.setPacketHandled(true);

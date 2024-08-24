@@ -87,13 +87,14 @@ public class PlayerEventHandler {
                 handlePlayerSprint(player);
                 handleWeaponLevel(player);
                 handleAmmoCount(player);
-                handleGround(player);
                 handlePrepareZoom(player);
                 handleSpecialWeaponAmmo(player);
                 handleChangeFireRate(player);
                 handleBocekPulling(player);
                 handleGunRecoil(player);
             }
+
+            handleGround(player);
             handleDistantRange(player);
             handleSimulationDistance(player);
             handleCannonTime(player);

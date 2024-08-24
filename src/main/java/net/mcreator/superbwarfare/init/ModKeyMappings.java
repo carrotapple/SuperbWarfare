@@ -26,22 +26,6 @@ public class ModKeyMappings {
         }
     };
 
-    public static final KeyMapping DOUBLE_JUMP = new KeyMapping("key.superbwarfare.double_jump", GLFW.GLFW_KEY_SPACE, "key.categories.superbwarfare") {
-        private boolean isDownOld = false;
-
-        @Override
-        public void setDown(boolean isDown) {
-            super.setDown(isDown);
-            if (isDownOld != isDown && isDown) {
-                ModUtils.PACKET_HANDLER.sendToServer(new DoubleJumpMessage(0));
-//                if (Minecraft.getInstance().player != null) {
-//                    DoubleJumpMessage.pressAction(Minecraft.getInstance().player, 0);
-//                }
-            }
-            isDownOld = isDown;
-        }
-    };
-
     public static final KeyMapping FIRE_MODE = new KeyMapping("key.superbwarfare.fire_mode", GLFW.GLFW_KEY_N, "key.categories.superbwarfare") {
         private boolean isDownOld = false;
 
@@ -201,7 +185,6 @@ public class ModKeyMappings {
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(RELOAD);
-        event.register(DOUBLE_JUMP);
         event.register(FIRE_MODE);
         event.register(SENSITIVITY_INCREASE);
         event.register(SENSITIVITY_REDUCE);
@@ -221,7 +204,6 @@ public class ModKeyMappings {
         public static void onClientTick(TickEvent.ClientTickEvent event) {
             if (Minecraft.getInstance().screen == null) {
                 RELOAD.consumeClick();
-                DOUBLE_JUMP.consumeClick();
                 FIRE_MODE.consumeClick();
                 SENSITIVITY_INCREASE.consumeClick();
                 SENSITIVITY_REDUCE.consumeClick();

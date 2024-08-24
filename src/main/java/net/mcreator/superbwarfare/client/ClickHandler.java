@@ -6,14 +6,18 @@ import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.entity.MortarEntity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModMobEffects;
+import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.*;
 import net.mcreator.superbwarfare.tools.TraceTool;
 import net.minecraft.client.Minecraft;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -44,7 +48,7 @@ public class ClickHandler {
             ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(1));
         }
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            if (Minecraft.getInstance().player.hasEffect(ModMobEffects.SHOCK.get())) {
+            if (player.hasEffect(ModMobEffects.SHOCK.get())) {
                 event.setCanceled(true);
             }
 
@@ -59,7 +63,6 @@ public class ClickHandler {
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
-
         if (player.isSpectator()) return;
 
         ItemStack stack = player.getMainHandItem();
@@ -67,7 +70,7 @@ public class ClickHandler {
         int button = event.getButton();
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            if (Minecraft.getInstance().player.hasEffect(ModMobEffects.SHOCK.get())) {
+            if (player.hasEffect(ModMobEffects.SHOCK.get())) {
                 event.setCanceled(true);
                 return;
             }
@@ -75,7 +78,7 @@ public class ClickHandler {
                 event.setCanceled(true);
                 ModUtils.PACKET_HANDLER.sendToServer(new DroneFireMessage(0));
             }
-            if (player.getVehicle() != null && (player.getVehicle() instanceof ICannonEntity)) {
+            if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity) {
                 event.setCanceled(true);
                 ModUtils.PACKET_HANDLER.sendToServer(new VehicleFireMessage(0));
                 return;
@@ -87,17 +90,17 @@ public class ClickHandler {
         }
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            if (Minecraft.getInstance().player.hasEffect(ModMobEffects.SHOCK.get())) {
+            if (player.hasEffect(ModMobEffects.SHOCK.get())) {
                 event.setCanceled(true);
             }
-            if (player.getMainHandItem().is(ModTags.Items.GUN) || (player.isPassenger() && (player.getVehicle() instanceof ICannonEntity))) {
+            if (player.getMainHandItem().is(ModTags.Items.GUN) || (player.isPassenger() && player.getVehicle() instanceof ICannonEntity)) {
                 event.setCanceled(true);
                 ModUtils.PACKET_HANDLER.sendToServer(new ZoomMessage(0));
             }
         }
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            if (Minecraft.getInstance().player.hasEffect(ModMobEffects.SHOCK.get())) {
+            if (player.hasEffect(ModMobEffects.SHOCK.get())) {
                 event.setCanceled(true);
             }
         }
@@ -114,7 +117,7 @@ public class ClickHandler {
 
         double scroll = event.getScrollDelta();
 
-        if (stack.is(ModTags.Items.GUN) && (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
+        if (stack.is(ModTags.Items.GUN) && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom) {
             var tag = stack.getOrCreateTag();
             if (tag.getDouble("min_zoom") != 0 && tag.getDouble("max_zoom") != 0) {
                 ModUtils.PACKET_HANDLER.sendToServer(new AdjustZoomFovMessage(scroll));
@@ -134,7 +137,17 @@ public class ClickHandler {
         }
     }
 
-    private static void setKeyState(int key, int state) {
+    private static void setKeyState(InputEvent.Key event) {
+        int key = event.getKey();
+        int state;
+        if (event.getAction() == InputConstants.PRESS) {
+            state = 1;
+        } else if (event.getAction() == InputConstants.RELEASE) {
+            state = 0;
+        } else {
+            return;
+        }
+
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
 
@@ -151,16 +164,34 @@ public class ClickHandler {
     public static void onKeyPressed(InputEvent.Key event) {
         if (notInGame()) return;
 
-        boolean clicked;
-        if (event.getAction() == InputConstants.PRESS) {
-            clicked = true;
-        } else if (event.getAction() == InputConstants.RELEASE) {
-            clicked = false;
-        } else {
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+        if (player.isSpectator()) return;
+
+        setKeyState(event);
+
+        int key = event.getKey();
+        if (key == Minecraft.getInstance().options.keyJump.getKey().getValue()) {
+            handleDoubleJump(player);
+        }
+    }
+
+    private static void handleDoubleJump(Player player) {
+        Level level = player.level();
+        double x = player.getX();
+        double y = player.getY();
+        double z = player.getZ();
+
+        if (!level.isLoaded(player.blockPosition())) {
             return;
         }
 
-        setKeyState(event.getKey(), clicked ? 1 : 0);
+        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).playerDoubleJump) {
+            player.setDeltaMovement(new Vec3(player.getLookAngle().x, 0.8, player.getLookAngle().z));
+            level.playLocalSound(x, y, z, ModSounds.DOUBLE_JUMP.get(), SoundSource.BLOCKS, 1, 1, false);
+
+            ModUtils.PACKET_HANDLER.sendToServer(new DoubleJumpMessage(false));
+        }
     }
 
 }
