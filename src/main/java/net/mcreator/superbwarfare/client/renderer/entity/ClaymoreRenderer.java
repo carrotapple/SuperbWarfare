@@ -2,14 +2,12 @@ package net.mcreator.superbwarfare.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import net.mcreator.superbwarfare.entity.ClaymoreEntity;
 import net.mcreator.superbwarfare.entity.model.ClaymoreModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
@@ -31,14 +29,6 @@ public class ClaymoreRenderer extends GeoEntityRenderer<ClaymoreEntity> {
         this.scaleHeight = scale;
         this.scaleWidth = scale;
         super.preRender(poseStack, entity, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-    }
-
-    @Override
-    public void render(ClaymoreEntity entityIn, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn) {
-        poseStack.pushPose();
-        poseStack.mulPose(Axis.YP.rotationDegrees(90 - Mth.lerp(partialTicks, entityIn.yRotO, entityIn.getYRot()) - 90));
-        super.render(entityIn, entityYaw, partialTicks, poseStack, bufferIn, packedLightIn);
-        poseStack.popPose();
     }
 
     @Override
