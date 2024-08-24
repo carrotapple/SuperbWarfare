@@ -117,6 +117,22 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         move.setRotZ(2.7f * (float) m + Mth.DEG_TO_RAD * (float) zRot);
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+        CoreGeoBone main = getAnimationProcessor().getBone("0");
+        var data = player.getPersistentData();
+        float numR = (float) (1 - 0.94 * data.getDouble("zoom_time"));
+        float numP = (float) (1 - 0.8 * data.getDouble("zoom_time"));
+
+        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
+            main.setRotX(numR * main.getRotX());
+            main.setRotY(numR * main.getRotY());
+            main.setRotZ(numR * main.getRotZ());
+            main.setPosX(numP * main.getPosX());
+            main.setPosY(numP * main.getPosY());
+            main.setPosZ(numP * main.getPosZ());
+            camera.setRotX(numR * camera.getRotX());
+            camera.setRotY(numR * camera.getRotY());
+            camera.setRotZ(numR * camera.getRotZ());
+        }
 
         player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
 
@@ -124,17 +140,5 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
 
         player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
 
-        CoreGeoBone main = getAnimationProcessor().getBone("0");
-        var data = player.getPersistentData();
-        float num = (float) (1 - 0.9 * data.getDouble("zoom_time"));
-
-        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
-            main.setRotX(num * main.getRotX());
-            main.setRotY(num * main.getRotY());
-            main.setRotZ(num * main.getRotZ());
-            main.setPosX(num * main.getPosX());
-            main.setPosY(num * main.getPosY());
-            main.setPosZ(num * main.getPosZ());
-        }
     }
 }

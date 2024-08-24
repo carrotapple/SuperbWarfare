@@ -73,6 +73,7 @@ public class ClientEventHandler {
             handleWeaponSway(living);
             handleWeaponMove(living);
             handleWeaponZoom(living);
+            handlePlayerBreath(living);
             handleWeaponFire(event, living);
             handleShockCamera(event, living);
             handlePlayerCameraShake(event, living);
@@ -309,18 +310,9 @@ public class ClientEventHandler {
         var data = entity.getPersistentData();
 
         if ((entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
-            if (data.getDouble("zoom_time") < 1) {
-                data.putDouble("zoom_time",
-                        (data.getDouble("zoom_time") + entity.getMainHandItem().getOrCreateTag().getDouble("zoom_speed") * 0.03 * times));
-            } else {
-                data.putDouble("zoom_time", 1);
-            }
+            data.putDouble("zoom_time", Mth.clamp(data.getDouble("zoom_time") + 0.03 * times,0,1));
         } else {
-            if (data.getDouble("zoom_time") > 0) {
-                data.putDouble("zoom_time", (data.getDouble("zoom_time") - 0.04 * times));
-            } else {
-                data.putDouble("zoom_time", 0);
-            }
+            data.putDouble("zoom_time", Mth.clamp(data.getDouble("zoom_time") - 0.04 * times,0,1));
         }
         data.putDouble("zoom_pos", (0.5 * Math.cos(Math.PI * Math.pow(Math.pow(data.getDouble("zoom_time"), 2) - 1, 2)) + 0.5));
         data.putDouble("zoom_pos_z", (-Math.pow(2 * data.getDouble("zoom_time") - 1, 2) + 1));
@@ -398,6 +390,21 @@ public class ClientEventHandler {
         }
     }
 
+    private static void handlePlayerBreath(LivingEntity entity) {
+        float fps = Minecraft.getInstance().getFps();
+        if (fps <= 0) {
+            fps = 1f;
+        }
+        float times = 110f / fps;
+        var data = entity.getPersistentData();
+
+        if ((entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).breath) {
+            data.putDouble("BreathTime", Mth.clamp(data.getDouble("BreathTime") + 0.06 * times,0,1));
+        } else {
+            data.putDouble("BreathTime", Mth.clamp(data.getDouble("BreathTime") - 0.06 * times,0,1));
+        }
+    }
+
     private static void handleShockCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
         if (entity.hasEffect(ModMobEffects.SHOCK.get()) && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
             event.setYaw(Minecraft.getInstance().gameRenderer.getMainCamera().getYRot() + (float) Mth.nextDouble(RandomSource.create(), -3, 3));
@@ -465,7 +472,7 @@ public class ClientEventHandler {
             double p = player.getPersistentData().getDouble("zoom_pos");
             double zoom = stack.getOrCreateTag().getDouble("zoom") + stack.getOrCreateTag().getDouble("custom_zoom");
 
-            event.setFOV(event.getFOV() / (1.0 + p * (zoom - 1)));
+            event.setFOV(event.getFOV() / (1.0 + p * (zoom - 1)) * (1 - 0.4 * player.getPersistentData().getDouble("BreathTime")));
             player.getPersistentData().putDouble("fov", event.getFOV());
             return;
         }

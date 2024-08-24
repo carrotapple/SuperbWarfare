@@ -99,6 +99,22 @@ public class Aa12ItemModel extends GeoModel<Aa12Item> {
         move.setRotZ(2.7f * (float) m + Mth.DEG_TO_RAD * (float) zRot);
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+        CoreGeoBone main = getAnimationProcessor().getBone("0");
+        var data = player.getPersistentData();
+        float numR = (float) (1 - 0.82 * data.getDouble("zoom_time"));
+        float numP = (float) (1 - 0.68 * data.getDouble("zoom_time"));
+
+        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
+            main.setRotX(numR * main.getRotX());
+            main.setRotY(numR * main.getRotY());
+            main.setRotZ(numR * main.getRotZ());
+            main.setPosX(numP * main.getPosX());
+            main.setPosY(numP * main.getPosY());
+            main.setPosZ(numP * main.getPosZ());
+            camera.setRotX(numR * camera.getRotX());
+            camera.setRotY(numR * camera.getRotY());
+            camera.setRotZ(numR * camera.getRotZ());
+        }
 
         player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
         player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());

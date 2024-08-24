@@ -48,7 +48,7 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
     public static ItemDisplayContext transformType;
 
     public MarlinItem() {
-        super(new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
+        super(new Item.Properties().stacksTo(1).rarity(Rarity.COMMON));
     }
 
     @Override

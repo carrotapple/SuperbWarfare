@@ -129,9 +129,6 @@ public class PlayerEventHandler {
     }
 
     private static void handleBreath(Player player) {
-        if (player.getPersistentData().getInt("NoBreath") > 0) {
-            player.getPersistentData().putInt("NoBreath", player.getPersistentData().getInt("NoBreath") - 1);
-        }
 
         if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breath) {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
@@ -153,9 +150,6 @@ public class PlayerEventHandler {
                 capability.breath = false;
                 capability.syncPlayerVariables(player);
             });
-            if (player instanceof ServerPlayer serverPlayer) {
-                SoundTool.playLocalSound(serverPlayer, ModSounds.BREATH_EXHAUSTION.get(), 1, 1);
-            }
         }
 
         if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breathTime == 100) {
@@ -346,12 +340,7 @@ public class PlayerEventHandler {
     private static void handlePrepareZoom(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.is(ModTags.Items.GUN)
-//                && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                && !player.isSpectator()
-//                && !stack.getOrCreateTag().getBoolean("charging")
-//                && !stack.getOrCreateTag().getBoolean("reloading")
-        ) {
+        if (stack.is(ModTags.Items.GUN) && !player.isSpectator()) {
             if (player.getMainHandItem().getItem() != ModItems.MINIGUN.get()) {
                 if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
                     player.setSprinting(false);

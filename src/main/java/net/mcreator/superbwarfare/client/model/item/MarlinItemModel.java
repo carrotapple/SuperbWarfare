@@ -46,11 +46,11 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
 
         gun.setPosY(1.06f * (float) p - (float) (0.7f * zp));
 
-        gun.setPosZ(1.5f * (float) p + (float) (0.9f * zp));
+        gun.setPosZ(4f * (float) p + (float) (0.9f * zp));
 
         gun.setRotZ((float) (0.02f * zp));
 
-        gun.setScaleZ(1f - (0.2f * (float) p));
+        gun.setScaleZ(1f - (0.5f * (float) p));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
@@ -110,6 +110,22 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
         move.setRotZ(2.7f * (float) m + Mth.DEG_TO_RAD * (float) zRot);
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+        CoreGeoBone main = getAnimationProcessor().getBone("0");
+        var data = player.getPersistentData();
+        float numR = (float) (1 - 0.55 * data.getDouble("zoom_time"));
+        float numP = (float) (1 - 0.88 * data.getDouble("zoom_time"));
+
+        if (stack.getOrCreateTag().getBoolean("reloading")) {
+            main.setRotX(numR * main.getRotX());
+            main.setRotY(numR * main.getRotY());
+            main.setRotZ(numR * main.getRotZ());
+            main.setPosX(numP * main.getPosX());
+            main.setPosY(numP * main.getPosY());
+            main.setPosZ(numP * main.getPosZ());
+            camera.setRotX(numR * camera.getRotX());
+            camera.setRotY(numR * camera.getRotY());
+            camera.setRotZ(numR * camera.getRotZ());
+        }
 
         player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
 

@@ -4,7 +4,7 @@
     "item": "superbwarfare:marlin_blueprint"
   },
   "base": {
-    "item": "superbwarfare:rare_material_pack"
+    "item": "superbwarfare:common_material_pack"
   },
   "addition": {
     "tag": "minecraft:logs"
