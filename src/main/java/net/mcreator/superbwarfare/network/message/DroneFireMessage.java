@@ -20,7 +20,7 @@ public class DroneFireMessage {
         this.type = buffer.readInt();
     }
 
-    public static void buffer(DroneFireMessage message, FriendlyByteBuf buffer) {
+    public static void encode(DroneFireMessage message, FriendlyByteBuf buffer) {
         buffer.writeInt(message.type);
     }
 

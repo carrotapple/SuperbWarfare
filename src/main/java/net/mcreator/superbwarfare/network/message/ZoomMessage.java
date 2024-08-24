@@ -6,7 +6,6 @@ import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -19,60 +18,53 @@ public class ZoomMessage {
         this.type = type;
     }
 
-    public ZoomMessage(FriendlyByteBuf buffer) {
-        this.type = buffer.readInt();
+    public static ZoomMessage decode(FriendlyByteBuf buffer) {
+        return new ZoomMessage(buffer.readInt());
     }
 
-    public static void buffer(ZoomMessage message, FriendlyByteBuf buffer) {
+    public static void encode(ZoomMessage message, FriendlyByteBuf buffer) {
         buffer.writeInt(message.type);
     }
 
     public static void handler(ZoomMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
-            if (context.getSender() != null) {
-                pressAction(context.getSender(), message.type);
+            ServerPlayer player = context.getSender();
+
+            if (player != null) {
+                Level level = player.level();
+
+                if (!level.isLoaded(player.blockPosition())) {
+                    return;
+                }
+
+                if (message.type == 0) {
+                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        capability.zoom = true;
+                        capability.syncPlayerVariables(player);
+                    });
+
+                    if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity) {
+                        SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_IN.get(), 2, 1);
+                    }
+                }
+
+                if (message.type == 1) {
+                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        capability.zoom = false;
+                        capability.syncPlayerVariables(player);
+                    });
+                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        capability.zooming = false;
+                        capability.syncPlayerVariables(player);
+                    });
+
+                    if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity) {
+                        SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_OUT.get(), 2, 1);
+                    }
+                }
             }
         });
         context.setPacketHandled(true);
-    }
-
-    public static void pressAction(Player entity, int type) {
-        Level world = entity.level();
-
-        if (!world.isLoaded(entity.blockPosition())) {
-            return;
-        }
-
-        if (type == 0) {
-            entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.zoom = true;
-                capability.syncPlayerVariables(entity);
-            });
-
-            if (entity.isPassenger() && entity.getVehicle() instanceof ICannonEntity) {
-                if (entity instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.CANNON_ZOOM_IN.get(), 2, 1);
-                }
-            }
-        }
-
-        if (type == 1) {
-            entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.zoom = false;
-                capability.syncPlayerVariables(entity);
-            });
-            entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.zooming = false;
-                capability.syncPlayerVariables(entity);
-            });
-
-            if (entity.isPassenger() && entity.getVehicle() instanceof ICannonEntity) {
-                if (entity instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.CANNON_ZOOM_OUT.get(), 2, 1);
-                }
-            }
-
-        }
     }
 }

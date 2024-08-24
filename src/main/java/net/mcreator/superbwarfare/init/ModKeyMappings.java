@@ -11,7 +11,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = {Dist.CLIENT})
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ModKeyMappings {
     public static final KeyMapping RELOAD = new KeyMapping("key.superbwarfare.reload", GLFW.GLFW_KEY_R, "key.categories.superbwarfare") {
         private boolean isDownOld = false;
@@ -34,9 +34,9 @@ public class ModKeyMappings {
             super.setDown(isDown);
             if (isDownOld != isDown && isDown) {
                 ModUtils.PACKET_HANDLER.sendToServer(new DoubleJumpMessage(0));
-                if (Minecraft.getInstance().player != null) {
-                    DoubleJumpMessage.pressAction(Minecraft.getInstance().player, 0);
-                }
+//                if (Minecraft.getInstance().player != null) {
+//                    DoubleJumpMessage.pressAction(Minecraft.getInstance().player, 0);
+//                }
             }
             isDownOld = isDown;
         }
@@ -106,9 +106,7 @@ public class ModKeyMappings {
             super.setDown(isDown);
             if (isDownOld != isDown && isDown) {
                 ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(2, true));
-                FORWARD_LASTPRESS = System.currentTimeMillis();
             } else if (isDownOld != isDown) {
-                int dt = (int) (System.currentTimeMillis() - FORWARD_LASTPRESS);
                 ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(2, false));
             }
             isDownOld = isDown;
@@ -122,9 +120,7 @@ public class ModKeyMappings {
             super.setDown(isDown);
             if (isDownOld != isDown && isDown) {
                 ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(3, true));
-                BACKWARD_LASTPRESS = System.currentTimeMillis();
             } else if (isDownOld != isDown) {
-                int dt = (int) (System.currentTimeMillis() - BACKWARD_LASTPRESS);
                 ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(3, false));
             }
             isDownOld = isDown;
@@ -138,9 +134,7 @@ public class ModKeyMappings {
             super.setDown(isDown);
             if (isDownOld != isDown && isDown) {
                 ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(0, true));
-                LEFT_LASTPRESS = System.currentTimeMillis();
             } else if (isDownOld != isDown) {
-                int dt = (int) (System.currentTimeMillis() - LEFT_LASTPRESS);
                 ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(0, false));
             }
             isDownOld = isDown;
@@ -154,9 +148,7 @@ public class ModKeyMappings {
             super.setDown(isDown);
             if (isDownOld != isDown && isDown) {
                 ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(1, true));
-                RIGHT_LASTPRESS = System.currentTimeMillis();
             } else if (isDownOld != isDown) {
-                int dt = (int) (System.currentTimeMillis() - RIGHT_LASTPRESS);
                 ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(1, false));
             }
             isDownOld = isDown;
@@ -170,9 +162,7 @@ public class ModKeyMappings {
             super.setDown(isDown);
             if (isDownOld != isDown && isDown) {
                 ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(4, true));
-                UP_LASTPRESS = System.currentTimeMillis();
             } else if (isDownOld != isDown) {
-                int dt = (int) (System.currentTimeMillis() - UP_LASTPRESS);
                 ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(4, false));
             }
             isDownOld = isDown;
@@ -186,9 +176,7 @@ public class ModKeyMappings {
             super.setDown(isDown);
             if (isDownOld != isDown && isDown) {
                 ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(5, true));
-                DOWN_LASTPRESS = System.currentTimeMillis();
             } else if (isDownOld != isDown) {
-                int dt = (int) (System.currentTimeMillis() - DOWN_LASTPRESS);
                 ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(5, false));
             }
             isDownOld = isDown;
@@ -203,22 +191,12 @@ public class ModKeyMappings {
             super.setDown(isDown);
             if (isDownOld != isDown && isDown) {
                 ModUtils.PACKET_HANDLER.sendToServer(new BreathMessage(true));
-                BREATH_LASTPRESS = System.currentTimeMillis();
             } else if (isDownOld != isDown) {
-                int dt = (int) (System.currentTimeMillis() - BREATH_LASTPRESS);
                 ModUtils.PACKET_HANDLER.sendToServer(new BreathMessage(false));
             }
             isDownOld = isDown;
         }
     };
-
-    private static long FORWARD_LASTPRESS = 0;
-    private static long BACKWARD_LASTPRESS = 0;
-    private static long LEFT_LASTPRESS = 0;
-    private static long RIGHT_LASTPRESS = 0;
-    private static long UP_LASTPRESS = 0;
-    private static long DOWN_LASTPRESS = 0;
-    private static long BREATH_LASTPRESS = 0;
 
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {

@@ -9,10 +9,7 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
-import net.mcreator.superbwarfare.tools.EnchantmentCategoryTool;
-import net.mcreator.superbwarfare.tools.GunsTool;
-import net.mcreator.superbwarfare.tools.ItemNBTTool;
-import net.mcreator.superbwarfare.tools.TooltipTool;
+import net.mcreator.superbwarfare.tools.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -93,7 +90,7 @@ public class Taser extends GunItem implements GeoItem, AnimatedItem {
 
             @Override
             public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack stack) {
-                return GunsTool.pose(entityLiving, hand, stack);
+                return PoseTool.pose(entityLiving, hand, stack);
             }
         });
     }

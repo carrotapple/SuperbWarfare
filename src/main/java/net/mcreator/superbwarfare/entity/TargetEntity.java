@@ -94,7 +94,6 @@ public class TargetEntity extends PathfinderMob implements GeoEntity, AnimatedEn
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-
         if (source.is(DamageTypes.IN_FIRE)
                 || source.getDirectEntity() instanceof ThrownPotion
                 || source.getDirectEntity() instanceof AreaEffectCloud
@@ -149,7 +148,7 @@ public class TargetEntity extends PathfinderMob implements GeoEntity, AnimatedEn
             if (sourceEntity instanceof Player player) {
                 player.displayClientMessage(Component.literal(("Target Down " + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceEntity.position()))) + "M")), true);
                 SoundTool.playLocalSound(player, ModSounds.TARGET_DOWN.get(), 100, 1);
-                ((TargetEntity) entity).entityData.set(DOWN_TIME,90);
+                ((TargetEntity) entity).entityData.set(DOWN_TIME, 90);
             }
         }
     }
@@ -193,10 +192,9 @@ public class TargetEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     public void baseTick() {
         super.baseTick();
         if (this.entityData.get(DOWN_TIME) > 0) {
-            this.entityData.set(DOWN_TIME,this.entityData.get(DOWN_TIME) - 1);
+            this.entityData.set(DOWN_TIME, this.entityData.get(DOWN_TIME) - 1);
         }
     }
-
 
     @Override
     public boolean isPushable() {
@@ -227,9 +225,6 @@ public class TargetEntity extends PathfinderMob implements GeoEntity, AnimatedEn
         this.setNoGravity(true);
     }
 
-    public static void init() {
-    }
-
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0)
@@ -240,7 +235,6 @@ public class TargetEntity extends PathfinderMob implements GeoEntity, AnimatedEn
                 .add(Attributes.KNOCKBACK_RESISTANCE, 10)
                 .add(Attributes.FLYING_SPEED, 0);
     }
-
 
     @Override
     protected void tickDeath() {

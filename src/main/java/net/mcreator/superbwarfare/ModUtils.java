@@ -92,12 +92,12 @@ public class ModUtils {
     }
 
     public void onCommonSetup(final FMLCommonSetupEvent event) {
-        addNetworkMessage(ZoomMessage.class, ZoomMessage::buffer, ZoomMessage::new, ZoomMessage::handler);
-        addNetworkMessage(DoubleJumpMessage.class, DoubleJumpMessage::buffer, DoubleJumpMessage::new, DoubleJumpMessage::handler);
+        addNetworkMessage(ZoomMessage.class, ZoomMessage::encode, ZoomMessage::decode, ZoomMessage::handler);
+        addNetworkMessage(DoubleJumpMessage.class, DoubleJumpMessage::encode, DoubleJumpMessage::decode, DoubleJumpMessage::handler);
         addNetworkMessage(GunsDataMessage.class, GunsDataMessage::encode, GunsDataMessage::decode, GunsDataMessage::handler, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-        addNetworkMessage(FireMessage.class, FireMessage::buffer, FireMessage::new, FireMessage::handler);
-        addNetworkMessage(VehicleFireMessage.class, VehicleFireMessage::buffer, VehicleFireMessage::new, VehicleFireMessage::handler);
-        addNetworkMessage(FireModeMessage.class, FireModeMessage::buffer, FireModeMessage::new, FireModeMessage::handler);
+        addNetworkMessage(FireMessage.class, FireMessage::encode, FireMessage::new, FireMessage::handler);
+        addNetworkMessage(VehicleFireMessage.class, VehicleFireMessage::encode, VehicleFireMessage::new, VehicleFireMessage::handler);
+        addNetworkMessage(FireModeMessage.class, FireModeMessage::encode, FireModeMessage::new, FireModeMessage::handler);
         addNetworkMessage(ReloadMessage.class, ReloadMessage::encode, ReloadMessage::decode, ReloadMessage::handler);
         addNetworkMessage(PlayerGunKillMessage.class, PlayerGunKillMessage::encode, PlayerGunKillMessage::decode, PlayerGunKillMessage::handler, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         addNetworkMessage(ClientIndicatorMessage.class, ClientIndicatorMessage::encode, ClientIndicatorMessage::decode, ClientIndicatorMessage::handler, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
@@ -106,11 +106,11 @@ public class ModUtils {
         addNetworkMessage(AdjustMortarAngleMessage.class, AdjustMortarAngleMessage::encode, AdjustMortarAngleMessage::decode, AdjustMortarAngleMessage::handler);
         addNetworkMessage(InteractMessage.class, InteractMessage::encode, InteractMessage::decode, InteractMessage::handler);
         addNetworkMessage(DroneMovementMessage.class, DroneMovementMessage::encode, DroneMovementMessage::decode, DroneMovementMessage::handler);
-        addNetworkMessage(DroneFireMessage.class, DroneFireMessage::buffer, DroneFireMessage::new, DroneFireMessage::handler);
+        addNetworkMessage(DroneFireMessage.class, DroneFireMessage::encode, DroneFireMessage::new, DroneFireMessage::handler);
         addNetworkMessage(SimulationDistanceMessage.class, SimulationDistanceMessage::encode, SimulationDistanceMessage::decode, SimulationDistanceMessage::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         addNetworkMessage(GunReforgeMessage.class, GunReforgeMessage::encode, GunReforgeMessage::decode, GunReforgeMessage::handler);
         addNetworkMessage(SetPerkLevelMessage.class, SetPerkLevelMessage::encode, SetPerkLevelMessage::decode, SetPerkLevelMessage::handler);
-        addNetworkMessage(BreathMessage.class, BreathMessage::buffer, BreathMessage::new, BreathMessage::handler);
+        addNetworkMessage(BreathMessage.class, BreathMessage::encode, BreathMessage::decode, BreathMessage::handler);
 
         event.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)),
                 Ingredient.of(Items.LIGHTNING_ROD), PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotion.SHOCK.get())));

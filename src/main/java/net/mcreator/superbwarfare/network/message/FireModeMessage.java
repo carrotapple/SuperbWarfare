@@ -26,7 +26,7 @@ public class FireModeMessage {
         this.type = buffer.readInt();
     }
 
-    public static void buffer(FireModeMessage message, FriendlyByteBuf buffer) {
+    public static void encode(FireModeMessage message, FriendlyByteBuf buffer) {
         buffer.writeInt(message.type);
     }
 

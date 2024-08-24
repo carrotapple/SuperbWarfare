@@ -80,7 +80,7 @@ public class MortarShellEntity extends ThrowableItemProjectile {
         super.onHitBlock(blockHitResult);
         BlockPos resultPos = blockHitResult.getBlockPos();
         BlockState state = this.level().getBlockState(resultPos);
-        if(state.getBlock() instanceof BellBlock bell) {
+        if (state.getBlock() instanceof BellBlock bell) {
             bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
         }
         if (!this.level().isClientSide() && this.level() instanceof ServerLevel) {

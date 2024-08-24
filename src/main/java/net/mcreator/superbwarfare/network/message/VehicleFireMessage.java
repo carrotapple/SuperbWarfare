@@ -19,7 +19,7 @@ public class VehicleFireMessage {
         this.type = buffer.readInt();
     }
 
-    public static void buffer(VehicleFireMessage message, FriendlyByteBuf buffer) {
+    public static void encode(VehicleFireMessage message, FriendlyByteBuf buffer) {
         buffer.writeInt(message.type);
     }
 

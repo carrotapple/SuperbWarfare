@@ -9,6 +9,7 @@ import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
 import net.mcreator.superbwarfare.tools.GunsTool;
+import net.mcreator.superbwarfare.tools.PoseTool;
 import net.mcreator.superbwarfare.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -69,7 +70,7 @@ public class Abekiri extends GunItem implements GeoItem, AnimatedItem {
 
             @Override
             public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack stack) {
-                return GunsTool.pose(entityLiving, hand, stack);
+                return PoseTool.pose(entityLiving, hand, stack);
             }
         });
     }

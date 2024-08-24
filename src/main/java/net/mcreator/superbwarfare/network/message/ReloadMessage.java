@@ -40,8 +40,10 @@ public class ReloadMessage {
     public static void pressAction(Player player, int type) {
         Level level = player.level();
 
-        if (!level.isLoaded(player.blockPosition()))
+        if (!level.isLoaded(player.blockPosition())) {
             return;
+        }
+
         if (type == 0) {
             ItemStack stack = player.getMainHandItem();
             var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
@@ -54,13 +56,11 @@ public class ReloadMessage {
             ) {
                 CompoundTag tag = stack.getOrCreateTag();
 
-                boolean can_single_reload = tag.getDouble("iterative_time") != 0;
-
-                boolean can_reload = (tag.getDouble("normal_reload_time") != 0 || tag.getDouble("empty_reload_time") != 0) && tag.getDouble("clipLoad") != 1;
-
+                boolean canSingleReload = tag.getDouble("iterative_time") != 0;
+                boolean canReload = (tag.getDouble("normal_reload_time") != 0 || tag.getDouble("empty_reload_time") != 0) && tag.getDouble("clipLoad") != 1;
                 boolean clipLoad = tag.getInt("ammo") == 0 && tag.getDouble("clipLoad") == 1;
 
-                //检查备弹
+                // 检查备弹
                 if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
                     return;
                 } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && capability.sniperAmmo == 0) {
@@ -77,7 +77,7 @@ public class ReloadMessage {
                     return;
                 }
 
-                if (can_reload || clipLoad) {
+                if (canReload || clipLoad) {
                     if (stack.is(ModTags.Items.OPEN_BOLT)) {
                         if (stack.getItem() == ModItems.M_60.get() || stack.getItem() == ModItems.ABEKIRI.get()) {
                             if (tag.getInt("ammo") < tag.getDouble("mag")) {
@@ -94,7 +94,7 @@ public class ReloadMessage {
                     return;
                 }
 
-                if (can_single_reload) {
+                if (canSingleReload) {
                     if (tag.getInt("ammo") < tag.getDouble("mag")) {
                         tag.putBoolean("start_single_reload", true);
                     }

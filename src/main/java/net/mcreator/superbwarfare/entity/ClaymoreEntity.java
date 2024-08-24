@@ -31,7 +31,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
 
-public class ClaymoreEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity{
+public class ClaymoreEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Float> ROT_Y = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.FLOAT);
 
@@ -159,12 +159,13 @@ public class ClaymoreEntity extends ThrowableItemProjectile implements GeoEntity
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
     }
+
     @Override
     protected void updateRotation() {
         this.setXRot(0);
         this.setYRot(this.entityData.get(ROT_Y));
     }
-    
+
     @Override
     public EntityDimensions getDimensions(Pose p_33597_) {
         return super.getDimensions(p_33597_).scale((float) 0.5);
