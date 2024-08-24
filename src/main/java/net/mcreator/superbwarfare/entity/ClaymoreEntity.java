@@ -66,11 +66,6 @@ public class ClaymoreEntity extends LivingEntity implements GeoEntity, AnimatedE
     }
 
     @Override
-    public boolean isCustomNameVisible() {
-        return false;
-    }
-
-    @Override
     public MobType getMobType() {
         return super.getMobType();
     }

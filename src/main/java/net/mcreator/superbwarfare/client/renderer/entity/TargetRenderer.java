@@ -37,4 +37,9 @@ public class TargetRenderer extends GeoEntityRenderer<TargetEntity> {
     protected float getDeathMaxRotation(TargetEntity entityLivingBaseIn) {
         return 0.0F;
     }
+
+    @Override
+    public boolean shouldShowName(TargetEntity animatable) {
+        return animatable.hasCustomName();
+    }
 }

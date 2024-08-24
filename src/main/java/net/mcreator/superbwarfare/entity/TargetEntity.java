@@ -7,10 +7,9 @@ import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -22,27 +21,22 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-// TODO 重置靶子
 @Mod.EventBusSubscriber
-public class TargetEntity extends PathfinderMob implements GeoEntity, AnimatedEntity {
+public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(TargetEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> DOWN_TIME = SynchedEntityData.defineId(TargetEntity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -55,9 +49,6 @@ public class TargetEntity extends PathfinderMob implements GeoEntity, AnimatedEn
 
     public TargetEntity(EntityType<TargetEntity> type, Level world) {
         super(type, world);
-        xpReward = 0;
-        setNoAi(true);
-        setPersistenceRequired();
     }
 
     @Override
@@ -68,23 +59,23 @@ public class TargetEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    @Override
-    protected PathNavigation createNavigation(Level world) {
-        return new FlyingPathNavigation(this, world);
-    }
-
-    @Override
     public MobType getMobType() {
         return super.getMobType();
     }
 
     @Override
-    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
-        return false;
+    public Iterable<ItemStack> getArmorSlots() {
+        return NonNullList.withSize(1, ItemStack.EMPTY);
+    }
+
+    @Override
+    public ItemStack getItemBySlot(EquipmentSlot pSlot) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void setItemSlot(EquipmentSlot pSlot, ItemStack pStack) {
+
     }
 
     @Override
@@ -127,8 +118,9 @@ public class TargetEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.contains("DownTime"))
+        if (compound.contains("DownTime")) {
             this.entityData.set(DOWN_TIME, compound.getInt("DownTime"));
+        }
     }
 
     @SubscribeEvent
@@ -139,7 +131,6 @@ public class TargetEntity extends PathfinderMob implements GeoEntity, AnimatedEn
         if (entity == null) return;
 
         if (entity instanceof TargetEntity target1) {
-
             event.setCanceled(true);
             target1.setHealth(target1.getMaxHealth());
 
@@ -160,16 +151,15 @@ public class TargetEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     }
 
     @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        InteractionResult result = InteractionResult.sidedSuccess(this.level().isClientSide());
-        super.mobInteract(player, hand);
-
+    public InteractionResult interact(Player player, InteractionHand hand) {
         if (player.isShiftKeyDown()) {
             if (!this.level().isClientSide()) {
                 this.discard();
             }
 
-            player.addItem(new ItemStack(ModItems.TARGET_DEPLOYER.get()));
+            if (!player.getAbilities().instabuild) {
+                player.addItem(new ItemStack(ModItems.TARGET_DEPLOYER.get()));
+            }
         } else {
             if (!(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
                 this.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3((player.getX()), this.getY(), (player.getZ())));
@@ -185,12 +175,12 @@ public class TargetEntity extends PathfinderMob implements GeoEntity, AnimatedEn
             }
         }
 
-        return result;
+        return InteractionResult.sidedSuccess(this.level().isClientSide());
     }
 
     @Override
-    public void baseTick() {
-        super.baseTick();
+    public void tick() {
+        super.tick();
         if (this.entityData.get(DOWN_TIME) > 0) {
             this.entityData.set(DOWN_TIME, this.entityData.get(DOWN_TIME) - 1);
         }
@@ -202,15 +192,16 @@ public class TargetEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     }
 
     @Override
+    public HumanoidArm getMainArm() {
+        return HumanoidArm.RIGHT;
+    }
+
+    @Override
     protected void doPush(Entity entityIn) {
     }
 
     @Override
     protected void pushEntities() {
-    }
-
-    @Override
-    protected void checkFallDamage(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
     }
 
     @Override
