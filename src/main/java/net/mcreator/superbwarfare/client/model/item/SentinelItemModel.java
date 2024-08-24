@@ -141,7 +141,7 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         float numR = (float) (1 - 0.9 * data.getDouble("zoom_time"));
         float numP = (float) (1 - 0.98 * data.getDouble("zoom_time"));
 
-        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
+        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0 || stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
             main.setRotX(numR * main.getRotX());
             main.setRotY(numR * main.getRotY());
             main.setRotZ(numR * main.getRotZ());

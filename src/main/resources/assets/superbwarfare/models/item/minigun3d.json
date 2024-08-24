@@ -674,7 +674,7 @@
 	"gui_light": "front",
 	"display": {
 		"thirdperson_righthand": {
-			"rotation": [75, -9, 0],
+			"rotation": [67.5, -10, 0],
 			"translation": [0.25, 3.5, -0.25],
 			"scale": [0.7, 0.7, 0.7]
 		},

@@ -63,8 +63,8 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
             }
 
             @Override
-            public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
-                return HumanoidModel.ArmPose.BOW_AND_ARROW;
+            public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack stack) {
+                return GunsTool.pose(entityLiving, hand, stack);
             }
         });
     }

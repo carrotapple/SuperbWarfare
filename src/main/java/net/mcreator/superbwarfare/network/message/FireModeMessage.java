@@ -3,7 +3,6 @@ package net.mcreator.superbwarfare.network.message;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -97,11 +96,9 @@ public class FireModeMessage {
                 }
             }
 
-            var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
 
             if (mainHandItem.getItem() == ModItems.SENTINEL.get()
                     && !player.isSpectator()
-                    && !capability.zooming
                     && !(player.getCooldowns().isOnCooldown(mainHandItem.getItem()))
                     && mainHandItem.getOrCreateTag().getInt("gun_reloading_time") == 0
                     && !mainHandItem.getOrCreateTag().getBoolean("sentinel_is_charging")) {

@@ -8,7 +8,8 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
-import net.mcreator.superbwarfare.tools.*;
+import net.mcreator.superbwarfare.tools.GunsTool;
+import net.mcreator.superbwarfare.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -61,8 +62,8 @@ public class Hk416Item extends GunItem implements GeoItem, AnimatedItem {
             }
 
             @Override
-            public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
-                return HumanoidModel.ArmPose.BOW_AND_ARROW;
+            public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack stack) {
+                return GunsTool.pose(entityLiving, hand, stack);
             }
         });
     }

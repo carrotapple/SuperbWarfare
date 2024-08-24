@@ -85,11 +85,10 @@ public class Minigun extends GunItem implements GeoItem, AnimatedItem {
 
             private static final HumanoidModel.ArmPose MinigunPose = HumanoidModel.ArmPose.create("Minigun", false, (model, entity, arm) -> {
                 if (arm != HumanoidArm.LEFT) {
-                    model.rightArm.xRot = -0.2F + model.head.xRot;
-                    model.rightArm.yRot = -0.2F;
-                    model.leftArm.xRot = -1F + model.head.xRot;
-                    model.leftArm.yRot = 1F;
-                    model.leftArm.zRot = -0.5F;
+                    model.rightArm.xRot = -22.5f * Mth.DEG_TO_RAD + model.head.xRot;
+                    model.rightArm.yRot = -10f * Mth.DEG_TO_RAD;
+                    model.leftArm.xRot = -45f * Mth.DEG_TO_RAD + model.head.xRot;
+                    model.leftArm.yRot = 40f * Mth.DEG_TO_RAD;
                 }
             });
 

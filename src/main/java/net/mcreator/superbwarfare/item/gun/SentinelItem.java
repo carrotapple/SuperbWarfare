@@ -110,8 +110,8 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
             }
 
             @Override
-            public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
-                return HumanoidModel.ArmPose.BOW_AND_ARROW;
+            public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack stack) {
+                return GunsTool.pose(entityLiving, hand, stack);
             }
         });
     }
@@ -144,7 +144,7 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload_normal"));
             }
 
-            if (stack.getOrCreateTag().getDouble("sentinel_charge_time") < 127 && stack.getOrCreateTag().getDouble("sentinel_charge_time") > 0 && stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
+            if (stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.charge"));
             }
 
