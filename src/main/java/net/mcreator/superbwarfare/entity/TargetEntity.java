@@ -147,7 +147,6 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
     @Override
     public void die(DamageSource source) {
         super.die(source);
-
     }
 
     @Override
@@ -184,6 +183,11 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
         if (this.entityData.get(DOWN_TIME) > 0) {
             this.entityData.set(DOWN_TIME, this.entityData.get(DOWN_TIME) - 1);
         }
+    }
+
+    @Override
+    public Vec3 getDeltaMovement() {
+        return new Vec3(0, 0, 0);
     }
 
     @Override
