@@ -129,7 +129,7 @@ public class Ntw20Model extends GeoModel<Ntw20> {
         float numR = (float) (1 - 0.92 * data.getDouble("zoom_time"));
         float numP = (float) (1 - 0.88 * data.getDouble("zoom_time"));
 
-        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
+        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0 || stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
             main.setRotX(numR * main.getRotX());
             main.setRotY(numR * main.getRotY());
             main.setRotZ(numR * main.getRotZ());

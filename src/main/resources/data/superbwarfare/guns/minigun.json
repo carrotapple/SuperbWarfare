@@ -6,7 +6,7 @@
   "recoil_y": 0.011,
   "damage": 8,
   "headshot": 2,
-  "velocity": 48,
+  "velocity": 24,
   "fire_interval": 1,
   "weight": 2,
   "fire_mode": 2,

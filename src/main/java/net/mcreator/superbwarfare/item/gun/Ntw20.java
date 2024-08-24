@@ -8,7 +8,6 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
-import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.RarityTool;
 import net.mcreator.superbwarfare.tools.TooltipTool;
@@ -93,10 +92,6 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
-
-            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming && stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.shift2"));
-            }
 
             if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.shift"));
