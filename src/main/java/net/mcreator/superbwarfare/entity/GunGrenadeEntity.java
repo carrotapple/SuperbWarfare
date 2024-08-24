@@ -139,9 +139,6 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         explosion.finalizeExplosion(false);
 
         ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-        for (int index0 = 0; index0 < 100; index0++) {
-            fragShoot();
-        }
     }
 
     private void causeEntityHitExplode(Entity entity) {
@@ -153,16 +150,5 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         explosion.finalizeExplosion(false);
         ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
         this.discard();
-    }
-
-    public void fragShoot() {
-        if (!this.level().isClientSide()) {
-            FragEntity frag = new FragEntity((LivingEntity) this.getOwner(), level()).setPosition0(this.position());
-
-            frag.setPos(this.getX(), this.getEyeY() + 0.1, this.getZ());
-            frag.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 5,
-                    360);
-            this.level().addFreshEntity(frag);
-        }
     }
 }

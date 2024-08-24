@@ -10,12 +10,10 @@ import net.minecraftforge.fml.common.Mod;
 public class ModModels {
     @SubscribeEvent
     public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(ModelBullet.LAYER_LOCATION, ModelBullet::createBodyLayer);
         event.registerLayerDefinition(ModelMortarShell.LAYER_LOCATION, ModelMortarShell::createBodyLayer);
         event.registerLayerDefinition(ModelTaserRod.LAYER_LOCATION, ModelTaserRod::createBodyLayer);
         event.registerLayerDefinition(ModelGrenade.LAYER_LOCATION, ModelGrenade::createBodyLayer);
         event.registerLayerDefinition(ModelBocekArrow.LAYER_LOCATION, ModelBocekArrow::createBodyLayer);
-        event.registerLayerDefinition(ModelClaymore.LAYER_LOCATION, ModelClaymore::createBodyLayer);
         event.registerLayerDefinition(ModelHandGrenade.LAYER_LOCATION, ModelHandGrenade::createBodyLayer);
     }
 }

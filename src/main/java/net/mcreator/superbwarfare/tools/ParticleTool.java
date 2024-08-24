@@ -2,7 +2,6 @@ package net.mcreator.superbwarfare.tools;
 
 import net.mcreator.superbwarfare.init.ModParticleTypes;
 import net.mcreator.superbwarfare.init.ModSounds;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -10,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
 public class ParticleTool {
@@ -48,16 +48,16 @@ public class ParticleTool {
 
         if (level instanceof ServerLevel serverLevel) {
             if ((level.getBlockState(BlockPos.containing(x, y, z))).getBlock() == Blocks.WATER) {
-                sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 3, z, 100, 1, 3, 1, 0.01, true);
-                sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 3, z, 150, 2, 1, 2, 0.01, true);
-                sendParticle(serverLevel, ParticleTypes.FALLING_WATER, x, y + 3, z, 400, 1.5, 4, 1.5, 1, true);
-                sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, x, y, z, 300, 3, 0.5, 3, 0.1, true);
+                sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 3, z, 20, 1, 3, 1, 0.01, true);
+                sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 3, z, 30, 2, 1, 2, 0.01, true);
+                sendParticle(serverLevel, ParticleTypes.FALLING_WATER, x, y + 3, z, 50, 1.5, 4, 1.5, 1, true);
+                sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, x, y, z, 60, 3, 0.5, 3, 0.1, true);
             }
             sendParticle(serverLevel, ParticleTypes.EXPLOSION, x, y + 1, z, 5, 0.7, 0.7, 0.7, 1, true);
-            sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 80, 0.4, 1, 0.4, 0.02, true);
-            sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, x, y + 1, z, 80, 0.4, 1, 0.4, 0.02, true);
-            sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 80, 2, 0.001, 2, 0.01, true);
-            sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), x, y, z, 80, 0, 0, 0, 0.2, true);
+            sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 20, 0.2, 0.7, 0.2, 0.02, true);
+            sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, x, y + 1, z, 10, 0.4, 1, 0.4, 0.02, true);
+            sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 20, 1, 0.001, 1, 0.01, true);
+            sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), x, y, z, 30, 0, 0, 0, 0.2, true);
         }
 
     }

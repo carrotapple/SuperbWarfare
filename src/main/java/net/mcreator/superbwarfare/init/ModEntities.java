@@ -25,7 +25,7 @@ public class ModEntities {
             EntityType.Builder.<SenpaiEntity>of(SenpaiEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(1024).setUpdateInterval(3).setCustomClientFactory(SenpaiEntity::new)
                     .sized(0.6f, 2f));
     public static final RegistryObject<EntityType<ClaymoreEntity>> CLAYMORE = register("claymore",
-            EntityType.Builder.<ClaymoreEntity>of(ClaymoreEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(ClaymoreEntity::new).fireImmune().sized(0.5f, 0.5f));
+            EntityType.Builder.<ClaymoreEntity>of(ClaymoreEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(512).setUpdateInterval(1).setCustomClientFactory(ClaymoreEntity::new).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<Mk42Entity>> MK_42 = register("mk_42",
             EntityType.Builder.<Mk42Entity>of(Mk42Entity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(5124).setUpdateInterval(3).setCustomClientFactory(Mk42Entity::new).fireImmune().sized(3.4f, 3.5f));
     public static final RegistryObject<EntityType<Mle1934Entity>> MLE_1934 = register("mle_1934",
@@ -39,9 +39,6 @@ public class ModEntities {
                     .setUpdateInterval(1).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<GunGrenadeEntity>> GUN_GRENADE = register("projectile_gun_grenade",
             EntityType.Builder.<GunGrenadeEntity>of(GunGrenadeEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(512).setUpdateInterval(1).setCustomClientFactory(GunGrenadeEntity::new).sized(0.5f, 0.5f));
-
-    public static final RegistryObject<EntityType<FragEntity>> FRAG = register("projectile_frag",
-            EntityType.Builder.<FragEntity>of(FragEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(FragEntity::new).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<RpgRocketEntity>> RPG_ROCKET = register("projectile_rpg_rocket",
             EntityType.Builder.<RpgRocketEntity>of(RpgRocketEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(512).setUpdateInterval(1).setCustomClientFactory(RpgRocketEntity::new).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<MortarShellEntity>> MORTAR_SHELL = register("projectile_mortar_shell",
@@ -72,7 +69,6 @@ public class ModEntities {
         event.put(TARGET.get(), TargetEntity.createAttributes().build());
         event.put(MORTAR.get(), MortarEntity.createAttributes().build());
         event.put(SENPAI.get(), SenpaiEntity.createAttributes().build());
-        event.put(CLAYMORE.get(), ClaymoreEntity.createAttributes().build());
         event.put(MK_42.get(), Mk42Entity.createAttributes().build());
         event.put(DRONE.get(), DroneEntity.createAttributes().build());
         event.put(MLE_1934.get(), Mle1934Entity.createAttributes().build());
