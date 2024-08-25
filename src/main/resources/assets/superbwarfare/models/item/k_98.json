@@ -12,16 +12,16 @@
 			"parent": "superbwarfare:item/k98_3d"
 		},
 		"thirdperson_lefthand": {
-			"parent": "superbwarfare:item/98_3d"
+			"parent": "superbwarfare:item/k98_3d"
 		},
 		"ground": {
-			"parent": "superbwarfare:item/98_3d"
+			"parent": "superbwarfare:item/k98_3d"
 		},
 		"fixed": {
-			"parent": "superbwarfare:item/98_3d"
+			"parent": "superbwarfare:item/k98_3d"
 		},
 		"head": {
-			"parent": "superbwarfare:item/98_3d"
+			"parent": "superbwarfare:item/k98_3d"
 		}
 	}
 }

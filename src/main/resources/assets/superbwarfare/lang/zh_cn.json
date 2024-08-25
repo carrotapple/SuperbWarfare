@@ -43,6 +43,7 @@
   "item.superbwarfare.m_1911": "M1911手枪",
   "item.superbwarfare.qbz_95": "95-1式自动步枪",
   "item.superbwarfare.k_98": "KAR-98K",
+  "item.superbwarfare.mosin_nagant": "莫辛纳甘",
 
   "des.superbwarfare.tips.upgradepoint": "升级点数: ",
   "des.superbwarfare.tips.damage": "伤害: ",
@@ -78,6 +79,7 @@
   "item.superbwarfare.m_1911_blueprint": "M1911手枪蓝图",
   "item.superbwarfare.qbz_95_blueprint": "95-1式自动步枪蓝图",
   "item.superbwarfare.k_98_blueprint": "KAR-98K蓝图",
+  "item.superbwarfare.mosin_nagant_blueprint": "莫辛纳甘蓝图",
 
   "item.superbwarfare.common_material_pack": "普通材料包",
   "item.superbwarfare.rare_material_pack": "稀有材料包",

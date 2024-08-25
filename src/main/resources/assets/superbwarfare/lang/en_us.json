@@ -43,6 +43,7 @@
   "item.superbwarfare.m_1911": "M1911A1",
   "item.superbwarfare.qbz_95": "QBZ-95-1",
   "item.superbwarfare.k_98": "KAR-98K",
+  "item.superbwarfare.mosin_nagant": "Mosin Nagant",
 
   "des.superbwarfare.tips.damage": "Damage: ",
   "des.superbwarfare.tips.level": "Level: ",
@@ -78,6 +79,7 @@
   "item.superbwarfare.m_1911_blueprint": "M1911 Blueprint",
   "item.superbwarfare.qbz_95_blueprint": "QBZ-95-1 Blueprint",
   "item.superbwarfare.k_98_blueprint": "KAR-98K Blueprint",
+  "item.superbwarfare.mosin_nagant_blueprint": "Mosin Nagant Blueprint",
 
   "item.superbwarfare.common_material_pack": "Common Material Pack",
   "item.superbwarfare.rare_material_pack": "Rare Material Pack",

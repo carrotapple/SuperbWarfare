@@ -1435,6 +1435,79 @@
     ]
   },
 
+  "mosin_nagant_fire_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:mosin_nagant/mosin_nagant_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "mosin_nagant_fire_3p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:mosin_nagant/mosin_nagant_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "mosin_nagant_far": {
+    "sounds": [
+      {
+        "name": "superbwarfare:mosin_nagant/mosin_nagant_far",
+        "stream": false
+      }
+    ]
+  },
+  "mosin_nagant_veryfar": {
+    "sounds": [
+      {
+        "name": "superbwarfare:mosin_nagant/mosin_nagant_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "mosin_nagant_bolt": {
+    "sounds": [
+      {
+        "name": "superbwarfare:k_98/k_98_bolt",
+        "stream": false
+      }
+    ]
+  },
+  "mosin_nagant_loop": {
+    "sounds": [
+      {
+        "name": "superbwarfare:k_98/k_98_loop",
+        "stream": false
+      }
+    ]
+  },
+  "mosin_nagant_prepare": {
+    "sounds": [
+      {
+        "name": "superbwarfare:k_98/k_98_prepare",
+        "stream": false
+      }
+    ]
+  },
+  "mosin_nagant_prepare_empty": {
+    "sounds": [
+      {
+        "name": "superbwarfare:k_98/k_98_prepare_empty",
+        "stream": false
+      }
+    ]
+  },
+  "mosin_nagant_end": {
+    "sounds": [
+      {
+        "name": "superbwarfare:k_98/k_98_finish",
+        "stream": false
+      }
+    ]
+  },
+
   "lightsaber": {
     "sounds": [
       {

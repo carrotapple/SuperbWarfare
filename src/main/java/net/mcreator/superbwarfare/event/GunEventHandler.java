@@ -415,16 +415,16 @@ public class GunEventHandler {
 
             if (stack.is(ModTags.Items.OPEN_BOLT)) {
                 if (tag.getInt("ammo") == 0) {
-                    tag.putInt("gun_reloading_time", (int) tag.getDouble("empty_reload_time"));
+                    tag.putInt("gun_reloading_time", (int) tag.getDouble("empty_reload_time") + 2);
                     stack.getOrCreateTag().putBoolean("is_empty_reloading", true);
                     playGunEmptyReloadSounds(player);
                 } else {
-                    tag.putInt("gun_reloading_time", (int) tag.getDouble("normal_reload_time"));
+                    tag.putInt("gun_reloading_time", (int) tag.getDouble("normal_reload_time") + 2);
                     stack.getOrCreateTag().putBoolean("is_normal_reloading", true);
                     playGunNormalReloadSounds(player);
                 }
             } else {
-                tag.putInt("gun_reloading_time", (int) tag.getDouble("empty_reload_time"));
+                tag.putInt("gun_reloading_time", (int) tag.getDouble("empty_reload_time") + 2);
                 stack.getOrCreateTag().putBoolean("is_empty_reloading", true);
                 playGunEmptyReloadSounds(player);
             }
@@ -605,7 +605,11 @@ public class GunEventHandler {
                 playGunPrepareLoadReloadSounds(player);
                 tag.putInt("prepare_load", (int) tag.getDouble("prepare_load_time"));
                 player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("prepare_load_time"));
-
+            } else if (tag.getDouble("prepare_empty") != 0 && tag.getInt("ammo") == 0) {
+                // 此处判断空仓换弹，如莫辛纳甘
+                playGunEmptyPrepareSounds(player);
+                tag.putInt("prepare", (int) tag.getDouble("prepare_empty"));
+                player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("prepare_empty"));
             } else {
                 playGunPrepareReloadSounds(player);
                 tag.putInt("prepare", (int) tag.getDouble("prepare_time"));
@@ -673,7 +677,7 @@ public class GunEventHandler {
             }
         }
 
-        if (stack.getItem() == ModItems.K_98.get()) {
+        if (stack.getItem() == ModItems.K_98.get() || stack.getItem() == ModItems.MOSIN_NAGANT.get()) {
             if (tag.getInt("iterative") == 1) {
                 singleLoad(player);
             }
@@ -710,8 +714,8 @@ public class GunEventHandler {
         // 三阶段
         if ((tag.getInt("iterative") == 1 && tag.getInt("reload_stage") == 3) || tag.getBoolean("force_stage3_start")) {
             tag.putBoolean("force_stage3_start", false);
-            tag.putDouble("finish", (int) tag.getDouble("finish_time"));
-            player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("finish_time"));
+            tag.putDouble("finish", (int) tag.getDouble("finish_time") + 2);
+            player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("finish_time") + 2);
             playGunEndReloadSounds(player);
         }
 
@@ -767,6 +771,23 @@ public class GunEventHandler {
             String name = origin.substring(origin.lastIndexOf(".") + 1);
 
             SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, name + "_prepare"));
+            if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
+                SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
+            }
+        }
+    }
+
+    public static void playGunEmptyPrepareSounds(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) {
+            return;
+        }
+
+        if (!player.level().isClientSide) {
+            String origin = stack.getItem().getDescriptionId();
+            String name = origin.substring(origin.lastIndexOf(".") + 1);
+
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, name + "_prepare_empty"));
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
             }

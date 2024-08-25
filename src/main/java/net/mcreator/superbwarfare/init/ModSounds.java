@@ -251,6 +251,16 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> K_98_LOOP = REGISTRY.register("k_98_loop", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "k_98_loop")));
     public static final RegistryObject<SoundEvent> K_98_END = REGISTRY.register("k_98_end", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "k_98_end")));
 
+    public static final RegistryObject<SoundEvent> MOSIN_NAGANT_FIRE_1P = REGISTRY.register("mosin_nagant_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mosin_nagant_fire_1p")));
+    public static final RegistryObject<SoundEvent> MOSIN_NAGANT_FIRE_3P = REGISTRY.register("mosin_nagant_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mosin_nagant_fire_3p")));
+    public static final RegistryObject<SoundEvent> MOSIN_NAGANT_FAR = REGISTRY.register("mosin_nagant_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mosin_nagant_far")));
+    public static final RegistryObject<SoundEvent> MOSIN_NAGANT_VERYFAR = REGISTRY.register("mosin_nagant_veryfar", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mosin_nagant_veryfar")));
+    public static final RegistryObject<SoundEvent> MOSIN_NAGANT_BOLT = REGISTRY.register("mosin_nagant_bolt", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mosin_nagant_bolt")));
+    public static final RegistryObject<SoundEvent> MOSIN_NAGANT_PREPARE = REGISTRY.register("mosin_nagant_prepare", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mosin_nagant_prepare")));
+    public static final RegistryObject<SoundEvent> MOSIN_NAGANT_PREPARE_EMPTY = REGISTRY.register("mosin_nagant_prepare_empty", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mosin_nagant_prepare_empty")));
+    public static final RegistryObject<SoundEvent> MOSIN_NAGANT_LOOP = REGISTRY.register("mosin_nagant_loop", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mosin_nagant_loop")));
+    public static final RegistryObject<SoundEvent> MOSIN_NAGANT_END = REGISTRY.register("mosin_nagant_end", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mosin_nagant_end")));
+
     public static final RegistryObject<SoundEvent> MK_42_FIRE_1P = REGISTRY.register("mk_42_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mk_42_fire_1p")));
     public static final RegistryObject<SoundEvent> MK_42_FIRE_3P = REGISTRY.register("mk_42_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mk_42_fire_3p")));
     public static final RegistryObject<SoundEvent> MK_42_FAR = REGISTRY.register("mk_42_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mk_42_far")));
