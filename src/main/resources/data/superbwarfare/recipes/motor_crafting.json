@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "aba",
+    "aba",
+    "cdc"
+  ],
+  "key": {
+    "a": {
+      "tag": "forge:plates/copper"
+    },
+    "b": {
+      "item": "minecraft:iron_ingot"
+    },
+    "c": {
+      "item": "minecraft:iron_nugget"
+    },
+    "d": {
+      "item": "minecraft:lodestone"
+    }
+  },
+  "result": {
+    "item": "superbwarfare:motor",
+    "count": 32
+  }
+}

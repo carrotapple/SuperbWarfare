@@ -248,7 +248,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
             entityToSpawnLeft.setPos(this.getX() + leftPos.x,
                     this.getEyeY() - 0.2 + leftPos.y,
                     this.getZ() + leftPos.z);
-            entityToSpawnLeft.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 18, 0.1f);
+            entityToSpawnLeft.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 18, 0.05f);
             level.addFreshEntity(entityToSpawnLeft);
 
             //右炮管
@@ -263,7 +263,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
                 entityToSpawnRight.setPos(this.getX() + rightPos.x,
                         this.getEyeY() - 0.2 + rightPos.y,
                         this.getZ() + rightPos.z);
-                entityToSpawnRight.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 18, 0.1f);
+                entityToSpawnRight.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 18, 0.05f);
                 level.addFreshEntity(entityToSpawnRight);
 
                 player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> capability.recoilHorizon = 1);

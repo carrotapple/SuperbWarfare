@@ -237,7 +237,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
                     player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime).durability(durability);
 
             entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
-            entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 15, 0.1f);
+            entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 15, 0.05f);
             level.addFreshEntity(entityToSpawn);
 
             if (player instanceof ServerPlayer serverPlayer) {
