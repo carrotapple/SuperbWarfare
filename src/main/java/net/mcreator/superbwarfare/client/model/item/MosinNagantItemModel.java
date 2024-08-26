@@ -37,6 +37,7 @@ public class MosinNagantItemModel extends GeoModel<MosinNagantItem> {
         CoreGeoBone bone15 = getAnimationProcessor().getBone("bone15");
         CoreGeoBone bone16 = getAnimationProcessor().getBone("bone16");
         CoreGeoBone qiangshen = getAnimationProcessor().getBone("qiangshen");
+        CoreGeoBone rex = getAnimationProcessor().getBone("rex");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -73,7 +74,7 @@ public class MosinNagantItemModel extends GeoModel<MosinNagantItem> {
 
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
             shen.setPosY(0.07f * (float) (fp + 2 * fr));
-            shen.setPosZ(10.6f * (float) (fp + 0.54f * fr));
+            shen.setPosZ(3.6f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.02f * (float) (fp + fr));
             shen.setRotZ(0f);
         } else {
@@ -82,7 +83,10 @@ public class MosinNagantItemModel extends GeoModel<MosinNagantItem> {
             shen.setRotX(0.17f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
         }
-        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
+        shen.setPosX((float)(0.75f * fr * (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
+
+        rex.setPosY(0.05f + 0.1f * (float) fp);
+        rex.setRotZ((float) (-0.08f * fp * (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon));
 
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
@@ -129,7 +133,7 @@ public class MosinNagantItemModel extends GeoModel<MosinNagantItem> {
         CoreGeoBone main = getAnimationProcessor().getBone("0");
         CoreGeoBone body = getAnimationProcessor().getBone("roll");
         var data = player.getPersistentData();
-        float numR = (float) (1 - 0.95 * data.getDouble("zoom_time"));
+        float numR = (float) (1 - 0.97 * data.getDouble("zoom_time"));
         float numP = (float) (1 - 0.81 * data.getDouble("zoom_time"));
 
         if (stack.getOrCreateTag().getBoolean("reloading") || stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {

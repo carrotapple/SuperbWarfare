@@ -91,17 +91,15 @@ public class HandGrenadeEntity extends ThrowableItemProjectile {
             case ENTITY:
                 EntityHitResult entityResult = (EntityHitResult) result;
                 Entity entity = entityResult.getEntity();
-
-                if (this.getOwner() instanceof LivingEntity living) {
-                    if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
-                        living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
-
-                        ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
-                    }
-                }
-
                 double speed_e = this.getDeltaMovement().length();
                 if (speed_e > 0.1) {
+                    if (this.getOwner() instanceof LivingEntity living) {
+                        if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
+                            living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
+
+                            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
+                        }
+                    }
                     entity.hurt(entity.damageSources().thrown(this, this.getOwner()), 1.0F);
                 }
                 this.bounce(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());

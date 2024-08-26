@@ -102,25 +102,7 @@ public class Ntw20Renderer extends GeoItemRenderer<Ntw20> {
             }
         }
 
-        if (name.equals("jing")) {
-            if (player_ != null) {
-                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && player_.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming);
-            }
-        }
-
-        if (name.equals("action")) {
-            if (player_ != null) {
-                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && player_.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming);
-            }
-        }
-
-        if (name.equals("body")) {
-            if (player_ != null) {
-                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && player_.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming);
-            }
-        }
-
-        if (name.equals("base")) {
+        if (name.equals("jing") || name.equals("action") || name.equals("body") || name.equals("base")) {
             if (player_ != null) {
                 bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && player_.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming);
             }

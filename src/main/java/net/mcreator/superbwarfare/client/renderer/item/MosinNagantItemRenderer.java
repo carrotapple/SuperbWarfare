@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.layer.MosinNagantLayer;
 import net.mcreator.superbwarfare.client.model.item.MosinNagantItemModel;
 import net.mcreator.superbwarfare.item.gun.MosinNagantItem;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
@@ -94,7 +95,13 @@ public class MosinNagantItemRenderer extends GeoItemRenderer<MosinNagantItem> {
             }
         }
 
-        if (name.equals("jia")) {
+        if (name.equals("rex")) {
+            if (player_ != null) {
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || !player_.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming);
+            }
+        }
+
+        if (name.equals("jia") || name.equals("b1") || name.equals("b2")) {
             if (player_ != null) {
                 bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden"));
             }

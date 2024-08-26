@@ -102,13 +102,7 @@ public class Mk14ItemRenderer extends GeoItemRenderer<Mk14Item> {
             }
         }
 
-        if (name.equals("jing")) {
-            if (player_ != null) {
-                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && player_.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming);
-            }
-        }
-
-        if (name.equals("qiangguan")) {
+        if (name.equals("jing") || name.equals("qiangguan")) {
             if (player_ != null) {
                 bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && player_.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming);
             }

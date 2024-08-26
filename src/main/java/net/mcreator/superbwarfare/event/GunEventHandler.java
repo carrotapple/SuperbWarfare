@@ -176,8 +176,8 @@ public class GunEventHandler {
               在开火动画的最后1tick，设置需要拉栓上膛的武器拉栓动画的倒计时为data里的拉栓时间
              */
             if (stack.getOrCreateTag().getInt("fire_animation") == 1 && stack.getOrCreateTag().getBoolean("need_bolt_action")) {
-                stack.getOrCreateTag().putInt("bolt_action_anim", stack.getOrCreateTag().getInt("bolt_action_time"));
-                player.getCooldowns().addCooldown(stack.getItem(), stack.getOrCreateTag().getInt("bolt_action_time"));
+                stack.getOrCreateTag().putInt("bolt_action_anim", stack.getOrCreateTag().getInt("bolt_action_time") + 1);
+                player.getCooldowns().addCooldown(stack.getItem(), stack.getOrCreateTag().getInt("bolt_action_time") + 1);
                 playGunBoltSounds(player);
             }
             if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
@@ -603,17 +603,17 @@ public class GunEventHandler {
             // 此处判断空仓换弹的时候，是否在准备阶段就需要装填一发，如M870
             if (tag.getDouble("prepare_load_time") != 0 && tag.getInt("ammo") == 0) {
                 playGunPrepareLoadReloadSounds(player);
-                tag.putInt("prepare_load", (int) tag.getDouble("prepare_load_time"));
-                player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("prepare_load_time"));
+                tag.putInt("prepare_load", (int) tag.getDouble("prepare_load_time") + 1);
+                player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("prepare_load_time") + 1);
             } else if (tag.getDouble("prepare_empty") != 0 && tag.getInt("ammo") == 0) {
                 // 此处判断空仓换弹，如莫辛纳甘
                 playGunEmptyPrepareSounds(player);
-                tag.putInt("prepare", (int) tag.getDouble("prepare_empty"));
-                player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("prepare_empty"));
+                tag.putInt("prepare", (int) tag.getDouble("prepare_empty") + 1);
+                player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("prepare_empty") + 1);
             } else {
                 playGunPrepareReloadSounds(player);
-                tag.putInt("prepare", (int) tag.getDouble("prepare_time"));
-                player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("prepare_time"));
+                tag.putInt("prepare", (int) tag.getDouble("prepare_time") + 1);
+                player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("prepare_time") + 1);
             }
 
             tag.putBoolean("force_stop", false);
