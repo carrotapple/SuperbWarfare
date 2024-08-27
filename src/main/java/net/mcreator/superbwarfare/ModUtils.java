@@ -30,7 +30,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Mod("superbwarfare")
+@Mod(ModUtils.MODID)
 public class ModUtils {
     public static final String MODID = "superbwarfare";
     public static final String ATTRIBUTE_MODIFIER = "superbwarfare_attribute_modifier";
@@ -51,6 +51,7 @@ public class ModUtils {
         ModPotion.POTIONS.register(bus);
         ModMenuTypes.REGISTRY.register(bus);
         ModEnchantments.REGISTRY.register(bus);
+        ModVillagers.register(bus);
 
         bus.addListener(this::onCommonSetup);
 
