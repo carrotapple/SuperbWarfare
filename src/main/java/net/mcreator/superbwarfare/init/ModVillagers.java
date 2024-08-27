@@ -41,10 +41,12 @@ public class ModVillagers {
         if (event.getType() == ModVillagers.ARMS_DEALER.get()) {
             Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
 
-//            trades.get(1).add(((pTrader, pRandom) -> new MerchantOffer(new ItemStack(ItemRegistry.RED_AHOGE.get(), 5),
-//                    new ItemStack(Items.EMERALD, 1), 10, 2, 0.05f)));
-//            trades.get(1).add(((pTrader, pRandom) -> new MerchantOffer(new ItemStack(ItemRegistry.WHITE_AHOGE.get(), 5),
-//                    new ItemStack(Items.EMERALD, 1), 10, 2, 0.05f)));
+            trades.get(1).add(((pTrader, pRandom) -> new MerchantOffer(new ItemStack(Items.EMERALD, 10),
+                    new ItemStack(ModItems.HANDGUN_AMMO_BOX.get(), 1), 5, 1, 0.05f)));
+            trades.get(1).add(((pTrader, pRandom) -> new MerchantOffer(new ItemStack(Items.EMERALD, 12),
+                    new ItemStack(ModItems.RIFLE_AMMO_BOX.get(), 1), 5, 1, 0.05f)));
+            trades.get(1).add(((pTrader, pRandom) -> new MerchantOffer(new ItemStack(ModItems.TASER_BLUEPRINT.get(), 1),
+                    new ItemStack(Items.EMERALD, 1), 10, 1, 0.05f)));
         }
     }
 
