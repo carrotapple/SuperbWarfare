@@ -75,7 +75,6 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
 
     @Override
     public void setItemSlot(EquipmentSlot pSlot, ItemStack pStack) {
-
     }
 
     @Override
@@ -124,22 +123,22 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
     }
 
     @SubscribeEvent
-    public static void onTarget1Down(LivingDeathEvent event) {
+    public static void onTargetDown(LivingDeathEvent event) {
         var entity = event.getEntity();
         var sourceEntity = event.getSource().getEntity();
 
         if (entity == null) return;
 
-        if (entity instanceof TargetEntity target1) {
+        if (entity instanceof TargetEntity targetEntity) {
             event.setCanceled(true);
-            target1.setHealth(target1.getMaxHealth());
+            targetEntity.setHealth(targetEntity.getMaxHealth());
 
             if (sourceEntity == null) return;
 
             if (sourceEntity instanceof Player player) {
                 player.displayClientMessage(Component.literal(("Target Down " + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceEntity.position()))) + "M")), true);
                 SoundTool.playLocalSound(player, ModSounds.TARGET_DOWN.get(), 100, 1);
-                ((TargetEntity) entity).entityData.set(DOWN_TIME, 90);
+                targetEntity.entityData.set(DOWN_TIME, 90);
             }
         }
     }

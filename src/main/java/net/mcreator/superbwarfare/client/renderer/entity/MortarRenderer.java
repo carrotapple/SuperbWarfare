@@ -37,4 +37,9 @@ public class MortarRenderer extends GeoEntityRenderer<MortarEntity> {
     protected float getDeathMaxRotation(MortarEntity entityLivingBaseIn) {
         return 0.0F;
     }
+
+    @Override
+    public boolean shouldShowName(MortarEntity animatable) {
+        return animatable.hasCustomName();
+    }
 }

@@ -5,6 +5,7 @@ import net.mcreator.superbwarfare.init.ModAttributes;
 import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -12,11 +13,9 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -29,10 +28,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
-import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -42,10 +41,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nullable;
-
-public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEntity {
-    public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.BOOLEAN);
+public class MortarEntity extends LivingEntity implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> FIRE_TIME = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.INT);
 
@@ -58,18 +54,13 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
 
     public MortarEntity(EntityType<MortarEntity> type, Level world) {
         super(type, world);
-        xpReward = 0;
-        setNoAi(true);
-        setPersistenceRequired();
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(SHOOT, false);
         this.entityData.define(ANIMATION, "undefined");
         this.entityData.define(FIRE_TIME, 0);
-
     }
 
     @Override
@@ -88,18 +79,27 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     }
 
     @Override
-    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
-        return false;
+    public Iterable<ItemStack> getArmorSlots() {
+        return NonNullList.withSize(1, ItemStack.EMPTY);
+    }
+
+    @Override
+    public ItemStack getItemBySlot(EquipmentSlot pSlot) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void setItemSlot(EquipmentSlot pSlot, ItemStack pStack) {
     }
 
     @Override
     public SoundEvent getHurtSound(DamageSource ds) {
-        return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("superbwarfare:hit"));
+        return ModSounds.HIT.get();
     }
 
     @Override
     public SoundEvent getDeathSound() {
-        return ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("superbwarfare:hit"));
+        return ModSounds.HIT.get();
     }
 
     @Override
@@ -128,37 +128,21 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData livingdata, @Nullable CompoundTag tag) {
-        SpawnGroupData retval = super.finalizeSpawn(world, difficulty, reason, livingdata, tag);
-        this.setYRot(this.getYRot());
-        this.setXRot(-70);
-        this.setYBodyRot(this.getYRot());
-        this.setYHeadRot(this.getYRot());
-        this.yRotO = this.getYRot();
-        this.xRotO = this.getXRot();
-        this.yBodyRotO = this.getYRot();
-        this.yHeadRotO = this.getYRot();
-        return retval;
-    }
-
-    @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        compound.putInt("fire_time", this.entityData.get(FIRE_TIME));
+        compound.putInt("FireTime", this.entityData.get(FIRE_TIME));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        if (compound.contains("fire_time"))
-            this.entityData.set(FIRE_TIME, compound.getInt("fire_time"));
+        if (compound.contains("FireTime")) {
+            this.entityData.set(FIRE_TIME, compound.getInt("FireTime"));
+        }
     }
 
-
     @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        super.mobInteract(player, hand);
-
+    public InteractionResult interact(Player player, InteractionHand hand) {
         ItemStack mainHandItem = player.getMainHandItem();
         if (player.isShiftKeyDown()) {
             this.setYRot(player.getYRot());
@@ -171,10 +155,7 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
             this.yHeadRotO = this.getYRot();
         }
         if (mainHandItem.getItem() == ModItems.MORTAR_SHELLS.get() && !player.getCooldowns().isOnCooldown(ModItems.MORTAR_SHELLS.get()) && !player.isShiftKeyDown()) {
-
-//            this.getPersistentData().putInt("fire_time",25);
-
-            this.entityData.set(FIRE_TIME,25);
+            this.entityData.set(FIRE_TIME, 25);
 
             player.getCooldowns().addCooldown(ModItems.MORTAR_SHELLS.get(), 30);
             if (!player.isCreative()) {
@@ -205,38 +186,33 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     @Override
     public void baseTick() {
         super.baseTick();
-        double[] Timer = {0};
-        double totalTime = 4;
-        int sleepTime = 2;
-        double Duration = totalTime / sleepTime;
-        Runnable Runnable = () -> {
-            while (Timer[0] < Duration) {
+        final Runnable runnable = doFire();
+        Thread thread = new Thread(runnable);
+        thread.start();
 
-                this.setXRot((float) -this.getAttribute(ModAttributes.MORTAR_PITCH.get()).getBaseValue());
-
-                Timer[0]++;
-                try {
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        Thread Thread = new Thread(Runnable);
-        Thread.start();
-
-//        if (this.getPersistentData().getInt("fire_time") > 0) {
-//            this.getPersistentData().putInt("fire_time",this.getPersistentData().getInt("fire_time") - 1);
-//        }
-
-        this.entityData.set(FIRE_TIME,this.entityData.get(FIRE_TIME) - 1);
+        this.entityData.set(FIRE_TIME, this.entityData.get(FIRE_TIME) - 1);
 
         this.refreshDimensions();
     }
 
-    @Override
-    public EntityDimensions getDimensions(Pose p_33597_) {
-        return super.getDimensions(p_33597_).scale((float) 1);
+    @NotNull
+    private Runnable doFire() {
+        double[] timer = {0};
+        double totalTime = 4;
+        int sleepTime = 2;
+        double Duration = totalTime / sleepTime;
+        return () -> {
+            while (timer[0] < Duration) {
+                this.setXRot((float) -this.getAttribute(ModAttributes.MORTAR_PITCH.get()).getBaseValue());
+
+                timer[0]++;
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    ModUtils.LOGGER.error(e.getLocalizedMessage());
+                }
+            }
+        };
     }
 
     @Override
@@ -245,20 +221,16 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
     }
 
     @Override
+    public HumanoidArm getMainArm() {
+        return HumanoidArm.RIGHT;
+    }
+
+    @Override
     protected void doPush(Entity entityIn) {
     }
 
     @Override
     protected void pushEntities() {
-    }
-
-    @Override
-    public void aiStep() {
-        super.aiStep();
-        this.updateSwingTime();
-    }
-
-    public static void init() {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -271,7 +243,7 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1);
     }
 
-    private PlayState movementPredicate(AnimationState event) {
+    private PlayState movementPredicate(AnimationState<MortarEntity> event) {
         if (this.animationProcedure.equals("empty")) {
             if (this.entityData.get(FIRE_TIME) > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mortar.fire"));
@@ -281,7 +253,7 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState event) {
+    private PlayState procedurePredicate(AnimationState<MortarEntity> event) {
         if (!animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
             event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
             if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
@@ -310,6 +282,11 @@ public class MortarEntity extends PathfinderMob implements GeoEntity, AnimatedEn
                 level.addFreshEntity(mortar);
             }
         }
+    }
+
+    @Override
+    public Vec3 getDeltaMovement() {
+        return new Vec3(0, 0, 0);
     }
 
     public String getSyncedAnimation() {
