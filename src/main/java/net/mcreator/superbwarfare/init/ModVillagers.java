@@ -77,13 +77,13 @@ public class ModVillagers {
                     new ItemStack(ModItems.STEEL_SPRING.get()), 12, 5, 0.05f));
 
             trades.get(2).add(new BasicItemListing(new ItemStack(Items.EMERALD, 16),
-                    new ItemStack(ModItems.MARLIN_BLUEPRINT.get()), 8, 50, 0.05f));
+                    new ItemStack(ModItems.MARLIN_BLUEPRINT.get()), 8, 25, 0.05f));
             trades.get(2).add(new BasicItemListing(new ItemStack(Items.EMERALD, 16),
-                    new ItemStack(ModItems.GLOCK_17_BLUEPRINT.get()), 8, 50, 0.05f));
+                    new ItemStack(ModItems.GLOCK_17_BLUEPRINT.get()), 8, 15, 0.05f));
             trades.get(2).add(new BasicItemListing(new ItemStack(Items.EMERALD, 16),
-                    new ItemStack(ModItems.M_1911_BLUEPRINT.get()), 8, 50, 0.05f));
+                    new ItemStack(ModItems.M_1911_BLUEPRINT.get()), 8, 15, 0.05f));
             trades.get(2).add(new BasicItemListing(new ItemStack(Items.EMERALD, 16),
-                    new ItemStack(ModItems.TASER_BLUEPRINT.get()), 8, 50, 0.05f));
+                    new ItemStack(ModItems.TASER_BLUEPRINT.get()), 8, 15, 0.05f));
 
             // 等级 3 交易
             trades.get(3).add(new BasicItemListing(new ItemStack(Items.EMERALD, 3),
@@ -114,21 +114,21 @@ public class ModVillagers {
                     new ItemStack(ModItems.CEMENTED_CARBIDE_TRIGGER.get()), 10, 10, 0.05f));
 
             trades.get(3).add(new BasicItemListing(new ItemStack(Items.EMERALD, 32),
-                    new ItemStack(ModItems.M_4_BLUEPRINT.get()), 10, 50, 0.05f));
+                    new ItemStack(ModItems.M_4_BLUEPRINT.get()), 10, 25, 0.05f));
             trades.get(3).add(new BasicItemListing(new ItemStack(Items.EMERALD, 32),
-                    new ItemStack(ModItems.M_79_BLUEPRINT.get()), 10, 50, 0.05f));
+                    new ItemStack(ModItems.M_79_BLUEPRINT.get()), 10, 25, 0.05f));
             trades.get(3).add(new BasicItemListing(new ItemStack(Items.EMERALD, 32),
-                    new ItemStack(ModItems.AK_47_BLUEPRINT.get()), 10, 50, 0.05f));
+                    new ItemStack(ModItems.AK_47_BLUEPRINT.get()), 10, 25, 0.05f));
             trades.get(3).add(new BasicItemListing(new ItemStack(Items.EMERALD, 32),
-                    new ItemStack(ModItems.GLOCK_18_BLUEPRINT.get()), 10, 50, 0.05f));
+                    new ItemStack(ModItems.GLOCK_18_BLUEPRINT.get()), 10, 25, 0.05f));
             trades.get(3).add(new BasicItemListing(new ItemStack(Items.EMERALD, 32),
-                    new ItemStack(ModItems.SKS_BLUEPRINT.get()), 10, 50, 0.05f));
+                    new ItemStack(ModItems.SKS_BLUEPRINT.get()), 10, 25, 0.05f));
             trades.get(3).add(new BasicItemListing(new ItemStack(Items.EMERALD, 32),
-                    new ItemStack(ModItems.M_870_BLUEPRINT.get()), 10, 50, 0.05f));
+                    new ItemStack(ModItems.M_870_BLUEPRINT.get()), 10, 25, 0.05f));
             trades.get(3).add(new BasicItemListing(new ItemStack(Items.EMERALD, 32),
-                    new ItemStack(ModItems.K_98_BLUEPRINT.get()), 10, 50, 0.05f));
+                    new ItemStack(ModItems.K_98_BLUEPRINT.get()), 10, 25, 0.05f));
             trades.get(3).add(new BasicItemListing(new ItemStack(Items.EMERALD, 40),
-                    new ItemStack(ModItems.MOSIN_NAGANT_BLUEPRINT.get()), 10, 50, 0.05f));
+                    new ItemStack(ModItems.MOSIN_NAGANT_BLUEPRINT.get()), 10, 25, 0.05f));
 
             // 等级 4 交易
             trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 2),
@@ -157,51 +157,51 @@ public class ModVillagers {
             trades.get(4).add(new BasicItemListing(new ItemStack(ModItems.ROCKET.get(), 1),
                     new ItemStack(Items.EMERALD, 2), 32, 5, 0.05f));
 
-            trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 12),
-                    new ItemStack(getItemHolder("poisonous_bullet"), 1), 16, 1, 0.05f));
-            trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 14),
-                    new ItemStack(getItemHolder("subsistence"), 1), 16, 1, 0.05f));
-            trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 14),
-                    new ItemStack(getItemHolder("kill_clip"), 1), 16, 1, 0.05f));
-            trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 14),
-                    new ItemStack(getItemHolder("gutshot_straight"), 1), 16, 1, 0.05f));
-            trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 14),
-                    new ItemStack(getItemHolder("head_seeker"), 1), 16, 1, 0.05f));
+            trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 22),
+                    new ItemStack(getItemHolder("poisonous_bullet"), 1), 4, 10, 0.05f));
+            trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 24),
+                    new ItemStack(getItemHolder("subsistence"), 1), 4, 10, 0.05f));
+            trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 25),
+                    new ItemStack(getItemHolder("kill_clip"), 1), 4, 10, 0.05f));
+            trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 26),
+                    new ItemStack(getItemHolder("gutshot_straight"), 1), 4, 10, 0.05f));
+            trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 22),
+                    new ItemStack(getItemHolder("head_seeker"), 1), 4, 10, 0.05f));
 
             // 等级 5 交易
-            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 24),
-                    new ItemStack(getItemHolder("silver_bullet"), 1), 16, 1, 0.05f));
-            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 20),
-                    new ItemStack(getItemHolder("field_doctor"), 1), 16, 1, 0.05f));
-            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 24),
-                    new ItemStack(getItemHolder("heal_clip"), 1), 16, 1, 0.05f));
-            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 20),
-                    new ItemStack(getItemHolder("killing_tally"), 1), 16, 1, 0.05f));
-            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 14),
-                    new ItemStack(getItemHolder("fourth_times_charm"), 1), 16, 1, 0.05f));
+            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 34),
+                    new ItemStack(getItemHolder("silver_bullet"), 1), 4, 15, 0.05f));
+            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 30),
+                    new ItemStack(getItemHolder("field_doctor"), 1), 4, 15, 0.05f));
+            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 34),
+                    new ItemStack(getItemHolder("heal_clip"), 1), 4, 15, 0.05f));
+            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 30),
+                    new ItemStack(getItemHolder("killing_tally"), 1), 4, 15, 0.05f));
+            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 34),
+                    new ItemStack(getItemHolder("fourth_times_charm"), 1), 4, 15, 0.05f));
 
             trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
-                    new ItemStack(ModItems.HUNTING_RIFLE_BLUEPRINT.get()), 10, 80, 0.05f));
+                    new ItemStack(ModItems.HUNTING_RIFLE_BLUEPRINT.get()), 10, 30, 0.05f));
             trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
-                    new ItemStack(ModItems.RPG_BLUEPRINT.get()), 10, 80, 0.05f));
+                    new ItemStack(ModItems.RPG_BLUEPRINT.get()), 10, 30, 0.05f));
             trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
-                    new ItemStack(ModItems.HK_416_BLUEPRINT.get()), 10, 80, 0.05f));
+                    new ItemStack(ModItems.HK_416_BLUEPRINT.get()), 10, 30, 0.05f));
             trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
-                    new ItemStack(ModItems.RPK_BLUEPRINT.get()), 10, 80, 0.05f));
+                    new ItemStack(ModItems.RPK_BLUEPRINT.get()), 10, 30, 0.05f));
             trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
-                    new ItemStack(ModItems.VECTOR_BLUEPRINT.get()), 10, 80, 0.05f));
+                    new ItemStack(ModItems.VECTOR_BLUEPRINT.get()), 10, 30, 0.05f));
             trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
-                    new ItemStack(ModItems.MK_14_BLUEPRINT.get()), 10, 80, 0.05f));
+                    new ItemStack(ModItems.MK_14_BLUEPRINT.get()), 10, 30, 0.05f));
             trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
-                    new ItemStack(ModItems.M_60_BLUEPRINT.get()), 10, 80, 0.05f));
+                    new ItemStack(ModItems.M_60_BLUEPRINT.get()), 10, 30, 0.05f));
             trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
-                    new ItemStack(ModItems.SVD_BLUEPRINT.get()), 10, 80, 0.05f));
+                    new ItemStack(ModItems.SVD_BLUEPRINT.get()), 10, 30, 0.05f));
             trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
-                    new ItemStack(ModItems.M_98B_BLUEPRINT.get()), 10, 80, 0.05f));
+                    new ItemStack(ModItems.M_98B_BLUEPRINT.get()), 10, 30, 0.05f));
             trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
-                    new ItemStack(ModItems.DEVOTION_BLUEPRINT.get()), 10, 80, 0.05f));
+                    new ItemStack(ModItems.DEVOTION_BLUEPRINT.get()), 10, 30, 0.05f));
             trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
-                    new ItemStack(ModItems.QBZ_95_BLUEPRINT.get()), 10, 80, 0.05f));
+                    new ItemStack(ModItems.QBZ_95_BLUEPRINT.get()), 10, 30, 0.05f));
 
             trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 16),
                     new ItemStack(ModItems.HE_5_INCHES.get(), 1), 8, 10, 0.05f));
