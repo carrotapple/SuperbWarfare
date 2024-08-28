@@ -214,17 +214,7 @@ public class ModItems {
      * 单独注册，用于Tab图标，不要删
      */
     public static final RegistryObject<Item> AP_BULLET = PERKS.register("ap_bullet", () -> new PerkItem(ModPerks.AP_BULLET));
-    public static final RegistryObject<Item> SILVER_BULLET = PERKS.register("silver_bullet", () -> new PerkItem(ModPerks.SILVER_BULLET));
-//    public static final RegistryObject<Item> POISONOUS_BULLET = PERKS.register("poisonous_bullet", () -> new PerkItem(ModPerks.POISONOUS_BULLET));
-//    public static final RegistryObject<Item> BEAST_BULLET = PERKS.register("beast_bullet", () -> new PerkItem(ModPerks.BEAST_BULLET));
-//    public static final RegistryObject<Item> HEAL_CLIP = PERKS.register("heal_clip", () -> new PerkItem(ModPerks.HEAL_CLIP));
-//    public static final RegistryObject<Item> FOURTH_TIMES_CHARM = PERKS.register("fourth_times_charm", () -> new PerkItem(ModPerks.FOURTH_TIMES_CHARM));
-//    public static final RegistryObject<Item> SUBSISTENCE = PERKS.register("subsistence", () -> new PerkItem(ModPerks.SUBSISTENCE));
-//    public static final RegistryObject<Item> FIELD_DOCTOR = PERKS.register("field_doctor", () -> new PerkItem(ModPerks.FIELD_DOCTOR));
-//    public static final RegistryObject<Item> KILL_CLIP = PERKS.register("kill_clip", () -> new PerkItem(ModPerks.KILL_CLIP));
-//    public static final RegistryObject<Item> GUTSHOT_STRAIGHT = PERKS.register("gutshot_straight", () -> new PerkItem(ModPerks.GUTSHOT_STRAIGHT));
-//    public static final RegistryObject<Item> KILLING_TALLY = PERKS.register("killing_tally", () -> new PerkItem(ModPerks.KILLING_TALLY));
-//    public static final RegistryObject<Item> HEAD_SEEKER = PERKS.register("head_seeker", () -> new PerkItem(ModPerks.HEAD_SEEKER));
+
     public static void register(IEventBus bus) {
         ITEMS.register(bus);
         GUNS.register(bus);
