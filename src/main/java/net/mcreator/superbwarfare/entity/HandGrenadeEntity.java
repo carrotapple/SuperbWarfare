@@ -40,10 +40,6 @@ public class HandGrenadeEntity extends ThrowableItemProjectile {
         super(type, world);
     }
 
-    public HandGrenadeEntity(EntityType<? extends HandGrenadeEntity> type, LivingEntity entity, Level world) {
-        super(type, entity, world);
-    }
-
     public HandGrenadeEntity(LivingEntity entity, Level level, int fuse) {
         super(ModEntities.HAND_GRENADE_ENTITY.get(), entity, level);
         this.fuse = fuse;
@@ -82,7 +78,7 @@ public class HandGrenadeEntity extends ThrowableItemProjectile {
                 }
                 this.bounce(blockResult.getDirection());
 
-                if(state.getBlock() instanceof BellBlock bell) {
+                if (state.getBlock() instanceof BellBlock bell) {
                     bell.attemptToRing(this.level(), resultPos, blockResult.getDirection());
                 }
 

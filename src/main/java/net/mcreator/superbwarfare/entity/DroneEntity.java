@@ -65,6 +65,7 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.UUID;
 
+// TODO 重做无人机
 public class DroneEntity extends PathfinderMob implements GeoEntity {
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Boolean> LINKED = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
@@ -463,7 +464,6 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
         explosion.finalizeExplosion(false);
         ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
     }
-
 
     @Override
     public EntityDimensions getDimensions(Pose p_33597_) {

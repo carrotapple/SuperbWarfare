@@ -1,4 +1,3 @@
-
 package net.mcreator.superbwarfare.entity;
 
 import net.mcreator.superbwarfare.ModUtils;
@@ -106,7 +105,7 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
         super.onHitBlock(blockHitResult);
         BlockPos resultPos = blockHitResult.getBlockPos();
         BlockState state = this.level().getBlockState(resultPos);
-        if(state.getBlock() instanceof BellBlock bell) {
+        if (state.getBlock() instanceof BellBlock bell) {
             bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
         }
     }

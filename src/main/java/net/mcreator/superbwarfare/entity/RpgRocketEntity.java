@@ -43,9 +43,8 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity{
-
-    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(CannonShellEntity.class, EntityDataSerializers.STRING);
+public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity {
+    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(RpgRocketEntity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public String animationprocedure = "empty";
@@ -55,10 +54,6 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
     public RpgRocketEntity(EntityType<? extends RpgRocketEntity> type, Level world) {
         super(type, world);
-    }
-
-    public RpgRocketEntity(EntityType<? extends RpgRocketEntity> type, LivingEntity entity, Level world) {
-        super(type, entity, world);
     }
 
     public RpgRocketEntity(LivingEntity entity, Level level, float damage, int monsterMultiplier) {
@@ -105,7 +100,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
         if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
-                causeEntityhitExplode(entity);
+                causeEntityHitExplode(entity);
             }
         }
 
@@ -122,9 +117,11 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
         super.onHitBlock(blockHitResult);
         BlockPos resultPos = blockHitResult.getBlockPos();
         BlockState state = this.level().getBlockState(resultPos);
-        if(state.getBlock() instanceof BellBlock bell) {
+
+        if (state.getBlock() instanceof BellBlock bell) {
             bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
         }
+
         if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
                 causeExplode();
@@ -171,7 +168,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
         ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
     }
 
-    private void causeEntityhitExplode(Entity entity) {
+    private void causeEntityHitExplode(Entity entity) {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
                 ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), (float) 2 / 3 * this.damage,
                 entity.getX(), entity.getY(), entity.getZ(), 10f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(this.monsterMultiplier);
@@ -182,14 +179,14 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
         this.discard();
     }
 
-    private PlayState movementPredicate(AnimationState event) {
+    private PlayState movementPredicate(AnimationState<RpgRocketEntity> event) {
         if (this.animationprocedure.equals("empty")) {
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.rpg.idle"));
         }
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState event) {
+    private PlayState procedurePredicate(AnimationState<RpgRocketEntity> event) {
         if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
             event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
             if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {

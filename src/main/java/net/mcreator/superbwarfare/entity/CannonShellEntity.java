@@ -39,8 +39,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class CannonShellEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity{
-
+public class CannonShellEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(CannonShellEntity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -55,14 +54,6 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
 
     public CannonShellEntity(EntityType<? extends CannonShellEntity> type, Level world) {
         super(type, world);
-    }
-
-    public CannonShellEntity(EntityType<? extends CannonShellEntity> type, double x, double y, double z, Level world) {
-        super(type, x, y, z, world);
-    }
-
-    public CannonShellEntity(EntityType<? extends CannonShellEntity> type, LivingEntity entity, Level world) {
-        super(type, entity, world);
     }
 
     public CannonShellEntity(EntityType<? extends CannonShellEntity> type, LivingEntity entity, Level world, float damage, float explosionRadius, float explosionDamage, float fireProbability, int fireTime) {
@@ -222,14 +213,14 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         this.discard();
     }
 
-    private PlayState movementPredicate(AnimationState event) {
+    private PlayState movementPredicate(AnimationState<CannonShellEntity> event) {
         if (this.animationprocedure.equals("empty")) {
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.cannon_shell.idle"));
         }
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState event) {
+    private PlayState procedurePredicate(AnimationState<CannonShellEntity> event) {
         if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
             event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
             if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {

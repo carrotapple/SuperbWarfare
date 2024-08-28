@@ -31,10 +31,6 @@ public class MortarShellEntity extends ThrowableItemProjectile {
         super(type, world);
     }
 
-    public MortarShellEntity(EntityType<? extends MortarShellEntity> type, double x, double y, double z, Level world) {
-        super(type, x, y, z, world);
-    }
-
     public MortarShellEntity(EntityType<? extends MortarShellEntity> type, LivingEntity entity, Level world) {
         super(type, entity, world);
     }

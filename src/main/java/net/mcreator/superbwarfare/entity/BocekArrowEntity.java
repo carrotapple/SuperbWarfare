@@ -48,10 +48,6 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
         super(type, world);
     }
 
-    public BocekArrowEntity(EntityType<? extends BocekArrowEntity> type, double x, double y, double z, Level world) {
-        super(type, x, y, z, world);
-    }
-
     public BocekArrowEntity(LivingEntity entity, Level level, int monsterMultiplier) {
         super(ModEntities.BOCEK_ARROW.get(), entity, level);
         this.monsterMultiplier = monsterMultiplier;

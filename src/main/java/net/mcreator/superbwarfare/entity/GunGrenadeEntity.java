@@ -32,7 +32,6 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 
 public class GunGrenadeEntity extends ThrowableItemProjectile {
-
     private int monsterMultiplier = 0;
     private float damage = 5f;
 
@@ -101,7 +100,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         super.onHitBlock(blockHitResult);
         BlockPos resultPos = blockHitResult.getBlockPos();
         BlockState state = this.level().getBlockState(resultPos);
-        if(state.getBlock() instanceof BellBlock bell) {
+        if (state.getBlock() instanceof BellBlock bell) {
             bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
         }
         if (this.tickCount > 0) {

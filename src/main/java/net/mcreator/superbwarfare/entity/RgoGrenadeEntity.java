@@ -38,7 +38,7 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity{
+public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(RgoGrenadeEntity.class, EntityDataSerializers.STRING);
     private int fuse = 80;
 
@@ -47,10 +47,6 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
 
     public RgoGrenadeEntity(EntityType<? extends RgoGrenadeEntity> type, Level world) {
         super(type, world);
-    }
-
-    public RgoGrenadeEntity(EntityType<? extends RgoGrenadeEntity> type, LivingEntity entity, Level world) {
-        super(type, entity, world);
     }
 
     public RgoGrenadeEntity(LivingEntity entity, Level level, int fuse) {
@@ -84,7 +80,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                 BlockHitResult blockResult = (BlockHitResult) result;
                 BlockPos resultPos = blockResult.getBlockPos();
                 BlockState state = this.level().getBlockState(resultPos);
-                if(state.getBlock() instanceof BellBlock bell) {
+                if (state.getBlock() instanceof BellBlock bell) {
                     bell.attemptToRing(this.level(), resultPos, blockResult.getDirection());
                 }
                 causeExplode();
@@ -102,7 +98,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                     }
                 }
 
-                causeEntityhitExplode(entity);
+                causeEntityHitExplode(entity);
                 break;
             default:
                 break;
@@ -126,7 +122,8 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                     1, 0, 0, 0, 0.01, true);
         }
     }
-    private void causeEntityhitExplode(Entity entity) {
+
+    private void causeEntityHitExplode(Entity entity) {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
                 ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 75,
                 entity.getX(), entity.getY(), entity.getZ(), 5.75f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
