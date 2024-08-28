@@ -169,35 +169,35 @@ public class ModVillagers {
 
 
 //            trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 12),
-//                    new ItemStack(new PerkItem(ModPerks.POISONOUS_BULLET),1), 16, 1, 0.05f));
+//                    new ItemStack(ModItems.POISONOUS_BULLET.get(),1), 16, 1, 0.05f));
 //
 //            trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 14),
-//                    new ItemStack(new PerkItem(ModPerks.SUBSISTENCE),1), 16, 1, 0.05f));
+//                    new ItemStack(ModItems.SUBSISTENCE.get(),1), 16, 1, 0.05f));
 //
 //            trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 14),
-//                    new ItemStack(new PerkItem(ModPerks.KILL_CLIP),1), 16, 1, 0.05f));
+//                    new ItemStack(ModItems.KILL_CLIP.get(),1), 16, 1, 0.05f));
 //
 //            trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 14),
-//                    new ItemStack(new PerkItem(ModPerks.GUTSHOT_STRAIGHT),1), 16, 1, 0.05f));
+//                    new ItemStack(ModItems.GUTSHOT_STRAIGHT.get(),1), 16, 1, 0.05f));
 //
 //            trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 14),
-//                    new ItemStack(new PerkItem(ModPerks.HEAD_SEEKER),1), 16, 1, 0.05f));
-//
+//                    new ItemStack(ModItems.HEAD_SEEKER.get(),1), 16, 1, 0.05f));
+
+
+            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 24),
+                    new ItemStack(ModItems.SILVER_BULLET.get(),1), 16, 1, 0.05f));
+
+//            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 20),
+//                    new ItemStack(ModItems.FIELD_DOCTOR.get(),1), 16, 1, 0.05f));
 //
 //            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 24),
-//                    new ItemStack(new PerkItem(ModPerks.SILVER_BULLET),1), 16, 1, 0.05f));
+//                    new ItemStack(ModItems.HEAL_CLIP.get(),1), 16, 1, 0.05f));
 //
 //            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 20),
-//                    new ItemStack(new PerkItem(ModPerks.FIELD_DOCTOR),1), 16, 1, 0.05f));
-//
-//            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 24),
-//                    new ItemStack(new PerkItem(ModPerks.HEAL_CLIP),1), 16, 1, 0.05f));
-//
-//            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 20),
-//                    new ItemStack(new PerkItem(ModPerks.KILLING_TALLY),1), 16, 1, 0.05f));
+//                    new ItemStack(ModItems.KILLING_TALLY.get(),1), 16, 1, 0.05f));
 //
 //            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 14),
-//                    new ItemStack(new PerkItem(ModPerks.FOURTH_TIMES_CHARM),1), 16, 1, 0.05f));
+//                    new ItemStack(ModItems.FOURTH_TIMES_CHARM.get(),1), 16, 1, 0.05f));
 
 
             trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
