@@ -25,7 +25,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -96,7 +95,7 @@ public class PlayerEventHandler {
                 handleChangeFireRate(player);
                 handleBocekPulling(player);
                 handleGunRecoil(player);
-                handleWeaponSeek(player, event.player.level());
+                handleWeaponSeek(player);
             }
 
             handleGround(player);
@@ -108,13 +107,12 @@ public class PlayerEventHandler {
         }
     }
 
-    //测试用
-    private static void handleWeaponSeek(Player player, LevelAccessor level) {
+    // 测试用
+    private static void handleWeaponSeek(Player player) {
         if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming) {
-            Entity seekingEntity = SeekTool.seekEntity(player, level, 256,30);
+            Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 256, 30);
             if (seekingEntity instanceof LivingEntity _entity && !_entity.level().isClientSide())
                 _entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 2, 0));
-
         }
     }
 
