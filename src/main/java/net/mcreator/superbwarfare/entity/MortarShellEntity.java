@@ -90,7 +90,7 @@ public class MortarShellEntity extends ThrowableItemProjectile {
         super.tick();
         if (this.level() instanceof ServerLevel serverLevel) {
             ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.xo, this.yo, this.zo,
-                    2, 0, 0, 0, 0.02, true);
+                    1, 0, 0, 0, 0.001, true);
         }
         if (this.tickCount > 600 || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {

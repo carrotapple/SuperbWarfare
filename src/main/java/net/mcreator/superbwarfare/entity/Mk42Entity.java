@@ -348,6 +348,17 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
     public static void init() {
     }
 
+    protected void clampRotation(Entity entity) {
+        float f = Mth.wrapDegrees(entity.getXRot());
+        float f1 = Mth.clamp(f, -85.0F, 15.0F);
+        entity.xRotO += f1 - f;
+        entity.setXRot(entity.getXRot() + f1 - f);
+    }
+    @Override
+    public void onPassengerTurned(Entity entity) {
+        this.clampRotation(entity);
+    }
+
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0)

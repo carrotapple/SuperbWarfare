@@ -14,7 +14,7 @@
       "item": "minecraft:iron_ingot"
     },
     "c": {
-      "item": "superbwarfare:ingot_steel"
+      "tag":"forge:ingots/steel"
     },
     "d": {
       "item": "superbwarfare:tungsten_rod"

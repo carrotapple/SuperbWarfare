@@ -8,7 +8,7 @@
   ],
   "key": {
     "a": {
-      "tag": "forge:ingots/steel"
+      "tag":"forge:ingots/steel"
     },
     "b": {
       "tag": "forge:plates/copper"

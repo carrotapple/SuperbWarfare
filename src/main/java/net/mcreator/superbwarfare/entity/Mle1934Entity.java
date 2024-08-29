@@ -377,6 +377,16 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
 
     public static void init() {
     }
+    protected void clampRotation(Entity entity) {
+        float f = Mth.wrapDegrees(entity.getXRot());
+        float f1 = Mth.clamp(f, -30.0F, 4.0F);
+        entity.xRotO += f1 - f;
+        entity.setXRot(entity.getXRot() + f1 - f);
+    }
+    @Override
+    public void onPassengerTurned(Entity entity) {
+        this.clampRotation(entity);
+    }
 
     public static AttributeSupplier.Builder createAttributes() {
         return Mob.createMobAttributes()

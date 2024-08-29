@@ -10,7 +10,7 @@
       "item": "minecraft:tripwire_hook"
     },
     "b": {
-      "item": "superbwarfare:ingot_steel"
+      "tag":"forge:ingots/steel"
     }
   },
   "result": {
