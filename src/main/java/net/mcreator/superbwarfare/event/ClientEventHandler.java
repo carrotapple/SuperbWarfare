@@ -212,7 +212,7 @@ public class ClientEventHandler {
                 on_ground = 0.001;
             }
 
-            if (data.getDouble("move_forward") == 1 && data.getDouble("firetime") == 0 && data.getDouble("zoom_time") == 0) {
+            if (Minecraft.getInstance().options.keyUp.isDown() && data.getDouble("firetime") == 0 && data.getDouble("zoom_time") == 0) {
                 if (data.getDouble("gun_move_rotZ") < 0.14) {
                     data.putDouble("gun_move_rotZ", data.getDouble("gun_move_rotZ") + 0.007 * times);
                 }
@@ -224,10 +224,10 @@ public class ClientEventHandler {
                 }
             }
 
-            if ((data.getDouble("move_left") == 1
-                    || data.getDouble("move_right") == 1
-                    || data.getDouble("move_forward") == 1
-                    || data.getDouble("move_backward") == 1) && data.getDouble("firetime") == 0) {
+            if ((Minecraft.getInstance().options.keyLeft.isDown()
+                    || Minecraft.getInstance().options.keyRight.isDown()
+                    || Minecraft.getInstance().options.keyUp.isDown()
+                    || Minecraft.getInstance().options.keyDown.isDown()) && data.getDouble("firetime") == 0) {
 
                 if (data.getDouble("gun_moveY_time") < 1.25) {
                     data.putDouble("gun_moveY_time", data.getDouble("gun_moveY_time") + 1.2 * on_ground * times * move_speed);
@@ -279,11 +279,11 @@ public class ClientEventHandler {
                 data.putDouble("move", ((data.getDouble("move") - 1 * times * Math.pow(data.getDouble("move"), 2) * (1 - 0.6 * data.getDouble("zoom_time")))
                         * (1 - 1 * data.getDouble("zoom_time"))));
             }
-            if (data.getDouble("move_right") == 1) {
+            if (Minecraft.getInstance().options.keyRight.isDown()) {
                 data.putDouble("move",
                         ((data.getDouble("move") + Math.pow(Math.abs(data.getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * data.getDouble("zoom_time")))
                                 * (1 - 0.1 * data.getDouble("zoom_time"))));
-            } else if (data.getDouble("move_left") == 1) {
+            } else if (Minecraft.getInstance().options.keyLeft.isDown()) {
                 data.putDouble("move",
                         ((data.getDouble("move") - Math.pow(Math.abs(data.getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * data.getDouble("zoom_time")))
                                 * (1 - 0.1 * data.getDouble("zoom_time"))));

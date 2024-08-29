@@ -167,19 +167,6 @@ public class ClickHandler {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
 
-        var options = Minecraft.getInstance().options;
-
-        var data = player.getPersistentData();
-        if (key == options.keyLeft.getKey().getValue()) {
-            data.putDouble("move_left", state);
-        } else if (key == options.keyRight.getKey().getValue()) {
-            data.putDouble("move_right", state);
-        } else if (key == options.keyUp.getKey().getValue()) {
-            data.putDouble("move_forward", state);
-        } else if (key == options.keyDown.getKey().getValue()) {
-            data.putDouble("move_backward", state);
-        }
-
         handleDroneMove(key, state, player);
     }
 
