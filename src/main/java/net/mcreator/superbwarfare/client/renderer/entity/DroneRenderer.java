@@ -1,19 +1,16 @@
 
 package net.mcreator.superbwarfare.client.renderer.entity;
 
-import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
-
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.MultiBufferSource;
-
-import net.mcreator.superbwarfare.entity.model.DroneModel;
-import net.mcreator.superbwarfare.entity.DroneEntity;
-
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.mcreator.superbwarfare.entity.DroneEntity;
+import net.mcreator.superbwarfare.entity.model.DroneModel;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class DroneRenderer extends GeoEntityRenderer<DroneEntity> {
 	public DroneRenderer(EntityRendererProvider.Context renderManager) {
@@ -38,5 +35,10 @@ public class DroneRenderer extends GeoEntityRenderer<DroneEntity> {
 	@Override
 	protected float getDeathMaxRotation(DroneEntity entityLivingBaseIn) {
 		return 0.0F;
+	}
+
+	@Override
+	public boolean shouldShowName(DroneEntity animatable) {
+		return animatable.hasCustomName();
 	}
 }

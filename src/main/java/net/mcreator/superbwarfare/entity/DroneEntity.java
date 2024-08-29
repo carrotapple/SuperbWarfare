@@ -11,6 +11,7 @@ import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -31,8 +32,6 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -65,19 +64,19 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.UUID;
 
-// TODO 重做无人机
-public class DroneEntity extends PathfinderMob implements GeoEntity {
+public class DroneEntity extends LivingEntity implements GeoEntity {
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Boolean> LINKED = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> CONTROLLER = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Boolean> KAMIKAZE = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
+
     public static final EntityDataAccessor<Float> MOVE_X = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> MOVE_Y = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> MOVE_Z = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
-
     public static final EntityDataAccessor<Float> ROT_X = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ROT_Z = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private boolean move = false;
 
@@ -89,9 +88,6 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
 
     public DroneEntity(EntityType<DroneEntity> type, Level world) {
         super(type, world);
-        xpReward = 0;
-        setNoAi(false);
-        setPersistenceRequired();
     }
 
     public DroneEntity(EntityType<? extends DroneEntity> type, Level world, float moveX, float moveY, float moveZ) {
@@ -124,18 +120,22 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
     }
 
     @Override
-    protected PathNavigation createNavigation(Level world) {
-        return new FlyingPathNavigation(this, world);
-    }
-
-    @Override
     public MobType getMobType() {
         return super.getMobType();
     }
 
     @Override
-    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
-        return false;
+    public Iterable<ItemStack> getArmorSlots() {
+        return NonNullList.withSize(1, ItemStack.EMPTY);
+    }
+
+    @Override
+    public ItemStack getItemBySlot(EquipmentSlot pSlot) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void setItemSlot(EquipmentSlot pSlot, ItemStack pStack) {
     }
 
     @Override
@@ -209,7 +209,6 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
             }
         }
 
-
         if (this.getPersistentData().getBoolean("forward")) {
             this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) - 0.15f);
             this.entityData.set(ROT_Z, Mth.clamp(this.entityData.get(ROT_Z) - 0.05f, -0.5f, 0.5f));
@@ -276,7 +275,6 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
             }
         }
 
-
         if (this.getPersistentData().getBoolean("firing")) {
             if (control instanceof Player player) {
                 if (this.entityData.get(AMMO) > 0) {
@@ -296,7 +294,7 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
     private void droneDrop(Player player) {
         Level level = player.level();
         if (!level.isClientSide()) {
-            RgoGrenadeEntity rgoGrenadeEntity = new RgoGrenadeEntity(player, level,160);
+            RgoGrenadeEntity rgoGrenadeEntity = new RgoGrenadeEntity(player, level, 160);
             rgoGrenadeEntity.setPos(this.getX(), this.getY(), this.getZ());
             rgoGrenadeEntity.shoot(0, -1, 0, 0, 0.5f);
             level.addFreshEntity(rgoGrenadeEntity);
@@ -304,8 +302,8 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
     }
 
     @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        super.mobInteract(player, hand);
+    public InteractionResult interact(Player player, InteractionHand hand) {
+        super.interact(player, hand);
 
         ItemStack stack = player.getMainHandItem();
         if (stack.getItem() == ModItems.MONITOR.get()) {
@@ -443,7 +441,6 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
                     });
         }
 
-
         if (this.entityData.get(KAMIKAZE)) {
             kamikazeExplosion(source.getEntity());
         }
@@ -475,18 +472,13 @@ public class DroneEntity extends PathfinderMob implements GeoEntity {
     }
 
     @Override
-    public void setNoGravity(boolean ignored) {
-        super.setNoGravity(true);
+    public boolean isNoGravity() {
+        return true;
     }
 
     @Override
-    public void aiStep() {
-        super.aiStep();
-        this.updateSwingTime();
-        this.setNoGravity(true);
-    }
-
-    public static void init() {
+    public HumanoidArm getMainArm() {
+        return HumanoidArm.RIGHT;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
