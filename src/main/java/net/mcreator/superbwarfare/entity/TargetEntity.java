@@ -14,6 +14,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -138,7 +139,7 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
             if (sourceEntity instanceof Player player) {
                 player.displayClientMessage(Component.literal(("Target Down " + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceEntity.position()))) + "M")), true);
                 SoundTool.playLocalSound(player, ModSounds.TARGET_DOWN.get(), 100, 1);
-                targetEntity.entityData.set(DOWN_TIME, 90);
+                targetEntity.entityData.set(DOWN_TIME, 91);
             }
         }
     }
@@ -182,6 +183,11 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
         if (this.entityData.get(DOWN_TIME) > 0) {
             this.entityData.set(DOWN_TIME, this.entityData.get(DOWN_TIME) - 1);
         }
+    }
+
+    @Override
+    public void travel(Vec3 dir) {
+        this.setXRot(-Mth.clamp(this.entityData.get(DOWN_TIME), 0, 90));
     }
 
     @Override

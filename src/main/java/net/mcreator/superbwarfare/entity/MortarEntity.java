@@ -16,6 +16,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -31,7 +32,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
-import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -154,10 +154,9 @@ public class MortarEntity extends LivingEntity implements GeoEntity, AnimatedEnt
             this.yBodyRotO = this.getYRot();
             this.yHeadRotO = this.getYRot();
         }
-        if (mainHandItem.getItem() == ModItems.MORTAR_SHELLS.get() && !player.getCooldowns().isOnCooldown(ModItems.MORTAR_SHELLS.get()) && !player.isShiftKeyDown()) {
+        if (mainHandItem.getItem() == ModItems.MORTAR_SHELLS.get() && !player.isShiftKeyDown() && this.entityData.get(FIRE_TIME) == 0) {
             this.entityData.set(FIRE_TIME, 25);
 
-            player.getCooldowns().addCooldown(ModItems.MORTAR_SHELLS.get(), 30);
             if (!player.isCreative()) {
                 player.getInventory().clearOrCountMatchingItems(p -> ModItems.MORTAR_SHELLS.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
             }
@@ -184,35 +183,17 @@ public class MortarEntity extends LivingEntity implements GeoEntity, AnimatedEnt
     }
 
     @Override
-    public void baseTick() {
-        super.baseTick();
-        final Runnable runnable = doFire();
-        Thread thread = new Thread(runnable);
-        thread.start();
-
-        this.entityData.set(FIRE_TIME, this.entityData.get(FIRE_TIME) - 1);
-
-        this.refreshDimensions();
+    public void travel(Vec3 dir) {
+        this.setXRot(-Mth.clamp((float) this.getAttribute(ModAttributes.MORTAR_PITCH.get()).getBaseValue(), 20, 89));
     }
 
-    @NotNull
-    private Runnable doFire() {
-        double[] timer = {0};
-        double totalTime = 4;
-        int sleepTime = 2;
-        double Duration = totalTime / sleepTime;
-        return () -> {
-            while (timer[0] < Duration) {
-                this.setXRot((float) -this.getAttribute(ModAttributes.MORTAR_PITCH.get()).getBaseValue());
-
-                timer[0]++;
-                try {
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException e) {
-                    ModUtils.LOGGER.error(e.getLocalizedMessage());
-                }
-            }
-        };
+    @Override
+    public void baseTick() {
+        super.baseTick();
+        if (this.entityData.get(FIRE_TIME) > 0) {
+            this.entityData.set(FIRE_TIME, this.entityData.get(FIRE_TIME) - 1);
+        }
+        this.refreshDimensions();
     }
 
     @Override

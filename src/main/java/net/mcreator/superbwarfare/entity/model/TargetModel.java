@@ -4,11 +4,11 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.TargetEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
-
-import static net.mcreator.superbwarfare.entity.TargetEntity.DOWN_TIME;
+import software.bernie.geckolib.model.data.EntityModelData;
 
 public class TargetModel extends GeoModel<TargetEntity> {
     @Override
@@ -29,10 +29,11 @@ public class TargetModel extends GeoModel<TargetEntity> {
     @Override
     public void setCustomAnimations(TargetEntity animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone head = getAnimationProcessor().getBone("ba");
-        if (animatable.getEntityData().get(DOWN_TIME) > 20) {
-            head.setRotX(Mth.clamp(90 - animatable.getEntityData().get(DOWN_TIME),0,3) * 30 * Mth.DEG_TO_RAD);
+        EntityModelData entityData = (EntityModelData) animationState.getData(DataTickets.ENTITY_MODEL_DATA);
+        if (entityData.headPitch() > 10) {
+            head.setRotX(Mth.clamp(Mth.clamp(90 - entityData.headPitch(),0,4) * 22.5f * Mth.DEG_TO_RAD,0,90));
         } else {
-            head.setRotX(4.5f * animatable.getEntityData().get(DOWN_TIME) * Mth.DEG_TO_RAD);
+            head.setRotX(Mth.clamp(9f * entityData.headPitch() * Mth.DEG_TO_RAD,0,90));
         }
     }
 }
