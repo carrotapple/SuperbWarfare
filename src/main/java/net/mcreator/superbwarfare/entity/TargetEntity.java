@@ -26,6 +26,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -211,6 +212,15 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
 
     @Override
     protected void pushEntities() {
+    }
+
+    @Override
+    protected AABB makeBoundingBox() {
+        if (this.entityData.get(DOWN_TIME) > 0) {
+            return super.makeBoundingBox().inflate(0, -0.85, 0).move(0, -0.85, 0);
+        }
+
+        return super.makeBoundingBox();
     }
 
     @Override
