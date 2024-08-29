@@ -137,6 +137,22 @@ public class ClickHandler {
         }
     }
 
+    @SubscribeEvent
+    public static void onKeyPressed(InputEvent.Key event) {
+        if (notInGame()) return;
+
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+        if (player.isSpectator()) return;
+
+        setKeyState(event);
+
+        int key = event.getKey();
+        if (key == Minecraft.getInstance().options.keyJump.getKey().getValue()) {
+            handleDoubleJump(player);
+        }
+    }
+
     private static void setKeyState(InputEvent.Key event) {
         int key = event.getKey();
         int state;
@@ -151,28 +167,42 @@ public class ClickHandler {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
 
+        var options = Minecraft.getInstance().options;
+
         var data = player.getPersistentData();
-        switch (key) {
-            case GLFW.GLFW_KEY_D -> data.putDouble("move_left", state);
-            case GLFW.GLFW_KEY_A -> data.putDouble("move_right", state);
-            case GLFW.GLFW_KEY_W -> data.putDouble("move_forward", state);
-            case GLFW.GLFW_KEY_S -> data.putDouble("move_backward", state);
+        if (key == options.keyLeft.getKey().getValue()) {
+            data.putDouble("move_left", state);
+        } else if (key == options.keyRight.getKey().getValue()) {
+            data.putDouble("move_right", state);
+        } else if (key == options.keyUp.getKey().getValue()) {
+            data.putDouble("move_forward", state);
+        } else if (key == options.keyDown.getKey().getValue()) {
+            data.putDouble("move_backward", state);
         }
+
+        handleDroneMove(key, state, player);
     }
 
-    @SubscribeEvent
-    public static void onKeyPressed(InputEvent.Key event) {
-        if (notInGame()) return;
+    private static void handleDroneMove(int key, int state, Player player) {
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModItems.MONITOR.get())) return;
+        if (!stack.getOrCreateTag().getBoolean("Using")) return;
+        if (!stack.getOrCreateTag().getBoolean("Linked")) return;
 
-        Player player = Minecraft.getInstance().player;
-        if (player == null) return;
-        if (player.isSpectator()) return;
+        var options = Minecraft.getInstance().options;
 
-        setKeyState(event);
-
-        int key = event.getKey();
-        if (key == Minecraft.getInstance().options.keyJump.getKey().getValue()) {
-            handleDoubleJump(player);
+        if (key == options.keyLeft.getKey().getValue()) {
+            ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(0, state == 1));
+        } else if (key == options.keyRight.getKey().getValue()) {
+            ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(1, state == 1));
+        } else if (key == options.keyUp.getKey().getValue()) {
+            ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(2, state == 1));
+        } else if (key == options.keyDown.getKey().getValue()) {
+            ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(3, state == 1));
+        } else if (key == options.keyJump.getKey().getValue()) {
+            ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(4, state == 1));
+        } else if (key == options.keyShift.getKey().getValue()) {
+            ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(5, state == 1));
         }
     }
 
