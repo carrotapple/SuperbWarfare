@@ -6,6 +6,7 @@ import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.SimulationDistanceMessage;
+import net.mcreator.superbwarfare.tools.SeekTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -17,11 +18,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -92,6 +96,7 @@ public class PlayerEventHandler {
                 handleChangeFireRate(player);
                 handleBocekPulling(player);
                 handleGunRecoil(player);
+                handleWeaponSeek(player, event.player.level());
             }
 
             handleGround(player);
@@ -100,6 +105,16 @@ public class PlayerEventHandler {
             handleCannonTime(player);
             handleTacticalSprint(player);
             handleBreath(player);
+        }
+    }
+
+    //测试用
+    private static void handleWeaponSeek(Player player, LevelAccessor level) {
+        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming) {
+            Entity seekingEntity = SeekTool.seekEntity(player, level, 256,30);
+            if (seekingEntity instanceof LivingEntity _entity && !_entity.level().isClientSide())
+                _entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 2, 0));
+
         }
     }
 
