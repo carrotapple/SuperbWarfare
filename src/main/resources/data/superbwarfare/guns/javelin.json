@@ -1,8 +1,8 @@
 {
   "zoom_speed": 0.72,
-  "zoom": 4,
-  "min_zoom": 4,
-  "max_zoom": 9,
+  "zoom": 2,
+  "min_zoom": 2,
+  "max_zoom": 6,
   "spread": 5,
   "zoomSpread": 5,
   "mag": 1,
