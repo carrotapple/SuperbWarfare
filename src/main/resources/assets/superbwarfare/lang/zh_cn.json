@@ -44,6 +44,7 @@
   "item.superbwarfare.qbz_95": "95-1式自动步枪",
   "item.superbwarfare.k_98": "KAR-98K",
   "item.superbwarfare.mosin_nagant": "莫辛纳甘",
+  "item.superbwarfare.javelin": "FGM-148标枪导弹",
 
   "des.superbwarfare.tips.upgradepoint": "升级点数: ",
   "des.superbwarfare.tips.damage": "伤害: ",
@@ -127,6 +128,7 @@
   "item.superbwarfare.ammo_supplier.creative": "所有弹药 +2147483647",
   "item.superbwarfare.he_5_inches": "高爆弹",
   "item.superbwarfare.ap_5_inches": "穿甲弹",
+  "item.superbwarfare.javelin_missile": "标枪导弹",
 
   "item.superbwarfare.ancient_cpu": "古代处理器",
   "item.superbwarfare.target_deployer": "标靶",

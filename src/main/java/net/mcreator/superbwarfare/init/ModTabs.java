@@ -53,6 +53,7 @@ public class ModTabs {
                                 output.accept(BocekItem.getGunInstance());
                                 output.accept(M79Item.getGunInstance());
                                 output.accept(RpgItem.getGunInstance());
+                                output.accept(JavelinItem.getGunInstance());
                             }
                     )
                     .build());

@@ -1,5 +1,6 @@
 package net.mcreator.superbwarfare.network.message;
 
+import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.*;
 import net.mcreator.superbwarfare.event.GunEventHandler;
 import net.mcreator.superbwarfare.init.*;
@@ -9,14 +10,19 @@ import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.ItemNBTTool;
 import net.mcreator.superbwarfare.tools.ParticleTool;
+import net.mcreator.superbwarfare.tools.SeekTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
@@ -24,6 +30,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
+import org.joml.Vector3d;
 
 import java.util.function.Supplier;
 
@@ -72,6 +79,19 @@ public class FireMessage {
             if (player.getMainHandItem().getItem() == ModItems.BOCEK.get()) {
                 handleBowShoot(player);
             }
+
+            if (player.getMainHandItem().getItem() == ModItems.JAVELIN.get()) {
+                var handItem = player.getMainHandItem();
+                var tag = handItem.getOrCreateTag();
+                handleJavelinFire(player);
+                tag.putBoolean("Seeking",false);
+                tag.putInt("SeekTime",0);
+                tag.putString("TargetEntity","none");
+                if (player instanceof ServerPlayer serverPlayer) {
+                    var clientboundstopsoundpacket = new ClientboundStopSoundPacket(new ResourceLocation(ModUtils.MODID, "javelin_lock"), SoundSource.PLAYERS);
+                    serverPlayer.connection.send(clientboundstopsoundpacket);
+                }
+            }
         }
     }
 
@@ -94,6 +114,16 @@ public class FireMessage {
 
         if (handItem.getItem() == ModItems.RPG.get()) {
             handleRpgFire(player);
+        }
+
+        if (handItem.getItem() == ModItems.JAVELIN.get() && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming && tag.getInt("ammo") > 0) {
+            Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 256, 9);
+            if (seekingEntity != null) {
+                tag.putString("TargetEntity",seekingEntity.getStringUUID());
+                tag.putBoolean("Seeking",true);
+                tag.putInt("SeekTime",0);
+            }
+
         }
 
         if (tag.getInt("fire_mode") == 1) {
@@ -430,5 +460,54 @@ public class FireMessage {
             tag.putInt("fire_animation", 2);
             tag.putInt("ammo", tag.getInt("ammo") - 1);
         }
+    }
+
+    private static void handleJavelinFire(Player player) {
+        if (player.isSpectator()) return;
+
+        Level level = player.level();
+        ItemStack mainHandItem = player.getMainHandItem();
+        CompoundTag tag = mainHandItem.getOrCreateTag();
+
+        if (tag.getInt("SeekTime") < 40) return;
+
+        float yRot = player.getYRot();
+        if (yRot < 0) {
+            yRot += 360;
+        }
+        yRot = yRot + 90 % 360;
+
+        var firePos = new Vector3d(0, -0.2, 0.15);
+        firePos.rotateZ(-player.getXRot() * Mth.DEG_TO_RAD);
+        firePos.rotateY(-yRot * Mth.DEG_TO_RAD);
+
+        if (!level.isClientSide()) {
+            JavelinMissileEntity missileEntity = new JavelinMissileEntity(player, level, (float) tag.getDouble("damage") * (float) tag.getDouble("levelDamageMultiple"));
+            missileEntity.setPos(player.getX() + firePos.x, player.getEyeY() + firePos.y, player.getZ() + firePos.z);
+            missileEntity.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.3, player.getLookAngle().z, 3f, 1);
+            missileEntity.setTargetUuid(tag.getString("TargetEntity"));
+            missileEntity.setAttackMode(tag.getBoolean("TopMode"));
+            level.addFreshEntity(missileEntity);
+        }
+
+        if (player.level() instanceof ServerLevel serverLevel) {
+            ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, player.getX() + 1.8 * player.getLookAngle().x,
+                    player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y,
+                    player.getZ() + 1.8 * player.getLookAngle().z,
+                    30, 0.4, 0.4, 0.4, 0.005, true);
+        }
+
+        player.getCooldowns().addCooldown(mainHandItem.getItem(), 10);
+
+        if (player instanceof ServerPlayer serverPlayer) {
+            SoundTool.playLocalSound(serverPlayer, ModSounds.JAVELIN_FIRE_1P.get(), 2, 1);
+            serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.JAVELIN_FIRE_3P.get(), SoundSource.PLAYERS, 4, 1);
+            serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.JAVELIN_FAR.get(), SoundSource.PLAYERS, 12, 1);
+        }
+
+        tag.putBoolean("shoot", true);
+
+        tag.putInt("fire_animation", 2);
+        tag.putInt("ammo", tag.getInt("ammo") - 1);
     }
 }

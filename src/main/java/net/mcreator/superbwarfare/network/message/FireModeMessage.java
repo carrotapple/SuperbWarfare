@@ -114,6 +114,10 @@ public class FireModeMessage {
                     tag.putBoolean("start_sentinel_charge", true);
                 }
             }
+
+            if (mainHandItem.getItem() == ModItems.JAVELIN.get()) {
+                tag.putBoolean("TopMode", !tag.getBoolean("TopMode"));
+            }
         }
     }
 }

@@ -533,6 +533,9 @@ public class GunEventHandler {
         } else if (stack.getItem() == ModItems.RPG.get()) {
             stack.getOrCreateTag().putInt("ammo", 1);
             player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.ROCKET.get(), 1, player.inventoryMenu.getCraftSlots());
+        } else if (stack.getItem() == ModItems.JAVELIN.get()) {
+            stack.getOrCreateTag().putInt("ammo", 1);
+            player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.JAVELIN_MISSILE.get(), 1, player.inventoryMenu.getCraftSlots());
         }
 
         stack.getOrCreateTag().putBoolean("is_normal_reloading", false);

@@ -23,6 +23,8 @@ public class AmmoBarOverlay {
     private static final ResourceLocation SEMI = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/fire_mode/semi.png");
     private static final ResourceLocation BURST = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/fire_mode/burst.png");
     private static final ResourceLocation AUTO = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/fire_mode/auto.png");
+    private static final ResourceLocation TOP = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/fire_mode/top.png");
+    private static final ResourceLocation DIR = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/fire_mode/dir.png");
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
@@ -65,6 +67,10 @@ public class AmmoBarOverlay {
 
             // 渲染开火模式
             ResourceLocation fireMode = getFireMode(stack);
+
+            if (stack.getItem() == ModItems.JAVELIN.get()) {
+                fireMode = stack.getOrCreateTag().getBoolean("TopMode")? TOP : DIR;
+            }
 
             event.getGuiGraphics().blit(fireMode,
                     w - 95,
@@ -166,7 +172,7 @@ public class AmmoBarOverlay {
             return "";
         }
 
-        if (stack.getItem() == ModItems.M_79.get() || stack.getItem() == ModItems.RPG.get() || stack.getItem() == ModItems.TASER.get()) {
+        if (stack.getItem() == ModItems.M_79.get() || stack.getItem() == ModItems.RPG.get() || stack.getItem() == ModItems.TASER.get() || stack.getItem() == ModItems.JAVELIN.get() ) {
             return "" + stack.getOrCreateTag().getInt("max_ammo");
         }
 
@@ -196,6 +202,10 @@ public class AmmoBarOverlay {
 
         if (stack.getItem() == ModItems.RPG.get()) {
             return "Yassin105 TBG";
+        }
+
+        if (stack.getItem() == ModItems.JAVELIN.get()) {
+            return "Javelin Missile";
         }
 
         if (stack.getItem() == ModItems.TASER.get()) {

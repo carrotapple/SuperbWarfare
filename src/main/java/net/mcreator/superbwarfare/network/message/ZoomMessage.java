@@ -1,11 +1,16 @@
 package net.mcreator.superbwarfare.network.message;
 
+import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
+import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -59,6 +64,16 @@ public class ZoomMessage {
 
                     if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity) {
                         SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_OUT.get(), 2, 1);
+                    }
+
+                    if (player.getMainHandItem().getItem() == ModItems.JAVELIN.get()) {
+                        var handItem = player.getMainHandItem();
+                        var tag = handItem.getOrCreateTag();
+                        tag.putBoolean("Seeking",false);
+                        tag.putInt("SeekTime",0);
+                        tag.putString("TargetEntity","none");
+                        var clientboundstopsoundpacket = new ClientboundStopSoundPacket(new ResourceLocation(ModUtils.MODID, "javelin_lock"), SoundSource.PLAYERS);
+                        player.connection.send(clientboundstopsoundpacket);
                     }
                 }
             }

@@ -1,0 +1,13 @@
+{
+  "zoom_speed": 0.72,
+  "zoom": 4,
+  "min_zoom": 4,
+  "max_zoom": 9,
+  "spread": 5,
+  "zoomSpread": 5,
+  "mag": 1,
+  "weight": 2,
+  "empty_reload_time": 78,
+  "damage": 300,
+  "BypassesArmor": 1
+}

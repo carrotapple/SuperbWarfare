@@ -8,6 +8,7 @@ import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
@@ -18,10 +19,10 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Explosion;
@@ -30,6 +31,7 @@ import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
@@ -42,27 +44,27 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity {
-    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(RpgRocketEntity.class, EntityDataSerializers.STRING);
+public class JavelinMissileEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity {
+    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(JavelinMissileEntity.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<String> TARGET_UUID = SynchedEntityData.defineId(JavelinMissileEntity.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<Boolean> TOP = SynchedEntityData.defineId(JavelinMissileEntity.class, EntityDataSerializers.BOOLEAN);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public String animationprocedure = "empty";
 
-    private int monsterMultiplier = 0;
-    private float damage = 150f;
+    private float damage = 300f;
 
-    public RpgRocketEntity(EntityType<? extends RpgRocketEntity> type, Level world) {
+    public JavelinMissileEntity(EntityType<? extends JavelinMissileEntity> type, Level world) {
         super(type, world);
     }
 
-    public RpgRocketEntity(LivingEntity entity, Level level, float damage, int monsterMultiplier) {
-        super(ModEntities.RPG_ROCKET.get(), entity, level);
+    public JavelinMissileEntity(LivingEntity entity, Level level, float damage) {
+        super(ModEntities.JAVELIN_MISSILE.get(), entity, level);
         this.damage = damage;
-        this.monsterMultiplier = monsterMultiplier;
     }
 
-    public RpgRocketEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
-        this(ModEntities.RPG_ROCKET.get(), level);
+    public JavelinMissileEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
+        this(ModEntities.JAVELIN_MISSILE.get(), level);
     }
 
     @Override
@@ -72,7 +74,21 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
     @Override
     protected Item getDefaultItem() {
-        return ModItems.ROCKET.get();
+        return ModItems.JAVELIN_MISSILE.get();
+    }
+
+    public void setTargetUuid(String uuid) {
+        this.entityData.set(TARGET_UUID, uuid);
+    }
+
+    public void setAttackMode(boolean mode) {
+        this.entityData.set(TOP, mode);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        this.entityData.define(TARGET_UUID, "none");
+        this.entityData.define(TOP, false);
     }
 
     @Override
@@ -82,7 +98,6 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        float damageMultiplier = 1 + 0.2f * this.monsterMultiplier;
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
@@ -96,11 +111,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
             entity.invulnerableTime = 0;
         }
 
-        if (entity instanceof Monster monster) {
-            monster.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * damageMultiplier);
-        } else {
-            entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
-        }
+        entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
 
         if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
@@ -138,22 +149,47 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
     @Override
     public void tick() {
         super.tick();
+        Entity entity = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(512))
+                .stream().filter(e -> e.getStringUUID().equals(entityData.get(TARGET_UUID))).findFirst().orElse(null);
 
-        if (this.tickCount == 3) {
+
+        if (this.tickCount == 6) {
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, this.xo, this.yo, this.zo, 15, 0.8, 0.8, 0.8, 0.01, true);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.xo, this.yo, this.zo, 10, 0.8, 0.8, 0.8, 0.01, true);
             }
         }
-        if (this.tickCount > 2) {
-            this.setDeltaMovement(this.getDeltaMovement().multiply(1.03, 1.03, 1.03));
 
+        if (this.tickCount > 5) {
+            if (entity != null) {
+                if (entityData.get(TOP)) {
+                    if (this.position().distanceTo(entity.position()) > 80) {
+                        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(),entity.getY() + 50,entity.getZ()));
+                    } else {
+                        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(),entity.getEyeY() + 1,entity.getZ()));
+                    }
+                } else {
+                    this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(),entity.getEyeY() + 1,entity.getZ()));
+                }
+                if (this.position().distanceTo(entity.position()) < 4) {
+                    triggerExplode(entity);
+                    this.discard();
+                }
+            }
+        }
+
+        if (this.tickCount > 6) {
+            this.setDeltaMovement(new Vec3(
+                    0.7f * this.getDeltaMovement().x + 1.3f * this.getLookAngle().x,
+                    0.7f * this.getDeltaMovement().y + 1.3f * this.getLookAngle().y,
+                    0.7f * this.getDeltaMovement().z + 1.3f * this.getLookAngle().z
+            ));
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, this.xo, this.yo, this.zo, 1, 0, 0, 0, 0, true);
             }
         }
 
-        if (this.tickCount > 100 || this.isInWater()) {
+        if (this.tickCount > 200 || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
                 causeExplode();
             }
@@ -161,10 +197,34 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
         }
     }
 
+    private void look(EntityAnchorArgument.Anchor pAnchor, Vec3 pTarget) {
+        Vec3 vec3 = pAnchor.apply(this);
+        double d0 = (pTarget.x - vec3.x) * 0.2;
+        double d1 = (pTarget.y - vec3.y) * 0.2;
+        double d2 = (pTarget.z - vec3.z) * 0.2;
+        double d3 = Math.sqrt(d0 * d0 + d2 * d2);
+        this.setXRot(Mth.wrapDegrees((float)(-(Mth.atan2(d1, d3) * 57.2957763671875))));
+        this.setYRot(Mth.wrapDegrees((float)(Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));
+        this.setYHeadRot(this.getYRot());
+        this.xRotO = this.getXRot();
+        this.yRotO = this.getYRot();
+    }
+
     private void causeExplode() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), (float) 2 / 3 * this.damage,
-                this.getX(), this.getY(), this.getZ(), 10f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(this.monsterMultiplier);
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), this.damage,
+                this.getX(), this.getY(), this.getZ(), 5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+
+        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+    }
+
+    private void triggerExplode(Entity target) {
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), this.damage,
+                target.getX(), target.getY(), target.getZ(), 5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
@@ -174,8 +234,8 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
     private void causeEntityHitExplode(Entity entity) {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), (float) 2 / 3 * this.damage,
-                entity.getX(), entity.getY(), entity.getZ(), 10f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(this.monsterMultiplier);
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), this.damage,
+                entity.getX(), entity.getY(), entity.getZ(), 5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
@@ -183,14 +243,14 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
         this.discard();
     }
 
-    private PlayState movementPredicate(AnimationState<RpgRocketEntity> event) {
+    private PlayState movementPredicate(AnimationState<JavelinMissileEntity> event) {
         if (this.animationprocedure.equals("empty")) {
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.rpg.idle"));
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.jvm.idle"));
         }
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState<RpgRocketEntity> event) {
+    private PlayState procedurePredicate(AnimationState<JavelinMissileEntity> event) {
         if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
             event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
             if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
@@ -205,7 +265,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
     @Override
     protected float getGravity() {
-        return 0.05F;
+        return 0F ;
     }
 
     public String getSyncedAnimation() {

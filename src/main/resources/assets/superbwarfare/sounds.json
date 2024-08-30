@@ -1508,6 +1508,55 @@
     ]
   },
 
+  "javelin_fire_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:javelin/javelin_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "javelin_fire_3p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:javelin/javelin_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "javelin_far": {
+    "sounds": [
+      {
+        "name": "superbwarfare:javelin/javelin_far",
+        "stream": false
+      }
+    ]
+  },
+  "javelin_reload_empty": {
+    "sounds": [
+      {
+        "name": "superbwarfare:javelin/javelin_reload",
+        "stream": false
+      }
+    ]
+  },
+  "javelin_lock": {
+    "sounds": [
+      {
+        "name": "superbwarfare:javelin/javelin_lock",
+        "stream": false
+      }
+    ]
+  },
+  "javelin_lockon": {
+    "sounds": [
+      {
+        "name": "superbwarfare:javelin/javelin_lockon",
+        "stream": false
+      }
+    ]
+  },
+
   "lightsaber": {
     "sounds": [
       {

@@ -56,6 +56,7 @@ public class ModItems {
     public static final RegistryObject<Item> MINIGUN = GUNS.register("minigun", Minigun::new);
     public static final RegistryObject<Item> M_79 = GUNS.register("m_79", M79Item::new);
     public static final RegistryObject<Item> RPG = GUNS.register("rpg", RpgItem::new);
+    public static final RegistryObject<Item> JAVELIN = GUNS.register("javelin", JavelinItem::new);
     public static final RegistryObject<Item> BOCEK = GUNS.register("bocek", BocekItem::new);
 
     /**
@@ -74,6 +75,7 @@ public class ModItems {
     public static final RegistryObject<Item> CREATIVE_AMMO_BOX = AMMO.register("creative_ammo_box", CreativeAmmoBox::new);
     public static final RegistryObject<Item> TASER_ELECTRODE = AMMO.register("taser_electrode", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> GRENADE_40MM = AMMO.register("grenade_40mm", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> JAVELIN_MISSILE = AMMO.register("javelin_missile", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> MORTAR_SHELLS = AMMO.register("mortar_shells", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> ROCKET = AMMO.register("rocket", Rocket::new);
     public static final RegistryObject<Item> HE_5_INCHES = AMMO.register("he_5_inches", He5Inches::new);

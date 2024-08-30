@@ -44,12 +44,13 @@
   "item.superbwarfare.qbz_95": "QBZ-95-1",
   "item.superbwarfare.k_98": "KAR-98K",
   "item.superbwarfare.mosin_nagant": "Mosin Nagant",
+  "item.superbwarfare.javelin": "FGM-148 Javelin",
 
   "des.superbwarfare.tips.damage": "Damage: ",
   "des.superbwarfare.tips.level": "Level: ",
   "des.superbwarfare.tips.bypass": "Armor Piercing: ",
   "des.superbwarfare.tips.distance": "Drone Distance: ",
-  "des.superbwarfare.tips.upgradepoint": "Ppgrade Point: ",
+  "des.superbwarfare.tips.upgradepoint": "Upgrade Point: ",
 
   "item.superbwarfare.vector_blueprint": "VECTOR Blueprint",
   "item.superbwarfare.m_60_blueprint": "M60 Blueprint",
@@ -127,6 +128,7 @@
   "item.superbwarfare.ammo_supplier.creative": "All Ammo +2147483647",
   "item.superbwarfare.he_5_inches": "HE Shell",
   "item.superbwarfare.ap_5_inches": "AP Shell",
+  "item.superbwarfare.javelin_missile": "Javelin Missile",
 
   "item.superbwarfare.ancient_cpu": "Ancient CPU",
   "item.superbwarfare.target_deployer": "Target",
