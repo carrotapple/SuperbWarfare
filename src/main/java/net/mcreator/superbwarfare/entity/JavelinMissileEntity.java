@@ -163,8 +163,8 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
         if (this.tickCount > 5) {
             if (entity != null) {
                 if (entityData.get(TOP)) {
-                    if (this.position().distanceTo(entity.position()) > 80) {
-                        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(),entity.getY() + 50,entity.getZ()));
+                    if (this.position().distanceTo(entity.position()) > 40) {
+                        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(),entity.getY() + 30,entity.getZ()));
                     } else {
                         this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(),entity.getEyeY() + 1,entity.getZ()));
                     }
@@ -185,7 +185,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
                     0.7f * this.getDeltaMovement().z + 1.3f * this.getLookAngle().z
             ));
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
-                ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, this.xo, this.yo, this.zo, 1, 0, 0, 0, 0, true);
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.xo, this.yo, this.zo, 1, 0, 0, 0, 0, true);
             }
         }
 

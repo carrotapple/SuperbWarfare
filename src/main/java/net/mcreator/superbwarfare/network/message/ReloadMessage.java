@@ -75,6 +75,8 @@ public class ReloadMessage {
                     return;
                 } else if (stack.getItem() == ModItems.RPG.get() && tag.getInt("max_ammo") == 0) {
                     return;
+                } else if (stack.getItem() == ModItems.JAVELIN.get() && tag.getInt("max_ammo") == 0) {
+                    return;
                 }
 
                 if (canReload || clipLoad) {
