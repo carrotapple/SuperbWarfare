@@ -469,7 +469,7 @@ public class FireMessage {
         ItemStack mainHandItem = player.getMainHandItem();
         CompoundTag tag = mainHandItem.getOrCreateTag();
 
-        if (tag.getInt("SeekTime") < 40) return;
+        if (tag.getInt("SeekTime") < 20) return;
 
         float yRot = player.getYRot();
         if (yRot < 0) {

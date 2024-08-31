@@ -53,7 +53,7 @@ public class JavelinItemModel extends GeoModel<JavelinItem> {
         dir.setHidden(stack.getOrCreateTag().getBoolean("TopMode"));
         missile_green.setHidden(!(stack.getOrCreateTag().getInt("ammo") > 0));
         missile_red.setHidden(stack.getOrCreateTag().getInt("ammo") > 0);
-        seek.setHidden(!(stack.getOrCreateTag().getInt("SeekTime") > 1 && stack.getOrCreateTag().getInt("SeekTime") < 40 ));
+        seek.setHidden(!(stack.getOrCreateTag().getInt("SeekTime") > 1 && stack.getOrCreateTag().getInt("SeekTime") < 20 ));
 
         gun.setPosX(1.62f * (float) p);
         gun.setPosY(6.3f * (float) p - (float) (0.2f * zp));
