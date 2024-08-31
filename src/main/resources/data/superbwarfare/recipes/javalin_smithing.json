@@ -1,15 +1,15 @@
 {
   "type": "minecraft:smithing_transform",
   "template": {
-    "item": "superbwarfare:sentinel_blueprint"
+    "item": "superbwarfare:javelin_blueprint"
   },
   "base": {
     "item": "superbwarfare:legendary_material_pack"
   },
   "addition": {
-    "item": "superbwarfare:shield_cell"
+    "item": "superbwarfare:ancient_cpu"
   },
   "result": {
-    "item": "superbwarfare:sentinel"
+    "item": "superbwarfare:javelin"
   }
 }

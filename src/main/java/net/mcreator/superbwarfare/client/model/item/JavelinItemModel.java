@@ -58,7 +58,7 @@ public class JavelinItemModel extends GeoModel<JavelinItem> {
         gun.setPosX(1.62f * (float) p);
         gun.setPosY(6.3f * (float) p - (float) (0.2f * zp));
         gun.setPosZ(22.95f * (float) p + (float) (0.3f * zp));
-        gun.setScaleZ(1f - (0.74f * (float) p));
+        gun.setScaleZ(1f - (0.77f * (float) p));
         gun.setRotZ(-4.75f * Mth.DEG_TO_RAD * (float) p + (float) (0.02f * zp));
 
         javelin.setHidden(gun.getPosX() > 1.55);

@@ -117,6 +117,10 @@ public class FireModeMessage {
 
             if (mainHandItem.getItem() == ModItems.JAVELIN.get()) {
                 tag.putBoolean("TopMode", !tag.getBoolean("TopMode"));
+                if (player instanceof ServerPlayer serverPlayer) {
+                    serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ModSounds.CANNON_ZOOM_OUT.get()),
+                            SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1f, 1f, serverPlayer.level().random.nextLong()));
+                }
             }
         }
     }

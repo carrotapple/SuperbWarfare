@@ -81,6 +81,7 @@
   "item.superbwarfare.qbz_95_blueprint": "QBZ-95-1 Blueprint",
   "item.superbwarfare.k_98_blueprint": "KAR-98K Blueprint",
   "item.superbwarfare.mosin_nagant_blueprint": "Mosin Nagant Blueprint",
+  "item.superbwarfare.javelin_blueprint": "Javelin Blueprint",
 
   "item.superbwarfare.common_material_pack": "Common Material Pack",
   "item.superbwarfare.rare_material_pack": "Rare Material Pack",
@@ -141,6 +142,8 @@
   "item.superbwarfare.mortar_barrel": "Mortar Barrel",
   "item.superbwarfare.mortar_deployer": "Mortar",
   "item.superbwarfare.claymore_mine": "Claymore",
+  "item.superbwarfare.seeker": "Seeker",
+  "item.superbwarfare.missile_engine": "Missile Engine",
   "item.superbwarfare.fusee": "Fusee",
   "item.superbwarfare.primer": "Primer",
   "item.superbwarfare.ap_head": "AP Warhead",

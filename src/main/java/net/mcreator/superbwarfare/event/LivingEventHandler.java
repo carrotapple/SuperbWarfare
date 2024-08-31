@@ -67,8 +67,11 @@ public class LivingEventHandler {
             stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
         }
 
-        if ((damageSource.is(ModDamageTypes.PROJECTILE_BOOM) || damageSource.is(DamageTypes.ARROW))
-                && (stack.getItem() == ModItems.M_79.get() || stack.getItem() == ModItems.RPG.get())) {
+        if ((damageSource.is(ModDamageTypes.PROJECTILE_BOOM)
+                || damageSource.is(ModDamageTypes.CANNON_FIRE))
+                && (stack.getItem() == ModItems.M_79.get()
+                || stack.getItem() == ModItems.RPG.get()
+                || stack.getItem() == ModItems.JAVELIN.get())) {
             stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
         }
 

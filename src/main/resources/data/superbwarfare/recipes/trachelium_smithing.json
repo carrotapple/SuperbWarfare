@@ -4,10 +4,10 @@
     "item": "superbwarfare:trachelium_blueprint"
   },
   "base": {
-    "item": "superbwarfare:legendary_material_pack"
+    "item": "superbwarfare:epic_material_pack"
   },
   "addition": {
-    "item": "minecraft:netherite_ingot"
+    "item": "superbwarfare:cemented_carbide_ingot"
   },
   "result": {
     "item": "superbwarfare:trachelium"

@@ -111,7 +111,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
             entity.invulnerableTime = 0;
         }
 
-        entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
+        entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), 0.2f * this.damage);
 
         if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
@@ -213,7 +213,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
     private void causeExplode() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
                 ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), this.damage,
-                this.getX(), this.getY(), this.getZ(), 5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                this.getX(), this.getY(), this.getZ(), 7f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
@@ -224,7 +224,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
     private void triggerExplode(Entity target) {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
                 ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), this.damage,
-                target.getX(), target.getY(), target.getZ(), 5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                target.getX(), target.getY(), target.getZ(), 7f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
@@ -235,7 +235,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
     private void causeEntityHitExplode(Entity entity) {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
                 ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), this.damage,
-                entity.getX(), entity.getY(), entity.getZ(), 5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                entity.getX(), entity.getY(), entity.getZ(), 7f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);

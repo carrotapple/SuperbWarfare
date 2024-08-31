@@ -7,7 +7,7 @@
     "item": "superbwarfare:epic_material_pack"
   },
   "addition": {
-    "tag": "minecraft:logs"
+    "item": "minecraft:dispenser"
   },
   "result": {
     "item": "superbwarfare:rpg"

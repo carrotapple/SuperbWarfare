@@ -207,11 +207,15 @@ public class ModVillagers {
                     new ItemStack(ModItems.HE_5_INCHES.get(), 1), 8, 10, 0.05f));
             trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 14),
                     new ItemStack(ModItems.AP_5_INCHES.get(), 1), 8, 10, 0.05f));
+            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 24),
+                    new ItemStack(ModItems.JAVELIN_MISSILE.get(), 1), 8, 10, 0.05f));
 
             trades.get(5).add(new BasicItemListing(new ItemStack(ModItems.HE_5_INCHES.get(), 1),
-                    new ItemStack(Items.EMERALD, 8), 32, 2, 0.05f));
+                    new ItemStack(Items.EMERALD, 8), 32, 4, 0.05f));
             trades.get(5).add(new BasicItemListing(new ItemStack(ModItems.AP_5_INCHES.get(), 1),
-                    new ItemStack(Items.EMERALD, 7), 32, 2, 0.05f));
+                    new ItemStack(Items.EMERALD, 7), 32, 4, 0.05f));
+            trades.get(5).add(new BasicItemListing(new ItemStack(ModItems.JAVELIN_MISSILE.get(), 1),
+                    new ItemStack(Items.EMERALD, 12), 32, 4, 0.05f));
         }
     }
 

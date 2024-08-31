@@ -161,7 +161,7 @@
         {
           "type": "minecraft:item",
           "name": "superbwarfare:trachelium_blueprint",
-          "weight": 60,
+          "weight": 10,
           "functions": [
             {
               "function": "set_count",
@@ -175,7 +175,7 @@
         {
           "type": "minecraft:item",
           "name": "superbwarfare:aa_12_blueprint",
-          "weight": 60,
+          "weight": 20,
           "functions": [
             {
               "function": "set_count",
@@ -189,7 +189,7 @@
         {
           "type": "minecraft:item",
           "name": "superbwarfare:sentinel_blueprint",
-          "weight": 60,
+          "weight": 20,
           "functions": [
             {
               "function": "set_count",
@@ -203,7 +203,7 @@
         {
           "type": "minecraft:item",
           "name": "superbwarfare:ntw_20_blueprint",
-          "weight": 50,
+          "weight": 20,
           "functions": [
             {
               "function": "set_count",
@@ -217,7 +217,7 @@
         {
           "type": "minecraft:item",
           "name": "superbwarfare:bocek_blueprint",
-          "weight": 50,
+          "weight": 10,
           "functions": [
             {
               "function": "set_count",
@@ -231,7 +231,21 @@
         {
           "type": "minecraft:item",
           "name": "superbwarfare:minigun_blueprint",
-          "weight": 50,
+          "weight": 20,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1,
+                "max": 1
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "superbwarfare:javelin_blueprint",
+          "weight": 15,
           "functions": [
             {
               "function": "set_count",
@@ -355,6 +369,20 @@
               "count": {
                 "min": 4,
                 "max": 12
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "superbwarfare:javelin_missile",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "set_count",
+              "count": {
+                "min": 1,
+                "max": 2
               }
             }
           ]
