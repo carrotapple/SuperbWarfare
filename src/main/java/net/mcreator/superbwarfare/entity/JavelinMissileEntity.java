@@ -23,6 +23,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Explosion;
@@ -166,10 +167,10 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
                     if (this.position().distanceTo(entity.position()) > 40) {
                         this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(),entity.getY() + 30,entity.getZ()));
                     } else {
-                        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(),entity.getEyeY() + 1,entity.getZ()));
+                        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(),entity.getEyeY() + (entity instanceof EnderDragon? -3 : 1),entity.getZ()));
                     }
                 } else {
-                    this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(),entity.getEyeY() + 1,entity.getZ()));
+                    this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(),entity.getEyeY() + (entity instanceof EnderDragon? -3 : 1),entity.getZ()));
                 }
                 if (this.position().distanceTo(entity.position()) < 4) {
                     triggerExplode(entity);
