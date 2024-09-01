@@ -117,7 +117,7 @@ public class FireMessage {
         }
 
         if (handItem.getItem() == ModItems.JAVELIN.get() && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming && tag.getInt("ammo") > 0) {
-            Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 384, 7);
+            Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 384, 8);
             if (seekingEntity != null) {
                 tag.putString("TargetEntity",seekingEntity.getStringUUID());
                 tag.putBoolean("Seeking",true);

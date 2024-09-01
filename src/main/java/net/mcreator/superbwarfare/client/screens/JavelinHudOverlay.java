@@ -20,12 +20,6 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class JavelinHudOverlay {
 
-    public static final int TEXTURE_WIDTH = 771;
-    public static final int TEXTURE_HEIGHT = 1006;
-
-    public static final int HUD_WIDTH = 1720;
-    public static final int HUD_HEIGHT = 720;
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void eventHandler(RenderGuiEvent.Pre event) {
         int w = event.getWindow().getGuiScaledWidth();
