@@ -1,6 +1,5 @@
 package net.mcreator.superbwarfare.client.renderer.item;
 
-import net.mcreator.superbwarfare.client.layer.JavelinLayer;
 import net.mcreator.superbwarfare.client.model.item.JavelinItemModel;
 import net.mcreator.superbwarfare.item.gun.JavelinItem;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -11,7 +10,6 @@ import software.bernie.geckolib.renderer.GeoItemRenderer;
 public class JavelinItemRenderer extends GeoItemRenderer<JavelinItem> {
     public JavelinItemRenderer() {
         super(new JavelinItemModel());
-        this.addRenderLayer(new JavelinLayer(this));
     }
 
     @Override

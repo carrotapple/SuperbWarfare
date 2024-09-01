@@ -34,12 +34,6 @@ public class JavelinItemModel extends GeoModel<JavelinItem> {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone javelin = getAnimationProcessor().getBone("javelin");
-        CoreGeoBone screen = getAnimationProcessor().getBone("screen");
-        CoreGeoBone seek = getAnimationProcessor().getBone("seek");
-        CoreGeoBone top = getAnimationProcessor().getBone("top");
-        CoreGeoBone dir = getAnimationProcessor().getBone("dir");
-        CoreGeoBone missile_green = getAnimationProcessor().getBone("missile_green");
-        CoreGeoBone missile_red = getAnimationProcessor().getBone("missile_red");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -49,11 +43,7 @@ public class JavelinItemModel extends GeoModel<JavelinItem> {
         double p = player.getPersistentData().getDouble("zoom_pos");
         double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-        top.setHidden(!stack.getOrCreateTag().getBoolean("TopMode"));
-        dir.setHidden(stack.getOrCreateTag().getBoolean("TopMode"));
-        missile_green.setHidden(!(stack.getOrCreateTag().getInt("ammo") > 0));
-        missile_red.setHidden(stack.getOrCreateTag().getInt("ammo") > 0);
-        seek.setHidden(!(stack.getOrCreateTag().getInt("SeekTime") > 1 && stack.getOrCreateTag().getInt("SeekTime") < 20 ));
+
 
         gun.setPosX(1.62f * (float) p);
         gun.setPosY(6.3f * (float) p - (float) (0.2f * zp));
@@ -62,9 +52,7 @@ public class JavelinItemModel extends GeoModel<JavelinItem> {
         gun.setRotZ(-4.75f * Mth.DEG_TO_RAD * (float) p + (float) (0.02f * zp));
 
         javelin.setHidden(gun.getPosX() > 1.55);
-        screen.setHidden(gun.getPosX() <= 1.55);
-
-        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.4));
+        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.55));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
