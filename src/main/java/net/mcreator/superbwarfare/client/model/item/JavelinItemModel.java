@@ -43,16 +43,14 @@ public class JavelinItemModel extends GeoModel<JavelinItem> {
         double p = player.getPersistentData().getDouble("zoom_pos");
         double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-
-
-        gun.setPosX(1.62f * (float) p);
-        gun.setPosY(6.3f * (float) p - (float) (0.2f * zp));
-        gun.setPosZ(22.95f * (float) p + (float) (0.3f * zp));
-        gun.setScaleZ(1f - (0.77f * (float) p));
+        gun.setPosX(1.66f * (float) p + (float) (0.2f * zp));
+        gun.setPosY(5.5f * (float) p + (float) (0.8f * zp));
+        gun.setPosZ(15.9f * (float) p);
+        gun.setScaleZ(1f - (0.8f * (float) p));
         gun.setRotZ(-4.75f * Mth.DEG_TO_RAD * (float) p + (float) (0.02f * zp));
 
-        javelin.setHidden(gun.getPosX() > 1.55);
-        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.55));
+        javelin.setHidden(gun.getPosZ() > 15.85);
+        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosZ() > 15.85));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
@@ -111,22 +109,6 @@ public class JavelinItemModel extends GeoModel<JavelinItem> {
         move.setRotZ(2.7f * (float) m + Mth.DEG_TO_RAD * (float) zRot);
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
-        CoreGeoBone main = getAnimationProcessor().getBone("0");
-        var data = player.getPersistentData();
-        float numR = (float) (1 - 0.98 * data.getDouble("zoom_time"));
-        float numP = (float) (1 - 0.97 * data.getDouble("zoom_time"));
-
-        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
-            main.setRotX(numR * main.getRotX());
-            main.setRotY(numR * main.getRotY());
-            main.setRotZ(numR * main.getRotZ());
-            main.setPosX(numP * main.getPosX());
-            main.setPosY(numP * main.getPosY());
-            main.setPosZ(numP * main.getPosZ());
-            camera.setRotX(numR * camera.getRotX());
-            camera.setRotY(numR * camera.getRotY());
-            camera.setRotZ(numR * camera.getRotZ());
-        }
 
         player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
 

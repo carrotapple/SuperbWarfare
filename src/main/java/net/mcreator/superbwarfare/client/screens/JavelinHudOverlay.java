@@ -20,6 +20,8 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class JavelinHudOverlay {
 
+    private static float scopeScale = 1;
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void eventHandler(RenderGuiEvent.Pre event) {
         int w = event.getWindow().getGuiScaledWidth();
@@ -28,15 +30,17 @@ public class JavelinHudOverlay {
         if (player != null) {
             ItemStack stack = player.getMainHandItem();
 
-            if ((stack.getItem() == ModItems.JAVELIN.get() && !stack.getOrCreateTag().getBoolean("HoloHidden"))) {
+            if ((stack.getItem() == ModItems.JAVELIN.get() && !stack.getOrCreateTag().getBoolean("HoloHidden")) && Minecraft.getInstance().options.getCameraType().isFirstPerson()) {
                 RenderSystem.disableDepthTest();
                 RenderSystem.depthMask(false);
                 RenderSystem.enableBlend();
                 RenderSystem.setShader(GameRenderer::getPositionTexShader);
                 RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
                 RenderSystem.setShaderColor(1, 1, 1, 1);
+                float deltaFrame = Minecraft.getInstance().getDeltaFrameTime();
+                scopeScale = Mth.lerp(0.5F * deltaFrame, scopeScale, 1.35F);
                 float f = (float)Math.min(w, h);
-                float f1 = Math.min((float)w / f, (float)h / f) * 1.35f;
+                float f1 = Math.min((float)w / f, (float)h / f) * scopeScale;
                 int i = Mth.floor(f * f1);
                 int j = Mth.floor(f * f1);
                 int k = (w - i) / 2;
@@ -56,6 +60,8 @@ public class JavelinHudOverlay {
                 RenderSystem.enableDepthTest();
                 RenderSystem.disableBlend();
                 RenderSystem.setShaderColor(1, 1, 1, 1);
+            } else {
+                scopeScale = 1;
             }
         }
     }
