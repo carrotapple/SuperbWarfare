@@ -482,7 +482,8 @@ public class FireMessage {
         firePos.rotateY(-yRot * Mth.DEG_TO_RAD);
 
         if (!level.isClientSide()) {
-            JavelinMissileEntity missileEntity = new JavelinMissileEntity(player, level, (float) tag.getDouble("damage") * (float) tag.getDouble("levelDamageMultiple"));
+            int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), mainHandItem);
+            JavelinMissileEntity missileEntity = new JavelinMissileEntity(player, level, (float) tag.getDouble("damage") * (float) tag.getDouble("levelDamageMultiple"), monsterMultiple);
             missileEntity.setPos(player.getX() + firePos.x, player.getEyeY() + firePos.y, player.getZ() + firePos.z);
             missileEntity.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.3, player.getLookAngle().z, 3f, 1);
             missileEntity.setTargetUuid(tag.getString("TargetEntity"));

@@ -94,7 +94,7 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
                 return;
             }
             if (!living.level().isClientSide()) {
-                living.addEffect(new MobEffectInstance(ModMobEffects.SHOCK.get(), 100, volt), this.getOwner());
+                living.addEffect(new MobEffectInstance(ModMobEffects.SHOCK.get(), 100 + volt * 30, volt), this.getOwner());
             }
         }
         this.discard();

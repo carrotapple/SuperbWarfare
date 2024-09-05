@@ -148,7 +148,7 @@ public class CustomExplosion extends Explosion {
 
                         double damageFinal = (damagePercent * damagePercent + damagePercent) / 2.0D * damage;
                         if (entity instanceof Monster monster) {
-                            monster.hurt(this.damageSource, (int) damageFinal * (1 + 0.4f * this.damageMultiplier));
+                            monster.hurt(this.damageSource, (int) damageFinal * (1 + 0.2f * this.damageMultiplier));
                         } else {
                             entity.hurt(this.damageSource, (float) ((int) damageFinal));
                         }
