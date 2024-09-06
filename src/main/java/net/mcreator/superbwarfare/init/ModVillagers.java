@@ -53,7 +53,7 @@ public class ModVillagers {
             trades.get(1).add(new BasicItemListing(new ItemStack(Items.EMERALD, 1),
                     new ItemStack(ModItems.RIFLE_AMMO.get(), 3), 16, 1, 0.05f));
             trades.get(1).add(new BasicItemListing(new ItemStack(Items.EMERALD, 1),
-                    new ItemStack(ModItems.SHOTGUN_AMMO.get(), 2), 16, 1, 0.05f));
+                    new ItemStack(ModItems.SNIPER_AMMO.get(), 2), 16, 1, 0.05f));
             trades.get(1).add(new BasicItemListing(new ItemStack(Items.EMERALD, 1),
                     new ItemStack(ModItems.SHOTGUN_AMMO.get(), 2), 16, 1, 0.05f));
 
@@ -91,7 +91,7 @@ public class ModVillagers {
             trades.get(3).add(new BasicItemListing(new ItemStack(Items.EMERALD, 2),
                     new ItemStack(ModItems.RIFLE_AMMO_BOX.get(), 1), 8, 5, 0.05f));
             trades.get(3).add(new BasicItemListing(new ItemStack(Items.EMERALD, 3),
-                    new ItemStack(ModItems.SHOTGUN_AMMO_BOX.get(), 1), 8, 5, 0.05f));
+                    new ItemStack(ModItems.SNIPER_AMMO_BOX.get(), 1), 8, 5, 0.05f));
             trades.get(3).add(new BasicItemListing(new ItemStack(Items.EMERALD, 3),
                     new ItemStack(ModItems.SHOTGUN_AMMO_BOX.get(), 1), 8, 5, 0.05f));
 
