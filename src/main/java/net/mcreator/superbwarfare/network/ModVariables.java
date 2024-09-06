@@ -22,7 +22,6 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -31,11 +30,6 @@ import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModVariables {
-    @SubscribeEvent
-    public static void init(FMLCommonSetupEvent event) {
-        ModUtils.addNetworkMessage(SavedDataSyncMessage.class, SavedDataSyncMessage::buffer, SavedDataSyncMessage::new, SavedDataSyncMessage::handler);
-        ModUtils.addNetworkMessage(PlayerVariablesSyncMessage.class, PlayerVariablesSyncMessage::buffer, PlayerVariablesSyncMessage::new, PlayerVariablesSyncMessage::handler);
-    }
 
     @SubscribeEvent
     public static void init(RegisterCapabilitiesEvent event) {
@@ -126,7 +120,7 @@ public class ModVariables {
     }
 
     public static class WorldVariables extends SavedData {
-        public static final String DATA_NAME = "target_world_variables";
+        public static final String DATA_NAME = ModUtils.MODID + "_world_variables";
 
         public static WorldVariables load(CompoundTag tag) {
             WorldVariables data = new WorldVariables();
@@ -158,7 +152,7 @@ public class ModVariables {
     }
 
     public static class MapVariables extends SavedData {
-        public static final String DATA_NAME = "target_map_variables";
+        public static final String DATA_NAME = ModUtils.MODID + "_map_variables";
         public boolean pvpMode = false;
 
         public static MapVariables load(CompoundTag tag) {
@@ -245,7 +239,7 @@ public class ModVariables {
         @SubscribeEvent
         public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
             if (event.getObject() instanceof Player && !(event.getObject() instanceof FakePlayer))
-                event.addCapability(new ResourceLocation("target", "player_variables"), new PlayerVariablesProvider());
+                event.addCapability(new ResourceLocation(ModUtils.MODID, "player_variables"), new PlayerVariablesProvider());
         }
 
         private final PlayerVariables playerVariables = new PlayerVariables();
@@ -345,11 +339,6 @@ public class ModVariables {
             breathTime = nbt.getInt("breathTime");
             breathExhaustion = nbt.getBoolean("breathExhaustion");
         }
-    }
-
-    @SubscribeEvent
-    public static void registerMessage(FMLCommonSetupEvent event) {
-        ModUtils.addNetworkMessage(PlayerVariablesSyncMessage.class, PlayerVariablesSyncMessage::buffer, PlayerVariablesSyncMessage::new, PlayerVariablesSyncMessage::handler);
     }
 
     public static class PlayerVariablesSyncMessage {
