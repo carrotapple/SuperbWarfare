@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.item.gun.Trachelium;
+import net.mcreator.superbwarfare.item.gun.handgun.Trachelium;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;

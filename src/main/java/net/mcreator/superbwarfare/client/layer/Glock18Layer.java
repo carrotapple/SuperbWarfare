@@ -3,7 +3,7 @@ package net.mcreator.superbwarfare.client.layer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.item.gun.Glock18Item;
+import net.mcreator.superbwarfare.item.gun.handgun.Glock18Item;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;

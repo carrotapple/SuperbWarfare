@@ -1,4 +1,4 @@
-package net.mcreator.superbwarfare.item.gun;
+package net.mcreator.superbwarfare.item.gun.sniper;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -9,6 +9,9 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
+import net.mcreator.superbwarfare.item.gun.GunItem;
+import net.mcreator.superbwarfare.perk.Perk;
+import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.PoseTool;
 import net.mcreator.superbwarfare.tools.RarityTool;
@@ -121,14 +124,13 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState fireAnimPredicate(AnimationState event) {
+    private PlayState fireAnimPredicate(AnimationState<SentinelItem> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
-
             if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.shift"));
             }
@@ -161,7 +163,6 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
-
             if (stack.getOrCreateTag().getInt("draw_time") < 16) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.draw"));
             }
@@ -180,21 +181,6 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.idle"));
         }
         return PlayState.STOP;
-    }
-
-    private PlayState procedurePredicate(AnimationState<SentinelItem> event) {
-        if (transformType != null && transformType.firstPerson()) {
-            if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
-                if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                    this.animationProcedure = "empty";
-                    event.getController().forceAnimationReset();
-                }
-            } else if (this.animationProcedure.equals("empty")) {
-                return PlayState.STOP;
-            }
-        }
-        return PlayState.CONTINUE;
     }
 
     @Override
@@ -220,14 +206,11 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
         super.inventoryTick(itemStack, world, entity, slot, selected);
 
         var tag = itemStack.getOrCreateTag();
-
         itemStack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                 energy -> {
                     int energyStored = energy.getEnergyStored();
-
                     if (energyStored > 0) {
                         energy.extractEnergy(5, false);
-
                         tag.putDouble("sentinelChargeDamage", 0.2857142857142857 * tag.getDouble("damage") * tag.getDouble("levelDamageMultiple"));
                     } else {
                         tag.putDouble("sentinelChargeDamage", 0);
@@ -281,5 +264,10 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public String getGunDisplayName() {
         return "SENTINEL";
+    }
+
+    @Override
+    public boolean canApplyPerk(Perk perk) {
+        return PerkHelper.SNIPER_RIFLE_PERKS.test(perk);
     }
 }

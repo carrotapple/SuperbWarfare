@@ -2,7 +2,12 @@ package net.mcreator.superbwarfare.init;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.item.gun.*;
+import net.mcreator.superbwarfare.item.gun.handgun.Glock17Item;
+import net.mcreator.superbwarfare.item.gun.handgun.Glock18Item;
+import net.mcreator.superbwarfare.item.gun.handgun.M1911Item;
+import net.mcreator.superbwarfare.item.gun.handgun.Trachelium;
 import net.mcreator.superbwarfare.item.gun.rifle.*;
+import net.mcreator.superbwarfare.item.gun.sniper.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -41,10 +46,10 @@ public class ModTabs {
                                 output.accept(K98Item.getGunInstance());
                                 output.accept(MosinNagantItem.getGunInstance());
                                 output.accept(SvdItem.getGunInstance());
-                                output.accept(HuntingRifle.getGunInstance());
+                                output.accept(HuntingRifleItem.getGunInstance());
                                 output.accept(M98bItem.getGunInstance());
                                 output.accept(SentinelItem.getGunInstance());
-                                output.accept(Ntw20.getGunInstance());
+                                output.accept(Ntw20Item.getGunInstance());
                                 output.accept(M870Item.getGunInstance());
                                 output.accept(Aa12Item.getGunInstance());
                                 output.accept(Devotion.getGunInstance());

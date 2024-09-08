@@ -1,22 +1,22 @@
-package net.mcreator.superbwarfare.item.gun;
+package net.mcreator.superbwarfare.item.gun.sniper;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.client.renderer.item.Ntw20Renderer;
+import net.mcreator.superbwarfare.client.renderer.item.K98ItemRenderer;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
+import net.mcreator.superbwarfare.item.gun.GunItem;
+import net.mcreator.superbwarfare.perk.Perk;
+import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.PoseTool;
-import net.mcreator.superbwarfare.tools.RarityTool;
-import net.mcreator.superbwarfare.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
@@ -26,11 +26,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.Rarity;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -41,34 +39,24 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
+public class K98Item extends GunItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
-    public Ntw20() {
-        super(new Item.Properties().stacksTo(1).rarity(RarityTool.LEGENDARY));
-    }
-
-    @Override
-    public Set<SoundEvent> getReloadSound() {
-        return Set.of(
-                ModSounds.NTW_20_RELOAD_EMPTY.get(),
-                ModSounds.NTW_20_RELOAD_NORMAL.get(),
-                ModSounds.NTW_20_BOLT.get()
-        );
+    public K98Item() {
+        super(new Properties().stacksTo(1).rarity(Rarity.RARE));
     }
 
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
-            private final BlockEntityWithoutLevelRenderer renderer = new Ntw20Renderer();
+            private final BlockEntityWithoutLevelRenderer renderer = new K98ItemRenderer();
 
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
@@ -86,58 +74,71 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState fireAnimPredicate(AnimationState event) {
+    private PlayState fireAnimPredicate(AnimationState<K98Item> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
-
             if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.shift"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.shift"));
             }
 
             if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.fire"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.fire"));
             }
 
             if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.reload_empty"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.reload_empty"));
             }
 
-            if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.reload_normal"));
+            if (stack.getOrCreateTag().getInt("reload_stage") == 1 && stack.getOrCreateTag().getDouble("prepare") > 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.prepare"));
             }
 
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.idle"));
+            if (stack.getOrCreateTag().getDouble("load_index") == 0 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.iterativeload"));
+            }
+
+            if (stack.getOrCreateTag().getDouble("load_index") == 1 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.iterativeload2"));
+            }
+
+            if (stack.getOrCreateTag().getInt("reload_stage") == 3) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.finish"));
+            }
+
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.idle"));
         }
         return PlayState.STOP;
     }
 
-    private PlayState idlePredicate(AnimationState event) {
+    private PlayState idlePredicate(AnimationState<K98Item> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
-
-            if (stack.getOrCreateTag().getInt("draw_time") < 29) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.draw"));
+            if (stack.getOrCreateTag().getInt("draw_time") < 16) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.draw"));
             }
 
             if (player.isSprinting() && player.onGround()
-                && player.getPersistentData().getDouble("noRun") == 0
-                && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))) {
+                    && player.getPersistentData().getDouble("noRun") == 0
+                    && !(stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+                    && stack.getOrCreateTag().getInt("reload_stage") != 1
+                    && stack.getOrCreateTag().getInt("reload_stage") != 2
+                    && stack.getOrCreateTag().getInt("reload_stage") != 3) {
                 if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && stack.getOrCreateTag().getInt("bolt_action_anim") == 0) {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.run_fast"));
+                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.run_fast"));
                 } else {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.run"));
+                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.run"));
                 }
             }
 
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.idle"));
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.idle"));
         }
         return PlayState.STOP;
     }
@@ -150,15 +151,9 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
         data.add(idleController);
     }
 
-
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
-        TooltipTool.addGunTips(list, stack);
     }
 
     @Override
@@ -168,14 +163,25 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
         if (slot == EquipmentSlot.MAINHAND) {
             map = HashMultimap.create(map);
             map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER, -0.15f, AttributeModifier.Operation.MULTIPLY_BASE));
+                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER, -0.05f, AttributeModifier.Operation.MULTIPLY_BASE));
         }
         return map;
     }
 
+    @Override
+    public Set<SoundEvent> getReloadSound() {
+        return Set.of(
+                ModSounds.K_98_RELOAD_EMPTY.get(),
+                ModSounds.K_98_BOLT.get(),
+                ModSounds.K_98_PREPARE.get(),
+                ModSounds.K_98_LOOP.get(),
+                ModSounds.K_98_END.get()
+        );
+    }
+
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.NTW_20.get());
-        GunsTool.initCreativeGun(stack, ModItems.NTW_20.getId().getPath());
+        ItemStack stack = new ItemStack(ModItems.K_98.get());
+        GunsTool.initCreativeGun(stack, ModItems.K_98.getId().getPath());
         return stack;
     }
 
@@ -186,11 +192,16 @@ public class Ntw20 extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/ntw_20_icon.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/k98_icon.png");
     }
 
     @Override
     public String getGunDisplayName() {
-        return "NTW-20";
+        return " KAR-98K";
+    }
+
+    @Override
+    public boolean canApplyPerk(Perk perk) {
+        return PerkHelper.SNIPER_RIFLE_PERKS.test(perk);
     }
 }

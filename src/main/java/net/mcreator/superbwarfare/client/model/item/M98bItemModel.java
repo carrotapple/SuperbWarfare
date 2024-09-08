@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.item.gun.M98bItem;
+import net.mcreator.superbwarfare.item.gun.sniper.M98bItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.layer.HuntingRifleLayer;
 import net.mcreator.superbwarfare.client.model.item.HuntingRifleItemModel;
-import net.mcreator.superbwarfare.item.gun.HuntingRifle;
+import net.mcreator.superbwarfare.item.gun.sniper.HuntingRifleItem;
 import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
@@ -25,14 +25,14 @@ import software.bernie.geckolib.util.RenderUtils;
 import java.util.HashSet;
 import java.util.Set;
 
-public class HuntingRifleItemRenderer extends GeoItemRenderer<HuntingRifle> {
+public class HuntingRifleItemRenderer extends GeoItemRenderer<HuntingRifleItem> {
     public HuntingRifleItemRenderer() {
         super(new HuntingRifleItemModel());
         this.addRenderLayer(new HuntingRifleLayer(this));
     }
 
     @Override
-    public RenderType getRenderType(HuntingRifle animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(HuntingRifleItem animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
@@ -41,7 +41,7 @@ public class HuntingRifleItemRenderer extends GeoItemRenderer<HuntingRifle> {
     protected MultiBufferSource currentBuffer;
     protected RenderType renderType;
     public ItemDisplayContext transformType;
-    protected HuntingRifle animatable;
+    protected HuntingRifleItem animatable;
     private final Set<String> hiddenBones = new HashSet<>();
 
     @Override
@@ -53,7 +53,7 @@ public class HuntingRifleItemRenderer extends GeoItemRenderer<HuntingRifle> {
     }
 
     @Override
-    public void actuallyRender(PoseStack matrixStackIn, HuntingRifle animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
+    public void actuallyRender(PoseStack matrixStackIn, HuntingRifleItem animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
                                int packedOverlayIn, float red, float green, float blue, float alpha) {
         this.currentBuffer = renderTypeBuffer;
         this.renderType = type;
@@ -65,7 +65,7 @@ public class HuntingRifleItemRenderer extends GeoItemRenderer<HuntingRifle> {
     }
 
     @Override
-    public void renderRecursively(PoseStack stack, HuntingRifle animatable, GeoBone bone, RenderType type, MultiBufferSource buffer, VertexConsumer bufferIn, boolean isReRender, float partialTick, int packedLightIn, int packedOverlayIn, float red,
+    public void renderRecursively(PoseStack stack, HuntingRifleItem animatable, GeoBone bone, RenderType type, MultiBufferSource buffer, VertexConsumer bufferIn, boolean isReRender, float partialTick, int packedLightIn, int packedOverlayIn, float red,
                                   float green, float blue, float alpha) {
         Minecraft mc = Minecraft.getInstance();
         String name = bone.getName();
@@ -128,7 +128,7 @@ public class HuntingRifleItemRenderer extends GeoItemRenderer<HuntingRifle> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(HuntingRifle instance) {
+    public ResourceLocation getTextureLocation(HuntingRifleItem instance) {
         return super.getTextureLocation(instance);
     }
 }

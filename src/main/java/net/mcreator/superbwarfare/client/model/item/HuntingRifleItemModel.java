@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.item.gun.HuntingRifle;
+import net.mcreator.superbwarfare.item.gun.sniper.HuntingRifleItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -12,24 +12,24 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class HuntingRifleItemModel extends GeoModel<HuntingRifle> {
+public class HuntingRifleItemModel extends GeoModel<HuntingRifleItem> {
     @Override
-    public ResourceLocation getAnimationResource(HuntingRifle animatable) {
+    public ResourceLocation getAnimationResource(HuntingRifleItem animatable) {
         return new ResourceLocation(ModUtils.MODID, "animations/hunting_rifle.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(HuntingRifle animatable) {
+    public ResourceLocation getModelResource(HuntingRifleItem animatable) {
         return new ResourceLocation(ModUtils.MODID, "geo/hunting_rifle.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(HuntingRifle animatable) {
+    public ResourceLocation getTextureResource(HuntingRifleItem animatable) {
         return new ResourceLocation(ModUtils.MODID, "textures/item/huntingrifle.png");
     }
 
     @Override
-    public void setCustomAnimations(HuntingRifle animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(HuntingRifleItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("lieqiang");
 

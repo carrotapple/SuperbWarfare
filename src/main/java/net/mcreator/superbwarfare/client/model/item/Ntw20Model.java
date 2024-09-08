@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.item.gun.Ntw20;
+import net.mcreator.superbwarfare.item.gun.sniper.Ntw20Item;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -13,24 +13,24 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class Ntw20Model extends GeoModel<Ntw20> {
+public class Ntw20Model extends GeoModel<Ntw20Item> {
     @Override
-    public ResourceLocation getAnimationResource(Ntw20 animatable) {
+    public ResourceLocation getAnimationResource(Ntw20Item animatable) {
         return new ResourceLocation(ModUtils.MODID, "animations/ntw_20.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(Ntw20 animatable) {
+    public ResourceLocation getModelResource(Ntw20Item animatable) {
         return new ResourceLocation(ModUtils.MODID, "geo/ntw_20.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(Ntw20 animatable) {
+    public ResourceLocation getTextureResource(Ntw20Item animatable) {
         return new ResourceLocation(ModUtils.MODID, "textures/item/ntw_20.png");
     }
 
     @Override
-    public void setCustomAnimations(Ntw20 animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(Ntw20Item animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone scope = getAnimationProcessor().getBone("scope");

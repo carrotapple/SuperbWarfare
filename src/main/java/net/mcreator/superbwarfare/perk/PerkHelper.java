@@ -215,5 +215,39 @@ public class PerkHelper {
         }
     };
 
+    public static final Predicate<Perk> HANDGUN_PERKS = perk -> {
+        switch (perk.type) {
+            case AMMO -> {
+                return true;
+            }
+            case FUNCTIONAL -> {
+                return perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FIELD_DOCTOR.get() || perk == ModPerks.SUBSISTENCE.get();
+            }
+            case DAMAGE -> {
+                return perk == ModPerks.KILL_CLIP.get() || perk == ModPerks.GUTSHOT_STRAIGHT.get() || perk == ModPerks.MONSTER_HUNTER.get();
+            }
+            default -> {
+                return false;
+            }
+        }
+    };
+
+    public static final Predicate<Perk> SNIPER_RIFLE_PERKS = perk -> {
+        switch (perk.type) {
+            case AMMO -> {
+                return true;
+            }
+            case FUNCTIONAL -> {
+                return perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FOURTH_TIMES_CHARM.get();
+            }
+            case DAMAGE -> {
+                return perk == ModPerks.KILL_CLIP.get() || perk == ModPerks.MONSTER_HUNTER.get();
+            }
+            default -> {
+                return false;
+            }
+        }
+    };
+
 
 }

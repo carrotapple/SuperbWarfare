@@ -1,4 +1,4 @@
-package net.mcreator.superbwarfare.item.gun;
+package net.mcreator.superbwarfare.item.gun.handgun;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -8,14 +8,15 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
+import net.mcreator.superbwarfare.item.gun.GunItem;
+import net.mcreator.superbwarfare.perk.Perk;
+import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.PoseTool;
-import net.mcreator.superbwarfare.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
@@ -28,8 +29,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -40,7 +39,6 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -76,7 +74,7 @@ public class Glock18Item extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState fireAnimPredicate(AnimationState event) {
+    private PlayState fireAnimPredicate(AnimationState<Glock18Item> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
@@ -115,7 +113,6 @@ public class Glock18Item extends GunItem implements GeoItem, AnimatedItem {
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
-
             if (stack.getOrCreateTag().getInt("draw_time") < 10) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.draw"));
             }
@@ -147,11 +144,6 @@ public class Glock18Item extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
-        TooltipTool.addGunTips(list, stack);
     }
 
     @Override
@@ -193,5 +185,10 @@ public class Glock18Item extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public String getGunDisplayName() {
         return " GLOCK-18";
+    }
+
+    @Override
+    public boolean canApplyPerk(Perk perk) {
+        return PerkHelper.HANDGUN_PERKS.test(perk);
     }
 }

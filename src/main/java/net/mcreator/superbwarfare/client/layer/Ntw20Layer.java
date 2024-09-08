@@ -3,7 +3,7 @@ package net.mcreator.superbwarfare.client.layer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.item.gun.Ntw20;
+import net.mcreator.superbwarfare.item.gun.sniper.Ntw20Item;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -12,15 +12,15 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
-public class Ntw20Layer extends GeoRenderLayer<Ntw20> {
+public class Ntw20Layer extends GeoRenderLayer<Ntw20Item> {
     private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/item/ntw_20_e.png");
 
-    public Ntw20Layer(GeoRenderer<Ntw20> entityRenderer) {
+    public Ntw20Layer(GeoRenderer<Ntw20Item> entityRenderer) {
         super(entityRenderer);
     }
 
     @Override
-    public void render(PoseStack poseStack, Ntw20 animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+    public void render(PoseStack poseStack, Ntw20Item animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         RenderType glowRenderType = RenderType.eyes(LAYER);
         getRenderer().reRender(getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, glowRenderType, bufferSource.getBuffer(glowRenderType), partialTick, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
     }

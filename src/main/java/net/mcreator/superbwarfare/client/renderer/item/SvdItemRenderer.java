@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.layer.SvdLayer;
 import net.mcreator.superbwarfare.client.model.item.SvdItemModel;
-import net.mcreator.superbwarfare.item.gun.SvdItem;
+import net.mcreator.superbwarfare.item.gun.sniper.SvdItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;

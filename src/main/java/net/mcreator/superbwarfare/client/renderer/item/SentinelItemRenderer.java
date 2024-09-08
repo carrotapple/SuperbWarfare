@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.layer.SentinelLayer;
 import net.mcreator.superbwarfare.client.model.item.SentinelItemModel;
-import net.mcreator.superbwarfare.item.gun.SentinelItem;
+import net.mcreator.superbwarfare.item.gun.sniper.SentinelItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;

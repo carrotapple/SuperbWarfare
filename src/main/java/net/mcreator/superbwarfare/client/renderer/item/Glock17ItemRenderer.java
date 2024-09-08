@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.layer.Glock17Layer;
 import net.mcreator.superbwarfare.client.model.item.Glock17ItemModel;
-import net.mcreator.superbwarfare.item.gun.Glock17Item;
+import net.mcreator.superbwarfare.item.gun.handgun.Glock17Item;
 import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.layer.Ntw20Layer;
 import net.mcreator.superbwarfare.client.model.item.Ntw20Model;
-import net.mcreator.superbwarfare.item.gun.Ntw20;
+import net.mcreator.superbwarfare.item.gun.sniper.Ntw20Item;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;
@@ -26,14 +26,14 @@ import software.bernie.geckolib.util.RenderUtils;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Ntw20Renderer extends GeoItemRenderer<Ntw20> {
+public class Ntw20Renderer extends GeoItemRenderer<Ntw20Item> {
     public Ntw20Renderer() {
         super(new Ntw20Model());
         this.addRenderLayer(new Ntw20Layer(this));
     }
 
     @Override
-    public RenderType getRenderType(Ntw20 animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(Ntw20Item animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
@@ -42,7 +42,7 @@ public class Ntw20Renderer extends GeoItemRenderer<Ntw20> {
     protected MultiBufferSource currentBuffer;
     protected RenderType renderType;
     public ItemDisplayContext transformType;
-    protected Ntw20 animatable;
+    protected Ntw20Item animatable;
     private final Set<String> hiddenBones = new HashSet<>();
     private final Set<String> suppressedBones = new HashSet<>();
 
@@ -55,7 +55,7 @@ public class Ntw20Renderer extends GeoItemRenderer<Ntw20> {
     }
 
     @Override
-    public void actuallyRender(PoseStack matrixStackIn, Ntw20 animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
+    public void actuallyRender(PoseStack matrixStackIn, Ntw20Item animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
                                int packedOverlayIn, float red, float green, float blue, float alpha) {
         this.currentBuffer = renderTypeBuffer;
         this.renderType = type;
@@ -67,7 +67,7 @@ public class Ntw20Renderer extends GeoItemRenderer<Ntw20> {
     }
 
     @Override
-    public void renderRecursively(PoseStack stack, Ntw20 animatable, GeoBone bone, RenderType type, MultiBufferSource buffer, VertexConsumer bufferIn, boolean isReRender, float partialTick, int packedLightIn, int packedOverlayIn, float red,
+    public void renderRecursively(PoseStack stack, Ntw20Item animatable, GeoBone bone, RenderType type, MultiBufferSource buffer, VertexConsumer bufferIn, boolean isReRender, float partialTick, int packedLightIn, int packedOverlayIn, float red,
                                   float green, float blue, float alpha) {
         Minecraft mc = Minecraft.getInstance();
         String name = bone.getName();
@@ -143,7 +143,7 @@ public class Ntw20Renderer extends GeoItemRenderer<Ntw20> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Ntw20 instance) {
+    public ResourceLocation getTextureLocation(Ntw20Item instance) {
         return super.getTextureLocation(instance);
     }
 }
