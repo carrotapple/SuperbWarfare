@@ -12,6 +12,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class PerkHelper {
     private static final String TAG_PERK_ID = "id";
@@ -177,5 +178,42 @@ public class PerkHelper {
     public static String makeId(ResourceLocation resourceLocation) {
         return resourceLocation.getNamespace() + ":" + resourceLocation.getPath();
     }
+
+    public static final Predicate<Perk> SHOTGUN_PERKS = perk -> {
+        switch (perk.type) {
+            case AMMO -> {
+                return true;
+            }
+            case FUNCTIONAL -> {
+                return perk == ModPerks.SUBSISTENCE.get();
+            }
+            case DAMAGE -> {
+                return perk == ModPerks.GUTSHOT_STRAIGHT.get() || perk == ModPerks.MONSTER_HUNTER.get();
+            }
+            default -> {
+                return false;
+            }
+        }
+    };
+
+    public static final Predicate<Perk> RIFLE_PERKS = perk -> {
+        switch (perk.type) {
+            case AMMO -> {
+                return true;
+            }
+            case FUNCTIONAL -> {
+                return perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FIELD_DOCTOR.get() ||
+                        perk == ModPerks.FOURTH_TIMES_CHARM.get() || perk == ModPerks.SUBSISTENCE.get();
+            }
+            case DAMAGE -> {
+                return perk == ModPerks.KILL_CLIP.get() || perk == ModPerks.GUTSHOT_STRAIGHT.get() ||
+                        perk == ModPerks.MONSTER_HUNTER.get() || perk == ModPerks.HEAD_SEEKER.get();
+            }
+            default -> {
+                return false;
+            }
+        }
+    };
+
 
 }

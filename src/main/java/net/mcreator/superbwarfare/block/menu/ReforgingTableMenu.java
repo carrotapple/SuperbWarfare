@@ -229,21 +229,21 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         ItemStack result = gun.copy();
 
         if (!ammo.isEmpty() && ammo.getItem() instanceof PerkItem perkItem) {
-            if (gunItem.canApplyPerk(result, perkItem.getPerk())) {
+            if (gunItem.canApplyPerk(perkItem.getPerk())) {
                 PerkHelper.setPerk(result, perkItem.getPerk(), this.ammoPerkLevel.get());
                 this.container.setItem(AMMO_PERK_SLOT, ItemStack.EMPTY);
             }
         }
 
         if (!func.isEmpty() && func.getItem() instanceof PerkItem perkItem) {
-            if (gunItem.canApplyPerk(result, perkItem.getPerk())) {
+            if (gunItem.canApplyPerk(perkItem.getPerk())) {
                 PerkHelper.setPerk(result, perkItem.getPerk(), this.funcPerkLevel.get());
                 this.container.setItem(FUNC_PERK_SLOT, ItemStack.EMPTY);
             }
         }
 
         if (!damage.isEmpty() && damage.getItem() instanceof PerkItem perkItem) {
-            if (gunItem.canApplyPerk(result, perkItem.getPerk())) {
+            if (gunItem.canApplyPerk(perkItem.getPerk())) {
                 PerkHelper.setPerk(result, perkItem.getPerk(), this.damagePerkLevel.get());
                 this.container.setItem(DAMAGE_PERK_SLOT, ItemStack.EMPTY);
             }
@@ -410,9 +410,9 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
                 ItemStack funcPerk = this.container.getItem(FUNC_PERK_SLOT);
                 ItemStack damagePerk = this.container.getItem(DAMAGE_PERK_SLOT);
 
-                boolean flag1 = ammoPerk.isEmpty() || (ammoPerk.getItem() instanceof PerkItem perkItem && gunItem.canApplyPerk(pStack, perkItem.getPerk()));
-                boolean flag2 = funcPerk.isEmpty() || (funcPerk.getItem() instanceof PerkItem perkItem && gunItem.canApplyPerk(pStack, perkItem.getPerk()));
-                boolean flag3 = damagePerk.isEmpty() || (damagePerk.getItem() instanceof PerkItem perkItem && gunItem.canApplyPerk(pStack, perkItem.getPerk()));
+                boolean flag1 = ammoPerk.isEmpty() || (ammoPerk.getItem() instanceof PerkItem perkItem && gunItem.canApplyPerk(perkItem.getPerk()));
+                boolean flag2 = funcPerk.isEmpty() || (funcPerk.getItem() instanceof PerkItem perkItem && gunItem.canApplyPerk(perkItem.getPerk()));
+                boolean flag3 = damagePerk.isEmpty() || (damagePerk.getItem() instanceof PerkItem perkItem && gunItem.canApplyPerk(perkItem.getPerk()));
 
                 return flag1 && flag2 && flag3 && this.container.getItem(RESULT_SLOT).isEmpty();
             }
@@ -445,7 +445,9 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         }
 
         public boolean mayPlace(ItemStack pStack) {
-            return pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == type && !container.getItem(INPUT_SLOT).isEmpty();
+            return pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == type
+                    && !container.getItem(INPUT_SLOT).isEmpty() && container.getItem(INPUT_SLOT).getItem() instanceof GunItem gunItem
+                    && gunItem.canApplyPerk(perkItem.getPerk());
         }
 
         public int getMaxStackSize() {

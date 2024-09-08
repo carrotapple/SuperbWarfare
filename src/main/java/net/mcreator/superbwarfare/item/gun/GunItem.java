@@ -182,7 +182,7 @@ public abstract class GunItem extends Item {
         }
     }
 
-    public boolean canApplyPerk(ItemStack stack, Perk perk) {
+    public boolean canApplyPerk(Perk perk) {
         return true;
     }
 }

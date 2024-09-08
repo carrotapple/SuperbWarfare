@@ -25,7 +25,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 
-import java.util.ArrayList;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -42,8 +41,8 @@ public class ModVariables {
         public static void onPlayerLoggedInSyncPlayerVariables(PlayerEvent.PlayerLoggedInEvent event) {
             if (event.getEntity().level().isClientSide()) return;
 
-            for (Entity entity : new ArrayList<>(event.getEntity().level().players())) {
-                entity.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).syncPlayerVariables(entity);
+            for (Player player : event.getEntity().level().players()) {
+                player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).syncPlayerVariables(player);
             }
         }
 
@@ -51,8 +50,8 @@ public class ModVariables {
         public static void onPlayerRespawnedSyncPlayerVariables(PlayerEvent.PlayerRespawnEvent event) {
             if (event.getEntity().level().isClientSide()) return;
 
-            for (Entity entity : new ArrayList<>(event.getEntity().level().players())) {
-                entity.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).syncPlayerVariables(entity);
+            for (Player player : event.getEntity().level().players()) {
+                player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).syncPlayerVariables(player);
             }
         }
 
@@ -60,8 +59,8 @@ public class ModVariables {
         public static void onPlayerChangedDimensionSyncPlayerVariables(PlayerEvent.PlayerChangedDimensionEvent event) {
             if (event.getEntity().level().isClientSide()) return;
 
-            for (Entity entity : new ArrayList<>(event.getEntity().level().players())) {
-                entity.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).syncPlayerVariables(entity);
+            for (Player player : event.getEntity().level().players()) {
+                player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).syncPlayerVariables(player);
             }
         }
 
@@ -92,8 +91,8 @@ public class ModVariables {
 
             if (event.getEntity().level().isClientSide()) return;
 
-            for (Entity entity : new ArrayList<>(event.getEntity().level().players())) {
-                entity.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).syncPlayerVariables(entity);
+            for (Player player : event.getEntity().level().players()) {
+                player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()).syncPlayerVariables(player);
             }
         }
 

@@ -8,6 +8,8 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
+import net.mcreator.superbwarfare.perk.Perk;
+import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.PoseTool;
 import net.mcreator.superbwarfare.tools.RarityTool;
@@ -78,7 +80,7 @@ public class Aa12Item extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState event) {
+    private PlayState idlePredicate(AnimationState<Aa12Item> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
@@ -123,7 +125,7 @@ public class Aa12Item extends GunItem implements GeoItem, AnimatedItem {
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState event) {
+    private PlayState procedurePredicate(AnimationState<Aa12Item> event) {
         if (transformType != null && transformType.firstPerson()) {
             if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
@@ -192,5 +194,10 @@ public class Aa12Item extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public String getGunDisplayName() {
         return "    AA-12";
+    }
+
+    @Override
+    public boolean canApplyPerk(Perk perk) {
+        return PerkHelper.SHOTGUN_PERKS.test(perk);
     }
 }
