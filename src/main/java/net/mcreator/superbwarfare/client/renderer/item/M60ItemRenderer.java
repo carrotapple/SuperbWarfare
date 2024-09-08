@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.layer.M60Layer;
 import net.mcreator.superbwarfare.client.model.item.M60ItemModel;
-import net.mcreator.superbwarfare.item.gun.M60Item;
+import net.mcreator.superbwarfare.item.gun.machinegun.M60Item;
 import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;

@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.item.gun.Devotion;
+import net.mcreator.superbwarfare.item.gun.machinegun.DevotionItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -13,25 +13,25 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class DevotionItemModel extends GeoModel<Devotion> {
+public class DevotionItemModel extends GeoModel<DevotionItem> {
     @Override
-    public ResourceLocation getAnimationResource(Devotion animatable) {
+    public ResourceLocation getAnimationResource(DevotionItem animatable) {
         return new ResourceLocation(ModUtils.MODID, "animations/devotion.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(Devotion animatable) {
+    public ResourceLocation getModelResource(DevotionItem animatable) {
         return new ResourceLocation(ModUtils.MODID, "geo/devotion.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(Devotion animatable) {
+    public ResourceLocation getTextureResource(DevotionItem animatable) {
         return new ResourceLocation(ModUtils.MODID, "textures/item/devotion.png");
     }
 
 
     @Override
-    public void setCustomAnimations(Devotion animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(DevotionItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone l = getAnimationProcessor().getBone("l");
         CoreGeoBone r = getAnimationProcessor().getBone("r");

@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.item.gun.Abekiri;
+import net.mcreator.superbwarfare.item.gun.shotgun.AbekiriItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -12,24 +12,24 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class AbekiriItemModel extends GeoModel<Abekiri> {
+public class AbekiriItemModel extends GeoModel<AbekiriItem> {
     @Override
-    public ResourceLocation getAnimationResource(Abekiri animatable) {
+    public ResourceLocation getAnimationResource(AbekiriItem animatable) {
         return new ResourceLocation(ModUtils.MODID, "animations/abekiri.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(Abekiri animatable) {
+    public ResourceLocation getModelResource(AbekiriItem animatable) {
         return new ResourceLocation(ModUtils.MODID, "geo/abekiri.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(Abekiri animatable) {
+    public ResourceLocation getTextureResource(AbekiriItem animatable) {
         return new ResourceLocation(ModUtils.MODID, "textures/item/abekiri.png");
     }
 
     @Override
-    public void setCustomAnimations(Abekiri animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(AbekiriItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
 

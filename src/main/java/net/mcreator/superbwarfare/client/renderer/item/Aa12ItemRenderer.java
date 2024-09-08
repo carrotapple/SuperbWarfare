@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.layer.Aa12Layer;
 import net.mcreator.superbwarfare.client.model.item.Aa12ItemModel;
-import net.mcreator.superbwarfare.item.gun.Aa12Item;
+import net.mcreator.superbwarfare.item.gun.shotgun.Aa12Item;
 import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;

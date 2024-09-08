@@ -13,7 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -29,7 +28,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -41,7 +39,6 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -150,11 +147,6 @@ public class JavelinItem extends GunItem implements GeoItem, AnimatedItem {
         return map;
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
-        TooltipTool.addGunTips(list, stack);
-    }
-
     public static int getAmmoCount(Player player) {
         int sum = 0;
         for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
@@ -194,15 +186,12 @@ public class JavelinItem extends GunItem implements GeoItem, AnimatedItem {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.JAVELIN_LOCK.get(), 2, 1);
                 }
 
-                if (tag.getInt("SeekTime") > 20 && seekingEntity instanceof LivingEntity _entity && !_entity.level().isClientSide()) {
-                    _entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0));
+                if (tag.getInt("SeekTime") > 20 && seekingEntity instanceof LivingEntity living && !living.level().isClientSide()) {
+                    living.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0));
                     if (player instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, ModSounds.JAVELIN_LOCKON.get(), 2, 1);
                     }
                 }
-//                if (seekingEntity != null) {
-//                    player.displayClientMessage(Component.literal(" " + tag.getInt("SeekTime")), true);
-//                }
             }
         }
     }
