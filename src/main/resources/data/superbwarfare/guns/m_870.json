@@ -22,5 +22,6 @@
   "prepare_load_time": 36,
   "iterative_time": 16,
   "finish_time": 12,
-  "BypassesArmor": 0.05
+  "BypassesArmor": 0.05,
+  "SoundRadius": 16
 }

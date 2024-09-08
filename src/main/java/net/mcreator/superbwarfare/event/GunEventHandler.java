@@ -227,13 +227,13 @@ public class GunEventHandler {
 
             if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_FIRE_1P.get(), 2f, pitch);
-                player.playSound(ModSounds.MINIGUN_FIRE_3P.get(), 4f, pitch);
-                player.playSound(ModSounds.MINIGUN_FAR.get(), 12f, pitch);
-                player.playSound(ModSounds.MINIGUN_VERYFAR.get(), 24f, pitch);
+                player.playSound(ModSounds.MINIGUN_FIRE_3P.get(), (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.2f, pitch);
+                player.playSound(ModSounds.MINIGUN_FAR.get(), (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.5f, pitch);
+                player.playSound(ModSounds.MINIGUN_VERYFAR.get(), (float) stack.getOrCreateTag().getDouble("SoundRadius"), pitch);
 
                 if (perk == ModPerks.BEAST_BULLET.get()) {
-                    player.playSound(ModSounds.HENG.get(), 5f, pitch);
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.HENG.get(), 5f, pitch);
+                    player.playSound(ModSounds.HENG.get(), 4f, pitch);
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.HENG.get(), 4f, pitch);
                 }
             }
 
@@ -281,17 +281,17 @@ public class GunEventHandler {
 
                     SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, "sentinel_charge_fire_3p"));
                     if (sound3p != null) {
-                        player.level().playSound(null, player.getOnPos(), sound3p, SoundSource.PLAYERS, 4f, 1f);
+                        player.level().playSound(null, player.getOnPos(), sound3p, SoundSource.PLAYERS, (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.2f, 1f);
                     }
 
                     SoundEvent soundFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, "sentinel_charge_far"));
                     if (soundFar != null) {
-                        player.playSound(soundFar, 12f, 1f);
+                        player.level().playSound(null, player.getOnPos(), soundFar, SoundSource.PLAYERS,  (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.5f, 1f);
                     }
 
                     SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, "sentinel_charge_veryfar"));
                     if (soundVeryFar != null) {
-                        player.playSound(soundVeryFar, 24f, 1f);
+                        player.level().playSound(null, player.getOnPos(), soundVeryFar, SoundSource.PLAYERS,  (float) stack.getOrCreateTag().getDouble("SoundRadius"), 1f);
                     }
 
                     return;
@@ -301,10 +301,10 @@ public class GunEventHandler {
             var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
             if (perk == ModPerks.BEAST_BULLET.get()) {
-                player.playSound(ModSounds.HENG.get(), 5f, 1f);
+                player.playSound(ModSounds.HENG.get(), 4f, 1f);
 
                 if (player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.HENG.get(), 5f, 1f);
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.HENG.get(), 4f, 1f);
                 }
             }
 
@@ -315,17 +315,17 @@ public class GunEventHandler {
 
             SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, name + "_fire_3p"));
             if (sound3p != null) {
-                player.level().playSound(null, player.getOnPos(), sound3p, SoundSource.PLAYERS, 4f, 1f);
+                player.level().playSound(null, player.getOnPos(), sound3p, SoundSource.PLAYERS, (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.2f, 1f);
             }
 
             SoundEvent soundFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, name + "_far"));
             if (soundFar != null) {
-                player.playSound(soundFar, 12f, 1f);
+                player.level().playSound(null, player.getOnPos(), soundFar, SoundSource.PLAYERS,  (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.5f, 1f);
             }
 
             SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, name + "_veryfar"));
             if (soundVeryFar != null) {
-                player.playSound(soundVeryFar, 24f, 1f);
+                player.level().playSound(null, player.getOnPos(), soundVeryFar, SoundSource.PLAYERS,  (float) stack.getOrCreateTag().getDouble("SoundRadius"), 1f);
             }
         }
     }

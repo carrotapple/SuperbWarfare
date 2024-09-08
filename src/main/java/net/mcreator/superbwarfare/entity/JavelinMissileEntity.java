@@ -61,7 +61,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
     }
 
     public JavelinMissileEntity(LivingEntity entity, Level level, float damage, int monsterMultiplier) {
-        super(ModEntities.RPG_ROCKET.get(), entity, level);
+        super(ModEntities.JAVELIN_MISSILE.get(), entity, level);
         this.damage = damage;
         this.monsterMultiplier = monsterMultiplier;
     }

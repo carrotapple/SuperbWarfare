@@ -22,5 +22,6 @@
   "burst_size": 1,
   "normal_reload_time": 64,
   "empty_reload_time": 86,
-  "BypassesArmor": 0.6
+  "BypassesArmor": 0.6,
+  "SoundRadius": 18
 }
