@@ -1,13 +1,14 @@
-package net.mcreator.superbwarfare.item.gun;
+package net.mcreator.superbwarfare.item.gun.launcher;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.client.renderer.item.M79ItemRenderer;
+import net.mcreator.superbwarfare.client.renderer.item.RpgItemRenderer;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
+import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.PoseTool;
 import net.mcreator.superbwarfare.tools.TooltipTool;
@@ -44,25 +45,20 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class M79Item extends GunItem implements GeoItem, AnimatedItem {
+public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
-    @Override
-    public Set<SoundEvent> getReloadSound() {
-        return Set.of(ModSounds.M_79_RELOAD_EMPTY.get());
-    }
-
-    public M79Item() {
-        super(new Item.Properties().stacksTo(1).fireResistant().rarity(Rarity.RARE));
+    public RpgItem() {
+        super(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     }
 
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
-            private final BlockEntityWithoutLevelRenderer renderer = new M79ItemRenderer();
+            private final BlockEntityWithoutLevelRenderer renderer = new RpgItemRenderer();
 
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
@@ -87,40 +83,42 @@ public class M79Item extends GunItem implements GeoItem, AnimatedItem {
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
-
-            if (stack.getOrCreateTag().getInt("draw_time") < 16) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m79.draw"));
+            var tag = stack.getOrCreateTag();
+            if (tag.getInt("draw_time") < 16) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.rpg.draw"));
             }
 
-            if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m79.fire"));
+            if (tag.getInt("fire_animation") > 0) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.rpg.fire"));
             }
 
             if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m79.reload"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.rpg.reload"));
             }
 
             if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
                 if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m79.run_fast"));
+                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.rpg.run_fast"));
                 } else {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m79.run"));
+                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.rpg.run"));
                 }
             }
 
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m79.idle"));
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.rpg.idle"));
         }
         return PlayState.STOP;
     }
 
     private PlayState procedurePredicate(AnimationState event) {
         if (transformType != null && transformType.firstPerson()) {
-            if (!(this.animationProcedure.equals("empty")) && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+            if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
                 if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                     this.animationProcedure = "empty";
                     event.getController().forceAnimationReset();
                 }
+            } else if (this.animationProcedure.equals("empty")) {
+                return PlayState.STOP;
             }
         }
         return PlayState.CONTINUE;
@@ -146,7 +144,7 @@ public class M79Item extends GunItem implements GeoItem, AnimatedItem {
         if (slot == EquipmentSlot.MAINHAND) {
             map = HashMultimap.create(map);
             map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER, -0.07f, AttributeModifier.Operation.MULTIPLY_BASE));
+                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER, -0.11f, AttributeModifier.Operation.MULTIPLY_BASE));
         }
         return map;
     }
@@ -168,20 +166,28 @@ public class M79Item extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
+    public Set<SoundEvent> getReloadSound() {
+        return Set.of(ModSounds.RPG_RELOAD_EMPTY.get());
+    }
+
+    @Override
     public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemStack, world, entity, slot, selected);
+
         if (entity instanceof Player player) {
-            itemStack.getOrCreateTag().putInt("max_ammo", getAmmoCount(player));
+            var tag = itemStack.getOrCreateTag();
+            tag.putInt("max_ammo", getAmmoCount(player));
+
         }
     }
 
     protected static boolean check(ItemStack stack) {
-        return stack.getItem() == ModItems.GRENADE_40MM.get();
+        return stack.getItem() == ModItems.ROCKET.get();
     }
 
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.M_79.get());
-        GunsTool.initCreativeGun(stack, ModItems.M_79.getId().getPath());
+        ItemStack stack = new ItemStack(ModItems.RPG.get());
+        GunsTool.initCreativeGun(stack, ModItems.RPG.getId().getPath());
         return stack;
     }
 
@@ -192,11 +198,11 @@ public class M79Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/m79_icon.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/rpg_icon.png");
     }
 
     @Override
     public String getGunDisplayName() {
-        return "M79 LAUNCHER";
+        return " RPG-7";
     }
 }

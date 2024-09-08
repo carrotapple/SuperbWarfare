@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.client.renderer.item;
 
 import net.mcreator.superbwarfare.client.model.item.JavelinItemModel;
-import net.mcreator.superbwarfare.item.gun.JavelinItem;
+import net.mcreator.superbwarfare.item.gun.launcher.JavelinItem;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;

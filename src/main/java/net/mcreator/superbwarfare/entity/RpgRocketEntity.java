@@ -48,21 +48,24 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
     public String animationprocedure = "empty";
 
-    private int monsterMultiplier = 0;
+    private float monsterMultiplier = 0.0f;
     private float damage = 150f;
 
     public RpgRocketEntity(EntityType<? extends RpgRocketEntity> type, Level world) {
         super(type, world);
     }
 
-    public RpgRocketEntity(LivingEntity entity, Level level, float damage, int monsterMultiplier) {
+    public RpgRocketEntity(LivingEntity entity, Level level, float damage) {
         super(ModEntities.RPG_ROCKET.get(), entity, level);
         this.damage = damage;
-        this.monsterMultiplier = monsterMultiplier;
     }
 
     public RpgRocketEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
         this(ModEntities.RPG_ROCKET.get(), level);
+    }
+
+    public void setMonsterMultiplier(float monsterMultiplier) {
+        this.monsterMultiplier = monsterMultiplier;
     }
 
     @Override
@@ -82,7 +85,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        float damageMultiplier = 1 + 0.2f * this.monsterMultiplier;
+        float damageMultiplier = 1 + this.monsterMultiplier;
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {

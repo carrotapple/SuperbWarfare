@@ -65,6 +65,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+@SuppressWarnings({"unused", "UnusedReturnValue", "SuspiciousNameCombination"})
 public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnData, GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Float> COLOR_R = SynchedEntityData.defineId(ProjectileEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> COLOR_G = SynchedEntityData.defineId(ProjectileEntity.class, EntityDataSerializers.FLOAT);
@@ -73,8 +74,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
-    private static final Predicate<Entity> PROJECTILE_TARGETS = input -> input != null && input.isPickable() && !input.isSpectator() && input.isAlive();
 
+    private static final Predicate<Entity> PROJECTILE_TARGETS = input -> input != null && input.isPickable() && !input.isSpectator() && input.isAlive();
     private static final Predicate<BlockState> IGNORE_LEAVES = input -> input != null && (input.getBlock() instanceof LeavesBlock
             || input.getBlock() instanceof FenceBlock
             || input.getBlock() instanceof IronBarsBlock
@@ -82,11 +83,12 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             || input.getBlock() instanceof DoorBlock
             || input.getBlock() instanceof TrapDoorBlock
             || input.getBlock() instanceof BarbedWireBlock);
+
     protected LivingEntity shooter;
     protected int shooterId;
     private float damage = 1f;
     private float headShot = 1f;
-    private int monsterMultiple = 0;
+    private float monsterMultiple = 0.0f;
     private float legShot = 0.5f;
     private boolean beast = false;
     private boolean zoom = false;
@@ -205,25 +207,19 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         }
         Vec3 hitBoxPos = hitPos.subtract(entity.position());
         boolean headshot = false;
-        boolean legshot = false;
+        boolean legShot = false;
         float eyeHeight = entity.getEyeHeight();
         float BodyHeight = entity.getBbHeight();
-        if ((eyeHeight - 0.35) < hitBoxPos.y && hitBoxPos.y < (eyeHeight + 0.4) && !(entity instanceof ClaymoreEntity
-                || entity instanceof MortarEntity
-                || entity instanceof ICannonEntity
-                || entity instanceof DroneEntity
-        )) {
+        if ((eyeHeight - 0.35) < hitBoxPos.y && hitBoxPos.y < (eyeHeight + 0.4) &&
+                !(entity instanceof ClaymoreEntity || entity instanceof MortarEntity || entity instanceof ICannonEntity || entity instanceof DroneEntity)) {
             headshot = true;
         }
-        if (hitBoxPos.y < (0.33 * BodyHeight) && !(entity instanceof ClaymoreEntity
-                || entity instanceof MortarEntity
-                || entity instanceof ICannonEntity
-                || entity instanceof DroneEntity
-        )) {
-            legshot = true;
+        if (hitBoxPos.y < (0.33 * BodyHeight) && !(entity instanceof ClaymoreEntity || entity instanceof MortarEntity ||
+                entity instanceof ICannonEntity || entity instanceof DroneEntity)) {
+            legShot = true;
         }
 
-        return new EntityResult(entity, hitPos, headshot, legshot);
+        return new EntityResult(entity, hitPos, headshot, legShot);
     }
 
     @Override
@@ -417,7 +413,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     // TODO 实现穿甲比例大于1时的穿透生物效果
     protected void onHitEntity(Entity entity, boolean headshot, boolean legShot) {
-        float mMultiple = 1 + 0.2f * this.monsterMultiple;
+        float mMultiple = 1 + this.monsterMultiple;
 
         if (entity == null) return;
 
@@ -548,9 +544,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     private static <T> T performRayTrace(ClipContext context, BiFunction<ClipContext, BlockPos, T> hitFunction, Function<ClipContext, T> p_217300_2_) {
         Vec3 startVec = context.getFrom();
         Vec3 endVec = context.getTo();
-        if (startVec.equals(endVec)) {
-            return p_217300_2_.apply(context);
-        } else {
+        if (!startVec.equals(endVec)) {
             double startX = Mth.lerp(-0.0000001, endVec.x, startVec.x);
             double startY = Mth.lerp(-0.0000001, endVec.y, startVec.y);
             double startZ = Mth.lerp(-0.0000001, endVec.z, startVec.z);
@@ -601,9 +595,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                     return t1;
                 }
             }
-
-            return p_217300_2_.apply(context);
         }
+        return p_217300_2_.apply(context);
     }
 
     public LivingEntity getShooter() {
@@ -735,7 +728,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         return this;
     }
 
-    public ProjectileEntity monsterMultiple(int monsterMultiple) {
+    public ProjectileEntity monsterMultiple(float monsterMultiple) {
         this.monsterMultiple = monsterMultiple;
         return this;
     }

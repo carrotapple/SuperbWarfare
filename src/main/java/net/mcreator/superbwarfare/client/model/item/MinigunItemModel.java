@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.item.gun.machinegun.Minigun;
+import net.mcreator.superbwarfare.item.gun.machinegun.MinigunItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -13,24 +13,24 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class MinigunItemModel extends GeoModel<Minigun> {
+public class MinigunItemModel extends GeoModel<MinigunItem> {
     @Override
-    public ResourceLocation getAnimationResource(Minigun animatable) {
+    public ResourceLocation getAnimationResource(MinigunItem animatable) {
         return new ResourceLocation(ModUtils.MODID, "animations/minigun.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(Minigun animatable) {
+    public ResourceLocation getModelResource(MinigunItem animatable) {
         return new ResourceLocation(ModUtils.MODID, "geo/minigun.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(Minigun animatable) {
+    public ResourceLocation getTextureResource(MinigunItem animatable) {
         return new ResourceLocation(ModUtils.MODID, "textures/item/minigun.png");
     }
 
     @Override
-    public void setCustomAnimations(Minigun animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(MinigunItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("barrel");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone heat_barrels = getAnimationProcessor().getBone("heatbarrels");

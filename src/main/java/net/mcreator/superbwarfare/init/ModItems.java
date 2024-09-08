@@ -5,14 +5,16 @@ import net.mcreator.superbwarfare.item.*;
 import net.mcreator.superbwarfare.item.common.BlueprintItem;
 import net.mcreator.superbwarfare.item.common.MaterialPack;
 import net.mcreator.superbwarfare.item.common.ammo.*;
-import net.mcreator.superbwarfare.item.gun.*;
 import net.mcreator.superbwarfare.item.gun.handgun.Glock17Item;
 import net.mcreator.superbwarfare.item.gun.handgun.Glock18Item;
 import net.mcreator.superbwarfare.item.gun.handgun.M1911Item;
 import net.mcreator.superbwarfare.item.gun.handgun.Trachelium;
+import net.mcreator.superbwarfare.item.gun.launcher.JavelinItem;
+import net.mcreator.superbwarfare.item.gun.launcher.M79Item;
+import net.mcreator.superbwarfare.item.gun.launcher.RpgItem;
 import net.mcreator.superbwarfare.item.gun.machinegun.DevotionItem;
 import net.mcreator.superbwarfare.item.gun.machinegun.M60Item;
-import net.mcreator.superbwarfare.item.gun.machinegun.Minigun;
+import net.mcreator.superbwarfare.item.gun.machinegun.MinigunItem;
 import net.mcreator.superbwarfare.item.gun.machinegun.RpkItem;
 import net.mcreator.superbwarfare.item.gun.rifle.*;
 import net.mcreator.superbwarfare.item.gun.shotgun.Aa12Item;
@@ -20,6 +22,8 @@ import net.mcreator.superbwarfare.item.gun.shotgun.AbekiriItem;
 import net.mcreator.superbwarfare.item.gun.shotgun.M870Item;
 import net.mcreator.superbwarfare.item.gun.smg.VectorItem;
 import net.mcreator.superbwarfare.item.gun.sniper.*;
+import net.mcreator.superbwarfare.item.gun.special.BocekItem;
+import net.mcreator.superbwarfare.item.gun.special.TaserItem;
 import net.mcreator.superbwarfare.tools.RarityTool;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -41,7 +45,7 @@ public class ModItems {
      */
     public static final DeferredRegister<Item> GUNS = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
 
-    public static final RegistryObject<Item> TASER = GUNS.register("taser", Taser::new);
+    public static final RegistryObject<Item> TASER = GUNS.register("taser", TaserItem::new);
     public static final RegistryObject<Item> GLOCK_17 = GUNS.register("glock_17", Glock17Item::new);
     public static final RegistryObject<Item> GLOCK_18 = GUNS.register("glock_18", Glock18Item::new);
     public static final RegistryObject<Item> M_1911 = GUNS.register("m_1911", M1911Item::new);
@@ -67,7 +71,7 @@ public class ModItems {
     public static final RegistryObject<Item> DEVOTION = GUNS.register("devotion", DevotionItem::new);
     public static final RegistryObject<Item> RPK = GUNS.register("rpk", RpkItem::new);
     public static final RegistryObject<Item> M_60 = GUNS.register("m_60", M60Item::new);
-    public static final RegistryObject<Item> MINIGUN = GUNS.register("minigun", Minigun::new);
+    public static final RegistryObject<Item> MINIGUN = GUNS.register("minigun", MinigunItem::new);
     public static final RegistryObject<Item> M_79 = GUNS.register("m_79", M79Item::new);
     public static final RegistryObject<Item> RPG = GUNS.register("rpg", RpgItem::new);
     public static final RegistryObject<Item> JAVELIN = GUNS.register("javelin", JavelinItem::new);

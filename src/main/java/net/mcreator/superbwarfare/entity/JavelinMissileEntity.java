@@ -53,21 +53,24 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public String animationprocedure = "empty";
-    private int monsterMultiplier = 0;
-    private float damage = 300f;
+    private float monsterMultiplier = 0.0f;
+    private float damage = 300.0f;
 
     public JavelinMissileEntity(EntityType<? extends JavelinMissileEntity> type, Level world) {
         super(type, world);
     }
 
-    public JavelinMissileEntity(LivingEntity entity, Level level, float damage, int monsterMultiplier) {
+    public JavelinMissileEntity(LivingEntity entity, Level level, float damage) {
         super(ModEntities.JAVELIN_MISSILE.get(), entity, level);
         this.damage = damage;
-        this.monsterMultiplier = monsterMultiplier;
     }
 
     public JavelinMissileEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
         this(ModEntities.JAVELIN_MISSILE.get(), level);
+    }
+
+    public void setMonsterMultiplier(float monsterMultiplier) {
+        this.monsterMultiplier = monsterMultiplier;
     }
 
     @Override
@@ -101,7 +104,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        float damageMultiplier = 1 + 0.2f * this.monsterMultiplier;
+        float damageMultiplier = 1 + this.monsterMultiplier;
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
@@ -172,12 +175,12 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
             if (entity != null) {
                 if (entityData.get(TOP)) {
                     if (this.position().distanceTo(entity.position()) > 40) {
-                        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(),entity.getY() + 30,entity.getZ()));
+                        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(), entity.getY() + 30, entity.getZ()));
                     } else {
-                        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(),entity.getEyeY() + (entity instanceof EnderDragon? -3 : 1),entity.getZ()));
+                        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(), entity.getEyeY() + (entity instanceof EnderDragon ? -3 : 1), entity.getZ()));
                     }
                 } else {
-                    this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(),entity.getEyeY() + (entity instanceof EnderDragon? -3 : 1),entity.getZ()));
+                    this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(), entity.getEyeY() + (entity instanceof EnderDragon ? -3 : 1), entity.getZ()));
                 }
                 if (this.position().distanceTo(entity.position()) < 4) {
                     triggerExplode(entity);
@@ -211,8 +214,8 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
         double d1 = (pTarget.y - vec3.y) * 0.2;
         double d2 = (pTarget.z - vec3.z) * 0.2;
         double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-        this.setXRot(Mth.wrapDegrees((float)(-(Mth.atan2(d1, d3) * 57.2957763671875))));
-        this.setYRot(Mth.wrapDegrees((float)(Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));
+        this.setXRot(Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * 57.2957763671875))));
+        this.setYRot(Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));
         this.setYHeadRot(this.getYRot());
         this.xRotO = this.getXRot();
         this.yRotO = this.getYRot();
@@ -273,7 +276,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
 
     @Override
     protected float getGravity() {
-        return 0F ;
+        return 0F;
     }
 
     public String getSyncedAnimation() {

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.layer.BocekLayer;
 import net.mcreator.superbwarfare.client.model.item.BocekItemModel;
-import net.mcreator.superbwarfare.item.gun.BocekItem;
+import net.mcreator.superbwarfare.item.gun.special.BocekItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;

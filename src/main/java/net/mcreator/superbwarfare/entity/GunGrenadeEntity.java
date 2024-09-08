@@ -32,21 +32,24 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 
 public class GunGrenadeEntity extends ThrowableItemProjectile {
-    private int monsterMultiplier = 0;
-    private float damage = 5f;
+    private float monsterMultiplier = 0.0f;
+    private float damage = 5.0f;
 
     public GunGrenadeEntity(EntityType<? extends GunGrenadeEntity> type, Level world) {
         super(type, world);
     }
 
-    public GunGrenadeEntity(LivingEntity entity, Level level, float damage, int monsterMultiplier) {
+    public GunGrenadeEntity(LivingEntity entity, Level level, float damage) {
         super(ModEntities.GUN_GRENADE.get(), entity, level);
         this.damage = damage;
-        this.monsterMultiplier = monsterMultiplier;
     }
 
     public GunGrenadeEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
         this(ModEntities.GUN_GRENADE.get(), level);
+    }
+
+    public void setMonsterMultiplier(float monsterMultiplier) {
+        this.monsterMultiplier = monsterMultiplier;
     }
 
     @Override
@@ -66,7 +69,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        float damageMultiplier = 1 + 0.2f * this.monsterMultiplier;
+        float damageMultiplier = 1 + this.monsterMultiplier;
         Entity entity = result.getEntity();
         if (this.getOwner() instanceof LivingEntity living) {
             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {

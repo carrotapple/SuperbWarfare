@@ -223,6 +223,8 @@
   "des.superbwarfare.gutshot_straight": "Aiming down sights increases body shot damage",
   "item.superbwarfare.head_seeker": "Head Seeker",
   "des.superbwarfare.head_seeker": "Body shots landed with this weapon increase precision damage for a short time",
+  "item.superbwarfare.monster_hunter": "Monster Hunter",
+  "des.superbwarfare.monster_hunter": "Increases the damage of weapon against monsters",
 
   "perk.superbwarfare.tips": "[Perks]",
   "perk.superbwarfare.slot": "Type: ",
@@ -300,8 +302,6 @@
   "enchantment.superbwarfare.super_recharge.desc": "Increases the recharge speed of TaserGun",
   "enchantment.superbwarfare.longer_wire": "Longer Wire",
   "enchantment.superbwarfare.longer_wire.desc": "Increases the range of TaserGun",
-  "enchantment.superbwarfare.monster_hunter": "Monster Hunter",
-  "enchantment.superbwarfare.monster_hunter.desc": "Increases bullet damage against monsters",
 
   "des.superbwarfare.sensitivity": "Current Sensitivity of This Gun: %1$s",
   "des.superbwarfare.need_bolt_action": "[ Need Bolt Action ]",

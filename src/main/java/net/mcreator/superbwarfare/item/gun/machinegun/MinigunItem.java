@@ -45,13 +45,13 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class Minigun extends GunItem implements GeoItem, AnimatedItem {
+public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
     private static final String TAG_HEAT = "heat";
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
-    public Minigun() {
+    public MinigunItem() {
         super(new Item.Properties().stacksTo(1).rarity(RarityTool.LEGENDARY));
     }
 
@@ -107,7 +107,7 @@ public class Minigun extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState<Minigun> event) {
+    private PlayState idlePredicate(AnimationState<MinigunItem> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
@@ -131,7 +131,7 @@ public class Minigun extends GunItem implements GeoItem, AnimatedItem {
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState<Minigun> event) {
+    private PlayState procedurePredicate(AnimationState<MinigunItem> event) {
         if (transformType != null && transformType.firstPerson()) {
             if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));

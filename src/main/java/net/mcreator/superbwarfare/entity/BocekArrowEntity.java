@@ -40,17 +40,16 @@ import java.util.Optional;
 public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
     public static final ItemStack PROJECTILE_ITEM = new ItemStack(Items.ARROW);
 
-    private int monsterMultiplier = 0;
+    private float monsterMultiplier = 0.0f;
     private float bypassArmorRate = 0.0f;
-    private float undeadMultiple = 1.0f;
+    private float undeadMultiplier = 1.0f;
 
     public BocekArrowEntity(EntityType<? extends BocekArrowEntity> type, Level world) {
         super(type, world);
     }
 
-    public BocekArrowEntity(LivingEntity entity, Level level, int monsterMultiplier) {
+    public BocekArrowEntity(LivingEntity entity, Level level) {
         super(ModEntities.BOCEK_ARROW.get(), entity, level);
-        this.monsterMultiplier = monsterMultiplier;
     }
 
     public BocekArrowEntity(PlayMessages.SpawnEntity packet, Level world) {
@@ -62,9 +61,12 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
         return this;
     }
 
-    public BocekArrowEntity undeadMultiple(float undeadMultiple) {
-        this.undeadMultiple = undeadMultiple;
-        return this;
+    public void setUndeadMultiplier(float undeadMultiplier) {
+        this.undeadMultiplier = undeadMultiplier;
+    }
+
+    public void setMonsterMultiplier(float monsterMultiplier) {
+        this.monsterMultiplier = monsterMultiplier;
     }
 
     @Override
@@ -159,9 +161,9 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
 
         boolean hurt;
         if (entity instanceof Monster monster) {
-            hurt = performHurt(entity, i * damageMultiplier * (monster.getMobType() == MobType.UNDEAD ? this.undeadMultiple : 1), headshot);
+            hurt = performHurt(entity, i * (1 + damageMultiplier) * (monster.getMobType() == MobType.UNDEAD ? this.undeadMultiplier : 1), headshot);
         } else {
-            hurt = performHurt(entity, i * (entity instanceof LivingEntity living && living.getMobType() == MobType.UNDEAD ? this.undeadMultiple : 1), headshot);
+            hurt = performHurt(entity, i * (entity instanceof LivingEntity living && living.getMobType() == MobType.UNDEAD ? this.undeadMultiplier : 1), headshot);
         }
 
         if (!hurt) {

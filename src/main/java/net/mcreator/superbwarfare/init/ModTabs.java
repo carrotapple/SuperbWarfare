@@ -1,14 +1,16 @@
 package net.mcreator.superbwarfare.init;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.item.gun.*;
 import net.mcreator.superbwarfare.item.gun.handgun.Glock17Item;
 import net.mcreator.superbwarfare.item.gun.handgun.Glock18Item;
 import net.mcreator.superbwarfare.item.gun.handgun.M1911Item;
 import net.mcreator.superbwarfare.item.gun.handgun.Trachelium;
+import net.mcreator.superbwarfare.item.gun.launcher.JavelinItem;
+import net.mcreator.superbwarfare.item.gun.launcher.M79Item;
+import net.mcreator.superbwarfare.item.gun.launcher.RpgItem;
 import net.mcreator.superbwarfare.item.gun.machinegun.DevotionItem;
 import net.mcreator.superbwarfare.item.gun.machinegun.M60Item;
-import net.mcreator.superbwarfare.item.gun.machinegun.Minigun;
+import net.mcreator.superbwarfare.item.gun.machinegun.MinigunItem;
 import net.mcreator.superbwarfare.item.gun.machinegun.RpkItem;
 import net.mcreator.superbwarfare.item.gun.rifle.*;
 import net.mcreator.superbwarfare.item.gun.shotgun.Aa12Item;
@@ -16,6 +18,8 @@ import net.mcreator.superbwarfare.item.gun.shotgun.AbekiriItem;
 import net.mcreator.superbwarfare.item.gun.shotgun.M870Item;
 import net.mcreator.superbwarfare.item.gun.smg.VectorItem;
 import net.mcreator.superbwarfare.item.gun.sniper.*;
+import net.mcreator.superbwarfare.item.gun.special.BocekItem;
+import net.mcreator.superbwarfare.item.gun.special.TaserItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -37,7 +41,7 @@ public class ModTabs {
                     .icon(() -> new ItemStack(ModItems.TASER.get()))
                     .displayItems(
                             (param, output) -> {
-                                output.accept(Taser.getGunInstance());
+                                output.accept(TaserItem.getGunInstance());
                                 output.accept(Glock17Item.getGunInstance());
                                 output.accept(Glock18Item.getGunInstance());
                                 output.accept(M1911Item.getGunInstance());
@@ -63,7 +67,7 @@ public class ModTabs {
                                 output.accept(DevotionItem.getGunInstance());
                                 output.accept(RpkItem.getGunInstance());
                                 output.accept(M60Item.getGunInstance());
-                                output.accept(Minigun.getGunInstance());
+                                output.accept(MinigunItem.getGunInstance());
                                 output.accept(BocekItem.getGunInstance());
                                 output.accept(M79Item.getGunInstance());
                                 output.accept(RpgItem.getGunInstance());

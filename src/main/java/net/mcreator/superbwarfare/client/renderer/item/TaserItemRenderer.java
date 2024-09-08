@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.layer.TaserLayer;
 import net.mcreator.superbwarfare.client.layer.TaserLayer2;
 import net.mcreator.superbwarfare.client.model.item.TaserItemModel;
-import net.mcreator.superbwarfare.item.gun.Taser;
+import net.mcreator.superbwarfare.item.gun.special.TaserItem;
 import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
@@ -25,7 +25,7 @@ import software.bernie.geckolib.util.RenderUtils;
 import java.util.HashSet;
 import java.util.Set;
 
-public class TaserItemRenderer extends GeoItemRenderer<Taser> {
+public class TaserItemRenderer extends GeoItemRenderer<TaserItem> {
     public TaserItemRenderer() {
         super(new TaserItemModel());
         this.addRenderLayer(new TaserLayer(this));
@@ -33,7 +33,7 @@ public class TaserItemRenderer extends GeoItemRenderer<Taser> {
     }
 
     @Override
-    public RenderType getRenderType(Taser animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(TaserItem animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
@@ -42,7 +42,7 @@ public class TaserItemRenderer extends GeoItemRenderer<Taser> {
     protected MultiBufferSource currentBuffer;
     protected RenderType renderType;
     public ItemDisplayContext transformType;
-    protected Taser animatable;
+    protected TaserItem animatable;
     private final Set<String> hiddenBones = new HashSet<>();
 
     @Override
@@ -54,7 +54,7 @@ public class TaserItemRenderer extends GeoItemRenderer<Taser> {
     }
 
     @Override
-    public void actuallyRender(PoseStack matrixStackIn, Taser animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
+    public void actuallyRender(PoseStack matrixStackIn, TaserItem animatable, BakedGeoModel model, RenderType type, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, boolean isRenderer, float partialTicks, int packedLightIn,
                                int packedOverlayIn, float red, float green, float blue, float alpha) {
         this.currentBuffer = renderTypeBuffer;
         this.renderType = type;
@@ -66,7 +66,7 @@ public class TaserItemRenderer extends GeoItemRenderer<Taser> {
     }
 
     @Override
-    public void renderRecursively(PoseStack stack, Taser animatable, GeoBone bone, RenderType type, MultiBufferSource buffer, VertexConsumer bufferIn, boolean isReRender, float partialTick, int packedLightIn, int packedOverlayIn, float red,
+    public void renderRecursively(PoseStack stack, TaserItem animatable, GeoBone bone, RenderType type, MultiBufferSource buffer, VertexConsumer bufferIn, boolean isReRender, float partialTick, int packedLightIn, int packedOverlayIn, float red,
                                   float green, float blue, float alpha) {
         Minecraft mc = Minecraft.getInstance();
         String name = bone.getName();
@@ -113,7 +113,7 @@ public class TaserItemRenderer extends GeoItemRenderer<Taser> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Taser instance) {
+    public ResourceLocation getTextureLocation(TaserItem instance) {
         return super.getTextureLocation(instance);
     }
 }

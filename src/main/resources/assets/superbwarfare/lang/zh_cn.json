@@ -223,6 +223,8 @@
   "des.superbwarfare.gutshot_straight": "瞄准时增加身体射击伤害",
   "item.superbwarfare.head_seeker": "死亡寻觅者",
   "des.superbwarfare.head_seeker": "使用此武器命中身体可在短时间内提高精准伤害",
+  "item.superbwarfare.monster_hunter": "怪物猎人",
+  "des.superbwarfare.monster_hunter": "增加武器对怪物的伤害",
 
   "perk.superbwarfare.tips": "[武器模组]",
   "perk.superbwarfare.slot": "类型: ",
@@ -300,8 +302,6 @@
   "enchantment.superbwarfare.super_recharge.desc": "增加泰瑟枪充能的速度",
   "enchantment.superbwarfare.longer_wire": "延长导线",
   "enchantment.superbwarfare.longer_wire.desc": "增加泰瑟枪的射程",
-  "enchantment.superbwarfare.monster_hunter": "怪物猎人",
-  "enchantment.superbwarfare.monster_hunter.desc": "增加对怪物的子弹伤害",
 
   "des.superbwarfare.sensitivity": "当前枪械的灵敏度为：%1$s",
   "des.superbwarfare.need_bolt_action": "【需要拉栓】",

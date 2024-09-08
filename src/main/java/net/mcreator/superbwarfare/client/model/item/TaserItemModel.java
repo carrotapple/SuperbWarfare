@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.item.gun.Taser;
+import net.mcreator.superbwarfare.item.gun.special.TaserItem;
 import net.mcreator.superbwarfare.tools.ItemNBTTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -13,27 +13,27 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-public class TaserItemModel extends GeoModel<Taser> {
+public class TaserItemModel extends GeoModel<TaserItem> {
 
     public static final String TAG_POWER = "Power";
 
     @Override
-    public ResourceLocation getAnimationResource(Taser animatable) {
+    public ResourceLocation getAnimationResource(TaserItem animatable) {
         return new ResourceLocation(ModUtils.MODID, "animations/taser.animation.json");
     }
 
     @Override
-    public ResourceLocation getModelResource(Taser animatable) {
+    public ResourceLocation getModelResource(TaserItem animatable) {
         return new ResourceLocation(ModUtils.MODID, "geo/taser.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureResource(Taser animatable) {
+    public ResourceLocation getTextureResource(TaserItem animatable) {
         return new ResourceLocation(ModUtils.MODID, "textures/item/tasergun.png");
     }
 
     @Override
-    public void setCustomAnimations(Taser animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(TaserItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone bar = getAnimationProcessor().getBone("bar");

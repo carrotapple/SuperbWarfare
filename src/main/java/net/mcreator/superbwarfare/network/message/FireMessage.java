@@ -84,9 +84,9 @@ public class FireMessage {
                 var handItem = player.getMainHandItem();
                 var tag = handItem.getOrCreateTag();
                 handleJavelinFire(player);
-                tag.putBoolean("Seeking",false);
-                tag.putInt("SeekTime",0);
-                tag.putString("TargetEntity","none");
+                tag.putBoolean("Seeking", false);
+                tag.putInt("SeekTime", 0);
+                tag.putString("TargetEntity", "none");
                 if (player instanceof ServerPlayer serverPlayer) {
                     var clientboundstopsoundpacket = new ClientboundStopSoundPacket(new ResourceLocation(ModUtils.MODID, "javelin_lock"), SoundSource.PLAYERS);
                     serverPlayer.connection.send(clientboundstopsoundpacket);
@@ -119,9 +119,9 @@ public class FireMessage {
         if (handItem.getItem() == ModItems.JAVELIN.get() && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming && tag.getInt("ammo") > 0) {
             Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 384, 8);
             if (seekingEntity != null) {
-                tag.putString("TargetEntity",seekingEntity.getStringUUID());
-                tag.putBoolean("Seeking",true);
-                tag.putInt("SeekTime",0);
+                tag.putString("TargetEntity", seekingEntity.getStringUUID());
+                tag.putBoolean("Seeking", true);
+                tag.putInt("SeekTime", 0);
             }
 
         }
@@ -182,15 +182,15 @@ public class FireMessage {
             if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
                 Level level = player.level();
                 if (!level.isClientSide()) {
-                    int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), stack);
                     float damage = (float) (0.04 * stack.getOrCreateTag().getDouble("damage") * (1 + 0.05 * stack.getOrCreateTag().getInt("level")));
                     float bypassArmorRate = (float) stack.getOrCreateTag().getDouble("BypassArmor");
+
+                    BocekArrowEntity arrow = new BocekArrowEntity(player, level);
 
                     ProjectileEntity projectile = new ProjectileEntity(player.level())
                             .shooter(player)
                             .headShot(1)
-                            .zoom(true)
-                            .monsterMultiple(1);
+                            .zoom(true);
 
                     var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
                     if (perk instanceof AmmoPerk ammoPerk) {
@@ -207,10 +207,17 @@ public class FireMessage {
                     float undeadMultiple = 1;
 
                     if (perk == ModPerks.SILVER_BULLET.get()) {
-                        int level_ = PerkHelper.getItemPerkLevel(perk, stack);
-                        undeadMultiple = 1.0f + 0.5f * level_;
+                        int perkLevel = PerkHelper.getItemPerkLevel(perk, stack);
+                        undeadMultiple = 1.0f + 0.5f * perkLevel;
                     } else if (perk == ModPerks.BEAST_BULLET.get()) {
                         projectile.beast();
+                    }
+
+                    var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
+                    if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
+                        int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, stack);
+                        projectile.monsterMultiple(0.1f + 0.1f * perkLevel);
+                        arrow.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
                     }
 
                     projectile.bypassArmorRate(0);
@@ -221,7 +228,7 @@ public class FireMessage {
 
                     bypassArmorRate = Math.max(bypassArmorRate, 0);
 
-                    BocekArrowEntity arrow = new BocekArrowEntity(player, level, monsterMultiple).bypassArmorRate(bypassArmorRate).undeadMultiple(undeadMultiple);
+                    arrow.bypassArmorRate(bypassArmorRate).setUndeadMultiplier(undeadMultiple);
                     arrow.setBaseDamage(damage);
                     arrow.setKnockback(0);
                     arrow.setSilent(true);
@@ -286,15 +293,13 @@ public class FireMessage {
         double damage;
         float headshot = (float) tag.getDouble("headshot");
         float velocity = 2 * (float) tag.getDouble("speed");
-        int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), heldItem);
         boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
         float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
 
         ProjectileEntity projectile = new ProjectileEntity(player.level())
                 .shooter(player)
                 .headShot(headshot)
-                .zoom(zoom)
-                .monsterMultiple(monsterMultiple);
+                .zoom(zoom);
 
         var perk = PerkHelper.getPerkByType(heldItem, Perk.Type.AMMO);
         if (perk instanceof AmmoPerk ammoPerk) {
@@ -316,6 +321,12 @@ public class FireMessage {
             projectile.undeadMultiple(1.0f + 0.5f * level);
         } else if (perk == ModPerks.BEAST_BULLET.get()) {
             projectile.beast();
+        }
+
+        var dmgPerk = PerkHelper.getPerkByType(heldItem, Perk.Type.DAMAGE);
+        if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
+            int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, heldItem);
+            projectile.monsterMultiple(0.1f + 0.1f * perkLevel);
         }
 
         projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
@@ -373,15 +384,20 @@ public class FireMessage {
         ItemStack stack = player.getMainHandItem();
         if (!stack.getOrCreateTag().getBoolean("reloading")) {
             if (!player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getInt("ammo") > 0) {
-
                 boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming;
                 double spread = stack.getOrCreateTag().getDouble("spread");
                 double zoomSpread = stack.getOrCreateTag().getDouble("zoomSpread");
 
                 Level level = player.level();
                 if (!level.isClientSide()) {
-                    int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), stack);
-                    GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, level, (float) stack.getOrCreateTag().getDouble("damage") * (float) stack.getOrCreateTag().getDouble("levelDamageMultiple"), monsterMultiple);
+                    GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, level,
+                            (float) stack.getOrCreateTag().getDouble("damage") * (float) stack.getOrCreateTag().getDouble("levelDamageMultiple"));
+
+                    var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
+                    if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
+                        int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, stack);
+                        gunGrenadeEntity.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
+                    }
 
                     gunGrenadeEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                     gunGrenadeEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) stack.getOrCreateTag().getDouble("velocity"),
@@ -416,18 +432,24 @@ public class FireMessage {
         if (player.isSpectator()) return;
 
         Level level = player.level();
-        ItemStack mainHandItem = player.getMainHandItem();
-        CompoundTag tag = mainHandItem.getOrCreateTag();
+        ItemStack stack = player.getMainHandItem();
+        CompoundTag tag = stack.getOrCreateTag();
 
-        if (!tag.getBoolean("reloading") && !player.getCooldowns().isOnCooldown(mainHandItem.getItem()) && tag.getInt("ammo") > 0) {
-
+        if (!tag.getBoolean("reloading") && !player.getCooldowns().isOnCooldown(stack.getItem()) && tag.getInt("ammo") > 0) {
             boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming;
-            double spread = mainHandItem.getOrCreateTag().getDouble("spread");
-            double zoomSpread = mainHandItem.getOrCreateTag().getDouble("zoomSpread");
+            double spread = stack.getOrCreateTag().getDouble("spread");
+            double zoomSpread = stack.getOrCreateTag().getDouble("zoomSpread");
 
             if (!level.isClientSide()) {
-                int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), mainHandItem);
-                RpgRocketEntity rocketEntity = new RpgRocketEntity(player, level, (float) tag.getDouble("damage") * (float) tag.getDouble("levelDamageMultiple"), monsterMultiple);
+                RpgRocketEntity rocketEntity = new RpgRocketEntity(player, level,
+                        (float) tag.getDouble("damage") * (float) tag.getDouble("levelDamageMultiple"));
+
+                var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
+                if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
+                    int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, stack);
+                    rocketEntity.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
+                }
+
                 rocketEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                 rocketEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) tag.getDouble("velocity"),
                         (float) (zoom ? zoomSpread : spread));
@@ -446,7 +468,7 @@ public class FireMessage {
                 tag.putBoolean("close_hammer", true);
             }
 
-            player.getCooldowns().addCooldown(mainHandItem.getItem(), 10);
+            player.getCooldowns().addCooldown(stack.getItem(), 10);
 
             if (player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, ModSounds.RPG_FIRE_1P.get(), 2, 1);
@@ -466,8 +488,8 @@ public class FireMessage {
         if (player.isSpectator()) return;
 
         Level level = player.level();
-        ItemStack mainHandItem = player.getMainHandItem();
-        CompoundTag tag = mainHandItem.getOrCreateTag();
+        ItemStack stack = player.getMainHandItem();
+        CompoundTag tag = stack.getOrCreateTag();
 
         if (tag.getInt("SeekTime") < 20) return;
 
@@ -482,8 +504,15 @@ public class FireMessage {
         firePos.rotateY(-yRot * Mth.DEG_TO_RAD);
 
         if (!level.isClientSide()) {
-            int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), mainHandItem);
-            JavelinMissileEntity missileEntity = new JavelinMissileEntity(player, level, (float) tag.getDouble("damage") * (float) tag.getDouble("levelDamageMultiple"), monsterMultiple);
+            JavelinMissileEntity missileEntity = new JavelinMissileEntity(player, level,
+                    (float) tag.getDouble("damage") * (float) tag.getDouble("levelDamageMultiple"));
+
+            var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
+            if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
+                int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, stack);
+                missileEntity.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
+            }
+
             missileEntity.setPos(player.getX() + firePos.x, player.getEyeY() + firePos.y, player.getZ() + firePos.z);
             missileEntity.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.3, player.getLookAngle().z, 3f, 1);
             missileEntity.setTargetUuid(tag.getString("TargetEntity"));
@@ -498,7 +527,7 @@ public class FireMessage {
                     30, 0.4, 0.4, 0.4, 0.005, true);
         }
 
-        player.getCooldowns().addCooldown(mainHandItem.getItem(), 10);
+        player.getCooldowns().addCooldown(stack.getItem(), 10);
 
         if (player instanceof ServerPlayer serverPlayer) {
             SoundTool.playLocalSound(serverPlayer, ModSounds.JAVELIN_FIRE_1P.get(), 2, 1);

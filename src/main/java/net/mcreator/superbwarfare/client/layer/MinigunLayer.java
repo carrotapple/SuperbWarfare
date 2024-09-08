@@ -3,7 +3,7 @@ package net.mcreator.superbwarfare.client.layer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.item.gun.machinegun.Minigun;
+import net.mcreator.superbwarfare.item.gun.machinegun.MinigunItem;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -12,15 +12,15 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
-public class MinigunLayer extends GeoRenderLayer<Minigun> {
+public class MinigunLayer extends GeoRenderLayer<MinigunItem> {
     private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/item/minigun_e.png");
 
-    public MinigunLayer(GeoRenderer<Minigun> entityRenderer) {
+    public MinigunLayer(GeoRenderer<MinigunItem> entityRenderer) {
         super(entityRenderer);
     }
 
     @Override
-    public void render(PoseStack poseStack, Minigun animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+    public void render(PoseStack poseStack, MinigunItem animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         RenderType glowRenderType = RenderType.eyes(LAYER);
         getRenderer().reRender(getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, glowRenderType, bufferSource.getBuffer(glowRenderType), partialTick, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
     }

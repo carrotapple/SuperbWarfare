@@ -3,7 +3,10 @@ package net.mcreator.superbwarfare.event;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.ProjectileEntity;
 import net.mcreator.superbwarfare.event.modevent.ReloadEvent;
-import net.mcreator.superbwarfare.init.*;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModPerks;
+import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.perk.AmmoPerk;
 import net.mcreator.superbwarfare.perk.Perk;
@@ -23,7 +26,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.event.TickEvent;
@@ -352,7 +354,6 @@ public class GunEventHandler {
 
         if (!player.level().isClientSide()) {
             float headshot = (float) heldItem.getOrCreateTag().getDouble("headshot");
-            int monsterMultiple = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.MONSTER_HUNTER.get(), heldItem);
             float damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("sentinelChargeDamage")) * (float) heldItem.getOrCreateTag().getDouble("levelDamageMultiple");
 
             boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming;
@@ -363,8 +364,7 @@ public class GunEventHandler {
                     .shooter(player)
                     .damage(damage)
                     .headShot(headshot)
-                    .zoom(zoom)
-                    .monsterMultiple(monsterMultiple);
+                    .zoom(zoom);
 
             float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
             var perk = PerkHelper.getPerkByType(heldItem, Perk.Type.AMMO);
@@ -394,6 +394,12 @@ public class GunEventHandler {
                 projectile.undeadMultiple(1.0f + 0.5f * level);
             } else if (perk == ModPerks.BEAST_BULLET.get()) {
                 projectile.beast();
+            }
+
+            var dmgPerk = PerkHelper.getPerkByType(heldItem, Perk.Type.DAMAGE);
+            if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
+                int level = PerkHelper.getItemPerkLevel(dmgPerk, heldItem);
+                projectile.monsterMultiple(0.1f + 0.1f * level);
             }
 
             projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
