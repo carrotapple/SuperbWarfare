@@ -48,9 +48,6 @@ public class ClientEventHandler {
         data.putDouble("yRot", Mth.clamp(0.05 * yRot, -10, 10) * (1 - 0.75 * data.getDouble("zoom_time")));
         data.putDouble("zRot", Mth.clamp(0.1 * yRot, -10, 10) * (1 - data.getDouble("zoom_time")));
 
-        data.putDouble("Cannon_xRot", Mth.clamp(0.2 * xRot, -3, 3));
-        data.putDouble("Cannon_yRot", Mth.clamp(1 * yRot, -15, 15));
-
         data.putDouble("droneCameraRotX", Mth.clamp(0.25f * xRot, -10, 10));
         data.putDouble("droneCameraRotY", Mth.clamp(0.25f * yRot, -20, 10));
     }
@@ -115,8 +112,8 @@ public class ClientEventHandler {
         double pitch = event.getPitch();
         double roll = event.getRoll();
 
-        event.setPitch((float) (pitch + 1 * data.getDouble("Cannon_xRot") + data.getDouble("cannon_camera_rot_x")));
-        event.setYaw((float) (yaw + 1 * data.getDouble("Cannon_yRot") + data.getDouble("cannon_camera_rot_y")));
+        event.setPitch((float) (pitch + data.getDouble("cannon_camera_rot_x")));
+        event.setYaw((float) (yaw + data.getDouble("cannon_camera_rot_y")));
         event.setRoll((float) (roll + data.getDouble("cannon_camera_rot_z")));
     }
 

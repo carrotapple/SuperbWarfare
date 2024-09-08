@@ -5,10 +5,10 @@
   "zoomSpread": 0.1,
   "recoil_x": 0.005,
   "recoil_y": 0.032,
-  "damage": 18,
-  "headshot": 1.5,
-  "velocity": 18,
-  "mag": 8,
+  "damage": 19,
+  "headshot": 2.2,
+  "velocity": 24,
+  "mag": 6,
   "projectile_amount": 1,
   "fire_interval": 5,
   "weight": 0,
@@ -18,6 +18,6 @@
   "auto": 0,
   "burst_size": 1,
   "empty_reload_time": 65,
-  "BypassesArmor": 0.2,
+  "BypassesArmor": 0.3,
   "SoundRadius": 10
 }

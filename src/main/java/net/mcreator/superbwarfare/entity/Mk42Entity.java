@@ -307,30 +307,25 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
     public void travel(Vec3 dir) {
         Entity entity = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
         if (this.isVehicle() && entity != null) {
-            this.setYRot(entity.getYRot());
-            this.yRotO = this.getYRot();
-            this.setXRot(Mth.clamp(entity.getXRot() - 1.35f, -85, 15));
-            this.setRot(this.getYRot(), this.getXRot());
-            this.yBodyRot = entity.getYRot();
-            this.yHeadRot = entity.getYRot();
-            this.setMaxUpStep(1.0F);
-            if (entity instanceof LivingEntity passenger) {
-                this.setSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED));
-                float forward = passenger.zza;
-                float strafe = passenger.xxa;
-                super.travel(new Vec3(strafe, 0, forward));
+            float diffY = entity.getYHeadRot() - this.getYRot();
+            float diffX = entity.getXRot() - this.getXRot();
+            if (diffY > 180.0f) {
+                diffY -= 360.0f;
+            } else if (diffY < -180.0f) {
+                diffY += 360.0f;
             }
-            double d1 = this.getX() - this.xo;
-            double d0 = this.getZ() - this.zo;
-            float f1 = (float) Math.sqrt(d1 * d1 + d0 * d0) * 4;
-            if (f1 > 1.0F)
-                f1 = 1.0F;
-            this.walkAnimation.setSpeed(this.walkAnimation.speed() + (f1 - this.walkAnimation.speed()) * 0.4F);
-            this.walkAnimation.position(this.walkAnimation.position() + this.walkAnimation.speed());
-            this.calculateEntityAnimation(true);
+            diffY = diffY * 0.15f;
+            diffX = diffX * 0.15f;
+            if (Math.abs(diffY) < 60f && Math.abs(diffX) < 60f) {
+                this.setYRot(this.getYRot() + Mth.clamp(diffY,-1.75f,1.75f));
+                this.yRotO = this.getYRot();
+                this.setXRot(Mth.clamp(this.getXRot() - 0.11f + Mth.clamp(diffX,-3f,3f), -85, 15));
+                this.setRot(this.getYRot(), this.getXRot());
+                this.yBodyRot = this.getYRot() + Mth.clamp(diffY,-1.75f,1.75f);
+                this.yHeadRot = this.getYRot() + Mth.clamp(diffY,-1.75f,1.75f);
+            }
             return;
         }
-        this.setMaxUpStep(0.5F);
         super.travel(dir);
     }
 
