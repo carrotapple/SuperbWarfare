@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.layer.Qbz95Layer;
 import net.mcreator.superbwarfare.client.model.item.Qbz95ItemModel;
-import net.mcreator.superbwarfare.item.gun.Qbz95Item;
+import net.mcreator.superbwarfare.item.gun.rifle.Qbz95Item;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;

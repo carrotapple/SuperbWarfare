@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.layer.AK47Layer;
 import net.mcreator.superbwarfare.client.model.item.AK47ItemModel;
-import net.mcreator.superbwarfare.item.gun.AK47Item;
+import net.mcreator.superbwarfare.item.gun.rifle.AK47Item;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;

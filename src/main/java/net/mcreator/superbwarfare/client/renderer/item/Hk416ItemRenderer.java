@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.layer.Hk416Layer;
 import net.mcreator.superbwarfare.client.model.item.Hk416ItemModel;
-import net.mcreator.superbwarfare.item.gun.Hk416Item;
+import net.mcreator.superbwarfare.item.gun.rifle.Hk416Item;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;

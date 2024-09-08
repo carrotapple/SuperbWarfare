@@ -6,6 +6,7 @@ import net.mcreator.superbwarfare.item.common.BlueprintItem;
 import net.mcreator.superbwarfare.item.common.MaterialPack;
 import net.mcreator.superbwarfare.item.common.ammo.*;
 import net.mcreator.superbwarfare.item.gun.*;
+import net.mcreator.superbwarfare.item.gun.rifle.*;
 import net.mcreator.superbwarfare.tools.RarityTool;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;

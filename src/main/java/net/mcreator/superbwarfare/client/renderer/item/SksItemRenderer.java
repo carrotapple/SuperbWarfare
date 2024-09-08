@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.layer.SksLayer;
 import net.mcreator.superbwarfare.client.model.item.SksItemModel;
-import net.mcreator.superbwarfare.item.gun.SksItem;
+import net.mcreator.superbwarfare.item.gun.rifle.SksItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;

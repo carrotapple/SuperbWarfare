@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.item.gun.MarlinItem;
+import net.mcreator.superbwarfare.item.gun.rifle.MarlinItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;

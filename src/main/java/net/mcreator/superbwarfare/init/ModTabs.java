@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.init;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.item.gun.*;
+import net.mcreator.superbwarfare.item.gun.rifle.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;

@@ -1,13 +1,14 @@
-package net.mcreator.superbwarfare.item.gun;
+package net.mcreator.superbwarfare.item.gun.rifle;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.client.renderer.item.M4ItemRenderer;
+import net.mcreator.superbwarfare.client.renderer.item.Mk14ItemRenderer;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
+import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
@@ -43,20 +44,20 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class M4Item extends GunItem implements GeoItem, AnimatedItem {
+public class Mk14Item extends GunItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
-    public M4Item() {
-        super(new Item.Properties().stacksTo(1).rarity(Rarity.RARE));
+    public Mk14Item() {
+        super(new Item.Properties().stacksTo(1).rarity(Rarity.EPIC));
     }
 
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         super.initializeClient(consumer);
         consumer.accept(new IClientItemExtensions() {
-            private final BlockEntityWithoutLevelRenderer renderer = new M4ItemRenderer();
+            private final BlockEntityWithoutLevelRenderer renderer = new Mk14ItemRenderer();
 
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
@@ -74,7 +75,7 @@ public class M4Item extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState<M4Item> event) {
+    private PlayState idlePredicate(AnimationState<Mk14Item> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
@@ -83,43 +84,43 @@ public class M4Item extends GunItem implements GeoItem, AnimatedItem {
         if (this.animationProcedure.equals("empty")) {
 
             if (stack.getOrCreateTag().getInt("draw_time") < 16) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m4.draw"));
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m14.draw"));
             }
 
             if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m4.fire"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m14.fire"));
             }
 
             if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m4.reload_empty"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m14.reload_empty"));
             }
 
             if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m4.reload_normal"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m14.reload_normal"));
             }
 
             if (stack.getOrCreateTag().getInt("fire_mode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m4.changefirerate2"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m14.changefirerate2"));
             }
 
             if (stack.getOrCreateTag().getInt("fire_mode") == 2 && stack.getOrCreateTag().getDouble("cg") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m4.changefirerate"));
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m14changefirerate"));
             }
 
             if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
                 if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m4.run_fast"));
+                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m14.run_fast"));
                 } else {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m4.run"));
+                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m14.run"));
                 }
             }
 
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m4.idle"));
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m14.idle"));
         }
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState<M4Item> event) {
+    private PlayState procedurePredicate(AnimationState<Mk14Item> event) {
         if (transformType != null && transformType.firstPerson()) {
             if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
@@ -138,7 +139,7 @@ public class M4Item extends GunItem implements GeoItem, AnimatedItem {
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         var procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
         data.add(procedureController);
-        var idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
+        var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
         data.add(idleController);
     }
 
@@ -148,25 +149,25 @@ public class M4Item extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
+    public Set<SoundEvent> getReloadSound() {
+        return Set.of(ModSounds.MK_14_RELOAD_EMPTY.get(), ModSounds.MK_14_RELOAD_NORMAL.get());
+    }
+
+    @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
         Multimap<Attribute, AttributeModifier> map = super.getAttributeModifiers(slot, stack);
         UUID uuid = new UUID(slot.toString().hashCode(), 0);
         if (slot == EquipmentSlot.MAINHAND) {
             map = HashMultimap.create(map);
             map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER, -0.04f, AttributeModifier.Operation.MULTIPLY_BASE));
+                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER, -0.05f, AttributeModifier.Operation.MULTIPLY_BASE));
         }
         return map;
     }
 
-    @Override
-    public Set<SoundEvent> getReloadSound() {
-        return Set.of(ModSounds.M_4_RELOAD_EMPTY.get(), ModSounds.M_4_RELOAD_NORMAL.get());
-    }
-
     public static ItemStack getGunInstance() {
-        ItemStack stack = new ItemStack(ModItems.M_4.get());
-        GunsTool.initCreativeGun(stack, ModItems.M_4.getId().getPath());
+        ItemStack stack = new ItemStack(ModItems.MK_14.get());
+        GunsTool.initCreativeGun(stack, ModItems.MK_14.getId().getPath());
         return stack;
     }
 
@@ -177,12 +178,12 @@ public class M4Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/m4_icon.png");
+        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/mk14ebr_icon.png");
     }
 
     @Override
     public String getGunDisplayName() {
-        return "  M4A1";
+        return "  MK-14";
     }
 
     @Override
