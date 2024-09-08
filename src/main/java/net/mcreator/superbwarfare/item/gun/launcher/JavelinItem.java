@@ -9,6 +9,8 @@ import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
 import net.mcreator.superbwarfare.item.gun.GunItem;
+import net.mcreator.superbwarfare.perk.Perk;
+import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -75,7 +77,7 @@ public class JavelinItem extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState event) {
+    private PlayState idlePredicate(AnimationState<JavelinItem> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
@@ -108,7 +110,7 @@ public class JavelinItem extends GunItem implements GeoItem, AnimatedItem {
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState event) {
+    private PlayState procedurePredicate(AnimationState<JavelinItem> event) {
         if (transformType != null && transformType.firstPerson()) {
             if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
@@ -161,9 +163,7 @@ public class JavelinItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(ModSounds.JAVELIN_RELOAD_EMPTY.get(),
-                ModSounds.JAVELIN_LOCK.get(),
-                ModSounds.JAVELIN_LOCKON.get());
+        return Set.of(ModSounds.JAVELIN_RELOAD_EMPTY.get(), ModSounds.JAVELIN_LOCK.get(), ModSounds.JAVELIN_LOCKON.get());
     }
 
     @Override
@@ -220,5 +220,10 @@ public class JavelinItem extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public String getGunDisplayName() {
         return "FGM-148";
+    }
+
+    @Override
+    public boolean canApplyPerk(Perk perk) {
+        return PerkHelper.LAUNCHER_PERKS.test(perk);
     }
 }
