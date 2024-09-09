@@ -1,11 +1,9 @@
 {
-  "replace": false,
   "values": [
     "superbwarfare:galena_ore",
-    "superbwarfare:deepslate_galena_ore",
     "superbwarfare:scheelite_ore",
+    "superbwarfare:deepslate_galena_ore",
     "superbwarfare:deepslate_scheelite_ore",
-    "superbwarfare:dragon_teeth",
-    "superbwarfare:reforging_table"
+    "superbwarfare:dragon_teeth"
   ]
 }
