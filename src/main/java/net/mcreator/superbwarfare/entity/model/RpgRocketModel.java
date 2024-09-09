@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.entity.model;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.entity.RpgRocketEntity;
+import net.mcreator.superbwarfare.entity.projectile.RpgRocketEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 

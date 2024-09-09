@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.entity;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.entity.projectile.MortarShellEntity;
 import net.mcreator.superbwarfare.init.ModAttributes;
 import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;

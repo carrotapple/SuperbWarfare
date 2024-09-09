@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.entity.model;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.entity.ProjectileEntity;
+import net.mcreator.superbwarfare.entity.projectile.ProjectileEntity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.Minecraft;

@@ -1,10 +1,10 @@
-package net.mcreator.superbwarfare.entity;
+package net.mcreator.superbwarfare.entity.projectile;
 
 import net.mcreator.superbwarfare.init.ModDamageTypes;
 import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;
-import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
+import net.mcreator.superbwarfare.tools.ProjectileTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
@@ -15,7 +15,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,7 +24,7 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 
 public class MortarShellEntity extends ThrowableItemProjectile {
-    private float damage = 100f;
+    private float damage = 150f;
 
     public MortarShellEntity(EntityType<? extends MortarShellEntity> type, Level world) {
         super(type, world);
@@ -66,7 +65,7 @@ public class MortarShellEntity extends ThrowableItemProjectile {
         entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
 
         if (this.level() instanceof ServerLevel) {
-            causeExplode();
+            ProjectileTool.causeCustomExplode(this, this.damage, 12.5f);
         }
         this.discard();
     }
@@ -80,7 +79,7 @@ public class MortarShellEntity extends ThrowableItemProjectile {
             bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
         }
         if (!this.level().isClientSide() && this.level() instanceof ServerLevel) {
-            causeExplode();
+            ProjectileTool.causeCustomExplode(this, this.damage, 12.5f);
         }
         this.discard();
     }
@@ -94,21 +93,10 @@ public class MortarShellEntity extends ThrowableItemProjectile {
         }
         if (this.tickCount > 600 || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
-                causeExplode();
+                ProjectileTool.causeCustomExplode(this, this.damage, 12.5f);
             }
             this.discard();
         }
-    }
-
-    private void causeExplode() {
-        CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 150f,
-                this.getX(), this.getY(), this.getZ(), 12.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
-        explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
-        explosion.finalizeExplosion(false);
-
-        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
     }
 
     @Override

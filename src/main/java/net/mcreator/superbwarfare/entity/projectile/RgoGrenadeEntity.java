@@ -1,13 +1,13 @@
-package net.mcreator.superbwarfare.entity;
+package net.mcreator.superbwarfare.entity.projectile;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.init.ModDamageTypes;
+import net.mcreator.superbwarfare.entity.AnimatedEntity;
 import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
-import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
+import net.mcreator.superbwarfare.tools.ProjectileTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
@@ -23,7 +23,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -83,9 +82,9 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                 if (state.getBlock() instanceof BellBlock bell) {
                     bell.attemptToRing(this.level(), resultPos, blockResult.getDirection());
                 }
-                causeExplode();
-                break;
 
+                ProjectileTool.causeCustomExplode(this, 75f, 5.75f, 1.25f);
+                break;
             case ENTITY:
                 EntityHitResult entityResult = (EntityHitResult) result;
                 Entity entity = entityResult.getEntity();
@@ -98,7 +97,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                     }
                 }
 
-                causeEntityHitExplode(entity);
+                ProjectileTool.causeCustomExplode(this, entity, 75f, 5.75f, 1.25f);
                 break;
             default:
                 break;
@@ -113,7 +112,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
         if (this.fuse <= 0) {
             this.discard();
             if (!this.level().isClientSide) {
-                causeExplode();
+                ProjectileTool.causeCustomExplode(this, 75f, 5.75f, 1.25f);
             }
         }
 
@@ -121,28 +120,6 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
             ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, this.xo, this.yo, this.zo,
                     1, 0, 0, 0, 0.01, true);
         }
-    }
-
-    private void causeEntityHitExplode(Entity entity) {
-        CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 75,
-                entity.getX(), entity.getY(), entity.getZ(), 5.75f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
-        explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
-        explosion.finalizeExplosion(false);
-        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-        this.discard();
-    }
-
-    private void causeExplode() {
-        CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 75,
-                this.getX(), this.getY(), this.getZ(), 5.75f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
-        explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
-        explosion.finalizeExplosion(false);
-        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-        this.discard();
     }
 
     @Override

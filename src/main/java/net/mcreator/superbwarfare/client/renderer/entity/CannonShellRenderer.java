@@ -3,7 +3,7 @@ package net.mcreator.superbwarfare.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.mcreator.superbwarfare.entity.CannonShellEntity;
+import net.mcreator.superbwarfare.entity.projectile.CannonShellEntity;
 import net.mcreator.superbwarfare.entity.layer.CannonShellLayer;
 import net.mcreator.superbwarfare.entity.model.CannonShellEntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;

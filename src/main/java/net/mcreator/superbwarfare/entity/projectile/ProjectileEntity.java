@@ -1,7 +1,8 @@
-package net.mcreator.superbwarfare.entity;
+package net.mcreator.superbwarfare.entity.projectile;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.block.BarbedWireBlock;
+import net.mcreator.superbwarfare.entity.*;
 import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.item.Transcript;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;

@@ -1,6 +1,6 @@
 package net.mcreator.superbwarfare.item;
 
-import net.mcreator.superbwarfare.entity.HandGrenadeEntity;
+import net.mcreator.superbwarfare.entity.projectile.HandGrenadeEntity;
 import net.mcreator.superbwarfare.init.ModDamageTypes;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.tools.CustomExplosion;

@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.entity.model;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.entity.JavelinMissileEntity;
+import net.mcreator.superbwarfare.entity.projectile.JavelinMissileEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 

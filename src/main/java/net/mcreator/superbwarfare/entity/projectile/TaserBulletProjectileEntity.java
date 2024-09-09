@@ -1,4 +1,4 @@
-package net.mcreator.superbwarfare.entity;
+package net.mcreator.superbwarfare.entity.projectile;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.*;

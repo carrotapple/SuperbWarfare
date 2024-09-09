@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.event;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.entity.ProjectileEntity;
+import net.mcreator.superbwarfare.entity.projectile.ProjectileEntity;
 import net.mcreator.superbwarfare.entity.TargetEntity;
 import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.item.gun.GunItem;

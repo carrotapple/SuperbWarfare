@@ -1,6 +1,7 @@
-package net.mcreator.superbwarfare.entity;
+package net.mcreator.superbwarfare.entity.projectile;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.entity.AnimatedEntity;
 import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.mcreator.superbwarfare.tools.CustomExplosion;

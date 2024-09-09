@@ -3,7 +3,7 @@ package net.mcreator.superbwarfare.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.mcreator.superbwarfare.entity.ProjectileEntity;
+import net.mcreator.superbwarfare.entity.projectile.ProjectileEntity;
 import net.mcreator.superbwarfare.entity.layer.ProjectileEntityInsideLayer;
 import net.mcreator.superbwarfare.entity.layer.ProjectileEntityLayer;
 import net.mcreator.superbwarfare.entity.model.ProjectileEntityModel;

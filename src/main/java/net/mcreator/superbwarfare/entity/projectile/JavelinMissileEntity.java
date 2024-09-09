@@ -1,13 +1,14 @@
-package net.mcreator.superbwarfare.entity;
+package net.mcreator.superbwarfare.entity.projectile;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.entity.AnimatedEntity;
 import net.mcreator.superbwarfare.init.ModDamageTypes;
 import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
-import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
+import net.mcreator.superbwarfare.tools.ProjectileTool;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -27,7 +28,6 @@ import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -126,7 +126,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
 
         if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
-                causeEntityHitExplode(entity);
+                ProjectileTool.causeCustomExplode(this, entity, this.damage, 8.0f, this.monsterMultiplier);
             }
         }
 
@@ -150,7 +150,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
 
         if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
-                causeExplode();
+                ProjectileTool.causeCustomExplode(this, 8.0f, this.monsterMultiplier);
             }
         }
 
@@ -183,8 +183,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
                     this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(), entity.getEyeY() + (entity instanceof EnderDragon ? -3 : 1), entity.getZ()));
                 }
                 if (this.position().distanceTo(entity.position()) < 4) {
-                    triggerExplode(entity);
-                    this.discard();
+                    ProjectileTool.causeCustomExplode(this, entity, this.damage, 8.0f, this.monsterMultiplier);
                 }
             }
         }
@@ -202,7 +201,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
 
         if (this.tickCount > 200 || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
-                causeExplode();
+                ProjectileTool.causeCustomExplode(this, 8.0f, this.monsterMultiplier);
             }
             this.discard();
         }
@@ -219,39 +218,6 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
         this.setYHeadRot(this.getYRot());
         this.xRotO = this.getXRot();
         this.yRotO = this.getYRot();
-    }
-
-    private void causeExplode() {
-        CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), this.damage,
-                this.getX(), this.getY(), this.getZ(), 8f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(this.monsterMultiplier);
-        explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
-        explosion.finalizeExplosion(false);
-
-        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-    }
-
-    private void triggerExplode(Entity target) {
-        CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), this.damage,
-                target.getX(), target.getY(), target.getZ(), 8f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(this.monsterMultiplier);
-        explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
-        explosion.finalizeExplosion(false);
-
-        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-    }
-
-    private void causeEntityHitExplode(Entity entity) {
-        CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), this.damage,
-                entity.getX(), entity.getY(), entity.getZ(), 8f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(this.monsterMultiplier);
-        explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
-        explosion.finalizeExplosion(false);
-        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-        this.discard();
     }
 
     private PlayState movementPredicate(AnimationState<JavelinMissileEntity> event) {

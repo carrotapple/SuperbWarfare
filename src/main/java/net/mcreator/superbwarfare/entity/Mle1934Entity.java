@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.entity;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.entity.projectile.CannonShellEntity;
 import net.mcreator.superbwarfare.init.ModDamageTypes;
 import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;

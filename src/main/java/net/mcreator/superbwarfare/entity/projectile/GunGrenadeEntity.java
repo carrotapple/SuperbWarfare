@@ -1,4 +1,4 @@
-package net.mcreator.superbwarfare.entity;
+package net.mcreator.superbwarfare.entity.projectile;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModDamageTypes;
@@ -6,8 +6,8 @@ import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
-import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
+import net.mcreator.superbwarfare.tools.ProjectileTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
@@ -21,7 +21,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -91,7 +90,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
 
         if (this.tickCount > 0) {
             if (this.level() instanceof ServerLevel) {
-                causeEntityHitExplode(entity);
+                ProjectileTool.causeCustomExplode(this, entity, this.damage * 1.8f, 7.5f, this.monsterMultiplier);
             }
         }
 
@@ -108,7 +107,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         }
         if (this.tickCount > 0) {
             if (this.level() instanceof ServerLevel) {
-                causeExplode();
+                ProjectileTool.causeCustomExplode(this, this.damage * 1.8f, 7.5f, this.monsterMultiplier);
             }
         }
 
@@ -126,31 +125,9 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
 
         if (this.tickCount > 200 || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
-                causeExplode();
+                ProjectileTool.causeCustomExplode(this, this.damage * 1.8f, 7.5f, this.monsterMultiplier);
             }
             this.discard();
         }
-    }
-
-    private void causeExplode() {
-        CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 1.8f * this.damage,
-                this.getX(), this.getY(), this.getZ(), 7.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(this.monsterMultiplier);
-        explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
-        explosion.finalizeExplosion(false);
-
-        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-    }
-
-    private void causeEntityHitExplode(Entity entity) {
-        CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), 1.8f * this.damage,
-                entity.getX(), entity.getY(), entity.getZ(), 7.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(this.monsterMultiplier);
-        explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
-        explosion.finalizeExplosion(false);
-        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-        this.discard();
     }
 }

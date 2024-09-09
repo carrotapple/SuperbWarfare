@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.network.message;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.entity.*;
+import net.mcreator.superbwarfare.entity.projectile.*;
 import net.mcreator.superbwarfare.event.GunEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModPerks;

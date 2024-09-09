@@ -1,6 +1,6 @@
 package net.mcreator.superbwarfare.tools;
 
-import net.mcreator.superbwarfare.entity.ProjectileEntity;
+import net.mcreator.superbwarfare.entity.projectile.ProjectileEntity;
 import net.minecraft.world.phys.EntityHitResult;
 
 /**
