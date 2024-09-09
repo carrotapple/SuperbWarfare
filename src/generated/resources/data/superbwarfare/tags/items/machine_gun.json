@@ -1,9 +1,8 @@
 {
-  "replace": false,
   "values": [
+    "superbwarfare:minigun",
     "superbwarfare:devotion",
     "superbwarfare:rpk",
-    "superbwarfare:minigun",
     "superbwarfare:m_60"
   ]
 }
