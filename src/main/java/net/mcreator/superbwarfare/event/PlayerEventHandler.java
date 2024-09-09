@@ -23,6 +23,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -92,7 +93,6 @@ public class PlayerEventHandler {
                 handleChangeFireRate(player);
                 handleBocekPulling(player);
                 handleGunRecoil(player);
-                handleWeaponSeek(player);
             }
 
             handleGround(player);
@@ -102,15 +102,6 @@ public class PlayerEventHandler {
             handleTacticalSprint(player);
             handleBreath(player);
         }
-    }
-
-    // 测试用
-    private static void handleWeaponSeek(Player player) {
-//        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming) {
-//            Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 256, 30);
-//            if (seekingEntity instanceof LivingEntity _entity && !_entity.level().isClientSide())
-//                _entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 2, 0));
-//        }
     }
 
     private static void handleWeaponSway(Player player) {
@@ -570,6 +561,22 @@ public class PlayerEventHandler {
             int maxDistance = playerTicketManager.viewDistance;
 
             ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new SimulationDistanceMessage(maxDistance));
+        }
+    }
+
+    @SubscribeEvent
+    public static void onAnvilUpdate(AnvilUpdateEvent event) {
+        ItemStack left = event.getLeft();
+        ItemStack right = event.getRight();
+
+        if (left.is(ModTags.Items.GUN) && right.getItem() == ModItems.SHORTCUT_PACK.get()) {
+            ItemStack output = left.copy();
+
+            output.getOrCreateTag().putDouble("UpgradePoint", output.getOrCreateTag().getDouble("UpgradePoint") + 1);
+
+            event.setOutput(output);
+            event.setCost(10);
+            event.setMaterialCost(1);
         }
     }
 }
