@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ada",
+    "cbc",
+    "ada"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:diamond"
+    },
+    "b": {
+      "item": "superbwarfare:epic_material_pack"
+    },
+    "c": {
+      "item": "minecraft:netherite_upgrade_smithing_template"
+    },
+    "d": {
+      "item": "minecraft:nether_star"
+    }
+  },
+  "result": {
+    "item": "superbwarfare:shortcut_pack",
+    "count": 1
+  }
+}

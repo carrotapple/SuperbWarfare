@@ -236,6 +236,7 @@ public class ModItems {
     /**
      * 单独注册，用于Tab图标，不要删
      */
+    public static final RegistryObject<Item> SHORTCUT_PACK = PERKS.register("shortcut_pack", () -> new Item(new Item.Properties().rarity(Rarity.EPIC)));
 
     public static final RegistryObject<Item> EMPTY_PERK = PERKS.register("empty_perk", () -> new Item(new Item.Properties()));
 
