@@ -205,6 +205,8 @@
   "des.superbwarfare.blade_bullet": "Makes the target bleeding after landing a hit",
   "item.superbwarfare.curse_flame_bullet": "Curse Flame Bullet",
   "des.superbwarfare.curse_flame_bullet": "命中后会使目标受到咒火效果",
+  "item.superbwarfare.longer_wire": "Longer Wire",
+  "des.superbwarfare.longer_wire": "Increases the range of Taser Gun",
 
   "item.superbwarfare.heal_clip": "Heal Clip",
   "des.superbwarfare.heal_clip": "Reloading after dealing a final blow will heal you and your nearby allies",
@@ -214,6 +216,8 @@
   "des.superbwarfare.subsistence": "Defeating targets partially reloads the magazine from reserves",
   "item.superbwarfare.field_doctor": "Field Doctor",
   "des.superbwarfare.field_doctor": "腰射时发射的子弹可以治疗队友",
+  "item.superbwarfare.super_recharge": "Super Recharge",
+  "des.superbwarfare.super_recharge": "Increases the recharge speed of Taser Gun",
 
   "item.superbwarfare.kill_clip": "Kill Clip",
   "des.superbwarfare.kill_clip": "Increases the damage of weapon after dealing a final blow",
@@ -225,6 +229,8 @@
   "des.superbwarfare.head_seeker": "Body shots landed with this weapon increase precision damage for a short time",
   "item.superbwarfare.monster_hunter": "Monster Hunter",
   "des.superbwarfare.monster_hunter": "Increases the damage of weapon against monsters",
+  "item.superbwarfare.volt_overload": "Volt Overload",
+  "des.superbwarfare.volt_overload": "Increases the shock damage of Taser Gun",
 
   "perk.superbwarfare.tips": "[Perks]",
   "perk.superbwarfare.slot": "Type: ",
@@ -295,13 +301,6 @@
   "item.minecraft.potion.effect.superbwarfare_long_shock": "Potion of Shock",
   "item.minecraft.splash_potion.effect.superbwarfare_long_shock": "Splash Potion of Shock",
   "item.minecraft.lingering_potion.effect.superbwarfare_long_shock": "Lingering Potion of Shock",
-
-  "enchantment.superbwarfare.volt_overload": "Volt Overload",
-  "enchantment.superbwarfare.volt_overload.desc": "Increases the shock damage of TaserGun",
-  "enchantment.superbwarfare.super_recharge": "Super Recharge",
-  "enchantment.superbwarfare.super_recharge.desc": "Increases the recharge speed of TaserGun",
-  "enchantment.superbwarfare.longer_wire": "Longer Wire",
-  "enchantment.superbwarfare.longer_wire.desc": "Increases the range of TaserGun",
 
   "des.superbwarfare.sensitivity": "Current Sensitivity of This Gun: %1$s",
   "des.superbwarfare.need_bolt_action": "[ Need Bolt Action ]",

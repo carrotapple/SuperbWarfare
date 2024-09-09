@@ -3,7 +3,10 @@ package net.mcreator.superbwarfare.network.message;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.*;
 import net.mcreator.superbwarfare.event.GunEventHandler;
-import net.mcreator.superbwarfare.init.*;
+import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModPerks;
+import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.perk.AmmoPerk;
 import net.mcreator.superbwarfare.perk.Perk;
@@ -27,7 +30,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
 import org.joml.Vector3d;
@@ -352,8 +354,8 @@ public class FireMessage {
                     serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.TASER_FIRE_3P.get(), SoundSource.PLAYERS, 1, 1);
                 }
 
-                int volt = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.VOLT_OVERLOAD.get(), stack);
-                int wire_length = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.LONGER_WIRE.get(), stack);
+                int volt = PerkHelper.getItemPerkLevel(ModPerks.VOLT_OVERLOAD.get(), stack);
+                int wireLength = PerkHelper.getItemPerkLevel(ModPerks.LONGER_WIRE.get(), stack);
 
                 boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming;
                 double spread = stack.getOrCreateTag().getDouble("spread");
@@ -361,7 +363,7 @@ public class FireMessage {
 
                 Level level = player.level();
                 if (!level.isClientSide()) {
-                    TaserBulletProjectileEntity taserBulletProjectile = new TaserBulletProjectileEntity(player, level, (float) stack.getOrCreateTag().getDouble("damage"), volt, wire_length);
+                    TaserBulletProjectileEntity taserBulletProjectile = new TaserBulletProjectileEntity(player, level, (float) stack.getOrCreateTag().getDouble("damage"), volt, wireLength);
 
                     taserBulletProjectile.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                     taserBulletProjectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) stack.getOrCreateTag().getDouble("velocity"),

@@ -205,6 +205,8 @@
   "des.superbwarfare.blade_bullet": "命中后会使目标流血",
   "item.superbwarfare.curse_flame_bullet": "咒火弹",
   "des.superbwarfare.curse_flame_bullet": "命中后会使目标受到咒火效果",
+  "item.superbwarfare.longer_wire": "延长导线",
+  "des.superbwarfare.longer_wire": "增加泰瑟枪的射程",
 
   "item.superbwarfare.heal_clip": "治疗弹匣",
   "des.superbwarfare.heal_clip": "最后一击后短时间内填装，可治疗自身和附近队友",
@@ -214,6 +216,8 @@
   "des.superbwarfare.subsistence": "消灭目标会使弹药从备弹中转移并填装部分弹匣",
   "item.superbwarfare.field_doctor": "役医师",
   "des.superbwarfare.field_doctor": "腰射时发射的子弹可以治疗队友",
+  "item.superbwarfare.super_recharge": "超级快充",
+  "des.superbwarfare.super_recharge": "增加泰瑟枪充能的速度",
 
   "item.superbwarfare.kill_clip": "杀戮弹匣",
   "des.superbwarfare.kill_clip": "完成击杀后填装可提升武器伤害",
@@ -225,6 +229,8 @@
   "des.superbwarfare.head_seeker": "使用此武器命中身体可在短时间内提高精准伤害",
   "item.superbwarfare.monster_hunter": "怪物猎人",
   "des.superbwarfare.monster_hunter": "增加武器对怪物的伤害",
+  "item.superbwarfare.volt_overload": "电压过载",
+  "des.superbwarfare.volt_overload": "增加泰瑟枪电击的伤害",
 
   "perk.superbwarfare.tips": "[武器模组]",
   "perk.superbwarfare.slot": "类型: ",
@@ -295,13 +301,6 @@
   "item.minecraft.potion.effect.superbwarfare_long_shock": "电击药水",
   "item.minecraft.splash_potion.effect.superbwarfare_long_shock": "喷溅型电击药水",
   "item.minecraft.lingering_potion.effect.superbwarfare_long_shock": "滞留型电击药水",
-
-  "enchantment.superbwarfare.volt_overload": "电压过载",
-  "enchantment.superbwarfare.volt_overload.desc": "增加泰瑟枪电击的伤害",
-  "enchantment.superbwarfare.super_recharge": "超级快充",
-  "enchantment.superbwarfare.super_recharge.desc": "增加泰瑟枪充能的速度",
-  "enchantment.superbwarfare.longer_wire": "延长导线",
-  "enchantment.superbwarfare.longer_wire.desc": "增加泰瑟枪的射程",
 
   "des.superbwarfare.sensitivity": "当前枪械的灵敏度为：%1$s",
   "des.superbwarfare.need_bolt_action": "【需要拉栓】",

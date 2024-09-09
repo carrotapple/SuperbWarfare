@@ -4,18 +4,21 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.TaserItemRenderer;
-import net.mcreator.superbwarfare.init.ModEnchantments;
 import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
 import net.mcreator.superbwarfare.item.gun.GunItem;
-import net.mcreator.superbwarfare.tools.*;
+import net.mcreator.superbwarfare.perk.Perk;
+import net.mcreator.superbwarfare.perk.PerkHelper;
+import net.mcreator.superbwarfare.tools.GunsTool;
+import net.mcreator.superbwarfare.tools.ItemNBTTool;
+import net.mcreator.superbwarfare.tools.PoseTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -28,9 +31,10 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
@@ -42,7 +46,6 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -100,14 +103,13 @@ public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState event) {
+    private PlayState idlePredicate(AnimationState<TaserItem> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
-
             if (stack.getOrCreateTag().getInt("draw_time") < 11) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.taser.draw"));
             }
@@ -133,7 +135,7 @@ public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState event) {
+    private PlayState procedurePredicate(AnimationState<TaserItem> event) {
         if (transformType != null && transformType.firstPerson()) {
             if (!(this.animationProcedure.equals("empty")) && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
                 event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
@@ -171,11 +173,6 @@ public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
         return this.cache;
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
-        TooltipTool.addGunTips(list, stack);
-    }
-
     public static int getAmmoCount(Player player) {
         int sum = 0;
         for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
@@ -194,10 +191,10 @@ public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
         if (entity instanceof Player player) {
             stack.getOrCreateTag().putInt("max_ammo", getAmmoCount(player));
         }
-        int charge_speed = EnchantmentHelper.getTagEnchantmentLevel(ModEnchantments.SUPER_RECHARGE.get(), stack);
 
-        if (ItemNBTTool.getInt(stack, TAG_POWER, 1200) < 1200) {
-            ItemNBTTool.setInt(stack, TAG_POWER, Mth.clamp(ItemNBTTool.getInt(stack, TAG_POWER, 1200) + 1 + charge_speed,0,1200));
+        int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.SUPER_RECHARGE.get(), stack);
+        if (ItemNBTTool.getInt(stack, TAG_POWER, 1200) < MAX_POWER_SIZE) {
+            ItemNBTTool.setInt(stack, TAG_POWER, Mth.clamp(ItemNBTTool.getInt(stack, TAG_POWER, 1200) + 1 + perkLevel, 0, MAX_POWER_SIZE));
         }
     }
 
@@ -227,17 +224,11 @@ public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public int getEnchantmentValue(ItemStack stack) {
-        return 10;
-    }
-
-    @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return enchantment.category == EnchantmentCategoryTool.TASER;
+    public boolean canApplyPerk(Perk perk) {
+        return switch (perk.type) {
+            case AMMO -> perk == ModPerks.LONGER_WIRE.get();
+            case FUNCTIONAL -> perk == ModPerks.SUPER_RECHARGE.get();
+            case DAMAGE -> perk == ModPerks.VOLT_OVERLOAD.get();
+        };
     }
 }

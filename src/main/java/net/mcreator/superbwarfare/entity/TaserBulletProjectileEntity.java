@@ -1,10 +1,7 @@
 package net.mcreator.superbwarfare.entity;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.init.ModDamageTypes;
-import net.mcreator.superbwarfare.init.ModEntities;
-import net.mcreator.superbwarfare.init.ModMobEffects;
-import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.Packet;
@@ -21,7 +18,6 @@ import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -36,19 +32,19 @@ import net.minecraftforge.network.PlayMessages;
 public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSupplier {
     private float damage = 1f;
     private int volt = 0;
-    private int wire_length = 0;
+    private int wireLength = 0;
     private boolean stop = false;
-    public static final ItemStack PROJECTILE_ITEM = new ItemStack(Blocks.AIR);
+    public static final ItemStack PROJECTILE_ITEM = new ItemStack(ModItems.TASER_ELECTRODE.get());
 
     public TaserBulletProjectileEntity(PlayMessages.SpawnEntity packet, Level world) {
         super(ModEntities.TASER_BULLET_PROJECTILE.get(), world);
     }
 
-    public TaserBulletProjectileEntity(LivingEntity entity, Level level, float damage, int volt, int wire_length) {
+    public TaserBulletProjectileEntity(LivingEntity entity, Level level, float damage, int volt, int wireLength) {
         super(ModEntities.TASER_BULLET_PROJECTILE.get(), entity, level);
         this.damage = damage;
         this.volt = volt;
-        this.wire_length = wire_length;
+        this.wireLength = wireLength;
     }
 
     public TaserBulletProjectileEntity(EntityType<? extends TaserBulletProjectileEntity> type, Level world) {
@@ -114,7 +110,7 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
     public void tick() {
         super.tick();
 
-        if (this.getOwner() != null && this.position().distanceTo(this.getOwner().position()) > 10 + 4 * wire_length && !stop) {
+        if (this.getOwner() != null && this.position().distanceTo(this.getOwner().position()) > 10 + 4 * wireLength && !stop) {
             stop = true;
             this.setDeltaMovement(new Vec3(0, 0, 0));
         }

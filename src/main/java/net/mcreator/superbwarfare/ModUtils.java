@@ -51,7 +51,6 @@ public class ModUtils {
         ModParticleTypes.REGISTRY.register(bus);
         ModPotion.POTIONS.register(bus);
         ModMenuTypes.REGISTRY.register(bus);
-        ModEnchantments.REGISTRY.register(bus);
         ModVillagers.register(bus);
 
         bus.addListener(this::onCommonSetup);

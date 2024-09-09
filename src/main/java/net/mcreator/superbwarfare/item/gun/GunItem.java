@@ -7,7 +7,6 @@ import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
-import net.mcreator.superbwarfare.tools.EnchantmentCategoryTool;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.ItemNBTTool;
 import net.mcreator.superbwarfare.tools.TooltipTool;
@@ -134,18 +133,13 @@ public abstract class GunItem extends Item {
     }
 
     @Override
-    public int getEnchantmentValue(ItemStack stack) {
-        return 15;
-    }
-
-    @Override
     public boolean isEnchantable(ItemStack stack) {
-        return true;
+        return false;
     }
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-        return enchantment.category == EnchantmentCategoryTool.GUN;
+        return false;
     }
 
     private void handleGunPerks(ItemStack stack) {
