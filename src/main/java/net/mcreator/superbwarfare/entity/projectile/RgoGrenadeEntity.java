@@ -89,6 +89,8 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                 EntityHitResult entityResult = (EntityHitResult) result;
                 Entity entity = entityResult.getEntity();
 
+                if (entity == this.getOwner()) return;
+
                 if (this.getOwner() instanceof LivingEntity living) {
                     if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
                         living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
