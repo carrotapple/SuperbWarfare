@@ -1,8 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "superbwarfare:block/galena_ore",
-    "particle": "superbwarfare:block/galena_ore"
-  },
-  "render_type": "solid"
-}

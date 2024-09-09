@@ -1,8 +1,9 @@
-// 1.20.1	2024-09-09T20:45:09.8782505	Item Models: superbwarfare
+// 1.20.1	2024-09-09T22:03:46.3738464	Item Models: superbwarfare
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_47_blueprint.json
 c993bddc0db9453ffbefa59f9ac9a74dba909038 assets/superbwarfare/models/item/ancient_cpu.json
 4b8fe8fbe5e64c3449ad539317254e4ed7188411 assets/superbwarfare/models/item/ap_head.json
+984c08ca6f6893a15721a85e30118f9e32c65c7f assets/superbwarfare/models/item/barbed_wire.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/bocek_blueprint.json
 1e5b4637c3787516305dd3d1598f401a5e78a954 assets/superbwarfare/models/item/cemented_carbide_action.json
 b793716e367623d60461fc760de4f012c28fdc53 assets/superbwarfare/models/item/cemented_carbide_barrel.json
@@ -33,6 +34,7 @@ e04bbd61e716fc5d53c9425aba508fc3287bfd57 assets/superbwarfare/models/item/iron_p
 00e7fd942d22c0fbf1f5b70cd5f4d86cc6f5be1d assets/superbwarfare/models/item/iron_spring.json
 590c0efcf223fdc2e98660ff3b293a68f87ac02e assets/superbwarfare/models/item/iron_trigger.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/javelin_blueprint.json
+195c1b7cbcce9b0ac42ecbfc21a8cafff8c78372 assets/superbwarfare/models/item/jump_pad.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/k_98_blueprint.json
 ce9e4fd8ea92cfdbdda158776c1b6e1b482a3f2a assets/superbwarfare/models/item/lead_ingot.json
 f66c351b4843ad4d4e086ccfb7d4d0221227d196 assets/superbwarfare/models/item/legendary_material_pack.json
@@ -63,6 +65,7 @@ f5b4fc1445373e6acfaa077e109de693c624eb1e assets/superbwarfare/models/item/nether
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/qbz_95_blueprint.json
 e821640d80c55763e7e7b62f7b80c60ff56dcc4f assets/superbwarfare/models/item/rare_material_pack.json
 ce0f0949b0545d8ef08aeaa52dd423dbe592f704 assets/superbwarfare/models/item/raw_cemented_carbide_powder.json
+5b8f7d5922e49e06bcd4d4d2a2a3dc934548570b assets/superbwarfare/models/item/reforging_table.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/rpg_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/rpk_blueprint.json
 ce2232fbc6a9186371c6ae6745ec3be2a0a33546 assets/superbwarfare/models/item/scheelite.json

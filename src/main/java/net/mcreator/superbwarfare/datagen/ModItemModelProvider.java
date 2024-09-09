@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.datagen;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModBlocks;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -112,6 +113,11 @@ public class ModItemModelProvider extends ItemModelProvider {
         blueprintItem(ModItems.K_98_BLUEPRINT);
         blueprintItem(ModItems.MOSIN_NAGANT_BLUEPRINT);
         blueprintItem(ModItems.JAVELIN_BLUEPRINT);
+
+        // blocks
+        evenSimplerBlockItem(ModBlocks.BARBED_WIRE);
+        evenSimplerBlockItem(ModBlocks.JUMP_PAD);
+        evenSimplerBlockItem(ModBlocks.REFORGING_TABLE);
     }
 
     private ItemModelBuilder simpleItem(RegistryObject<Item> item) {

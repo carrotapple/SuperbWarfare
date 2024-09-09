@@ -1,8 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "superbwarfare:block/scheelite_ore",
-    "particle": "superbwarfare:block/scheelite_ore"
-  },
-  "render_type": "solid"
-}
