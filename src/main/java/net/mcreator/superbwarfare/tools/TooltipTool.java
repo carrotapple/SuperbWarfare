@@ -202,11 +202,27 @@ public class TooltipTool {
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.#").format(damage)).withStyle(ChatFormatting.GREEN)));
 
+        addLevelTips(tooltip, stack);
         addPerkTips(tooltip, stack);
 
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                 e -> tooltip.add(Component.literal(e.getEnergyStored() + " / " + e.getMaxEnergyStored() + " FE").withStyle(ChatFormatting.GRAY))
         );
+    }
+
+    public static void addLauncherTips(List<Component> tooltip, ItemStack stack) {
+        tooltip.add(Component.literal(""));
+
+        double damage = ItemNBTTool.getDouble(stack, "damage", 0)
+                * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1);
+
+        tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.literal(new DecimalFormat("##.#").format(damage)).withStyle(ChatFormatting.GREEN)));
+
+        addLevelTips(tooltip, stack);
+        addPerkTips(tooltip, stack);
+
     }
 
     public static void addMonitorTips(List<Component> tooltip, String id) {

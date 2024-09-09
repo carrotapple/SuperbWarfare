@@ -236,6 +236,9 @@ public class ModItems {
     /**
      * 单独注册，用于Tab图标，不要删
      */
+
+    public static final RegistryObject<Item> EMPTY_PERK = PERKS.register("empty_perk", () -> new Item(new Item.Properties()));
+
     public static final RegistryObject<Item> AP_BULLET = PERKS.register("ap_bullet", () -> new PerkItem(ModPerks.AP_BULLET));
 
     public static void register(IEventBus bus) {

@@ -19,8 +19,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class TaserItemModel extends GeoModel<TaserItem> {
 
-    public static final String TAG_POWER = "Power";
-
     @Override
     public ResourceLocation getAnimationResource(TaserItem animatable) {
         return new ResourceLocation(ModUtils.MODID, "animations/taser.animation.json");

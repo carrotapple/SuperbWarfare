@@ -232,6 +232,8 @@
   "item.superbwarfare.volt_overload": "Volt Overload",
   "des.superbwarfare.volt_overload": "Increases the shock damage of Taser Gun",
 
+  "item.superbwarfare.empty_perk": "Empty Perk",
+
   "perk.superbwarfare.tips": "[Perks]",
   "perk.superbwarfare.slot": "Type: ",
   "perk.superbwarfare.slot_Ammo": "Bullet Perk",
