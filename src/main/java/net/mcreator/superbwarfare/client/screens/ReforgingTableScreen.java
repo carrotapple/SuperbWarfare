@@ -40,7 +40,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(pGuiGraphics);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+
         var ammoPerkLevel = ReforgingTableScreen.this.menu.ammoPerkLevel.get();
         var funcPerkLevel = ReforgingTableScreen.this.menu.funcPerkLevel.get();
         var damagePerkLevel = ReforgingTableScreen.this.menu.damagePerkLevel.get();
@@ -62,6 +62,8 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         int pointS = upgradePoint % 10;
         pGuiGraphics.blit(TEXTURE, this.leftPos + 43, this.topPos + 20, 51 + 5 * pointG, 178, 5, 5, 200, 200);
         pGuiGraphics.blit(TEXTURE, this.leftPos + 47, this.topPos + 20, 51 + 5 * pointS, 178, 5, 5, 200, 200);
+
+        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
     }
 
     @Override

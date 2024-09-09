@@ -445,9 +445,15 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         }
 
         public boolean mayPlace(ItemStack pStack) {
+            var slot = switch (type) {
+                case AMMO -> AMMO_PERK_SLOT;
+                case FUNCTIONAL -> FUNC_PERK_SLOT;
+                case DAMAGE -> DAMAGE_PERK_SLOT;
+            };
+
             return pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == type
                     && !container.getItem(INPUT_SLOT).isEmpty() && container.getItem(INPUT_SLOT).getItem() instanceof GunItem gunItem
-                    && gunItem.canApplyPerk(perkItem.getPerk());
+                    && gunItem.canApplyPerk(perkItem.getPerk()) && container.getItem(slot).isEmpty();
         }
 
         public int getMaxStackSize() {
