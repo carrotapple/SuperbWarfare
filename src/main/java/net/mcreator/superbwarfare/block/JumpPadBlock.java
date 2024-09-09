@@ -100,7 +100,7 @@ public class JumpPadBlock extends Block {
         // 禁止套娃
         if (entity instanceof TargetEntity || entity instanceof ICannonEntity) return;
 
-        boolean zooming = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zooming).orElse(false);
+        boolean zooming = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zoom).orElse(false);
 
         if (entity.isShiftKeyDown()) {
             if (entity.onGround()) {

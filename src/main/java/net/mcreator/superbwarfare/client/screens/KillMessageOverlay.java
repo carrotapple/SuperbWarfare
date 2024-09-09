@@ -246,7 +246,7 @@ public class KillMessageOverlay {
         if (record.headshot) {
             icon = HEADSHOT;
         } else {
-            if (DamageTypeTool.isArrowDamage(record.damageType) || DamageTypeTool.isGunDamage(record.damageType)) {
+            if (DamageTypeTool.isGunDamage(record.damageType)) {
                 icon = null;
             } else {
                 // 如果是其他伤害，则渲染对应图标

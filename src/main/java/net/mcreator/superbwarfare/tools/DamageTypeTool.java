@@ -7,16 +7,6 @@ import net.minecraft.world.damagesource.DamageType;
 
 public class DamageTypeTool {
 
-    public static boolean isArrowDamage(DamageSource source) {
-        return source.is(ModDamageTypes.ARROW_IN_BRAIN) || source.is(ModDamageTypes.ARROW_IN_KNEE)
-                || source.is(ModDamageTypes.ARROW_IN_BRAIN_ABSOLUTE) || source.is(ModDamageTypes.ARROW_IN_KNEE_ABSOLUTE);
-    }
-
-    public static boolean isArrowDamage(ResourceKey<DamageType> damageType) {
-        return damageType == ModDamageTypes.ARROW_IN_BRAIN || damageType == ModDamageTypes.ARROW_IN_KNEE
-                || damageType == ModDamageTypes.ARROW_IN_BRAIN_ABSOLUTE || damageType == ModDamageTypes.ARROW_IN_KNEE_ABSOLUTE;
-    }
-
     public static boolean isGunDamage(DamageSource source) {
         return source.is(ModDamageTypes.GUN_FIRE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)
                 || source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT_ABSOLUTE);
@@ -32,8 +22,7 @@ public class DamageTypeTool {
     }
 
     public static boolean isHeadshotDamage(DamageSource source) {
-        return source.is(ModDamageTypes.GUN_FIRE_HEADSHOT) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT_ABSOLUTE)
-                || source.is(ModDamageTypes.ARROW_IN_BRAIN) || source.is(ModDamageTypes.ARROW_IN_BRAIN_ABSOLUTE);
+        return source.is(ModDamageTypes.GUN_FIRE_HEADSHOT) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT_ABSOLUTE);
     }
 
     public static boolean isGunFireDamage(DamageSource source) {

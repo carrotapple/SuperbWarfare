@@ -64,7 +64,6 @@ public class PlayerEventHandler {
 
         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
             capability.zoom = false;
-            capability.zooming = false;
             capability.tacticalSprintExhaustion = false;
             capability.tacticalSprintTime = 600;
             capability.syncPlayerVariables(player);
@@ -118,7 +117,7 @@ public class PlayerEventHandler {
             }
 
             if (!player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breath &&
-                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming) {
+                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom) {
                 float newPitch = (float) (player.getXRot() - 0.03f * Mth.sin((float) (0.08 * player.tickCount)) * pose * Mth.nextDouble(RandomSource.create(), 0.1, 1));
                 player.setXRot(newPitch);
                 player.xRotO = player.getXRot();
@@ -274,7 +273,7 @@ public class PlayerEventHandler {
             player.getPersistentData().putDouble("noRun", 20);
         }
 
-        if (player.isShiftKeyDown() || player.isPassenger() || player.isInWater() || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
+        if (player.isShiftKeyDown() || player.isPassenger() || player.isInWater() || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
             player.getPersistentData().putDouble("noRun", 1);
         }
 
@@ -282,7 +281,7 @@ public class PlayerEventHandler {
             player.getPersistentData().putDouble("noRun", (player.getPersistentData().getDouble("noRun") - 1));
         }
 
-        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
+        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
             player.setSprinting(false);
         }
     }
@@ -340,19 +339,19 @@ public class PlayerEventHandler {
     }
 
     private static void handlePrepareZoom(Player player) {
-        ItemStack stack = player.getMainHandItem();
-
-        if (stack.is(ModTags.Items.GUN) && !player.isSpectator()) {
-            if (player.getMainHandItem().getItem() != ModItems.MINIGUN.get()) {
-                if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
-                    player.setSprinting(false);
-                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                        capability.zooming = true;
-                        capability.syncPlayerVariables(player);
-                    });
-                }
-            }
-        }
+//        ItemStack stack = player.getMainHandItem();
+//
+//        if (stack.is(ModTags.Items.GUN) && !player.isSpectator()) {
+//            if (player.getMainHandItem().getItem() != ModItems.MINIGUN.get()) {
+//                if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
+//                    player.setSprinting(false);
+//                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+//                        capability.zooming = true;
+//                        capability.syncPlayerVariables(player);
+//                    });
+//                }
+//            }
+//        }
     }
 
     private static void handleSpecialWeaponAmmo(Player player) {

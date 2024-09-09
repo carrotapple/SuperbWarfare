@@ -1,11 +1,11 @@
 {
   "zoom_speed": 1,
   "zoom": 2,
-  "spread": 3,
-  "zoomSpread": 0,
+  "spread": 4,
+  "zoomSpread": 1,
   "recoil_x": 0.005,
   "recoil_y": 0.003,
-  "headshot": 1.5,
+  "headshot": 2.5,
   "damage": 24,
   "weight": 1,
   "BypassesArmor": 0.25

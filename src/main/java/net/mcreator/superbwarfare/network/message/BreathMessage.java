@@ -37,7 +37,7 @@ public class BreathMessage {
 
                 var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null);
 
-                if (message.type && !cap.orElse(new ModVariables.PlayerVariables()).breathExhaustion && cap.orElse(new ModVariables.PlayerVariables()).zooming &&
+                if (message.type && !cap.orElse(new ModVariables.PlayerVariables()).breathExhaustion && cap.orElse(new ModVariables.PlayerVariables()).zoom &&
                         player.getPersistentData().getDouble("NoBreath") == 0) {
                     cap.ifPresent(capability -> {
                         capability.breath = true;

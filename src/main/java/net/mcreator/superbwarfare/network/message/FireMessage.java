@@ -119,7 +119,7 @@ public class FireMessage {
             handleRpgFire(player);
         }
 
-        if (handItem.getItem() == ModItems.JAVELIN.get() && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming && tag.getInt("ammo") > 0) {
+        if (handItem.getItem() == ModItems.JAVELIN.get() && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom && tag.getInt("ammo") > 0) {
             Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 384, 8);
             if (seekingEntity != null) {
                 tag.putString("TargetEntity", seekingEntity.getStringUUID());
@@ -182,65 +182,70 @@ public class FireMessage {
 
         if (stack.getOrCreateTag().getDouble("power") >= 6) {
             stack.getOrCreateTag().putDouble("speed", stack.getOrCreateTag().getDouble("power"));
-            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
-                Level level = player.level();
-                if (!level.isClientSide()) {
-                    float damage = (float) (0.04 * stack.getOrCreateTag().getDouble("damage") * (1 + 0.05 * stack.getOrCreateTag().getInt("level")));
-                    float bypassArmorRate = (float) stack.getOrCreateTag().getDouble("BypassArmor");
+            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
+                Level plevel = player.level();
+                if (!plevel.isClientSide()) {
+                    ItemStack heldItem = player.getMainHandItem();
 
-                    BocekArrowEntity arrow = new BocekArrowEntity(player, level);
+                    if (player.level().isClientSide()) return;
+
+                    CompoundTag tag = heldItem.getOrCreateTag();
+                    double damage;
+                    float headshot = (float) tag.getDouble("headshot");
+                    float velocity = 2 * (float) tag.getDouble("speed");
+                    boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
+                    float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
 
                     ProjectileEntity projectile = new ProjectileEntity(player.level())
                             .shooter(player)
-                            .headShot(1)
-                            .zoom(true);
+                            .headShot(headshot)
+                            .zoom(zoom);
 
-                    var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+                    var perk = PerkHelper.getPerkByType(heldItem, Perk.Type.AMMO);
                     if (perk instanceof AmmoPerk ammoPerk) {
-                        int pLevel = PerkHelper.getItemPerkLevel(perk, stack);
+                        int level = PerkHelper.getItemPerkLevel(perk, heldItem);
 
-                        bypassArmorRate += ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (pLevel - 1) : 0);
+                        bypassArmorRate += ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (level - 1) : 0);
                         projectile.setRGB(ammoPerk.rgb);
 
                         if (ammoPerk.mobEffect.get() != null) {
-                            projectile.effect(() -> new MobEffectInstance(ammoPerk.mobEffect.get(), 70 + 30 * pLevel, pLevel - 1));
+                            projectile.effect(() -> new MobEffectInstance(ammoPerk.mobEffect.get(), 70 + 30 * level, level - 1));
                         }
                     }
 
-                    float undeadMultiple = 1;
+                    bypassArmorRate = Math.max(bypassArmorRate, 0);
+                    projectile.bypassArmorRate(bypassArmorRate);
 
                     if (perk == ModPerks.SILVER_BULLET.get()) {
-                        int perkLevel = PerkHelper.getItemPerkLevel(perk, stack);
-                        undeadMultiple = 1.0f + 0.5f * perkLevel;
+                        int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+                        projectile.undeadMultiple(1.0f + 0.5f * level);
                     } else if (perk == ModPerks.BEAST_BULLET.get()) {
                         projectile.beast();
                     }
 
-                    var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
+                    var dmgPerk = PerkHelper.getPerkByType(heldItem, Perk.Type.DAMAGE);
                     if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
-                        int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, stack);
+                        int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, heldItem);
                         projectile.monsterMultiple(0.1f + 0.1f * perkLevel);
-                        arrow.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
                     }
 
-                    projectile.bypassArmorRate(0);
-                    projectile.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
-                    projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) (2 * power), 0);
-                    projectile.damage(0);
+                    projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
+
+                    damage = 0.08333333 * tag.getDouble("damage") * tag.getDouble("speed") * tag.getDouble("levelDamageMultiple");
+                    projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, velocity, 0);
+                    projectile.damage((float) damage);
                     player.level().addFreshEntity(projectile);
 
-                    bypassArmorRate = Math.max(bypassArmorRate, 0);
-
-                    arrow.bypassArmorRate(bypassArmorRate).setUndeadMultiplier(undeadMultiple);
-                    arrow.setBaseDamage(damage);
+                    BocekArrowEntity arrow = new BocekArrowEntity(player, plevel);
+                    arrow.setBaseDamage(0);
                     arrow.setKnockback(0);
                     arrow.setSilent(true);
                     arrow.setPierceLevel((byte) 2);
-                    arrow.pickup = AbstractArrow.Pickup.ALLOWED;
+                    arrow.pickup = AbstractArrow.Pickup.DISALLOWED;
 
                     arrow.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                     arrow.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) (2 * power), 0);
-                    level.addFreshEntity(arrow);
+                    plevel.addFreshEntity(arrow);
                 }
 
                 if (!player.level().isClientSide()) {
@@ -334,7 +339,7 @@ public class FireMessage {
 
         projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
 
-        damage = 2 * 0.008333333 * tag.getDouble("damage") * tag.getDouble("speed") * tag.getDouble("levelDamageMultiple");
+        damage = 0.008333333 * tag.getDouble("damage") * tag.getDouble("speed") * tag.getDouble("levelDamageMultiple");
         projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, velocity, 2.5f);
         projectile.damage((float) damage);
         player.level().addFreshEntity(projectile);
@@ -364,7 +369,7 @@ public class FireMessage {
                 int volt = PerkHelper.getItemPerkLevel(ModPerks.VOLT_OVERLOAD.get(), stack);
                 int wireLength = PerkHelper.getItemPerkLevel(ModPerks.LONGER_WIRE.get(), stack);
 
-                boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming;
+                boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
                 double spread = stack.getOrCreateTag().getDouble("spread");
                 double zoomSpread = stack.getOrCreateTag().getDouble("zoomSpread");
 
@@ -386,7 +391,6 @@ public class FireMessage {
                 stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                         energy -> energy.extractEnergy(2000 + 200 * perkLevel, false)
                 );
-//                ItemNBTTool.setInt(stack, "Power", ItemNBTTool.getInt(stack, "Power", 1200) - 400);
             }
         }
     }
@@ -397,7 +401,7 @@ public class FireMessage {
         ItemStack stack = player.getMainHandItem();
         if (!stack.getOrCreateTag().getBoolean("reloading")) {
             if (!player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getInt("ammo") > 0) {
-                boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming;
+                boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
                 double spread = stack.getOrCreateTag().getDouble("spread");
                 double zoomSpread = stack.getOrCreateTag().getDouble("zoomSpread");
 
@@ -449,7 +453,7 @@ public class FireMessage {
         CompoundTag tag = stack.getOrCreateTag();
 
         if (!tag.getBoolean("reloading") && !player.getCooldowns().isOnCooldown(stack.getItem()) && tag.getInt("ammo") > 0) {
-            boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming;
+            boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
             double spread = stack.getOrCreateTag().getDouble("spread");
             double zoomSpread = stack.getOrCreateTag().getDouble("zoomSpread");
 

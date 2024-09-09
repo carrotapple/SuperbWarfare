@@ -8,6 +8,7 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModMobEffects;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
+import net.mcreator.superbwarfare.item.common.ammo.CannonShellItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.*;
 import net.mcreator.superbwarfare.tools.TraceTool;
@@ -78,7 +79,7 @@ public class ClickHandler {
                 event.setCanceled(true);
                 ModUtils.PACKET_HANDLER.sendToServer(new DroneFireMessage(0));
             }
-            if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity) {
+            if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity && player.getMainHandItem().getItem() instanceof CannonShellItem) {
                 event.setCanceled(true);
                 ModUtils.PACKET_HANDLER.sendToServer(new VehicleFireMessage(0));
                 return;

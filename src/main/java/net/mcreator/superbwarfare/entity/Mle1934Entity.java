@@ -2,10 +2,7 @@ package net.mcreator.superbwarfare.entity;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.projectile.CannonShellEntity;
-import net.mcreator.superbwarfare.init.ModDamageTypes;
-import net.mcreator.superbwarfare.init.ModEntities;
-import net.mcreator.superbwarfare.init.ModItems;
-import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.item.common.ammo.CannonShellItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
@@ -336,8 +333,12 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
 
     @Override
     public void travel(Vec3 dir) {
-        Entity entity = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
-        if (this.isVehicle() && entity != null) {
+        Player entity = this.getPassengers().isEmpty() ? null : (Player) this.getPassengers().get(0);
+        ItemStack stack = null;
+        if (entity != null) {
+            stack = entity.getMainHandItem();
+        }
+        if (stack != null && this.isVehicle() && !stack.is(ModTags.Items.GUN)) {
             float diffY = entity.getYHeadRot() - this.getYRot();
             float diffX = entity.getXRot() - this.getXRot();
             if (diffY > 180.0f) {
@@ -374,10 +375,17 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
     public static void init() {
     }
     protected void clampRotation(Entity entity) {
-        float f = Mth.wrapDegrees(entity.getXRot());
-        float f1 = Mth.clamp(f, -30.0F, 4.0F);
-        entity.xRotO += f1 - f;
-        entity.setXRot(entity.getXRot() + f1 - f);
+        ItemStack stack = null;
+        if (entity instanceof Player player) {
+            stack = player.getMainHandItem();
+        }
+
+        if (!stack.is(ModTags.Items.GUN)) {
+            float f = Mth.wrapDegrees(entity.getXRot());
+            float f1 = Mth.clamp(f, -30.0F, 4.0F);
+            entity.xRotO += f1 - f;
+            entity.setXRot(entity.getXRot() + f1 - f);
+        }
     }
     @Override
     public void onPassengerTurned(Entity entity) {

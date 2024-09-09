@@ -1,10 +1,7 @@
 package net.mcreator.superbwarfare.entity;
 
 import net.mcreator.superbwarfare.entity.projectile.CannonShellEntity;
-import net.mcreator.superbwarfare.init.ModDamageTypes;
-import net.mcreator.superbwarfare.init.ModEntities;
-import net.mcreator.superbwarfare.init.ModItems;
-import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.item.common.ammo.CannonShellItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
@@ -37,6 +34,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -305,9 +303,13 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
     }
 
     @Override
-    public void travel(Vec3 dir) {
-        Entity entity = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
-        if (this.isVehicle() && entity != null) {
+    public void travel(@NotNull Vec3 dir) {
+        Player entity = this.getPassengers().isEmpty() ? null : (Player) this.getPassengers().get(0);
+        ItemStack stack = null;
+        if (entity != null) {
+            stack = entity.getMainHandItem();
+        }
+        if (stack != null && this.isVehicle() && !stack.is(ModTags.Items.GUN)) {
             float diffY = entity.getYHeadRot() - this.getYRot();
             float diffX = entity.getXRot() - this.getXRot();
             if (diffY > 180.0f) {
@@ -318,21 +320,16 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
             diffY = diffY * 0.15f;
             diffX = diffX * 0.15f;
             if (Math.abs(diffY) < 60f && Math.abs(diffX) < 60f) {
-                this.setYRot(this.getYRot() + Mth.clamp(diffY,-1.75f,1.75f));
+                this.setYRot(this.getYRot() + Mth.clamp(diffY, -1.75f, 1.75f));
                 this.yRotO = this.getYRot();
-                this.setXRot(Mth.clamp(this.getXRot() - 0.11f + Mth.clamp(diffX,-3f,3f), -85, 15));
+                this.setXRot(Mth.clamp(this.getXRot() - 0.11f + Mth.clamp(diffX, -3f, 3f), -85, 15));
                 this.setRot(this.getYRot(), this.getXRot());
-                this.yBodyRot = this.getYRot() + Mth.clamp(diffY,-1.75f,1.75f);
-                this.yHeadRot = this.getYRot() + Mth.clamp(diffY,-1.75f,1.75f);
+                this.yBodyRot = this.getYRot() + Mth.clamp(diffY, -1.75f, 1.75f);
+                this.yHeadRot = this.getYRot() + Mth.clamp(diffY, -1.75f, 1.75f);
             }
             return;
         }
         super.travel(dir);
-    }
-
-    @Override
-    public EntityDimensions getDimensions(Pose p_33597_) {
-        return super.getDimensions(p_33597_).scale((float) 1);
     }
 
     @Override
@@ -345,11 +342,19 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
     }
 
     protected void clampRotation(Entity entity) {
-        float f = Mth.wrapDegrees(entity.getXRot());
-        float f1 = Mth.clamp(f, -85.0F, 15.0F);
-        entity.xRotO += f1 - f;
-        entity.setXRot(entity.getXRot() + f1 - f);
+        ItemStack stack = null;
+        if (entity instanceof Player player) {
+            stack = player.getMainHandItem();
+        }
+
+        if (!stack.is(ModTags.Items.GUN)) {
+            float f = Mth.wrapDegrees(entity.getXRot());
+            float f1 = Mth.clamp(f, -85.0F, 15.0F);
+            entity.xRotO += f1 - f;
+            entity.setXRot(entity.getXRot() + f1 - f);
+        }
     }
+
     @Override
     public void onPassengerTurned(Entity entity) {
         this.clampRotation(entity);

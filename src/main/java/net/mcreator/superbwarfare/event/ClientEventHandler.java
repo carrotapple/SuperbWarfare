@@ -26,6 +26,7 @@ import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.lwjgl.glfw.GLFW;
 
 import static net.mcreator.superbwarfare.entity.DroneEntity.ROT_X;
 import static net.mcreator.superbwarfare.entity.DroneEntity.ROT_Z;
@@ -150,7 +151,8 @@ public class ClientEventHandler {
             var data = entity.getPersistentData();
             ItemStack stack = entity.getMainHandItem();
 
-            boolean zoom = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming;
+            boolean zoom = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS;
+
             double spread = stack.getOrCreateTag().getDouble("spread");
             double zoomSpread = stack.getOrCreateTag().getDouble("zoomSpread");
 
@@ -306,7 +308,7 @@ public class ClientEventHandler {
         float times = 110f / fps;
         var data = entity.getPersistentData();
 
-        if ((entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
+        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
             data.putDouble("zoom_time", Mth.clamp(data.getDouble("zoom_time") + 0.03 * times,0,1));
         } else {
             data.putDouble("zoom_time", Mth.clamp(data.getDouble("zoom_time") - 0.04 * times,0,1));
@@ -474,7 +476,7 @@ public class ClientEventHandler {
             return;
         }
         if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity) {
-            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
+            if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
                 event.setFOV(event.getFOV() / 5);
             }
         }

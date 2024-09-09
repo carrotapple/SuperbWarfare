@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -20,6 +19,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.lwjgl.glfw.GLFW;
 
 import static net.mcreator.superbwarfare.tools.RenderTool.preciseBlit;
 
@@ -47,7 +47,7 @@ public class CrossHairOverlay {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
-        if (shouldRenderCrossHair(player) || stack.is(ModItems.MINIGUN.get())) {
+        if (shouldRenderCrossHair(player) || stack.is(ModItems.MINIGUN.get()) || (stack.is(ModItems.BOCEK.get()) && stack.getOrCreateTag().getBoolean("HoloHidden"))) {
             preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/point.png"), w / 2f - 7.5f, h / 2f - 8, 0, 0, 16, 16, 16, 16);
             preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexheng.png"), w / 2f - 9.5f - 2.8f * (float) spread, h / 2f - 8, 0, 0, 16, 16, 16, 16);
             preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexheng.png"), w / 2f - 6.5f + 2.8f * (float) spread, h / 2f - 8, 0, 0, 16, 16, 16, 16);
@@ -95,10 +95,10 @@ public class CrossHairOverlay {
         if (player == null) return false;
 
         if (player.isSpectator()) return false;
-        if (!player.getMainHandItem().is(ModTags.Items.GUN) || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming)
+        if (!player.getMainHandItem().is(ModTags.Items.GUN) || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS)
             return false;
 
-        return !(player.getMainHandItem().getItem() == ModItems.M_79.get())
+        return !(player.getMainHandItem().getItem() == ModItems.M_79.get() || player.getMainHandItem().getItem() == ModItems.BOCEK.get())
                 && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
     }
 

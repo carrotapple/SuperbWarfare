@@ -3,10 +3,10 @@ package net.mcreator.superbwarfare.entity.model;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.projectile.ProjectileEntity;
 import net.mcreator.superbwarfare.init.ModItems;
-import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import org.lwjgl.glfw.GLFW;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
@@ -24,7 +24,7 @@ public class ProjectileEntityModel extends GeoModel<ProjectileEntity> {
             return new ResourceLocation(ModUtils.MODID, "geo/projectile_entity2.geo.json");
         }
 
-        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming
+        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS
                 || player.getMainHandItem().is(ModItems.GLOCK_17.get())
                 || player.getMainHandItem().is(ModItems.GLOCK_18.get())
                 || player.getMainHandItem().is(ModItems.BOCEK.get())) {

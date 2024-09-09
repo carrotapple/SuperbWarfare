@@ -153,7 +153,7 @@ public class GunEventHandler {
 
                 int zoomAddCooldown = 0;
                 if (stack.getItem() == ModItems.MARLIN.get()) {
-                    if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
+                    if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
                         zoomAddCooldown = 5;
                         stack.getOrCreateTag().putDouble("marlin_animation_time", 15);
                         stack.getOrCreateTag().putBoolean("fastfiring", false);
@@ -356,7 +356,7 @@ public class GunEventHandler {
             float headshot = (float) heldItem.getOrCreateTag().getDouble("headshot");
             float damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("sentinelChargeDamage")) * (float) heldItem.getOrCreateTag().getDouble("levelDamageMultiple");
 
-            boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming;
+            boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
             double spread = heldItem.getOrCreateTag().getDouble("spread");
             double zoomSpread = heldItem.getOrCreateTag().getDouble("zoomSpread");
 

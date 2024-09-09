@@ -66,6 +66,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import static net.mcreator.superbwarfare.entity.TargetEntity.DOWN_TIME;
+
 @SuppressWarnings({"unused", "UnusedReturnValue", "SuspiciousNameCombination"})
 public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnData, GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Float> COLOR_R = SynchedEntityData.defineId(ProjectileEntity.class, EntityDataSerializers.FLOAT);
@@ -126,6 +128,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
         for (Entity entity : entities) {
             if (entity.equals(this.shooter)) continue;
+
+            if (entity.equals(this.shooter.getVehicle())) continue;
+
+            if (entity instanceof TargetEntity && entity.getEntityData().get(DOWN_TIME) > 0) continue;
 
             EntityResult result = this.getHitResult(entity, startVec, endVec);
             if (result == null) continue;

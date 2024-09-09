@@ -3,13 +3,13 @@ package net.mcreator.superbwarfare.mixins;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.init.ModMobEffects;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,8 +37,8 @@ public class MouseHandlerMixin {
 
         ItemStack stack = mc.player.getMainHandItem();
 
-        if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity) {
-            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
+        if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity && !stack.is(ModTags.Items.GUN)) {
+            if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
                 return 0.15;
             } else {
                 return 0.3;
@@ -57,7 +57,7 @@ public class MouseHandlerMixin {
         float originalFov = mc.options.fov().get();
 
         if (!player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
-            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
+            if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
                 additionalAdsSensitivity = (float) Mth.clamp((1 + 0.1f * customSens) * (1.25F * fov / originalFov) * (1 + 0.2f * Math.pow((originalFov / fov), 1.25)), 0.125F, 2F);
             } else {
                 additionalAdsSensitivity = Mth.clamp((1 + 0.1f * customSens) * 1.25F, 0.125F, 2F);

@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.layer.M98bLayer;
 import net.mcreator.superbwarfare.client.model.item.M98bItemModel;
 import net.mcreator.superbwarfare.item.gun.sniper.M98bItem;
-import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
@@ -18,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
@@ -100,7 +100,7 @@ public class M98bItemRenderer extends GeoItemRenderer<M98bItem> {
             if (player != null) {
                 itemStack = player.getMainHandItem();
             }
-            bone.setHidden((itemStack != null && itemStack.getOrCreateTag().getBoolean("HoloHidden")) || !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zooming);
+            bone.setHidden((itemStack != null && itemStack.getOrCreateTag().getBoolean("HoloHidden")) || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS);
         }
 
         if (name.equals("qiang")) {

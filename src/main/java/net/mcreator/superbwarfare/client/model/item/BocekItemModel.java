@@ -3,12 +3,12 @@ package net.mcreator.superbwarfare.client.model.item;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.special.BocekItem;
-import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
@@ -32,7 +32,6 @@ public class BocekItemModel extends GeoModel<BocekItem> {
     @Override
     public void setCustomAnimations(BocekItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
-        CoreGeoBone jian = getAnimationProcessor().getBone("jian");
         CoreGeoBone arrow = getAnimationProcessor().getBone("arrow");
         CoreGeoBone rh = getAnimationProcessor().getBone("ys");
         CoreGeoBone lun = getAnimationProcessor().getBone("hualun1");
@@ -89,13 +88,13 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         r.setScaleZ(1f - (0.31f * (float) p));
         shen.setRotZ(60 * Mth.DEG_TO_RAD * (float) p + (float) (0.05f * zp) - 0.2f);
 
-        stack.getOrCreateTag().putBoolean("HoloHidden", !((shen_pos.getPosX() < -0.7 && gun.getPosZ() < -2.5)));
+        stack.getOrCreateTag().putBoolean("HoloHidden", !((shen_pos.getPosX() < -0.7 && gun.getPosZ() < -2.6)));
 
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
 
-        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
+        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
             fire.setPosY(-0.01f * (float) (fp + 2 * fr));
             fire.setPosZ(3f * (float) (fp + 0.54f * fr));
             fire.setRotX(0.003f * (float) (fp + fr));

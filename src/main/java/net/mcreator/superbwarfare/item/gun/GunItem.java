@@ -4,7 +4,6 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
@@ -59,10 +58,6 @@ public abstract class GunItem extends Item {
             if (itemstack.getOrCreateTag().getBoolean("draw")) {
                 itemstack.getOrCreateTag().putBoolean("draw", false);
                 itemstack.getOrCreateTag().putInt("draw_time", 0);
-                entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.zooming = false;
-                    capability.syncPlayerVariables(entity);
-                });
 
                 if (itemstack.getItem() == ModItems.RPG.get() && itemstack.getOrCreateTag().getInt("ammo") == 0) {
                     itemstack.getOrCreateTag().putDouble("empty", 1);

@@ -1,8 +1,8 @@
 package net.mcreator.superbwarfare.event;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.entity.projectile.ProjectileEntity;
 import net.mcreator.superbwarfare.entity.TargetEntity;
+import net.mcreator.superbwarfare.entity.projectile.ProjectileEntity;
 import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -63,9 +63,6 @@ public class LivingEventHandler {
 
         double damage = amount;
         ItemStack stack = sourceentity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
-        if (DamageTypeTool.isArrowDamage(damageSource) && stack.getItem() == ModItems.BOCEK.get()) {
-            stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
-        }
 
         if ((damageSource.is(ModDamageTypes.PROJECTILE_BOOM)
                 || damageSource.is(ModDamageTypes.CANNON_FIRE))
@@ -78,7 +75,7 @@ public class LivingEventHandler {
         if (DamageTypeTool.isGunDamage(damageSource)) {
             double distance = entity.position().distanceTo(sourceentity.position());
 
-            if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) || stack.getItem() == ModItems.BOCEK.get()) {
+            if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
                 damage = reduceDamageByDistance(amount, distance, 0.03, 25);
             } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
                 damage = reduceDamageByDistance(amount, distance, 0.001, 200);
@@ -86,7 +83,7 @@ public class LivingEventHandler {
                 damage = reduceDamageByDistance(amount, distance, 0.03, 50);
             } else if (stack.is(ModTags.Items.SMG)) {
                 damage = reduceDamageByDistance(amount, distance, 0.03, 50);
-            } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
+            } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) || stack.getItem() == ModItems.BOCEK.get()) {
                 damage = reduceDamageByDistance(amount, distance, 0.0025, 150);
             }
             event.setAmount((float) damage);

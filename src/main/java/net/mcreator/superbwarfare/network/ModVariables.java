@@ -70,7 +70,6 @@ public class ModVariables {
             PlayerVariables original = event.getOriginal().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
             PlayerVariables clone = event.getEntity().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
             clone.zoom = original.zoom;
-            clone.zooming = original.zooming;
             clone.recoil = original.recoil;
             clone.recoilHorizon = original.recoilHorizon;
             clone.firing = original.firing;
@@ -262,7 +261,6 @@ public class ModVariables {
 
     public static class PlayerVariables {
         public boolean zoom = false;
-        public boolean zooming = false;
         public double recoil = 0;
         public double recoilHorizon = 0;
         public double firing = 0;
@@ -292,7 +290,6 @@ public class ModVariables {
         public Tag writeNBT() {
             CompoundTag nbt = new CompoundTag();
             nbt.putBoolean("zoom", zoom);
-            nbt.putBoolean("zooming", zooming);
             nbt.putDouble("recoil", recoil);
             nbt.putDouble("recoil_horizon", recoilHorizon);
             nbt.putDouble("firing", firing);
@@ -318,7 +315,6 @@ public class ModVariables {
         public void readNBT(Tag Tag) {
             CompoundTag nbt = (CompoundTag) Tag;
             zoom = nbt.getBoolean("zoom");
-            zooming = nbt.getBoolean("zooming");
             recoil = nbt.getDouble("recoil");
             recoilHorizon = nbt.getDouble("recoil_horizon");
             firing = nbt.getDouble("firing");
@@ -375,7 +371,6 @@ public class ModVariables {
 
                 PlayerVariables variables = entity.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
                 variables.zoom = message.data.zoom;
-                variables.zooming = message.data.zooming;
                 variables.recoil = message.data.recoil;
                 variables.recoilHorizon = message.data.recoilHorizon;
                 variables.firing = message.data.firing;

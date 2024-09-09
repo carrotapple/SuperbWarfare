@@ -55,17 +55,10 @@ public class JavelinItemModel extends GeoModel<JavelinItem> {
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
 
-        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zooming) {
-            shen.setPosY(0.07f * (float) (fp + 2 * fr));
-            shen.setPosZ(3.6f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.02f * (float) (fp + fr));
-            shen.setRotZ(0f);
-        } else {
-            shen.setPosY(0.28f * (float) (fp + 2 * fr));
-            shen.setPosZ(3.8f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.17f * (float) (0.18f * fp + fr));
-            shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
-        }
+        shen.setPosY(0.28f * (float) (fp + 2 * fr));
+        shen.setPosZ(3.8f * (float) (fp + 0.54f * fr));
+        shen.setRotX(0.17f * (float) (0.18f * fp + fr));
+        shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
         shen.setPosX((float)(0.75f * fr * (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
         
         CoreGeoBone root = getAnimationProcessor().getBone("root");
