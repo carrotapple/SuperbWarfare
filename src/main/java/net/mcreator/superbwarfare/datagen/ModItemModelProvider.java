@@ -22,6 +22,42 @@ public class ModItemModelProvider extends ItemModelProvider {
     protected void registerModels() {
         simpleItem(ModItems.EMPTY_PERK, "perk/");
 
+        simpleItem(ModItems.MORTAR_SHELLS);
+
+        // misc
+        simpleItem(ModItems.ANCIENT_CPU);
+        simpleItem(ModItems.PROPELLER);
+        simpleItem(ModItems.MOTOR);
+        simpleItem(ModItems.DRONE);
+
+        simpleItem(ModItems.TARGET_DEPLOYER);
+        simpleItem(ModItems.MORTAR_DEPLOYER);
+        simpleItem(ModItems.MORTAR_BARREL);
+        simpleItem(ModItems.MORTAR_BASE_PLATE);
+        simpleItem(ModItems.MORTAR_BIPOD);
+        simpleItem(ModItems.SEEKER);
+        simpleItem(ModItems.MISSILE_ENGINE);
+        simpleItem(ModItems.FUSEE);
+        simpleItem(ModItems.PRIMER);
+        simpleItem(ModItems.AP_HEAD);
+        simpleItem(ModItems.HE_HEAD);
+        simpleItem(ModItems.COPPER_PLATE);
+        simpleItem(ModItems.STEEL_INGOT);
+        simpleItem(ModItems.LEAD_INGOT);
+        simpleItem(ModItems.TUNGSTEN_INGOT);
+        simpleItem(ModItems.CEMENTED_CARBIDE_INGOT);
+        simpleItem(ModItems.HIGH_ENERGY_EXPLOSIVES);
+        simpleItem(ModItems.GRAIN);
+        simpleItem(ModItems.IRON_POWDER);
+        simpleItem(ModItems.TUNGSTEN_POWDER);
+        simpleItem(ModItems.COAL_POWDER);
+        simpleItem(ModItems.COAL_IRON_POWDER);
+        simpleItem(ModItems.RAW_CEMENTED_CARBIDE_POWDER);
+        simpleItem(ModItems.GALENA);
+        simpleItem(ModItems.SCHEELITE);
+        simpleItem(ModItems.DOG_TAG);
+        simpleItem(ModItems.TRANSCRIPT);
+
         simpleItem(ModItems.TUNGSTEN_ROD);
         simpleItem(ModItems.IRON_BARREL);
         simpleItem(ModItems.IRON_ACTION);

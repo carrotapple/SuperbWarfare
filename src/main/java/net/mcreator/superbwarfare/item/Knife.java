@@ -31,7 +31,7 @@ public class Knife extends SwordItem {
             }
 
             public Ingredient getRepairIngredient() {
-                return Ingredient.of(new ItemStack(ModItems.INGOT_STEEL.get()));
+                return Ingredient.of(new ItemStack(ModItems.STEEL_INGOT.get()));
             }
         }, 3, -1.8f, new Item.Properties());
     }
