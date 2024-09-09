@@ -22,6 +22,29 @@ public class ModItemModelProvider extends ItemModelProvider {
     protected void registerModels() {
         simpleItem(ModItems.EMPTY_PERK, "perk/");
 
+        simpleItem(ModItems.TUNGSTEN_ROD);
+        simpleItem(ModItems.IRON_BARREL);
+        simpleItem(ModItems.IRON_ACTION);
+        simpleItem(ModItems.IRON_TRIGGER);
+        simpleItem(ModItems.IRON_SPRING);
+        simpleItem(ModItems.STEEL_BARREL);
+        simpleItem(ModItems.STEEL_ACTION);
+        simpleItem(ModItems.STEEL_TRIGGER);
+        simpleItem(ModItems.STEEL_SPRING);
+        simpleItem(ModItems.CEMENTED_CARBIDE_BARREL);
+        simpleItem(ModItems.CEMENTED_CARBIDE_ACTION);
+        simpleItem(ModItems.CEMENTED_CARBIDE_TRIGGER);
+        simpleItem(ModItems.CEMENTED_CARBIDE_SPRING);
+        simpleItem(ModItems.NETHERITE_BARREL);
+        simpleItem(ModItems.NETHERITE_ACTION);
+        simpleItem(ModItems.NETHERITE_TRIGGER);
+        simpleItem(ModItems.NETHERITE_SPRING);
+
+        simpleItem(ModItems.COMMON_MATERIAL_PACK);
+        simpleItem(ModItems.RARE_MATERIAL_PACK);
+        simpleItem(ModItems.EPIC_MATERIAL_PACK);
+        simpleItem(ModItems.LEGENDARY_MATERIAL_PACK);
+
         // blueprints
         blueprintItem(ModItems.TRACHELIUM_BLUEPRINT);
         blueprintItem(ModItems.GLOCK_17_BLUEPRINT);
