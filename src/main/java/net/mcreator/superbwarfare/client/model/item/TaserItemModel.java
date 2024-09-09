@@ -1,17 +1,21 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.special.TaserItem;
-import net.mcreator.superbwarfare.tools.ItemNBTTool;
+import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TaserItemModel extends GeoModel<TaserItem> {
 
@@ -45,9 +49,16 @@ public class TaserItemModel extends GeoModel<TaserItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        bar.setScaleX((float) ItemNBTTool.getInt(stack, TAG_POWER, 1200) / 1200);
+        AtomicInteger energy = new AtomicInteger(0);
+        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                e -> energy.set(e.getEnergyStored())
+        );
 
-        if (ItemNBTTool.getInt(stack, TAG_POWER, 1200) >= 400) {
+        int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.VOLT_OVERLOAD.get(), stack);
+
+        bar.setScaleX((float) energy.get() / 12000);
+
+        if (energy.get() >= 2000 + 200 * perkLevel) {
             bluecover.setScaleX(1);
             bluecover.setScaleY(1);
             bluecover.setScaleZ(1);

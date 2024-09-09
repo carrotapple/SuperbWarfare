@@ -11,7 +11,6 @@ import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.perk.AmmoPerk;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
-import net.mcreator.superbwarfare.tools.ItemNBTTool;
 import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.mcreator.superbwarfare.tools.SeekTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
@@ -31,9 +30,11 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.network.NetworkEvent;
 import org.joml.Vector3d;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 public class FireMessage {
@@ -344,8 +345,14 @@ public class FireMessage {
 
         ItemStack stack = player.getMainHandItem();
         if (!stack.getOrCreateTag().getBoolean("reloading")) {
+            int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.VOLT_OVERLOAD.get(), stack);
+            AtomicBoolean flag = new AtomicBoolean(false);
+            stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                    iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() > 2000 + 200 * perkLevel)
+            );
+
             if (!player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getInt("ammo") > 0
-                    && ItemNBTTool.getInt(stack, "Power", 1200) > 400) {
+                    && flag.get()) {
 
                 player.getCooldowns().addCooldown(stack.getItem(), 5);
 
@@ -375,7 +382,11 @@ public class FireMessage {
 
                 stack.getOrCreateTag().putInt("fire_animation", 4);
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
-                ItemNBTTool.setInt(stack, "Power", ItemNBTTool.getInt(stack, "Power", 1200) - 400);
+
+                stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                        energy -> energy.extractEnergy(2000 + 200 * perkLevel, false)
+                );
+//                ItemNBTTool.setInt(stack, "Power", ItemNBTTool.getInt(stack, "Power", 1200) - 400);
             }
         }
     }
