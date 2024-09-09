@@ -150,7 +150,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
 
         if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this, 8.0f, this.monsterMultiplier);
+                ProjectileTool.causeCustomExplode(this, this.damage, 8.0f, this.monsterMultiplier);
             }
         }
 
@@ -201,7 +201,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
 
         if (this.tickCount > 200 || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this, 8.0f, this.monsterMultiplier);
+                ProjectileTool.causeCustomExplode(this, this.damage, 8.0f, this.monsterMultiplier);
             }
             this.discard();
         }

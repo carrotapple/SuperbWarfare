@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 
 public class ProjectileTool {
 
-    public static void causeCustomExplode(ThrowableItemProjectile projectile, Entity target, float radius, float damage, float damageMultiplier) {
+    public static void causeCustomExplode(ThrowableItemProjectile projectile, Entity target, float damage, float radius, float damageMultiplier) {
         CustomExplosion explosion = new CustomExplosion(projectile.level(), projectile,
                 ModDamageTypes.causeProjectileBoomDamage(projectile.level().registryAccess(), projectile, projectile.getOwner()), damage,
                 target.getX(), target.getY(), target.getZ(), radius, Explosion.BlockInteraction.KEEP).setDamageMultiplier(damageMultiplier);
@@ -21,15 +21,15 @@ public class ProjectileTool {
         projectile.discard();
     }
 
-    public static void causeCustomExplode(ThrowableItemProjectile projectile, float radius, float damage, float damageMultiplier) {
+    public static void causeCustomExplode(ThrowableItemProjectile projectile, float damage, float radius, float damageMultiplier) {
         causeCustomExplode(projectile, projectile, damage, radius, damageMultiplier);
     }
 
     public static void causeCustomExplode(ThrowableItemProjectile projectile, float damage, float radius) {
-        causeCustomExplode(projectile, radius, damage, 0.0f);
+        causeCustomExplode(projectile, damage, radius, 0.0f);
     }
 
-    public static void causeCustomExplode(LivingEntity projectile, @Nullable LivingEntity owner, float radius, float damage, float damageMultiplier) {
+    public static void causeCustomExplode(LivingEntity projectile, @Nullable LivingEntity owner, float damage, float radius, float damageMultiplier) {
         CustomExplosion explosion = new CustomExplosion(projectile.level(), projectile,
                 ModDamageTypes.causeProjectileBoomDamage(projectile.level().registryAccess(), projectile, owner), damage,
                 projectile.getX(), projectile.getY(), projectile.getZ(), radius, Explosion.BlockInteraction.KEEP).setDamageMultiplier(damageMultiplier);
