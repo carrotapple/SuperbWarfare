@@ -311,7 +311,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
         }
         if (stack != null && this.isVehicle() && !stack.is(ModTags.Items.GUN)) {
             float diffY = entity.getYHeadRot() - this.getYRot();
-            float diffX = entity.getXRot() - this.getXRot();
+            float diffX = entity.getXRot() - 1.3f - this.getXRot();
             if (diffY > 180.0f) {
                 diffY -= 360.0f;
             } else if (diffY < -180.0f) {
@@ -319,10 +319,11 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
             }
             diffY = diffY * 0.15f;
             diffX = diffX * 0.15f;
+
             if (Math.abs(diffY) < 60f && Math.abs(diffX) < 60f) {
                 this.setYRot(this.getYRot() + Mth.clamp(diffY, -1.75f, 1.75f));
                 this.yRotO = this.getYRot();
-                this.setXRot(Mth.clamp(this.getXRot() - 0.11f + Mth.clamp(diffX, -3f, 3f), -85, 15));
+                this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -3f, 3f), -85, 15));
                 this.setRot(this.getYRot(), this.getXRot());
                 this.yBodyRot = this.getYRot() + Mth.clamp(diffY, -1.75f, 1.75f);
                 this.yHeadRot = this.getYRot() + Mth.clamp(diffY, -1.75f, 1.75f);

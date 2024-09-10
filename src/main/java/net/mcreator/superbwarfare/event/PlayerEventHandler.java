@@ -87,7 +87,6 @@ public class PlayerEventHandler {
                 handlePlayerSprint(player);
                 handleWeaponLevel(player);
                 handleAmmoCount(player);
-                handlePrepareZoom(player);
                 handleSpecialWeaponAmmo(player);
                 handleChangeFireRate(player);
                 handleBocekPulling(player);
@@ -336,22 +335,6 @@ public class PlayerEventHandler {
                 capability.syncPlayerVariables(player);
             });
         }
-    }
-
-    private static void handlePrepareZoom(Player player) {
-//        ItemStack stack = player.getMainHandItem();
-//
-//        if (stack.is(ModTags.Items.GUN) && !player.isSpectator()) {
-//            if (player.getMainHandItem().getItem() != ModItems.MINIGUN.get()) {
-//                if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
-//                    player.setSprinting(false);
-//                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-//                        capability.zooming = true;
-//                        capability.syncPlayerVariables(player);
-//                    });
-//                }
-//            }
-//        }
     }
 
     private static void handleSpecialWeaponAmmo(Player player) {

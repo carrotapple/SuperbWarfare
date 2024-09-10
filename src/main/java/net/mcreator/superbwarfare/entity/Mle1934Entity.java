@@ -35,6 +35,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3d;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -332,7 +333,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
     }
 
     @Override
-    public void travel(Vec3 dir) {
+    public void travel(@NotNull Vec3 dir) {
         Player entity = this.getPassengers().isEmpty() ? null : (Player) this.getPassengers().get(0);
         ItemStack stack = null;
         if (entity != null) {
@@ -340,7 +341,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
         }
         if (stack != null && this.isVehicle() && !stack.is(ModTags.Items.GUN)) {
             float diffY = entity.getYHeadRot() - this.getYRot();
-            float diffX = entity.getXRot() - this.getXRot();
+            float diffX = entity.getXRot() - 1.3f - this.getXRot();
             if (diffY > 180.0f) {
                 diffY -= 360.0f;
             } else if (diffY < -180.0f) {
@@ -349,21 +350,16 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
             diffY = diffY * 0.15f;
             diffX = diffX * 0.15f;
             if (Math.abs(diffY) < 60f && Math.abs(diffX) < 60f) {
-                this.setYRot(this.getYRot() + Mth.clamp(diffY,-1.25f,1.25f));
+                this.setYRot(this.getYRot() + Mth.clamp(diffY, -1.25f, 1.25f));
                 this.yRotO = this.getYRot();
-                this.setXRot(Mth.clamp(this.getXRot() - 0.1f + Mth.clamp(diffX,-2f,2f), -30, 4));
+                this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -30, 4));
                 this.setRot(this.getYRot(), this.getXRot());
-                this.yBodyRot = this.getYRot() + Mth.clamp(diffY,-1.25f,1.25f);
-                this.yHeadRot = this.getYRot() + Mth.clamp(diffY,-1.25f,1.25f);
+                this.yBodyRot = this.getYRot() + Mth.clamp(diffY, -1.25f, 1.25f);
+                this.yHeadRot = this.getYRot() + Mth.clamp(diffY, -1.25f, 1.25f);
             }
             return;
         }
         super.travel(dir);
-    }
-
-    @Override
-    public EntityDimensions getDimensions(Pose p_33597_) {
-        return super.getDimensions(p_33597_).scale((float) 1);
     }
 
     @Override

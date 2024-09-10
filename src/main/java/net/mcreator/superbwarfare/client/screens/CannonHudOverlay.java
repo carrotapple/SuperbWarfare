@@ -5,10 +5,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.item.gun.GunItem;
-import net.mcreator.superbwarfare.tools.RenderTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiEvent;
@@ -17,10 +17,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.Objects;
+
+import static net.mcreator.superbwarfare.tools.RenderTool.preciseBlit;
+
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
-public class Mk42UIOverlay {
-    public static final int TEXTURE_WIDTH = 771;
-    public static final int TEXTURE_HEIGHT = 1006;
+public class CannonHudOverlay {
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
@@ -34,10 +36,23 @@ public class Mk42UIOverlay {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
         if (shouldRenderCrossHair(player)) {
-            RenderTool.preciseBlit(event.getGuiGraphics(),
-                    new ResourceLocation(ModUtils.MODID, "textures/screens/mk_42_rex.png"),
-                    (float) w / 2 - (float) TEXTURE_WIDTH / 10f, (float) h / 2 - (float) TEXTURE_HEIGHT / 10f,
-                    0, 0, TEXTURE_WIDTH / 5f, TEXTURE_HEIGHT / 5f, TEXTURE_WIDTH / 5f, TEXTURE_HEIGHT / 5f);
+            float yRotOffset = Mth.lerp(event.getPartialTick(), player.yRotO, player.getYRot());
+            float xRotOffset = Mth.lerp(event.getPartialTick(), player.xRotO, player.getXRot());
+            float diffY = 13 * (Objects.requireNonNull(player.getVehicle()).getViewYRot(event.getPartialTick()) - yRotOffset);
+            float diffX = 13 * (Objects.requireNonNull(player.getVehicle()).getViewXRot(event.getPartialTick()) - xRotOffset + 1.3f);
+            if (diffY > 180.0f) {
+                diffY -= 360.0f;
+            } else if (diffY < -180.0f) {
+                diffY += 360.0f;
+            }
+            float f = (float)Math.min(w, h);
+            float f1 = Math.min((float)w / f, (float)h / f);
+            int i = Mth.floor(f * f1);
+            int j = Mth.floor(f * f1);
+            int k = (w - i) / 2;
+            int l = (h - j) / 2;
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/indicator.png"), k + diffY, l + diffX, 0, 0.0F, i, j, i, j);
         }
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();
