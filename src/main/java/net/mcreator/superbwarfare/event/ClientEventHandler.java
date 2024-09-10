@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -65,6 +66,8 @@ public class ClientEventHandler {
                 && living.getMainHandItem().getOrCreateTag().getBoolean("Using")
                 && living.getMainHandItem().getOrCreateTag().getBoolean("Linked")) {
             handleDroneCamera(event, living);
+        } else {
+            Minecraft.getInstance().gameRenderer.shutdownEffect();
         }
         if (level != null && entity instanceof LivingEntity living && living.getMainHandItem().is(ModTags.Items.GUN)) {
             handleWeaponCrossHair(living);
@@ -104,6 +107,30 @@ public class ClientEventHandler {
 
             event.setPitch((float) (pitch + data.getDouble("droneCameraRotX") - 0.15f * Mth.RAD_TO_DEG * data.getDouble("droneRotZ")));
             event.setRoll((float) (roll + data.getDouble("droneCameraRotY") - 0.5f * Mth.RAD_TO_DEG * data.getDouble("droneRotX")));
+        }
+
+        if (drone != null && stack.getOrCreateTag().getBoolean("Using")) {
+            if (Minecraft.getInstance().gameRenderer.currentEffect() == null) {
+                Minecraft.getInstance().gameRenderer.loadEffect(new ResourceLocation("minecraft:shaders/post/scan_pincushion.json"));
+            }
+        }
+    }
+
+
+    private static void handleCannonScreen(LivingEntity entity) {
+        if (entity.level().isClientSide() && entity instanceof Player player) {
+            ItemStack stack = player.getMainHandItem();
+            DroneEntity drone = entity.level().getEntitiesOfClass(DroneEntity.class, entity.getBoundingBox().inflate(512))
+                    .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
+
+            if ((drone != null && player.getMainHandItem().is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using"))
+                    || (player.isPassenger() && player.getVehicle() instanceof ICannonEntity && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS && !stack.is(ModTags.Items.GUN))) {
+                if (Minecraft.getInstance().gameRenderer.currentEffect() == null) {
+                    Minecraft.getInstance().gameRenderer.loadEffect(new ResourceLocation("minecraft:shaders/post/scan_pincushion.json"));
+                }
+            } else {
+                Minecraft.getInstance().gameRenderer.shutdownEffect();
+            }
         }
     }
 
@@ -475,10 +502,8 @@ public class ClientEventHandler {
             player.getPersistentData().putDouble("fov", event.getFOV());
             return;
         }
-        if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity) {
-            if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
-                event.setFOV(event.getFOV() / 5);
-            }
+        if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS && !stack.is(ModTags.Items.GUN)) {
+            event.setFOV(event.getFOV() / 5);
         }
     }
 
