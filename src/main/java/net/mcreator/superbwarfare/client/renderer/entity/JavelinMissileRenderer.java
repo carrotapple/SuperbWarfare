@@ -3,8 +3,8 @@ package net.mcreator.superbwarfare.client.renderer.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.mcreator.superbwarfare.entity.projectile.JavelinMissileEntity;
 import net.mcreator.superbwarfare.entity.model.JavelinMissileModel;
+import net.mcreator.superbwarfare.entity.projectile.JavelinMissileEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -36,7 +36,7 @@ public class JavelinMissileRenderer extends GeoEntityRenderer<JavelinMissileEnti
     @Override
     public void render(JavelinMissileEntity entityIn, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn) {
         poseStack.pushPose();
-        if (entityIn.tickCount > 5) {
+        if (entityIn.tickCount > 3) {
             poseStack.mulPose(Axis.YP.rotationDegrees(90 - Mth.lerp(partialTicks, entityIn.yRotO, entityIn.getYRot())));
             poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, entityIn.xRotO, entityIn.getXRot()) - 90));
         } else {

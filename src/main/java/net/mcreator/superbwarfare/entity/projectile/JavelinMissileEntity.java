@@ -164,18 +164,23 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
                 .stream().filter(e -> e.getStringUUID().equals(entityData.get(TARGET_UUID))).findFirst().orElse(null);
 
 
-        if (this.tickCount == 6) {
+        if (this.tickCount == 4) {
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, this.xo, this.yo, this.zo, 15, 0.8, 0.8, 0.8, 0.01, true);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.xo, this.yo, this.zo, 10, 0.8, 0.8, 0.8, 0.01, true);
             }
         }
 
-        if (this.tickCount > 5) {
+        if (this.tickCount > 3) {
             if (entity != null) {
                 if (entityData.get(TOP)) {
-                    if (this.position().distanceTo(entity.position()) > 40) {
-                        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(), entity.getY() + 30, entity.getZ()));
+                    double px = this.getX();
+                    double ex = entity.getX();
+                    double pz = this.getZ();
+                    double ez = entity.getZ();
+
+                    if (Math.sqrt(Math.pow(px - ex, 2) + Math.pow(pz - ez, 2)) > 10) {
+                        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(), entity.getY() + Mth.clamp(4 * this.tickCount, 0, 90), entity.getZ()));
                     } else {
                         this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(), entity.getEyeY() + (entity instanceof EnderDragon ? -3 : 1), entity.getZ()));
                     }
@@ -188,7 +193,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
             }
         }
 
-        if (this.tickCount > 6) {
+        if (this.tickCount > 4) {
             this.setDeltaMovement(new Vec3(
                     0.7f * this.getDeltaMovement().x + 1.3f * this.getLookAngle().x,
                     0.7f * this.getDeltaMovement().y + 1.3f * this.getLookAngle().y,

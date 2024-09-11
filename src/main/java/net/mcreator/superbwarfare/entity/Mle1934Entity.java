@@ -341,7 +341,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
         }
         if (stack != null && this.isVehicle() && !stack.is(ModTags.Items.GUN)) {
             float diffY = entity.getYHeadRot() - this.getYRot();
-            float diffX = entity.getXRot() - 1.3f - this.getXRot();
+            float diffX = entity.getXRot() - 1.2f - this.getXRot();
             if (diffY > 180.0f) {
                 diffY -= 360.0f;
             } else if (diffY < -180.0f) {
