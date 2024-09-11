@@ -38,8 +38,8 @@ public class CannonHudOverlay {
         if (shouldRenderCrossHair(player)) {
             float yRotOffset = Mth.lerp(event.getPartialTick(), player.yRotO, player.getYRot());
             float xRotOffset = Mth.lerp(event.getPartialTick(), player.xRotO, player.getXRot());
-            float diffY = 13 * (Objects.requireNonNull(player.getVehicle()).getViewYRot(event.getPartialTick()) - yRotOffset);
-            float diffX = 17 * (Objects.requireNonNull(player.getVehicle()).getViewXRot(event.getPartialTick()) - xRotOffset + 1.3f);
+            float diffY = Objects.requireNonNull(player.getVehicle()).getViewYRot(event.getPartialTick()) - yRotOffset;
+            float diffX = Objects.requireNonNull(player.getVehicle()).getViewXRot(event.getPartialTick()) - xRotOffset + 1.3f;
             if (diffY > 180.0f) {
                 diffY -= 360.0f;
             } else if (diffY < -180.0f) {
@@ -52,7 +52,7 @@ public class CannonHudOverlay {
             int k = (w - i) / 2;
             int l = (h - j) / 2;
             preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/indicator.png"), k + diffY, l + diffX, 0, 0.0F, i, j, i, j);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/indicator.png"), k + 13 * diffY, l + 17 * diffX, 0, 0.0F, i, j, i, j);
         }
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();
