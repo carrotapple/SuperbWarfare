@@ -52,6 +52,11 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
 
     public String animationprocedure = "empty";
 
+    protected int interpolationSteps;
+
+    protected double serverYRot;
+    protected double serverXRot;
+
     public Mle1934Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.MLE_1934.get(), world);
     }
@@ -333,6 +338,13 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
     }
 
     @Override
+    public void lerpTo(double x, double y, double z, float yaw, float pitch, int interpolationSteps, boolean interpolate) {
+        serverYRot = yaw;
+        serverXRot = pitch;
+        this.interpolationSteps = 10;
+    }
+
+    @Override
     public void travel(@NotNull Vec3 dir) {
         Player entity = this.getPassengers().isEmpty() ? null : (Player) this.getPassengers().get(0);
         ItemStack stack = null;
@@ -349,14 +361,12 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
             }
             diffY = diffY * 0.15f;
             diffX = diffX * 0.15f;
-            if (Math.abs(diffY) < 60f && Math.abs(diffX) < 60f) {
-                this.setYRot(this.getYRot() + Mth.clamp(diffY, -1.25f, 1.25f));
-                this.yRotO = this.getYRot();
-                this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -30, 4));
-                this.setRot(this.getYRot(), this.getXRot());
-                this.yBodyRot = this.getYRot() + Mth.clamp(diffY, -1.25f, 1.25f);
-                this.yHeadRot = this.getYRot() + Mth.clamp(diffY, -1.25f, 1.25f);
-            }
+            this.setYRot(this.getYRot() + Mth.clamp(diffY, -1.25f, 1.25f));
+            this.yRotO = this.getYRot();
+            this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -30, 4));
+            this.setRot(this.getYRot(), this.getXRot());
+            this.yBodyRot = this.getYRot() + Mth.clamp(diffY, -1.25f, 1.25f);
+            this.yHeadRot = this.getYRot() + Mth.clamp(diffY, -1.25f, 1.25f);
             return;
         }
         super.travel(dir);
@@ -383,6 +393,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
             entity.setXRot(entity.getXRot() + f1 - f);
         }
     }
+
     @Override
     public void onPassengerTurned(Entity entity) {
         this.clampRotation(entity);

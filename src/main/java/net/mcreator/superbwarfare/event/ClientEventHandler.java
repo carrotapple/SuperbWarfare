@@ -67,7 +67,11 @@ public class ClientEventHandler {
                 && living.getMainHandItem().getOrCreateTag().getBoolean("Linked")) {
             handleDroneCamera(event, living);
         } else {
-            Minecraft.getInstance().gameRenderer.shutdownEffect();
+            if (Minecraft.getInstance().gameRenderer.currentEffect() != null && Minecraft.getInstance().gameRenderer.currentEffect().getName().equals("superbwarfare:shaders/post/scan_pincushion.json")) {
+                Minecraft.getInstance().gameRenderer.shutdownEffect();
+            }
+
+
         }
         if (level != null && entity instanceof LivingEntity living && living.getMainHandItem().is(ModTags.Items.GUN)) {
             handleWeaponCrossHair(living);
@@ -111,7 +115,7 @@ public class ClientEventHandler {
 
         if (drone != null && stack.getOrCreateTag().getBoolean("Using")) {
             if (Minecraft.getInstance().gameRenderer.currentEffect() == null) {
-                Minecraft.getInstance().gameRenderer.loadEffect(new ResourceLocation("minecraft:shaders/post/scan_pincushion.json"));
+                Minecraft.getInstance().gameRenderer.loadEffect(new ResourceLocation("superbwarfare:shaders/post/scan_pincushion.json"));
             }
         }
     }

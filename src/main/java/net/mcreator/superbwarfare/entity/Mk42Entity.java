@@ -50,6 +50,11 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
 
     public String animationprocedure = "empty";
 
+    protected int interpolationSteps;
+
+    protected double serverYRot;
+    protected double serverXRot;
+
     public Mk42Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.MK_42.get(), world);
     }
@@ -186,7 +191,6 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
                 capability.syncPlayerVariables(gunner);
             });
         }
-
         this.refreshDimensions();
     }
 
@@ -303,6 +307,13 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
     }
 
     @Override
+    public void lerpTo(double x, double y, double z, float yaw, float pitch, int interpolationSteps, boolean interpolate) {
+        serverYRot = yaw;
+        serverXRot = pitch;
+        this.interpolationSteps = 10;
+    }
+
+    @Override
     public void travel(@NotNull Vec3 dir) {
         Player entity = this.getPassengers().isEmpty() ? null : (Player) this.getPassengers().get(0);
         ItemStack stack = null;
@@ -320,14 +331,11 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
             diffY = diffY * 0.15f;
             diffX = diffX * 0.15f;
 
-            if (Math.abs(diffY) < 60f && Math.abs(diffX) < 60f) {
-                this.setYRot(this.getYRot() + Mth.clamp(diffY, -1.75f, 1.75f));
-                this.yRotO = this.getYRot();
-                this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -3f, 3f), -85, 15));
-                this.setRot(this.getYRot(), this.getXRot());
-                this.yBodyRot = this.getYRot() + Mth.clamp(diffY, -1.75f, 1.75f);
-                this.yHeadRot = this.getYRot() + Mth.clamp(diffY, -1.75f, 1.75f);
-            }
+            this.setYRot(this.getYRot() + Mth.clamp(diffY, -1.75f, 1.75f));
+            this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -3f, 3f), -85, 15));
+            this.setRot(this.getYRot(), this.getXRot());
+            this.yBodyRot = this.getYRot();
+            this.yHeadRot = this.getYRot();
             return;
         }
         super.travel(dir);

@@ -39,7 +39,7 @@ public class CannonHudOverlay {
             float yRotOffset = Mth.lerp(event.getPartialTick(), player.yRotO, player.getYRot());
             float xRotOffset = Mth.lerp(event.getPartialTick(), player.xRotO, player.getXRot());
             float diffY = 13 * (Objects.requireNonNull(player.getVehicle()).getViewYRot(event.getPartialTick()) - yRotOffset);
-            float diffX = 13 * (Objects.requireNonNull(player.getVehicle()).getViewXRot(event.getPartialTick()) - xRotOffset + 1.3f);
+            float diffX = 17 * (Objects.requireNonNull(player.getVehicle()).getViewXRot(event.getPartialTick()) - xRotOffset + 1.3f);
             if (diffY > 180.0f) {
                 diffY -= 360.0f;
             } else if (diffY < -180.0f) {
