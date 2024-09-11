@@ -40,19 +40,20 @@ public class CannonHudOverlay {
             float xRotOffset = Mth.lerp(event.getPartialTick(), player.xRotO, player.getXRot());
             float diffY = Objects.requireNonNull(player.getVehicle()).getViewYRot(event.getPartialTick()) - yRotOffset;
             float diffX = Objects.requireNonNull(player.getVehicle()).getViewXRot(event.getPartialTick()) - xRotOffset + 1.3f;
+            float fovAdjust = (float) 70 / Minecraft.getInstance().options.fov().get();
             if (diffY > 180.0f) {
                 diffY -= 360.0f;
             } else if (diffY < -180.0f) {
                 diffY += 360.0f;
             }
             float f = (float)Math.min(w, h);
-            float f1 = Math.min((float)w / f, (float)h / f);
+            float f1 = Math.min((float)w / f, (float)h / f) * fovAdjust;
             int i = Mth.floor(f * f1);
             int j = Mth.floor(f * f1);
             int k = (w - i) / 2;
             int l = (h - j) / 2;
             preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/indicator.png"), k + 13 * diffY, l + 17 * diffX, 0, 0.0F, i, j, i, j);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/indicator.png"), k + 15.6f * diffY * fovAdjust, l + 20.4f * diffX * fovAdjust, 0, 0.0F, i, j, i, j);
         }
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();
