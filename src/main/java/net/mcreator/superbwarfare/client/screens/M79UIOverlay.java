@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.init.ModItems;
-import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -32,7 +31,7 @@ public class M79UIOverlay {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        if (shouldRenderCrossHair(player) || shouldRenderCrossHair2(player)) {
+        if (shouldRenderCrossHair(player)) {
             event.getGuiGraphics().blit(new ResourceLocation(ModUtils.MODID, "textures/screens/rex.png"), w / 2 - 16, h / 2 - 16, 0, 0, 32, 32, 32, 32);
         }
         RenderSystem.depthMask(true);
@@ -49,13 +48,12 @@ public class M79UIOverlay {
                 && (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || (player.isPassenger() && player.getVehicle() instanceof ICannonEntity))
                 && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS;
     }
-
-    private static boolean shouldRenderCrossHair2(Player player) {
-        if (player == null) return false;
-        return !player.isSpectator()
-                && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
-                && player.isPassenger()
-                && player.getVehicle() instanceof ICannonEntity
-                && !(player.getMainHandItem().getItem() instanceof GunItem);
-    }
+//    private static boolean shouldRenderCrossHair2(Player player) {
+//        if (player == null) return false;
+//        return !player.isSpectator()
+//                && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
+//                && player.isPassenger()
+//                && player.getVehicle() instanceof ICannonEntity
+//                && !(player.getMainHandItem().getItem() instanceof GunItem);
+//    }
 }

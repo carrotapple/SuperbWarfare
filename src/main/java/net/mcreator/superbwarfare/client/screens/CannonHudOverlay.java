@@ -52,8 +52,13 @@ public class CannonHudOverlay {
             int j = Mth.floor(f * f1);
             int k = (w - i) / 2;
             int l = (h - j) / 2;
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/indicator.png"), k + 15.6f * diffY * fovAdjust, l + 20.4f * diffX * fovAdjust, 0, 0.0F, i, j, i, j);
+            if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
+                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
+                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/indicator.png"), k + 32.2f * diffY * fovAdjust, l + 39.1f * diffX * fovAdjust, 0, 0.0F, i, j, i, j);
+            } else {
+                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
+                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/indicator.png"), k + (float) Math.tan(Mth.clamp(Mth.DEG_TO_RAD * diffY, -1.5, 1.5)) * 230 * fovAdjust, l + (float) Math.tan(Mth.clamp(Mth.DEG_TO_RAD * diffX, -1.5, 1.5)) * 230, 0, 0.0F, i, j, i, j);
+            }
         }
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();
@@ -66,7 +71,6 @@ public class CannonHudOverlay {
         if (player == null) return false;
         return !player.isSpectator()
                 && !(player.getMainHandItem().getItem() instanceof GunItem)
-                && (player.getVehicle() != null && (player.getVehicle() instanceof ICannonEntity))
-                && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS;
+                && (player.getVehicle() != null && (player.getVehicle() instanceof ICannonEntity));
     }
 }
