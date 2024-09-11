@@ -216,6 +216,10 @@ public class ModItems {
     public static final RegistryObject<Item> BARBED_WIRE = block(ModBlocks.BARBED_WIRE);
     public static final RegistryObject<Item> DRAGON_TEETH = block(ModBlocks.DRAGON_TEETH);
     public static final RegistryObject<Item> REFORGING_TABLE = block(ModBlocks.REFORGING_TABLE);
+    public static final RegistryObject<Item> LEAD_BLOCK = block(ModBlocks.LEAD_BLOCK);
+    public static final RegistryObject<Item> STEEL_BLOCK = block(ModBlocks.STEEL_BLOCK);
+    public static final RegistryObject<Item> TUNGSTEN_BLOCK = block(ModBlocks.TUNGSTEN_BLOCK);
+    public static final RegistryObject<Item> CEMENTED_CARBIDE_BLOCK = block(ModBlocks.CEMENTED_CARBIDE_BLOCK);
 
     private static RegistryObject<Item> block(RegistryObject<Block> block) {
         return BLOCKS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties()));

@@ -176,6 +176,10 @@
   "block.superbwarfare.deepslate_galena_ore": "Deepslate Galena 0re",
   "block.superbwarfare.dragon_teeth": "Dragon Teeth",
   "block.superbwarfare.reforging_table": "Gun Reforge Table",
+  "block.superbwarfare.lead_block": "Lead Block",
+  "block.superbwarfare.tungsten_block": "Tungsten Block",
+  "block.superbwarfare.steel_block": "Steel Block",
+  "block.superbwarfare.cemented_carbide_block": "Cemented Carbide Block",
 
   "item.superbwarfare.high_energy_explosives": "High Energy Explosives",
   "item.superbwarfare.grain": "Grain",

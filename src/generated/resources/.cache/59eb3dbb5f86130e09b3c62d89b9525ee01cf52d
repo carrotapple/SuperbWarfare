@@ -1,10 +1,14 @@
-// 1.20.1	2024-09-09T21:45:30.1964838	Loot Tables
+// 1.20.1	2024-09-11T15:45:39.7059384	Loot Tables
 98386b2e65b2afb7cf5b0cabf6a7b0f062c1e640 data/superbwarfare/loot_tables/blocks/barbed_wire.json
+811e69929a14e6736015849c220100bb58d914c9 data/superbwarfare/loot_tables/blocks/cemented_carbide_block.json
 dabbe17417c944567dc6dfcdcba32b8377c24f69 data/superbwarfare/loot_tables/blocks/deepslate_galena_ore.json
 a7c1af3e194d35a64544902468bd964f45f2f9ef data/superbwarfare/loot_tables/blocks/deepslate_scheelite_ore.json
 e80a153391c34dbca9130a140e6401242e3add4c data/superbwarfare/loot_tables/blocks/dragon_teeth.json
 cdd4acb439988069ca04920cb3905f01b7257362 data/superbwarfare/loot_tables/blocks/galena_ore.json
 188ee13e38134e87d07ded14b35c60b488db9ef8 data/superbwarfare/loot_tables/blocks/jump_pad.json
+26265463564b351c59c97d0ef8d2711e69c84a38 data/superbwarfare/loot_tables/blocks/lead_block.json
 8216c47bb150112820b066eb1edbec51c7e61251 data/superbwarfare/loot_tables/blocks/reforging_table.json
 8ae2495a0843798bc13e0d3ca4c010f88a44c7a6 data/superbwarfare/loot_tables/blocks/sandbag.json
 bce3fc7a50ba51c24ad3a37d2534a7db9cf0db73 data/superbwarfare/loot_tables/blocks/scheelite_ore.json
+83112ebff477e322bd3d23ed4653c7c02b230473 data/superbwarfare/loot_tables/blocks/steel_block.json
+71fc892124b5343e10688cabc2fb7c87d83cfef8 data/superbwarfare/loot_tables/blocks/tungsten_block.json

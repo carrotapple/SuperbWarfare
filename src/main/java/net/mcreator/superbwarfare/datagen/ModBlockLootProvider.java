@@ -21,6 +21,10 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
         this.dropSelf(ModBlocks.JUMP_PAD.get());
         this.dropSelf(ModBlocks.DRAGON_TEETH.get());
         this.dropSelf(ModBlocks.REFORGING_TABLE.get());
+        this.dropSelf(ModBlocks.LEAD_BLOCK.get());
+        this.dropSelf(ModBlocks.STEEL_BLOCK.get());
+        this.dropSelf(ModBlocks.TUNGSTEN_BLOCK.get());
+        this.dropSelf(ModBlocks.CEMENTED_CARBIDE_BLOCK.get());
 
         this.add(ModBlocks.GALENA_ORE.get(), this.createOreDrop(ModBlocks.GALENA_ORE.get(), ModItems.GALENA.get()));
         this.add(ModBlocks.SCHEELITE_ORE.get(), this.createOreDrop(ModBlocks.SCHEELITE_ORE.get(), ModItems.SCHEELITE.get()));

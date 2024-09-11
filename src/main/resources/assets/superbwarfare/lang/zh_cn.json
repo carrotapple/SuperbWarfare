@@ -176,6 +176,10 @@
   "block.superbwarfare.deepslate_galena_ore": "深层方铅矿石",
   "block.superbwarfare.dragon_teeth": "龙牙",
   "block.superbwarfare.reforging_table": "枪械重铸台",
+  "block.superbwarfare.lead_block": "铅块",
+  "block.superbwarfare.tungsten_block": "钨块",
+  "block.superbwarfare.steel_block": "钢块",
+  "block.superbwarfare.cemented_carbide_block": "硬质合金块",
 
   "item.superbwarfare.high_energy_explosives": "高能炸药",
   "item.superbwarfare.grain": "推进药柱",

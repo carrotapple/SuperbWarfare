@@ -5,7 +5,6 @@ import net.mcreator.superbwarfare.init.ModBlocks;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -28,6 +27,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockWithItem(ModBlocks.DEEPSLATE_GALENA_ORE);
         blockWithItem(ModBlocks.SCHEELITE_ORE);
         blockWithItem(ModBlocks.DEEPSLATE_SCHEELITE_ORE);
+        blockWithItem(ModBlocks.LEAD_BLOCK);
+        blockWithItem(ModBlocks.STEEL_BLOCK);
+        blockWithItem(ModBlocks.TUNGSTEN_BLOCK);
+        blockWithItem(ModBlocks.CEMENTED_CARBIDE_BLOCK);
     }
 
     private String name(Block block) {

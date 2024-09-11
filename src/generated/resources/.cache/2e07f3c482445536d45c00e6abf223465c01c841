@@ -1,4 +1,4 @@
-// 1.20.1	2024-09-09T21:58:39.0898222	Tags for minecraft:item mod id superbwarfare
+// 1.20.1	2024-09-11T15:45:39.7049414	Tags for minecraft:item mod id superbwarfare
 cf8d49a8d2872286d1a9c3d4a7e1c2b7690db0b8 data/forge/tags/items/dusts.json
 0fa06c2ff83bf09797e3ddff90f62d1124e645b4 data/forge/tags/items/dusts/coal_coke.json
 295ddf906b7133a0558d03e9a60eea18281fe430 data/forge/tags/items/dusts/iron.json
@@ -18,6 +18,10 @@ acced7f04d0125f1e53cf67a9c3f5f4a35889ee9 data/forge/tags/items/ore_rates/singula
 b6b0065ecbe36917b777ad86d467ef62dec9d82e data/forge/tags/items/raw_materials.json
 08cf183386837d6d22b7ee1315758e479adf82d8 data/forge/tags/items/raw_materials/lead.json
 01d117b3c36039399a63c89f32ee0cc0abfee66a data/forge/tags/items/raw_materials/tungsten.json
+e3d277bdb108231d7e5c0cb2bf5dfe90beba9beb data/forge/tags/items/storage_blocks.json
+af6fd64b4a685c353f243763db268f7b2304c009 data/forge/tags/items/storage_blocks/lead.json
+3743c2790deca7e779d3e4b82f092de39b446988 data/forge/tags/items/storage_blocks/steel.json
+144e54d908121dee498b2ebba3b24b09fd6f18d9 data/forge/tags/items/storage_blocks/tungsten.json
 99a5a3a4bb6b5fb641dcd449937365ea174f3797 data/superbwarfare/tags/items/gun.json
 62eb408544731ce4cfcd119d8a6cc74731189ac0 data/superbwarfare/tags/items/handgun.json
 b404c6fd99d2ca68c6738f225cb7d68ee443c10a data/superbwarfare/tags/items/machine_gun.json

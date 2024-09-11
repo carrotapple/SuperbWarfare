@@ -36,6 +36,11 @@ public class ModItemTagProvider extends ItemTagsProvider {
         this.tag(forgeTag("ingots/steel")).add(ModItems.STEEL_INGOT.get());
         this.tag(forgeTag("ingots/tungsten")).add(ModItems.TUNGSTEN_INGOT.get());
 
+        this.tag(Tags.Items.STORAGE_BLOCKS).addTags(forgeTag("storage_blocks/lead"), forgeTag("storage_blocks/steel"), forgeTag("storage_blocks/tungsten"));
+        this.tag(forgeTag("storage_blocks/lead")).add(ModItems.LEAD_BLOCK.get());
+        this.tag(forgeTag("storage_blocks/steel")).add(ModItems.STEEL_BLOCK.get());
+        this.tag(forgeTag("storage_blocks/tungsten")).add(ModItems.TUNGSTEN_BLOCK.get());
+
         this.tag(Tags.Items.ORES).addTags(forgeTag("ores/lead"), forgeTag("ores/tungsten"));
         this.tag(forgeTag("ores/lead")).add(ModItems.GALENA_ORE.get(), ModItems.DEEPSLATE_GALENA_ORE.get());
         this.tag(forgeTag("ores/tungsten")).add(ModItems.SCHEELITE_ORE.get(), ModItems.DEEPSLATE_SCHEELITE_ORE.get());
