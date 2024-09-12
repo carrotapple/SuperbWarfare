@@ -5,11 +5,16 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.item.gun.GunItem;
+import net.mcreator.superbwarfare.tools.TraceTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -17,6 +22,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 import static net.mcreator.superbwarfare.tools.RenderTool.preciseBlit;
@@ -53,6 +59,33 @@ public class CannonHudOverlay {
             int k = (w - i) / 2;
             int l = (h - j) / 2;
             if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
+                Entity lookingEntity = TraceTool.findLookingEntity(player, 512);
+                boolean lookAtEntity = false;
+                double block_range = player.position().distanceTo((Vec3.atLowerCornerOf(player.level().clip(
+                        new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(512)),
+                                ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
+
+                double entity_range = 0;
+
+
+                if (lookingEntity != null) {
+                    lookAtEntity = true;
+                    entity_range = player.distanceTo(lookingEntity);
+                }
+                if (lookAtEntity) {
+                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
+                                    .append(Component.literal(new DecimalFormat("##.#").format(entity_range) + "M " + lookingEntity.getDisplayName().getString())),
+                            w / 2 + 14, h / 2 - 20, -1, false);
+                } else {
+                    if (block_range > 511) {
+                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
+                                .append(Component.literal("---M")), w / 2 + 14, h / 2 - 20, -1, false);
+                    } else {
+                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
+                                        .append(Component.literal(new DecimalFormat("##.#").format(block_range) + "M")),
+                                w / 2 + 14, h / 2 - 20, -1, false);
+                    }
+                }
                 preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
                 preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/indicator.png"), k + (float) Math.tan(Mth.clamp(Mth.DEG_TO_RAD * diffY, -1.5, 1.5)) * 5 * i / 1.4f * (90 - Math.abs(player.getXRot())) / 90, l + (float) Math.tan(Mth.clamp(Mth.DEG_TO_RAD * diffX, -1.5, 1.5)) * 5 * j / 1.4f, 0, 0.0F, i, j, i, j);
             } else {
