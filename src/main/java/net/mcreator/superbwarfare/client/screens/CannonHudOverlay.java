@@ -12,6 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.Vec3;
@@ -68,9 +69,9 @@ public class CannonHudOverlay {
                 double entity_range = 0;
 
 
-                if (lookingEntity != null) {
+                if (lookingEntity instanceof LivingEntity living) {
                     lookAtEntity = true;
-                    entity_range = player.distanceTo(lookingEntity);
+                    entity_range = player.distanceTo(living);
                 }
                 if (lookAtEntity) {
                     event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")

@@ -124,7 +124,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
         if (amount < 34) {
             return false;
         }
-        return super.hurt(source, amount - 34);
+        return super.hurt(source, 0.3f * amount);
     }
 
     @Override
@@ -213,7 +213,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
             boolean salvoShoot = false;
 
             if (stack.is(ModItems.HE_5_INCHES.get())) {
-                hitDamage = 130;
+                hitDamage = 700;
                 explosionRadius = 13;
                 explosionDamage = 250;
                 fireProbability = 0.24F;
@@ -222,7 +222,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
             }
 
             if (stack.is(ModItems.AP_5_INCHES.get())) {
-                hitDamage = 550;
+                hitDamage = 1000;
                 explosionRadius = 3.8f;
                 explosionDamage = 300;
                 fireProbability = 0;
@@ -241,7 +241,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
             }
             yRot = yRot + 90 % 360;
 
-            var leftPos = new Vector3d(7.2, 0, -0.45);
+            var leftPos = new Vector3d(0, 0, -0.45);
             leftPos.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
             leftPos.rotateY(-yRot * Mth.DEG_TO_RAD);
 
@@ -255,9 +255,40 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
             entityToSpawnLeft.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 15, 0.05f);
             level.addFreshEntity(entityToSpawnLeft);
 
+            var leftPosP1 = new Vector3d(7, 0, -0.45);
+            leftPosP1.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
+            leftPosP1.rotateY(-yRot * Mth.DEG_TO_RAD);
+
+            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                    this.getX() + leftPosP1.x,
+                    this.getEyeY() - 0.2 + leftPosP1.y,
+                    this.getZ() + leftPosP1.z,
+                    10, 0.4, 0.4, 0.4, 0.0075);
+
+            server.sendParticles(ParticleTypes.CLOUD,
+                    this.getX() + leftPosP1.x,
+                    this.getEyeY() - 0.2 + leftPosP1.y,
+                    this.getZ() + leftPosP1.z,
+                    10, 0.4, 0.4, 0.4, 0.0075);
+
+            int count = 5;
+
+            for (float i = 9.5f; i < 14; i += .5f) {
+
+                var leftPosP = new Vector3d(i, 0, -0.45);
+                leftPosP.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
+                leftPosP.rotateY(-yRot * Mth.DEG_TO_RAD);
+
+                server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                        this.getX() + leftPosP.x,
+                        this.getEyeY() - 0.2 + leftPosP.y,
+                        this.getZ() + leftPosP.z,
+                        Mth.clamp(count--,1,5), 0.1, 0.1, 0.1, 0.002);
+            }
+
             //右炮管
             if (salvoShoot) {
-                var rightPos = new Vector3d(7.2, 0, 0.45);
+                var rightPos = new Vector3d(0, 0, 0.45);
                 rightPos.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
                 rightPos.rotateY(-yRot * Mth.DEG_TO_RAD);
 
@@ -269,6 +300,37 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
                         this.getZ() + rightPos.z);
                 entityToSpawnRight.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 15, 0.05f);
                 level.addFreshEntity(entityToSpawnRight);
+
+                var rightPosP1 = new Vector3d(7, 0, 0.45);
+                rightPosP1.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
+                rightPosP1.rotateY(-yRot * Mth.DEG_TO_RAD);
+
+                server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                        this.getX() + rightPosP1.x,
+                        this.getEyeY() - 0.2 + rightPosP1.y,
+                        this.getZ() + rightPosP1.z,
+                        10, 0.4, 0.4, 0.4, 0.0075);
+
+                server.sendParticles(ParticleTypes.CLOUD,
+                        this.getX() + rightPosP1.x,
+                        this.getEyeY() - 0.2 + rightPosP1.y,
+                        this.getZ() + rightPosP1.z,
+                        10, 0.4, 0.4, 0.4, 0.0075);
+
+                int countR = 5;
+
+                for (float i = 9.5f; i < 14; i += .5f) {
+
+                    var rightPosP = new Vector3d(i, 0, 0.45);
+                    rightPosP.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
+                    rightPosP.rotateY(-yRot * Mth.DEG_TO_RAD);
+
+                    server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
+                            this.getX() + rightPosP.x,
+                            this.getEyeY() - 0.2 + rightPosP.y,
+                            this.getZ() + rightPosP.z,
+                            Mth.clamp(countR--,1,5), 0.1, 0.1, 0.1, 0.002);
+                }
 
                 player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> capability.recoilHorizon = 1);
             } else {
@@ -289,51 +351,8 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
                     this.getX() + 5 * this.getLookAngle().x,
                     this.getY(),
                     this.getZ() + 5 * this.getLookAngle().z,
-                    200, 5, 0.02, 5, 0.005);
+                    100, 7, 0.02, 7, 0.005);
 
-            double x = this.getX() + 9 * this.getLookAngle().x;
-            double y = this.getEyeY() + 9 * this.getLookAngle().y;
-            double z = this.getZ() + 9 * this.getLookAngle().z;
-
-            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 10, 0.4, 0.4, 0.4, 0.0075);
-
-            server.sendParticles(ParticleTypes.CLOUD, x, y, z, 10, 0.4, 0.4, 0.4, 0.0075);
-
-            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
-                    this.getX() + 9.5 * this.getLookAngle().x,
-                    this.getEyeY() + 9.5 * this.getLookAngle().y,
-                    this.getZ() + 9.5 * this.getLookAngle().z,
-                    5, 0.15, 0.15, 0.15, 0.0075);
-
-            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
-                    this.getX() + 10 * this.getLookAngle().x,
-                    this.getEyeY() + 10 * this.getLookAngle().y,
-                    this.getZ() + 10 * this.getLookAngle().z,
-                    4, 0.15, 0.15, 0.15, 0.0075);
-
-            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
-                    this.getX() + 11.5 * this.getLookAngle().x,
-                    this.getEyeY() + 11.5 * this.getLookAngle().y,
-                    this.getZ() + 11.5 * this.getLookAngle().z,
-                    3, 0.15, 0.15, 0.15, 0.0075);
-
-            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
-                    this.getX() + 12 * this.getLookAngle().x,
-                    this.getEyeY() + 12 * this.getLookAngle().y,
-                    this.getZ() + 12 * this.getLookAngle().z,
-                    2, 0.15, 0.15, 0.15, 0.0075);
-
-            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
-                    this.getX() + 12.5 * this.getLookAngle().x,
-                    this.getEyeY() + 12.5 * this.getLookAngle().y,
-                    this.getZ() + 12.5 * this.getLookAngle().z,
-                    2, 0.15, 0.15, 0.15, 0.0075);
-
-            server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
-                    this.getX() + 13 * this.getLookAngle().x,
-                    this.getEyeY() + 13 * this.getLookAngle().y,
-                    this.getZ() + 13 * this.getLookAngle().z,
-                    1, 0.15, 0.15, 0.15, 0.0075);
         }
     }
 
