@@ -54,10 +54,10 @@ public class CannonHudOverlay {
             int l = (h - j) / 2;
             if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
                 preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
-                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/indicator.png"), k + 32.2f * diffY * fovAdjust, l + 39.1f * diffX * fovAdjust, 0, 0.0F, i, j, i, j);
+                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/indicator.png"), k + (float) Math.tan(Mth.clamp(Mth.DEG_TO_RAD * diffY, -1.5, 1.5)) * 5 * i / 1.4f * (90 - Math.abs(player.getXRot())) / 90, l + (float) Math.tan(Mth.clamp(Mth.DEG_TO_RAD * diffX, -1.5, 1.5)) * 5 * j / 1.4f, 0, 0.0F, i, j, i, j);
             } else {
                 preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
-                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/indicator.png"), k + (float) Math.tan(Mth.clamp(Mth.DEG_TO_RAD * diffY, -1.5, 1.5)) * 230 * fovAdjust, l + (float) Math.tan(Mth.clamp(Mth.DEG_TO_RAD * diffX, -1.5, 1.5)) * 230, 0, 0.0F, i, j, i, j);
+                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/indicator.png"), k + (float) Math.tan(Mth.clamp(Mth.DEG_TO_RAD * diffY, -1.5, 1.5)) * i / 1.4f * (90 - Math.abs(player.getXRot())) / 90, l + (float) Math.tan(Mth.clamp(Mth.DEG_TO_RAD * diffX, -1.5, 1.5)) * j / 1.4f, 0, 0.0F, i, j, i, j);
             }
         }
         RenderSystem.depthMask(true);
