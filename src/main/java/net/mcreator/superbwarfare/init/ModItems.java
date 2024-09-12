@@ -133,6 +133,7 @@ public class ModItems {
     public static final RegistryObject<Item> COPPER_PLATE = ITEMS.register("copper_plate", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> STEEL_INGOT = ITEMS.register("steel_ingot", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> LEAD_INGOT = ITEMS.register("lead_ingot", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> SILVER_INGOT = ITEMS.register("silver_ingot", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TUNGSTEN_INGOT = ITEMS.register("tungsten_ingot", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> CEMENTED_CARBIDE_INGOT = ITEMS.register("cemented_carbide_ingot", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> HIGH_ENERGY_EXPLOSIVES = ITEMS.register("high_energy_explosives", () -> new Item(new Item.Properties()));
@@ -144,6 +145,7 @@ public class ModItems {
     public static final RegistryObject<Item> RAW_CEMENTED_CARBIDE_POWDER = ITEMS.register("raw_cemented_carbide_powder", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> GALENA = ITEMS.register("galena", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> SCHEELITE = ITEMS.register("scheelite", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> RAW_SILVER = ITEMS.register("raw_silver", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> DOG_TAG = ITEMS.register("dog_tag", DogTag::new);
     public static final RegistryObject<Item> SHIELD_CELL = ITEMS.register("shield_cell", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
     public static final RegistryObject<Item> TRANSCRIPT = ITEMS.register("transcript", Transcript::new);
@@ -211,6 +213,8 @@ public class ModItems {
     public static final RegistryObject<Item> DEEPSLATE_GALENA_ORE = block(ModBlocks.DEEPSLATE_GALENA_ORE);
     public static final RegistryObject<Item> SCHEELITE_ORE = block(ModBlocks.SCHEELITE_ORE);
     public static final RegistryObject<Item> DEEPSLATE_SCHEELITE_ORE = block(ModBlocks.DEEPSLATE_SCHEELITE_ORE);
+    public static final RegistryObject<Item> SILVER_ORE = block(ModBlocks.SILVER_ORE);
+    public static final RegistryObject<Item> DEEPSLATE_SILVER_ORE = block(ModBlocks.DEEPSLATE_SILVER_ORE);
     public static final RegistryObject<Item> JUMP_PAD = block(ModBlocks.JUMP_PAD);
     public static final RegistryObject<Item> SANDBAG = block(ModBlocks.SANDBAG);
     public static final RegistryObject<Item> BARBED_WIRE = block(ModBlocks.BARBED_WIRE);
@@ -219,6 +223,7 @@ public class ModItems {
     public static final RegistryObject<Item> LEAD_BLOCK = block(ModBlocks.LEAD_BLOCK);
     public static final RegistryObject<Item> STEEL_BLOCK = block(ModBlocks.STEEL_BLOCK);
     public static final RegistryObject<Item> TUNGSTEN_BLOCK = block(ModBlocks.TUNGSTEN_BLOCK);
+    public static final RegistryObject<Item> SILVER_BLOCK = block(ModBlocks.SILVER_BLOCK);
     public static final RegistryObject<Item> CEMENTED_CARBIDE_BLOCK = block(ModBlocks.CEMENTED_CARBIDE_BLOCK);
 
     private static RegistryObject<Item> block(RegistryObject<Block> block) {

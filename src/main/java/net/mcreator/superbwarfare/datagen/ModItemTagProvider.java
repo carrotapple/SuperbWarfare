@@ -31,29 +31,34 @@ public class ModItemTagProvider extends ItemTagsProvider {
         this.tag(forgeTag("dusts/iron")).add(ModItems.IRON_POWDER.get());
         this.tag(forgeTag("dusts/tungsten")).add(ModItems.TUNGSTEN_POWDER.get());
 
-        this.tag(Tags.Items.INGOTS).addTags(forgeTag("ingots/lead"), forgeTag("ingots/steel"), forgeTag("ingots/tungsten"));
+        this.tag(Tags.Items.INGOTS).addTags(forgeTag("ingots/lead"), forgeTag("ingots/steel"), forgeTag("ingots/tungsten"), forgeTag("ingots/silver"));
         this.tag(forgeTag("ingots/lead")).add(ModItems.LEAD_INGOT.get());
         this.tag(forgeTag("ingots/steel")).add(ModItems.STEEL_INGOT.get());
         this.tag(forgeTag("ingots/tungsten")).add(ModItems.TUNGSTEN_INGOT.get());
+        this.tag(forgeTag("ingots/silver")).add(ModItems.SILVER_INGOT.get());
 
-        this.tag(Tags.Items.STORAGE_BLOCKS).addTags(forgeTag("storage_blocks/lead"), forgeTag("storage_blocks/steel"), forgeTag("storage_blocks/tungsten"));
+        this.tag(Tags.Items.STORAGE_BLOCKS).addTags(forgeTag("storage_blocks/lead"), forgeTag("storage_blocks/steel"), forgeTag("storage_blocks/tungsten"), forgeTag("storage_blocks/silver"));
         this.tag(forgeTag("storage_blocks/lead")).add(ModItems.LEAD_BLOCK.get());
         this.tag(forgeTag("storage_blocks/steel")).add(ModItems.STEEL_BLOCK.get());
         this.tag(forgeTag("storage_blocks/tungsten")).add(ModItems.TUNGSTEN_BLOCK.get());
+        this.tag(forgeTag("storage_blocks/silver")).add(ModItems.SILVER_BLOCK.get());
 
-        this.tag(Tags.Items.ORES).addTags(forgeTag("ores/lead"), forgeTag("ores/tungsten"));
+        this.tag(Tags.Items.ORES).addTags(forgeTag("ores/lead"), forgeTag("ores/tungsten"), forgeTag("ores/silver"));
         this.tag(forgeTag("ores/lead")).add(ModItems.GALENA_ORE.get(), ModItems.DEEPSLATE_GALENA_ORE.get());
         this.tag(forgeTag("ores/tungsten")).add(ModItems.SCHEELITE_ORE.get(), ModItems.DEEPSLATE_SCHEELITE_ORE.get());
+        this.tag(forgeTag("ores/silver")).add(ModItems.SILVER_ORE.get(), ModItems.DEEPSLATE_SILVER_ORE.get());
 
-        this.tag(Tags.Items.RAW_MATERIALS).addTags(forgeTag("raw_materials/lead"), forgeTag("raw_materials/tungsten"));
+        this.tag(Tags.Items.RAW_MATERIALS).addTags(forgeTag("raw_materials/lead"), forgeTag("raw_materials/tungsten"), forgeTag("raw_materials/silver"));
         this.tag(forgeTag("raw_materials/lead")).add(ModItems.GALENA.get());
         this.tag(forgeTag("raw_materials/tungsten")).add(ModItems.SCHEELITE.get());
+        this.tag(forgeTag("raw_materials/silver")).add(ModItems.RAW_SILVER.get());
 
         this.tag(Tags.Items.ORE_RATES_SINGULAR).add(ModItems.GALENA_ORE.get(), ModItems.DEEPSLATE_GALENA_ORE.get(),
-                ModItems.SCHEELITE_ORE.get(), ModItems.DEEPSLATE_SCHEELITE_ORE.get());
+                ModItems.SCHEELITE_ORE.get(), ModItems.DEEPSLATE_SCHEELITE_ORE.get(),
+                ModItems.SILVER_ORE.get(), ModItems.DEEPSLATE_SILVER_ORE.get());
 
-        this.tag(Tags.Items.ORES_IN_GROUND_DEEPSLATE).add(ModItems.GALENA_ORE.get(), ModItems.SCHEELITE_ORE.get());
-        this.tag(Tags.Items.ORES_IN_GROUND_STONE).add(ModItems.DEEPSLATE_GALENA_ORE.get(), ModItems.DEEPSLATE_SCHEELITE_ORE.get());
+        this.tag(Tags.Items.ORES_IN_GROUND_STONE).add(ModItems.GALENA_ORE.get(), ModItems.SCHEELITE_ORE.get(), ModItems.SILVER_ORE.get());
+        this.tag(Tags.Items.ORES_IN_GROUND_DEEPSLATE).add(ModItems.DEEPSLATE_GALENA_ORE.get(), ModItems.DEEPSLATE_SCHEELITE_ORE.get(), ModItems.DEEPSLATE_SILVER_ORE.get());
 
         this.tag(forgeTag("plates")).addTags(forgeTag("plates/copper"));
         this.tag(forgeTag("plates/copper")).add(ModItems.COPPER_PLATE.get());

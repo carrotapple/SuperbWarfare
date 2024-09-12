@@ -25,11 +25,14 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
         this.dropSelf(ModBlocks.STEEL_BLOCK.get());
         this.dropSelf(ModBlocks.TUNGSTEN_BLOCK.get());
         this.dropSelf(ModBlocks.CEMENTED_CARBIDE_BLOCK.get());
+        this.dropSelf(ModBlocks.SILVER_BLOCK.get());
 
         this.add(ModBlocks.GALENA_ORE.get(), this.createOreDrop(ModBlocks.GALENA_ORE.get(), ModItems.GALENA.get()));
         this.add(ModBlocks.SCHEELITE_ORE.get(), this.createOreDrop(ModBlocks.SCHEELITE_ORE.get(), ModItems.SCHEELITE.get()));
+        this.add(ModBlocks.SILVER_ORE.get(), this.createOreDrop(ModBlocks.SILVER_ORE.get(), ModItems.RAW_SILVER.get()));
         this.add(ModBlocks.DEEPSLATE_GALENA_ORE.get(), this.createOreDrop(ModBlocks.DEEPSLATE_GALENA_ORE.get(), ModItems.GALENA.get()));
         this.add(ModBlocks.DEEPSLATE_SCHEELITE_ORE.get(), this.createOreDrop(ModBlocks.DEEPSLATE_SCHEELITE_ORE.get(), ModItems.SCHEELITE.get()));
+        this.add(ModBlocks.DEEPSLATE_SILVER_ORE.get(), this.createOreDrop(ModBlocks.DEEPSLATE_SILVER_ORE.get(), ModItems.RAW_SILVER.get()));
     }
 
     @Override

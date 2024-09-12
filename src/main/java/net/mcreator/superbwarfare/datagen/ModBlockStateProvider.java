@@ -31,6 +31,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockWithItem(ModBlocks.STEEL_BLOCK);
         blockWithItem(ModBlocks.TUNGSTEN_BLOCK);
         blockWithItem(ModBlocks.CEMENTED_CARBIDE_BLOCK);
+        blockWithItem(ModBlocks.SILVER_ORE);
+        blockWithItem(ModBlocks.DEEPSLATE_SILVER_ORE);
+        blockWithItem(ModBlocks.SILVER_BLOCK);
     }
 
     private String name(Block block) {

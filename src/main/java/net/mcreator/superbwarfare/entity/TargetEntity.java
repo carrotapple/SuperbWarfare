@@ -213,15 +213,6 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
     protected void pushEntities() {
     }
 
-//    @Override
-//    protected AABB makeBoundingBox() {
-//        if (this.entityData.get(DOWN_TIME) > 0) {
-//            return super.makeBoundingBox().inflate(0, -0.85, 0).move(0, -0.85, 0);
-//        }
-//
-//        return super.makeBoundingBox();
-//    }
-
     @Override
     public void setNoGravity(boolean ignored) {
         super.setNoGravity(true);

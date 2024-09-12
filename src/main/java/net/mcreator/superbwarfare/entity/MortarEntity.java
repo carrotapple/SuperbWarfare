@@ -49,6 +49,10 @@ public class MortarEntity extends LivingEntity implements GeoEntity, AnimatedEnt
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
 
+    protected int interpolationSteps;
+    protected double serverYRot;
+    protected double serverXRot;
+
     public MortarEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.MORTAR.get(), world);
     }
@@ -181,6 +185,13 @@ public class MortarEntity extends LivingEntity implements GeoEntity, AnimatedEnt
         }
 
         return InteractionResult.sidedSuccess(this.level().isClientSide());
+    }
+
+    @Override
+    public void lerpTo(double x, double y, double z, float yaw, float pitch, int interpolationSteps, boolean interpolate) {
+        serverYRot = yaw;
+        serverXRot = pitch;
+        this.interpolationSteps = 10;
     }
 
     @Override

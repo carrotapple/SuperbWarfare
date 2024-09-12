@@ -1,4 +1,4 @@
-// 1.20.1	2024-09-09T22:03:46.3738464	Item Models: superbwarfare
+// 1.20.1	2024-09-12T20:50:19.5912832	Item Models: superbwarfare
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_47_blueprint.json
 c993bddc0db9453ffbefa59f9ac9a74dba909038 assets/superbwarfare/models/item/ancient_cpu.json
@@ -65,12 +65,14 @@ f5b4fc1445373e6acfaa077e109de693c624eb1e assets/superbwarfare/models/item/nether
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/qbz_95_blueprint.json
 e821640d80c55763e7e7b62f7b80c60ff56dcc4f assets/superbwarfare/models/item/rare_material_pack.json
 ce0f0949b0545d8ef08aeaa52dd423dbe592f704 assets/superbwarfare/models/item/raw_cemented_carbide_powder.json
+59cbca463403cfc50d964229268638c55dd915fb assets/superbwarfare/models/item/raw_silver.json
 5b8f7d5922e49e06bcd4d4d2a2a3dc934548570b assets/superbwarfare/models/item/reforging_table.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/rpg_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/rpk_blueprint.json
 ce2232fbc6a9186371c6ae6745ec3be2a0a33546 assets/superbwarfare/models/item/scheelite.json
 c010baff106b3307ec585df4757f7c3d756e9794 assets/superbwarfare/models/item/seeker.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/sentinel_blueprint.json
+129239c26d14526d65764dc10ef99864c9ef7fff assets/superbwarfare/models/item/silver_ingot.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/sks_blueprint.json
 93a18630b8c0a5aab1f0202f42b8bd5ee7153c38 assets/superbwarfare/models/item/steel_action.json
 321bafbe4487eda1a6ca82eec647eabc3230a4e3 assets/superbwarfare/models/item/steel_barrel.json

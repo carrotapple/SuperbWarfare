@@ -53,7 +53,6 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
     public String animationprocedure = "empty";
 
     protected int interpolationSteps;
-
     protected double serverYRot;
     protected double serverXRot;
 
