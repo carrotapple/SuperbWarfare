@@ -113,6 +113,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     @Nullable
     protected EntityResult findEntityOnPath(Vec3 startVec, Vec3 endVec) {
+        if (this.shooter == null) return null;
+
         Vec3 hitVec = null;
         Entity hitEntity = null;
         boolean headshot = false;
