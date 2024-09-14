@@ -87,6 +87,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             || input.getBlock() instanceof TrapDoorBlock
             || input.getBlock() instanceof BarbedWireBlock);
 
+    @Nullable
     protected LivingEntity shooter;
     protected int shooterId;
     private float damage = 1f;
@@ -321,8 +322,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             }
 
             if (state.getBlock() instanceof TargetBlock) {
+                if (this.shooter == null) return;
+
                 int rings = getRings(blockHitResult, hitVec);
-                double dis = shooter.position().distanceTo(hitVec);
+                double dis = this.shooter.position().distanceTo(hitVec);
                 recordHitScore(rings, dis);
             }
 
@@ -422,6 +425,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     // TODO 实现穿甲比例大于1时的穿透生物效果
     protected void onHitEntity(Entity entity, boolean headshot, boolean legShot) {
+        if (this.shooter == null) return;
+
         float mMultiple = 1 + this.monsterMultiple;
 
         if (entity == null) return;
@@ -449,7 +454,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                         p -> p.sendSystemMessage(
                                 Component.translatable("death.attack.beast_gun",
                                         victim.getDisplayName(),
-                                        shooter.getDisplayName()
+                                        shooter == null ? "" : shooter.getDisplayName()
                                 )
                         )
                 );
