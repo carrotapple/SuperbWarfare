@@ -179,6 +179,8 @@ public class ModVillagers {
                     new ItemStack(getItemHolder("killing_tally"), 1), 4, 15, 0.05f));
             trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 34),
                     new ItemStack(getItemHolder("fourth_times_charm"), 1), 4, 15, 0.05f));
+            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 48),
+                    new ItemStack(getItemHolder("monster_hunter"), 1), 4, 25, 0.05f));
 
             trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
                     new ItemStack(ModItems.HUNTING_RIFLE_BLUEPRINT.get()), 10, 30, 0.05f));
