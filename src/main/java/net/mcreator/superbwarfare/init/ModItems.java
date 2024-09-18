@@ -120,6 +120,7 @@ public class ModItems {
     public static final RegistryObject<Item> LIGHT_SABER = ITEMS.register("light_saber", LightSaber::new);
     public static final RegistryObject<Item> KNIFE = ITEMS.register("knife", Knife::new);
     public static final RegistryObject<Item> HAMMER = ITEMS.register("hammer", Hammer::new);
+    public static final RegistryObject<Item> CROWBAR = ITEMS.register("crowbar", Crowbar::new);
     public static final RegistryObject<Item> MORTAR_DEPLOYER = ITEMS.register("mortar_deployer", MortarDeployer::new);
     public static final RegistryObject<Item> MORTAR_BARREL = ITEMS.register("mortar_barrel", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> MORTAR_BASE_PLATE = ITEMS.register("mortar_base_plate", () -> new Item(new Item.Properties()));

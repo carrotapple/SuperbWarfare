@@ -33,6 +33,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
@@ -127,12 +128,18 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
     }
 
     @Override
-    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+    public @NotNull InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (player.isShiftKeyDown() && player.getMainHandItem().getItem() == ModItems.CROWBAR.get() && this.getFirstPassenger() == null) {
+            this.discard();
+            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MLE_1934_SPAWN_EGG.get()));
+        } else {
+            player.setXRot(this.getXRot());
+            player.setYRot(this.getYRot());
+            player.startRiding(this);
+
+        }
         InteractionResult result = InteractionResult.sidedSuccess(this.level().isClientSide());
         super.mobInteract(player, hand);
-        player.setXRot(this.getXRot());
-        player.setYRot(this.getYRot());
-        player.startRiding(this);
         return result;
     }
 

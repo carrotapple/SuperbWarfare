@@ -31,6 +31,7 @@ import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -150,6 +151,10 @@ public class MortarEntity extends LivingEntity implements GeoEntity, AnimatedEnt
     public InteractionResult interact(Player player, InteractionHand hand) {
         ItemStack mainHandItem = player.getMainHandItem();
         if (player.isShiftKeyDown()) {
+            if (mainHandItem.getItem() == ModItems.CROWBAR.get()){
+                this.discard();
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MORTAR_DEPLOYER.get()));
+            }
             this.setYRot(player.getYRot());
             this.setXRot(this.getXRot());
             this.setYBodyRot(this.getYRot());

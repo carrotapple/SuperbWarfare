@@ -11,7 +11,7 @@ public class Knife extends SwordItem {
     public Knife() {
         super(new Tier() {
             public int getUses() {
-                return 500;
+                return 1500;
             }
 
             public float getSpeed() {
