@@ -51,9 +51,9 @@ public class SvdItemModel extends GeoModel<SvdItem> {
             bolt.setPosZ(3.25f);
         }
 
-        double zt = ClientEventHandler.getZoom_time();
-        double zp = ClientEventHandler.getZoom_pos();
-        double zpz = ClientEventHandler.getZoom_pos_z();
+        double zt = ClientEventHandler.getZoomTime();
+        double zp = ClientEventHandler.getZoomPos();
+        double zpz = ClientEventHandler.getZoomPosZ();
 
         gun.setPosX(2.02f * (float) zp);
 

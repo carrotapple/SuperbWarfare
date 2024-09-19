@@ -57,9 +57,9 @@ public class M98bItemModel extends GeoModel<M98bItem> {
         }
         shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
 
-        double zt = ClientEventHandler.getZoom_time();
-        double zp = ClientEventHandler.getZoom_pos();
-        double zpz = ClientEventHandler.getZoom_pos_z();
+        double zt = ClientEventHandler.getZoomTime();
+        double zp = ClientEventHandler.getZoomPos();
+        double zpz = ClientEventHandler.getZoomPosZ();
 
         gun.setPosX(2.245f * (float) zp);
 

@@ -79,9 +79,9 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         deng3.setPosZ(0.05f * (float) bp);
         deng.setScaleZ(1f + (0.07f * (float) bp));
 
-        double zt = ClientEventHandler.getZoom_time();
-        double zp = ClientEventHandler.getZoom_pos();
-        double zpz = ClientEventHandler.getZoom_pos_z();
+        double zt = ClientEventHandler.getZoomTime();
+        double zp = ClientEventHandler.getZoomPos();
+        double zpz = ClientEventHandler.getZoomPosZ();
 
         lh.setRotX(0.2f * (float) zp);
         shen_pos.setPosX(-3.4f * (float) zp);

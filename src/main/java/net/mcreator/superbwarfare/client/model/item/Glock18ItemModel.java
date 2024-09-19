@@ -51,9 +51,9 @@ public class Glock18ItemModel extends GeoModel<Glock18Item> {
             switch_.setRotX(0);
         }
 
-        double zt = ClientEventHandler.getZoom_time();
-        double zp = ClientEventHandler.getZoom_pos();
-        double zpz = ClientEventHandler.getZoom_pos_z();
+        double zt = ClientEventHandler.getZoomTime();
+        double zp = ClientEventHandler.getZoomPos();
+        double zpz = ClientEventHandler.getZoomPosZ();
 
         gun.setPosX(-1.34f * (float) zp);
 

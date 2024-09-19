@@ -51,9 +51,9 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
             r.setRotX(-1.5f);
         }
 
-        double zt = ClientEventHandler.getZoom_time();
-        double zp = ClientEventHandler.getZoom_pos();
-        double zpz = ClientEventHandler.getZoom_pos_z();
+        double zt = ClientEventHandler.getZoomTime();
+        double zp = ClientEventHandler.getZoomPos();
+        double zpz = ClientEventHandler.getZoomPosZ();
 
         gun.setPosX(3.105f * (float) zp);
 

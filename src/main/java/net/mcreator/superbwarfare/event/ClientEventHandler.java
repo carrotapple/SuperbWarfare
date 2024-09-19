@@ -34,9 +34,9 @@ import static net.mcreator.superbwarfare.entity.DroneEntity.ROT_Z;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
-    protected static double zoom_time = 0;
-    protected static double zoom_pos = 0;
-    protected static double zoom_pos_z = 0;
+    protected static double zoomTime = 0;
+    protected static double zoomPos = 0;
+    protected static double zoomPosZ = 0;
 
     @SubscribeEvent
     public static void handleWeaponTurn(RenderHandEvent event) {
@@ -49,9 +49,9 @@ public class ClientEventHandler {
         float yRotOffset = Mth.lerp(event.getPartialTick(), player.yBobO, player.yBob);
         float xRot = player.getViewXRot(event.getPartialTick()) - xRotOffset;
         float yRot = player.getViewYRot(event.getPartialTick()) - yRotOffset;
-        data.putDouble("xRot", Mth.clamp(0.05 * xRot, -5, 5) * (1 - 0.75 * zoom_time));
-        data.putDouble("yRot", Mth.clamp(0.05 * yRot, -10, 10) * (1 - 0.75 * zoom_time));
-        data.putDouble("zRot", Mth.clamp(0.1 * yRot, -10, 10) * (1 - zoom_time));
+        data.putDouble("xRot", Mth.clamp(0.05 * xRot, -5, 5) * (1 - 0.75 * zoomTime));
+        data.putDouble("yRot", Mth.clamp(0.05 * yRot, -10, 10) * (1 - 0.75 * zoomTime));
+        data.putDouble("zRot", Mth.clamp(0.1 * yRot, -10, 10) * (1 - zoomTime));
 
         data.putDouble("droneCameraRotX", Mth.clamp(0.25f * xRot, -10, 10));
         data.putDouble("droneCameraRotY", Mth.clamp(0.25f * yRot, -20, 10));
@@ -77,7 +77,6 @@ public class ClientEventHandler {
 
         }
         if (level != null && entity instanceof LivingEntity living && living.getMainHandItem().is(ModTags.Items.GUN)) {
-            handleWeaponCrossHair(living);
             handleWeaponSway(living);
             handleWeaponMove(living);
             handleWeaponZoom();
@@ -174,26 +173,7 @@ public class ClientEventHandler {
                     .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().ifPresent(drone -> event.setCanceled(true));
         }
     }
-
-    private static void handleWeaponCrossHair(LivingEntity entity) {
-//        if (entity.getMainHandItem().is(ModTags.Items.GUN)) {
-//
-//            float times = 3 * Minecraft.getInstance().getDeltaFrameTime();
-//            var data = entity.getPersistentData();
-//            ItemStack stack = entity.getMainHandItem();
-//            boolean zoom = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS;
-//            double spread = stack.getOrCreateTag().getDouble("spread");
-//            double zoomSpread = stack.getOrCreateTag().getDouble("zoomSpread");
-//            double gunSpread = (float) (zoom ? zoomSpread : spread);
-//
-//            if (data.getDouble("crosshair") > gunSpread) {
-//                data.putDouble("crosshair", data.getDouble("crosshair") - 0.05 * Math.pow(gunSpread - data.getDouble("crosshair"), 2) * times);
-//            } else {
-//                data.putDouble("crosshair", data.getDouble("crosshair") + 0.05 * Math.pow(gunSpread - data.getDouble("crosshair"), 2) * times);
-//            }
-//        }
-    }
-
+    
     private static void handleWeaponSway(LivingEntity entity) {
         if (entity.getMainHandItem().is(ModTags.Items.GUN)) {
             float times = 2 * Minecraft.getInstance().getDeltaFrameTime();
@@ -209,8 +189,8 @@ public class ClientEventHandler {
             }
 
             data.putDouble("sway_time", data.getDouble("sway_time") + 0.05 * times);
-            data.putDouble("x", (pose * -0.008 * Math.sin(data.getDouble("sway_time")) * (1 - 0.95 * zoom_time)));
-            data.putDouble("y", (pose * 0.125 * Math.sin(data.getDouble("sway_time") - 1.585) * (1 - 0.95 * zoom_time)) - 3 * data.getDouble("gun_move_rotZ"));
+            data.putDouble("x", (pose * -0.008 * Math.sin(data.getDouble("sway_time")) * (1 - 0.95 * zoomTime)));
+            data.putDouble("y", (pose * 0.125 * Math.sin(data.getDouble("sway_time") - 1.585) * (1 - 0.95 * zoomTime)) - 3 * data.getDouble("gun_move_rotZ"));
         }
     }
 
@@ -230,7 +210,7 @@ public class ClientEventHandler {
                 on_ground = 0.001;
             }
 
-            if (Minecraft.getInstance().options.keyUp.isDown() && data.getDouble("firetime") == 0 && zoom_time == 0) {
+            if (Minecraft.getInstance().options.keyUp.isDown() && data.getDouble("firetime") == 0 && zoomTime == 0) {
                 if (data.getDouble("gun_move_rotZ") < 0.14) {
                     data.putDouble("gun_move_rotZ", data.getDouble("gun_move_rotZ") + 0.007 * times);
                 }
@@ -259,9 +239,9 @@ public class ClientEventHandler {
                     data.putDouble("gun_moveX_time", 0);
                 }
 
-                data.putDouble("gun_move_posY", -0.135 * Math.sin(2 * Math.PI * (data.getDouble("gun_moveY_time") - 0.25)) * (1 - 0.95 * zoom_time));
+                data.putDouble("gun_move_posY", -0.135 * Math.sin(2 * Math.PI * (data.getDouble("gun_moveY_time") - 0.25)) * (1 - 0.95 * zoomTime));
 
-                data.putDouble("gun_move_posX", 0.2 * Math.sin(1 * Math.PI * data.getDouble("gun_moveX_time")) * (1 - 0.95 * zoom_time));
+                data.putDouble("gun_move_posX", 0.2 * Math.sin(1 * Math.PI * data.getDouble("gun_moveX_time")) * (1 - 0.95 * zoomTime));
 
             } else {
                 if (data.getDouble("gun_moveY_time") > 0.25) {
@@ -277,43 +257,43 @@ public class ClientEventHandler {
                 }
 
                 if (data.getDouble("gun_move_posX") > 0) {
-                    data.putDouble("gun_move_posX", data.getDouble("gun_move_posX") - 1.5 * (Math.pow(data.getDouble("gun_move_posX"), 2) * times) * (1 - 0.75 * zoom_time));
+                    data.putDouble("gun_move_posX", data.getDouble("gun_move_posX") - 1.5 * (Math.pow(data.getDouble("gun_move_posX"), 2) * times) * (1 - 0.75 * zoomTime));
                 } else {
-                    data.putDouble("gun_move_posX", data.getDouble("gun_move_posX") + 1.5 * (Math.pow(data.getDouble("gun_move_posX"), 2) * times) * (1 - 0.75 * zoom_time));
+                    data.putDouble("gun_move_posX", data.getDouble("gun_move_posX") + 1.5 * (Math.pow(data.getDouble("gun_move_posX"), 2) * times) * (1 - 0.75 * zoomTime));
                 }
 
                 if (data.getDouble("gun_move_posY") > 0) {
-                    data.putDouble("gun_move_posY", data.getDouble("gun_move_posY") - 1.5 * (Math.pow(data.getDouble("gun_move_posY"), 2) * times) * (1 - 0.75 * zoom_time));
+                    data.putDouble("gun_move_posY", data.getDouble("gun_move_posY") - 1.5 * (Math.pow(data.getDouble("gun_move_posY"), 2) * times) * (1 - 0.75 * zoomTime));
                 } else {
-                    data.putDouble("gun_move_posY", data.getDouble("gun_move_posY") + 1.5 * (Math.pow(data.getDouble("gun_move_posY"), 2) * times) * (1 - 0.75 * zoom_time));
+                    data.putDouble("gun_move_posY", data.getDouble("gun_move_posY") + 1.5 * (Math.pow(data.getDouble("gun_move_posY"), 2) * times) * (1 - 0.75 * zoomTime));
                 }
 
             }
 
             if (data.getDouble("move") < 0) {
-                data.putDouble("move", ((data.getDouble("move") + 1 * times * Math.pow(data.getDouble("move"), 2) * (1 - 0.6 * zoom_time))
-                        * (1 - 1 * zoom_time)));
+                data.putDouble("move", ((data.getDouble("move") + 1 * times * Math.pow(data.getDouble("move"), 2) * (1 - 0.6 * zoomTime))
+                        * (1 - 1 * zoomTime)));
             } else {
-                data.putDouble("move", ((data.getDouble("move") - 1 * times * Math.pow(data.getDouble("move"), 2) * (1 - 0.6 * zoom_time))
-                        * (1 - 1 * zoom_time)));
+                data.putDouble("move", ((data.getDouble("move") - 1 * times * Math.pow(data.getDouble("move"), 2) * (1 - 0.6 * zoomTime))
+                        * (1 - 1 * zoomTime)));
             }
             if (Minecraft.getInstance().options.keyRight.isDown()) {
                 data.putDouble("move",
-                        ((data.getDouble("move") + Math.pow(Math.abs(data.getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * zoom_time))
-                                * (1 - 0.1 * zoom_time)));
+                        ((data.getDouble("move") + Math.pow(Math.abs(data.getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * zoomTime))
+                                * (1 - 0.1 * zoomTime)));
             } else if (Minecraft.getInstance().options.keyLeft.isDown()) {
                 data.putDouble("move",
-                        ((data.getDouble("move") - Math.pow(Math.abs(data.getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * zoom_time))
-                                * (1 - 0.1 * zoom_time)));
+                        ((data.getDouble("move") - Math.pow(Math.abs(data.getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * zoomTime))
+                                * (1 - 0.1 * zoomTime)));
             }
 
             double velocity = entity.getDeltaMovement().y();
 
             if (-0.8 < velocity + 0.078 && velocity + 0.078 < 0.8) {
                 if (data.getDouble("vy") < entity.getDeltaMovement().y() + 0.078) {
-                    data.putDouble("vy", Mth.clamp(((data.getDouble("vy") + 0.35 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.8 * zoom_time)), -0.8, 0.8));
+                    data.putDouble("vy", Mth.clamp(((data.getDouble("vy") + 0.35 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.8 * zoomTime)), -0.8, 0.8));
                 } else {
-                    data.putDouble("vy", Mth.clamp(((data.getDouble("vy") - 0.35 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.8 * zoom_time)), -0.8, 0.8));
+                    data.putDouble("vy", Mth.clamp(((data.getDouble("vy") - 0.35 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.8 * zoomTime)), -0.8, 0.8));
                 }
             }
         }
@@ -322,24 +302,24 @@ public class ClientEventHandler {
     private static void handleWeaponZoom() {
         float times = 5 * Minecraft.getInstance().getDeltaFrameTime();
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
-            zoom_time = Mth.clamp(zoom_time + 0.03 * times,0,1);
+            zoomTime = Mth.clamp(zoomTime + 0.03 * times,0,1);
         } else {
-            zoom_time = Mth.clamp(zoom_time - 0.04 * times,0,1);
+            zoomTime = Mth.clamp(zoomTime - 0.04 * times,0,1);
         }
-        zoom_pos = 0.5 * Math.cos(Math.PI * Math.pow(Math.pow(zoom_time, 2) - 1, 2)) + 0.5;
-        zoom_pos_z = -Math.pow(2 * zoom_time - 1, 2) + 1;
+        zoomPos = 0.5 * Math.cos(Math.PI * Math.pow(Math.pow(zoomTime, 2) - 1, 2)) + 0.5;
+        zoomPosZ = -Math.pow(2 * zoomTime - 1, 2) + 1;
     }
 
-    public static double getZoom_time() {
-        return zoom_time;
+    public static double getZoomTime() {
+        return zoomTime;
     }
 
-    public static double getZoom_pos() {
-        return zoom_pos;
+    public static double getZoomPos() {
+        return zoomPos;
     }
 
-    public static double getZoom_pos_z() {
-        return zoom_pos_z;
+    public static double getZoomPosZ() {
+        return zoomPosZ;
     }
 
     private static void handleWeaponFire(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
@@ -477,7 +457,7 @@ public class ClientEventHandler {
                 return;
             }
 
-            double p = zoom_pos;
+            double p = zoomPos;
             double zoom = stack.getOrCreateTag().getDouble("zoom") + stack.getOrCreateTag().getDouble("custom_zoom");
 
             event.setFOV(event.getFOV() / (1.0 + p * (zoom - 1)) * (1 - 0.4 * player.getPersistentData().getDouble("BreathTime")));

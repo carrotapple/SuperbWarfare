@@ -47,9 +47,9 @@ public class SksItemModel extends GeoModel<SksItem> {
             bolt.setPosZ(2.5f);
         }
 
-        double zt = ClientEventHandler.getZoom_time();
-        double zp = ClientEventHandler.getZoom_pos();
-        double zpz = ClientEventHandler.getZoom_pos_z();
+        double zt = ClientEventHandler.getZoomTime();
+        double zp = ClientEventHandler.getZoomPos();
+        double zpz = ClientEventHandler.getZoomPosZ();
 
         gun.setPosX(1.53f * (float) zp);
 

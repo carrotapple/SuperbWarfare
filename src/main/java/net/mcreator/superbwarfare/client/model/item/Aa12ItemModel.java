@@ -41,13 +41,12 @@ public class Aa12ItemModel extends GeoModel<Aa12Item> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        double zt = ClientEventHandler.getZoom_time();
-        double zp = ClientEventHandler.getZoom_pos();
-        double zpz = ClientEventHandler.getZoom_pos_z();
+        double zt = ClientEventHandler.getZoomTime();
+        double zp = ClientEventHandler.getZoomPos();
+        double zpz = ClientEventHandler.getZoomPosZ();
 
         gun.setPosX(2.105f * (float) zp);
         gun.setPosY(0.17f * (float) zp - (float) (0.2f * zpz));
-
         gun.setPosZ(0.1f * (float) zp + (float) (0.3f * zpz));
         gun.setRotZ((float) (0.02f * zp));
         gun.setScaleZ(1f - (0.4f * (float) zp));

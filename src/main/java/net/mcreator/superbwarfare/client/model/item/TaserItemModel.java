@@ -83,9 +83,9 @@ public class TaserItemModel extends GeoModel<TaserItem> {
         shen.setRotY(0.02f * (float) fr);
         shen.setRotZ(-0.02f * (float) (fp + 1.3 * fr));
 
-        double zt = ClientEventHandler.getZoom_time();
-        double zp = ClientEventHandler.getZoom_pos();
-        double zpz = ClientEventHandler.getZoom_pos_z();
+        double zt = ClientEventHandler.getZoomTime();
+        double zp = ClientEventHandler.getZoomPos();
+        double zpz = ClientEventHandler.getZoomPosZ();
 
         gun.setPosX(1.82f * (float) zp);
 

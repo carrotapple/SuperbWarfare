@@ -47,9 +47,9 @@ public class MosinNagantItemModel extends GeoModel<MosinNagantItem> {
         if (!stack.is(ModTags.Items.GUN)) return;
 
 
-        double zt = ClientEventHandler.getZoom_time();
-        double zp = ClientEventHandler.getZoom_pos();
-        double zpz = ClientEventHandler.getZoom_pos_z();
+        double zt = ClientEventHandler.getZoomTime();
+        double zp = ClientEventHandler.getZoomPos();
+        double zpz = ClientEventHandler.getZoomPosZ();
 
         gun.setPosX(2.105f * (float) zp);
         gun.setPosY(0.766f * (float) zp - (float) (0.2f * zpz));

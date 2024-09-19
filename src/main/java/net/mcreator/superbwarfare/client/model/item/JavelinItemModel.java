@@ -41,9 +41,9 @@ public class JavelinItemModel extends GeoModel<JavelinItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        double zt = ClientEventHandler.getZoom_time();
-        double zp = ClientEventHandler.getZoom_pos();
-        double zpz = ClientEventHandler.getZoom_pos_z();
+        double zt = ClientEventHandler.getZoomTime();
+        double zp = ClientEventHandler.getZoomPos();
+        double zpz = ClientEventHandler.getZoomPosZ();
 
         gun.setPosX(1.66f * (float) zp + (float) (0.2f * zpz));
         gun.setPosY(5.5f * (float) zp + (float) (0.8f * zpz));

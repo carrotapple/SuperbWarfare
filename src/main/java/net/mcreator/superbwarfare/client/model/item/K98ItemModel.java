@@ -53,9 +53,9 @@ public class K98ItemModel extends GeoModel<K98Item> {
             clip.setScaleZ(1);
         }
 
-        double zt = ClientEventHandler.getZoom_time();
-        double zp = ClientEventHandler.getZoom_pos();
-        double zpz = ClientEventHandler.getZoom_pos_z();
+        double zt = ClientEventHandler.getZoomTime();
+        double zp = ClientEventHandler.getZoomPos();
+        double zpz = ClientEventHandler.getZoomPosZ();
 
         gun.setPosX(2.11f * (float) zp);
         gun.setPosY(1.52f * (float) zp - (float) (0.2f * zpz));
