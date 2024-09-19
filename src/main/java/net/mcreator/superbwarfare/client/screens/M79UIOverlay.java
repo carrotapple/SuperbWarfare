@@ -48,12 +48,4 @@ public class M79UIOverlay {
                 && (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || (player.isPassenger() && player.getVehicle() instanceof ICannonEntity))
                 && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS;
     }
-//    private static boolean shouldRenderCrossHair2(Player player) {
-//        if (player == null) return false;
-//        return !player.isSpectator()
-//                && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
-//                && player.isPassenger()
-//                && player.getVehicle() instanceof ICannonEntity
-//                && !(player.getMainHandItem().getItem() instanceof GunItem);
-//    }
 }

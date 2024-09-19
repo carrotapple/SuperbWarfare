@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.sniper.HuntingRifleItem;
 import net.minecraft.client.Minecraft;
@@ -38,21 +39,19 @@ public class HuntingRifleItemModel extends GeoModel<HuntingRifleItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        double p = 0;
-        p = player.getPersistentData().getDouble("zoom_pos");
+        double zt = ClientEventHandler.getZoom_time();
+        double zp = ClientEventHandler.getZoom_pos();
+        double zpz = ClientEventHandler.getZoom_pos_z();
 
-        double zp = 0;
-        zp = player.getPersistentData().getDouble("zoom_pos_z");
+        gun.setPosX(1.95f * (float) zp);
 
-        gun.setPosX(1.95f * (float) p);
+        gun.setPosY(1.32f * (float) zp - (float) (0.2f * zpz));
 
-        gun.setPosY(1.32f * (float) p - (float) (0.2f * zp));
+        gun.setPosZ(3f * (float) zp + (float) (0.5f * zpz));
 
-        gun.setPosZ(3f * (float) p + (float) (0.5f * zp));
+        gun.setRotZ((float) (0.05f * zpz));
 
-        gun.setRotZ((float) (0.05f * zp));
-
-        gun.setScaleZ(1f - (0.5f * (float) p));
+        gun.setScaleZ(1f - (0.5f * (float) zp));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
@@ -80,10 +79,8 @@ public class HuntingRifleItemModel extends GeoModel<HuntingRifleItem> {
         float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
         float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
 
-        double y = 0;
-        double x = 0;
-        y = player.getPersistentData().getDouble("y");
-        x = player.getPersistentData().getDouble("x");
+        double y = player.getPersistentData().getDouble("y");
+        double x = player.getPersistentData().getDouble("x");
 
         root.setPosX(PosX);
 
@@ -121,9 +118,9 @@ public class HuntingRifleItemModel extends GeoModel<HuntingRifleItem> {
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
-        var data = player.getPersistentData();
-        float numR = (float) (1 - 0.82 * data.getDouble("zoom_time"));
-        float numP = (float) (1 - 0.78 * data.getDouble("zoom_time"));
+
+        float numR = (float) (1 - 0.82 * zt);
+        float numP = (float) (1 - 0.78 * zt);
 
         if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
             main.setRotX(numR * main.getRotX());

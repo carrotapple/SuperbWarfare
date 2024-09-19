@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.sniper.SentinelItem;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -43,21 +44,21 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        double p = player.getPersistentData().getDouble("zoom_pos");
+        double zt = ClientEventHandler.getZoom_time();
+        double zp = ClientEventHandler.getZoom_pos();
+        double zpz = ClientEventHandler.getZoom_pos_z();
 
-        double zp = player.getPersistentData().getDouble("zoom_pos_z");
+        gun.setPosX(2.928f * (float) zp);
 
-        gun.setPosX(2.928f * (float) p);
+        gun.setPosY(-0.062f * (float) zp - (float) (0.1f * zpz));
 
-        gun.setPosY(-0.062f * (float) p - (float) (0.1f * zp));
+        gun.setPosZ(10f * (float) zp + (float) (0.3f * zpz));
 
-        gun.setPosZ(10f * (float) p + (float) (0.3f * zp));
+        gun.setRotZ((float) (0.05f * zpz));
 
-        gun.setRotZ((float) (0.05f * zp));
+        gun.setScaleZ(1f - (0.7f * (float) zp));
 
-        gun.setScaleZ(1f - (0.7f * (float) p));
-
-        scope.setScaleZ(1f - (0.8f * (float) p));
+        scope.setScaleZ(1f - (0.8f * (float) zp));
 
         float fps = Minecraft.getInstance().getFps();
         if (fps <= 0) {
@@ -138,9 +139,9 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
-        var data = player.getPersistentData();
-        float numR = (float) (1 - 0.9 * data.getDouble("zoom_time"));
-        float numP = (float) (1 - 0.98 * data.getDouble("zoom_time"));
+
+        float numR = (float) (1 - 0.9 * zt);
+        float numP = (float) (1 - 0.98 * zt);
 
         if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0 || stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
             main.setRotX(numR * main.getRotX());

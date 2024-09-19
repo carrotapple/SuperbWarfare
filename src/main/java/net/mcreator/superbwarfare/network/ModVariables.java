@@ -73,7 +73,6 @@ public class ModVariables {
             clone.recoil = original.recoil;
             clone.recoilHorizon = original.recoilHorizon;
             clone.firing = original.firing;
-            clone.cannonFiring = original.cannonFiring;
             clone.rifleAmmo = original.rifleAmmo;
             clone.handgunAmmo = original.handgunAmmo;
             clone.shotgunAmmo = original.shotgunAmmo;
@@ -264,7 +263,6 @@ public class ModVariables {
         public double recoil = 0;
         public double recoilHorizon = 0;
         public double firing = 0;
-        public double cannonFiring = 0;
         public int cannonRecoil = 0;
 
         public int rifleAmmo = 0;
@@ -293,7 +291,6 @@ public class ModVariables {
             nbt.putDouble("recoil", recoil);
             nbt.putDouble("recoil_horizon", recoilHorizon);
             nbt.putDouble("firing", firing);
-            nbt.putDouble("cannonFiring", cannonFiring);
             nbt.putInt("cannonRecoil", cannonRecoil);
             nbt.putInt("rifle_ammo", rifleAmmo);
             nbt.putInt("handgun_ammo", handgunAmmo);
@@ -318,7 +315,6 @@ public class ModVariables {
             recoil = nbt.getDouble("recoil");
             recoilHorizon = nbt.getDouble("recoil_horizon");
             firing = nbt.getDouble("firing");
-            cannonFiring = nbt.getDouble("cannonFiring");
             cannonRecoil = nbt.getInt("cannonRecoil");
             rifleAmmo = nbt.getInt("rifle_ammo");
             handgunAmmo = nbt.getInt("handgun_ammo");
@@ -374,7 +370,6 @@ public class ModVariables {
                 variables.recoil = message.data.recoil;
                 variables.recoilHorizon = message.data.recoilHorizon;
                 variables.firing = message.data.firing;
-                variables.cannonFiring = message.data.cannonFiring;
                 variables.cannonRecoil = message.data.cannonRecoil;
                 variables.rifleAmmo = message.data.rifleAmmo;
                 variables.handgunAmmo = message.data.handgunAmmo;

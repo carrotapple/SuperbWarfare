@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.machinegun.M60Item;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -83,17 +84,17 @@ public class M60ItemModel extends GeoModel<M60Item> {
             b1.setScaleZ(0);
         }
 
-        double p = player.getPersistentData().getDouble("zoom_pos");
+        double zt = ClientEventHandler.getZoom_time();
+        double zp = ClientEventHandler.getZoom_pos();
+        double zpz = ClientEventHandler.getZoom_pos_z();
 
-        double zp = player.getPersistentData().getDouble("zoom_pos_z");
+        gun.setPosX(3.74f * (float) zp);
 
-        gun.setPosX(3.74f * (float) p);
+        gun.setPosY(-0.1f * (float) zp - (float) (0.1f * zpz));
 
-        gun.setPosY(-0.1f * (float) p - (float) (0.1f * zp));
+        gun.setPosZ((float) zp + (float) (0.3f * zpz));
 
-        gun.setPosZ((float) p + (float) (0.3f * zp));
-
-        gun.setRotZ(-0.087f * (float) p + (float) (0.05f * zp));
+        gun.setRotZ(-0.087f * (float) zp + (float) (0.05f * zpz));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
@@ -156,9 +157,9 @@ public class M60ItemModel extends GeoModel<M60Item> {
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
-        var data = player.getPersistentData();
-        float numR = (float) (1 - 0.88 * data.getDouble("zoom_time"));
-        float numP = (float) (1 - 0.28 * data.getDouble("zoom_time"));
+
+        float numR = (float) (1 - 0.88 * zt);
+        float numP = (float) (1 - 0.28 * zt);
 
         if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
             main.setRotX(numR * main.getRotX());

@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.shotgun.AbekiriItem;
 import net.minecraft.client.Minecraft;
@@ -39,19 +40,17 @@ public class AbekiriItemModel extends GeoModel<AbekiriItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        double p = 0;
-        p = player.getPersistentData().getDouble("zoom_pos");
+        double zt = ClientEventHandler.getZoom_time();
+        double zp = ClientEventHandler.getZoom_pos();
+        double zpz = ClientEventHandler.getZoom_pos_z();
 
-        double zp = 0;
-        zp = player.getPersistentData().getDouble("zoom_pos_z");
+        gun.setPosX(2.45f * (float) zp);
 
-        gun.setPosX(2.45f * (float) p);
+        gun.setPosY(1.7f * (float) zp - (float) (0.4f * zpz));
 
-        gun.setPosY(1.7f * (float) p - (float) (0.4f * zp));
+        gun.setPosZ(2f * (float) zp + (float) (0.3f * zpz));
 
-        gun.setPosZ(2f * (float) p + (float) (0.3f * zp));
-
-        gun.setRotZ((float) (0.05f * zp));
+        gun.setRotZ((float) (0.05f * zpz));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
@@ -109,9 +108,9 @@ public class AbekiriItemModel extends GeoModel<AbekiriItem> {
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
-        var data = player.getPersistentData();
-        float numR = (float) (1 - 0.42 * data.getDouble("zoom_time"));
-        float numP = (float) (1 - 0.48 * data.getDouble("zoom_time"));
+
+        float numR = (float) (1 - 0.42 * zt);
+        float numP = (float) (1 - 0.48 * zt);
 
         if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
             main.setRotX(numR * main.getRotX());

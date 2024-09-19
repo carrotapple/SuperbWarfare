@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.launcher.JavelinItem;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -39,15 +40,16 @@ public class JavelinItemModel extends GeoModel<JavelinItem> {
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
-        
-        double p = player.getPersistentData().getDouble("zoom_pos");
-        double zp = player.getPersistentData().getDouble("zoom_pos_z");
 
-        gun.setPosX(1.66f * (float) p + (float) (0.2f * zp));
-        gun.setPosY(5.5f * (float) p + (float) (0.8f * zp));
-        gun.setPosZ(15.9f * (float) p);
-        gun.setScaleZ(1f - (0.8f * (float) p));
-        gun.setRotZ(-4.75f * Mth.DEG_TO_RAD * (float) p + (float) (0.02f * zp));
+        double zt = ClientEventHandler.getZoom_time();
+        double zp = ClientEventHandler.getZoom_pos();
+        double zpz = ClientEventHandler.getZoom_pos_z();
+
+        gun.setPosX(1.66f * (float) zp + (float) (0.2f * zpz));
+        gun.setPosY(5.5f * (float) zp + (float) (0.8f * zpz));
+        gun.setPosZ(15.9f * (float) zp);
+        gun.setScaleZ(1f - (0.8f * (float) zp));
+        gun.setRotZ(-4.75f * Mth.DEG_TO_RAD * (float) zp + (float) (0.02f * zpz));
 
         javelin.setHidden(gun.getPosZ() > 15.85);
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosZ() > 15.85));

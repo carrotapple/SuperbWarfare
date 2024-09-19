@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.smg.VectorItem;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -52,18 +53,19 @@ public class VectorItemModel extends GeoModel<VectorItem> {
             kmj.setRotX(0);
         }
 
-        double p = player.getPersistentData().getDouble("zoom_pos");
-        double zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double zt = ClientEventHandler.getZoom_time();
+        double zp = ClientEventHandler.getZoom_pos();
+        double zpz = ClientEventHandler.getZoom_pos_z();
 
-        gun.setPosX(2.35f * (float) p);
+        gun.setPosX(2.35f * (float) zp);
 
-        gun.setPosY(0.74f * (float) p - (float) (0.2f * zp));
+        gun.setPosY(0.74f * (float) zp - (float) (0.2f * zpz));
 
-        gun.setPosZ(5f * (float) p + (float) (0.3f * zp));
+        gun.setPosZ(5f * (float) zp + (float) (0.3f * zpz));
 
-        gun.setScaleZ(1f - (0.5f * (float) p));
+        gun.setScaleZ(1f - (0.5f * (float) zp));
 
-        scope.setScaleZ(1f - (0.2f * (float) p));
+        scope.setScaleZ(1f - (0.2f * (float) zp));
 
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
 
@@ -129,9 +131,9 @@ public class VectorItemModel extends GeoModel<VectorItem> {
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
-        var data = player.getPersistentData();
-        float numR = (float) (1 - 0.92 * data.getDouble("zoom_time"));
-        float numP = (float) (1 - 0.88 * data.getDouble("zoom_time"));
+
+        float numR = (float) (1 - 0.92 * zt);
+        float numP = (float) (1 - 0.88 * zt);
 
         if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
             main.setRotX(numR * main.getRotX());

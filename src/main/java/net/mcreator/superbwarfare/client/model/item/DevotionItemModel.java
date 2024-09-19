@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.machinegun.DevotionItem;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -43,25 +44,24 @@ public class DevotionItemModel extends GeoModel<DevotionItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        double p = player.getPersistentData().getDouble("zoom_pos");
+        double zt = ClientEventHandler.getZoom_time();
+        double zp = ClientEventHandler.getZoom_pos();
+        double zpz = ClientEventHandler.getZoom_pos_z();
 
-        double zp = player.getPersistentData().getDouble("zoom_pos_z");
+        gun.setPosX(2.17f * (float) zp);
 
-        gun.setPosX(2.17f * (float) p);
+        gun.setPosY(0.17f * (float) zp - (float) (0.5f * zpz));
 
-        gun.setPosY(0.17f * (float) p - (float) (0.5f * zp));
+        gun.setPosZ(8.8f * (float) zp + (float) (0.6f * zpz));
 
-        gun.setPosZ(8.8f * (float) p + (float) (0.6f * zp));
+        gun.setRotZ((float) (0.05f * zpz));
 
-        gun.setRotZ((float) (0.05f * zp));
-
-        gun.setScaleZ(1f - (0.7f * (float) p));
+        gun.setScaleZ(1f - (0.7f * (float) zp));
 
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone number = getAnimationProcessor().getBone("number");
 
-        double bp = 0;
-        bp = player.getPersistentData().getDouble("boltpos");
+        double bp = player.getPersistentData().getDouble("boltpos");
 
         bolt.setPosZ(-2f * (float) bp);
 
@@ -618,10 +618,8 @@ public class DevotionItemModel extends GeoModel<DevotionItem> {
         float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
         float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
 
-        double y = 0;
-        double x = 0;
-        y = player.getPersistentData().getDouble("y");
-        x = player.getPersistentData().getDouble("x");
+        double y = player.getPersistentData().getDouble("y");
+        double x = player.getPersistentData().getDouble("x");
 
         root.setPosX(PosX);
 
@@ -664,9 +662,9 @@ public class DevotionItemModel extends GeoModel<DevotionItem> {
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
-        var data = player.getPersistentData();
-        float numR = (float) (1 - 0.82 * data.getDouble("zoom_time"));
-        float numP = (float) (1 - 0.78 * data.getDouble("zoom_time"));
+
+        float numR = (float) (1 - 0.82 * zt);
+        float numP = (float) (1 - 0.78 * zt);
 
         if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
             main.setRotX(numR * main.getRotX());

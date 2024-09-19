@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.special.BocekItem;
 import net.minecraft.client.Minecraft;
@@ -78,15 +79,16 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         deng3.setPosZ(0.05f * (float) bp);
         deng.setScaleZ(1f + (0.07f * (float) bp));
 
-        double p = player.getPersistentData().getDouble("zoom_pos");
-        double zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double zt = ClientEventHandler.getZoom_time();
+        double zp = ClientEventHandler.getZoom_pos();
+        double zpz = ClientEventHandler.getZoom_pos_z();
 
-        lh.setRotX(0.2f * (float) p);
-        shen_pos.setPosX(-3.4f * (float) p);
-        shen_pos.setPosY(6.76f * (float) p - (float) (0.2f * zp));
-        shen_pos.setPosZ(6.4f * (float) p + (float) (0.3f * zp));
-        r.setScaleZ(1f - (0.31f * (float) p));
-        shen.setRotZ(60 * Mth.DEG_TO_RAD * (float) p + (float) (0.05f * zp) - 0.2f);
+        lh.setRotX(0.2f * (float) zp);
+        shen_pos.setPosX(-3.4f * (float) zp);
+        shen_pos.setPosY(6.76f * (float) zp - (float) (0.2f * zpz));
+        shen_pos.setPosZ(6.4f * (float) zp + (float) (0.3f * zpz));
+        r.setScaleZ(1f - (0.31f * (float) zp));
+        shen.setRotZ(60 * Mth.DEG_TO_RAD * (float) zp + (float) (0.05f * zpz) - 0.2f);
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !((shen_pos.getPosX() < -0.7 && gun.getPosZ() < -2.6)));
 

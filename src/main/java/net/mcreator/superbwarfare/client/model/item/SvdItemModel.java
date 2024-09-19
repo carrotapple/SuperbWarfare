@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.sniper.SvdItem;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -50,24 +51,25 @@ public class SvdItemModel extends GeoModel<SvdItem> {
             bolt.setPosZ(3.25f);
         }
 
-        double p = player.getPersistentData().getDouble("zoom_pos");
-        double zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double zt = ClientEventHandler.getZoom_time();
+        double zp = ClientEventHandler.getZoom_pos();
+        double zpz = ClientEventHandler.getZoom_pos_z();
 
-        gun.setPosX(2.02f * (float) p);
+        gun.setPosX(2.02f * (float) zp);
 
-        gun.setPosY(0.85f * (float) p - (float) (0.6f * zp));
+        gun.setPosY(0.85f * (float) zp - (float) (0.6f * zpz));
 
-        gun.setPosZ(13.2f * (float) p + (float) (0.5f * zp));
+        gun.setPosZ(13.2f * (float) zp + (float) (0.5f * zpz));
 
-        gun.setRotZ((float) (0.05f * zp));
+        gun.setRotZ((float) (0.05f * zpz));
 
-        gun.setScaleZ(1f - (0.8f * (float) p));
+        gun.setScaleZ(1f - (0.8f * (float) zp));
 
-        scope.setScaleZ(1f - (0.95f * (float) p));
+        scope.setScaleZ(1f - (0.95f * (float) zp));
 
-        bt1.setScaleY(1f - (0.5f * (float) p));
+        bt1.setScaleY(1f - (0.5f * (float) zp));
 
-        bt2.setScaleX(1f - (0.5f * (float) p));
+        bt2.setScaleX(1f - (0.5f * (float) zp));
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.9));
 
@@ -142,9 +144,9 @@ public class SvdItemModel extends GeoModel<SvdItem> {
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
-        var data = player.getPersistentData();
-        float numR = (float) (1 - 0.94 * data.getDouble("zoom_time"));
-        float numP = (float) (1 - 0.88 * data.getDouble("zoom_time"));
+
+        float numR = (float) (1 - 0.94 * zt);
+        float numP = (float) (1 - 0.88 * zt);
 
         if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
             main.setRotX(numR * main.getRotX());

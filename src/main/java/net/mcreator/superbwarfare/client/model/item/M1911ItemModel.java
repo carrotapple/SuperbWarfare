@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.handgun.M1911Item;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -42,16 +43,17 @@ public class M1911ItemModel extends GeoModel<M1911Item> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        double p = player.getPersistentData().getDouble("zoom_pos");
-        double zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double zt = ClientEventHandler.getZoom_time();
+        double zp = ClientEventHandler.getZoom_pos();
+        double zpz = ClientEventHandler.getZoom_pos_z();
 
-        gun.setPosX(1.86f * (float) p);
+        gun.setPosX(1.86f * (float) zp);
 
-        gun.setPosY(1.55f * (float) p - (float) (0.2f * zp));
+        gun.setPosY(1.55f * (float) zp - (float) (0.2f * zpz));
 
-        gun.setPosZ(2f * (float) p + (float) (0.3f * zp));
+        gun.setPosZ(2f * (float) zp + (float) (0.3f * zpz));
 
-        gun.setScaleZ(1f - (0.35f * (float) p));
+        gun.setScaleZ(1f - (0.35f * (float) zp));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
@@ -128,9 +130,9 @@ public class M1911ItemModel extends GeoModel<M1911Item> {
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
         CoreGeoBone body = getAnimationProcessor().getBone("gun");
-        var data = player.getPersistentData();
-        float numR = (float) (1 - 0.12 * data.getDouble("zoom_time"));
-        float numP = (float) (1 - 0.68 * data.getDouble("zoom_time"));
+
+        float numR = (float) (1 - 0.12 * zt);
+        float numP = (float) (1 - 0.68 * zt);
 
         if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
             main.setRotX(numR * main.getRotX());

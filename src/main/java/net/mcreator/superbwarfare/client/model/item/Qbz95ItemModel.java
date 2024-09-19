@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.rifle.Qbz95Item;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -41,14 +42,15 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        double p = player.getPersistentData().getDouble("zoom_pos");
-        double zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double zt = ClientEventHandler.getZoom_time();
+        double zp = ClientEventHandler.getZoom_pos();
+        double zpz = ClientEventHandler.getZoom_pos_z();
 
-        gun.setPosX(3.73f * (float) p);
-        gun.setPosY(-0.5f * (float) p - (float) (0.2f * zp));
-        gun.setPosZ(13f * (float) p + (float) (0.3f * zp));
-        gun.setRotZ((float) (0.05f * zp));
-        gun.setScaleZ(1f - (0.7f * (float) p));
+        gun.setPosX(3.73f * (float) zp);
+        gun.setPosY(-0.5f * (float) zp - (float) (0.2f * zpz));
+        gun.setPosZ(13f * (float) zp + (float) (0.3f * zpz));
+        gun.setRotZ((float) (0.05f * zpz));
+        gun.setScaleZ(1f - (0.7f * (float) zp));
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 3.1));
 
@@ -116,9 +118,9 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
-        var data = player.getPersistentData();
-        float numR = (float) (1 - 0.92 * data.getDouble("zoom_time"));
-        float numP = (float) (1 - 0.88 * data.getDouble("zoom_time"));
+
+        float numR = (float) (1 - 0.92 * zt);
+        float numP = (float) (1 - 0.88 * zt);
 
         if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
             main.setRotX(numR * main.getRotX());

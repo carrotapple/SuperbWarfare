@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.rifle.SksItem;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -34,7 +35,6 @@ public class SksItemModel extends GeoModel<SksItem> {
     @Override
     public void setCustomAnimations(SksItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
         CoreGeoBone bolt = getAnimationProcessor().getBone("bolt");
         CoreGeoBone shuan = getAnimationProcessor().getBone("bolt2");
 
@@ -47,16 +47,17 @@ public class SksItemModel extends GeoModel<SksItem> {
             bolt.setPosZ(2.5f);
         }
 
-        double p = player.getPersistentData().getDouble("zoom_pos");
-        double zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double zt = ClientEventHandler.getZoom_time();
+        double zp = ClientEventHandler.getZoom_pos();
+        double zpz = ClientEventHandler.getZoom_pos_z();
 
-        gun.setPosX(1.53f * (float) p);
+        gun.setPosX(1.53f * (float) zp);
 
-        gun.setPosY(0.34f * (float) p - (float) (0.6f * zp));
+        gun.setPosY(0.34f * (float) zp - (float) (0.6f * zpz));
 
-        gun.setPosZ(2.5f * (float) p + (float) (0.5f * zp));
+        gun.setPosZ(2.5f * (float) zp + (float) (0.5f * zpz));
 
-        gun.setRotZ((float) (0.05f * zp));
+        gun.setRotZ((float) (0.05f * zpz));
 
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
 
@@ -125,9 +126,9 @@ public class SksItemModel extends GeoModel<SksItem> {
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
-        var data = player.getPersistentData();
-        float numR = (float) (1 - 0.92 * data.getDouble("zoom_time"));
-        float numP = (float) (1 - 0.88 * data.getDouble("zoom_time"));
+
+        float numR = (float) (1 - 0.92 * zt);
+        float numP = (float) (1 - 0.88 * zt);
 
         if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
             main.setRotX(numR * main.getRotX());

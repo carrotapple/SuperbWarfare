@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.rifle.MarlinItem;
 import net.minecraft.client.Minecraft;
@@ -39,18 +40,19 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        double p = player.getPersistentData().getDouble("zoom_pos");
-        double zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double zt = ClientEventHandler.getZoom_time();
+        double zp = ClientEventHandler.getZoom_pos();
+        double zpz = ClientEventHandler.getZoom_pos_z();
 
-        gun.setPosX(1.712f * (float) p);
+        gun.setPosX(1.712f * (float) zp);
 
-        gun.setPosY(1.06f * (float) p - (float) (0.7f * zp));
+        gun.setPosY(1.06f * (float) zp - (float) (0.7f * zpz));
 
-        gun.setPosZ(4f * (float) p + (float) (0.9f * zp));
+        gun.setPosZ(4f * (float) zp + (float) (0.9f * zpz));
 
-        gun.setRotZ((float) (0.02f * zp));
+        gun.setRotZ((float) (0.02f * zpz));
 
-        gun.setScaleZ(1f - (0.5f * (float) p));
+        gun.setScaleZ(1f - (0.5f * (float) zp));
 
         double fp = player.getPersistentData().getDouble("fire_pos");
         double fr = player.getPersistentData().getDouble("fire_rot");
@@ -111,9 +113,9 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
-        var data = player.getPersistentData();
-        float numR = (float) (1 - 0.55 * data.getDouble("zoom_time"));
-        float numP = (float) (1 - 0.88 * data.getDouble("zoom_time"));
+
+        float numR = (float) (1 - 0.55 * zt);
+        float numP = (float) (1 - 0.88 * zt);
 
         if (stack.getOrCreateTag().getBoolean("reloading")) {
             main.setRotX(numR * main.getRotX());

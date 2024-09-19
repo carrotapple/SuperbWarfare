@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.sniper.M98bItem;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -34,7 +35,6 @@ public class M98bItemModel extends GeoModel<M98bItem> {
     public void setCustomAnimations(M98bItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
-        CoreGeoBone shi = getAnimationProcessor().getBone("shi");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -57,29 +57,17 @@ public class M98bItemModel extends GeoModel<M98bItem> {
         }
         shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
 
-        double p = player.getPersistentData().getDouble("zoom_pos");
-        double zp = player.getPersistentData().getDouble("zoom_pos_z");
+        double zt = ClientEventHandler.getZoom_time();
+        double zp = ClientEventHandler.getZoom_pos();
+        double zpz = ClientEventHandler.getZoom_pos_z();
 
-        gun.setPosX(2.245f * (float) p);
+        gun.setPosX(2.245f * (float) zp);
 
-        gun.setPosY(0.3f * (float) p - (float) (0.2f * zp));
+        gun.setPosY(0.3f * (float) zp - (float) (0.2f * zpz));
 
-        gun.setPosZ(4.2f * (float) p + (float) (0.3f * zp));
+        gun.setPosZ(4.2f * (float) zp + (float) (0.3f * zpz));
 
-        gun.setRotZ((float) (0.02f * zp));
-
-//        CoreGeoBone holo = getAnimationProcessor().getBone("scope2");
-//        CoreGeoBone qiang = getAnimationProcessor().getBone("qiang");
-
-        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.9));
-
-//        if (gun.getPosX() > 1.9) {
-//            holo.setHidden(false);
-//            qiang.setHidden(true);
-//        } else {
-//            holo.setHidden(true);
-//            qiang.setHidden(false);
-//        }
+        gun.setRotZ((float) (0.02f * zpz));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         CoreGeoBone zhunxing = getAnimationProcessor().getBone("shi");
@@ -132,9 +120,8 @@ public class M98bItemModel extends GeoModel<M98bItem> {
         CoreGeoBone main = getAnimationProcessor().getBone("0");
         CoreGeoBone scope = getAnimationProcessor().getBone("scope2");
 
-        var data = player.getPersistentData();
-        float numR = (float) (1 - 0.88 * data.getDouble("zoom_time"));
-        float numP = (float) (1 - 0.68 * data.getDouble("zoom_time"));
+        float numR = (float) (1 - 0.88 * zt);
+        float numP = (float) (1 - 0.68 * zt);
 
         if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
             main.setRotX(numR * main.getRotX());

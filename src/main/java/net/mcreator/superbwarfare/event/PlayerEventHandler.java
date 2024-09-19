@@ -9,7 +9,6 @@ import net.mcreator.superbwarfare.network.message.SimulationDistanceMessage;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -19,18 +18,13 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
-
-import java.text.DecimalFormat;
 
 @Mod.EventBusSubscriber
 public class PlayerEventHandler {
@@ -94,7 +88,6 @@ public class PlayerEventHandler {
             }
 
             handleGround(player);
-            handleDistantRange(player);
             handleSimulationDistance(player);
             handleCannonTime(player);
             handleTacticalSprint(player);
@@ -230,12 +223,6 @@ public class PlayerEventHandler {
     }
 
     private static void handleCannonTime(Player player) {
-        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).cannonFiring > 0) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.cannonFiring = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).cannonFiring - 1;
-                capability.syncPlayerVariables(player);
-            });
-        }
         if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).cannonRecoil > 0) {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.cannonRecoil = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).cannonRecoil - 1;
@@ -353,27 +340,6 @@ public class PlayerEventHandler {
         if (stack.is(ModTags.Items.GUN)) {
             if (stack.getOrCreateTag().getDouble("cg") > 0) {
                 stack.getOrCreateTag().putDouble("cg", (stack.getOrCreateTag().getDouble("cg") - 1));
-            }
-        }
-    }
-
-    /**
-     * 望远镜瞄准时显示距离
-     */
-    private static void handleDistantRange(Player player) {
-        ItemStack stack = player.getUseItem();
-        if (stack.getItem() == Items.SPYGLASS) {
-            if (player.position().distanceTo((Vec3.atLowerCornerOf(player.level().clip(
-                    new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(1024)),
-                            ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos()))) <= 512) {
-                if (!player.level().isClientSide())
-                    player.displayClientMessage(Component.literal((new DecimalFormat("##.#")
-                            .format(player.position().distanceTo((Vec3.atLowerCornerOf(
-                                    player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(768)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos()))))
-                            + "M")), true);
-            } else {
-                if (player.level().isClientSide())
-                    player.displayClientMessage(Component.literal("---M"), true);
             }
         }
     }
