@@ -37,6 +37,22 @@ public class ClientEventHandler {
     protected static double zoomTime = 0;
     protected static double zoomPos = 0;
     protected static double zoomPosZ = 0;
+    private static double swayTime = 0;
+
+    protected static double swayX = 0;
+
+    protected static double swayY = 0;
+
+    private static double moveXTime = 0;
+    private static double moveYTime = 0;
+    protected static double movePosX = 0;
+    protected static double movePosY = 0;
+    protected static double moveRotZ = 0;
+    protected static double movePosHorizon = 0;
+    protected static double velocityY = 0;
+    protected static double turnRotX = 0;
+    protected static double turnRotY = 0;
+    protected static double turnRotZ = 0;
 
     @SubscribeEvent
     public static void handleWeaponTurn(RenderHandEvent event) {
@@ -49,12 +65,24 @@ public class ClientEventHandler {
         float yRotOffset = Mth.lerp(event.getPartialTick(), player.yBobO, player.yBob);
         float xRot = player.getViewXRot(event.getPartialTick()) - xRotOffset;
         float yRot = player.getViewYRot(event.getPartialTick()) - yRotOffset;
-        data.putDouble("xRot", Mth.clamp(0.05 * xRot, -5, 5) * (1 - 0.75 * zoomTime));
-        data.putDouble("yRot", Mth.clamp(0.05 * yRot, -10, 10) * (1 - 0.75 * zoomTime));
-        data.putDouble("zRot", Mth.clamp(0.1 * yRot, -10, 10) * (1 - zoomTime));
+        turnRotX = Mth.clamp(0.05 * xRot, -5, 5) * (1 - 0.75 * zoomTime);
+        turnRotY = Mth.clamp(0.05 * yRot, -10, 10) * (1 - 0.75 * zoomTime);
+        turnRotZ = Mth.clamp(0.1 * yRot, -10, 10) * (1 - zoomTime);
 
         data.putDouble("droneCameraRotX", Mth.clamp(0.25f * xRot, -10, 10));
         data.putDouble("droneCameraRotY", Mth.clamp(0.25f * yRot, -20, 10));
+    }
+
+    public static double getTurnRotX() {
+        return turnRotX;
+    }
+
+    public static double getTurnRotY() {
+        return turnRotY;
+    }
+
+    public static double getTurnRotZ() {
+        return turnRotZ;
     }
 
     @SubscribeEvent
@@ -188,10 +216,18 @@ public class ClientEventHandler {
                 pose = 1;
             }
 
-            data.putDouble("sway_time", data.getDouble("sway_time") + 0.05 * times);
-            data.putDouble("x", (pose * -0.008 * Math.sin(data.getDouble("sway_time")) * (1 - 0.95 * zoomTime)));
-            data.putDouble("y", (pose * 0.125 * Math.sin(data.getDouble("sway_time") - 1.585) * (1 - 0.95 * zoomTime)) - 3 * data.getDouble("gun_move_rotZ"));
+            swayTime += 0.05 * times;
+            swayX = pose * -0.008 * Math.sin(swayTime) * (1 - 0.95 * zoomTime);
+            swayY = pose * 0.125 * Math.sin(swayTime - 1.585) * (1 - 0.95 * zoomTime) - 3 * moveRotZ;
         }
+    }
+
+    public static double getSwayX() {
+        return swayX;
+    }
+
+    public static double getSwayY() {
+        return swayY;
     }
 
     private static void handleWeaponMove(LivingEntity entity) {
@@ -211,15 +247,9 @@ public class ClientEventHandler {
             }
 
             if (Minecraft.getInstance().options.keyUp.isDown() && data.getDouble("firetime") == 0 && zoomTime == 0) {
-                if (data.getDouble("gun_move_rotZ") < 0.14) {
-                    data.putDouble("gun_move_rotZ", data.getDouble("gun_move_rotZ") + 0.007 * times);
-                }
+                moveRotZ = Mth.clamp(moveRotZ + 0.007 * times,0,0.14);
             } else {
-                if (data.getDouble("gun_move_rotZ") > 0) {
-                    data.putDouble("gun_move_rotZ", data.getDouble("gun_move_rotZ") - 0.007 * times);
-                } else {
-                    data.putDouble("gun_move_rotZ", 0);
-                }
+                moveRotZ = Mth.clamp(moveRotZ - 0.007 * times,0,0.14);
             }
 
             if ((Minecraft.getInstance().options.keyLeft.isDown()
@@ -227,76 +257,88 @@ public class ClientEventHandler {
                     || Minecraft.getInstance().options.keyUp.isDown()
                     || Minecraft.getInstance().options.keyDown.isDown()) && data.getDouble("firetime") == 0) {
 
-                if (data.getDouble("gun_moveY_time") < 1.25) {
-                    data.putDouble("gun_moveY_time", data.getDouble("gun_moveY_time") + 1.2 * on_ground * times * move_speed);
+                if (moveYTime < 1.25) {
+                    moveYTime += 1.2 * on_ground * times * move_speed;
                 } else {
-                    data.putDouble("gun_moveY_time", 0.25);
+                    moveYTime = 0.25;
                 }
 
-                if (data.getDouble("gun_moveX_time") < 2) {
-                    data.putDouble("gun_moveX_time", data.getDouble("gun_moveX_time") + 1.2 * on_ground * times * move_speed);
+                if (moveXTime < 2) {
+                    moveXTime += 1.2 * on_ground * times * move_speed;
                 } else {
-                    data.putDouble("gun_moveX_time", 0);
+                    moveXTime = 0;
                 }
 
-                data.putDouble("gun_move_posY", -0.135 * Math.sin(2 * Math.PI * (data.getDouble("gun_moveY_time") - 0.25)) * (1 - 0.95 * zoomTime));
-
-                data.putDouble("gun_move_posX", 0.2 * Math.sin(1 * Math.PI * data.getDouble("gun_moveX_time")) * (1 - 0.95 * zoomTime));
+                movePosX= 0.2 * Math.sin(1 * Math.PI * moveXTime) * (1 - 0.95 * zoomTime);
+                movePosY = -0.135 * Math.sin(2 * Math.PI * (moveYTime - 0.25)) * (1 - 0.95 * zoomTime);
 
             } else {
-                if (data.getDouble("gun_moveY_time") > 0.25) {
-                    data.putDouble("gun_moveY_time", data.getDouble("gun_moveY_time") - 0.5 * times);
+                if (moveYTime > 0.25) {
+                    moveYTime -= 0.5 * times;
                 } else {
-                    data.putDouble("gun_moveY_time", 0.25);
+                    moveYTime = 0.25;
                 }
 
-                if (data.getDouble("gun_moveX_time") > 0) {
-                    data.putDouble("gun_moveX_time", data.getDouble("gun_moveX_time") - 0.5 * times);
+                if (moveXTime > 0) {
+                    moveXTime -= 0.5 * times;
                 } else {
-                    data.putDouble("gun_moveX_time", 0);
+                    moveXTime = 0;
                 }
 
-                if (data.getDouble("gun_move_posX") > 0) {
-                    data.putDouble("gun_move_posX", data.getDouble("gun_move_posX") - 1.5 * (Math.pow(data.getDouble("gun_move_posX"), 2) * times) * (1 - 0.75 * zoomTime));
+                if (movePosX > 0) {
+                    movePosX -= 1.5 * (Math.pow(movePosX, 2) * times) * (1 - 0.75 * zoomTime);
                 } else {
-                    data.putDouble("gun_move_posX", data.getDouble("gun_move_posX") + 1.5 * (Math.pow(data.getDouble("gun_move_posX"), 2) * times) * (1 - 0.75 * zoomTime));
+                    movePosX += 1.5 * (Math.pow(movePosX, 2) * times) * (1 - 0.75 * zoomTime);
                 }
 
-                if (data.getDouble("gun_move_posY") > 0) {
-                    data.putDouble("gun_move_posY", data.getDouble("gun_move_posY") - 1.5 * (Math.pow(data.getDouble("gun_move_posY"), 2) * times) * (1 - 0.75 * zoomTime));
+                if (movePosY > 0) {
+                    movePosY -= 1.5 * (Math.pow(movePosY, 2) * times) * (1 - 0.75 * zoomTime);
                 } else {
-                    data.putDouble("gun_move_posY", data.getDouble("gun_move_posY") + 1.5 * (Math.pow(data.getDouble("gun_move_posY"), 2) * times) * (1 - 0.75 * zoomTime));
+                    movePosY += 1.5 * (Math.pow(movePosY, 2) * times) * (1 - 0.75 * zoomTime);
                 }
-
             }
 
-            if (data.getDouble("move") < 0) {
-                data.putDouble("move", ((data.getDouble("move") + 1 * times * Math.pow(data.getDouble("move"), 2) * (1 - 0.6 * zoomTime))
-                        * (1 - 1 * zoomTime)));
+            if (movePosHorizon < 0) {
+                movePosHorizon += 2 * times * Math.pow(movePosHorizon, 2);
             } else {
-                data.putDouble("move", ((data.getDouble("move") - 1 * times * Math.pow(data.getDouble("move"), 2) * (1 - 0.6 * zoomTime))
-                        * (1 - 1 * zoomTime)));
+                movePosHorizon -= 2 * times * Math.pow(movePosHorizon, 2);
             }
             if (Minecraft.getInstance().options.keyRight.isDown()) {
-                data.putDouble("move",
-                        ((data.getDouble("move") + Math.pow(Math.abs(data.getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * zoomTime))
-                                * (1 - 0.1 * zoomTime)));
+                movePosHorizon = Mth.clamp(movePosHorizon + Math.pow(Math.abs(movePosHorizon) + 0.05, 2) * 0.2 * times, -0.5,0.5) * (1 - zoomTime);
             } else if (Minecraft.getInstance().options.keyLeft.isDown()) {
-                data.putDouble("move",
-                        ((data.getDouble("move") - Math.pow(Math.abs(data.getDouble("move")) + 0.05, 2) * 0.2 * times * (1 - 0.1 * zoomTime))
-                                * (1 - 0.1 * zoomTime)));
+                movePosHorizon = Mth.clamp(movePosHorizon - Math.pow(Math.abs(movePosHorizon) + 0.05, 2) * 0.2 * times, -0.5,0.5) * (1 - zoomTime);
             }
 
             double velocity = entity.getDeltaMovement().y();
 
             if (-0.8 < velocity + 0.078 && velocity + 0.078 < 0.8) {
-                if (data.getDouble("vy") < entity.getDeltaMovement().y() + 0.078) {
-                    data.putDouble("vy", Mth.clamp(((data.getDouble("vy") + 0.35 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.8 * zoomTime)), -0.8, 0.8));
+                if (velocityY < entity.getDeltaMovement().y() + 0.078) {
+                    velocityY = Mth.clamp((velocityY + 0.55 * Math.pow((velocity + 0.078) - velocityY , 2)), -0.8, 0.8) * (1 - 0.8 * zoomTime);
                 } else {
-                    data.putDouble("vy", Mth.clamp(((data.getDouble("vy") - 0.35 * Math.pow((velocity + 0.078) - data.getDouble("vy"), 2)) * (1 - 0.8 * zoomTime)), -0.8, 0.8));
+                    velocityY = Mth.clamp((velocityY - 0.55 * Math.pow((velocity + 0.078) - velocityY , 2)), -0.8, 0.8) * (1 - 0.8 * zoomTime);
                 }
             }
         }
+    }
+
+    public static double getMoveRotZ() {
+        return moveRotZ;
+    }
+
+    public static double getMovePosX() {
+        return movePosX;
+    }
+
+    public static double getMovePosY() {
+        return movePosY;
+    }
+
+    public static double getMovePosHorizon() {
+        return movePosHorizon;
+    }
+
+    public static double getVelocityY() {
+        return velocityY;
     }
 
     private static void handleWeaponZoom() {

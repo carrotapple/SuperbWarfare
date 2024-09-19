@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.machinegun.MinigunItem;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -66,14 +67,12 @@ public class MinigunItemModel extends GeoModel<MinigunItem> {
 
         float PosX = (float) player.getPersistentData().getDouble("gun_move_posX");
         float PosY = (float) player.getPersistentData().getDouble("gun_move_posY");
-        double y = player.getPersistentData().getDouble("y");
-        double x = player.getPersistentData().getDouble("x");
 
+        double swayX = ClientEventHandler.getSwayX();
+        double swayY = ClientEventHandler.getSwayY();
         root.setPosX(PosX);
-
-        root.setPosY((float) y + PosY);
-
-        root.setRotX((float) x);
+        root.setPosY((float) swayY + PosY);
+        root.setRotX((float) swayX);
 
         float RotZ = (float) player.getPersistentData().getDouble("gun_move_rotZ");
 

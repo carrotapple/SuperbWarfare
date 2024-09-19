@@ -101,14 +101,12 @@ public class SvdItemModel extends GeoModel<SvdItem> {
 
         float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
         float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
-        double y = player.getPersistentData().getDouble("y");
-        double x = player.getPersistentData().getDouble("x");
 
+        double swayX = ClientEventHandler.getSwayX();
+        double swayY = ClientEventHandler.getSwayY();
         root.setPosX(PosX);
-
-        root.setPosY((float) y + PosY);
-
-        root.setRotX((float) x);
+        root.setPosY((float) swayY + PosY);
+        root.setRotX((float) swayX);
 
         float RotZ = (float) player.getPersistentData().getDouble("gun_move_rotZ");
 
@@ -140,7 +138,7 @@ public class SvdItemModel extends GeoModel<SvdItem> {
 
         glass.setPosX(0.25f * -PosX);
 
-        glass.setPosY(0.2f * (float) fp + 0.5f * (float) vy + (float) y + PosY);
+        glass.setPosY(0.2f * (float) fp + 0.5f * (float) vy + (float) swayY + PosY);
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");

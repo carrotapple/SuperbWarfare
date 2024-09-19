@@ -107,14 +107,11 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
         float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
         float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
 
-        double y = player.getPersistentData().getDouble("y");
-        double x = player.getPersistentData().getDouble("x");
-
+        double swayX = ClientEventHandler.getSwayX();
+        double swayY = ClientEventHandler.getSwayY();
         root.setPosX(PosX);
-
-        root.setPosY((float) y + 1.2f * PosY);
-
-        root.setRotX((float) x);
+        root.setPosY((float) swayY + PosY);
+        root.setRotX((float) swayX);
 
         float RotZ = (float) player.getPersistentData().getDouble("gun_move_rotZ");
 

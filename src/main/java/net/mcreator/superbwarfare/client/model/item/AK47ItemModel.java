@@ -84,14 +84,11 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         float PosY = (float) player.getPersistentData().getDouble("gun_move_posY");
         float RotZ = (float) player.getPersistentData().getDouble("gun_move_rotZ");
 
-        double y = player.getPersistentData().getDouble("y");
-        double x = player.getPersistentData().getDouble("x");
-
+        double swayX = ClientEventHandler.getSwayX();
+        double swayY = ClientEventHandler.getSwayY();
         root.setPosX(PosX);
-
-        root.setPosY((float) y + PosY);
-
-        root.setRotX((float) x);
+        root.setPosY((float) swayY + PosY);
+        root.setRotX((float) swayX);
 
         root.setRotY(0.2f * PosX);
 
