@@ -96,42 +96,30 @@ public class TaserItemModel extends GeoModel<TaserItem> {
         gun.setRotZ((float) (0.05f * zpz));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
-
-        float PosX = (float) player.getPersistentData().getDouble("gun_move_posX");
-        float PosY = (float) player.getPersistentData().getDouble("gun_move_posY");
-        float RotZ = (float) player.getPersistentData().getDouble("gun_move_rotZ");
+        CoreGeoBone move = getAnimationProcessor().getBone("move");
 
         double swayX = ClientEventHandler.getSwayX();
         double swayY = ClientEventHandler.getSwayY();
-        root.setPosX(PosX);
-        root.setPosY((float) swayY + PosY);
+        float moveRotZ = (float) ClientEventHandler.getMoveRotZ();
+        float movePosX = (float) ClientEventHandler.getMovePosX();
+        float movePosY = (float) ClientEventHandler.getMovePosY();
+        double mph = ClientEventHandler.getMovePosHorizon();
+        double vY = ClientEventHandler.getVelocityY();
+        double turnRotX = ClientEventHandler.getTurnRotX();
+        double turnRotY = ClientEventHandler.getTurnRotY();
+        double turnRotZ = ClientEventHandler.getTurnRotZ();
+
+        root.setPosX(movePosX);
+        root.setPosY((float) swayY + movePosY);
         root.setRotX((float) swayX);
+        root.setRotY(0.2f * movePosX);
+        root.setRotZ(0.2f * movePosX + moveRotZ);
 
-        root.setRotY(0.2f * PosX);
-
-        root.setRotZ(0.2f * PosX + RotZ);
-
-        CoreGeoBone move = getAnimationProcessor().getBone("move");
-
-        double m = player.getPersistentData().getDouble("move");
-
-        double vy = player.getPersistentData().getDouble("vy");
-
-        move.setPosX(9.3f * (float) m);
-
-        move.setPosY(-2 * (float) vy);
-
-        double xRot = player.getPersistentData().getDouble("xRot");
-
-        double yRot = player.getPersistentData().getDouble("yRot");
-
-        double zRot = player.getPersistentData().getDouble("zRot");
-
-        move.setRotX(Mth.DEG_TO_RAD * (float) xRot - 0.15f * (float) vy);
-
-        move.setRotY(Mth.DEG_TO_RAD * (float) yRot);
-
-        move.setRotZ(2.7f * (float) m + Mth.DEG_TO_RAD * (float) zRot);
+        move.setPosX(9.3f * (float) mph);
+        move.setPosY(-2f * (float) vY);
+        move.setRotX(Mth.DEG_TO_RAD * (float) turnRotX - 0.15f * (float) vY);
+        move.setRotY(Mth.DEG_TO_RAD * (float) turnRotY);
+        move.setRotZ(2.7f * (float) mph + Mth.DEG_TO_RAD * (float) turnRotZ);
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");

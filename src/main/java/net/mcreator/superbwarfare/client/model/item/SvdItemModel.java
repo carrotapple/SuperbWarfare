@@ -91,54 +91,39 @@ public class SvdItemModel extends GeoModel<SvdItem> {
             shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
         }
         shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
-
         holo.setPosY(0.05f + 1.1f * (float) fp);
         holo.setRotZ(-0.04f * (float) fp);
         holo.setScaleX(0.75f);
         holo.setScaleY(0.75f);
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
-
-        float PosX = (float)player.getPersistentData().getDouble("gun_move_posX");
-        float PosY = (float)player.getPersistentData().getDouble("gun_move_posY");
+        CoreGeoBone move = getAnimationProcessor().getBone("move");
 
         double swayX = ClientEventHandler.getSwayX();
         double swayY = ClientEventHandler.getSwayY();
-        root.setPosX(PosX);
-        root.setPosY((float) swayY + PosY);
+        float moveRotZ = (float) ClientEventHandler.getMoveRotZ();
+        float movePosX = (float) ClientEventHandler.getMovePosX();
+        float movePosY = (float) ClientEventHandler.getMovePosY();
+        double mph = ClientEventHandler.getMovePosHorizon();
+        double vY = ClientEventHandler.getVelocityY();
+        double turnRotX = ClientEventHandler.getTurnRotX();
+        double turnRotY = ClientEventHandler.getTurnRotY();
+        double turnRotZ = ClientEventHandler.getTurnRotZ();
+
+        root.setPosX(movePosX);
+        root.setPosY((float) swayY + movePosY);
         root.setRotX((float) swayX);
+        root.setRotY(0.2f * movePosX);
+        root.setRotZ(0.2f * movePosX + moveRotZ);
 
-        float RotZ = (float) player.getPersistentData().getDouble("gun_move_rotZ");
+        move.setPosX(9.3f * (float) mph);
+        move.setPosY(-2f * (float) vY);
+        move.setRotX(Mth.DEG_TO_RAD * (float) turnRotX - 0.15f * (float) vY);
+        move.setRotY(Mth.DEG_TO_RAD * (float) turnRotY);
+        move.setRotZ(2.7f * (float) mph + Mth.DEG_TO_RAD * (float) turnRotZ);
 
-        root.setRotY(0.2f * PosX);
-
-        root.setRotZ(0.2f * PosX + RotZ);
-
-        CoreGeoBone move = getAnimationProcessor().getBone("move");
-
-        double m = player.getPersistentData().getDouble("move");
-
-        double vy = player.getPersistentData().getDouble("vy");
-
-        move.setPosX(9.3f * (float) m);
-
-        move.setPosY(-2f * (float) vy);
-
-        double xRot = player.getPersistentData().getDouble("xRot");
-
-        double yRot = player.getPersistentData().getDouble("yRot");
-
-        double zRot = player.getPersistentData().getDouble("zRot");
-
-        move.setRotX(Mth.DEG_TO_RAD * (float) xRot - 0.15f * (float) vy);
-
-        move.setRotY(Mth.DEG_TO_RAD * (float) yRot);
-
-        move.setRotZ(2.7f * (float) m + Mth.DEG_TO_RAD * (float) zRot);
-
-        glass.setPosX(0.25f * -PosX);
-
-        glass.setPosY(0.2f * (float) fp + 0.5f * (float) vy + (float) swayY + PosY);
+        glass.setPosX(0.25f * -movePosX);
+        glass.setPosY(0.2f * (float) fp + 0.5f * (float) vY + (float) swayY + movePosY);
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
