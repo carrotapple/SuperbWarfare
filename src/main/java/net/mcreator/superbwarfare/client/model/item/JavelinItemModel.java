@@ -54,8 +54,8 @@ public class JavelinItemModel extends GeoModel<JavelinItem> {
         javelin.setHidden(gun.getPosZ() > 15.85);
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosZ() > 15.85));
 
-        double fp = player.getPersistentData().getDouble("fire_pos");
-        double fr = player.getPersistentData().getDouble("fire_rot");
+        double fp = ClientEventHandler.getFirePos();
+        double fr = ClientEventHandler.getFireRot();
 
         shen.setPosY(0.28f * (float) (fp + 2 * fr));
         shen.setPosZ(3.8f * (float) (fp + 0.54f * fr));
@@ -90,11 +90,6 @@ public class JavelinItemModel extends GeoModel<JavelinItem> {
         move.setRotZ(2.7f * (float) mph + Mth.DEG_TO_RAD * (float) turnRotZ);
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
-
-        player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
-
-        player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
-
-        player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
+        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

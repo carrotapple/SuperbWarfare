@@ -49,22 +49,13 @@ public class DevotionItemModel extends GeoModel<DevotionItem> {
         double zpz = ClientEventHandler.getZoomPosZ();
 
         gun.setPosX(2.17f * (float) zp);
-
         gun.setPosY(0.17f * (float) zp - (float) (0.5f * zpz));
-
         gun.setPosZ(8.8f * (float) zp + (float) (0.6f * zpz));
-
         gun.setRotZ((float) (0.05f * zpz));
-
         gun.setScaleZ(1f - (0.7f * (float) zp));
 
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone number = getAnimationProcessor().getBone("number");
-
-        double bp = player.getPersistentData().getDouble("boltpos");
-
-        bolt.setPosZ(-2f * (float) bp);
-
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
         if (gun.getPosX() > 1.2) {
             number.setScaleX(1);
@@ -76,8 +67,8 @@ public class DevotionItemModel extends GeoModel<DevotionItem> {
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.8));
 
-        double fp = player.getPersistentData().getDouble("fire_pos");
-        double fr = player.getPersistentData().getDouble("fire_rot");
+        double fp = ClientEventHandler.getFirePos();
+        double fr = ClientEventHandler.getFireRot();
 
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
             shen.setPosY(0.05f * (float) (fp + 2 * fr));
@@ -91,8 +82,7 @@ public class DevotionItemModel extends GeoModel<DevotionItem> {
             shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
         }
         shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
-
-
+        bolt.setPosZ(-2f * (float) fp);
 
         CoreGeoBone n0 = getAnimationProcessor().getBone("00");
         CoreGeoBone n1 = getAnimationProcessor().getBone("1");
@@ -661,11 +651,6 @@ public class DevotionItemModel extends GeoModel<DevotionItem> {
             camera.setRotY(numR * camera.getRotY());
             camera.setRotZ(numR * camera.getRotZ());
         }
-
-        player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
-
-        player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
-
-        player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
+        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

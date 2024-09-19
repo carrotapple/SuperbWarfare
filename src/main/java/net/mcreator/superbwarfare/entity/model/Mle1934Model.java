@@ -2,10 +2,10 @@ package net.mcreator.superbwarfare.entity.model;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.Mle1934Entity;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
@@ -52,10 +52,6 @@ public class Mle1934Model extends GeoModel<Mle1934Entity> {
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
 
         if (animatable.getFirstPassenger() == null) return;
-        Entity gunner = animatable.getFirstPassenger();
-
-        gunner.getPersistentData().putDouble("cannon_camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
-        gunner.getPersistentData().putDouble("cannon_camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
-        gunner.getPersistentData().putDouble("cannon_camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
+        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

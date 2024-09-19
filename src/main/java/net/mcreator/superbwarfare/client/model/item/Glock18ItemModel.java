@@ -65,8 +65,8 @@ public class Glock18ItemModel extends GeoModel<Glock18Item> {
 
         gun.setRotZ(-11 * Mth.DEG_TO_RAD * (float) zp + (float) (0.05f * zpz));
 
-        double fp = player.getPersistentData().getDouble("fire_pos");
-        double fr = player.getPersistentData().getDouble("fire_rot");
+        double fp = ClientEventHandler.getFirePos();
+        double fr = ClientEventHandler.getFireRot();
 
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
             shen.setPosY(0.03f * (float) (fp + 2 * fr));
@@ -145,11 +145,6 @@ public class Glock18ItemModel extends GeoModel<Glock18Item> {
             camera.setRotY(numR * camera.getRotY());
             camera.setRotZ(numR * camera.getRotZ());
         }
-
-        player.getPersistentData().putDouble("camera_rot_x", Mth.RAD_TO_DEG * camera.getRotX());
-
-        player.getPersistentData().putDouble("camera_rot_y", Mth.RAD_TO_DEG * camera.getRotY());
-
-        player.getPersistentData().putDouble("camera_rot_z", Mth.RAD_TO_DEG * camera.getRotZ());
+        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }
