@@ -13,16 +13,12 @@ import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunInfo;
 import net.mcreator.superbwarfare.tools.GunsTool;
-import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -62,118 +58,118 @@ public class GunEventHandler {
     private static void handleGunFire(Player player) {
         ItemStack stack = player.getMainHandItem();
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
-            double mode = stack.getOrCreateTag().getInt("fire_mode");
-
-            int interval = stack.getOrCreateTag().getInt("fire_interval");
-
-            if (!player.getPersistentData().getBoolean("firing") && player.getMainHandItem().getItem() == ModItems.DEVOTION.get()) {
-                stack.getOrCreateTag().putDouble("fire_increase", 0);
-            }
-
-            if (stack.getOrCreateTag().getInt("ammo") == 0) {
-                stack.getOrCreateTag().putInt("burst_fire", 0);
-            }
-
-            if ((player.getPersistentData().getBoolean("firing") || stack.getOrCreateTag().getInt("burst_fire") > 0)
-                    && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                    && !stack.getOrCreateTag().getBoolean("reloading")
-                    && !stack.getOrCreateTag().getBoolean("charging")
-                    && stack.getOrCreateTag().getInt("ammo") > 0
-                    && !player.getCooldowns().isOnCooldown(stack.getItem())
-                    && !stack.getOrCreateTag().getBoolean("need_bolt_action")) {
-
-                playGunSounds(player);
-
-                if (mode == 0) {
-                    player.getPersistentData().putBoolean("firing", false);
-                }
-
-                int burstCooldown = 0;
-                if (mode == 1) {
-                    stack.getOrCreateTag().putInt("burst_fire", (stack.getOrCreateTag().getInt("burst_fire") - 1));
-                    burstCooldown = stack.getOrCreateTag().getInt("burst_fire") == 0 ? interval + 4 : 0;
-                }
-
-                if (stack.getOrCreateTag().getDouble("animindex") == 1) {
-                    stack.getOrCreateTag().putDouble("animindex", 0);
-                } else {
-                    stack.getOrCreateTag().putDouble("animindex", 1);
-                }
-                /*
-                  空仓挂机
-                 */
-                if (stack.getOrCreateTag().getInt("ammo") == 1) {
-                    stack.getOrCreateTag().putBoolean("HoldOpen", true);
-                }
-
-                /*
-                  判断是否为栓动武器（bolt_action_time > 0），并在开火后给一个需要上膛的状态
-                 */
-                if (stack.getOrCreateTag().getDouble("bolt_action_time") > 0 && stack.getOrCreateTag().getInt("ammo") > 1) {
-                    stack.getOrCreateTag().putBoolean("need_bolt_action", true);
-                }
-
-                stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
-                stack.getOrCreateTag().putInt("fire_animation", interval);
-                player.getPersistentData().putInt("noRun_time", interval + 2);
-                stack.getOrCreateTag().putDouble("flash_time", 2);
-
-                stack.getOrCreateTag().putDouble("empty", 1);
-
-                if (stack.getItem() == ModItems.M_60.get()) {
-                    stack.getOrCreateTag().putBoolean("bullet_chain", true);
-                }
-
-                if (stack.getItem() == ModItems.M_4.get() || player.getMainHandItem().getItem() == ModItems.HK_416.get() || player.getMainHandItem().getItem() == ModItems.QBZ_95.get()) {
-                    if (stack.getOrCreateTag().getDouble("fire_sequence") == 1) {
-                        stack.getOrCreateTag().putDouble("fire_sequence", 0);
-                    } else {
-                        stack.getOrCreateTag().putDouble("fire_sequence", 1);
-                    }
-                }
-
-                if (stack.getItem() == ModItems.DEVOTION.get()) {
-                    stack.getOrCreateTag().putDouble("fire_increase", stack.getOrCreateTag().getDouble("fire_increase") + 0.334);
-                }
-
-                if (stack.getItem() == ModItems.ABEKIRI.get()) {
-                    stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(InteractionHand.MAIN_HAND));
-                    if (player instanceof ServerPlayer serverPlayer && player.level() instanceof ServerLevel serverLevel) {
-                        ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, player.getX() + 1.8 * player.getLookAngle().x, player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y,
-                                player.getZ() + 1.8 * player.getLookAngle().z, 30, 0.4, 0.4, 0.4, 0.005, true, serverPlayer);
-                    }
-                }
-
-                if (stack.getItem() == ModItems.SENTINEL.get()) {
-                    stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                            iEnergyStorage -> iEnergyStorage.extractEnergy(3000, false)
-                    );
-                    stack.getOrCreateTag().putDouble("chamber_rot", 20);
-                }
-
-                int zoomAddCooldown = 0;
-                if (stack.getItem() == ModItems.MARLIN.get()) {
-                    if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
-                        zoomAddCooldown = 5;
-                        stack.getOrCreateTag().putDouble("marlin_animation_time", 15);
-                        stack.getOrCreateTag().putBoolean("fastfiring", false);
-                    } else {
-                        stack.getOrCreateTag().putDouble("marlin_animation_time", 10);
-                        stack.getOrCreateTag().putBoolean("fastfiring", true);
-                    }
-                }
-
-                int cooldown = interval + (int) stack.getOrCreateTag().getDouble("fire_sequence") - (int) stack.getOrCreateTag().getDouble("fire_increase") + burstCooldown + zoomAddCooldown;
-                player.getCooldowns().addCooldown(stack.getItem(), cooldown);
-
-                for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {
-                    gunShoot(player);
-                }
-
-                stack.getOrCreateTag().putBoolean("shoot", true);
-
-            }
-
+//            double mode = stack.getOrCreateTag().getInt("fire_mode");
+//
+//            int interval = stack.getOrCreateTag().getInt("fire_interval");
+//
+//            if (!player.getPersistentData().getBoolean("firing") && player.getMainHandItem().getItem() == ModItems.DEVOTION.get()) {
+//                stack.getOrCreateTag().putDouble("fire_increase", 0);
+//            }
+//
+//            if (stack.getOrCreateTag().getInt("ammo") == 0) {
+//                stack.getOrCreateTag().putInt("burst_fire", 0);
+//            }
+//
+//            if ((player.getPersistentData().getBoolean("firing") || stack.getOrCreateTag().getInt("burst_fire") > 0)
+//                    && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+//                    && !stack.getOrCreateTag().getBoolean("reloading")
+//                    && !stack.getOrCreateTag().getBoolean("charging")
+//                    && stack.getOrCreateTag().getInt("ammo") > 0
+//                    && !player.getCooldowns().isOnCooldown(stack.getItem())
+//                    && !stack.getOrCreateTag().getBoolean("need_bolt_action")) {
+//
+//                playGunSounds(player);
+//
+//                if (mode == 0) {
+//                    player.getPersistentData().putBoolean("firing", false);
+//                }
+//
+//                int burstCooldown = 0;
+//                if (mode == 1) {
+//                    stack.getOrCreateTag().putInt("burst_fire", (stack.getOrCreateTag().getInt("burst_fire") - 1));
+//                    burstCooldown = stack.getOrCreateTag().getInt("burst_fire") == 0 ? interval + 4 : 0;
+//                }
+//
+//                if (stack.getOrCreateTag().getDouble("animindex") == 1) {
+//                    stack.getOrCreateTag().putDouble("animindex", 0);
+//                } else {
+//                    stack.getOrCreateTag().putDouble("animindex", 1);
+//                }
+//                /*
+//                  空仓挂机
+//                 */
+//                if (stack.getOrCreateTag().getInt("ammo") == 1) {
+//                    stack.getOrCreateTag().putBoolean("HoldOpen", true);
+//                }
+//
+//                /*
+//                  判断是否为栓动武器（bolt_action_time > 0），并在开火后给一个需要上膛的状态
+//                 */
+//                if (stack.getOrCreateTag().getDouble("bolt_action_time") > 0 && stack.getOrCreateTag().getInt("ammo") > 1) {
+//                    stack.getOrCreateTag().putBoolean("need_bolt_action", true);
+//                }
+//
+//                stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
+//                stack.getOrCreateTag().putInt("fire_animation", interval);
+//                player.getPersistentData().putInt("noRun_time", interval + 2);
+//                stack.getOrCreateTag().putDouble("flash_time", 2);
+//
+//                stack.getOrCreateTag().putDouble("empty", 1);
+//
+//                if (stack.getItem() == ModItems.M_60.get()) {
+//                    stack.getOrCreateTag().putBoolean("bullet_chain", true);
+//                }
+//
+//                if (stack.getItem() == ModItems.M_4.get() || player.getMainHandItem().getItem() == ModItems.HK_416.get() || player.getMainHandItem().getItem() == ModItems.QBZ_95.get()) {
+//                    if (stack.getOrCreateTag().getDouble("fire_sequence") == 1) {
+//                        stack.getOrCreateTag().putDouble("fire_sequence", 0);
+//                    } else {
+//                        stack.getOrCreateTag().putDouble("fire_sequence", 1);
+//                    }
+//                }
+//
+//                if (stack.getItem() == ModItems.DEVOTION.get()) {
+//                    stack.getOrCreateTag().putDouble("fire_increase", stack.getOrCreateTag().getDouble("fire_increase") + 0.334);
+//                }
+//
+//                if (stack.getItem() == ModItems.ABEKIRI.get()) {
+//                    stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(InteractionHand.MAIN_HAND));
+//                    if (player instanceof ServerPlayer serverPlayer && player.level() instanceof ServerLevel serverLevel) {
+//                        ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, player.getX() + 1.8 * player.getLookAngle().x, player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y,
+//                                player.getZ() + 1.8 * player.getLookAngle().z, 30, 0.4, 0.4, 0.4, 0.005, true, serverPlayer);
+//                    }
+//                }
+//
+//                if (stack.getItem() == ModItems.SENTINEL.get()) {
+//                    stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+//                            iEnergyStorage -> iEnergyStorage.extractEnergy(3000, false)
+//                    );
+//                    stack.getOrCreateTag().putDouble("chamber_rot", 20);
+//                }
+//
+//                int zoomAddCooldown = 0;
+//                if (stack.getItem() == ModItems.MARLIN.get()) {
+//                    if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
+//                        zoomAddCooldown = 5;
+//                        stack.getOrCreateTag().putDouble("marlin_animation_time", 15);
+//                        stack.getOrCreateTag().putBoolean("fastfiring", false);
+//                    } else {
+//                        stack.getOrCreateTag().putDouble("marlin_animation_time", 10);
+//                        stack.getOrCreateTag().putBoolean("fastfiring", true);
+//                    }
+//                }
+//
+//                int cooldown = interval + (int) stack.getOrCreateTag().getDouble("fire_sequence") - (int) stack.getOrCreateTag().getDouble("fire_increase") + burstCooldown + zoomAddCooldown;
+//                player.getCooldowns().addCooldown(stack.getItem(), cooldown);
+//
+//                for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {
+//                    gunShoot(player);
+//                }
+//
+//                stack.getOrCreateTag().putBoolean("shoot", true);
+//
+//            }
+//
             /*
               在开火动画的最后1tick，设置需要拉栓上膛的武器拉栓动画的倒计时为data里的拉栓时间
              */
@@ -202,7 +198,7 @@ public class GunEventHandler {
 
         var tag = stack.getOrCreateTag();
 
-        if ((player.getPersistentData().getBoolean("firing") || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) && !player.isSprinting()) {
+        if ((player.getPersistentData().getBoolean("holdFire") || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) && !player.isSprinting()) {
             if (tag.getDouble("minigun_rotation") < 10) {
                 tag.putDouble("minigun_rotation", (tag.getDouble("minigun_rotation") + 1));
             }

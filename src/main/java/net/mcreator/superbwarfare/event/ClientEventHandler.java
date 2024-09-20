@@ -7,10 +7,12 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModMobEffects;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
+import net.mcreator.superbwarfare.network.message.ShootMessage;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -71,6 +73,8 @@ public class ClientEventHandler {
     public static double bowPos = 0;
     public static double handPos = 0;
 
+    public static double ClientTimer = 0;
+
     @SubscribeEvent
     public static void handleWeaponTurn(RenderHandEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
@@ -89,6 +93,43 @@ public class ClientEventHandler {
 
         droneCameraRotX = Mth.clamp(0.25f * xRot, -10, 10);
         droneCameraRotY = Mth.clamp(0.25f * yRot, -20, 10);
+    }
+
+    private static boolean notInGame() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return true;
+        if (mc.getOverlay() != null) return true;
+        if (mc.screen != null) return true;
+        if (!mc.mouseHandler.isMouseGrabbed()) return true;
+        return !mc.isWindowActive();
+    }
+
+    @SubscribeEvent
+    public static void handleWeaponFire(RenderHandEvent event) {
+        if (notInGame()) return;
+        ClientLevel level = Minecraft.getInstance().level;
+        Player player = Minecraft.getInstance().player;
+        if (player != null && level != null && player.getMainHandItem().is(ModTags.Items.NORMAL_GUN)) {
+
+            ItemStack stack = player.getMainHandItem();
+
+            double customRpm = 0;
+
+            if (stack.getItem() == ModItems.MARLIN.get() && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
+                customRpm = -40;
+            }
+
+            double rpm = stack.getOrCreateTag().getDouble("rpm") + customRpm;
+
+            ClientTimer = Mth.clamp(ClientTimer - 25 * Minecraft.getInstance().getDeltaFrameTime(), 0, Double.POSITIVE_INFINITY);
+
+            if (ClientTimer == 0 && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS) {
+                ModUtils.PACKET_HANDLER.sendToServer(new ShootMessage(0));
+                ClientTimer = 60 / (rpm == 0 ? 600 : rpm) * 1000;
+            }
+
+            player.displayClientMessage(Component.literal(new java.text.DecimalFormat("####").format(ClientTimer)), true);
+        }
     }
 
     @SubscribeEvent
@@ -315,10 +356,8 @@ public class ClientEventHandler {
         double yaw = event.getYaw();
         double pitch = event.getPitch();
         double roll = event.getRoll();
-        double amplitude;
         ItemStack stack = entity.getMainHandItem();
-        amplitude = 15000 * stack.getOrCreateTag().getDouble("recoil_y")
-                * stack.getOrCreateTag().getDouble("recoil_x");
+        double amplitude = 15000 * stack.getOrCreateTag().getDouble("recoil_y") * stack.getOrCreateTag().getDouble("recoil_x");
 
         var capability = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null);
         if (capability.orElse(new ModVariables.PlayerVariables()).firing > 0) {

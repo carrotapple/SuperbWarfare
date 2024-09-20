@@ -72,8 +72,8 @@ public class FireMessage {
         if (type == 0) {
             handlePlayerShoot(player);
         } else if (type == 1) {
-            player.getPersistentData().putBoolean("firing", false);
-            player.getPersistentData().putDouble("minigun_firing", 0);
+            player.getPersistentData().putBoolean("holdFire", false);
+//            player.getPersistentData().putBoolean("firing", false);
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.bowPullHold = false;
                 capability.syncPlayerVariables(player);
@@ -130,10 +130,10 @@ public class FireMessage {
         }
 
         if (tag.getInt("fire_mode") == 1) {
-            player.getPersistentData().putBoolean("firing", false);
+            player.getPersistentData().putBoolean("holdFire", false);
             tag.putInt("burst_fire", (int) tag.getDouble("burst_size"));
         } else {
-            player.getPersistentData().putBoolean("firing", true);
+            player.getPersistentData().putBoolean("holdFire", true);
         }
         if (tag.getDouble("prepare") == 0 && tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
             tag.putDouble("force_stop", 1);
