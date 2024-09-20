@@ -48,6 +48,22 @@ public class TaserItemModel extends GeoModel<TaserItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
+        double zt = ClientEventHandler.zoomTime;
+        double zp = ClientEventHandler.zoomPos;
+        double zpz = ClientEventHandler.zoomPosZ;
+        double swayX = ClientEventHandler.swayX;
+        double swayY = ClientEventHandler.swayY;
+        float moveRotZ = (float) ClientEventHandler.moveRotZ;
+        float movePosX = (float) ClientEventHandler.movePosX;
+        float movePosY = (float) ClientEventHandler.movePosY;
+        double mph = ClientEventHandler.movePosHorizon;
+        double vY = ClientEventHandler.velocityY;
+        double turnRotX = ClientEventHandler.turnRot[0];
+        double turnRotY = ClientEventHandler.turnRot[1];
+        double turnRotZ = ClientEventHandler.turnRot[2];
+        double fp = ClientEventHandler.firePos;
+        double fr = ClientEventHandler.fireRot;
+
         AtomicInteger energy = new AtomicInteger(0);
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                 e -> energy.set(e.getEnergyStored())
@@ -73,19 +89,12 @@ public class TaserItemModel extends GeoModel<TaserItem> {
             redcover.setScaleZ(1);
         }
 
-        double fp = ClientEventHandler.getFirePos();
-        double fr = ClientEventHandler.getFireRot();
-
         shen.setPosX(-0.05f * (float) (fp + 0.2 * fr));
         shen.setPosY(0.1f * (float) (fp + 2 * fr));
         shen.setPosZ(1.2f * (float) (1.3 * fp + 0.54f * fr));
         shen.setRotX(0.04f * (float) (1.28f * fp + fr));
         shen.setRotY(0.02f * (float) fr);
         shen.setRotZ(-0.02f * (float) (fp + 1.3 * fr));
-
-        double zt = ClientEventHandler.getZoomTime();
-        double zp = ClientEventHandler.getZoomPos();
-        double zpz = ClientEventHandler.getZoomPosZ();
 
         gun.setPosX(1.82f * (float) zp);
 
@@ -97,17 +106,6 @@ public class TaserItemModel extends GeoModel<TaserItem> {
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         CoreGeoBone move = getAnimationProcessor().getBone("move");
-
-        double swayX = ClientEventHandler.getSwayX();
-        double swayY = ClientEventHandler.getSwayY();
-        float moveRotZ = (float) ClientEventHandler.getMoveRotZ();
-        float movePosX = (float) ClientEventHandler.getMovePosX();
-        float movePosY = (float) ClientEventHandler.getMovePosY();
-        double mph = ClientEventHandler.getMovePosHorizon();
-        double vY = ClientEventHandler.getVelocityY();
-        double turnRotX = ClientEventHandler.getTurnRotX();
-        double turnRotY = ClientEventHandler.getTurnRotY();
-        double turnRotZ = ClientEventHandler.getTurnRotZ();
 
         root.setPosX(movePosX);
         root.setPosY((float) swayY + movePosY);

@@ -41,9 +41,20 @@ public class JavelinItemModel extends GeoModel<JavelinItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        double zt = ClientEventHandler.getZoomTime();
-        double zp = ClientEventHandler.getZoomPos();
-        double zpz = ClientEventHandler.getZoomPosZ();
+        double zp = ClientEventHandler.zoomPos;
+        double zpz = ClientEventHandler.zoomPosZ;
+        double swayX = ClientEventHandler.swayX;
+        double swayY = ClientEventHandler.swayY;
+        float moveRotZ = (float) ClientEventHandler.moveRotZ;
+        float movePosX = (float) ClientEventHandler.movePosX;
+        float movePosY = (float) ClientEventHandler.movePosY;
+        double mph = ClientEventHandler.movePosHorizon;
+        double vY = ClientEventHandler.velocityY;
+        double turnRotX = ClientEventHandler.turnRot[0];
+        double turnRotY = ClientEventHandler.turnRot[1];
+        double turnRotZ = ClientEventHandler.turnRot[2];
+        double fp = ClientEventHandler.firePos;
+        double fr = ClientEventHandler.fireRot;
 
         gun.setPosX(1.66f * (float) zp + (float) (0.2f * zpz));
         gun.setPosY(5.5f * (float) zp + (float) (0.8f * zpz));
@@ -54,9 +65,6 @@ public class JavelinItemModel extends GeoModel<JavelinItem> {
         javelin.setHidden(gun.getPosZ() > 15.85);
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosZ() > 15.85));
 
-        double fp = ClientEventHandler.getFirePos();
-        double fr = ClientEventHandler.getFireRot();
-
         shen.setPosY(0.28f * (float) (fp + 2 * fr));
         shen.setPosZ(3.8f * (float) (fp + 0.54f * fr));
         shen.setRotX(0.17f * (float) (0.18f * fp + fr));
@@ -65,17 +73,6 @@ public class JavelinItemModel extends GeoModel<JavelinItem> {
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         CoreGeoBone move = getAnimationProcessor().getBone("move");
-
-        double swayX = ClientEventHandler.getSwayX();
-        double swayY = ClientEventHandler.getSwayY();
-        float moveRotZ = (float) ClientEventHandler.getMoveRotZ();
-        float movePosX = (float) ClientEventHandler.getMovePosX();
-        float movePosY = (float) ClientEventHandler.getMovePosY();
-        double mph = ClientEventHandler.getMovePosHorizon();
-        double vY = ClientEventHandler.getVelocityY();
-        double turnRotX = ClientEventHandler.getTurnRotX();
-        double turnRotY = ClientEventHandler.getTurnRotY();
-        double turnRotZ = ClientEventHandler.getTurnRotZ();
 
         root.setPosX(movePosX);
         root.setPosY((float) swayY + movePosY);

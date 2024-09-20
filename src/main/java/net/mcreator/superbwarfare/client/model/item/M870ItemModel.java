@@ -41,9 +41,21 @@ public class M870ItemModel extends GeoModel<M870Item> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        double zt = ClientEventHandler.getZoomTime();
-        double zp = ClientEventHandler.getZoomPos();
-        double zpz = ClientEventHandler.getZoomPosZ();
+        double zt = ClientEventHandler.zoomTime;
+        double zp = ClientEventHandler.zoomPos;
+        double zpz = ClientEventHandler.zoomPosZ;
+        double swayX = ClientEventHandler.swayX;
+        double swayY = ClientEventHandler.swayY;
+        float moveRotZ = (float) ClientEventHandler.moveRotZ;
+        float movePosX = (float) ClientEventHandler.movePosX;
+        float movePosY = (float) ClientEventHandler.movePosY;
+        double mph = ClientEventHandler.movePosHorizon;
+        double vY = ClientEventHandler.velocityY;
+        double turnRotX = ClientEventHandler.turnRot[0];
+        double turnRotY = ClientEventHandler.turnRot[1];
+        double turnRotZ = ClientEventHandler.turnRot[2];
+        double fp = ClientEventHandler.firePos;
+        double fr = ClientEventHandler.fireRot;
 
         gun.setPosX(1.7f * (float) zp);
 
@@ -54,9 +66,6 @@ public class M870ItemModel extends GeoModel<M870Item> {
         gun.setRotZ((float) (0.02f * zpz));
 
         gun.setScaleZ(1f - (0.2f * (float) zp));
-
-        double fp = ClientEventHandler.getFirePos();
-        double fr = ClientEventHandler.getFireRot();
 
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
             shen.setPosY(0.2f * (float) (fp + 2 * fr));
@@ -74,17 +83,6 @@ public class M870ItemModel extends GeoModel<M870Item> {
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         CoreGeoBone move = getAnimationProcessor().getBone("move");
-
-        double swayX = ClientEventHandler.getSwayX();
-        double swayY = ClientEventHandler.getSwayY();
-        float moveRotZ = (float) ClientEventHandler.getMoveRotZ();
-        float movePosX = (float) ClientEventHandler.getMovePosX();
-        float movePosY = (float) ClientEventHandler.getMovePosY();
-        double mph = ClientEventHandler.getMovePosHorizon();
-        double vY = ClientEventHandler.getVelocityY();
-        double turnRotX = ClientEventHandler.getTurnRotX();
-        double turnRotY = ClientEventHandler.getTurnRotY();
-        double turnRotZ = ClientEventHandler.getTurnRotZ();
 
         root.setPosX(movePosX);
         root.setPosY((float) swayY + movePosY);

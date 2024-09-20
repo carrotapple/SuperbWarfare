@@ -46,8 +46,21 @@ public class RpgItemModel extends GeoModel<RpgItem> {
             hammer.setRotX(-90 * Mth.DEG_TO_RAD);
         }
 
-        double fp = ClientEventHandler.getFirePos();
-        double fr = ClientEventHandler.getFireRot();
+        double zt = ClientEventHandler.zoomTime;
+        double zp = ClientEventHandler.zoomPos;
+        double zpz = ClientEventHandler.zoomPosZ;
+        double swayX = ClientEventHandler.swayX;
+        double swayY = ClientEventHandler.swayY;
+        float moveRotZ = (float) ClientEventHandler.moveRotZ;
+        float movePosX = (float) ClientEventHandler.movePosX;
+        float movePosY = (float) ClientEventHandler.movePosY;
+        double mph = ClientEventHandler.movePosHorizon;
+        double vY = ClientEventHandler.velocityY;
+        double turnRotX = ClientEventHandler.turnRot[0];
+        double turnRotY = ClientEventHandler.turnRot[1];
+        double turnRotZ = ClientEventHandler.turnRot[2];
+        double fp = ClientEventHandler.firePos;
+        double fr = ClientEventHandler.fireRot;
 
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
             shen.setPosY(0.02f * (float) (fp + 2 * fr));
@@ -62,10 +75,6 @@ public class RpgItemModel extends GeoModel<RpgItem> {
         }
         shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
 
-        double zt = ClientEventHandler.getZoomTime();
-        double zp = ClientEventHandler.getZoomPos();
-        double zpz = ClientEventHandler.getZoomPosZ();
-
         gun.setPosX(0.91f * (float) zp);
         gun.setPosY(-0.04f * (float) zp - (float) (0.2f * zpz));
         gun.setPosZ(2f * (float) zp + (float) (0.15f * zpz));
@@ -74,17 +83,6 @@ public class RpgItemModel extends GeoModel<RpgItem> {
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         CoreGeoBone move = getAnimationProcessor().getBone("move");
-
-        double swayX = ClientEventHandler.getSwayX();
-        double swayY = ClientEventHandler.getSwayY();
-        float moveRotZ = (float) ClientEventHandler.getMoveRotZ();
-        float movePosX = (float) ClientEventHandler.getMovePosX();
-        float movePosY = (float) ClientEventHandler.getMovePosY();
-        double mph = ClientEventHandler.getMovePosHorizon();
-        double vY = ClientEventHandler.getVelocityY();
-        double turnRotX = ClientEventHandler.getTurnRotX();
-        double turnRotY = ClientEventHandler.getTurnRotY();
-        double turnRotZ = ClientEventHandler.getTurnRotZ();
 
         root.setPosX(movePosX);
         root.setPosY((float) swayY + movePosY);

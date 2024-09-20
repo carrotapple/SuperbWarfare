@@ -52,9 +52,23 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        double pp = ClientEventHandler.getPullPos();
-        double bp = ClientEventHandler.getBowPos();
-        double hp = ClientEventHandler.getHandPos();
+        double fp = ClientEventHandler.firePos;
+        double fr = ClientEventHandler.fireRot;
+        double pp = ClientEventHandler.pullPos;
+        double bp = ClientEventHandler.bowPos;
+        double hp = ClientEventHandler.handPos;
+        double zp = ClientEventHandler.zoomPos;
+        double zpz = ClientEventHandler.zoomPosZ;
+        double swayX = ClientEventHandler.swayX;
+        double swayY = ClientEventHandler.swayY;
+        float moveRotZ = (float) ClientEventHandler.moveRotZ;
+        float movePosX = (float) ClientEventHandler.movePosX;
+        float movePosY = (float) ClientEventHandler.movePosY;
+        double mph = ClientEventHandler.movePosHorizon;
+        double vY = ClientEventHandler.velocityY;
+        double turnRotX = ClientEventHandler.turnRot[0];
+        double turnRotY = ClientEventHandler.turnRot[1];
+        double turnRotZ = ClientEventHandler.turnRot[2];
 
         arrow.setPosZ(9f * (float) bp);
         rh.setPosZ(9f * (float) hp);
@@ -79,9 +93,6 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         deng3.setPosZ(0.05f * (float) bp);
         deng.setScaleZ(1f + (0.07f * (float) bp));
 
-        double zt = ClientEventHandler.getZoomTime();
-        double zp = ClientEventHandler.getZoomPos();
-        double zpz = ClientEventHandler.getZoomPosZ();
 
         lh.setRotX(0.2f * (float) zp);
         shen_pos.setPosX(-3.4f * (float) zp);
@@ -91,10 +102,6 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         shen.setRotZ(60 * Mth.DEG_TO_RAD * (float) zp + (float) (0.05f * zpz) - 0.2f);
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !((shen_pos.getPosX() < -0.7 && gun.getPosZ() < -2.6)));
-
-
-        double fp = ClientEventHandler.getFirePos();
-        double fr = ClientEventHandler.getFireRot();
 
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
             fire.setPosY(-0.01f * (float) (fp + 2 * fr));
@@ -110,17 +117,6 @@ public class BocekItemModel extends GeoModel<BocekItem> {
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         CoreGeoBone move = getAnimationProcessor().getBone("move");
-
-        double swayX = ClientEventHandler.getSwayX();
-        double swayY = ClientEventHandler.getSwayY();
-        float moveRotZ = (float) ClientEventHandler.getMoveRotZ();
-        float movePosX = (float) ClientEventHandler.getMovePosX();
-        float movePosY = (float) ClientEventHandler.getMovePosY();
-        double mph = ClientEventHandler.getMovePosHorizon();
-        double vY = ClientEventHandler.getVelocityY();
-        double turnRotX = ClientEventHandler.getTurnRotX();
-        double turnRotY = ClientEventHandler.getTurnRotY();
-        double turnRotZ = ClientEventHandler.getTurnRotZ();
 
         root.setPosX(movePosX);
         root.setPosY((float) swayY + movePosY);

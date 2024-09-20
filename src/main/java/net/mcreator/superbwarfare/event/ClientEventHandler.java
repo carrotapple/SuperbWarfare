@@ -35,41 +35,41 @@ import static net.mcreator.superbwarfare.entity.DroneEntity.ROT_Z;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
     public static double zoomTime = 0;
-    private static double zoomPos = 0;
-    private static double zoomPosZ = 0;
-    private static double swayTime = 0;
-    private static double swayX = 0;
-    private static double swayY = 0;
-    private static double moveXTime = 0;
-    private static double moveYTime = 0;
-    private static double movePosX = 0;
-    private static double movePosY = 0;
-    private static double moveRotZ = 0;
-    private static double movePosHorizon = 0;
-    private static double velocityY = 0;
+    public static double zoomPos = 0;
+    public static double zoomPosZ = 0;
+    public static double swayTime = 0;
+    public static double swayX = 0;
+    public static double swayY = 0;
+    public static double moveXTime = 0;
+    public static double moveYTime = 0;
+    public static double movePosX = 0;
+    public static double movePosY = 0;
+    public static double moveRotZ = 0;
+    public static double movePosHorizon = 0;
+    public static double velocityY = 0;
 
     public static double[] turnRot = {0, 0, 0};
     public static double[] cameraRot = {0, 0, 0};
 
-    private static double firePosTimer = 0;
-    private static double fireRotTimer = 0;
-    private static double firePos = 0;
-    private static double firePosZ = 0;
-    private static double fireRot = 0;
-    private static double droneCameraRotX = 0;
-    private static double droneCameraRotY = 0;
-    private static double droneRotX = 0;
-    private static double droneRotZ = 0;
-    private static double breathTime = 0;
+    public static double firePosTimer = 0;
+    public static double fireRotTimer = 0;
+    public static double firePos = 0;
+    public static double firePosZ = 0;
+    public static double fireRot = 0;
+    public static double droneCameraRotX = 0;
+    public static double droneCameraRotY = 0;
+    public static double droneRotX = 0;
+    public static double droneRotZ = 0;
+    public static double breathTime = 0;
 
     public static double fov = 0;
 
-    private static double pullTimer = 0;
-    private static double bowTimer = 0;
-    private static double handTimer = 0;
-    private static double pullPos = 0;
-    private static double bowPos = 0;
-    private static double handPos = 0;
+    public static double pullTimer = 0;
+    public static double bowTimer = 0;
+    public static double handTimer = 0;
+    public static double pullPos = 0;
+    public static double bowPos = 0;
+    public static double handPos = 0;
 
     @SubscribeEvent
     public static void handleWeaponTurn(RenderHandEvent event) {
@@ -81,24 +81,14 @@ public class ClientEventHandler {
         float yRotOffset = Mth.lerp(event.getPartialTick(), player.yBobO, player.yBob);
         float xRot = player.getViewXRot(event.getPartialTick()) - xRotOffset;
         float yRot = player.getViewYRot(event.getPartialTick()) - yRotOffset;
-        turnRot[0] = Mth.clamp(0.05 * xRot, -5, 5) * (1 - 0.75 * zoomTime);
-        turnRot[1] = Mth.clamp(0.05 * yRot, -10, 10) * (1 - 0.75 * zoomTime);
-        turnRot[2] = Mth.clamp(0.1 * yRot, -10, 10) * (1 - zoomTime);
+        if (player.getMainHandItem().is(ModTags.Items.GUN)) {
+            turnRot[0] = Mth.clamp(0.05 * xRot, -5, 5) * (1 - 0.75 * zoomTime);
+            turnRot[1] = Mth.clamp(0.05 * yRot, -10, 10) * (1 - 0.75 * zoomTime);
+            turnRot[2] = Mth.clamp(0.1 * yRot, -10, 10) * (1 - zoomTime);
+        }
 
         droneCameraRotX = Mth.clamp(0.25f * xRot, -10, 10);
         droneCameraRotY = Mth.clamp(0.25f * yRot, -20, 10);
-    }
-
-    public static double getTurnRotX() {
-        return turnRot[0];
-    }
-
-    public static double getTurnRotY() {
-        return turnRot[1];
-    }
-
-    public static double getTurnRotZ() {
-        return turnRot[2];
     }
 
     @SubscribeEvent
@@ -221,14 +211,6 @@ public class ClientEventHandler {
         }
     }
 
-    public static double getSwayX() {
-        return swayX;
-    }
-
-    public static double getSwayY() {
-        return swayY;
-    }
-
     private static void handleWeaponMove(LivingEntity entity) {
         if (entity.getMainHandItem().is(ModTags.Items.GUN)) {
             float times = 4.5f * Minecraft.getInstance().getDeltaFrameTime();
@@ -317,26 +299,6 @@ public class ClientEventHandler {
         }
     }
 
-    public static double getMoveRotZ() {
-        return moveRotZ;
-    }
-
-    public static double getMovePosX() {
-        return movePosX;
-    }
-
-    public static double getMovePosY() {
-        return movePosY;
-    }
-
-    public static double getMovePosHorizon() {
-        return movePosHorizon;
-    }
-
-    public static double getVelocityY() {
-        return velocityY;
-    }
-
     private static void handleWeaponZoom() {
         float times = 5 * Minecraft.getInstance().getDeltaFrameTime();
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
@@ -346,18 +308,6 @@ public class ClientEventHandler {
         }
         zoomPos = 0.5 * Math.cos(Math.PI * Math.pow(Math.pow(zoomTime, 2) - 1, 2)) + 0.5;
         zoomPosZ = -Math.pow(2 * zoomTime - 1, 2) + 1;
-    }
-
-    public static double getZoomTime() {
-        return zoomTime;
-    }
-
-    public static double getZoomPos() {
-        return zoomPos;
-    }
-
-    public static double getZoomPosZ() {
-        return zoomPosZ;
     }
 
     private static void handleWeaponFire(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
@@ -415,14 +365,6 @@ public class ClientEventHandler {
         }
     }
 
-    public static double getFirePos() {
-        return firePos;
-    }
-
-    public static double getFireRot() {
-        return fireRot;
-    }
-
     private static void handlePlayerBreath(LivingEntity entity) {
         float times = 4 * Minecraft.getInstance().getDeltaFrameTime();
 
@@ -474,18 +416,6 @@ public class ClientEventHandler {
         }
         pullPos = 0.5 * Math.cos(Math.PI * Math.pow(Math.pow(pullTimer, 2) - 1, 2)) + 0.5;
         bowPos = 0.5 * Math.cos(Math.PI * Math.pow(Math.pow(bowTimer, 2) - 1, 2)) + 0.5;
-    }
-
-    public static double getHandPos() {
-        return handPos;
-    }
-
-    public static double getPullPos() {
-        return pullPos;
-    }
-
-    public static double getBowPos() {
-        return bowPos;
     }
 
     @SubscribeEvent

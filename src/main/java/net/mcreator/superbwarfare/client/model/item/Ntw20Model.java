@@ -44,59 +44,51 @@ public class Ntw20Model extends GeoModel<Ntw20Item> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
+        double zt = ClientEventHandler.zoomTime;
+        double zp = ClientEventHandler.zoomPos;
+        double zpz = ClientEventHandler.zoomPosZ;
+        double swayX = ClientEventHandler.swayX;
+        double swayY = ClientEventHandler.swayY;
+        float moveRotZ = (float) ClientEventHandler.moveRotZ;
+        float movePosX = (float) ClientEventHandler.movePosX;
+        float movePosY = (float) ClientEventHandler.movePosY;
+        double mph = ClientEventHandler.movePosHorizon;
+        double vY = ClientEventHandler.velocityY;
+        double turnRotX = ClientEventHandler.turnRot[0];
+        double turnRotY = ClientEventHandler.turnRot[1];
+        double turnRotZ = ClientEventHandler.turnRot[2];
+        double fp = ClientEventHandler.firePos;
+        double fr = ClientEventHandler.fireRot;
+
         if (player.getPersistentData().getDouble("prone") > 0) {
             l.setRotX(-1.5f);
             r.setRotX(-1.5f);
         }
 
-        double fp = ClientEventHandler.getFirePos();
-        double fr = ClientEventHandler.getFireRot();
-
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
-            shen.setPosY(0.4f * (float) (fp + 2 * fr));
-            shen.setPosZ(3.6f * (float) (fp + 0.54f * fr));
+            shen.setPosY(0.1f * (float) (fp + 2 * fr));
+            shen.setPosZ(5.6f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.1f * (float) (fp + fr));
             shen.setRotZ(0f);
         } else {
-            shen.setPosY(1.2f * (float) (fp + 2 * fr));
-            shen.setPosZ(7.2f * (float) (fp + 0.54f * fr));
+            shen.setPosY(0.2f * (float) (fp + 2 * fr));
+            shen.setPosZ(4.2f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.1f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
         }
 
         shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
-
-        double zt = ClientEventHandler.getZoomTime();
-        double zp = ClientEventHandler.getZoomPos();
-        double zpz = ClientEventHandler.getZoomPosZ();
-
         gun.setPosX(4.54f * (float) zp);
-
         gun.setPosY(-0.45f * (float) zp - (float) (0.2f * zpz));
-
         gun.setPosZ(10.0f * (float) zp + (float) (0.3f * zpz));
-
         gun.setRotZ((float) (0.02f * zpz));
-
         gun.setScaleZ(1f - (0.8f * (float) zp));
-
         scope.setScaleZ(1f - (0.85f * (float) zp));
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 4.3));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         CoreGeoBone move = getAnimationProcessor().getBone("move");
-
-        double swayX = ClientEventHandler.getSwayX();
-        double swayY = ClientEventHandler.getSwayY();
-        float moveRotZ = (float) ClientEventHandler.getMoveRotZ();
-        float movePosX = (float) ClientEventHandler.getMovePosX();
-        float movePosY = (float) ClientEventHandler.getMovePosY();
-        double mph = ClientEventHandler.getMovePosHorizon();
-        double vY = ClientEventHandler.getVelocityY();
-        double turnRotX = ClientEventHandler.getTurnRotX();
-        double turnRotY = ClientEventHandler.getTurnRotY();
-        double turnRotZ = ClientEventHandler.getTurnRotZ();
 
         root.setPosX(movePosX);
         root.setPosY((float) swayY + movePosY);
