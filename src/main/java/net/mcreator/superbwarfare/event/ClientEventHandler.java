@@ -85,11 +85,9 @@ public class ClientEventHandler {
         float yRotOffset = Mth.lerp(event.getPartialTick(), player.yBobO, player.yBob);
         float xRot = player.getViewXRot(event.getPartialTick()) - xRotOffset;
         float yRot = player.getViewYRot(event.getPartialTick()) - yRotOffset;
-        if (player.getMainHandItem().is(ModTags.Items.GUN)) {
-            turnRot[0] = Mth.clamp(0.05 * xRot, -5, 5) * (1 - 0.75 * zoomTime);
-            turnRot[1] = Mth.clamp(0.05 * yRot, -10, 10) * (1 - 0.75 * zoomTime);
-            turnRot[2] = Mth.clamp(0.1 * yRot, -10, 10) * (1 - zoomTime);
-        }
+        turnRot[0] = Mth.clamp(0.05 * xRot, -5, 5) * (1 - 0.75 * zoomTime);
+        turnRot[1] = Mth.clamp(0.05 * yRot, -10, 10) * (1 - 0.75 * zoomTime);
+        turnRot[2] = Mth.clamp(0.1 * yRot, -10, 10) * (1 - zoomTime);
 
         droneCameraRotX = Mth.clamp(0.25f * xRot, -10, 10);
         droneCameraRotY = Mth.clamp(0.25f * yRot, -20, 10);
@@ -262,10 +260,10 @@ public class ClientEventHandler {
                 on_ground = 0.001;
             }
 
-            if (Minecraft.getInstance().options.keyUp.isDown() && firePosTimer == 0 && zoomTime == 0) {
-                moveRotZ = Mth.clamp(moveRotZ + 0.007 * times, 0, 0.14);
+            if (Minecraft.getInstance().options.keyUp.isDown() && firePosTimer == 0) {
+                moveRotZ = Mth.clamp(moveRotZ + 0.007 * times, 0, 0.14) * (1 - zoomTime);
             } else {
-                moveRotZ = Mth.clamp(moveRotZ - 0.007 * times, 0, 0.14);
+                moveRotZ = Mth.clamp(moveRotZ - 0.007 * times, 0, 0.14) * (1 - zoomTime);
             }
 
             if ((Minecraft.getInstance().options.keyLeft.isDown()
@@ -312,15 +310,16 @@ public class ClientEventHandler {
                 }
             }
 
-            if (movePosHorizon < 0) {
-                movePosHorizon += 2 * times * Math.pow(movePosHorizon, 2);
-            } else {
-                movePosHorizon -= 2 * times * Math.pow(movePosHorizon, 2);
-            }
             if (Minecraft.getInstance().options.keyRight.isDown()) {
                 movePosHorizon = Mth.clamp(movePosHorizon + Math.pow(Math.abs(movePosHorizon) + 0.05, 2) * 0.2 * times, -0.5, 0.5) * (1 - zoomTime);
             } else if (Minecraft.getInstance().options.keyLeft.isDown()) {
                 movePosHorizon = Mth.clamp(movePosHorizon - Math.pow(Math.abs(movePosHorizon) + 0.05, 2) * 0.2 * times, -0.5, 0.5) * (1 - zoomTime);
+            }
+
+            if (movePosHorizon < 0) {
+                movePosHorizon += 2 * times * Math.pow(movePosHorizon, 2) * (1 - zoomTime);
+            } else {
+                movePosHorizon -= 2 * times * Math.pow(movePosHorizon, 2) * (1 - zoomTime);
             }
 
             double velocity = entity.getDeltaMovement().y();
@@ -420,15 +419,9 @@ public class ClientEventHandler {
     public static void shake(double boneRotX, double boneRotY, double boneRotZ) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
-            if (player.getMainHandItem().is(ModTags.Items.GUN) || (player.getVehicle() != null && (player.getVehicle() instanceof ICannonEntity))) {
-                cameraRot[0] = boneRotX;
-                cameraRot[1] = boneRotY;
-                cameraRot[2] = boneRotZ;
-            } else {
-                cameraRot[0] = 0;
-                cameraRot[1] = 0;
-                cameraRot[2] = 0;
-            }
+            cameraRot[0] = boneRotX;
+            cameraRot[1] = boneRotY;
+            cameraRot[2] = boneRotZ;
         }
     }
 
@@ -436,12 +429,18 @@ public class ClientEventHandler {
         double yaw = event.getYaw();
         double pitch = event.getPitch();
         double roll = event.getRoll();
-        event.setPitch((float) (pitch + cameraRot[0] + 0.2 * turnRot[0] + 3 * velocityY));
-        event.setYaw((float) (yaw + cameraRot[1] + 0.8 * turnRot[1]));
-        event.setRoll((float) (roll + cameraRot[2] + 0.35 * turnRot[2]));
+        LocalPlayer player = Minecraft.getInstance().player;
+
+        if (player == null) return;
+
+        if (player.getMainHandItem().is(ModTags.Items.GUN) || (player.getVehicle() != null && (player.getVehicle() instanceof ICannonEntity))) {
+            event.setPitch((float) (pitch + cameraRot[0] + 0.2 * turnRot[0] + 3 * velocityY));
+            event.setYaw((float) (yaw + cameraRot[1] + 0.8 * turnRot[1]));
+            event.setRoll((float) (roll + cameraRot[2] + 0.35 * turnRot[2]));
+        }
     }
 
-    private static void handleBowPullAnimation(LivingEntity entity) {
+        private static void handleBowPullAnimation(LivingEntity entity) {
         float times = 4 * Minecraft.getInstance().getDeltaFrameTime();
 
         if ((entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).bowPull) {
