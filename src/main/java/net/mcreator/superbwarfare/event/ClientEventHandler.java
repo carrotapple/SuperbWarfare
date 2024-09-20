@@ -10,7 +10,6 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -62,6 +61,14 @@ public class ClientEventHandler {
     private static double droneCameraRotY = 0;
     private static double droneRotX = 0;
     private static double droneRotZ = 0;
+    private static double breathTime = 0;
+    private static double fov = 0;
+    private static double pullTimer = 0;
+    private static double bowTimer = 0;
+    private static double handTimer = 0;
+    private static double pullPos = 0;
+    private static double bowPos = 0;
+    private static double handPos = 0;
 
 
     @SubscribeEvent
@@ -70,7 +77,6 @@ public class ClientEventHandler {
         if (player == null) {
             return;
         }
-        var data = player.getPersistentData();
         float xRotOffset = Mth.lerp(event.getPartialTick(), player.xBobO, player.xBob);
         float yRotOffset = Mth.lerp(event.getPartialTick(), player.yBobO, player.yBob);
         float xRot = player.getViewXRot(event.getPartialTick()) - xRotOffset;
@@ -99,9 +105,7 @@ public class ClientEventHandler {
     public static void computeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
         ClientLevel level = Minecraft.getInstance().level;
         Entity entity = event.getCamera().getEntity();
-
         handlePlayerCameraShake(event);
-
         if (level != null && entity instanceof LivingEntity living
                 && living.getMainHandItem().is(ModItems.MONITOR.get())
                 && living.getMainHandItem().getOrCreateTag().getBoolean("Using")
@@ -124,7 +128,6 @@ public class ClientEventHandler {
     }
 
     private static void handleDroneCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
-        var data = entity.getPersistentData();
         ItemStack stack = entity.getMainHandItem();
         double pitch = event.getPitch();
         double roll = event.getRoll();
@@ -229,7 +232,6 @@ public class ClientEventHandler {
     private static void handleWeaponMove(LivingEntity entity) {
         if (entity.getMainHandItem().is(ModTags.Items.GUN)) {
             float times = 4.5f * Minecraft.getInstance().getDeltaFrameTime();
-            var data = entity.getPersistentData();
             double move_speed = (float) Mth.clamp(entity.getDeltaMovement().horizontalDistanceSqr(), 0, 0.02);
             double on_ground;
             if (entity.onGround()) {
@@ -428,9 +430,9 @@ public class ClientEventHandler {
         var data = entity.getPersistentData();
 
         if ((entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).breath) {
-            data.putDouble("BreathTime", Mth.clamp(data.getDouble("BreathTime") + 0.06 * times,0,1));
+            breathTime = Mth.clamp(breathTime + 0.06 * times,0,1);
         } else {
-            data.putDouble("BreathTime", Mth.clamp(data.getDouble("BreathTime") - 0.06 * times,0,1));
+            breathTime = Mth.clamp(breathTime - 0.06 * times,0,1);
         }
     }
 
@@ -459,24 +461,34 @@ public class ClientEventHandler {
 
     private static void handleBowPullAnimation(LivingEntity entity) {
         float times = 4 * Minecraft.getInstance().getDeltaFrameTime();
-        CompoundTag persistentData = entity.getPersistentData();
 
         if ((entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).bowPull) {
-            persistentData.putDouble("pulltime", Math.min(persistentData.getDouble("pulltime") + 0.018 * times, 1));
-            persistentData.putDouble("bowtime", Math.min(persistentData.getDouble("bowtime") + 0.018 * times, 1));
-            persistentData.putDouble("handtime", Math.min(persistentData.getDouble("handtime") + 0.018 * times, 1));
-            persistentData.putDouble("handpos", (0.5 * Math.cos(Math.PI * Math.pow(Math.pow(persistentData.getDouble("handtime"), 2) - 1, 2)) + 0.5));
+            pullTimer = Math.min(pullTimer + 0.018 * times, 1);
+            bowTimer = Math.min(bowTimer + 0.018 * times, 1);
+            handTimer = Math.min(handTimer + 0.018 * times, 1);
+            handPos = 0.5 * Math.cos(Math.PI * Math.pow(Math.pow(handTimer, 2) - 1, 2)) + 0.5;
         } else {
-            persistentData.putDouble("pulltime", Math.max(persistentData.getDouble("pulltime") - 0.009 * times, 0));
-            persistentData.putDouble("bowtime", Math.max(persistentData.getDouble("bowtime") - 1 * times, 0));
-            persistentData.putDouble("handtime", Math.max(persistentData.getDouble("handtime") - 0.04 * times, 0));
-            if (persistentData.getDouble("handtime") > 0 && persistentData.getDouble("handtime") < 0.5) {
-                persistentData.putDouble("handpos", (0.5 * Math.cos(Math.PI * Math.pow(Math.pow(persistentData.getDouble("handtime"), 2) - 1, 2)) + 0.5));
+            pullTimer = Math.max(pullTimer - 0.009 * times, 0);
+            bowTimer = Math.max(bowTimer - 1 * times, 0);
+            handTimer = Math.max(handTimer - 0.04 * times, 0);
+            if (handTimer > 0 && handTimer < 0.5) {
+                handPos = 0.5 * Math.cos(Math.PI * Math.pow(Math.pow(handTimer, 2) - 1, 2)) + 0.5;
             }
         }
+        pullPos = 0.5 * Math.cos(Math.PI * Math.pow(Math.pow(pullTimer, 2) - 1, 2)) + 0.5;
+        bowPos = 0.5 * Math.cos(Math.PI * Math.pow(Math.pow(bowTimer, 2) - 1, 2)) + 0.5;
+    }
 
-        persistentData.putDouble("pullpos", (0.5 * Math.cos(Math.PI * Math.pow(Math.pow(persistentData.getDouble("pulltime"), 2) - 1, 2)) + 0.5));
-        persistentData.putDouble("bowpos", (0.5 * Math.cos(Math.PI * Math.pow(Math.pow(persistentData.getDouble("bowtime"), 2) - 1, 2)) + 0.5));
+    public static double getHandPos() {
+        return handPos;
+    }
+
+    public static double getPullPos() {
+        return pullPos;
+    }
+
+    public static double getBowPos() {
+        return bowPos;
     }
 
     @SubscribeEvent
@@ -496,13 +508,17 @@ public class ClientEventHandler {
             double p = zoomPos;
             double zoom = stack.getOrCreateTag().getDouble("zoom") + stack.getOrCreateTag().getDouble("custom_zoom");
 
-            event.setFOV(event.getFOV() / (1.0 + p * (zoom - 1)) * (1 - 0.4 * player.getPersistentData().getDouble("BreathTime")));
-            player.getPersistentData().putDouble("fov", event.getFOV());
+            event.setFOV(event.getFOV() / (1.0 + p * (zoom - 1)) * (1 - 0.4 * breathTime));
+            fov = event.getFOV();
             return;
         }
         if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS && !stack.is(ModTags.Items.GUN)) {
             event.setFOV(event.getFOV() / 5);
         }
+    }
+
+    public static double getFov() {
+        return fov;
     }
 
     @SubscribeEvent

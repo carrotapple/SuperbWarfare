@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.mixins;
 
 import net.mcreator.superbwarfare.entity.ICannonEntity;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModMobEffects;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.minecraft.client.CameraType;
@@ -51,7 +52,7 @@ public class MouseHandlerMixin {
 
         boolean flag = false;
         float sens = 0.2f;
-        float fov = (float) player.getPersistentData().getDouble("fov");
+        double fov = ClientEventHandler.getFov();
         float customSens = (float) stack.getOrCreateTag().getInt("sensitivity");
 
         float originalFov = mc.options.fov().get();

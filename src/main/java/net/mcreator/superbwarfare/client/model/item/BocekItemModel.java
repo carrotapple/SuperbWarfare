@@ -52,9 +52,9 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        double pp = player.getPersistentData().getDouble("pullpos");
-        double bp = player.getPersistentData().getDouble("bowpos");
-        double hp = player.getPersistentData().getDouble("handpos");
+        double pp = ClientEventHandler.getPullPos();
+        double bp = ClientEventHandler.getBowPos();
+        double hp = ClientEventHandler.getHandPos();
 
         arrow.setPosZ(9f * (float) bp);
         rh.setPosZ(9f * (float) hp);
