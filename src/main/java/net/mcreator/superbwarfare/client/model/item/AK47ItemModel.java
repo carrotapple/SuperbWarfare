@@ -15,7 +15,6 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
-
 public class AK47ItemModel extends GeoModel<AK47Item> {
 
     @Override
@@ -45,7 +44,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        double zt = ClientEventHandler.getZoomTime();
+        double zt = ClientEventHandler.zoomTime;
         double zp = ClientEventHandler.getZoomPos();
         double zpz = ClientEventHandler.getZoomPosZ();
 
@@ -55,9 +54,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         gun.setScaleZ(1f - (0.2f * (float) zp));
         scope.setScaleZ(1f - (0.4f * (float) zp));
 
-
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.8));
-
 
         double fp = ClientEventHandler.getFirePos();
         double fr = ClientEventHandler.getFireRot();
@@ -74,7 +71,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
             shen.setRotX(0.07f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
         }
-        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
+        shen.setPosX(0.5f * (float) fr * (float) ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
 
         shuan.setPosZ(2.4f * (float) fp);
 
@@ -121,6 +118,6 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
             camera.setRotY(numR * camera.getRotY());
             camera.setRotZ(numR * camera.getRotZ());
         }
-        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
+        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

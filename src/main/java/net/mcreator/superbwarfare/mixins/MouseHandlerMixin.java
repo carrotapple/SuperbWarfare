@@ -52,7 +52,7 @@ public class MouseHandlerMixin {
 
         boolean flag = false;
         float sens = 0.2f;
-        double fov = ClientEventHandler.getFov();
+        double fov = ClientEventHandler.fov;
         float customSens = (float) stack.getOrCreateTag().getInt("sensitivity");
 
         float originalFov = mc.options.fov().get();
