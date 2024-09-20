@@ -8,6 +8,7 @@ import net.mcreator.superbwarfare.init.ModMobEffects;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.ShootMessage;
+import net.mcreator.superbwarfare.tools.MillisTimer;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -73,7 +74,7 @@ public class ClientEventHandler {
     public static double bowPos = 0;
     public static double handPos = 0;
 
-    public static double ClientTimer = 0;
+    public static MillisTimer clientTimer = new MillisTimer();
 
     @SubscribeEvent
     public static void handleWeaponTurn(RenderHandEvent event) {
@@ -109,8 +110,7 @@ public class ClientEventHandler {
         if (notInGame()) return;
         ClientLevel level = Minecraft.getInstance().level;
         Player player = Minecraft.getInstance().player;
-        if (player != null && level != null && player.getMainHandItem().is(ModTags.Items.NORMAL_GUN)) {
-
+        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS && player != null && level != null && player.getMainHandItem().is(ModTags.Items.NORMAL_GUN)) {
             ItemStack stack = player.getMainHandItem();
 
             double customRpm = 0;
@@ -120,15 +120,28 @@ public class ClientEventHandler {
             }
 
             double rpm = stack.getOrCreateTag().getDouble("rpm") + customRpm;
+            if (rpm == 0) {
+                rpm = 600;
+            }
+            double rps = rpm / 60;
 
-            ClientTimer = Mth.clamp(ClientTimer - 25 * Minecraft.getInstance().getDeltaFrameTime(), 0, Double.POSITIVE_INFINITY);
+            // cooldown in ms
+            double cooldown = 1000 / rps;
 
-            if (ClientTimer == 0 && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS) {
-                ModUtils.PACKET_HANDLER.sendToServer(new ShootMessage(0));
-                ClientTimer = 60 / (rpm == 0 ? 600 : rpm) * 1000;
+            if (!clientTimer.started()) {
+                clientTimer.start();
+                // 首发瞬间发射
+                clientTimer.setProgress((long) (cooldown + 1));
             }
 
-            player.displayClientMessage(Component.literal(new java.text.DecimalFormat("####").format(ClientTimer)), true);
+            if (clientTimer.getProgress() >= cooldown) {
+                ModUtils.PACKET_HANDLER.sendToServer(new ShootMessage(0));
+                clientTimer.setProgress((long) (clientTimer.getProgress() - cooldown));
+            }
+
+            player.displayClientMessage(Component.literal(new java.text.DecimalFormat("####").format(clientTimer.getProgress())), true);
+        } else {
+            clientTimer.stop();
         }
     }
 
