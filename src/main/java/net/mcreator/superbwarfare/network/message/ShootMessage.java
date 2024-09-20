@@ -122,17 +122,26 @@ public class ShootMessage {
                     stack.getOrCreateTag().putDouble("chamber_rot", 20);
                 }
 
+                int actionInterval = 0;
+
+                if (stack.getItem() == ModItems.MARLIN.get() || stack.getItem() == ModItems.M_870.get()) {
+                    actionInterval = stack.getOrCreateTag().getInt("fire_interval");
+                }
+
+                int customCoolDown = 0;
+
                 if (stack.getItem() == ModItems.MARLIN.get()) {
                     if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
                         stack.getOrCreateTag().putDouble("marlin_animation_time", 15);
                         stack.getOrCreateTag().putBoolean("fastfiring", false);
+                        customCoolDown = 5;
                     } else {
                         stack.getOrCreateTag().putDouble("marlin_animation_time", 10);
                         stack.getOrCreateTag().putBoolean("fastfiring", true);
                     }
                 }
 
-                int cooldown = burstCooldown;
+                int cooldown = burstCooldown + actionInterval + customCoolDown;
                 player.getCooldowns().addCooldown(stack.getItem(), cooldown);
 
                 for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {

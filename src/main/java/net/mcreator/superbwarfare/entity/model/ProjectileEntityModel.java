@@ -24,7 +24,7 @@ public class ProjectileEntityModel extends GeoModel<ProjectileEntity> {
             return new ResourceLocation(ModUtils.MODID, "geo/projectile_entity2.geo.json");
         }
 
-        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS
+        if ((GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS && !player.getMainHandItem().is(ModItems.MINIGUN.get()))
                 || player.getMainHandItem().is(ModItems.GLOCK_17.get())
                 || player.getMainHandItem().is(ModItems.GLOCK_18.get())
                 || player.getMainHandItem().is(ModItems.BOCEK.get())) {

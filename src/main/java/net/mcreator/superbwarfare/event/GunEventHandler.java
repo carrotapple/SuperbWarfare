@@ -211,7 +211,7 @@ public class GunEventHandler {
 
         if (tag.getDouble("overheat") == 0
                 && (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0
-                && !(player.getCooldowns().isOnCooldown(stack.getItem())) && tag.getDouble("minigun_rotation") >= 10 && player.getPersistentData().getBoolean("firing")) {
+                && !(player.getCooldowns().isOnCooldown(stack.getItem())) && tag.getDouble("minigun_rotation") >= 10 && player.getPersistentData().getBoolean("holdFire")) {
             tag.putDouble("heat", (tag.getDouble("heat") + 0.5));
             if (tag.getDouble("heat") >= 50.5) {
                 tag.putDouble("overheat", 40);
