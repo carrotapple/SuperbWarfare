@@ -83,6 +83,10 @@ public class FireMessage {
                 handleBowShoot(player);
             }
 
+            if (player.getMainHandItem().getItem() == ModItems.DEVOTION.get()) {
+                player.getMainHandItem().getOrCreateTag().putDouble("customRpm", 0);
+            }
+
             if (player.getMainHandItem().getItem() == ModItems.JAVELIN.get()) {
                 var handItem = player.getMainHandItem();
                 var tag = handItem.getOrCreateTag();

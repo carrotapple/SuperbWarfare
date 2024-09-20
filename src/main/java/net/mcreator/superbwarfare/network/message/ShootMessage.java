@@ -8,6 +8,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -105,6 +106,10 @@ public class ShootMessage {
 
                 if (stack.getItem() == ModItems.M_60.get()) {
                     stack.getOrCreateTag().putBoolean("bullet_chain", true);
+                }
+
+                if (stack.getItem() == ModItems.DEVOTION.get()) {
+                    stack.getOrCreateTag().putInt("customRpm", Mth.clamp(stack.getOrCreateTag().getInt("customRpm") + 20, 0, 500));
                 }
 
                 if (stack.getItem() == ModItems.ABEKIRI.get()) {

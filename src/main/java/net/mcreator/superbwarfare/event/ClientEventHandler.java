@@ -114,8 +114,8 @@ public class ClientEventHandler {
 
             double customRpm = 0;
 
-            if (stack.getItem() == ModItems.MARLIN.get() && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
-                customRpm = -40;
+            if (stack.getItem() == ModItems.DEVOTION.get()) {
+                customRpm = stack.getOrCreateTag().getInt("customRpm");
             }
 
             double rpm = stack.getOrCreateTag().getDouble("rpm") + customRpm;
