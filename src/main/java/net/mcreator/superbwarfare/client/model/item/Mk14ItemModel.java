@@ -15,6 +15,8 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
+import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
+
 public class Mk14ItemModel extends GeoModel<Mk14Item> {
     @Override
     public ResourceLocation getAnimationResource(Mk14Item animatable) {
@@ -46,7 +48,7 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        if (player.getPersistentData().getDouble("prone") > 0) {
+        if (isProne(player)) {
             l.setRotX(-1.5f);
             r.setRotX(-1.5f);
         }

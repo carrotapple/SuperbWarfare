@@ -90,8 +90,8 @@ public class M98bItemModel extends GeoModel<M98bItem> {
         root.setPosX(movePosX);
         root.setPosY((float) swayY + movePosY);
         root.setRotX((float) swayX);
-        root.setRotY(movePosX);
-        root.setRotZ(movePosX + moveRotZ);
+        root.setRotY(0.2f * movePosX);
+        root.setRotZ(0.2f * movePosX + moveRotZ);
 
         move.setPosX(9.3f * (float) mph);
         move.setPosY(-2f * (float) vY);

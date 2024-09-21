@@ -15,6 +15,8 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
+import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
+
 public class DevotionItemModel extends GeoModel<DevotionItem> {
     @Override
     public ResourceLocation getAnimationResource(DevotionItem animatable) {
@@ -627,7 +629,7 @@ public class DevotionItemModel extends GeoModel<DevotionItem> {
         move.setRotY(Mth.DEG_TO_RAD * (float) turnRotY);
         move.setRotZ(2.7f * (float) mph + Mth.DEG_TO_RAD * (float) turnRotZ);
 
-        if (player.getPersistentData().getDouble("prone") > 0) {
+        if (isProne(player)) {
             l.setRotX(1.5f);
             r.setRotX(1.5f);
         }

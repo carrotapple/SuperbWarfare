@@ -3,6 +3,7 @@ package net.mcreator.superbwarfare.client.screens;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.minecraft.client.CameraType;
@@ -38,10 +39,7 @@ public class CrossHairOverlay {
             return;
         }
         ItemStack stack = player.getMainHandItem();
-        boolean zoom = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS;
-        double normalSpread = stack.getOrCreateTag().getDouble("spread");
-        double zoomSpread = stack.getOrCreateTag().getDouble("zoomSpread");
-        double spread = (zoom ? zoomSpread : normalSpread);
+        double spread = ClientEventHandler.gunSpread;
 
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
@@ -51,11 +49,11 @@ public class CrossHairOverlay {
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
         if (shouldRenderCrossHair(player) || stack.is(ModItems.MINIGUN.get()) || (stack.is(ModItems.BOCEK.get()) && stack.getOrCreateTag().getBoolean("HoloHidden"))) {
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/point.png"), w / 2f - 7.5f, h / 2f - 8, 0, 0, 16, 16, 16, 16);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexheng.png"), (float) (w / 2f - 9.5f - 2.8f * spread), h / 2f - 8, 0, 0, 16, 16, 16, 16);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexheng.png"), (float) (w / 2f - 6.5f + 2.8f * spread), h / 2f - 8, 0, 0, 16, 16, 16, 16);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexshu.png"), w / 2f - 7.5f, (float) (h / 2f - 7 + 2.8f * spread), 0, 0, 16, 16, 16, 16);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexshu.png"), w / 2f - 7.5f, (float) (h / 2f - 10 - 2.8f * spread), 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/point.png"), w / 2f - 7.5f, h / 2f - 7.5f, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexheng.png"), (float) (w / 2f - 13.5f - 2.8f * spread), h / 2f - 7.5f, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexheng.png"), (float) (w / 2f - 2.5f + 2.8f * spread), h / 2f - 7.5f, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexshu.png"), w / 2f - 7.5f, (float) (h / 2f - 2.5f + 2.8f * spread), 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexshu.png"), w / 2f - 7.5f, (float) (h / 2f - 13.5f - 2.8f * spread), 0, 0, 16, 16, 16, 16);
         }
 
         float ww = w / 2f - 7.5f + (float) (2 * (Math.random() - 0.5f));

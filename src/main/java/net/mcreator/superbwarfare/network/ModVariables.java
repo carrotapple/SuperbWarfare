@@ -275,7 +275,6 @@ public class ModVariables {
         public boolean tacticalSprint = false;
         public int tacticalSprintTime = 600;
         public boolean tacticalSprintExhaustion = false;
-
         public boolean breath = false;
         public int breathTime = 160;
         public boolean breathExhaustion = false;

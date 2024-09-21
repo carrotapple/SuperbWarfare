@@ -15,6 +15,8 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
+import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
+
 public class Ntw20Model extends GeoModel<Ntw20Item> {
     @Override
     public ResourceLocation getAnimationResource(Ntw20Item animatable) {
@@ -60,7 +62,7 @@ public class Ntw20Model extends GeoModel<Ntw20Item> {
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
-        if (player.getPersistentData().getDouble("prone") > 0) {
+        if (isProne(player)) {
             l.setRotX(-1.5f);
             r.setRotX(-1.5f);
         }

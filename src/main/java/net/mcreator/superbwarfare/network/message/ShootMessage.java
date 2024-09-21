@@ -22,31 +22,31 @@ import static net.mcreator.superbwarfare.event.GunEventHandler.gunShoot;
 import static net.mcreator.superbwarfare.event.GunEventHandler.playGunSounds;
 
 public class ShootMessage {
-    private final int type;
+    private final double spared;
 
-    public ShootMessage(int type) {
-        this.type = type;
+    public ShootMessage(double spared) {
+        this.spared = spared;
     }
 
     public static ShootMessage decode(FriendlyByteBuf buffer) {
-        return new ShootMessage(buffer.readInt());
+        return new ShootMessage(buffer.readDouble());
     }
 
     public static void encode(ShootMessage message, FriendlyByteBuf buffer) {
-        buffer.writeInt(message.type);
+        buffer.writeDouble(message.spared);
     }
 
     public static void handler(ShootMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
             if (context.getSender() != null) {
-                pressAction(context.getSender(), message.type);
+                pressAction(context.getSender(), message.spared);
             }
         });
         context.setPacketHandled(true);
     }
 
-    public static void pressAction(Player player, int type) {
+    public static void pressAction(Player player, double spared) {
         Level level = player.level();
 
         if (!level.isLoaded(player.blockPosition())) {
@@ -55,7 +55,6 @@ public class ShootMessage {
 
         ItemStack stack = player.getMainHandItem();
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
-
             double mode = stack.getOrCreateTag().getInt("fire_mode");
             int interval = stack.getOrCreateTag().getInt("fire_interval");
 
@@ -150,7 +149,7 @@ public class ShootMessage {
                 player.getCooldowns().addCooldown(stack.getItem(), cooldown);
 
                 for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {
-                    gunShoot(player);
+                    gunShoot(player, spared);
                 }
                 playGunSounds(player);
 

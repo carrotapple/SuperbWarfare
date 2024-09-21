@@ -27,12 +27,14 @@ import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
 import static net.mcreator.superbwarfare.entity.DroneEntity.ROT_X;
 import static net.mcreator.superbwarfare.entity.DroneEntity.ROT_Z;
+import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
@@ -72,6 +74,8 @@ public class ClientEventHandler {
     public static double pullPos = 0;
     public static double bowPos = 0;
     public static double handPos = 0;
+    public static double gunSpread = 0;
+    public static double fireSpread = 0;
 
     public static MillisTimer clientTimer = new MillisTimer();
 
@@ -102,13 +106,63 @@ public class ClientEventHandler {
         return !mc.isWindowActive();
     }
 
+    private static boolean isMove() {
+        return Minecraft.getInstance().options.keyLeft.isDown()
+                || Minecraft.getInstance().options.keyRight.isDown()
+                || Minecraft.getInstance().options.keyUp.isDown()
+                || Minecraft.getInstance().options.keyDown.isDown();
+    }
+
     @SubscribeEvent
-    public static void handleWeaponFire(RenderHandEvent event) {
-        if (notInGame()) return;
+    public static void handleWeaponFire(TickEvent.RenderTickEvent event) {
         ClientLevel level = Minecraft.getInstance().level;
         Player player = Minecraft.getInstance().player;
-        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS && player != null && level != null && player.getMainHandItem().is(ModTags.Items.NORMAL_GUN)) {
-            ItemStack stack = player.getMainHandItem();
+        if (notInGame()) return;
+        if (player == null) return;
+        if (level == null) return;
+
+        ItemStack stack = player.getMainHandItem();
+
+        //精准度
+        float times = Minecraft.getInstance().getDeltaFrameTime();
+
+        double basicDev = stack.getOrCreateTag().getDouble("spread");
+
+        double walk = isMove() ? 0.75 * basicDev : 0;
+
+        double sprint = player.isSprinting() ? 1.25 * basicDev : 0;
+
+        double crouching = player.isCrouching() ? -0.15 * basicDev : 0;
+
+        double prone = isProne(player) ? -0.3 * basicDev : 0;
+
+        double jump = player.onGround() ? 0 * basicDev : 1.5 * basicDev;
+
+        double ride = player.onGround() ? -0.25 * basicDev : 0;
+
+        double zoomSpread;
+
+        if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
+            zoomSpread = 1 - (0.995 * zoomTime);
+        } else if (stack.is(ModTags.Items.SHOTGUN) || stack.is(ModItems.MINIGUN.get())) {
+            zoomSpread = 1 - (0.25 * zoomTime);
+        }
+        else {
+            zoomSpread = 1 - (0.9 * zoomTime);
+        }
+
+        double spread = stack.is(ModTags.Items.SHOTGUN) || stack.is(ModItems.MINIGUN.get()) ? 1.2 * zoomSpread * (basicDev + 0.2 * (walk + sprint + crouching + prone + jump + ride) + fireSpread) : zoomSpread * (0.4 * basicDev + walk + sprint + crouching + prone + jump + ride + 0.6 * fireSpread);
+
+        if (gunSpread < spread) {
+            gunSpread += 0.07 * Math.pow(spread - gunSpread, 2) * times;
+        } else {
+            gunSpread -= 0.07 * Math.pow(spread - gunSpread, 2) * times;
+        }
+
+//        player.displayClientMessage(Component.literal(new java.text.DecimalFormat("####").format(gunSpread)), true);
+
+        // 开火部分
+        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS && player.getMainHandItem().is(ModTags.Items.NORMAL_GUN)) {
 
             double customRpm = 0;
 
@@ -132,7 +186,7 @@ public class ClientEventHandler {
             }
 
             if (clientTimer.getProgress() >= cooldown) {
-                ModUtils.PACKET_HANDLER.sendToServer(new ShootMessage(0));
+                ModUtils.PACKET_HANDLER.sendToServer(new ShootMessage(spread));
                 clientTimer.setProgress((long) (clientTimer.getProgress() - cooldown));
             }
 
@@ -231,9 +285,9 @@ public class ClientEventHandler {
             double pose;
             var data = entity.getPersistentData();
 
-            if (entity.isShiftKeyDown() && entity.getBbHeight() >= 1 && data.getDouble("prone") == 0) {
+            if (entity.isShiftKeyDown() && entity.getBbHeight() >= 1 && isProne((Player) entity)) {
                 pose = 0.85;
-            } else if (data.getDouble("prone") > 0) {
+            } else if (isProne((Player) entity)) {
                 pose = entity.getMainHandItem().getOrCreateTag().getDouble("bipod") == 1 ? 0 : 0.25f;
             } else {
                 pose = 1;
@@ -266,10 +320,7 @@ public class ClientEventHandler {
                 moveRotZ = Mth.clamp(moveRotZ - 0.007 * times, 0, 0.14) * (1 - zoomTime);
             }
 
-            if ((Minecraft.getInstance().options.keyLeft.isDown()
-                    || Minecraft.getInstance().options.keyRight.isDown()
-                    || Minecraft.getInstance().options.keyUp.isDown()
-                    || Minecraft.getInstance().options.keyDown.isDown()) && firePosTimer == 0) {
+            if (isMove() && firePosTimer == 0) {
                 if (moveYTime < 1.25) {
                     moveYTime += 1.2 * on_ground * times * move_speed;
                 } else {
@@ -317,10 +368,12 @@ public class ClientEventHandler {
             }
 
             if (movePosHorizon < 0) {
-                movePosHorizon += 2 * times * Math.pow(movePosHorizon, 2) * (1 - zoomTime);
+                movePosHorizon += 4 * times * Math.pow(movePosHorizon, 2);
             } else {
-                movePosHorizon -= 2 * times * Math.pow(movePosHorizon, 2) * (1 - zoomTime);
+                movePosHorizon -= 4 * times * Math.pow(movePosHorizon, 2);
             }
+
+            movePosHorizon *= (1 - zoomTime);
 
             double velocity = entity.getDeltaMovement().y();
 
@@ -358,7 +411,15 @@ public class ClientEventHandler {
             firePosTimer = 0.001;
             fireRotTimer = 0.001;
             firePosZ = 0.1;
+            fireSpread += 10;
         }
+
+        fireSpread = Mth.clamp(fireSpread - 0.2 * (Math.pow(fireSpread, 2) * times), 0 ,100);
+
+//        Player player = Minecraft.getInstance().player;
+//        if (player != null) {
+//            player.displayClientMessage(Component.literal(new java.text.DecimalFormat("####").format(fireSpread)), true);
+//        }
 
         firePosZ = Mth.clamp(firePosZ - 0.01 * times, 0, 0.6);
 
@@ -396,6 +457,9 @@ public class ClientEventHandler {
             fireRotTimer = 0;
             fireRot = 0;
         }
+
+
+
     }
 
     private static void handlePlayerBreath(LivingEntity entity) {

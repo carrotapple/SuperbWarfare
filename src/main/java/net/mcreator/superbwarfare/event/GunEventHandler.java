@@ -124,7 +124,7 @@ public class GunEventHandler {
             stack.getOrCreateTag().putBoolean("shoot", true);
 
             for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {
-                gunShoot(player);
+                gunShoot(player, 2 * stack.getOrCreateTag().getDouble("spread"));
             }
 
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
@@ -230,7 +230,7 @@ public class GunEventHandler {
         }
     }
 
-    public static void gunShoot(Player player) {
+    public static void gunShoot(Player player, double spared) {
         ItemStack heldItem = player.getMainHandItem();
 
         if (!player.level().isClientSide()) {
@@ -238,8 +238,6 @@ public class GunEventHandler {
             float damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("sentinelChargeDamage")) * (float) heldItem.getOrCreateTag().getDouble("levelDamageMultiple");
 
             boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
-            double spread = heldItem.getOrCreateTag().getDouble("spread");
-            double zoomSpread = heldItem.getOrCreateTag().getDouble("zoomSpread");
 
             ProjectileEntity projectile = new ProjectileEntity(player.level())
                     .shooter(player)
@@ -285,7 +283,7 @@ public class GunEventHandler {
 
             projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
             projectile.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.0005f, player.getLookAngle().z, 1 * (float) heldItem.getOrCreateTag().getDouble("velocity"),
-                    (float) (zoom ? zoomSpread : spread));
+                    (float) spared);
             player.level().addFreshEntity(projectile);
         }
     }

@@ -77,7 +77,6 @@ public class PlayerEventHandler {
         if (event.phase == TickEvent.Phase.END) {
             if (stack.is(ModTags.Items.GUN)) {
                 handleWeaponSway(player);
-                handlePlayerProne(player);
                 handlePlayerSprint(player);
                 handleWeaponLevel(player);
                 handleAmmoCount(player);
@@ -85,6 +84,7 @@ public class PlayerEventHandler {
                 handleChangeFireRate(player);
                 handleBocekPulling(player);
                 handleGunRecoil(player);
+                isProne(player);
             }
 
             handleGround(player);
@@ -95,14 +95,22 @@ public class PlayerEventHandler {
         }
     }
 
+    public static boolean isProne(Player player) {
+        Level level = player.level();
+
+        if (player.getBbHeight() <= 1) return true;
+
+        return player.isCrouching() && level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 0.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude() && !level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 1.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude();
+    }
+
     private static void handleWeaponSway(Player player) {
         if (player.getMainHandItem().is(ModTags.Items.GUN)) {
             float pose;
             var data = player.getPersistentData();
 
-            if (player.isCrouching() && player.getBbHeight() >= 1 && data.getDouble("prone") == 0) {
+            if (player.isCrouching() && player.getBbHeight() >= 1 && !isProne(player)) {
                 pose = 0.85f;
-            } else if (player.getPersistentData().getDouble("prone") > 0) {
+            } else if (isProne(player)) {
                 pose = player.getMainHandItem().getOrCreateTag().getDouble("bipod") == 1 ? 0 : 0.25f;
             } else {
                 pose = 1;
@@ -228,26 +236,6 @@ public class PlayerEventHandler {
                 capability.cannonRecoil = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).cannonRecoil - 1;
                 capability.syncPlayerVariables(player);
             });
-        }
-    }
-
-    /**
-     * 判断玩家是否趴下
-     */
-    private static void handlePlayerProne(Player player) {
-        Level level = player.level();
-
-        if (player.getBbHeight() <= 1) {
-            player.getPersistentData().putDouble("prone", 3);
-        }
-
-        if (player.isCrouching() && level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 0.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude()
-                && !level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 1.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude()) {
-            player.getPersistentData().putDouble("prone", 3);
-        }
-
-        if (player.getPersistentData().getDouble("prone") > 0) {
-            player.getPersistentData().putDouble("prone", (player.getPersistentData().getDouble("prone") - 1));
         }
     }
 
@@ -436,10 +424,10 @@ public class PlayerEventHandler {
                   计算后坐力
                  */
                 float rx, ry;
-                if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && player.getPersistentData().getDouble("prone") == 0) {
+                if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && !isProne(player)) {
                     rx = 0.7f;
                     ry = 0.8f;
-                } else if (player.getPersistentData().getDouble("prone") > 0) {
+                } else if (isProne(player)) {
                     if (tag.getDouble("bipod") == 1) {
                         rx = 0.05f;
                         ry = 0.1f;
