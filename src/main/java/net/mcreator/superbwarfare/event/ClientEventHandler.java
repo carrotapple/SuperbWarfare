@@ -107,10 +107,13 @@ public class ClientEventHandler {
     }
 
     private static boolean isMove() {
-        return Minecraft.getInstance().options.keyLeft.isDown()
-                || Minecraft.getInstance().options.keyRight.isDown()
-                || Minecraft.getInstance().options.keyUp.isDown()
-                || Minecraft.getInstance().options.keyDown.isDown();
+        Player player = Minecraft.getInstance().player;
+            return Minecraft.getInstance().options.keyLeft.isDown()
+                    || Minecraft.getInstance().options.keyRight.isDown()
+                    || Minecraft.getInstance().options.keyUp.isDown()
+                    || Minecraft.getInstance().options.keyDown.isDown()
+                    || (player != null && player.isSprinting());
+
     }
 
     @SubscribeEvent
@@ -128,15 +131,15 @@ public class ClientEventHandler {
 
         double basicDev = stack.getOrCreateTag().getDouble("spread");
 
-        double walk = isMove() ? 0.75 * basicDev : 0;
+        double walk = isMove() ? 0.15 * basicDev : 0;
 
-        double sprint = player.isSprinting() ? 1.25 * basicDev : 0;
+        double sprint = player.isSprinting() ? 0.25 * basicDev : 0;
 
         double crouching = player.isCrouching() ? -0.15 * basicDev : 0;
 
         double prone = isProne(player) ? -0.3 * basicDev : 0;
 
-        double jump = player.onGround() ? 0 * basicDev : 1.5 * basicDev;
+        double jump = player.onGround() ? 0 * basicDev : 0.35 * basicDev;
 
         double ride = player.onGround() ? -0.25 * basicDev : 0;
 
@@ -151,7 +154,7 @@ public class ClientEventHandler {
             zoomSpread = 1 - (0.9 * zoomTime);
         }
 
-        double spread = stack.is(ModTags.Items.SHOTGUN) || stack.is(ModItems.MINIGUN.get()) ? 1.2 * zoomSpread * (basicDev + 0.2 * (walk + sprint + crouching + prone + jump + ride) + fireSpread) : zoomSpread * (0.4 * basicDev + walk + sprint + crouching + prone + jump + ride + 0.6 * fireSpread);
+        double spread = stack.is(ModTags.Items.SHOTGUN) || stack.is(ModItems.MINIGUN.get()) ? 1.2 * zoomSpread * (basicDev + 0.2 * (walk + sprint + crouching + prone + jump + ride) + fireSpread) : zoomSpread * (0.7 * basicDev + walk + sprint + crouching + prone + jump + ride + 0.8 * fireSpread);
 
         if (gunSpread < spread) {
             gunSpread += 0.07 * Math.pow(spread - gunSpread, 2) * times;
@@ -283,7 +286,6 @@ public class ClientEventHandler {
         if (entity.getMainHandItem().is(ModTags.Items.GUN)) {
             float times = 2 * Minecraft.getInstance().getDeltaFrameTime();
             double pose;
-            var data = entity.getPersistentData();
 
             if (entity.isShiftKeyDown() && entity.getBbHeight() >= 1 && isProne((Player) entity)) {
                 pose = 0.85;
@@ -306,7 +308,7 @@ public class ClientEventHandler {
             double on_ground;
             if (entity.onGround()) {
                 if (entity.isSprinting()) {
-                    on_ground = 1.0;
+                    on_ground = 1.35;
                 } else {
                     on_ground = 2.0;
                 }
@@ -411,16 +413,10 @@ public class ClientEventHandler {
             firePosTimer = 0.001;
             fireRotTimer = 0.001;
             firePosZ = 0.1;
-            fireSpread += 10;
+            fireSpread += 1.5;
         }
 
-        fireSpread = Mth.clamp(fireSpread - 0.2 * (Math.pow(fireSpread, 2) * times), 0 ,100);
-
-//        Player player = Minecraft.getInstance().player;
-//        if (player != null) {
-//            player.displayClientMessage(Component.literal(new java.text.DecimalFormat("####").format(fireSpread)), true);
-//        }
-
+        fireSpread = Mth.clamp(fireSpread - 0.1 * (Math.pow(fireSpread, 2) * times), 0 ,100);
         firePosZ = Mth.clamp(firePosZ - 0.01 * times, 0, 0.6);
 
         if (0 < firePosTimer) {

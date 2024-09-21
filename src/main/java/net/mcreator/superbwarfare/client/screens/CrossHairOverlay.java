@@ -39,7 +39,7 @@ public class CrossHairOverlay {
             return;
         }
         ItemStack stack = player.getMainHandItem();
-        double spread = ClientEventHandler.gunSpread;
+        double spread = ClientEventHandler.gunSpread + 3 * ClientEventHandler.firePos;
 
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
@@ -48,31 +48,36 @@ public class CrossHairOverlay {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
+        float moveX = (float) (-6 * ClientEventHandler.turnRot[1] - (player.isSprinting() ? 10 : 6) * ClientEventHandler.movePosX);
+        float moveY = (float) (-6 * ClientEventHandler.turnRot[0] + 6 * (float)ClientEventHandler.velocityY - (player.isSprinting() ? 10 : 6) * ClientEventHandler.movePosY - 2 * ClientEventHandler.firePos);
+
         if (shouldRenderCrossHair(player) || stack.is(ModItems.MINIGUN.get()) || (stack.is(ModItems.BOCEK.get()) && stack.getOrCreateTag().getBoolean("HoloHidden"))) {
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/point.png"), w / 2f - 7.5f, h / 2f - 7.5f, 0, 0, 16, 16, 16, 16);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexheng.png"), (float) (w / 2f - 13.5f - 2.8f * spread), h / 2f - 7.5f, 0, 0, 16, 16, 16, 16);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexheng.png"), (float) (w / 2f - 2.5f + 2.8f * spread), h / 2f - 7.5f, 0, 0, 16, 16, 16, 16);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexshu.png"), w / 2f - 7.5f, (float) (h / 2f - 2.5f + 2.8f * spread), 0, 0, 16, 16, 16, 16);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexshu.png"), w / 2f - 7.5f, (float) (h / 2f - 13.5f - 2.8f * spread), 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/point.png"), w / 2f - 7.5f + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
+            if (!player.isSprinting()) {
+                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexheng.png"), (float) (w / 2f - 13.5f - 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
+                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexheng.png"), (float) (w / 2f - 2.5f + 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
+                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexshu.png"), w / 2f - 7.5f + moveX, (float) (h / 2f - 2.5f + 2.8f * spread) + moveY, 0, 0, 16, 16, 16, 16);
+                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexshu.png"), w / 2f - 7.5f + moveX, (float) (h / 2f - 13.5f - 2.8f * spread) + moveY, 0, 0, 16, 16, 16, 16);
+            }
         }
 
         float ww = w / 2f - 7.5f + (float) (2 * (Math.random() - 0.5f));
-        float hh = h / 2f - 8 + (float) (2 * (Math.random() - 0.5f));
+        float hh = h / 2f - 7.5f + (float) (2 * (Math.random() - 0.5f));
         float m = (40 - KILL_INDICATOR * 5) / 5.5f;
 
         if (HIT_INDICATOR > 0) {
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/hit_marker.png"), ww, hh, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/hit_marker.png"), ww + moveX, hh + moveY, 0, 0, 16, 16, 16, 16);
         }
 
         if (HEAD_INDICATOR > 0) {
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/headshotmark.png"), ww, hh, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/headshotmark.png"), ww + moveX, hh + moveY, 0, 0, 16, 16, 16, 16);
         }
 
         if (KILL_INDICATOR > 0) {
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/kill_mark1.png"), w / 2f - 7.5f - 2 + m, h / 2f - 8 - 2 + m, 0, 0, 16, 16, 16, 16);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/kill_mark2.png"), w / 2f - 7.5f + 2 - m, h / 2f - 8 - 2 + m, 0, 0, 16, 16, 16, 16);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/kill_mark3.png"), w / 2f - 7.5f - 2 + m, h / 2f - 8 + 2 - m, 0, 0, 16, 16, 16, 16);
-            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/kill_mark4.png"), w / 2f - 7.5f + 2 - m, h / 2f - 8 + 2 - m, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/kill_mark1.png"), w / 2f - 7.5f - 2 + m + moveX, h / 2f - 7.5f - 2 + m + moveY, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/kill_mark2.png"), w / 2f - 7.5f + 2 - m + moveX, h / 2f - 7.5f - 2 + m + moveY, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/kill_mark3.png"), w / 2f - 7.5f - 2 + m + moveX, h / 2f - 7.5f + 2 - m + moveY, 0, 0, 16, 16, 16, 16);
+            preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/kill_mark4.png"), w / 2f - 7.5f + 2 - m + moveX, h / 2f - 7.5f + 2 - m + moveY, 0, 0, 16, 16, 16, 16);
         }
 
         RenderSystem.depthMask(true);
