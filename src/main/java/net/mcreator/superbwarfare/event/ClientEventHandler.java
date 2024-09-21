@@ -106,14 +106,13 @@ public class ClientEventHandler {
         return !mc.isWindowActive();
     }
 
-    private static boolean isMove() {
+    private static boolean isMoving() {
         Player player = Minecraft.getInstance().player;
-            return Minecraft.getInstance().options.keyLeft.isDown()
-                    || Minecraft.getInstance().options.keyRight.isDown()
-                    || Minecraft.getInstance().options.keyUp.isDown()
-                    || Minecraft.getInstance().options.keyDown.isDown()
-                    || (player != null && player.isSprinting());
-
+        return Minecraft.getInstance().options.keyLeft.isDown()
+                || Minecraft.getInstance().options.keyRight.isDown()
+                || Minecraft.getInstance().options.keyUp.isDown()
+                || Minecraft.getInstance().options.keyDown.isDown()
+                || (player != null && player.isSprinting());
     }
 
     @SubscribeEvent
@@ -126,21 +125,15 @@ public class ClientEventHandler {
 
         ItemStack stack = player.getMainHandItem();
 
-        //精准度
+        // 精准度
         float times = Minecraft.getInstance().getDeltaFrameTime();
 
         double basicDev = stack.getOrCreateTag().getDouble("spread");
-
-        double walk = isMove() ? 0.15 * basicDev : 0;
-
+        double walk = isMoving() ? 0.15 * basicDev : 0;
         double sprint = player.isSprinting() ? 0.25 * basicDev : 0;
-
         double crouching = player.isCrouching() ? -0.15 * basicDev : 0;
-
         double prone = isProne(player) ? -0.3 * basicDev : 0;
-
         double jump = player.onGround() ? 0 * basicDev : 0.35 * basicDev;
-
         double ride = player.onGround() ? -0.25 * basicDev : 0;
 
         double zoomSpread;
@@ -149,8 +142,7 @@ public class ClientEventHandler {
             zoomSpread = 1 - (0.995 * zoomTime);
         } else if (stack.is(ModTags.Items.SHOTGUN) || stack.is(ModItems.MINIGUN.get())) {
             zoomSpread = 1 - (0.25 * zoomTime);
-        }
-        else {
+        } else {
             zoomSpread = 1 - (0.9 * zoomTime);
         }
 
@@ -161,8 +153,6 @@ public class ClientEventHandler {
         } else {
             gunSpread -= 0.07 * Math.pow(spread - gunSpread, 2) * times;
         }
-
-//        player.displayClientMessage(Component.literal(new java.text.DecimalFormat("####").format(gunSpread)), true);
 
         // 开火部分
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS && player.getMainHandItem().is(ModTags.Items.NORMAL_GUN)) {
@@ -193,7 +183,6 @@ public class ClientEventHandler {
                 clientTimer.setProgress((long) (clientTimer.getProgress() - cooldown));
             }
 
-//            player.displayClientMessage(Component.literal(new java.text.DecimalFormat("####").format(clientTimer.getProgress())), true);
         } else {
             clientTimer.stop();
         }
@@ -235,7 +224,6 @@ public class ClientEventHandler {
                 .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
 
         if (drone != null) {
-
             if (droneRotZ > drone.getEntityData().get(ROT_Z)) {
                 droneRotZ = Mth.clamp(droneRotZ - 0.3 * Math.pow(drone.getEntityData().get(ROT_Z) - droneRotZ, 2), drone.getEntityData().get(ROT_Z), Double.POSITIVE_INFINITY);
             } else {
@@ -283,14 +271,14 @@ public class ClientEventHandler {
     }
 
     private static void handleWeaponSway(LivingEntity entity) {
-        if (entity.getMainHandItem().is(ModTags.Items.GUN)) {
+        if (entity.getMainHandItem().is(ModTags.Items.GUN) && entity instanceof Player player) {
             float times = 2 * Minecraft.getInstance().getDeltaFrameTime();
             double pose;
 
-            if (entity.isShiftKeyDown() && entity.getBbHeight() >= 1 && isProne((Player) entity)) {
+            if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && isProne(player)) {
                 pose = 0.85;
-            } else if (isProne((Player) entity)) {
-                pose = entity.getMainHandItem().getOrCreateTag().getDouble("bipod") == 1 ? 0 : 0.25f;
+            } else if (isProne(player)) {
+                pose = player.getMainHandItem().getOrCreateTag().getDouble("bipod") == 1 ? 0 : 0.25f;
             } else {
                 pose = 1;
             }
@@ -304,16 +292,16 @@ public class ClientEventHandler {
     private static void handleWeaponMove(LivingEntity entity) {
         if (entity.getMainHandItem().is(ModTags.Items.GUN)) {
             float times = 4.5f * Minecraft.getInstance().getDeltaFrameTime();
-            double move_speed = (float) Mth.clamp(entity.getDeltaMovement().horizontalDistanceSqr(), 0, 0.02);
-            double on_ground;
+            double moveSpeed = (float) Mth.clamp(entity.getDeltaMovement().horizontalDistanceSqr(), 0, 0.02);
+            double onGround;
             if (entity.onGround()) {
                 if (entity.isSprinting()) {
-                    on_ground = 1.35;
+                    onGround = 1.35;
                 } else {
-                    on_ground = 2.0;
+                    onGround = 2.0;
                 }
             } else {
-                on_ground = 0.001;
+                onGround = 0.001;
             }
 
             if (Minecraft.getInstance().options.keyUp.isDown() && firePosTimer == 0) {
@@ -322,15 +310,15 @@ public class ClientEventHandler {
                 moveRotZ = Mth.clamp(moveRotZ - 0.007 * times, 0, 0.14) * (1 - zoomTime);
             }
 
-            if (isMove() && firePosTimer == 0) {
+            if (isMoving() && firePosTimer == 0) {
                 if (moveYTime < 1.25) {
-                    moveYTime += 1.2 * on_ground * times * move_speed;
+                    moveYTime += 1.2 * onGround * times * moveSpeed;
                 } else {
                     moveYTime = 0.25;
                 }
 
                 if (moveXTime < 2) {
-                    moveXTime += 1.2 * on_ground * times * move_speed;
+                    moveXTime += 1.2 * onGround * times * moveSpeed;
                 } else {
                     moveXTime = 0;
                 }
@@ -416,7 +404,7 @@ public class ClientEventHandler {
             fireSpread += 1.5;
         }
 
-        fireSpread = Mth.clamp(fireSpread - 0.1 * (Math.pow(fireSpread, 2) * times), 0 ,100);
+        fireSpread = Mth.clamp(fireSpread - 0.1 * (Math.pow(fireSpread, 2) * times), 0, 100);
         firePosZ = Mth.clamp(firePosZ - 0.01 * times, 0, 0.6);
 
         if (0 < firePosTimer) {
@@ -453,8 +441,6 @@ public class ClientEventHandler {
             fireRotTimer = 0;
             fireRot = 0;
         }
-
-
 
     }
 
@@ -500,7 +486,7 @@ public class ClientEventHandler {
         }
     }
 
-        private static void handleBowPullAnimation(LivingEntity entity) {
+    private static void handleBowPullAnimation(LivingEntity entity) {
         float times = 4 * Minecraft.getInstance().getDeltaFrameTime();
 
         if ((entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).bowPull) {

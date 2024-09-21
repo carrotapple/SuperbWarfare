@@ -22,10 +22,10 @@ import static net.mcreator.superbwarfare.event.GunEventHandler.gunShoot;
 import static net.mcreator.superbwarfare.event.GunEventHandler.playGunSounds;
 
 public class ShootMessage {
-    private final double spared;
+    private final double spread;
 
-    public ShootMessage(double spared) {
-        this.spared = spared;
+    public ShootMessage(double spread) {
+        this.spread = spread;
     }
 
     public static ShootMessage decode(FriendlyByteBuf buffer) {
@@ -33,14 +33,14 @@ public class ShootMessage {
     }
 
     public static void encode(ShootMessage message, FriendlyByteBuf buffer) {
-        buffer.writeDouble(message.spared);
+        buffer.writeDouble(message.spread);
     }
 
     public static void handler(ShootMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
             if (context.getSender() != null) {
-                pressAction(context.getSender(), message.spared);
+                pressAction(context.getSender(), message.spread);
             }
         });
         context.setPacketHandled(true);

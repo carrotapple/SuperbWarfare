@@ -97,16 +97,15 @@ public class PlayerEventHandler {
 
     public static boolean isProne(Player player) {
         Level level = player.level();
-
         if (player.getBbHeight() <= 1) return true;
 
-        return player.isCrouching() && level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 0.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude() && !level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 1.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude();
+        return player.isCrouching() && level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 0.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude()
+                && !level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 1.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude();
     }
 
     private static void handleWeaponSway(Player player) {
         if (player.getMainHandItem().is(ModTags.Items.GUN)) {
             float pose;
-            var data = player.getPersistentData();
 
             if (player.isCrouching() && player.getBbHeight() >= 1 && !isProne(player)) {
                 pose = 0.85f;
