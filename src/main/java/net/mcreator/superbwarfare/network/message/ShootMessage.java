@@ -154,7 +154,6 @@ public class ShootMessage {
                 playGunSounds(player);
 
                 stack.getOrCreateTag().putBoolean("shoot", true);
-
             }
         }
     }
