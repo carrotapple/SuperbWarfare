@@ -129,7 +129,7 @@ public class ClientEventHandler {
         float times = Minecraft.getInstance().getDeltaFrameTime();
 
         double basicDev = stack.getOrCreateTag().getDouble("spread");
-        double walk = isMoving() ? 0.15 * basicDev : 0;
+        double walk = isMoving() ? 0.3 * basicDev : 0;
         double sprint = player.isSprinting() ? 0.25 * basicDev : 0;
         double crouching = player.isCrouching() ? -0.15 * basicDev : 0;
         double prone = isProne(player) ? -0.3 * basicDev : 0;
@@ -401,11 +401,11 @@ public class ClientEventHandler {
             firePosTimer = 0.001;
             fireRotTimer = 0.001;
             firePosZ = 0.1;
-            fireSpread += 1.5;
+            fireSpread += 0.2;
         }
 
         fireSpread = Mth.clamp(fireSpread - 0.1 * (Math.pow(fireSpread, 2) * times), 0, 100);
-        firePosZ = Mth.clamp(firePosZ - 0.01 * times, 0, 0.6);
+        firePosZ = Mth.clamp(firePosZ - 0.02 * times, 0, 0.6);
 
         if (0 < firePosTimer) {
             firePosTimer += 0.25 * (1.1 - firePosTimer) * times;
