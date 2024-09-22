@@ -46,6 +46,13 @@ public class PlayerEventHandler {
             return;
         }
 
+        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+            capability.zoom = false;
+            capability.tacticalSprintExhaustion = false;
+            capability.tacticalSprintTime = 600;
+            capability.syncPlayerVariables(player);
+        });
+
         if (!ModVariables.MapVariables.get(player.level()).pvpMode) {
             return;
         }
@@ -55,13 +62,6 @@ public class PlayerEventHandler {
                 stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag"));
             }
         }
-
-        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            capability.zoom = false;
-            capability.tacticalSprintExhaustion = false;
-            capability.tacticalSprintTime = 600;
-            capability.syncPlayerVariables(player);
-        });
     }
 
     @SubscribeEvent

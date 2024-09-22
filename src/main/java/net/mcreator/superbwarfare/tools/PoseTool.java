@@ -2,7 +2,6 @@ package net.mcreator.superbwarfare.tools;
 
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,11 +17,7 @@ public class PoseTool {
                 || stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
             return HumanoidModel.ArmPose.CROSSBOW_CHARGE;
         } else if (entityLiving.isSprinting() && entityLiving.onGround() && entityLiving.getPersistentData().getDouble("noRun") == 0) {
-            if (entityLiving.hasEffect(MobEffects.MOVEMENT_SPEED)) {
-                return HumanoidModel.ArmPose.THROW_SPEAR;
-            } else {
-                return HumanoidModel.ArmPose.CROSSBOW_CHARGE;
-            }
+            return HumanoidModel.ArmPose.CROSSBOW_CHARGE;
         } else {
             return HumanoidModel.ArmPose.BOW_AND_ARROW;
         }
