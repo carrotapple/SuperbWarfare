@@ -5,6 +5,7 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
+import net.mcreator.superbwarfare.network.message.ReloadMessage;
 import net.mcreator.superbwarfare.network.message.SimulationDistanceMessage;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.core.BlockPos;
@@ -76,6 +77,7 @@ public class PlayerEventHandler {
 
         if (event.phase == TickEvent.Phase.END) {
             if (stack.is(ModTags.Items.GUN)) {
+                handleWeaponAutoReload(player);
                 handleWeaponSway(player);
                 handlePlayerSprint(player);
                 handleWeaponLevel(player);
@@ -101,6 +103,41 @@ public class PlayerEventHandler {
 
         return player.isCrouching() && level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 0.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude()
                 && !level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 1.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude();
+    }
+
+    private static void handleWeaponAutoReload(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
+// TODO 添加是否开启自动换弹选项
+        if (!player.isSpectator()
+                && stack.is(ModTags.Items.GUN)
+                && !stack.getOrCreateTag().getBoolean("sentinel_is_charging")
+                && !(player.getCooldowns().isOnCooldown(stack.getItem()))
+                && stack.getOrCreateTag().getInt("gun_reloading_time") == 0
+                && stack.getOrCreateTag().getInt("ammo") == 0
+        ) {
+            CompoundTag tag = stack.getOrCreateTag();
+
+            // 检查备弹
+            if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
+                return;
+            } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && capability.sniperAmmo == 0) {
+                return;
+            } else if ((stack.is(ModTags.Items.USE_HANDGUN_AMMO) || stack.is(ModTags.Items.SMG)) && capability.handgunAmmo == 0) {
+                return;
+            } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && capability.rifleAmmo == 0) {
+                return;
+            } else if (stack.getItem() == ModItems.TASER.get() && tag.getInt("max_ammo") == 0) {
+                return;
+            } else if (stack.getItem() == ModItems.M_79.get() && tag.getInt("max_ammo") == 0) {
+                return;
+            } else if (stack.getItem() == ModItems.RPG.get() && tag.getInt("max_ammo") == 0) {
+                return;
+            } else if (stack.getItem() == ModItems.JAVELIN.get() && tag.getInt("max_ammo") == 0) {
+                return;
+            }
+            ModUtils.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
+        }
     }
 
     private static void handleWeaponSway(Player player) {
