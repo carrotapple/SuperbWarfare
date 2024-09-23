@@ -280,7 +280,7 @@ public class PlayerEventHandler {
      * 判断玩家是否在奔跑
      */
     private static void handlePlayerSprint(Player player) {
-        if (player.getMainHandItem().getOrCreateTag().getInt("flash_time") > 0) {
+        if (player.getMainHandItem().getOrCreateTag().getInt("flash_time") > 0 || player.getMainHandItem().getOrCreateTag().getInt("fire_animation") > 0) {
             player.getPersistentData().putDouble("noRun", 20);
         }
 
@@ -383,8 +383,10 @@ public class PlayerEventHandler {
 
                 player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                     capability.bowPull = true;
+                    capability.tacticalSprint = false;
                     capability.syncPlayerVariables(player);
                 });
+                player.setSprinting(false);
             }
             if (tag.getDouble("power") == 1) {
                 if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
@@ -400,6 +402,14 @@ public class PlayerEventHandler {
                 capability.bowPull = false;
                 capability.syncPlayerVariables(player);
             });
+        }
+
+        if (tag.getDouble("power") > 0) {
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.tacticalSprint = false;
+                capability.syncPlayerVariables(player);
+            });
+            player.setSprinting(false);
         }
     }
 

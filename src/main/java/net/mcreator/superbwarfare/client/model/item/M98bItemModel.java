@@ -35,6 +35,9 @@ public class M98bItemModel extends GeoModel<M98bItem> {
     public void setCustomAnimations(M98bItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
+        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+        CoreGeoBone main = getAnimationProcessor().getBone("0");
+        CoreGeoBone scope = getAnimationProcessor().getBone("scope2");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -68,14 +71,12 @@ public class M98bItemModel extends GeoModel<M98bItem> {
             shen.setRotX(0.15f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
         }
+        scope.setPosZ(75.2f * (float) (fp + 0.54f * fr));
         shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
 
         gun.setPosX(2.245f * (float) zp);
-
         gun.setPosY(0.3f * (float) zp - (float) (0.2f * zpz));
-
         gun.setPosZ(4.2f * (float) zp + (float) (0.3f * zpz));
-
         gun.setRotZ((float) (0.02f * zpz));
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.8));
@@ -98,10 +99,6 @@ public class M98bItemModel extends GeoModel<M98bItem> {
         move.setRotX(Mth.DEG_TO_RAD * (float) turnRotX - 0.15f * (float) vY);
         move.setRotY(Mth.DEG_TO_RAD * (float) turnRotY);
         move.setRotZ(2.7f * (float) mph + Mth.DEG_TO_RAD * (float) turnRotZ);
-
-        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
-        CoreGeoBone main = getAnimationProcessor().getBone("0");
-        CoreGeoBone scope = getAnimationProcessor().getBone("scope2");
 
         float numR = (float) (1 - 0.88 * zt);
         float numP = (float) (1 - 0.68 * zt);

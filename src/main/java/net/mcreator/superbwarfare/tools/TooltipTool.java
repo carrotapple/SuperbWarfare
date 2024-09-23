@@ -40,6 +40,7 @@ public class TooltipTool {
         addLevelTips(tooltip, stack);
         addBypassTips(tooltip, stack);
         addPerkTips(tooltip, stack);
+        addRpmTips(tooltip, stack);
     }
 
     public static void addShotgunTips(List<Component> tooltip, ItemStack stack, int count) {
@@ -55,6 +56,13 @@ public class TooltipTool {
         addLevelTips(tooltip, stack);
         addBypassTips(tooltip, stack);
         addPerkTips(tooltip, stack);
+        addRpmTips(tooltip, stack);
+    }
+
+    private static void addRpmTips(List<Component> tooltip, ItemStack stack) {
+        tooltip.add(Component.translatable("des.superbwarfare.tips.rpm").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getDouble(stack, "rpm", 0) + ItemNBTTool.getDouble(stack, "customRpm", 0))).withStyle(ChatFormatting.GREEN)));
     }
 
     private static void addLevelTips(List<Component> tooltip, ItemStack stack) {
@@ -186,6 +194,7 @@ public class TooltipTool {
         addLevelTips(tooltip, stack);
         addBypassTips(tooltip, stack);
         addPerkTips(tooltip, stack);
+        addRpmTips(tooltip, stack);
 
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                 e -> tooltip.add(Component.literal(e.getEnergyStored() + " / " + e.getMaxEnergyStored() + " FE").withStyle(ChatFormatting.GRAY))
@@ -202,7 +211,11 @@ public class TooltipTool {
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.#").format(damage)).withStyle(ChatFormatting.GREEN)));
 
-        addLevelTips(tooltip, stack);
+        int upgradePoint = Mth.floor(ItemNBTTool.getDouble(stack, "UpgradePoint", 0));
+
+        tooltip.add(Component.translatable("des.superbwarfare.tips.upgradepoint").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.literal(String.valueOf(upgradePoint)).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.BOLD)));
         addPerkTips(tooltip, stack);
 
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(

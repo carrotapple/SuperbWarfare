@@ -256,7 +256,6 @@ public class GunEventHandler {
         //启动换弹
         if (tag.getBoolean("start_reload")) {
             MinecraftForge.EVENT_BUS.post(new ReloadEvent.Pre(player, stack));
-
             if (stack.is(ModTags.Items.OPEN_BOLT)) {
                 if (tag.getInt("ammo") == 0) {
                     tag.putInt("gun_reloading_time", (int) tag.getDouble("empty_reload_time") + 2);
@@ -271,6 +270,9 @@ public class GunEventHandler {
                 tag.putInt("gun_reloading_time", (int) tag.getDouble("empty_reload_time") + 2);
                 stack.getOrCreateTag().putBoolean("is_empty_reloading", true);
                 playGunEmptyReloadSounds(player);
+            }
+            if (stack.getItem() == ModItems.DEVOTION.get()) {
+                tag.putInt("customRpm", 0);
             }
             tag.putBoolean("start_reload", false);
         }

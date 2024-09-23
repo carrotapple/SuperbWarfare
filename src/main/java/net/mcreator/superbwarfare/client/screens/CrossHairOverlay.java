@@ -12,6 +12,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -28,6 +29,7 @@ public class CrossHairOverlay {
     public static int HIT_INDICATOR = 0;
     public static int HEAD_INDICATOR = 0;
     public static int KILL_INDICATOR = 0;
+    private static float scopeScale = 1f;
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
@@ -39,6 +41,9 @@ public class CrossHairOverlay {
         }
         ItemStack stack = player.getMainHandItem();
         double spread = ClientEventHandler.gunSpread + 3 * ClientEventHandler.firePos;
+        float deltaFrame = Minecraft.getInstance().getDeltaFrameTime();
+        float moveX = (float) (-6 * ClientEventHandler.turnRot[1] - (player.isSprinting() ? 10 : 6) * ClientEventHandler.movePosX);
+        float moveY = (float) (-6 * ClientEventHandler.turnRot[0] + 6 * (float)ClientEventHandler.velocityY - (player.isSprinting() ? 10 : 6) * ClientEventHandler.movePosY - 2 * ClientEventHandler.firePos);
 
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
@@ -47,16 +52,42 @@ public class CrossHairOverlay {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
-        float moveX = (float) (-6 * ClientEventHandler.turnRot[1] - (player.isSprinting() ? 10 : 6) * ClientEventHandler.movePosX);
-        float moveY = (float) (-6 * ClientEventHandler.turnRot[0] + 6 * (float)ClientEventHandler.velocityY - (player.isSprinting() ? 10 : 6) * ClientEventHandler.movePosY - 2 * ClientEventHandler.firePos);
+        scopeScale = (float) Mth.lerp(0.5F * deltaFrame, scopeScale, 1 + 1.5f * spread);
+        float f = (float)Math.min(w, h);
+        float f1 = Math.min((float)w / f, (float)h / f) * 0.012f * scopeScale;
+        float i = Mth.floor(f * f1);
+        float j = Mth.floor(f * f1);
+        float k = ((w - i) / 2) + moveX;
+        float l = ((h - j) / 2) + moveY;
 
-        if (shouldRenderCrossHair(player) || stack.is(ModItems.MINIGUN.get()) || (stack.is(ModItems.BOCEK.get()) && stack.getOrCreateTag().getBoolean("HoloHidden"))) {
+        if (shouldRenderCrossHair(player) || stack.is(ModItems.MINIGUN.get())) {
             preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/point.png"), w / 2f - 7.5f + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
             if (!player.isSprinting() || player.getPersistentData().getDouble("noRun") > 0) {
-                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexheng.png"), (float) (w / 2f - 13.5f - 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
-                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexheng.png"), (float) (w / 2f - 2.5f + 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
-                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexshu.png"), w / 2f - 7.5f + moveX, (float) (h / 2f - 2.5f + 2.8f * spread) + moveY, 0, 0, 16, 16, 16, 16);
-                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexshu.png"), w / 2f - 7.5f + moveX, (float) (h / 2f - 13.5f - 2.8f * spread) + moveY, 0, 0, 16, 16, 16, 16);
+                if (stack.is(ModTags.Items.SHOTGUN)) {
+                    preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/shotgun_hud.png"), k, l, 0, 0.0F, i, j, i, j);
+                } else {
+                    preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexheng.png"), (float) (w / 2f - 13.5f - 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
+                    preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexheng.png"), (float) (w / 2f - 2.5f + 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
+                    preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexshu.png"), w / 2f - 7.5f + moveX, (float) (h / 2f - 2.5f + 2.8f * spread) + moveY, 0, 0, 16, 16, 16, 16);
+                    preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexshu.png"), w / 2f - 7.5f + moveX, (float) (h / 2f - 13.5f - 2.8f * spread) + moveY, 0, 0, 16, 16, 16, 16);
+                }
+            }
+        }
+
+        if (stack.is(ModItems.BOCEK.get())) {
+
+            if (stack.getOrCreateTag().getBoolean("HoloHidden")) {
+                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/point.png"), w / 2f - 7.5f + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
+                if (!player.isSprinting() || player.getPersistentData().getDouble("noRun") > 0 || ClientEventHandler.pullPos > 0) {
+                    if (ClientEventHandler.zoomTime < 0.1) {
+                        preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/shotgun_hud.png"), k, l, 0, 0.0F, i, j, i, j);
+                    } else {
+                        preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexheng.png"), (float) (w / 2f - 13.5f - 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
+                        preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexheng.png"), (float) (w / 2f - 2.5f + 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
+                        preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexshu.png"), w / 2f - 7.5f + moveX, (float) (h / 2f - 2.5f + 2.8f * spread) + moveY, 0, 0, 16, 16, 16, 16);
+                        preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/rexshu.png"), w / 2f - 7.5f + moveX, (float) (h / 2f - 13.5f - 2.8f * spread) + moveY, 0, 0, 16, 16, 16, 16);
+                    }
+                }
             }
         }
 

@@ -188,7 +188,7 @@ public class ShootMessage {
                 stack.getOrCreateTag().putBoolean("shoot", true);
 
                 for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {
-                    gunShoot(player, 2 * stack.getOrCreateTag().getDouble("spread"));
+                    gunShoot(player, spared);
                 }
 
                 player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {

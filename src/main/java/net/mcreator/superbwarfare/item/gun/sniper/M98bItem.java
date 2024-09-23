@@ -75,17 +75,13 @@ public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState<M98bItem> event) {
+    private PlayState fireAnimPredicate(AnimationState<M98bItem> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
-            if (stack.getOrCreateTag().getInt("draw_time") < 16) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.draw"));
-            }
-
             if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.shift"));
             }
@@ -102,7 +98,25 @@ public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.reload_normal"));
             }
 
-            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.idle"));
+        }
+        return PlayState.STOP;
+    }
+
+    private PlayState idlePredicate(AnimationState<M98bItem> event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
+
+        if (this.animationProcedure.equals("empty")) {
+            if (stack.getOrCreateTag().getInt("draw_time") < 16) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.draw"));
+            }
+
+            if (player.isSprinting() && player.onGround()
+                    && player.getPersistentData().getDouble("noRun") == 0
+                    && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))) {
                 if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && stack.getOrCreateTag().getInt("bolt_action_anim") == 0) {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.run_fast"));
                 } else {
@@ -115,25 +129,10 @@ public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState<M98bItem> event) {
-        if (transformType != null && transformType.firstPerson()) {
-            if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
-                if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                    this.animationProcedure = "empty";
-                    event.getController().forceAnimationReset();
-                }
-            } else if (this.animationProcedure.equals("empty")) {
-                return PlayState.STOP;
-            }
-        }
-        return PlayState.CONTINUE;
-    }
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        var procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
-        data.add(procedureController);
+        var fireAnimController = new AnimationController<>(this, "fireAnimController", 1, this::fireAnimPredicate);
+        data.add(fireAnimController);
         var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
         data.add(idleController);
     }

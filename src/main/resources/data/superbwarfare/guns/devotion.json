@@ -5,7 +5,7 @@
   "bipod": 1,
   "recoil_x": 0.0018,
   "recoil_y": 0.01,
-  "damage": 7,
+  "damage": 9.5,
   "headshot": 2,
   "velocity": 25,
   "mag": 55,

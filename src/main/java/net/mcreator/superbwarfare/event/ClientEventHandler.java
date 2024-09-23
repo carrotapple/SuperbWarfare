@@ -411,7 +411,7 @@ public class ClientEventHandler {
             fireSpread += 0.2;
         }
 
-        fireSpread = Mth.clamp(fireSpread - 0.1 * (Math.pow(fireSpread, 2) * times), 0, 100);
+        fireSpread = Mth.clamp(fireSpread - 0.6 * (Math.pow(fireSpread, 2) * times), 0, 100);
         firePosZ = Mth.clamp(firePosZ - 0.02 * times, 0, 0.6);
 
         if (0 < firePosTimer) {
@@ -527,7 +527,13 @@ public class ClientEventHandler {
                 return;
             }
 
-            double p = zoomPos;
+            double p;
+            if (stack.is(ModItems.BOCEK.get())) {
+                p = (pullPos + 0.25) * zoomTime;
+            } else {
+                p = zoomPos;
+            }
+
             double zoom = stack.getOrCreateTag().getDouble("zoom") + stack.getOrCreateTag().getDouble("custom_zoom");
 
             event.setFOV(event.getFOV() / (1.0 + p * (zoom - 1)) * (1 - 0.4 * breathTime));

@@ -4,7 +4,7 @@
   "spread": 3.7,
   "recoil_x": 0.0013,
   "recoil_y": 0.009,
-  "damage": 7.5,
+  "damage": 8.25,
   "headshot": 2,
   "velocity": 27,
   "mag": 30,
@@ -19,5 +19,5 @@
   "empty_reload_time": 74,
   "BypassesArmor": 0.28,
   "SoundRadius": 13,
-  "rpm": 750
+  "rpm": 650
 }
