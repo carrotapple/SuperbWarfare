@@ -93,47 +93,6 @@ public class GunEventHandler {
         } else if (tag.getDouble("minigun_rotation") > 0) {
             tag.putDouble("minigun_rotation", (tag.getDouble("minigun_rotation") - 0.5));
         }
-
-        if (tag.getDouble("overheat") == 0
-                && (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0
-                && !(player.getCooldowns().isOnCooldown(stack.getItem())) && tag.getDouble("minigun_rotation") >= 10 && player.getPersistentData().getBoolean("holdFire")) {
-            tag.putDouble("heat", (tag.getDouble("heat") + 0.5));
-            if (tag.getDouble("heat") >= 50.5) {
-                tag.putDouble("overheat", 40);
-                player.getCooldowns().addCooldown(stack.getItem(), 40);
-                if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_OVERHEAT.get(), 2f, 1f);
-                }
-            }
-            var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
-            float pitch = tag.getDouble("heat") <= 40 ? 1 : (float) (1 - 0.025 * Math.abs(40 - tag.getDouble("heat")));
-
-            if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
-                SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_FIRE_1P.get(), 2f, pitch);
-                player.playSound(ModSounds.MINIGUN_FIRE_3P.get(), (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.2f, pitch);
-                player.playSound(ModSounds.MINIGUN_FAR.get(), (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.5f, pitch);
-                player.playSound(ModSounds.MINIGUN_VERYFAR.get(), (float) stack.getOrCreateTag().getDouble("SoundRadius"), pitch);
-
-                if (perk == ModPerks.BEAST_BULLET.get()) {
-                    player.playSound(ModSounds.HENG.get(), 4f, pitch);
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.HENG.get(), 4f, pitch);
-                }
-            }
-
-
-            stack.getOrCreateTag().putBoolean("shoot", true);
-
-            for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {
-                gunShoot(player, 2 * stack.getOrCreateTag().getDouble("spread"));
-            }
-
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.rifleAmmo = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).rifleAmmo - 1;
-                capability.syncPlayerVariables(player);
-            });
-
-            tag.putInt("fire_animation", 2);
-        }
     }
 
     /**

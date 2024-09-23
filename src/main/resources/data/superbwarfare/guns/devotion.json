@@ -10,7 +10,6 @@
   "velocity": 25,
   "mag": 55,
   "projectile_amount": 1,
-  "fire_interval": 5,
   "weight": 1,
   "fire_mode": 2,
   "semi": 0,

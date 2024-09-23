@@ -9,7 +9,6 @@
   "velocity": 16,
   "mag": 17,
   "projectile_amount": 1,
-  "fire_interval": 3,
   "weight": 0,
   "fire_mode": 0,
   "semi": 1,
@@ -19,5 +18,6 @@
   "normal_reload_time": 30,
   "empty_reload_time": 35,
   "BypassesArmor": 0.15,
-  "SoundRadius": 10
+  "SoundRadius": 10,
+  "rpm": 600
 }

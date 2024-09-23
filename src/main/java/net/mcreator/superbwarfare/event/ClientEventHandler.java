@@ -155,7 +155,8 @@ public class ClientEventHandler {
         }
 
         // 开火部分
-        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS && player.getMainHandItem().is(ModTags.Items.NORMAL_GUN)) {
+        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS
+                && (player.getMainHandItem().is(ModTags.Items.NORMAL_GUN) || stack.is(ModItems.MINIGUN.get()))) {
 
             double customRpm = 0;
 
@@ -171,6 +172,12 @@ public class ClientEventHandler {
 
             // cooldown in ms
             double cooldown = 1000 / rps;
+
+            if (stack.getItem() == ModItems.MINIGUN.get()) {
+                if (stack.getOrCreateTag().getDouble("overheat") != 0 || player.getCooldowns().isOnCooldown(stack.getItem()) || stack.getOrCreateTag().getDouble("minigun_rotation") < 10) {
+                    return;
+                }
+            }
 
             if (!clientTimer.started()) {
                 clientTimer.start();

@@ -1,9 +1,14 @@
 package net.mcreator.superbwarfare.network.message;
 
 import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModPerks;
+import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
+import net.mcreator.superbwarfare.perk.Perk;
+import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.ParticleTool;
+import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
@@ -55,8 +60,11 @@ public class ShootMessage {
 
         ItemStack stack = player.getMainHandItem();
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
+
+            double rpm = stack.getOrCreateTag().getDouble("rpm") + stack.getOrCreateTag().getInt("customRpm");;
+
+            int coolDownownTick = (int) Math.ceil(20 / (rpm / 60));
             double mode = stack.getOrCreateTag().getInt("fire_mode");
-            int interval = stack.getOrCreateTag().getInt("fire_interval");
 
             if ((player.getPersistentData().getBoolean("holdFire") || stack.getOrCreateTag().getInt("burst_fire") > 0)
                     && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
@@ -66,15 +74,17 @@ public class ShootMessage {
                     && !player.getCooldowns().isOnCooldown(stack.getItem())
                     && !stack.getOrCreateTag().getBoolean("need_bolt_action")) {
 
+                int singleInterval = 0;
                 if (mode == 0) {
                     player.getPersistentData().putBoolean("holdFire", false);
+                    singleInterval = coolDownownTick;
                 }
 
                 int burstCooldown = 0;
                 if (mode == 1) {
                     player.getPersistentData().putBoolean("holdFire", false);
                     stack.getOrCreateTag().putInt("burst_fire", (stack.getOrCreateTag().getInt("burst_fire") - 1));
-                    burstCooldown = stack.getOrCreateTag().getInt("burst_fire") == 0 ? interval + 4 : 0;
+                    burstCooldown = stack.getOrCreateTag().getInt("burst_fire") == 0 ? coolDownownTick + 4 : 0;
                 }
 
                 if (stack.getOrCreateTag().getDouble("animindex") == 1) {
@@ -97,8 +107,8 @@ public class ShootMessage {
                 }
 
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
-                stack.getOrCreateTag().putInt("fire_animation", interval);
-                player.getPersistentData().putInt("noRun_time", interval + 2);
+                stack.getOrCreateTag().putInt("fire_animation", coolDownownTick);
+                player.getPersistentData().putInt("noRun_time", coolDownownTick + 2);
                 stack.getOrCreateTag().putDouble("flash_time", 2);
 
                 stack.getOrCreateTag().putDouble("empty", 1);
@@ -126,12 +136,6 @@ public class ShootMessage {
                     stack.getOrCreateTag().putDouble("chamber_rot", 20);
                 }
 
-                int actionInterval = 0;
-
-                if (stack.getItem() == ModItems.MARLIN.get() || stack.getItem() == ModItems.M_870.get()) {
-                    actionInterval = stack.getOrCreateTag().getInt("fire_interval");
-                }
-
                 int customCoolDown = 0;
 
                 if (stack.getItem() == ModItems.MARLIN.get()) {
@@ -145,7 +149,7 @@ public class ShootMessage {
                     }
                 }
 
-                int cooldown = burstCooldown + actionInterval + customCoolDown;
+                int cooldown = burstCooldown + singleInterval + customCoolDown;
                 player.getCooldowns().addCooldown(stack.getItem(), cooldown);
 
                 for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {
@@ -155,6 +159,46 @@ public class ShootMessage {
 
                 stack.getOrCreateTag().putBoolean("shoot", true);
             }
+        } else if (stack.is(ModItems.MINIGUN.get())) {
+            var tag = stack.getOrCreateTag();
+            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0) {
+                tag.putDouble("heat", (tag.getDouble("heat") + 0.5));
+                if (tag.getDouble("heat") >= 50.5) {
+                    tag.putDouble("overheat", 40);
+                    player.getCooldowns().addCooldown(stack.getItem(), 40);
+                    if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
+                        SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_OVERHEAT.get(), 2f, 1f);
+                    }
+                }
+                var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+                float pitch = tag.getDouble("heat") <= 40 ? 1 : (float) (1 - 0.025 * Math.abs(40 - tag.getDouble("heat")));
+
+                if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_FIRE_1P.get(), 2f, pitch);
+                    player.playSound(ModSounds.MINIGUN_FIRE_3P.get(), (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.2f, pitch);
+                    player.playSound(ModSounds.MINIGUN_FAR.get(), (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.5f, pitch);
+                    player.playSound(ModSounds.MINIGUN_VERYFAR.get(), (float) stack.getOrCreateTag().getDouble("SoundRadius"), pitch);
+
+                    if (perk == ModPerks.BEAST_BULLET.get()) {
+                        player.playSound(ModSounds.HENG.get(), 4f, pitch);
+                        SoundTool.playLocalSound(serverPlayer, ModSounds.HENG.get(), 4f, pitch);
+                    }
+                }
+
+                stack.getOrCreateTag().putBoolean("shoot", true);
+
+                for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {
+                    gunShoot(player, 2 * stack.getOrCreateTag().getDouble("spread"));
+                }
+
+                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    capability.rifleAmmo = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).rifleAmmo - 1;
+                    capability.syncPlayerVariables(player);
+                });
+
+                tag.putInt("fire_animation", 2);
+            }
+
         }
     }
 }

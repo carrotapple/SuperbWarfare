@@ -10,7 +10,6 @@
   "mag": 8,
   "force_stop_reloading": 1,
   "projectile_amount": 1,
-  "fire_interval": 10,
   "weight": 1,
   "fire_mode": 0,
   "semi": 1,

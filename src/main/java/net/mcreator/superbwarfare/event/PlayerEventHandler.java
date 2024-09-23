@@ -113,6 +113,7 @@ public class PlayerEventHandler {
                 && stack.is(ModTags.Items.GUN)
                 && !stack.getOrCreateTag().getBoolean("sentinel_is_charging")
                 && !(player.getCooldowns().isOnCooldown(stack.getItem()))
+                && stack.getOrCreateTag().getInt("draw_time") > 35
                 && stack.getOrCreateTag().getInt("gun_reloading_time") == 0
                 && stack.getOrCreateTag().getInt("ammo") == 0
         ) {

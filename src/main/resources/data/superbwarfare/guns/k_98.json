@@ -9,7 +9,6 @@
   "velocity": 37.75,
   "projectile_amount": 1,
   "mag": 5,
-  "fire_interval": 2,
   "bolt_action_time": 22,
   "weight": 1,
   "fire_mode": 0,
@@ -23,5 +22,6 @@
   "iterative_time": 11,
   "finish_time": 18,
   "BypassesArmor": 0.5,
-  "SoundRadius": 18
+  "SoundRadius": 18,
+  "rpm": 100
 }

@@ -6,10 +6,10 @@
   "damage": 8,
   "headshot": 2,
   "velocity": 24,
-  "fire_interval": 1,
   "weight": 2,
   "fire_mode": 2,
   "projectile_amount": 1,
   "BypassesArmor": 0.3,
-  "SoundRadius": 14
+  "SoundRadius": 14,
+  "rpm": 1200
 }

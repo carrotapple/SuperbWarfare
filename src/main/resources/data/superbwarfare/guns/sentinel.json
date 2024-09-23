@@ -9,7 +9,6 @@
   "projectile_amount": 1,
   "headshot": 3,
   "velocity": 39,
-  "fire_interval": 2,
   "bolt_action_time": 22,
   "weight": 1,
   "fire_mode": 0,
@@ -20,5 +19,6 @@
   "normal_reload_time": 59,
   "empty_reload_time": 89,
   "BypassesArmor": 0.8,
-  "SoundRadius": 20
+  "SoundRadius": 20,
+  "rpm": 90
 }
