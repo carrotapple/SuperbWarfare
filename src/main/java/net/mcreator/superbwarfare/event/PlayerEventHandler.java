@@ -5,7 +5,9 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
+import net.mcreator.superbwarfare.network.message.ReloadMessage;
 import net.mcreator.superbwarfare.network.message.SimulationDistanceMessage;
+import net.mcreator.superbwarfare.tools.ItemNBTTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -16,11 +18,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -65,6 +69,14 @@ public class PlayerEventHandler {
     }
 
     @SubscribeEvent
+    public static void onPickup(EntityItemPickupEvent event) {
+        ItemEntity stack = event.getItem();
+        if (stack.getItem().is(ModTags.Items.GUN)) {
+            ItemNBTTool.setBoolean(stack.getItem(), "init", false);
+        }
+    }
+
+    @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
 
@@ -105,39 +117,40 @@ public class PlayerEventHandler {
     }
 
     private static void handleWeaponAutoReload(Player player) {
-//        ItemStack stack = player.getMainHandItem();
-//        var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
+        if (player.level().isClientSide) {
+            ItemStack stack = player.getMainHandItem();
+            var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
+            if (!player.isSpectator()
+                    && stack.is(ModTags.Items.GUN)
+                    && !stack.getOrCreateTag().getBoolean("sentinel_is_charging")
+                    && !(player.getCooldowns().isOnCooldown(stack.getItem()))
+                    && stack.getOrCreateTag().getInt("draw_time") > 35
+                    && stack.getOrCreateTag().getInt("gun_reloading_time") == 0
+                    && stack.getOrCreateTag().getInt("ammo") == 0
+            ) {
+                CompoundTag tag = stack.getOrCreateTag();
 
-//        if (!player.isSpectator()
-//                && stack.is(ModTags.Items.GUN)
-//                && !stack.getOrCreateTag().getBoolean("sentinel_is_charging")
-//                && !(player.getCooldowns().isOnCooldown(stack.getItem()))
-//                && stack.getOrCreateTag().getInt("draw_time") > 35
-//                && stack.getOrCreateTag().getInt("gun_reloading_time") == 0
-//                && stack.getOrCreateTag().getInt("ammo") == 0
-//        ) {
-//            CompoundTag tag = stack.getOrCreateTag();
-//
-//            // 检查备弹
-//            if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
-//                return;
-//            } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && capability.sniperAmmo == 0) {
-//                return;
-//            } else if ((stack.is(ModTags.Items.USE_HANDGUN_AMMO) || stack.is(ModTags.Items.SMG)) && capability.handgunAmmo == 0) {
-//                return;
-//            } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && capability.rifleAmmo == 0) {
-//                return;
-//            } else if (stack.getItem() == ModItems.TASER.get() && tag.getInt("max_ammo") == 0) {
-//                return;
-//            } else if (stack.getItem() == ModItems.M_79.get() && tag.getInt("max_ammo") == 0) {
-//                return;
-//            } else if (stack.getItem() == ModItems.RPG.get() && tag.getInt("max_ammo") == 0) {
-//                return;
-//            } else if (stack.getItem() == ModItems.JAVELIN.get() && tag.getInt("max_ammo") == 0) {
-//                return;
-//            }
-//            ModUtils.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
-//        }
+                // 检查备弹
+                if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
+                    return;
+                } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && capability.sniperAmmo == 0) {
+                    return;
+                } else if ((stack.is(ModTags.Items.USE_HANDGUN_AMMO) || stack.is(ModTags.Items.SMG)) && capability.handgunAmmo == 0) {
+                    return;
+                } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && capability.rifleAmmo == 0) {
+                    return;
+                } else if (stack.getItem() == ModItems.TASER.get() && tag.getInt("max_ammo") == 0) {
+                    return;
+                } else if (stack.getItem() == ModItems.M_79.get() && tag.getInt("max_ammo") == 0) {
+                    return;
+                } else if (stack.getItem() == ModItems.RPG.get() && tag.getInt("max_ammo") == 0) {
+                    return;
+                } else if (stack.getItem() == ModItems.JAVELIN.get() && tag.getInt("max_ammo") == 0) {
+                    return;
+                }
+                ModUtils.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
+            }
+        }
     }
 
     private static void handleWeaponSway(Player player) {
