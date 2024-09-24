@@ -11,14 +11,14 @@
       "item": "minecraft:gunpowder"
     },
     "b": {
-      "item": "minecraft:glowstone_dust"
+      "item": "minecraft:sugar"
     },
     "c": {
-      "item": "minecraft:blaze_powder"
+      "tag": "forge:sand"
     }
   },
   "result": {
     "item": "superbwarfare:high_energy_explosives",
-    "count": 1
+    "count": 2
   }
 }

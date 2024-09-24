@@ -115,11 +115,6 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
     }
 
     @Override
-    public boolean isNoGravity() {
-        return true;
-    }
-
-    @Override
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
         BlockPos resultPos = blockHitResult.getBlockPos();
@@ -186,7 +181,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
     @Override
     protected float getGravity() {
-        return 0.05F;
+        return 0.03F;
     }
 
     public String getSyncedAnimation() {

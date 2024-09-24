@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.init;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.item.*;
+import net.mcreator.superbwarfare.item.armor.Ru6b47;
 import net.mcreator.superbwarfare.item.common.BlueprintItem;
 import net.mcreator.superbwarfare.item.common.MaterialPack;
 import net.mcreator.superbwarfare.item.common.ammo.*;
@@ -25,6 +26,7 @@ import net.mcreator.superbwarfare.item.gun.sniper.*;
 import net.mcreator.superbwarfare.item.gun.special.BocekItem;
 import net.mcreator.superbwarfare.item.gun.special.TaserItem;
 import net.mcreator.superbwarfare.tools.RarityTool;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -121,6 +123,7 @@ public class ModItems {
     public static final RegistryObject<Item> KNIFE = ITEMS.register("knife", Knife::new);
     public static final RegistryObject<Item> HAMMER = ITEMS.register("hammer", Hammer::new);
     public static final RegistryObject<Item> CROWBAR = ITEMS.register("crowbar", Crowbar::new);
+    public static final RegistryObject<Item> RU_6B47 = ITEMS.register("ru_6b47", () -> new Ru6b47(ArmorItem.Type.HELMET, new Item.Properties()));
     public static final RegistryObject<Item> MORTAR_DEPLOYER = ITEMS.register("mortar_deployer", MortarDeployer::new);
     public static final RegistryObject<Item> MORTAR_BARREL = ITEMS.register("mortar_barrel", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> MORTAR_BASE_PLATE = ITEMS.register("mortar_base_plate", () -> new Item(new Item.Properties()));

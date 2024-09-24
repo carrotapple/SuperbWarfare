@@ -84,6 +84,11 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
     }
 
     @Override
+    public boolean shouldRenderAtSqrDistance(double pDistance) {
+        return true;
+    }
+
+    @Override
     public boolean hurt(DamageSource source, float amount) {
         if (source.is(DamageTypes.IN_FIRE)
                 || source.getDirectEntity() instanceof ThrownPotion

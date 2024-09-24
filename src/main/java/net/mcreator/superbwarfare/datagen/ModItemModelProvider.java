@@ -85,6 +85,10 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.EPIC_MATERIAL_PACK);
         simpleItem(ModItems.LEGENDARY_MATERIAL_PACK);
 
+        // armor
+
+        simpleItem(ModItems.RU_6B47);
+
         // blueprints
         blueprintItem(ModItems.TRACHELIUM_BLUEPRINT);
         blueprintItem(ModItems.GLOCK_17_BLUEPRINT);
