@@ -131,23 +131,34 @@ public class PlayerEventHandler {
                 CompoundTag tag = stack.getOrCreateTag();
 
                 // 检查备弹
-                if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
-                    return;
-                } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && capability.sniperAmmo == 0) {
-                    return;
-                } else if ((stack.is(ModTags.Items.USE_HANDGUN_AMMO) || stack.is(ModTags.Items.SMG)) && capability.handgunAmmo == 0) {
-                    return;
-                } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && capability.rifleAmmo == 0) {
-                    return;
-                } else if (stack.getItem() == ModItems.TASER.get() && tag.getInt("max_ammo") == 0) {
-                    return;
-                } else if (stack.getItem() == ModItems.M_79.get() && tag.getInt("max_ammo") == 0) {
-                    return;
-                } else if (stack.getItem() == ModItems.RPG.get() && tag.getInt("max_ammo") == 0) {
-                    return;
-                } else if (stack.getItem() == ModItems.JAVELIN.get() && tag.getInt("max_ammo") == 0) {
-                    return;
+
+                int count = 0;
+                for (var inv : player.getInventory().items) {
+                    if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
+                        count++;
+                    }
                 }
+
+                if (count == 0) {
+                    if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
+                        return;
+                    } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && capability.sniperAmmo == 0) {
+                        return;
+                    } else if ((stack.is(ModTags.Items.USE_HANDGUN_AMMO) || stack.is(ModTags.Items.SMG)) && capability.handgunAmmo == 0) {
+                        return;
+                    } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && capability.rifleAmmo == 0) {
+                        return;
+                    } else if (stack.getItem() == ModItems.TASER.get() && tag.getInt("max_ammo") == 0) {
+                        return;
+                    } else if (stack.getItem() == ModItems.M_79.get() && tag.getInt("max_ammo") == 0) {
+                        return;
+                    } else if (stack.getItem() == ModItems.RPG.get() && tag.getInt("max_ammo") == 0) {
+                        return;
+                    } else if (stack.getItem() == ModItems.JAVELIN.get() && tag.getInt("max_ammo") == 0) {
+                        return;
+                    }
+                }
+
                 ModUtils.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
             }
         }

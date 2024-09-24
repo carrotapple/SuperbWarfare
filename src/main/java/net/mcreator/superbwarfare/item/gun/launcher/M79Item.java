@@ -154,14 +154,24 @@ public class M79Item extends GunItem implements GeoItem, AnimatedItem {
     }
 
     public static int getAmmoCount(Player player) {
-        int sum = 0;
-        for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
-            ItemStack itemstack = player.getInventory().getItem(i);
-            if (check(itemstack)) {
-                sum += itemstack.getCount();
+        int count = 0;
+        for (var inv : player.getInventory().items) {
+            if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
+                count++;
             }
         }
-        return sum;
+
+        if (count == 0) {
+            int sum = 0;
+            for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
+                ItemStack itemstack = player.getInventory().getItem(i);
+                if (check(itemstack)) {
+                    sum += itemstack.getCount();
+                }
+            }
+            return sum;
+        }
+        return (int) Double.POSITIVE_INFINITY;
     }
 
     @Override

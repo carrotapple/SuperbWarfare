@@ -63,7 +63,7 @@ public class ShootMessage {
 
             double rpm = stack.getOrCreateTag().getDouble("rpm") + stack.getOrCreateTag().getInt("customRpm");;
 
-            int coolDownownTick = (int) Math.ceil(20 / (rpm / 60));
+            int coolDownTick = (int) Math.ceil(20 / (rpm / 60));
             double mode = stack.getOrCreateTag().getInt("fire_mode");
 
             if ((player.getPersistentData().getBoolean("holdFire") || stack.getOrCreateTag().getInt("burst_fire") > 0)
@@ -77,14 +77,14 @@ public class ShootMessage {
                 int singleInterval = 0;
                 if (mode == 0) {
                     player.getPersistentData().putBoolean("holdFire", false);
-                    singleInterval = coolDownownTick;
+                    singleInterval = coolDownTick;
                 }
 
                 int burstCooldown = 0;
                 if (mode == 1) {
                     player.getPersistentData().putBoolean("holdFire", false);
                     stack.getOrCreateTag().putInt("burst_fire", (stack.getOrCreateTag().getInt("burst_fire") - 1));
-                    burstCooldown = stack.getOrCreateTag().getInt("burst_fire") == 0 ? coolDownownTick + 4 : 0;
+                    burstCooldown = stack.getOrCreateTag().getInt("burst_fire") == 0 ? coolDownTick + 4 : 0;
                 }
 
                 if (stack.getOrCreateTag().getDouble("animindex") == 1) {
@@ -107,8 +107,8 @@ public class ShootMessage {
                 }
 
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
-                stack.getOrCreateTag().putInt("fire_animation", coolDownownTick);
-                player.getPersistentData().putInt("noRun_time", coolDownownTick + 2);
+                stack.getOrCreateTag().putInt("fire_animation", coolDownTick);
+                player.getPersistentData().putInt("noRun_time", coolDownTick + 2);
                 stack.getOrCreateTag().putDouble("flash_time", 2);
 
                 stack.getOrCreateTag().putDouble("empty", 1);
@@ -161,7 +161,15 @@ public class ShootMessage {
             }
         } else if (stack.is(ModItems.MINIGUN.get())) {
             var tag = stack.getOrCreateTag();
-            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0) {
+
+            int count = 0;
+            for (var inv : player.getInventory().items) {
+                if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
+                    count++;
+                }
+            }
+
+            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0 || count > 0) {
                 tag.putDouble("heat", (tag.getDouble("heat") + 0.5));
                 if (tag.getDouble("heat") >= 50.5) {
                     tag.putDouble("overheat", 40);
@@ -191,10 +199,12 @@ public class ShootMessage {
                     gunShoot(player, spared);
                 }
 
-                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    capability.rifleAmmo = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).rifleAmmo - 1;
-                    capability.syncPlayerVariables(player);
-                });
+                if (count == 0) {
+                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        capability.rifleAmmo = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).rifleAmmo - 1;
+                        capability.syncPlayerVariables(player);
+                    });
+                }
 
                 tag.putInt("fire_animation", 2);
             }

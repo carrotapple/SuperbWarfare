@@ -26,6 +26,19 @@ public class AmmoBarOverlay {
     private static final ResourceLocation TOP = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/fire_mode/top.png");
     private static final ResourceLocation DIR = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/fire_mode/dir.png");
 
+    private static boolean creativeAmmo() {
+        Player player = Minecraft.getInstance().player;
+        int count = 0;
+        if (player != null) {
+            for (var inv : player.getInventory().items) {
+                if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
+                    count++;
+                }
+            }
+        }
+        return count > 0;
+    }
+
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
         int w = event.getWindow().getGuiScaledWidth();
@@ -96,14 +109,26 @@ public class AmmoBarOverlay {
             poseStack.pushPose();
             poseStack.scale(1.5f, 1.5f, 1f);
 
-            event.getGuiGraphics().drawString(
-                    Minecraft.getInstance().font,
-                    getGunAmmoCount(player) + "",
-                    w / 1.5f - 64 / 1.5f,
-                    h / 1.5f - 48 / 1.5f,
-                    0xFFFFFF,
-                    true
-            );
+            if ((stack.getItem() == ModItems.MINIGUN.get() || stack.getItem() == ModItems.BOCEK.get()) && creativeAmmo()) {
+                event.getGuiGraphics().drawString(
+                        Minecraft.getInstance().font,
+                        "∞",
+                        w / 1.5f - 64 / 1.5f,
+                        h / 1.5f - 48 / 1.5f,
+                        0xFFFFFF,
+                        true
+                );
+            } else {
+                event.getGuiGraphics().drawString(
+                        Minecraft.getInstance().font,
+                        getGunAmmoCount(player) + "",
+                        w / 1.5f - 64 / 1.5f,
+                        h / 1.5f - 48 / 1.5f,
+                        0xFFFFFF,
+                        true
+                );
+            }
+
             poseStack.popPose();
 
             // 渲染备弹量
@@ -172,23 +197,27 @@ public class AmmoBarOverlay {
             return "";
         }
 
-        if (stack.getItem() == ModItems.M_79.get() || stack.getItem() == ModItems.RPG.get() || stack.getItem() == ModItems.TASER.get() || stack.getItem() == ModItems.JAVELIN.get() ) {
-            return "" + stack.getOrCreateTag().getInt("max_ammo");
+        if (!creativeAmmo()) {
+            if (stack.getItem() == ModItems.M_79.get() || stack.getItem() == ModItems.RPG.get() || stack.getItem() == ModItems.TASER.get() || stack.getItem() == ModItems.JAVELIN.get() ) {
+                return "" + stack.getOrCreateTag().getInt("max_ammo");
+            }
+
+            if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
+                return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo;
+            }
+            if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
+                return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).handgunAmmo;
+            }
+            if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
+                return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).shotgunAmmo;
+            }
+            if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
+                return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).sniperAmmo;
+            }
+            return "";
         }
 
-        if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-            return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo;
-        }
-        if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-            return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).handgunAmmo;
-        }
-        if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-            return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).shotgunAmmo;
-        }
-        if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-            return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).sniperAmmo;
-        }
-        return "";
+        return "∞";
     }
 
     private static String getGunAmmoType(ItemStack stack) {

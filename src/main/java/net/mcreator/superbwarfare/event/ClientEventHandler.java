@@ -156,12 +156,22 @@ public class ClientEventHandler {
 
         // 开火部分
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS
-                && (player.getMainHandItem().is(ModTags.Items.NORMAL_GUN) || stack.is(ModItems.MINIGUN.get()))) {
+                && (player.getMainHandItem().is(ModTags.Items.NORMAL_GUN) || (stack.is(ModItems.MINIGUN.get()) && !player.isSprinting()))) {
 
             double customRpm = 0;
 
             if (stack.getItem() == ModItems.DEVOTION.get()) {
                 customRpm = stack.getOrCreateTag().getInt("customRpm");
+            }
+
+            if (stack.getItem() == ModItems.MINIGUN.get()) {
+                if (player.isInWater()) {
+                    customRpm = - 0.25 * stack.getOrCreateTag().getDouble("rpm");
+                }
+
+                if (stack.getOrCreateTag().getDouble("overheat") != 0 || player.getCooldowns().isOnCooldown(stack.getItem()) || stack.getOrCreateTag().getDouble("minigun_rotation") < 10) {
+                    return;
+                }
             }
 
             double rpm = stack.getOrCreateTag().getDouble("rpm") + customRpm;
@@ -173,11 +183,6 @@ public class ClientEventHandler {
             // cooldown in ms
             double cooldown = 1000 / rps;
 
-            if (stack.getItem() == ModItems.MINIGUN.get()) {
-                if (stack.getOrCreateTag().getDouble("overheat") != 0 || player.getCooldowns().isOnCooldown(stack.getItem()) || stack.getOrCreateTag().getDouble("minigun_rotation") < 10) {
-                    return;
-                }
-            }
 
             if (!clientTimer.started()) {
                 clientTimer.start();

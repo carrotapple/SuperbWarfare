@@ -152,14 +152,6 @@ public class FireMessage {
             }
         }
 
-        if (handItem.getItem() == ModItems.MINIGUN.get()) {
-            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo == 0) {
-                if (!player.level().isClientSide()) {
-                    SoundTool.playLocalSound(player, ModSounds.TRIGGER_CLICK.get(), 10, 1);
-                }
-            }
-        }
-
         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
             capability.bowPullHold = true;
             capability.syncPlayerVariables(player);
@@ -290,7 +282,14 @@ public class FireMessage {
             player.getMainHandItem().getOrCreateTag().putDouble("power", 0);
             stack.getOrCreateTag().putInt("fire_animation", 2);
 
-            if (!player.isCreative()) {
+            int count = 0;
+            for (var inv : player.getInventory().items) {
+                if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
+                    count++;
+                }
+            }
+
+            if (count == 0 && !player.isCreative()) {
                 player.getInventory().clearOrCountMatchingItems(p -> Items.ARROW == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
             }
         }

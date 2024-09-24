@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.MinigunItemRenderer;
 import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModParticleTypes;
 import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
@@ -12,12 +13,16 @@ import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.ItemNBTTool;
+import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.mcreator.superbwarfare.tools.RarityTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
@@ -33,6 +38,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import org.joml.Vector3d;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -131,25 +137,8 @@ public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState<MinigunItem> event) {
-        if (transformType != null && transformType.firstPerson()) {
-            if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
-                if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                    this.animationProcedure = "empty";
-                    event.getController().forceAnimationReset();
-                }
-            } else if (this.animationProcedure.equals("empty")) {
-                return PlayState.STOP;
-            }
-        }
-        return PlayState.CONTINUE;
-    }
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        var procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
-        data.add(procedureController);
         var idleController = new AnimationController<>(this, "idleController", 6, this::idlePredicate);
         data.add(idleController);
     }
@@ -175,6 +164,16 @@ public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
 
+        float yRot = entity.getYRot();
+        if (yRot < 0) {
+            yRot += 360;
+        }
+        yRot = yRot + 90 % 360;
+
+        var leftPos = new Vector3d(1.2, -0.3, 0.3);
+        leftPos.rotateZ(-entity.getXRot() * Mth.DEG_TO_RAD);
+        leftPos.rotateY(-yRot * Mth.DEG_TO_RAD);
+
         double cooldown = 0;
         if (entity.wasInPowderSnow) {
             cooldown = 0.75;
@@ -182,6 +181,22 @@ public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
             cooldown = 0.2;
         } else if (entity.isOnFire() || entity.isInLava()) {
             cooldown = -0.5;
+        }
+
+        if (entity instanceof ServerPlayer serverPlayer && entity.level() instanceof ServerLevel serverLevel && itemstack.getOrCreateTag().getDouble("heat") > 4) {
+            if (entity.isInWater()) {
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP,
+                        entity.getX() + leftPos.x,
+                        entity.getEyeY() + leftPos.y,
+                        entity.getZ() + leftPos.z,
+                        1, 0.1, 0.1, 0.1, 0.002, true, serverPlayer);
+            }
+
+            ParticleTool.sendParticle(serverLevel, ModParticleTypes.CUSTOM_CLOUD.get(),
+                    entity.getX() + leftPos.x,
+                    entity.getEyeY() + leftPos.y,
+                    entity.getZ() + leftPos.z,
+                    1, 0.1, 0.1, 0.1, 0.002, true, serverPlayer);
         }
 
         itemstack.getOrCreateTag().putDouble("heat", Mth.clamp(itemstack.getOrCreateTag().getDouble("heat") - 0.25 - cooldown, 0, 55));

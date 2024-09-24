@@ -336,23 +336,52 @@ public class GunEventHandler {
     public static void playGunNormalReload(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-            if (stack.getItem() == ModItems.ABEKIRI.get()) {
-                GunsTool.reload(player, GunInfo.Type.SHOTGUN);
-            } else {
-                GunsTool.reload(player, GunInfo.Type.SHOTGUN, true);
-            }
-        } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-            GunsTool.reload(player, GunInfo.Type.SNIPER, true);
-        } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-            GunsTool.reload(player, GunInfo.Type.HANDGUN, true);
-        } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-            if (stack.getItem() == ModItems.M_60.get()) {
-                GunsTool.reload(player, GunInfo.Type.RIFLE);
-            } else {
-                GunsTool.reload(player, GunInfo.Type.RIFLE, true);
+        int count = 0;
+        for (var inv : player.getInventory().items) {
+            if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
+                count++;
             }
         }
+
+        if (count == 0) {
+            if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
+                if (stack.getItem() == ModItems.ABEKIRI.get()) {
+                    GunsTool.reload(player, GunInfo.Type.SHOTGUN);
+                } else {
+                    GunsTool.reload(player, GunInfo.Type.SHOTGUN, true);
+                }
+            } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
+                GunsTool.reload(player, GunInfo.Type.SNIPER, true);
+            } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
+                GunsTool.reload(player, GunInfo.Type.HANDGUN, true);
+            } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
+                if (stack.getItem() == ModItems.M_60.get()) {
+                    GunsTool.reload(player, GunInfo.Type.RIFLE);
+                } else {
+                    GunsTool.reload(player, GunInfo.Type.RIFLE, true);
+                }
+            }
+        } else {
+            if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
+                if (stack.getItem() == ModItems.ABEKIRI.get()) {
+                    stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag"));
+                } else {
+                    stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + 1);
+                }
+            } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
+                stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + 1);
+            } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
+                stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + 1);
+            } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
+                if (stack.getItem() == ModItems.M_60.get()) {
+                    stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag"));
+                } else {
+                    stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + 1);
+                }
+            }
+        }
+
+
         stack.getOrCreateTag().putBoolean("is_normal_reloading", false);
         stack.getOrCreateTag().putBoolean("is_empty_reloading", false);
 
@@ -362,27 +391,40 @@ public class GunEventHandler {
     public static void playGunEmptyReload(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-            GunsTool.reload(player, GunInfo.Type.SHOTGUN);
-        } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-            GunsTool.reload(player, GunInfo.Type.SNIPER);
-        } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-            GunsTool.reload(player, GunInfo.Type.HANDGUN);
-        } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-            GunsTool.reload(player, GunInfo.Type.RIFLE);
-        } else if (stack.getItem() == ModItems.TASER.get()) {
-            stack.getOrCreateTag().putInt("ammo", 1);
-            player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.TASER_ELECTRODE.get(), 1, player.inventoryMenu.getCraftSlots());
-        } else if (stack.getItem() == ModItems.M_79.get()) {
-            stack.getOrCreateTag().putInt("ammo", 1);
-            player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.GRENADE_40MM.get(), 1, player.inventoryMenu.getCraftSlots());
-        } else if (stack.getItem() == ModItems.RPG.get()) {
-            stack.getOrCreateTag().putInt("ammo", 1);
-            player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.ROCKET.get(), 1, player.inventoryMenu.getCraftSlots());
-        } else if (stack.getItem() == ModItems.JAVELIN.get()) {
-            stack.getOrCreateTag().putInt("ammo", 1);
-            player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.JAVELIN_MISSILE.get(), 1, player.inventoryMenu.getCraftSlots());
+        int count = 0;
+        for (var inv : player.getInventory().items) {
+            if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
+                count++;
+            }
         }
+
+        if (count == 0) {
+            if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
+                GunsTool.reload(player, GunInfo.Type.SHOTGUN);
+            } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
+                GunsTool.reload(player, GunInfo.Type.SNIPER);
+            } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
+                GunsTool.reload(player, GunInfo.Type.HANDGUN);
+            } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
+                GunsTool.reload(player, GunInfo.Type.RIFLE);
+            } else if (stack.getItem() == ModItems.TASER.get()) {
+                stack.getOrCreateTag().putInt("ammo", 1);
+                player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.TASER_ELECTRODE.get(), 1, player.inventoryMenu.getCraftSlots());
+            } else if (stack.getItem() == ModItems.M_79.get()) {
+                stack.getOrCreateTag().putInt("ammo", 1);
+                player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.GRENADE_40MM.get(), 1, player.inventoryMenu.getCraftSlots());
+            } else if (stack.getItem() == ModItems.RPG.get()) {
+                stack.getOrCreateTag().putInt("ammo", 1);
+                player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.ROCKET.get(), 1, player.inventoryMenu.getCraftSlots());
+            } else if (stack.getItem() == ModItems.JAVELIN.get()) {
+                stack.getOrCreateTag().putInt("ammo", 1);
+                player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.JAVELIN_MISSILE.get(), 1, player.inventoryMenu.getCraftSlots());
+            }
+        } else {
+            stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag"));
+        }
+
+
 
         stack.getOrCreateTag().putBoolean("is_normal_reloading", false);
         stack.getOrCreateTag().putBoolean("is_empty_reloading", false);
@@ -586,27 +628,37 @@ public class GunEventHandler {
 
         tag.putInt("ammo", tag.getInt("ammo") + 1);
 
-        if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.shotgunAmmo -= 1;
-                capability.syncPlayerVariables(player);
-            });
-        } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.sniperAmmo -= 1;
-                capability.syncPlayerVariables(player);
-            });
-        } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.handgunAmmo -= 1;
-                capability.syncPlayerVariables(player);
-            });
-        } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.rifleAmmo -= 1;
-                capability.syncPlayerVariables(player);
-            });
+        int count = 0;
+        for (var inv : player.getInventory().items) {
+            if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
+                count++;
+            }
         }
+
+        if (count == 0) {
+            if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
+                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    capability.shotgunAmmo -= 1;
+                    capability.syncPlayerVariables(player);
+                });
+            } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
+                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    capability.sniperAmmo -= 1;
+                    capability.syncPlayerVariables(player);
+                });
+            } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
+                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    capability.handgunAmmo -= 1;
+                    capability.syncPlayerVariables(player);
+                });
+            } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
+                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    capability.rifleAmmo -= 1;
+                    capability.syncPlayerVariables(player);
+                });
+            }
+        }
+
     }
 
     public static void playGunPrepareReloadSounds(Player player) {

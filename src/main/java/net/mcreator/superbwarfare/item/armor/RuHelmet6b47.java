@@ -18,8 +18,6 @@ import java.util.function.Consumer;
 
 public class RuHelmet6b47 extends ArmorItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public String animationprocedure = "empty";
-
     public RuHelmet6b47() {
         super(ModArmorMaterial.CEMENTED_CARBIDE, Type.HELMET, new Properties());
     }

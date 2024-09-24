@@ -26,7 +26,6 @@ import net.mcreator.superbwarfare.item.gun.sniper.*;
 import net.mcreator.superbwarfare.item.gun.special.BocekItem;
 import net.mcreator.superbwarfare.item.gun.special.TaserItem;
 import net.mcreator.superbwarfare.tools.RarityTool;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -92,7 +91,7 @@ public class ModItems {
     public static final RegistryObject<Item> RIFLE_AMMO_BOX = AMMO.register("rifle_ammo_box", RifleAmmoBox::new);
     public static final RegistryObject<Item> SNIPER_AMMO_BOX = AMMO.register("sniper_ammo_box", SniperAmmoBox::new);
     public static final RegistryObject<Item> SHOTGUN_AMMO_BOX = AMMO.register("shotgun_ammo_box", ShotgunAmmoBox::new);
-    public static final RegistryObject<Item> CREATIVE_AMMO_BOX = AMMO.register("creative_ammo_box", CreativeAmmoBox::new);
+    public static final RegistryObject<Item> CREATIVE_AMMO_BOX = AMMO.register("creative_ammo_box", () -> new Item(new Item.Properties().rarity(Rarity.EPIC)));
     public static final RegistryObject<Item> TASER_ELECTRODE = AMMO.register("taser_electrode", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> GRENADE_40MM = AMMO.register("grenade_40mm", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> JAVELIN_MISSILE = AMMO.register("javelin_missile", () -> new Item(new Item.Properties()));

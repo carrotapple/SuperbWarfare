@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.init;
 
 import net.mcreator.superbwarfare.client.particle.BulletHoleParticle;
+import net.mcreator.superbwarfare.client.particle.CustomCloudParticle;
 import net.mcreator.superbwarfare.client.particle.FireStarParticle;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
@@ -13,6 +14,7 @@ public class ModParticles {
     public static void registerParticles(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(ModParticleTypes.FIRE_STAR.get(), FireStarParticle::provider);
         event.registerSpriteSet(ModParticleTypes.BULLET_HOLE.get(), BulletHoleParticle::provider);
+        event.registerSpriteSet(ModParticleTypes.CUSTOM_CLOUD.get(), CustomCloudParticle::provider);
     }
 }
 
