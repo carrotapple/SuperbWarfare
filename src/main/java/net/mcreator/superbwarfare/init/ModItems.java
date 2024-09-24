@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.init;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.item.*;
-import net.mcreator.superbwarfare.item.armor.Ru6b47;
+import net.mcreator.superbwarfare.item.armor.RuHelmet6b47;
 import net.mcreator.superbwarfare.item.common.BlueprintItem;
 import net.mcreator.superbwarfare.item.common.MaterialPack;
 import net.mcreator.superbwarfare.item.common.ammo.*;
@@ -123,7 +123,7 @@ public class ModItems {
     public static final RegistryObject<Item> KNIFE = ITEMS.register("knife", Knife::new);
     public static final RegistryObject<Item> HAMMER = ITEMS.register("hammer", Hammer::new);
     public static final RegistryObject<Item> CROWBAR = ITEMS.register("crowbar", Crowbar::new);
-    public static final RegistryObject<Item> RU_6B47 = ITEMS.register("ru_6b47", () -> new Ru6b47(ArmorItem.Type.HELMET, new Item.Properties()));
+    public static final RegistryObject<Item> RU_HELMET_6B47 = ITEMS.register("ru_helmet_6b47", RuHelmet6b47::new);
     public static final RegistryObject<Item> MORTAR_DEPLOYER = ITEMS.register("mortar_deployer", MortarDeployer::new);
     public static final RegistryObject<Item> MORTAR_BARREL = ITEMS.register("mortar_barrel", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> MORTAR_BASE_PLATE = ITEMS.register("mortar_base_plate", () -> new Item(new Item.Properties()));
