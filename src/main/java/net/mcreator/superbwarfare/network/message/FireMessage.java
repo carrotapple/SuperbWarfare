@@ -152,10 +152,12 @@ public class FireMessage {
             }
         }
 
-        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-            capability.bowPullHold = true;
-            capability.syncPlayerVariables(player);
-        });
+        if (handItem.getItem() == ModItems.BOCEK.get()) {
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.bowPullHold = true;
+                capability.syncPlayerVariables(player);
+            });
+        }
 
         // 栓动武器左键手动拉栓
         if (tag.getInt("bolt_action_time") > 0 && tag.getInt("ammo") > 0 && tag.getInt("bolt_action_anim") == 0) {

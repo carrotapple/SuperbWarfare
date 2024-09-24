@@ -83,7 +83,7 @@ public class GunEventHandler {
 
         var tag = stack.getOrCreateTag();
 
-        if ((player.getPersistentData().getBoolean("holdFire") || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) && !player.isSprinting()) {
+        if ((player.getPersistentData().getBoolean("holdFire") || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom)) {
             if (tag.getDouble("minigun_rotation") < 10) {
                 tag.putDouble("minigun_rotation", (tag.getDouble("minigun_rotation") + 1));
             }
@@ -523,19 +523,31 @@ public class GunEventHandler {
         // 一阶段结束，检查备弹，如果有则二阶段启动，无则直接跳到三阶段
         if ((tag.getDouble("prepare") == 1 || tag.getDouble("prepare_load") == 1)) {
 
-            // 检查备弹
-            var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
-            if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
-                tag.putBoolean("force_stage3_start", true);
-            } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && capability.sniperAmmo == 0) {
-                tag.putBoolean("force_stage3_start", true);
-            } else if ((stack.is(ModTags.Items.USE_HANDGUN_AMMO) || stack.is(ModTags.Items.SMG)) && capability.handgunAmmo == 0) {
-                tag.putBoolean("force_stage3_start", true);
-            } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && capability.rifleAmmo == 0) {
-                tag.putBoolean("force_stage3_start", true);
+            int count = 0;
+            for (var inv : player.getInventory().items) {
+                if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
+                    count++;
+                }
+            }
+
+            if (count == 0) {
+                var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
+                if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
+                    tag.putBoolean("force_stage3_start", true);
+                } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && capability.sniperAmmo == 0) {
+                    tag.putBoolean("force_stage3_start", true);
+                } else if ((stack.is(ModTags.Items.USE_HANDGUN_AMMO) || stack.is(ModTags.Items.SMG)) && capability.handgunAmmo == 0) {
+                    tag.putBoolean("force_stage3_start", true);
+                } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && capability.rifleAmmo == 0) {
+                    tag.putBoolean("force_stage3_start", true);
+                } else {
+                    tag.putInt("reload_stage", 2);
+                }
             } else {
                 tag.putInt("reload_stage", 2);
             }
+            // 检查备弹
+
         }
 
         // 强制停止换弹，进入三阶段
@@ -583,16 +595,27 @@ public class GunEventHandler {
             }
 
             // 备弹耗尽结束
-            var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
-            if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
-                tag.putInt("reload_stage", 3);
-            } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && capability.sniperAmmo == 0) {
-                tag.putInt("reload_stage", 3);
-            } else if ((stack.is(ModTags.Items.USE_HANDGUN_AMMO) || stack.is(ModTags.Items.SMG)) && capability.handgunAmmo == 0) {
-                tag.putInt("reload_stage", 3);
-            } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && capability.rifleAmmo == 0) {
-                tag.putInt("reload_stage", 3);
+
+            int count = 0;
+            for (var inv : player.getInventory().items) {
+                if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
+                    count++;
+                }
             }
+
+            if (count == 0) {
+                var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
+                if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
+                    tag.putInt("reload_stage", 3);
+                } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && capability.sniperAmmo == 0) {
+                    tag.putInt("reload_stage", 3);
+                } else if ((stack.is(ModTags.Items.USE_HANDGUN_AMMO) || stack.is(ModTags.Items.SMG)) && capability.handgunAmmo == 0) {
+                    tag.putInt("reload_stage", 3);
+                } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && capability.rifleAmmo == 0) {
+                    tag.putInt("reload_stage", 3);
+                }
+            }
+
 
             // 强制结束
             if (tag.getBoolean("stop")) {

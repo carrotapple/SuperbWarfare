@@ -171,6 +171,12 @@ public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
         yRot = yRot + 90 % 360;
 
         var leftPos = new Vector3d(1.2, -0.3, 0.3);
+
+        if (entity.isSprinting()) {
+            leftPos = new Vector3d(1., -0.4, -0.4);
+        }
+
+
         leftPos.rotateZ(-entity.getXRot() * Mth.DEG_TO_RAD);
         leftPos.rotateY(-yRot * Mth.DEG_TO_RAD);
 
@@ -183,7 +189,7 @@ public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
             cooldown = -0.5;
         }
 
-        if (entity instanceof ServerPlayer serverPlayer && entity.level() instanceof ServerLevel serverLevel && itemstack.getOrCreateTag().getDouble("heat") > 4) {
+        if (entity instanceof ServerPlayer serverPlayer && entity.level() instanceof ServerLevel serverLevel && itemstack.getOrCreateTag().getDouble("heat") > 4 && entity.isInWaterOrRain()) {
             if (entity.isInWater()) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP,
                         entity.getX() + leftPos.x,
@@ -191,7 +197,6 @@ public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
                         entity.getZ() + leftPos.z,
                         1, 0.1, 0.1, 0.1, 0.002, true, serverPlayer);
             }
-
             ParticleTool.sendParticle(serverLevel, ModParticleTypes.CUSTOM_CLOUD.get(),
                     entity.getX() + leftPos.x,
                     entity.getEyeY() + leftPos.y,
