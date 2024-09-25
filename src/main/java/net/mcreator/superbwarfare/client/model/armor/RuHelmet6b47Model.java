@@ -5,7 +5,7 @@ import net.mcreator.superbwarfare.item.armor.RuHelmet6b47;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
-public class Ru6b47Model extends GeoModel<RuHelmet6b47> {
+public class RuHelmet6b47Model extends GeoModel<RuHelmet6b47> {
 	@Override
 	public ResourceLocation getAnimationResource(RuHelmet6b47 object) {
 		return null;
@@ -13,7 +13,7 @@ public class Ru6b47Model extends GeoModel<RuHelmet6b47> {
 
 	@Override
 	public ResourceLocation getModelResource(RuHelmet6b47 object) {
-		return new ResourceLocation(ModUtils.MODID, "geo/ru_6b47.geo.json");
+		return new ResourceLocation(ModUtils.MODID, "geo/ru_helmet_6b47.geo.json");
 	}
 
 	@Override

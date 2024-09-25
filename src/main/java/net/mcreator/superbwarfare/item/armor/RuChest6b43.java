@@ -1,6 +1,6 @@
 package net.mcreator.superbwarfare.item.armor;
 
-import net.mcreator.superbwarfare.client.renderer.armor.RuHelmet6b47ArmorRenderer;
+import net.mcreator.superbwarfare.client.renderer.armor.RuChest6b43ArmorRenderer;
 import net.mcreator.superbwarfare.tiers.ModArmorMaterial;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -16,10 +16,10 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.function.Consumer;
 
-public class RuHelmet6b47 extends ArmorItem implements GeoItem {
+public class RuChest6b43 extends ArmorItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public RuHelmet6b47() {
-        super(ModArmorMaterial.CEMENTED_CARBIDE, Type.HELMET, new Properties());
+    public RuChest6b43() {
+        super(ModArmorMaterial.CEMENTED_CARBIDE, Type.CHESTPLATE, new Properties());
     }
 
     @Override
@@ -30,7 +30,7 @@ public class RuHelmet6b47 extends ArmorItem implements GeoItem {
             @Override
             public HumanoidModel<?> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
                 if (this.renderer == null)
-                    this.renderer = new RuHelmet6b47ArmorRenderer();
+                    this.renderer = new RuChest6b43ArmorRenderer();
                 this.renderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
                 return this.renderer;
             }

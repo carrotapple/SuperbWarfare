@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "aba",
+    "aaa",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "superbwarfare:cemented_carbide_ingot"
+    },
+    "b": {
+      "tag": "forge:dyes/green"
+    }
+  },
+  "result": {
+    "item": "superbwarfare:ru_chest_6b43",
+    "count": 1
+  }
+}

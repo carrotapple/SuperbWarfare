@@ -88,6 +88,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         // armor
 
         simpleItem(ModItems.RU_HELMET_6B47);
+        simpleItem(ModItems.RU_CHEST_6B43);
 
         // blueprints
         blueprintItem(ModItems.TRACHELIUM_BLUEPRINT);

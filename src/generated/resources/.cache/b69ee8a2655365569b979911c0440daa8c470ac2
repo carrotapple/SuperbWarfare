@@ -1,4 +1,4 @@
-// 1.20.1	2024-09-25T02:21:34.5694533	Item Models: superbwarfare
+// 1.20.1	2024-09-25T18:10:54.9808742	Item Models: superbwarfare
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_47_blueprint.json
 c993bddc0db9453ffbefa59f9ac9a74dba909038 assets/superbwarfare/models/item/ancient_cpu.json
@@ -70,6 +70,7 @@ ce0f0949b0545d8ef08aeaa52dd423dbe592f704 assets/superbwarfare/models/item/raw_ce
 5b8f7d5922e49e06bcd4d4d2a2a3dc934548570b assets/superbwarfare/models/item/reforging_table.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/rpg_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/rpk_blueprint.json
+34aecddee2e3b903c075b1625e1b23c57ea23fd1 assets/superbwarfare/models/item/ru_chest_6b43.json
 66a2586547a7cc44a80f950036a1795af580518a assets/superbwarfare/models/item/ru_helmet_6b47.json
 ce2232fbc6a9186371c6ae6745ec3be2a0a33546 assets/superbwarfare/models/item/scheelite.json
 c010baff106b3307ec585df4757f7c3d756e9794 assets/superbwarfare/models/item/seeker.json
