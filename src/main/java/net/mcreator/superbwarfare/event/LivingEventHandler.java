@@ -91,7 +91,7 @@ public class LivingEventHandler {
         }
 
         if (damageSource.is(ModTags.DamageTypes.PROJECTILE_ABSOLUTE)) {
-            // TODO 添加对于穿透伤害的处理
+            damage = damage * (1 - 0.2 * Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE.get()), 0, 1));
         }
 
         event.setAmount((float) damage);
