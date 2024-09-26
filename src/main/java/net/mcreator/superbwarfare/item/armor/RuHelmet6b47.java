@@ -25,6 +25,7 @@ import java.util.function.Consumer;
 
 public class RuHelmet6b47 extends ArmorItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
     public RuHelmet6b47() {
         super(ModArmorMaterial.CEMENTED_CARBIDE, Type.HELMET, new Properties());
     }
@@ -45,13 +46,13 @@ public class RuHelmet6b47 extends ArmorItem implements GeoItem {
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
-        Multimap<Attribute, AttributeModifier> map = super.getDefaultAttributeModifiers(equipmentSlot);
-        UUID uuid = new UUID(equipmentSlot.toString().hashCode(), 0);
-        if (equipmentSlot == EquipmentSlot.HEAD) {
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+        Multimap<Attribute, AttributeModifier> map = super.getDefaultAttributeModifiers(slot);
+        UUID uuid = new UUID(slot.toString().hashCode(), 0);
+        if (slot == EquipmentSlot.HEAD) {
             map = HashMultimap.create(map);
-            map.put(ModAttributes.BULLET_RESISTANCE.get(), new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER, 0.2f, AttributeModifier.Operation.ADDITION));
-
+            map.put(ModAttributes.BULLET_RESISTANCE.get(), new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER,
+                    0.2 * Math.max(0, 1 - (double) stack.getDamageValue() / stack.getMaxDamage()), AttributeModifier.Operation.ADDITION));
         }
         return map;
     }
