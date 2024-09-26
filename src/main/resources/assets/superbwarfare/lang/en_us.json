@@ -219,6 +219,8 @@
   "des.superbwarfare.curse_flame_bullet": "命中后会使目标受到咒火效果",
   "item.superbwarfare.longer_wire": "Longer Wire",
   "des.superbwarfare.longer_wire": "Increases the range of Taser Gun",
+  "item.superbwarfare.jhp_bullet": "JHP Bullet",
+  "des.superbwarfare.jhp_bullet": "增加对低护甲目标的伤害",
 
   "item.superbwarfare.heal_clip": "Heal Clip",
   "des.superbwarfare.heal_clip": "Reloading after dealing a final blow will heal you and your nearby allies",

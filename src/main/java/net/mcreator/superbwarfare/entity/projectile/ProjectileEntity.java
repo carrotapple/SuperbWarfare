@@ -34,6 +34,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobType;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -95,6 +96,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     private boolean zoom = false;
     private float bypassArmorRate = 0.0f;
     private float undeadMultiple = 1.0f;
+    private boolean jhpBullet = false;
+    private float jhpLevel = 0f;
     private Supplier<MobEffectInstance> mobEffect = () -> null;
 
     public ProjectileEntity(EntityType<? extends ProjectileEntity> p_i50159_1_, Level p_i50159_2_) {
@@ -475,6 +478,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             this.damage *= this.undeadMultiple;
         }
 
+        if (entity instanceof LivingEntity living && jhpBullet) {
+            this.damage *= (1.0f + 0.12f * jhpLevel) * ((float)(10 / (living.getAttributeValue(Attributes.ARMOR) + 10)) + 0.25f);
+        }
+
         if (headshot) {
             if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
                 var holder = Holder.direct(ModSounds.HEADSHOT.get());
@@ -752,6 +759,16 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     public ProjectileEntity beast() {
         this.beast = true;
+        return this;
+    }
+
+    public ProjectileEntity jhpBullet() {
+        this.jhpBullet = true;
+        return this;
+    }
+
+    public ProjectileEntity jhpLevel(float jhpLevel) {
+        this.jhpLevel = jhpLevel;
         return this;
     }
 

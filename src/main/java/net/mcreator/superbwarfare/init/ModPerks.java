@@ -30,6 +30,8 @@ public class ModPerks {
 
     public static final RegistryObject<Perk> AP_BULLET = AMMO_PERKS.register("ap_bullet",
             () -> new AmmoPerk(new AmmoPerk.Builder("ap_bullet", Perk.Type.AMMO).bypassArmorRate(0.4f).rgb(230, 0, 0)));
+    public static final RegistryObject<Perk> JHP_BULLET = AMMO_PERKS.register("jhp_bullet",
+            () -> new AmmoPerk(new AmmoPerk.Builder("jhp_bullet", Perk.Type.AMMO).bypassArmorRate(-0.2f).rgb(230, 131, 65)));
     public static final RegistryObject<Perk> SILVER_BULLET = AMMO_PERKS.register("silver_bullet",
             () -> new AmmoPerk(new AmmoPerk.Builder("silver_bullet", Perk.Type.AMMO).bypassArmorRate(0.05f).rgb(87, 166, 219)));
     public static final RegistryObject<Perk> POISONOUS_BULLET = AMMO_PERKS.register("poisonous_bullet",

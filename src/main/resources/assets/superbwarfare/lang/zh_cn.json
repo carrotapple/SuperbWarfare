@@ -219,6 +219,8 @@
   "des.superbwarfare.curse_flame_bullet": "命中后会使目标受到咒火效果",
   "item.superbwarfare.longer_wire": "延长导线",
   "des.superbwarfare.longer_wire": "增加泰瑟枪的射程",
+  "item.superbwarfare.jhp_bullet": "空尖弹",
+  "des.superbwarfare.jhp_bullet": "增加对低护甲目标的伤害",
 
   "item.superbwarfare.heal_clip": "治疗弹匣",
   "des.superbwarfare.heal_clip": "最后一击后短时间内填装，可治疗自身和附近队友",

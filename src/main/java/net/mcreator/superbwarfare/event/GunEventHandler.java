@@ -232,6 +232,10 @@ public class GunEventHandler {
                 projectile.undeadMultiple(1.0f + 0.5f * level);
             } else if (perk == ModPerks.BEAST_BULLET.get()) {
                 projectile.beast();
+            } else if (perk == ModPerks.JHP_BULLET.get()) {
+                int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+                projectile.jhpBullet();
+                projectile.jhpLevel(level);
             }
 
             var dmgPerk = PerkHelper.getPerkByType(heldItem, Perk.Type.DAMAGE);
