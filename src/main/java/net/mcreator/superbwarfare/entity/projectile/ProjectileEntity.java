@@ -258,21 +258,21 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             entityResults.sort(Comparator.comparingDouble(e -> e.getHitPos().distanceTo(this.shooter.position())));
 
             for (EntityResult entityResult : entityResults) {
-                if (!this.beast) {
-                    this.bypassArmorRate -= 0.2F;
-                    if (this.bypassArmorRate < 0) {
-                        break;
-                    }
-                }
-
                 result = new ExtendedEntityRayTraceResult(entityResult);
                 if (((EntityHitResult) result).getEntity() instanceof Player player) {
-                    if (this.shooter instanceof Player && !((Player) this.shooter).canHarmPlayer(player)) {
+                    if (this.shooter instanceof Player p && !p.canHarmPlayer(player)) {
                         result = null;
                     }
                 }
                 if (result != null) {
                     this.onHit(result);
+                }
+
+                if (!this.beast) {
+                    this.bypassArmorRate -= 0.2F;
+                    if (this.bypassArmorRate < 0.8F) {
+                        break;
+                    }
                 }
             }
             if (entityResults.isEmpty()) {
