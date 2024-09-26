@@ -219,6 +219,12 @@ public class FireMessage {
                         projectile.undeadMultiple(1.0f + 0.5f * level);
                     } else if (perk == ModPerks.BEAST_BULLET.get()) {
                         projectile.beast();
+                    } else if (perk == ModPerks.JHP_BULLET.get()) {
+                        int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+                        projectile.jhpBullet(true, level);
+                    } else if (perk == ModPerks.HE_BULLET.get()) {
+                        int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+                        projectile.heBullet(true, level);
                     }
 
                     var dmgPerk = PerkHelper.getPerkByType(heldItem, Perk.Type.DAMAGE);
@@ -253,7 +259,9 @@ public class FireMessage {
             } else {
                 stack.getOrCreateTag().putBoolean("shoot", true);
 
-                for (int index0 = 0; index0 < 10; index0++) {
+                var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+
+                for (int index0 = 0; index0 < (perk == ModPerks.HE_BULLET.get() ? 1 : 10); index0++) {
                     spawnBullet(player);
                 }
 
@@ -334,6 +342,12 @@ public class FireMessage {
             projectile.undeadMultiple(1.0f + 0.5f * level);
         } else if (perk == ModPerks.BEAST_BULLET.get()) {
             projectile.beast();
+        } else if (perk == ModPerks.JHP_BULLET.get()) {
+            int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+            projectile.jhpBullet(true, level);
+        } else if (perk == ModPerks.HE_BULLET.get()) {
+            int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+            projectile.heBullet(true, level);
         }
 
         var dmgPerk = PerkHelper.getPerkByType(heldItem, Perk.Type.DAMAGE);
@@ -346,7 +360,7 @@ public class FireMessage {
 
         damage = 0.008333333 * tag.getDouble("damage") * tag.getDouble("speed") * tag.getDouble("levelDamageMultiple");
         projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, velocity, 2.5f);
-        projectile.damage((float) damage);
+        projectile.damage((float) (perk == ModPerks.HE_BULLET.get() ? 10 * damage : damage));
         player.level().addFreshEntity(projectile);
     }
 

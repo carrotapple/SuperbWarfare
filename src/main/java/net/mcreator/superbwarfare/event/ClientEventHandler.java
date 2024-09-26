@@ -5,9 +5,12 @@ import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModMobEffects;
+import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.ShootMessage;
+import net.mcreator.superbwarfare.perk.Perk;
+import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.MillisTimer;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -124,6 +127,7 @@ public class ClientEventHandler {
         if (level == null) return;
 
         ItemStack stack = player.getMainHandItem();
+        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
         // 精准度
         float times = Minecraft.getInstance().getDeltaFrameTime();
@@ -140,7 +144,13 @@ public class ClientEventHandler {
 
         if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
             zoomSpread = 1 - (0.995 * zoomTime);
-        } else if (stack.is(ModTags.Items.SHOTGUN) || stack.is(ModItems.MINIGUN.get())) {
+        } else if (stack.is(ModTags.Items.SHOTGUN)) {
+            if (perk == ModPerks.HE_BULLET.get()) {
+                zoomSpread = 1 - (0.85 * zoomTime);
+            } else {
+                zoomSpread = 1 - (0.25 * zoomTime);
+            }
+        } else if (stack.is(ModItems.MINIGUN.get())) {
             zoomSpread = 1 - (0.25 * zoomTime);
         } else {
             zoomSpread = 1 - (0.9 * zoomTime);
@@ -157,6 +167,7 @@ public class ClientEventHandler {
         // 开火部分
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS
                 && (player.getMainHandItem().is(ModTags.Items.NORMAL_GUN)
+                && !notInGame()
                 || (stack.is(ModItems.MINIGUN.get()) && !player.isSprinting() && stack.getOrCreateTag().getDouble("overheat") == 0 && !player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getDouble("minigun_rotation") >= 10
         ))) {
 

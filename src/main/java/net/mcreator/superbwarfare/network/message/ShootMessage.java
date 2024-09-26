@@ -152,9 +152,12 @@ public class ShootMessage {
                 int cooldown = burstCooldown + singleInterval + customCoolDown;
                 player.getCooldowns().addCooldown(stack.getItem(), cooldown);
 
-                for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {
+                var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+
+                for (int index0 = 0; index0 < (perk == ModPerks.HE_BULLET.get() ? 1 : (int) stack.getOrCreateTag().getDouble("projectile_amount")); index0++) {
                     gunShoot(player, spared);
                 }
+
                 playGunSounds(player);
 
                 stack.getOrCreateTag().putBoolean("shoot", true);
@@ -195,7 +198,7 @@ public class ShootMessage {
 
                 stack.getOrCreateTag().putBoolean("shoot", true);
 
-                for (int index0 = 0; index0 < (int) stack.getOrCreateTag().getDouble("projectile_amount"); index0++) {
+                for (int index0 = 0; index0 < (perk == ModPerks.HE_BULLET.get() ? 1 : (int) stack.getOrCreateTag().getDouble("projectile_amount")); index0++) {
                     gunShoot(player, spared);
                 }
 

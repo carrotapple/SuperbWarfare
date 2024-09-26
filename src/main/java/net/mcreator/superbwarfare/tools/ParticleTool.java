@@ -7,6 +7,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -23,6 +24,24 @@ public class ParticleTool {
     public static <T extends ParticleOptions> void sendParticle(ServerLevel level, T particle, double x, double y, double z, int count,
                                                                 double xOffset, double yOffset, double zOffset, double speed, boolean force, ServerPlayer viewer) {
         level.sendParticles(viewer, particle, force, x, y, z, count, xOffset, yOffset, zOffset, speed);
+    }
+
+    public static void spawnSmallExplosionParticles(Level level, Vec3 pos) {
+        double x = pos.x;
+        double y = pos.y;
+        double z = pos.z;
+
+        if (!level.isClientSide()) {
+            level.playSound(null, BlockPos.containing(x, y + 1, z), SoundEvents.FIREWORK_ROCKET_BLAST, SoundSource.BLOCKS, 4, 1);
+        } else {
+            level.playLocalSound(x, (y + 1), z, SoundEvents.FIREWORK_ROCKET_BLAST, SoundSource.BLOCKS, 2, 1, false);
+        }
+
+        if (level instanceof ServerLevel serverLevel) {
+            sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 3, 0.1, 0.1, 0.1, 0.02, true);
+            sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, x, y, z, 4, 0.2, 0.2, 0.2, 0.02, true);
+            sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), x, y, z, 6, 0, 0, 0, 0.2, true);
+        }
     }
 
     public static void spawnMediumExplosionParticles(Level level, Vec3 pos) {
@@ -59,7 +78,6 @@ public class ParticleTool {
             sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 20, 1, 0.001, 1, 0.01, true);
             sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), x, y, z, 30, 0, 0, 0, 0.2, true);
         }
-
     }
 
     public static void spawnHugeExplosionParticles(Level level, Vec3 pos) {

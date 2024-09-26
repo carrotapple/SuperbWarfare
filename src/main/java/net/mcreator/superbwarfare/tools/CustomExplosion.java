@@ -170,7 +170,7 @@ public class CustomExplosion extends Explosion {
                         yDistance *= d11;
                         zDistance *= d11;
 
-                        Vec3 knockbackVec = new Vec3(xDistance, yDistance, zDistance);
+                        Vec3 knockbackVec = new Vec3(0.2 * xDistance, 0.2 * yDistance, 0.2 * zDistance);
                         entity.setDeltaMovement(entity.getDeltaMovement().add(knockbackVec));
 
                         if (entity instanceof Player player) {

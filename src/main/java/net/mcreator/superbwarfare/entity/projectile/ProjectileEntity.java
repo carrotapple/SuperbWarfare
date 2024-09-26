@@ -7,6 +7,7 @@ import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.item.Transcript;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.mcreator.superbwarfare.network.message.PlayerGunKillMessage;
+import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ExtendedEntityRayTraceResult;
 import net.mcreator.superbwarfare.tools.HitboxHelper;
 import net.mcreator.superbwarfare.tools.ParticleTool;
@@ -39,6 +40,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -97,7 +99,9 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     private float bypassArmorRate = 0.0f;
     private float undeadMultiple = 1.0f;
     private boolean jhpBullet = false;
-    private float jhpLevel = 0f;
+    private int jhpLevel = 0;
+    private boolean heBullet = false;
+    private int heLevel = 0;
     private Supplier<MobEffectInstance> mobEffect = () -> null;
 
     public ProjectileEntity(EntityType<? extends ProjectileEntity> p_i50159_1_, Level p_i50159_2_) {
@@ -332,6 +336,9 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             }
 
             this.onHitBlock(hitVec);
+            if (heBullet) {
+                explosionBulletBlock(this, damage, heLevel, monsterMultiple + 1, hitVec);
+            }
         }
 
         if (result instanceof ExtendedEntityRayTraceResult entityHitResult) {
@@ -349,6 +356,16 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             this.onHitEntity(entity, entityHitResult.isHeadshot(), entityHitResult.isLegshot());
             entity.invulnerableTime = 0;
         }
+    }
+
+    protected void explosionBulletBlock(Entity projectile , float damage, int heLevel, float monsterMultiple, Vec3 hitVec) {
+        CustomExplosion explosion = new CustomExplosion(projectile.level(), projectile,
+                ModDamageTypes.causeProjectileBoomDamage(projectile.level().registryAccess(), projectile, this.getShooter()), (float) ((2 + 0.1 * damage) * (1 + 0.1 * heLevel)),
+                hitVec.x, hitVec.y, hitVec.z, (float)((2.5 + 0.01 * damage) * (1 + 0.05 * heLevel)) , Explosion.BlockInteraction.KEEP).setDamageMultiplier(monsterMultiple);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(projectile.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnSmallExplosionParticles(this.level(), hitVec);
     }
 
     private static int getRings(@NotNull BlockHitResult blockHitResult, @NotNull Vec3 hitVec) {
@@ -418,7 +435,6 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             } else {
                 ParticleTool.sendParticle(serverLevel, ModParticleTypes.BULLET_HOLE.get(), location.x, location.y, location.z, 1, 0, 0, 0, 0, true);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, location.x, location.y, location.z, 3, 0, 0.1, 0, 0.01, true);
-
                 this.discard();
             }
             serverLevel.playSound(null, new BlockPos((int) location.x, (int) location.y, (int) location.z), ModSounds.LAND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -482,6 +498,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             this.damage *= (1.0f + 0.12f * jhpLevel) * ((float)(10 / (living.getAttributeValue(Attributes.ARMOR) + 10)) + 0.25f);
         }
 
+        if (heBullet) {
+            explosionBulletEntity(this, entity, damage, heLevel, mMultiple);
+        }
+
         if (headshot) {
             if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
                 var holder = Holder.direct(ModSounds.HEADSHOT.get());
@@ -519,6 +539,16 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         }
 
         this.discard();
+    }
+
+    protected void explosionBulletEntity(Entity projectile, Entity target, float damage, int heLevel, float monsterMultiple) {
+        CustomExplosion explosion = new CustomExplosion(projectile.level(), projectile,
+                ModDamageTypes.causeProjectileBoomDamage(projectile.level().registryAccess(), projectile, this.getShooter()), (float) ((2 + 0.1 * damage) * (1 + 0.1 * heLevel)),
+                target.getX(), target.getY(), target.getZ(), (float)((2.5 + 0.01 * damage) * (1 + 0.05 * heLevel)) , Explosion.BlockInteraction.KEEP).setDamageMultiplier(monsterMultiple);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(projectile.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnSmallExplosionParticles(target.level(), target.position());
     }
 
     public void setDamage(float damage) {
@@ -762,13 +792,15 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         return this;
     }
 
-    public ProjectileEntity jhpBullet() {
+    public ProjectileEntity jhpBullet(boolean jhpBullet, int jhpLevel) {
         this.jhpBullet = true;
+        this.jhpLevel = jhpLevel;
         return this;
     }
 
-    public ProjectileEntity jhpLevel(float jhpLevel) {
-        this.jhpLevel = jhpLevel;
+    public ProjectileEntity heBullet(boolean heBullet, int heLevel) {
+        this.heBullet = true;
+        this.heLevel = heLevel;
         return this;
     }
 
