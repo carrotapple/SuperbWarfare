@@ -70,8 +70,6 @@ public class BocekArrowEntity extends AbstractArrow implements ItemSupplier {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-
-
         this.discard();
     }
 

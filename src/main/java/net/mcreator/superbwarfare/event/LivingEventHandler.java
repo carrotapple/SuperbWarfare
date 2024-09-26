@@ -90,15 +90,12 @@ public class LivingEventHandler {
             }
         }
 
-        // TODO 添加TACZ枪械非穿甲伤害的适配
-
-        if (damageSource.is(ModDamageTypes.GUN_FIRE)
-                || damageSource.is(ModDamageTypes.GUN_FIRE_HEADSHOT)
-                || damageSource.is(DamageTypes.ARROW)
-                || damageSource.is(DamageTypes.TRIDENT)
-                || damageSource.is(DamageTypes.THROWN)
-        ) {
+        if (damageSource.is(ModTags.DamageTypes.PROJECTILE)) {
             damage = damage * (1 - Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE.get()), 0, 1));
+        }
+
+        if (damageSource.is(ModTags.DamageTypes.PROJECTILE_ABSOLUTE)) {
+            // TODO 添加对于穿透伤害的处理
         }
 
         event.setAmount((float) damage);

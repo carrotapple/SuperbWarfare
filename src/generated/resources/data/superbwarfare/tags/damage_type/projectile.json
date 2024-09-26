@@ -1,0 +1,13 @@
+{
+  "values": [
+    "superbwarfare:gunfire",
+    "superbwarfare:gunfire_headshot",
+    "minecraft:arrow",
+    "minecraft:trident",
+    "minecraft:thrown",
+    {
+      "id": "tacz:bullet",
+      "required": false
+    }
+  ]
+}

@@ -1,9 +1,11 @@
 package net.mcreator.superbwarfare.init;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.item.Item;
 
 public class ModTags {
@@ -28,6 +30,15 @@ public class ModTags {
 
         private static TagKey<Item> tag(String name) {
             return ItemTags.create(new ResourceLocation(ModUtils.MODID, name));
+        }
+    }
+
+    public static class DamageTypes {
+        public static final TagKey<DamageType> PROJECTILE = tag("projectile");
+        public static final TagKey<DamageType> PROJECTILE_ABSOLUTE = tag("projectile_absolute");
+
+        private static TagKey<DamageType> tag(String name) {
+            return TagKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, name));
         }
     }
 }
