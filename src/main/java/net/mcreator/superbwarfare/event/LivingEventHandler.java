@@ -66,11 +66,7 @@ public class LivingEventHandler {
 
         ItemStack stack = sourceentity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
 
-        if ((damageSource.is(ModDamageTypes.PROJECTILE_BOOM)
-                || damageSource.is(ModDamageTypes.CANNON_FIRE))
-                && (stack.getItem() == ModItems.M_79.get()
-                || stack.getItem() == ModItems.RPG.get()
-                || stack.getItem() == ModItems.JAVELIN.get())) {
+        if ((damageSource.is(ModDamageTypes.PROJECTILE_BOOM) || damageSource.is(ModDamageTypes.CANNON_FIRE)) && stack.is(ModTags.Items.LAUNCHER)) {
             stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
         }
 

@@ -85,6 +85,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
         this.tag(ModTags.Items.USE_SHOTGUN_AMMO).add(ModItems.ABEKIRI.get(), ModItems.M_870.get(), ModItems.AA_12.get());
         this.tag(ModTags.Items.USE_SNIPER_AMMO).add(ModItems.HUNTING_RIFLE.get(), ModItems.NTW_20.get(), ModItems.SENTINEL.get(),
                 ModItems.SVD.get(), ModItems.M_98B.get(), ModItems.K_98.get(), ModItems.MOSIN_NAGANT.get());
+        this.tag(ModTags.Items.LAUNCHER).add(ModItems.M_79.get(), ModItems.RPG.get(), ModItems.JAVELIN.get());
     }
 
     private static TagKey<Item> forgeTag(String name) {

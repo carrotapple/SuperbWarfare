@@ -82,7 +82,7 @@ public class AmmoBarOverlay {
             ResourceLocation fireMode = getFireMode(stack);
 
             if (stack.getItem() == ModItems.JAVELIN.get()) {
-                fireMode = stack.getOrCreateTag().getBoolean("TopMode")? TOP : DIR;
+                fireMode = stack.getOrCreateTag().getBoolean("TopMode") ? TOP : DIR;
             }
 
             event.getGuiGraphics().blit(fireMode,
@@ -198,10 +198,9 @@ public class AmmoBarOverlay {
         }
 
         if (!creativeAmmo()) {
-            if (stack.getItem() == ModItems.M_79.get() || stack.getItem() == ModItems.RPG.get() || stack.getItem() == ModItems.TASER.get() || stack.getItem() == ModItems.JAVELIN.get() ) {
+            if (stack.is(ModTags.Items.LAUNCHER) || stack.getItem() == ModItems.TASER.get()) {
                 return "" + stack.getOrCreateTag().getInt("max_ammo");
             }
-
             if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
                 return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo;
             }
@@ -224,27 +223,21 @@ public class AmmoBarOverlay {
         if (stack.getItem() == ModItems.BOCEK.get()) {
             return "   Arrow";
         }
-
         if (stack.getItem() == ModItems.M_79.get()) {
             return "40mm Grenade";
         }
-
         if (stack.getItem() == ModItems.RPG.get()) {
             return "Yassin105 TBG";
         }
-
         if (stack.getItem() == ModItems.JAVELIN.get()) {
             return "Javelin Missile";
         }
-
         if (stack.getItem() == ModItems.TASER.get()) {
             return "Electrode Rod";
         }
-
         if (stack.getItem() == ModItems.MINIGUN.get()) {
             return "Rifle Ammo";
         }
-
         if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
             return "  Rifle Ammo";
         }
