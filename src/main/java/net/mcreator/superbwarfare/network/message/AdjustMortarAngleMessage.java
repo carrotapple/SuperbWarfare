@@ -1,7 +1,6 @@
 package net.mcreator.superbwarfare.network.message;
 
 import net.mcreator.superbwarfare.client.gui.RangeHelper;
-import net.mcreator.superbwarfare.init.ModAttributes;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.mcreator.superbwarfare.tools.TraceTool;
@@ -14,6 +13,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
+
+import static net.mcreator.superbwarfare.entity.MortarEntity.PITCH;
 
 public class AdjustMortarAngleMessage {
     private final double scroll;
@@ -43,8 +44,8 @@ public class AdjustMortarAngleMessage {
             double angle = 0;
 
             if (looking instanceof LivingEntity living){
-                living.getAttribute(ModAttributes.MORTAR_PITCH.get()).setBaseValue(Mth.clamp(living.getAttribute(ModAttributes.MORTAR_PITCH.get()).getBaseValue() + 0.5 * message.scroll,20,89));
-                angle = living.getAttribute(ModAttributes.MORTAR_PITCH.get()).getBaseValue();
+                living.getEntityData().set(PITCH, (float)Mth.clamp(living.getEntityData().get(PITCH) + 0.5 * message.scroll,20,89));
+                angle = living.getEntityData().get(PITCH);
             }
 
             player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(angle) + " Range:" + new java.text.DecimalFormat("##.#").format((int) RangeHelper.getRange(angle)) + "M"), true);

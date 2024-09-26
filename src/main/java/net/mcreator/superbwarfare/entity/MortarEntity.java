@@ -2,7 +2,6 @@ package net.mcreator.superbwarfare.entity;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.projectile.MortarShellEntity;
-import net.mcreator.superbwarfare.init.ModAttributes;
 import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
@@ -46,6 +45,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class MortarEntity extends LivingEntity implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> FIRE_TIME = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Float> PITCH = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.FLOAT);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public String animationProcedure = "empty";
@@ -67,6 +67,7 @@ public class MortarEntity extends LivingEntity implements GeoEntity, AnimatedEnt
         super.defineSynchedData();
         this.entityData.define(ANIMATION, "undefined");
         this.entityData.define(FIRE_TIME, 0);
+        this.entityData.define(PITCH, 70f);
     }
 
     @Override
@@ -137,6 +138,7 @@ public class MortarEntity extends LivingEntity implements GeoEntity, AnimatedEnt
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("FireTime", this.entityData.get(FIRE_TIME));
+        compound.putFloat("Pitch", this.entityData.get(PITCH));
     }
 
     @Override
@@ -144,6 +146,9 @@ public class MortarEntity extends LivingEntity implements GeoEntity, AnimatedEnt
         super.readAdditionalSaveData(compound);
         if (compound.contains("FireTime")) {
             this.entityData.set(FIRE_TIME, compound.getInt("FireTime"));
+        }
+        if (compound.contains("Pitch")) {
+            this.entityData.set(PITCH, compound.getFloat("Pitch"));
         }
     }
 
@@ -201,7 +206,7 @@ public class MortarEntity extends LivingEntity implements GeoEntity, AnimatedEnt
 
     @Override
     public void travel(Vec3 dir) {
-        this.setXRot(-Mth.clamp((float) this.getAttribute(ModAttributes.MORTAR_PITCH.get()).getBaseValue(), 20, 89));
+        this.setXRot(-Mth.clamp((float) entityData.get(PITCH), 20, 89));
     }
 
     @Override
@@ -251,19 +256,6 @@ public class MortarEntity extends LivingEntity implements GeoEntity, AnimatedEnt
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState<MortarEntity> event) {
-        if (!animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
-            if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                this.animationProcedure = "empty";
-                event.getController().forceAnimationReset();
-            }
-        } else if (animationProcedure.equals("empty")) {
-            return PlayState.STOP;
-        }
-        return PlayState.CONTINUE;
-    }
-
     @Override
     protected void tickDeath() {
         ++this.deathTime;
@@ -303,7 +295,6 @@ public class MortarEntity extends LivingEntity implements GeoEntity, AnimatedEnt
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         data.add(new AnimationController<>(this, "movement", 0, this::movementPredicate));
-        data.add(new AnimationController<>(this, "procedure", 0, this::procedurePredicate));
     }
 
     @Override

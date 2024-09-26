@@ -8,7 +8,7 @@ import software.bernie.geckolib.model.GeoModel;
 public class LightSaberItemModel extends GeoModel<LightSaber> {
     @Override
     public ResourceLocation getAnimationResource(LightSaber animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/lightsaber.animation.json");
+        return null;
     }
 
     @Override

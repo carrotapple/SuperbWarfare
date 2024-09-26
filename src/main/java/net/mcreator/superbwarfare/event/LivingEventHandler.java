@@ -16,6 +16,7 @@ import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -62,6 +63,7 @@ public class LivingEventHandler {
         }
 
         double damage = amount;
+
         ItemStack stack = sourceentity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
 
         if ((damageSource.is(ModDamageTypes.PROJECTILE_BOOM)
@@ -86,9 +88,22 @@ public class LivingEventHandler {
             } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) || stack.getItem() == ModItems.BOCEK.get()) {
                 damage = reduceDamageByDistance(amount, distance, 0.0025, 150);
             }
-            event.setAmount((float) damage);
-            stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
         }
+
+        // TODO 添加TACZ枪械非穿甲伤害的适配
+
+        if (damageSource.is(ModDamageTypes.GUN_FIRE)
+                || damageSource.is(ModDamageTypes.GUN_FIRE_HEADSHOT)
+                || damageSource.is(DamageTypes.ARROW)
+                || damageSource.is(DamageTypes.TRIDENT)
+                || damageSource.is(DamageTypes.THROWN)
+        ) {
+            damage = damage * (1 - Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE.get()), 0, 1));
+        }
+
+        event.setAmount((float) damage);
+
+        stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
 
         if (entity instanceof TargetEntity && sourceentity instanceof Player player) {
             player.displayClientMessage(Component.literal("Damage:" + new java.text.DecimalFormat("##.#").format(damage) + " Distance:" + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceentity.position()))) + "M"), false);
