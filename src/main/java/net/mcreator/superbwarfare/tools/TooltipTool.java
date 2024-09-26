@@ -39,8 +39,8 @@ public class TooltipTool {
 
         addLevelTips(tooltip, stack);
         addBypassTips(tooltip, stack);
-        addPerkTips(tooltip, stack);
         addRpmTips(tooltip, stack);
+        addPerkTips(tooltip, stack);
     }
 
     public static void addShotgunTips(List<Component> tooltip, ItemStack stack, int count) {

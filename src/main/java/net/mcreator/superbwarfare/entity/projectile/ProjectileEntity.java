@@ -57,10 +57,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.text.DecimalFormat;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -247,7 +244,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
         Vec3 vec = this.getDeltaMovement();
 
-        if (!this.level().isClientSide()) {
+        if (!this.level().isClientSide() && this.shooter != null) {
             Vec3 startVec = this.position();
             Vec3 endVec = startVec.add(this.getDeltaMovement());
             HitResult result = rayTraceBlocks(this.level(), new ClipContext(startVec, endVec, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this), IGNORE_LEAVES);
@@ -256,16 +253,18 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             }
 
             List<EntityResult> entityResults = new ArrayList<>();
+            var temp = findEntitiesOnPath(startVec, endVec);
+            if (temp != null) entityResults.addAll(temp);
+            entityResults.sort(Comparator.comparingDouble(e -> e.getHitPos().distanceTo(this.shooter.position())));
 
-            if (this.beast) {
-                var temp = findEntitiesOnPath(startVec, endVec);
-                if (temp != null) entityResults.addAll(temp);
-            } else {
-                var temp = this.findEntityOnPath(startVec, endVec);
-                if (temp != null) entityResults.add(temp);
-            }
+            for (EntityResult entityResult : entityResults) {
+                if (!this.beast) {
+                    this.bypassArmorRate -= 0.2F;
+                    if (this.bypassArmorRate < 0) {
+                        break;
+                    }
+                }
 
-            for (var entityResult : entityResults) {
                 result = new ExtendedEntityRayTraceResult(entityResult);
                 if (((EntityHitResult) result).getEntity() instanceof Player player) {
                     if (this.shooter instanceof Player && !((Player) this.shooter).canHarmPlayer(player)) {
@@ -423,7 +422,6 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         }
     }
 
-    // TODO 实现穿甲比例大于1时的穿透生物效果
     protected void onHitEntity(Entity entity, boolean headshot, boolean legShot) {
         if (this.shooter == null) return;
 
