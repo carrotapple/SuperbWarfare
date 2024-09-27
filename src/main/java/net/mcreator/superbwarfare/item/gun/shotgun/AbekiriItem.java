@@ -159,7 +159,7 @@ public class AbekiriItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
-        TooltipTool.addShotgunTips(list, stack, 8);
+        TooltipTool.addShotgunTips(list, stack);
     }
 
     public static ItemStack getGunInstance() {

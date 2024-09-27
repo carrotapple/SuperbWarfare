@@ -195,6 +195,7 @@ public class GunEventHandler {
         if (!player.level().isClientSide()) {
             float headshot = (float) heldItem.getOrCreateTag().getDouble("headshot");
             float damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("sentinelChargeDamage")) * (float) heldItem.getOrCreateTag().getDouble("levelDamageMultiple");
+            float velocity = (float) heldItem.getOrCreateTag().getDouble("velocity");
             boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
             var perk = PerkHelper.getPerkByType(heldItem, Perk.Type.AMMO);
 
@@ -238,6 +239,7 @@ public class GunEventHandler {
             } else if (perk == ModPerks.HE_BULLET.get()) {
                 int level = PerkHelper.getItemPerkLevel(perk, heldItem);
                 projectile.heBullet(true, level);
+                velocity *= 0.6f;
             }
 
             var dmgPerk = PerkHelper.getPerkByType(heldItem, Perk.Type.DAMAGE);
@@ -247,7 +249,7 @@ public class GunEventHandler {
             }
 
             projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
-            projectile.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.0005f, player.getLookAngle().z, 1 * (float) heldItem.getOrCreateTag().getDouble("velocity"),
+            projectile.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.0005f, player.getLookAngle().z, velocity,
                     (float) spared);
             player.level().addFreshEntity(projectile);
         }

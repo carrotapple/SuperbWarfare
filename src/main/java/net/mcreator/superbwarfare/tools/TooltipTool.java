@@ -43,7 +43,7 @@ public class TooltipTool {
         addPerkTips(tooltip, stack);
     }
 
-    public static void addShotgunTips(List<Component> tooltip, ItemStack stack, int count) {
+    public static void addShotgunTips(List<Component> tooltip, ItemStack stack) {
         tooltip.add(Component.literal(""));
 
         double damage = ItemNBTTool.getDouble(stack, "damage", 0)
@@ -51,7 +51,7 @@ public class TooltipTool {
 
         tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##.#").format(damage) + " * " + count).withStyle(ChatFormatting.GREEN)));
+                .append(Component.literal(new DecimalFormat("##.#").format(damage) + " * " + new DecimalFormat("##").format(ItemNBTTool.getDouble(stack, "projectile_amount", 0))).withStyle(ChatFormatting.GREEN)));
 
         addLevelTips(tooltip, stack);
         addBypassTips(tooltip, stack);

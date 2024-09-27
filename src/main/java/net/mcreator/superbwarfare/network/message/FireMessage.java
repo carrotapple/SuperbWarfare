@@ -225,6 +225,7 @@ public class FireMessage {
                     } else if (perk == ModPerks.HE_BULLET.get()) {
                         int level = PerkHelper.getItemPerkLevel(perk, heldItem);
                         projectile.heBullet(true, level);
+                        velocity *= 0.6f;
                     }
 
                     var dmgPerk = PerkHelper.getPerkByType(heldItem, Perk.Type.DAMAGE);
@@ -348,6 +349,7 @@ public class FireMessage {
         } else if (perk == ModPerks.HE_BULLET.get()) {
             int level = PerkHelper.getItemPerkLevel(perk, heldItem);
             projectile.heBullet(true, level);
+            velocity *= 0.6f;
         }
 
         var dmgPerk = PerkHelper.getPerkByType(heldItem, Perk.Type.DAMAGE);

@@ -158,7 +158,7 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
-        TooltipTool.addShotgunTips(list, stack, 12);
+        TooltipTool.addShotgunTips(list, stack);
     }
 
     @Override

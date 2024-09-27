@@ -220,7 +220,9 @@
   "item.superbwarfare.longer_wire": "延长导线",
   "des.superbwarfare.longer_wire": "增加泰瑟枪的射程",
   "item.superbwarfare.jhp_bullet": "空尖弹",
-  "des.superbwarfare.jhp_bullet": "增加对低护甲目标的伤害",
+  "des.superbwarfare.jhp_bullet": "增加对无护甲目标的伤害，但伤害会随着护甲值上升而迅速降低",
+  "item.superbwarfare.he_bullet": "爆炸子弹",
+  "des.superbwarfare.he_bullet": "子弹在命中后会爆炸",
 
   "item.superbwarfare.heal_clip": "治疗弹匣",
   "des.superbwarfare.heal_clip": "最后一击后短时间内填装，可治疗自身和附近队友",
