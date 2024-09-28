@@ -257,11 +257,14 @@ public class PlayerEventHandler {
             player.getPersistentData().putDouble("noRun", 20);
         }
 
+        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).holdFire) {
+            player.getPersistentData().putDouble("noRun", 10);
+        }
+
         if (player.isShiftKeyDown()
                 || player.isPassenger()
                 || player.isInWater()
-                || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom
-                || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).holdFire) {
+                || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
             player.getPersistentData().putDouble("noRun", 3);
         }
 
