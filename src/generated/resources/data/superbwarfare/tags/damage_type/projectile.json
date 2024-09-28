@@ -8,6 +8,10 @@
     {
       "id": "tacz:bullet",
       "required": false
+    },
+    {
+      "id": "tacz:bullet_void",
+      "required": false
     }
   ]
 }

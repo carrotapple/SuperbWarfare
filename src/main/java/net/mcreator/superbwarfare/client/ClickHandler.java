@@ -86,7 +86,12 @@ public class ClickHandler {
             }
             if (player.getMainHandItem().is(ModTags.Items.GUN)) {
                 event.setCanceled(true);
-                ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(0));
+
+                if (stack.is(ModTags.Items.GUN) && !stack.is(ModTags.Items.CANNOT_RELOAD) && stack.getOrCreateTag().getInt("ammo") <= 0) {
+                    ModUtils.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
+                } else {
+                    ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(0));
+                }
             }
         }
 

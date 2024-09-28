@@ -61,7 +61,6 @@ public class ReloadMessage {
                 boolean clipLoad = tag.getInt("ammo") == 0 && tag.getDouble("clipLoad") == 1;
 
                 // 检查备弹
-
                 int count = 0;
                 for (var inv : player.getInventory().items) {
                     if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
