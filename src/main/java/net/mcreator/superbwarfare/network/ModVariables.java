@@ -70,6 +70,7 @@ public class ModVariables {
             PlayerVariables original = event.getOriginal().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
             PlayerVariables clone = event.getEntity().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
             clone.zoom = original.zoom;
+            clone.holdFire = original.holdFire;
             clone.recoil = original.recoil;
             clone.recoilHorizon = original.recoilHorizon;
             clone.firing = original.firing;
@@ -260,6 +261,7 @@ public class ModVariables {
 
     public static class PlayerVariables {
         public boolean zoom = false;
+        public boolean holdFire = false;
         public double recoil = 0;
         public double recoilHorizon = 0;
         public double firing = 0;
@@ -287,6 +289,7 @@ public class ModVariables {
         public Tag writeNBT() {
             CompoundTag nbt = new CompoundTag();
             nbt.putBoolean("zoom", zoom);
+            nbt.putBoolean("holdFire", holdFire);
             nbt.putDouble("recoil", recoil);
             nbt.putDouble("recoil_horizon", recoilHorizon);
             nbt.putDouble("firing", firing);
@@ -311,6 +314,7 @@ public class ModVariables {
         public void readNBT(Tag Tag) {
             CompoundTag nbt = (CompoundTag) Tag;
             zoom = nbt.getBoolean("zoom");
+            holdFire = nbt.getBoolean("holdFire");
             recoil = nbt.getDouble("recoil");
             recoilHorizon = nbt.getDouble("recoil_horizon");
             firing = nbt.getDouble("firing");
@@ -366,6 +370,7 @@ public class ModVariables {
 
                 PlayerVariables variables = entity.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
                 variables.zoom = message.data.zoom;
+                variables.holdFire = message.data.holdFire;
                 variables.recoil = message.data.recoil;
                 variables.recoilHorizon = message.data.recoilHorizon;
                 variables.firing = message.data.firing;

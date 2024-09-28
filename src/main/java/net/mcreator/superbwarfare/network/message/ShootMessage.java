@@ -66,7 +66,7 @@ public class ShootMessage {
             int coolDownTick = (int) Math.ceil(20 / (rpm / 60));
             double mode = stack.getOrCreateTag().getInt("fire_mode");
 
-            if ((player.getPersistentData().getBoolean("holdFire") || stack.getOrCreateTag().getInt("burst_fire") > 0)
+            if (((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).holdFire || stack.getOrCreateTag().getInt("burst_fire") > 0)
                     && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
                     && !stack.getOrCreateTag().getBoolean("reloading")
                     && !stack.getOrCreateTag().getBoolean("charging")
@@ -76,13 +76,19 @@ public class ShootMessage {
 
                 int singleInterval = 0;
                 if (mode == 0) {
-                    player.getPersistentData().putBoolean("holdFire", false);
+                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        capability.holdFire = false;
+                        capability.syncPlayerVariables(player);
+                    });
                     singleInterval = coolDownTick;
                 }
 
                 int burstCooldown = 0;
                 if (mode == 1) {
-                    player.getPersistentData().putBoolean("holdFire", false);
+                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                        capability.holdFire = false;
+                        capability.syncPlayerVariables(player);
+                    });
                     stack.getOrCreateTag().putInt("burst_fire", (stack.getOrCreateTag().getInt("burst_fire") - 1));
                     burstCooldown = stack.getOrCreateTag().getInt("burst_fire") == 0 ? coolDownTick + 4 : 0;
                 }

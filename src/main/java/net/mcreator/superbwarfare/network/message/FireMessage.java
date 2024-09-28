@@ -71,11 +71,14 @@ public class FireMessage {
 
         if (type == 0) {
             handlePlayerShoot(player);
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.holdFire = true;
+                capability.syncPlayerVariables(player);
+            });
         } else if (type == 1) {
-            player.getPersistentData().putBoolean("holdFire", false);
-//            player.getPersistentData().putBoolean("firing", false);
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.bowPullHold = false;
+                capability.holdFire = false;
                 capability.syncPlayerVariables(player);
             });
 
@@ -134,11 +137,13 @@ public class FireMessage {
         }
 
         if (tag.getInt("fire_mode") == 1) {
-            player.getPersistentData().putBoolean("holdFire", false);
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.holdFire = false;
+                capability.syncPlayerVariables(player);
+            });
             tag.putInt("burst_fire", (int) tag.getDouble("burst_size"));
-        } else {
-            player.getPersistentData().putBoolean("holdFire", true);
         }
+
         if (tag.getDouble("prepare") == 0 && tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
             tag.putDouble("force_stop", 1);
         }

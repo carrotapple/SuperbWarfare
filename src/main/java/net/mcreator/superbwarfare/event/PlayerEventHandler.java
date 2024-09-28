@@ -5,7 +5,6 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
-import net.mcreator.superbwarfare.network.message.ReloadMessage;
 import net.mcreator.superbwarfare.network.message.SimulationDistanceMessage;
 import net.mcreator.superbwarfare.tools.ItemNBTTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
@@ -258,15 +257,20 @@ public class PlayerEventHandler {
             player.getPersistentData().putDouble("noRun", 20);
         }
 
-        if (player.isShiftKeyDown() || player.isPassenger() || player.isInWater() || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
-            player.getPersistentData().putDouble("noRun", 1);
+        if (player.isShiftKeyDown()
+                || player.isPassenger()
+                || player.isInWater()
+                || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom
+                || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).holdFire) {
+            player.getPersistentData().putDouble("noRun", 3);
         }
 
         if (player.getPersistentData().getDouble("noRun") > 0) {
             player.getPersistentData().putDouble("noRun", (player.getPersistentData().getDouble("noRun") - 1));
         }
 
-        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
+        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom
+                || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).holdFire) {
             player.setSprinting(false);
         }
     }

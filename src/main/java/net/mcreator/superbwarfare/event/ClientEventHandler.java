@@ -79,6 +79,7 @@ public class ClientEventHandler {
     public static double handPos = 0;
     public static double gunSpread = 0;
     public static double fireSpread = 0;
+    public static double cantFireTime = 0;
 
     public static MillisTimer clientTimer = new MillisTimer();
 
@@ -165,8 +166,18 @@ public class ClientEventHandler {
         }
 
         // 开火部分
+
+        if (player.getPersistentData().getDouble("noRun") == 0 && player.isSprinting() && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS) {
+            cantFireTime = Mth.clamp(cantFireTime + 3 * times,0,30);
+        } else {
+            cantFireTime = Mth.clamp(cantFireTime - 6 * times,0,30);
+        }
+
+//        player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##").format(cantFireTime)), true);
+
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS
                 && (player.getMainHandItem().is(ModTags.Items.NORMAL_GUN)
+                && cantFireTime == 0
                 && !notInGame()
                 || (stack.is(ModItems.MINIGUN.get()) && !player.isSprinting() && stack.getOrCreateTag().getDouble("overheat") == 0 && !player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getDouble("minigun_rotation") >= 10
         ))) {
