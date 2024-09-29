@@ -1,11 +1,14 @@
 package net.mcreator.superbwarfare.init;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.network.message.*;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -97,7 +100,8 @@ public class ModKeyMappings {
         }
     };
 
-    public static final KeyMapping CONFIG = new KeyMapping("key.superbwarfare.config", GLFW.GLFW_KEY_P, "key.categories.superbwarfare");
+    public static final KeyMapping CONFIG = new KeyMapping("key.superbwarfare.config", KeyConflictContext.IN_GAME,
+            KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_O, "key.categories.superbwarfare");
 
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
