@@ -6,6 +6,7 @@ public class DisplayConfig {
 
     public static ForgeConfigSpec.BooleanValue KILL_INDICATION;
     public static ForgeConfigSpec.BooleanValue GLOBAL_INDICATION;
+    public static ForgeConfigSpec.BooleanValue AMMO_HUD;
 
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("display");
@@ -15,6 +16,9 @@ public class DisplayConfig {
 
         builder.comment("Set FALSE if you want to show kill indication ONLY while killing an entity with a gun");
         GLOBAL_INDICATION = builder.define("global_indication", false);
+
+        builder.comment("Set TRUE to show ammo and gun info on HUD");
+        AMMO_HUD = builder.define("ammo_hud", true);
 
         builder.pop();
     }

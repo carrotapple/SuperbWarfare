@@ -27,5 +27,13 @@ public class DisplayClothConfig {
                 .setTooltip(Component.translatable("config.superbwarfare.client.display.global_indication.des"))
                 .build()
         );
+
+        category.addEntry(entryBuilder
+                .startBooleanToggle(Component.translatable("config.superbwarfare.client.display.ammo_hud"), DisplayConfig.AMMO_HUD.get())
+                .setDefaultValue(true)
+                .setSaveConsumer(DisplayConfig.AMMO_HUD::set)
+                .setTooltip(Component.translatable("config.superbwarfare.client.display.ammo_hud.des"))
+                .build()
+        );
     }
 }

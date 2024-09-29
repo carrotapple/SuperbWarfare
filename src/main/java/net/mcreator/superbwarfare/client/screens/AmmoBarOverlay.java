@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.client.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.config.client.DisplayConfig;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModKeyMappings;
 import net.mcreator.superbwarfare.init.ModTags;
@@ -41,17 +42,15 @@ public class AmmoBarOverlay {
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
+        if (!DisplayConfig.AMMO_HUD.get()) return;
+
         int w = event.getWindow().getGuiScaledWidth();
         int h = event.getWindow().getGuiScaledHeight();
         Player player = Minecraft.getInstance().player;
 
-        if (player == null) {
-            return;
-        }
+        if (player == null) return;
 
-        if (player.isSpectator()) {
-            return;
-        }
+        if (player.isSpectator()) return;
 
         ItemStack stack = player.getMainHandItem();
         if (stack.getItem() instanceof GunItem gunItem) {
