@@ -2,18 +2,19 @@ package net.mcreator.superbwarfare.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.config.client.EmptyAutoReloadConfig;
+import net.mcreator.superbwarfare.compat.CompatHolder;
+import net.mcreator.superbwarfare.compat.clothconfig.ClothConfigHelper;
+import net.mcreator.superbwarfare.config.client.ReloadConfig;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.entity.MortarEntity;
-import net.mcreator.superbwarfare.init.ModItems;
-import net.mcreator.superbwarfare.init.ModMobEffects;
-import net.mcreator.superbwarfare.init.ModSounds;
-import net.mcreator.superbwarfare.init.ModTags;
+import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.item.common.ammo.CannonShellItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.*;
 import net.mcreator.superbwarfare.tools.TraceTool;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -23,6 +24,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
@@ -89,7 +91,7 @@ public class ClickHandler {
                 event.setCanceled(true);
 
                 if (stack.is(ModTags.Items.GUN) && !stack.is(ModTags.Items.CANNOT_RELOAD) && stack.getOrCreateTag().getInt("ammo") <= 0) {
-                    if (EmptyAutoReloadConfig.EMPTY_AUTO_RELOAD.get()) {
+                    if (ReloadConfig.EMPTY_AUTO_RELOAD.get()) {
                         ModUtils.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
                     }
                 } else {
@@ -158,8 +160,11 @@ public class ClickHandler {
         setKeyState(event);
 
         int key = event.getKey();
-        if (key == Minecraft.getInstance().options.keyJump.getKey().getValue()) {
+        if (key == Minecraft.getInstance().options.keyJump.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
             handleDoubleJump(player);
+        }
+        if (key == ModKeyMappings.CONFIG.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
+            handleConfigScreen(player);
         }
     }
 
@@ -218,6 +223,14 @@ public class ClickHandler {
             level.playLocalSound(x, y, z, ModSounds.DOUBLE_JUMP.get(), SoundSource.BLOCKS, 1, 1, false);
 
             ModUtils.PACKET_HANDLER.sendToServer(new DoubleJumpMessage(false));
+        }
+    }
+
+    private static void handleConfigScreen(Player player) {
+        if (ModList.get().isLoaded(CompatHolder.CLOTH_CONFIG)) {
+            CompatHolder.hasMod(CompatHolder.CLOTH_CONFIG, () -> Minecraft.getInstance().setScreen(ClothConfigHelper.getConfigScreen(null)));
+        } else {
+            player.displayClientMessage(Component.translatable("des.superbwarfare.no_cloth_config").withStyle(ChatFormatting.RED), true);
         }
     }
 

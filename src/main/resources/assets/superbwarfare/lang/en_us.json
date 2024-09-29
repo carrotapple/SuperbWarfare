@@ -303,6 +303,7 @@
   "key.superbwarfare.sensitivity_reduce": "Reduce Sensitivity",
   "key.superbwarfare.interact": "Interact",
   "key.superbwarfare.breath": "Breathe",
+  "key.superbwarfare.config": "Open Config Screen",
 
   "effect.superbwarfare.shock": "Shock",
   "item.minecraft.potion.effect.superbwarfare_shock": "Potion of Shock",
@@ -328,6 +329,7 @@
   "des.superbwarfare.monitor.monitor_already_linked": "This monitor has been connected！",
   "des.superbwarfare.monitor.already_linked": "This device has been connected！",
   "des.superbwarfare.monitor.unlinked": "Disconnect！",
+  "des.superbwarfare.no_cloth_config": "您尚未安装 Cloth Config API，无法打开配置界面",
 
   "des.superbwarfare.drone.distance": "DISTANCE:",
   "des.superbwarfare.drone.health": "HEALTH:",
@@ -340,5 +342,10 @@
 
   "entity.minecraft.villager.superbwarfare.armory": "Armory",
 
-  "container.superbwarfare.reforging_table": "Gun Reforge Table"
+  "container.superbwarfare.reforging_table": "Gun Reforge Table",
+
+  "config.superbwarfare.title": "卓越前线：配置",
+  "config.superbwarfare.client.reload": "换弹配置",
+  "config.superbwarfare.client.reload.empty_auto_reload": "自动换弹",
+  "config.superbwarfare.client.reload.empty_auto_reload.des": "在当前弹匣为空时，点击开火键以进行换弹"
 }

@@ -97,6 +97,8 @@ public class ModKeyMappings {
         }
     };
 
+    public static final KeyMapping CONFIG = new KeyMapping("key.superbwarfare.config", GLFW.GLFW_KEY_P, "key.categories.superbwarfare");
+
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(RELOAD);
@@ -105,9 +107,10 @@ public class ModKeyMappings {
         event.register(SENSITIVITY_REDUCE);
         event.register(INTERACT);
         event.register(BREATH);
+        event.register(CONFIG);
     }
 
-    @Mod.EventBusSubscriber({Dist.CLIENT})
+    @Mod.EventBusSubscriber(value = Dist.CLIENT)
     public static class KeyEventListener {
         @SubscribeEvent
         public static void onClientTick(TickEvent.ClientTickEvent event) {
