@@ -4,7 +4,6 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.mcreator.superbwarfare.config.client.DisplayConfig;
-import net.mcreator.superbwarfare.config.client.KillMessageConfig;
 import net.minecraft.network.chat.Component;
 
 public class DisplayClothConfig {
@@ -33,6 +32,14 @@ public class DisplayClothConfig {
                 .setDefaultValue(true)
                 .setSaveConsumer(DisplayConfig.AMMO_HUD::set)
                 .setTooltip(Component.translatable("config.superbwarfare.client.display.ammo_hud.des"))
+                .build()
+        );
+
+        category.addEntry(entryBuilder
+                .startBooleanToggle(Component.translatable("config.superbwarfare.client.display.float_cross_hair"), DisplayConfig.FLOAT_CROSS_HAIR.get())
+                .setDefaultValue(true)
+                .setSaveConsumer(DisplayConfig.FLOAT_CROSS_HAIR::set)
+                .setTooltip(Component.translatable("config.superbwarfare.client.display.float_cross_hair.des"))
                 .build()
         );
     }

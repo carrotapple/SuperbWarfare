@@ -51,8 +51,13 @@ public class CrossHairOverlay {
         ItemStack stack = player.getMainHandItem();
         double spread = ClientEventHandler.gunSpread + 3 * ClientEventHandler.firePos;
         float deltaFrame = Minecraft.getInstance().getDeltaFrameTime();
-        float moveX = (float) (-6 * ClientEventHandler.turnRot[1] - (player.isSprinting() ? 10 : 6) * ClientEventHandler.movePosX);
-        float moveY = (float) (-6 * ClientEventHandler.turnRot[0] + 6 * (float) ClientEventHandler.velocityY - (player.isSprinting() ? 10 : 6) * ClientEventHandler.movePosY - 2 * ClientEventHandler.firePos);
+        float moveX = 0;
+        float moveY = 0;
+
+        if (DisplayConfig.FLOAT_CROSS_HAIR.get()) {
+            moveX = (float) (-6 * ClientEventHandler.turnRot[1] - (player.isSprinting() ? 10 : 6) * ClientEventHandler.movePosX);
+            moveY = (float) (-6 * ClientEventHandler.turnRot[0] + 6 * (float) ClientEventHandler.velocityY - (player.isSprinting() ? 10 : 6) * ClientEventHandler.movePosY - 2 * ClientEventHandler.firePos);
+        }
 
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
@@ -62,18 +67,17 @@ public class CrossHairOverlay {
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
         scopeScale = (float) Mth.lerp(0.5F * deltaFrame, scopeScale, 1 + 1.5f * spread);
-        float f = (float) Math.min(w, h);
-        float f1 = Math.min((float) w / f, (float) h / f) * 0.012f * scopeScale;
-        float i = Mth.floor(f * f1);
-        float j = Mth.floor(f * f1);
-        float k = ((w - i) / 2) + moveX;
-        float l = ((h - j) / 2) + moveY;
+        float minLength = (float) Math.min(w, h);
+        float scaledMinLength = Math.min((float) w / minLength, (float) h / minLength) * 0.012f * scopeScale;
+        float finLength = Mth.floor(minLength * scaledMinLength);
+        float finPosX = ((w - finLength) / 2) + moveX;
+        float finPosY = ((h - finLength) / 2) + moveY;
 
         if (shouldRenderCrossHair(player) || stack.is(ModItems.MINIGUN.get())) {
             preciseBlit(guiGraphics, new ResourceLocation(ModUtils.MODID, "textures/screens/point.png"), w / 2f - 7.5f + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
             if (!player.isSprinting() || player.getPersistentData().getDouble("noRun") > 0) {
                 if (stack.is(ModTags.Items.SHOTGUN)) {
-                    preciseBlit(guiGraphics, new ResourceLocation(ModUtils.MODID, "textures/screens/shotgun_hud.png"), k, l, 0, 0.0F, i, j, i, j);
+                    preciseBlit(guiGraphics, new ResourceLocation(ModUtils.MODID, "textures/screens/shotgun_hud.png"), finPosX, finPosY, 0, 0.0F, finLength, finLength, finLength, finLength);
                 } else {
                     preciseBlit(guiGraphics, REX_HORIZONTAL, (float) (w / 2f - 13.5f - 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
                     preciseBlit(guiGraphics, REX_HORIZONTAL, (float) (w / 2f - 2.5f + 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
@@ -88,7 +92,7 @@ public class CrossHairOverlay {
                 preciseBlit(guiGraphics, new ResourceLocation(ModUtils.MODID, "textures/screens/point.png"), w / 2f - 7.5f + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
                 if (!player.isSprinting() || player.getPersistentData().getDouble("noRun") > 0 || ClientEventHandler.pullPos > 0) {
                     if (ClientEventHandler.zoomTime < 0.1) {
-                        preciseBlit(guiGraphics, new ResourceLocation(ModUtils.MODID, "textures/screens/shotgun_hud.png"), k, l, 0, 0.0F, i, j, i, j);
+                        preciseBlit(guiGraphics, new ResourceLocation(ModUtils.MODID, "textures/screens/shotgun_hud.png"), finPosX, finPosY, 0, 0.0F, finLength, finLength, finLength, finLength);
                     } else {
                         preciseBlit(guiGraphics, REX_HORIZONTAL, (float) (w / 2f - 13.5f - 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
                         preciseBlit(guiGraphics, REX_HORIZONTAL, (float) (w / 2f - 2.5f + 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);

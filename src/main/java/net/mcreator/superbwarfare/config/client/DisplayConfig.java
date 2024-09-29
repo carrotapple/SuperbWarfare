@@ -7,6 +7,7 @@ public class DisplayConfig {
     public static ForgeConfigSpec.BooleanValue KILL_INDICATION;
     public static ForgeConfigSpec.BooleanValue GLOBAL_INDICATION;
     public static ForgeConfigSpec.BooleanValue AMMO_HUD;
+    public static ForgeConfigSpec.BooleanValue FLOAT_CROSS_HAIR;
 
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("display");
@@ -19,6 +20,9 @@ public class DisplayConfig {
 
         builder.comment("Set TRUE to show ammo and gun info on HUD");
         AMMO_HUD = builder.define("ammo_hud", true);
+
+        builder.comment("Set TRUE to enable float cross hair");
+        FLOAT_CROSS_HAIR = builder.define("float_cross_hair", true);
 
         builder.pop();
     }
