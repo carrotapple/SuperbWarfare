@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.event;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.config.client.DisplayConfig;
 import net.mcreator.superbwarfare.entity.TargetEntity;
 import net.mcreator.superbwarfare.entity.projectile.ProjectileEntity;
 import net.mcreator.superbwarfare.init.*;
@@ -52,7 +53,7 @@ public class LivingEventHandler {
             return;
         }
 
-        killIndication(event.getSource().getEntity());
+        killIndication(event.getSource());
         handleGunPerksWhenDeath(event);
         handlePlayerKillEntity(event);
     }
@@ -107,8 +108,14 @@ public class LivingEventHandler {
         return amount / (1 + rate * Math.max(0, distance - minDistance));
     }
 
-    private static void killIndication(Entity sourceEntity) {
+    private static void killIndication(DamageSource source) {
+        var sourceEntity = source.getEntity();
         if (sourceEntity == null) {
+            return;
+        }
+
+        // 如果配置不选择全局伤害提示，则只在伤害类型为mod添加的时显示指示器
+        if (!DisplayConfig.GLOBAL_INDICATION.get() && !DamageTypeTool.isModDamage(source)) {
             return;
         }
 

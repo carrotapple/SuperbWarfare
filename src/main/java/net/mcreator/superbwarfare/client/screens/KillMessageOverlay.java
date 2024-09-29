@@ -3,7 +3,7 @@ package net.mcreator.superbwarfare.client.screens;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.config.client.KillMessageClientConfig;
+import net.mcreator.superbwarfare.config.client.KillMessageConfig;
 import net.mcreator.superbwarfare.event.KillMessageHandler;
 import net.mcreator.superbwarfare.init.ModDamageTypes;
 import net.mcreator.superbwarfare.init.ModItems;
@@ -46,7 +46,7 @@ public class KillMessageOverlay {
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void onRenderGui(RenderGuiEvent.Pre event) {
-        if (!KillMessageClientConfig.SHOW_KILL_MESSAGE.get()) {
+        if (!KillMessageConfig.SHOW_KILL_MESSAGE.get()) {
             return;
         }
 

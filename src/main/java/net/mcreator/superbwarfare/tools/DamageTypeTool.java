@@ -29,4 +29,11 @@ public class DamageTypeTool {
         return source.is(ModDamageTypes.GUN_FIRE) || source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE);
     }
 
+    public static boolean isModDamage(DamageSource source) {
+        return source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT_ABSOLUTE)
+                || source.is(ModDamageTypes.GUN_FIRE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)
+                || source.is(ModDamageTypes.MINE) || source.is(ModDamageTypes.SHOCK)
+                || source.is(ModDamageTypes.PROJECTILE_BOOM) || source.is(ModDamageTypes.CANNON_FIRE);
+    }
+
 }

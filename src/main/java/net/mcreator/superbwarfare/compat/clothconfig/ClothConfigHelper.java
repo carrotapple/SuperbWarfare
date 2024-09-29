@@ -2,7 +2,8 @@ package net.mcreator.superbwarfare.compat.clothconfig;
 
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import net.mcreator.superbwarfare.compat.clothconfig.client.KillMessageClientClothConfig;
+import net.mcreator.superbwarfare.compat.clothconfig.client.DisplayClothConfig;
+import net.mcreator.superbwarfare.compat.clothconfig.client.KillMessageClothConfig;
 import net.mcreator.superbwarfare.compat.clothconfig.client.ReloadClothConfig;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -19,7 +20,8 @@ public class ClothConfigHelper {
         ConfigEntryBuilder entryBuilder = root.entryBuilder();
 
         ReloadClothConfig.init(root, entryBuilder);
-        KillMessageClientClothConfig.init(root, entryBuilder);
+        KillMessageClothConfig.init(root, entryBuilder);
+        DisplayClothConfig.init(root, entryBuilder);
 
         return root;
     }

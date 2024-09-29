@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.config.client;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
-public class KillMessageClientConfig {
+public class KillMessageConfig {
 
     public static ForgeConfigSpec.BooleanValue SHOW_KILL_MESSAGE;
     public static ForgeConfigSpec.IntValue KILL_MESSAGE_COUNT;

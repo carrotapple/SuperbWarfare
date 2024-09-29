@@ -351,5 +351,10 @@
   "config.superbwarfare.client.kill_message.show_kill_message": "显示击杀信息",
   "config.superbwarfare.client.kill_message.show_kill_message.des": "开启时，在屏幕右上角显示击杀信息",
   "config.superbwarfare.client.kill_message.kill_message_count": "击杀信息数量",
-  "config.superbwarfare.client.kill_message.kill_message_count.des": "同时显示的最大击杀信息数量"
+  "config.superbwarfare.client.kill_message.kill_message_count.des": "同时显示的最大击杀信息数量",
+  "config.superbwarfare.client.display": "显示配置",
+  "config.superbwarfare.client.display.kill_indication": "击杀提示",
+  "config.superbwarfare.client.display.kill_indication.des": "开启时，击杀生物时会在准星周围显示击杀提示",
+  "config.superbwarfare.client.display.global_indication": "全局伤害提示",
+  "config.superbwarfare.client.display.global_indication.des": "是否在仅使用本模组的伤害类型击杀生物时，在准星周围显示击杀提示"
 }

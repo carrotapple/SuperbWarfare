@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.network;
 
 import net.mcreator.superbwarfare.client.screens.CrossHairOverlay;
 import net.mcreator.superbwarfare.client.screens.DroneUIOverlay;
-import net.mcreator.superbwarfare.config.client.KillMessageClientConfig;
+import net.mcreator.superbwarfare.config.client.KillMessageConfig;
 import net.mcreator.superbwarfare.event.KillMessageHandler;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.mcreator.superbwarfare.network.message.GunsDataMessage;
@@ -27,7 +27,7 @@ public class ClientPacketHandler {
 
     public static void handlePlayerKillMessage(Player attacker, Entity target, boolean headshot, ResourceKey<DamageType> damageType, Supplier<NetworkEvent.Context> ctx) {
         if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
-            if (KillMessageHandler.QUEUE.size() >= KillMessageClientConfig.KILL_MESSAGE_COUNT.get()) {
+            if (KillMessageHandler.QUEUE.size() >= KillMessageConfig.KILL_MESSAGE_COUNT.get()) {
                 KillMessageHandler.QUEUE.poll();
             }
             KillMessageHandler.QUEUE.offer(new PlayerKillRecord(attacker, target, attacker.getMainHandItem(), headshot, damageType));
