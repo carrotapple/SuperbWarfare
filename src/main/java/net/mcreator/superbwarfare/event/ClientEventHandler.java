@@ -537,17 +537,15 @@ public class ClientEventHandler {
             angle = Math.atan(0.6 / (lookDistance + 2.9)) * Mth.RAD_TO_DEG;
         }
 
-        if (DisplayConfig.CAMERA_ROTATE.get()) {
-            if (player.getMainHandItem().is(ModTags.Items.GUN) || (player.getVehicle() != null && (player.getVehicle() instanceof ICannonEntity))) {
-                event.setPitch((float) (pitch + cameraRot[0] + 0.2 * turnRot[0] + 3 * velocityY));
-                if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK) {
-                    event.setYaw((float) (yaw + cameraRot[1] + 0.8 * turnRot[1] - angle * zoomPos));
-                } else {
-                    event.setYaw((float) (yaw + cameraRot[1] + 0.8 * turnRot[1]));
-                }
-
-                event.setRoll((float) (roll + cameraRot[2] + 0.35 * turnRot[2]));
+        if (player.getMainHandItem().is(ModTags.Items.GUN) || (player.getVehicle() != null && (player.getVehicle() instanceof ICannonEntity))) {
+            event.setPitch((float) (pitch + cameraRot[0] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.2 : 0) * turnRot[0] + 3 * velocityY));
+            if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK) {
+                event.setYaw((float) (yaw + cameraRot[1] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.8 : 0) * turnRot[1] - angle * zoomPos));
+            } else {
+                event.setYaw((float) (yaw + cameraRot[1] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.8 : 0) * turnRot[1]));
             }
+
+            event.setRoll((float) (roll + cameraRot[2] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.35 : 0) * turnRot[2]));
         }
     }
 
