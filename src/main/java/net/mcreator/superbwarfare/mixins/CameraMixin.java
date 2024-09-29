@@ -3,8 +3,11 @@ package net.mcreator.superbwarfare.mixins;
 import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.entity.Mk42Entity;
 import net.mcreator.superbwarfare.entity.Mle1934Entity;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.minecraft.client.Camera;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -63,10 +66,16 @@ public abstract class CameraMixin {
     public void ia$setup(BlockGetter area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
         if (thirdPerson && entity.getVehicle() instanceof Mk42Entity) {
             move(-getMaxZoom(8), 1.0, 0.0);
+            return;
         }
         if (thirdPerson && entity.getVehicle() instanceof Mle1934Entity) {
             move(-getMaxZoom(10), 1.3, 0.0);
+            return;
         }
+        if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && entity instanceof Player player && player.getMainHandItem().is(ModTags.Items.GUN)) {
+            move(-getMaxZoom(-2.9 * Math.max(ClientEventHandler.pullPos, ClientEventHandler.zoomPos)), 0, -0.6 * Math.max(ClientEventHandler.pullPos, ClientEventHandler.zoomPos));
+        }
+
     }
 
     @Shadow

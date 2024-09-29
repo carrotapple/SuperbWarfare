@@ -12,6 +12,7 @@ import net.mcreator.superbwarfare.network.message.ShootMessage;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.MillisTimer;
+import net.mcreator.superbwarfare.tools.SeekTool;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -25,6 +26,8 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
@@ -80,6 +83,7 @@ public class ClientEventHandler {
     public static double gunSpread = 0;
     public static double fireSpread = 0;
     public static double cantFireTime = 0;
+    public static double lookDistance = 0;
 
     public static MillisTimer clientTimer = new MillisTimer();
 
@@ -509,9 +513,39 @@ public class ClientEventHandler {
 
         if (player == null) return;
 
+        double range;
+        Entity lookingEntity = SeekTool.seekEntity(player, player.level(), 520, 5);
+
+        if (lookingEntity != null) {
+            range = player.distanceTo(lookingEntity);
+        } else {
+            range = player.position().distanceTo((Vec3.atLowerCornerOf(player.level().clip(
+                    new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(520)),
+                            ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
+        }
+
+        if (lookDistance < range) {
+            lookDistance = Mth.clamp(lookDistance + 0.002 * Math.pow(range - lookDistance, 2) * Minecraft.getInstance().getDeltaFrameTime(),0.01, 520);
+        } else {
+            lookDistance = Mth.clamp(lookDistance - 0.002 * Math.pow(range - lookDistance, 2) * Minecraft.getInstance().getDeltaFrameTime(),0.01, 520);
+        }
+
+        double angle = 0;
+
+        if (lookDistance != 0) {
+            angle = Math.atan(0.6 / lookDistance) * Mth.RAD_TO_DEG;
+        }
+
+//        player.displayClientMessage(Component.nullToEmpty(Component.literal(new DecimalFormat("##").format(lookDistance)) + " " + new DecimalFormat("##.#").format(angle)), true);
+
         if (player.getMainHandItem().is(ModTags.Items.GUN) || (player.getVehicle() != null && (player.getVehicle() instanceof ICannonEntity))) {
             event.setPitch((float) (pitch + cameraRot[0] + 0.2 * turnRot[0] + 3 * velocityY));
-            event.setYaw((float) (yaw + cameraRot[1] + 0.8 * turnRot[1]));
+            if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK) {
+                event.setYaw((float) (yaw + cameraRot[1] + 0.8 * turnRot[1] - angle * zoomPos));
+            } else {
+                event.setYaw((float) (yaw + cameraRot[1] + 0.8 * turnRot[1]));
+            }
+
             event.setRoll((float) (roll + cameraRot[2] + 0.35 * turnRot[2]));
         }
     }
@@ -538,7 +572,8 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public static void onFovUpdate(ViewportEvent.ComputeFov event) {
-        Player player = Minecraft.getInstance().player;
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
         if (player == null) {
             return;
         }
@@ -559,7 +594,10 @@ public class ClientEventHandler {
 
             double zoom = stack.getOrCreateTag().getDouble("zoom") + stack.getOrCreateTag().getDouble("custom_zoom");
 
-            event.setFOV(event.getFOV() / (1.0 + p * (zoom - 1)) * (1 - 0.4 * breathTime));
+            if (mc.options.getCameraType().isFirstPerson()) {
+                event.setFOV(event.getFOV() / (1.0 + p * (zoom - 1)) * (1 - 0.4 * breathTime));
+            } else if (mc.options.getCameraType() == CameraType.THIRD_PERSON_BACK)
+                event.setFOV(event.getFOV() / (1.0 + p * 0.01) * (1 - 0.4 * breathTime));
             fov = event.getFOV();
             return;
         }

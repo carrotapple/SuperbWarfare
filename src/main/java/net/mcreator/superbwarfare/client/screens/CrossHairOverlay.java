@@ -73,7 +73,7 @@ public class CrossHairOverlay {
         float finPosX = ((w - finLength) / 2) + moveX;
         float finPosY = ((h - finLength) / 2) + moveY;
 
-        if (shouldRenderCrossHair(player) || stack.is(ModItems.MINIGUN.get())) {
+        if (shouldRenderCrossHair(player) || (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON && stack.is(ModItems.MINIGUN.get())) || (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && (ClientEventHandler.zoomTime > 0 || ClientEventHandler.pullPos > 0))) {
             preciseBlit(guiGraphics, new ResourceLocation(ModUtils.MODID, "textures/screens/point.png"), w / 2f - 7.5f + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
             if (!player.isSprinting() || player.getPersistentData().getDouble("noRun") > 0) {
                 if (stack.is(ModTags.Items.SHOTGUN)) {

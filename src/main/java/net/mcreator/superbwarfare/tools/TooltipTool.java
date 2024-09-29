@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.tools;
 
 import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.init.ModPerks;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.perk.AmmoPerk;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
@@ -36,10 +37,11 @@ public class TooltipTool {
         tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.#").format(damage)).withStyle(ChatFormatting.GREEN)));
-
+        if (stack.is(ModTags.Items.IS_AUTO_WEAPON)) {
+            addRpmTips(tooltip, stack);
+        }
         addLevelTips(tooltip, stack);
         addBypassTips(tooltip, stack);
-        addRpmTips(tooltip, stack);
         addPerkTips(tooltip, stack);
     }
 
@@ -53,10 +55,13 @@ public class TooltipTool {
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.#").format(damage) + " * " + new DecimalFormat("##").format(ItemNBTTool.getDouble(stack, "projectile_amount", 0))).withStyle(ChatFormatting.GREEN)));
 
+        if (stack.is(ModTags.Items.IS_AUTO_WEAPON)) {
+            addRpmTips(tooltip, stack);
+        }
         addLevelTips(tooltip, stack);
         addBypassTips(tooltip, stack);
         addPerkTips(tooltip, stack);
-        addRpmTips(tooltip, stack);
+
     }
 
     private static void addRpmTips(List<Component> tooltip, ItemStack stack) {
@@ -191,10 +196,12 @@ public class TooltipTool {
                     .append(Component.literal(new DecimalFormat("##.#").format(damage)).withStyle(ChatFormatting.GREEN)));
         }
 
+        if (stack.is(ModTags.Items.IS_AUTO_WEAPON)) {
+            addRpmTips(tooltip, stack);
+        }
         addLevelTips(tooltip, stack);
         addBypassTips(tooltip, stack);
         addPerkTips(tooltip, stack);
-        addRpmTips(tooltip, stack);
 
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                 e -> tooltip.add(Component.literal(e.getEnergyStored() + " / " + e.getMaxEnergyStored() + " FE").withStyle(ChatFormatting.GRAY))
