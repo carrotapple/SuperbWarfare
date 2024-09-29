@@ -533,7 +533,7 @@ public class ClientEventHandler {
         double angle = 0;
 
         if (lookDistance != 0) {
-            angle = Math.atan(0.6 / lookDistance) * Mth.RAD_TO_DEG;
+            angle = Math.atan(0.6 / (lookDistance + 2.9)) * Mth.RAD_TO_DEG;
         }
 
 //        player.displayClientMessage(Component.nullToEmpty(Component.literal(new DecimalFormat("##").format(lookDistance)) + " " + new DecimalFormat("##.#").format(angle)), true);
