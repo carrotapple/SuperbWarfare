@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.event;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.config.client.DisplayConfig;
 import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.init.ModItems;
@@ -172,9 +173,9 @@ public class ClientEventHandler {
         // 开火部分
 
         if (player.getPersistentData().getDouble("noRun") == 0 && player.isSprinting() && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS) {
-            cantFireTime = Mth.clamp(cantFireTime + 3 * times,0,30);
+            cantFireTime = Mth.clamp(cantFireTime + 3 * times, 0, 30);
         } else {
-            cantFireTime = Mth.clamp(cantFireTime - 6 * times,0,30);
+            cantFireTime = Mth.clamp(cantFireTime - 6 * times, 0, 30);
         }
 
 //        player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##").format(cantFireTime)), true);
@@ -193,7 +194,7 @@ public class ClientEventHandler {
             }
 
             if (stack.getItem() == ModItems.MINIGUN.get() && player.isInWater()) {
-                customRpm = - 0.25 * stack.getOrCreateTag().getDouble("rpm");
+                customRpm = -0.25 * stack.getOrCreateTag().getDouble("rpm");
             }
 
             double rpm = stack.getOrCreateTag().getDouble("rpm") + customRpm;
@@ -525,9 +526,9 @@ public class ClientEventHandler {
         }
 
         if (lookDistance < range) {
-            lookDistance = Mth.clamp(lookDistance + 0.002 * Math.pow(range - lookDistance, 2) * Minecraft.getInstance().getDeltaFrameTime(),0.01, 520);
+            lookDistance = Mth.clamp(lookDistance + 0.002 * Math.pow(range - lookDistance, 2) * Minecraft.getInstance().getDeltaFrameTime(), 0.01, 520);
         } else {
-            lookDistance = Mth.clamp(lookDistance - 0.002 * Math.pow(range - lookDistance, 2) * Minecraft.getInstance().getDeltaFrameTime(),0.01, 520);
+            lookDistance = Mth.clamp(lookDistance - 0.002 * Math.pow(range - lookDistance, 2) * Minecraft.getInstance().getDeltaFrameTime(), 0.01, 520);
         }
 
         double angle = 0;
@@ -536,17 +537,17 @@ public class ClientEventHandler {
             angle = Math.atan(0.6 / (lookDistance + 2.9)) * Mth.RAD_TO_DEG;
         }
 
-//        player.displayClientMessage(Component.nullToEmpty(Component.literal(new DecimalFormat("##").format(lookDistance)) + " " + new DecimalFormat("##.#").format(angle)), true);
+        if (DisplayConfig.CAMERA_ROTATE.get()) {
+            if (player.getMainHandItem().is(ModTags.Items.GUN) || (player.getVehicle() != null && (player.getVehicle() instanceof ICannonEntity))) {
+                event.setPitch((float) (pitch + cameraRot[0] + 0.2 * turnRot[0] + 3 * velocityY));
+                if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK) {
+                    event.setYaw((float) (yaw + cameraRot[1] + 0.8 * turnRot[1] - angle * zoomPos));
+                } else {
+                    event.setYaw((float) (yaw + cameraRot[1] + 0.8 * turnRot[1]));
+                }
 
-        if (player.getMainHandItem().is(ModTags.Items.GUN) || (player.getVehicle() != null && (player.getVehicle() instanceof ICannonEntity))) {
-            event.setPitch((float) (pitch + cameraRot[0] + 0.2 * turnRot[0] + 3 * velocityY));
-            if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK) {
-                event.setYaw((float) (yaw + cameraRot[1] + 0.8 * turnRot[1] - angle * zoomPos));
-            } else {
-                event.setYaw((float) (yaw + cameraRot[1] + 0.8 * turnRot[1]));
+                event.setRoll((float) (roll + cameraRot[2] + 0.35 * turnRot[2]));
             }
-
-            event.setRoll((float) (roll + cameraRot[2] + 0.35 * turnRot[2]));
         }
     }
 

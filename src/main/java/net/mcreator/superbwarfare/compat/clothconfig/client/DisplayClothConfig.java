@@ -42,5 +42,13 @@ public class DisplayClothConfig {
                 .setTooltip(Component.translatable("config.superbwarfare.client.display.float_cross_hair.des"))
                 .build()
         );
+
+        category.addEntry(entryBuilder
+                .startBooleanToggle(Component.translatable("config.superbwarfare.client.display.camera_rotate"), DisplayConfig.CAMERA_ROTATE.get())
+                .setDefaultValue(true)
+                .setSaveConsumer(DisplayConfig.CAMERA_ROTATE::set)
+                .setTooltip(Component.translatable("config.superbwarfare.client.display.camera_rotate.des"))
+                .build()
+        );
     }
 }
