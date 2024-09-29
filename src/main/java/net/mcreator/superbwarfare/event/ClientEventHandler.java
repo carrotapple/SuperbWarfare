@@ -85,6 +85,7 @@ public class ClientEventHandler {
     public static double fireSpread = 0;
     public static double cantFireTime = 0;
     public static double lookDistance = 0;
+    public static double cameraLocation = 0.6;
 
     public static MillisTimer clientTimer = new MillisTimer();
 
@@ -178,7 +179,6 @@ public class ClientEventHandler {
             cantFireTime = Mth.clamp(cantFireTime - 6 * times, 0, 30);
         }
 
-//        player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##").format(cantFireTime)), true);
 
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS
                 && (player.getMainHandItem().is(ModTags.Items.NORMAL_GUN)
@@ -227,7 +227,7 @@ public class ClientEventHandler {
     public static void computeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
         ClientLevel level = Minecraft.getInstance().level;
         Entity entity = event.getCamera().getEntity();
-        handlePlayerCameraShake(event);
+        handlePlayerCamera(event);
         if (level != null && entity instanceof LivingEntity living
                 && living.getMainHandItem().is(ModItems.MONITOR.get())
                 && living.getMainHandItem().getOrCreateTag().getBoolean("Using")
@@ -506,11 +506,19 @@ public class ClientEventHandler {
         }
     }
 
-    private static void handlePlayerCameraShake(ViewportEvent.ComputeCameraAngles event) {
+    private static void handlePlayerCamera(ViewportEvent.ComputeCameraAngles event) {
         double yaw = event.getYaw();
         double pitch = event.getPitch();
         double roll = event.getRoll();
         LocalPlayer player = Minecraft.getInstance().player;
+
+        if (GLFW.glfwGetKey(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_RIGHT) == GLFW.GLFW_PRESS) {
+            cameraLocation = Mth.clamp(cameraLocation - 0.05 * Minecraft.getInstance().getDeltaFrameTime(), -0.6, 0.6);
+        }
+
+        if (GLFW.glfwGetKey(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT) == GLFW.GLFW_PRESS) {
+            cameraLocation = Mth.clamp(cameraLocation + 0.05 * Minecraft.getInstance().getDeltaFrameTime(), -0.6, 0.6);
+        }
 
         if (player == null) return;
 
@@ -533,14 +541,14 @@ public class ClientEventHandler {
 
         double angle = 0;
 
-        if (lookDistance != 0) {
-            angle = Math.atan(0.6 / (lookDistance + 2.9)) * Mth.RAD_TO_DEG;
+        if (lookDistance != 0 && cameraLocation != 0) {
+            angle = Math.atan(Mth.abs((float) cameraLocation) / (lookDistance + 2.9)) * Mth.RAD_TO_DEG;
         }
 
         if (player.getMainHandItem().is(ModTags.Items.GUN) || (player.getVehicle() != null && (player.getVehicle() instanceof ICannonEntity))) {
             event.setPitch((float) (pitch + cameraRot[0] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.2 : 0) * turnRot[0] + 3 * velocityY));
             if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK) {
-                event.setYaw((float) (yaw + cameraRot[1] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.8 : 0) * turnRot[1] - angle * zoomPos));
+                event.setYaw((float) (yaw + cameraRot[1] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.8 : 0) * turnRot[1] - (cameraLocation > 0 ? 1 : -1) * angle * zoomPos));
             } else {
                 event.setYaw((float) (yaw + cameraRot[1] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.8 : 0) * turnRot[1]));
             }
