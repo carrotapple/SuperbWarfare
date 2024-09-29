@@ -86,11 +86,11 @@ public class M60Item extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m60.draw"));
             }
 
-            if (stack.getOrCreateTag().getInt("fire_animation") > 0 && stack.getOrCreateTag().getDouble("animindex") == 0) {
+            if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m60.fire"));
             }
 
-            if (stack.getOrCreateTag().getInt("fire_animation") > 0 && stack.getOrCreateTag().getDouble("animindex") == 1) {
+            if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m60.fire2"));
             }
 

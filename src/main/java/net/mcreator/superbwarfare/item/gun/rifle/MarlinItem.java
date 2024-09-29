@@ -90,11 +90,11 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.marlin.draw"));
                 }
 
-                if (stack.getOrCreateTag().getInt("flash_time") > 0 && stack.getOrCreateTag().getDouble("animindex") == 0) {
+                if (stack.getOrCreateTag().getInt("flash_time") > 0) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.fire"));
                 }
 
-                if (stack.getOrCreateTag().getInt("flash_time") > 0 && stack.getOrCreateTag().getDouble("animindex") == 1) {
+                if (stack.getOrCreateTag().getInt("flash_time") > 0) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.fire2"));
                 }
 

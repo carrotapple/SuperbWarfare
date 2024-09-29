@@ -75,29 +75,21 @@ public class ShootMessage {
                     && !stack.getOrCreateTag().getBoolean("need_bolt_action")) {
 
                 int singleInterval = 0;
-                if (mode == 0) {
-                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                        capability.holdFire = false;
-                        capability.syncPlayerVariables(player);
-                    });
-                    singleInterval = coolDownTick;
-                }
-
                 int burstCooldown = 0;
-                if (mode == 1) {
+
+                if (mode != 2) {
                     player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                         capability.holdFire = false;
                         capability.syncPlayerVariables(player);
                     });
-                    stack.getOrCreateTag().putInt("burst_fire", (stack.getOrCreateTag().getInt("burst_fire") - 1));
-                    burstCooldown = stack.getOrCreateTag().getInt("burst_fire") == 0 ? coolDownTick + 4 : 0;
+                    if (mode == 0) {
+                        singleInterval = coolDownTick;
+                    } else if (mode == 1) {
+                        burstCooldown = stack.getOrCreateTag().getInt("burst_fire") == 0 ? coolDownTick + 3 : 0;
+                        stack.getOrCreateTag().putInt("burst_fire", (stack.getOrCreateTag().getInt("burst_fire") - 1));
+                    }
                 }
 
-                if (stack.getOrCreateTag().getDouble("animindex") == 1) {
-                    stack.getOrCreateTag().putDouble("animindex", 0);
-                } else {
-                    stack.getOrCreateTag().putDouble("animindex", 1);
-                }
                 /*
                   空仓挂机
                  */
