@@ -1,7 +1,6 @@
 package net.mcreator.superbwarfare.event;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.config.server.KillMessageServerConfig;
 import net.mcreator.superbwarfare.entity.TargetEntity;
 import net.mcreator.superbwarfare.entity.projectile.ProjectileEntity;
 import net.mcreator.superbwarfare.init.*;
@@ -239,10 +238,6 @@ public class LivingEventHandler {
      * 发送击杀消息
      */
     private static void handlePlayerKillEntity(LivingDeathEvent event) {
-        if (!KillMessageServerConfig.SEND_KILL_MESSAGE.get()) {
-            return;
-        }
-
         LivingEntity entity = event.getEntity();
         DamageSource source = event.getSource();
 
