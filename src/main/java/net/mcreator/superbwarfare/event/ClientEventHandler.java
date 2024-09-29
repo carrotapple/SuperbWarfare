@@ -174,9 +174,9 @@ public class ClientEventHandler {
         // 开火部分
 
         if (player.getPersistentData().getDouble("noRun") == 0 && player.isSprinting() && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS) {
-            cantFireTime = Mth.clamp(cantFireTime + 3 * times, 0, 30);
+            cantFireTime = Mth.clamp(cantFireTime + 3 * times, 0, 24);
         } else {
-            cantFireTime = Mth.clamp(cantFireTime - 6 * times, 0, 30);
+            cantFireTime = Mth.clamp(cantFireTime - 6 * times, 0, 24);
         }
 
 

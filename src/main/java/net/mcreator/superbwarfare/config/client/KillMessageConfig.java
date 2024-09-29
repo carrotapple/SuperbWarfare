@@ -11,7 +11,7 @@ public class KillMessageConfig {
         builder.push("kill_message");
 
         builder.comment("Set TRUE if you want to show kill message");
-        SHOW_KILL_MESSAGE = builder.define("show_kill_message", false);
+        SHOW_KILL_MESSAGE = builder.define("show_kill_message", true);
 
         builder.comment("The max count of kill messages to show concurrently");
         KILL_MESSAGE_COUNT = builder.defineInRange("kill_message_count", 5, 1, 20);

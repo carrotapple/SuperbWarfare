@@ -17,7 +17,7 @@ public class DisplayConfig {
         KILL_INDICATION = builder.define("kill_indication", true);
 
         builder.comment("Set FALSE if you want to show kill indication ONLY while killing an entity with a gun");
-        GLOBAL_INDICATION = builder.define("global_indication", false);
+        GLOBAL_INDICATION = builder.define("global_indication", true);
 
         builder.comment("Set TRUE to show ammo and gun info on HUD");
         AMMO_HUD = builder.define("ammo_hud", true);

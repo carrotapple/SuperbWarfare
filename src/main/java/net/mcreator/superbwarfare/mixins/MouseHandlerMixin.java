@@ -53,7 +53,7 @@ public class MouseHandlerMixin {
 
 
         if (!player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
-            return original / Math.max((1 + (0.25 * (zoom - (0.2 * customSens)) * ClientEventHandler.zoomTime)), 0.1);
+            return original / Math.max((1 + (0.2 * (zoom - (0.3 * customSens)) * ClientEventHandler.zoomTime)), 0.1);
         }
 
         return original;
