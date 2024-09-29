@@ -1,5 +1,6 @@
 package net.mcreator.superbwarfare;
 
+import net.mcreator.superbwarfare.config.ClientConfig;
 import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.*;
@@ -15,7 +16,9 @@ import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkDirection;
@@ -39,6 +42,8 @@ public class ModUtils {
     public static final Logger LOGGER = LogManager.getLogger(ModUtils.class);
 
     public ModUtils() {
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.init());
+
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModPerks.register(bus);

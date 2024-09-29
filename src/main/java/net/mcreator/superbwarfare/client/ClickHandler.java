@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.config.client.EmptyAutoReloadConfig;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.entity.MortarEntity;
 import net.mcreator.superbwarfare.init.ModItems;
@@ -88,7 +89,9 @@ public class ClickHandler {
                 event.setCanceled(true);
 
                 if (stack.is(ModTags.Items.GUN) && !stack.is(ModTags.Items.CANNOT_RELOAD) && stack.getOrCreateTag().getInt("ammo") <= 0) {
-                    ModUtils.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
+                    if (EmptyAutoReloadConfig.EMPTY_AUTO_RELOAD.get()) {
+                        ModUtils.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
+                    }
                 } else {
                     ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(0));
                 }
