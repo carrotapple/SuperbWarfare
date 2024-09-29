@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare;
 
 import net.mcreator.superbwarfare.config.ClientConfig;
+import net.mcreator.superbwarfare.config.ServerConfig;
 import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.*;
@@ -43,6 +44,7 @@ public class ModUtils {
 
     public ModUtils() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.init());
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.init());
 
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 

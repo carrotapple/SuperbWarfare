@@ -3,6 +3,7 @@ package net.mcreator.superbwarfare.client.screens;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.config.client.KillMessageClientConfig;
 import net.mcreator.superbwarfare.event.KillMessageHandler;
 import net.mcreator.superbwarfare.init.ModDamageTypes;
 import net.mcreator.superbwarfare.init.ModItems;
@@ -44,7 +45,11 @@ public class KillMessageOverlay {
     private static final ResourceLocation WORLD_PEACE_STAFF = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/compat/world_peace_staff.png");
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
-    public static void eventHandler(RenderGuiEvent.Pre event) {
+    public static void onRenderGui(RenderGuiEvent.Pre event) {
+        if (!KillMessageClientConfig.SHOW_KILL_MESSAGE.get()) {
+            return;
+        }
+
         Player player = Minecraft.getInstance().player;
 
         if (player == null) {
