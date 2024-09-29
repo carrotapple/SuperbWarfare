@@ -4,13 +4,13 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ReloadConfig {
 
-    public static ForgeConfigSpec.BooleanValue EMPTY_AUTO_RELOAD;
+    public static ForgeConfigSpec.BooleanValue LEFT_CLICK_RELOAD;
 
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("reload");
 
-        builder.comment("Set TRUE if you want to reload guns when ammo is empty");
-        EMPTY_AUTO_RELOAD = builder.define("empty_auto_reload", true);
+        builder.comment("Set TRUE if you want to reload guns when ammo is empty by clicking left button");
+        LEFT_CLICK_RELOAD = builder.define("left_click_reload", true);
 
         builder.pop();
     }

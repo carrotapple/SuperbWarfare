@@ -12,10 +12,10 @@ public class ReloadClothConfig {
         ConfigCategory category = root.getOrCreateCategory(Component.translatable("config.superbwarfare.client.reload"));
 
         category.addEntry(entryBuilder
-                .startBooleanToggle(Component.translatable("config.superbwarfare.client.reload.empty_auto_reload"), ReloadConfig.EMPTY_AUTO_RELOAD.get())
+                .startBooleanToggle(Component.translatable("config.superbwarfare.client.reload.left_click_reload"), ReloadConfig.LEFT_CLICK_RELOAD.get())
                 .setDefaultValue(true)
-                .setSaveConsumer(ReloadConfig.EMPTY_AUTO_RELOAD::set)
-                .setTooltip(Component.translatable("config.superbwarfare.client.reload.empty_auto_reload.des")).build()
+                .setSaveConsumer(ReloadConfig.LEFT_CLICK_RELOAD::set)
+                .setTooltip(Component.translatable("config.superbwarfare.client.reload.left_click_reload.des")).build()
         );
     }
 }

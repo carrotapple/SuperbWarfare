@@ -345,8 +345,8 @@
 
   "config.superbwarfare.title": "卓越前线",
   "config.superbwarfare.client.reload": "换弹配置",
-  "config.superbwarfare.client.reload.empty_auto_reload": "自动换弹",
-  "config.superbwarfare.client.reload.empty_auto_reload.des": "在当前弹匣为空时，点击开火键以进行换弹",
+  "config.superbwarfare.client.reload.left_click_reload": "开火换弹",
+  "config.superbwarfare.client.reload.left_click_reload.des": "在当前弹匣为空时，点击开火键以进行换弹",
   "config.superbwarfare.client.kill_message": "击杀信息配置",
   "config.superbwarfare.client.kill_message.show_kill_message": "显示击杀信息",
   "config.superbwarfare.client.kill_message.show_kill_message.des": "开启时，在屏幕右上角显示击杀信息",
