@@ -32,6 +32,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 import org.joml.Vector3d;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -263,8 +264,6 @@ public class FireMessage {
                     player.playSound(ModSounds.BOCEK_ZOOM_FIRE_3P.get(), 2, 1);
                 }
             } else {
-                stack.getOrCreateTag().putBoolean("shoot", true);
-
                 var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
                 for (int index0 = 0; index0 < (perk == ModPerks.HE_BULLET.get() ? 1 : 10); index0++) {
@@ -287,12 +286,6 @@ public class FireMessage {
                 }
             }
 
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.recoil = 0.1;
-                capability.firing = 1;
-                capability.syncPlayerVariables(player);
-            });
-
             player.getCooldowns().addCooldown(player.getMainHandItem().getItem(), 7);
             player.getMainHandItem().getOrCreateTag().putInt("arrow_empty", 7);
             player.getMainHandItem().getOrCreateTag().putDouble("power", 0);
@@ -307,6 +300,11 @@ public class FireMessage {
 
             if (count == 0 && !player.isCreative()) {
                 player.getInventory().clearOrCountMatchingItems(p -> Items.ARROW == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
+            }
+
+            stack.getOrCreateTag().putBoolean("shoot", true);
+            if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
+                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootAnimationMessage(10));
             }
         }
     }
@@ -409,14 +407,17 @@ public class FireMessage {
                     level.addFreshEntity(taserBulletProjectile);
                 }
 
-                stack.getOrCreateTag().putBoolean("shoot", true);
-
                 stack.getOrCreateTag().putInt("fire_animation", 4);
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
 
                 stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                         energy -> energy.extractEnergy(2000 + 200 * perkLevel, false)
                 );
+
+                stack.getOrCreateTag().putBoolean("shoot", true);
+                if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
+                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootAnimationMessage(10));
+                }
             }
         }
     }
@@ -463,10 +464,13 @@ public class FireMessage {
                     serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_79_VERYFAR.get(), SoundSource.PLAYERS, 10, 1);
                 }
 
-                stack.getOrCreateTag().putBoolean("shoot", true);
-
                 stack.getOrCreateTag().putInt("fire_animation", 2);
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
+
+                stack.getOrCreateTag().putBoolean("shoot", true);
+                if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
+                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootAnimationMessage(10));
+                }
             }
         }
     }
@@ -520,10 +524,13 @@ public class FireMessage {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.RPG_VERYFAR.get(), SoundSource.PLAYERS, 10, 1);
             }
 
-            tag.putBoolean("shoot", true);
-
             tag.putInt("fire_animation", 2);
             tag.putInt("ammo", tag.getInt("ammo") - 1);
+
+            stack.getOrCreateTag().putBoolean("shoot", true);
+            if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
+                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootAnimationMessage(10));
+            }
         }
     }
 
@@ -578,9 +585,12 @@ public class FireMessage {
             serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.JAVELIN_FAR.get(), SoundSource.PLAYERS, 10, 1);
         }
 
-        tag.putBoolean("shoot", true);
-
         tag.putInt("fire_animation", 2);
         tag.putInt("ammo", tag.getInt("ammo") - 1);
+
+        stack.getOrCreateTag().putBoolean("shoot", true);
+        if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
+            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootAnimationMessage(10));
+        }
     }
 }

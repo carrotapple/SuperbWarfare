@@ -36,8 +36,12 @@ import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.NetworkEvent;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.function.Supplier;
 
 import static net.mcreator.superbwarfare.entity.DroneEntity.ROT_X;
 import static net.mcreator.superbwarfare.entity.DroneEntity.ROT_Z;
@@ -62,6 +66,7 @@ public class ClientEventHandler {
     public static double[] turnRot = {0, 0, 0};
     public static double[] cameraRot = {0, 0, 0};
 
+    public static double fireRecoilTime = 0;
     public static double firePosTimer = 0;
     public static double fireRotTimer = 0;
     public static double firePos = 0;
@@ -423,6 +428,12 @@ public class ClientEventHandler {
         zoomPosZ = -Math.pow(2 * zoomTime - 1, 2) + 1;
     }
 
+    public static void handleFireRecoilTimeMessage(double time, Supplier<NetworkEvent.Context> ctx) {
+        if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+            fireRecoilTime = time;
+        }
+    }
+
     private static void handleWeaponFire(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
         float times = 1.5f * Minecraft.getInstance().getDeltaFrameTime();
         double yaw = event.getYaw();
@@ -432,11 +443,12 @@ public class ClientEventHandler {
         double amplitude = 15000 * stack.getOrCreateTag().getDouble("recoil_y") * stack.getOrCreateTag().getDouble("recoil_x");
 
         var capability = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null);
-        if (capability.orElse(new ModVariables.PlayerVariables()).firing > 0) {
+        if (fireRecoilTime > 0) {
             firePosTimer = 0.001;
             fireRotTimer = 0.001;
             firePosZ = 0.1;
             fireSpread += 0.2;
+            fireRecoilTime -= 7 * times;
         }
 
         fireSpread = Mth.clamp(fireSpread - 0.6 * (Math.pow(fireSpread, 2) * times), 0, 100);

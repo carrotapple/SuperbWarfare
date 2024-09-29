@@ -1,5 +1,6 @@
 package net.mcreator.superbwarfare.network.message;
 
+import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModSounds;
@@ -20,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.function.Supplier;
 
@@ -159,6 +161,11 @@ public class ShootMessage {
                 playGunSounds(player);
 
                 stack.getOrCreateTag().putBoolean("shoot", true);
+
+                if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
+                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootAnimationMessage(10));
+                }
+
             }
         } else if (stack.is(ModItems.MINIGUN.get())) {
             var tag = stack.getOrCreateTag();
@@ -194,8 +201,6 @@ public class ShootMessage {
                     }
                 }
 
-                stack.getOrCreateTag().putBoolean("shoot", true);
-
                 for (int index0 = 0; index0 < (perk == ModPerks.HE_BULLET.get() ? 1 : (int) stack.getOrCreateTag().getDouble("projectile_amount")); index0++) {
                     gunShoot(player, spared);
                 }
@@ -208,8 +213,12 @@ public class ShootMessage {
                 }
 
                 tag.putInt("fire_animation", 2);
-            }
 
+                stack.getOrCreateTag().putBoolean("shoot", true);
+                if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
+                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootAnimationMessage(10));
+                }
+            }
         }
     }
 }

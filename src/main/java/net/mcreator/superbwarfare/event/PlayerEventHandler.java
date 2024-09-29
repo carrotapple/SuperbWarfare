@@ -409,7 +409,6 @@ public class PlayerEventHandler {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.recoilHorizon = 2 * Math.random() - 1;
                 capability.recoil = 0.1;
-                capability.firing = 1;
                 capability.syncPlayerVariables(player);
             });
             tag.putBoolean("shoot", false);
@@ -427,25 +426,9 @@ public class PlayerEventHandler {
                     player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                         capability.recoilHorizon = 2 * Math.random() - 1;
                         capability.recoil = 0.1;
-                        capability.firing = 1;
                         capability.syncPlayerVariables(player);
                     });
                     tag.putBoolean("shoot", false);
-                }
-
-                /*
-                  开火动画计时器
-                 */
-                if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).firing > 0) {
-                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                        capability.firing = (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).firing - 0.1;
-                        capability.syncPlayerVariables(player);
-                    });
-                } else {
-                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                        capability.firing = 0;
-                        capability.syncPlayerVariables(player);
-                    });
                 }
 
                 /*
