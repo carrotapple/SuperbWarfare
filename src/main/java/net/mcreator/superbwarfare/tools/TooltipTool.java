@@ -71,8 +71,8 @@ public class TooltipTool {
     }
 
     private static void addLevelTips(List<Component> tooltip, ItemStack stack) {
-        int level = (int) ItemNBTTool.getDouble(stack, "level", 0);
-        double rate = ItemNBTTool.getDouble(stack, "damagenow", 0) / ItemNBTTool.getDouble(stack, "damageneed", 1);
+        int level = ItemNBTTool.getInt(stack, "Level", 0);
+        double rate = ItemNBTTool.getDouble(stack, "Exp", 0) / (20 / 3.0 * Math.pow(level, 3) + 90 * Math.pow(level, 2) - 290 / 3.0 * level + 20);
 
         ChatFormatting formatting;
         if (level < 10) {
@@ -130,7 +130,7 @@ public class TooltipTool {
                     .append(Component.literal(" >> "))
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.translatable("item.superbwarfare." + id).withStyle(ChatFormatting.WHITE))
-                    .append(Component.literal(" Lvl. " + ammoTag.getInt("level")).withStyle(ChatFormatting.WHITE)));
+                    .append(Component.literal(" Lvl. " + ammoTag.getInt("Level")).withStyle(ChatFormatting.WHITE)));
             addHideText(tooltip, Component.translatable("des.superbwarfare." + id).withStyle(ChatFormatting.GRAY));
         }
 
@@ -140,7 +140,7 @@ public class TooltipTool {
                     .append(Component.literal(" >> "))
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.translatable("item.superbwarfare." + id).withStyle(ChatFormatting.WHITE))
-                    .append(Component.literal(" Lvl. " + functionalTag.getInt("level")).withStyle(ChatFormatting.WHITE)));
+                    .append(Component.literal(" Lvl. " + functionalTag.getInt("Level")).withStyle(ChatFormatting.WHITE)));
             addHideText(tooltip, Component.translatable("des.superbwarfare." + id).withStyle(ChatFormatting.GRAY));
         }
 
@@ -150,7 +150,7 @@ public class TooltipTool {
                     .append(Component.literal(" >> "))
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.translatable("item.superbwarfare." + id).withStyle(ChatFormatting.WHITE))
-                    .append(Component.literal(" Lvl. " + damageTag.getInt("level")).withStyle(ChatFormatting.WHITE)));
+                    .append(Component.literal(" Lvl. " + damageTag.getInt("Level")).withStyle(ChatFormatting.WHITE)));
             addHideText(tooltip, Component.translatable("des.superbwarfare." + id).withStyle(ChatFormatting.GRAY));
         }
     }

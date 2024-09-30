@@ -66,8 +66,8 @@ public class GunsTool {
 
     public static void pvpModeCheck(ItemStack stack, Level level) {
         if (!ModVariables.MapVariables.get(level).pvpMode) {
-            if (stack.getOrCreateTag().getInt("level") >= 10) {
-                stack.getOrCreateTag().putDouble("levelDamageMultiple", 1 + 0.05 * (stack.getOrCreateTag().getInt("level") - 10));
+            if (stack.getOrCreateTag().getInt("Level") >= 10) {
+                stack.getOrCreateTag().putDouble("levelDamageMultiple", 1 + 0.05 * (stack.getOrCreateTag().getInt("Level") - 10));
             } else {
                 stack.getOrCreateTag().putDouble("levelDamageMultiple", 1);
             }

@@ -34,8 +34,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
+import java.text.DecimalFormat;
+
 @Mod.EventBusSubscriber
 public class LivingEventHandler {
+
     @SubscribeEvent
     public static void onEntityHurt(LivingHurtEvent event) {
         if (event == null || event.getEntity() == null) {
@@ -44,7 +47,9 @@ public class LivingEventHandler {
 
         handleGunPerksWhenHurt(event);
         renderDamageIndicator(event);
-        reduceBulletDamage(event, event.getSource(), event.getEntity(), event.getSource().getEntity(), event.getAmount());
+        reduceBulletDamage(event);
+        giveExpToWeapon(event);
+        handleGunLevels(event);
     }
 
     @SubscribeEvent
@@ -58,21 +63,24 @@ public class LivingEventHandler {
         handlePlayerKillEntity(event);
     }
 
-    private static void reduceBulletDamage(LivingHurtEvent event, DamageSource damageSource, LivingEntity entity, Entity sourceentity, double amount) {
-        if (damageSource == null || entity == null || sourceentity == null) {
-            return;
-        }
+    /**
+     * 计算子弹伤害衰减
+     */
+    private static void reduceBulletDamage(LivingHurtEvent event) {
+        DamageSource source = event.getSource();
+        if (source == null) return;
+        LivingEntity entity = event.getEntity();
+        if (entity == null) return;
+        Entity sourceEntity = source.getEntity();
+        if (sourceEntity == null) return;
 
+        double amount = event.getAmount();
         double damage = amount;
 
-        ItemStack stack = sourceentity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
+        ItemStack stack = sourceEntity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
 
-        if ((damageSource.is(ModDamageTypes.PROJECTILE_BOOM) || damageSource.is(ModDamageTypes.CANNON_FIRE)) && stack.is(ModTags.Items.LAUNCHER)) {
-            stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
-        }
-
-        if (DamageTypeTool.isGunDamage(damageSource)) {
-            double distance = entity.position().distanceTo(sourceentity.position());
+        if (DamageTypeTool.isGunDamage(source)) {
+            double distance = entity.position().distanceTo(sourceEntity.position());
 
             if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
                 damage = reduceDamageByDistance(amount, distance, 0.03, 25);
@@ -87,25 +95,70 @@ public class LivingEventHandler {
             }
         }
 
-        if (damageSource.is(ModTags.DamageTypes.PROJECTILE)) {
-            damage = damage * (1 - Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE.get()), 0, 1));
+        if (source.is(ModTags.DamageTypes.PROJECTILE)) {
+            damage *= 1 - Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE.get()), 0, 1);
         }
 
-        if (damageSource.is(ModTags.DamageTypes.PROJECTILE_ABSOLUTE)) {
-            damage = damage * (1 - 0.2 * Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE.get()), 0, 1));
+        if (source.is(ModTags.DamageTypes.PROJECTILE_ABSOLUTE)) {
+            damage *= 1 - 0.2 * Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE.get()), 0, 1);
         }
 
         event.setAmount((float) damage);
 
-        stack.getOrCreateTag().putDouble("damagetotal", stack.getOrCreateTag().getDouble("damagetotal") + damage);
-
-        if (entity instanceof TargetEntity && sourceentity instanceof Player player) {
-            player.displayClientMessage(Component.literal("Damage:" + new java.text.DecimalFormat("##.#").format(damage) + " Distance:" + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceentity.position()))) + "M"), false);
+        if (entity instanceof TargetEntity && sourceEntity instanceof Player player) {
+            player.displayClientMessage(Component.literal("Damage:" + new DecimalFormat("##.#").format(damage) +
+                    " Distance:" + new DecimalFormat("##.#").format(entity.position().distanceTo(sourceEntity.position())) + "M"), false);
         }
     }
 
     private static double reduceDamageByDistance(double amount, double distance, double rate, double minDistance) {
         return amount / (1 + rate * Math.max(0, distance - minDistance));
+    }
+
+    /**
+     * 根据造成的伤害，提供武器经验
+     */
+    private static void giveExpToWeapon(LivingHurtEvent event) {
+        DamageSource source = event.getSource();
+        if (source == null) return;
+        Entity sourceEntity = source.getEntity();
+        if (!(sourceEntity instanceof Player player)) return;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return;
+
+        double amount = event.getAmount();
+
+        // 先处理发射器类武器或高爆弹的爆炸伤害
+        if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
+            if (stack.is(ModTags.Items.LAUNCHER) || PerkHelper.getItemPerkLevel(ModPerks.HE_BULLET.get(), stack) > 0) {
+                stack.getOrCreateTag().putDouble("Exp", stack.getOrCreateTag().getDouble("Exp") + amount);
+            }
+        }
+
+        // 再判断是不是枪械能造成的伤害
+        if (!DamageTypeTool.isGunDamage(source)) return;
+
+        stack.getOrCreateTag().putDouble("Exp", stack.getOrCreateTag().getDouble("Exp") + amount);
+    }
+
+    private static void handleGunLevels(LivingHurtEvent event) {
+        DamageSource source = event.getSource();
+        if (source == null) return;
+        Entity sourceEntity = source.getEntity();
+        if (!(sourceEntity instanceof Player player)) return;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return;
+
+        var tag = stack.getOrCreateTag();
+        int level = stack.getOrCreateTag().getInt("Level");
+        double exp = stack.getOrCreateTag().getDouble("Exp");
+        double upgradeExpNeeded = 20 / 3.0 * Math.pow(level, 3) + 90 * Math.pow(level, 2) - 290 / 3.0 * level + 20;
+
+        if (exp >= upgradeExpNeeded) {
+            tag.putDouble("Exp", exp - upgradeExpNeeded);
+            tag.putInt("Level", level + 1);
+            tag.putDouble("UpgradePoint", tag.getDouble("UpgradePoint") + 0.25);
+        }
     }
 
     private static void killIndication(DamageSource source) {
@@ -318,7 +371,7 @@ public class LivingEventHandler {
             }
         }
 
-        if (DamageTypeTool.isGunHeadshotDamage(source)) {
+        if (DamageTypeTool.isHeadshotDamage(source)) {
             handleHeadSeekerDamage(stack, event);
         }
     }

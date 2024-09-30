@@ -89,7 +89,6 @@ public class PlayerEventHandler {
             if (stack.is(ModTags.Items.GUN)) {
                 handleWeaponSway(player);
                 handlePlayerSprint(player);
-                handleWeaponLevel(player);
                 handleAmmoCount(player);
                 handleSpecialWeaponAmmo(player);
                 handleChangeFireRate(player);
@@ -275,28 +274,6 @@ public class PlayerEventHandler {
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom
                 || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).holdFire) {
             player.setSprinting(false);
-        }
-    }
-
-    /**
-     * 处理武器等级
-     */
-    private static void handleWeaponLevel(Player player) {
-        ItemStack stack = player.getMainHandItem();
-        if (stack.is(ModTags.Items.GUN)) {
-            var tag = stack.getOrCreateTag();
-            if (tag.getInt("level") == 0) {
-                tag.putDouble("exp2", 20);
-            } else {
-                tag.putDouble("exp2", (tag.getDouble("exp1") + tag.getInt("level") * 200 * (1 + 0.1 * tag.getInt("level"))));
-            }
-            if (tag.getDouble("damagetotal") >= tag.getDouble("exp2")) {
-                tag.putDouble("exp1", (tag.getDouble("exp2")));
-                tag.putInt("level", tag.getInt("level") + 1);
-                tag.putDouble("UpgradePoint", tag.getDouble("UpgradePoint") + 0.25);
-            }
-            tag.putDouble("damagenow", (tag.getDouble("damagetotal") - tag.getDouble("exp1")));
-            tag.putDouble("damageneed", (tag.getDouble("exp2") - tag.getDouble("exp1")));
         }
     }
 

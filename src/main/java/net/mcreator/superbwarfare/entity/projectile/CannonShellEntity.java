@@ -200,7 +200,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         }
 
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), explosionDamage,
+                ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), explosionDamage,
                 this.getX(), this.getY(), this.getZ(), explosionRadius, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1).setFireTime(fireTime);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
