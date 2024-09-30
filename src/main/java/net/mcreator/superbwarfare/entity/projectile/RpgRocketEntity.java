@@ -107,7 +107,9 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
         if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this, entity, this.damage * 0.67f, 10.0f, this.monsterMultiplier);
+                ProjectileTool.causeCustomExplode(this,
+                        ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
+                        entity, this.damage * 0.67f, 10.0f, this.monsterMultiplier);
             }
         }
 
@@ -126,7 +128,9 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
         if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this, this.damage * 0.67f, 10.0f, this.monsterMultiplier);
+                ProjectileTool.causeCustomExplode(this,
+                        ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
+                        this, this.damage * 0.67f, 10.0f, this.monsterMultiplier);
             }
         }
 
@@ -153,7 +157,9 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
         if (this.tickCount > 100 || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this, this.damage * 0.67f, 10.0f, this.monsterMultiplier);
+                ProjectileTool.causeCustomExplode(this,
+                        ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
+                        this, this.damage * 0.67f, 10.0f, this.monsterMultiplier);
             }
             this.discard();
         }
@@ -181,7 +187,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
     @Override
     protected float getGravity() {
-        return 0.03F;
+        return super.getGravity();
     }
 
     public String getSyncedAnimation() {

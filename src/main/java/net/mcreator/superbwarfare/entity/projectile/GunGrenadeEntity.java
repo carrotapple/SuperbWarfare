@@ -90,7 +90,9 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
 
         if (this.tickCount > 0) {
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this, entity, this.damage * 1.8f, 7.5f, this.monsterMultiplier);
+                ProjectileTool.causeCustomExplode(this,
+                        ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
+                        entity, this.damage * 1.8f, 7.5f, this.monsterMultiplier);
             }
         }
 
@@ -105,9 +107,12 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         if (state.getBlock() instanceof BellBlock bell) {
             bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
         }
+
         if (this.tickCount > 0) {
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this, this.damage * 1.8f, 7.5f, this.monsterMultiplier);
+                ProjectileTool.causeCustomExplode(this,
+                        ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
+                        this, this.damage * 1.8f, 7.5f, this.monsterMultiplier);
             }
         }
 
@@ -125,7 +130,9 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
 
         if (this.tickCount > 200 || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this, this.damage * 1.8f, 7.5f, this.monsterMultiplier);
+                ProjectileTool.causeCustomExplode(this,
+                        ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
+                        this, this.damage * 1.8f, 7.5f, this.monsterMultiplier);
             }
             this.discard();
         }

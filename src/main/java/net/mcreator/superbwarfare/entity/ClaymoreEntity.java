@@ -6,7 +6,6 @@ import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
-import net.mcreator.superbwarfare.tools.ProjectileTool;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -116,7 +115,14 @@ public class ClaymoreEntity extends LivingEntity implements GeoEntity, AnimatedE
         super.die(source);
 
         if (level() instanceof ServerLevel) {
-            ProjectileTool.causeCustomExplode(this, this.getOwner(), 15.0f, 7.5f, 1);
+            CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                    ModDamageTypes.causeMineDamage(this.level().registryAccess(), this.getOwner()), 15.0f,
+                    this.getX(), this.getY(), this.getZ(), 7.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+            explosion.explode();
+            net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+            explosion.finalizeExplosion(false);
+            ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+            this.discard();
         }
     }
 
