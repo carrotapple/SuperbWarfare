@@ -89,6 +89,8 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         simpleItem(ModItems.RU_HELMET_6B47);
         simpleItem(ModItems.RU_CHEST_6B43);
+        simpleItem(ModItems.US_HELMET_PASTG);
+        simpleItem(ModItems.US_CHEST_IOTV);
 
         // blueprints
         blueprintItem(ModItems.TRACHELIUM_BLUEPRINT);

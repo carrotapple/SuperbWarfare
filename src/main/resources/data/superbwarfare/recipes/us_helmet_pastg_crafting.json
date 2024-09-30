@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "aaa",
+    "aba"
+  ],
+  "key": {
+    "a": {
+      "item": "superbwarfare:cemented_carbide_ingot"
+    },
+    "b": {
+      "item": "minecraft:sand"
+    }
+  },
+  "result": {
+    "item": "superbwarfare:us_helmet_pastg",
+    "count": 1
+  }
+}
