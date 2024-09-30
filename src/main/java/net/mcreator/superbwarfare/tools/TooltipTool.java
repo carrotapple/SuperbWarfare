@@ -72,7 +72,7 @@ public class TooltipTool {
 
     private static void addLevelTips(List<Component> tooltip, ItemStack stack) {
         int level = ItemNBTTool.getInt(stack, "Level", 0);
-        double rate = ItemNBTTool.getDouble(stack, "Exp", 0) / (20 / 3.0 * Math.pow(level, 3) + 90 * Math.pow(level, 2) - 290 / 3.0 * level + 20);
+        double rate = ItemNBTTool.getDouble(stack, "Exp", 0) / (20 * Math.pow(level, 2) + 160 * level + 20);
 
         ChatFormatting formatting;
         if (level < 10) {
