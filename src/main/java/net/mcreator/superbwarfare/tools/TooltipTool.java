@@ -130,7 +130,7 @@ public class TooltipTool {
                     .append(Component.literal(" >> "))
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.translatable("item.superbwarfare." + id).withStyle(ChatFormatting.WHITE))
-                    .append(Component.literal(" Lvl. " + ammoTag.getInt("Level")).withStyle(ChatFormatting.WHITE)));
+                    .append(Component.literal(" Lvl. " + ammoTag.getInt("level")).withStyle(ChatFormatting.WHITE)));
             addHideText(tooltip, Component.translatable("des.superbwarfare." + id).withStyle(ChatFormatting.GRAY));
         }
 
@@ -140,7 +140,7 @@ public class TooltipTool {
                     .append(Component.literal(" >> "))
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.translatable("item.superbwarfare." + id).withStyle(ChatFormatting.WHITE))
-                    .append(Component.literal(" Lvl. " + functionalTag.getInt("Level")).withStyle(ChatFormatting.WHITE)));
+                    .append(Component.literal(" Lvl. " + functionalTag.getInt("level")).withStyle(ChatFormatting.WHITE)));
             addHideText(tooltip, Component.translatable("des.superbwarfare." + id).withStyle(ChatFormatting.GRAY));
         }
 
@@ -150,7 +150,7 @@ public class TooltipTool {
                     .append(Component.literal(" >> "))
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.translatable("item.superbwarfare." + id).withStyle(ChatFormatting.WHITE))
-                    .append(Component.literal(" Lvl. " + damageTag.getInt("Level")).withStyle(ChatFormatting.WHITE)));
+                    .append(Component.literal(" Lvl. " + damageTag.getInt("level")).withStyle(ChatFormatting.WHITE)));
             addHideText(tooltip, Component.translatable("des.superbwarfare." + id).withStyle(ChatFormatting.GRAY));
         }
     }
