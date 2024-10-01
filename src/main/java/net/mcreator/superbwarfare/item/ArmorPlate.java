@@ -34,7 +34,7 @@ public class ArmorPlate extends Item {
             armorLevel = 2;
         }
 
-        if (armor.getOrCreateTag().getDouble("armorPlate") < armorLevel * 30) {
+        if (armor.getOrCreateTag().getDouble("ArmorPlate") < armorLevel * 30) {
             playerIn.startUsingItem(handIn);
         }
 
