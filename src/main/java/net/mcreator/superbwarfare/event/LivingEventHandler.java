@@ -68,7 +68,6 @@ public class LivingEventHandler {
      */
     private static void reduceBulletDamage(LivingHurtEvent event) {
         DamageSource source = event.getSource();
-        if (source == null) return;
         LivingEntity entity = event.getEntity();
         if (entity == null) return;
         Entity sourceEntity = source.getEntity();
@@ -79,6 +78,7 @@ public class LivingEventHandler {
 
         ItemStack stack = sourceEntity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
 
+        //距离衰减
         if (DamageTypeTool.isGunDamage(source)) {
             double distance = entity.position().distanceTo(sourceEntity.position());
 
@@ -95,24 +95,28 @@ public class LivingEventHandler {
             }
         }
 
-        if (source.is(ModTags.DamageTypes.PROJECTILE)) {
-            damage *= 1 - Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE.get()), 0, 1);
+        //计算防弹插板减伤
+        if (source.is(ModTags.DamageTypes.PROJECTILE) || source.is(ModTags.DamageTypes.PROJECTILE_ABSOLUTE)) {
+            ItemStack armor = entity.getItemBySlot(EquipmentSlot.CHEST);
+
+            if (armor != ItemStack.EMPTY && armor.getTag() != null && armor.getTag().contains("ArmorPlate")) {
+                double armorValue;
+                armorValue = armor.getOrCreateTag().getDouble("ArmorPlate");
+                armor.getOrCreateTag().putDouble("ArmorPlate", Math.max(armor.getOrCreateTag().getDouble("ArmorPlate") - damage, 0));
+                damage = Math.max(damage - armorValue, 0);
+            }
+
+            //计算防弹护具减伤
+            if (source.is(ModTags.DamageTypes.PROJECTILE)) {
+                damage *= 1 - 0.8 * Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE.get()), 0, 1);
+            }
+
+            if (source.is(ModTags.DamageTypes.PROJECTILE_ABSOLUTE)) {
+                damage *= 1 - 0.2 * Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE.get()), 0, 1);
+            }
         }
 
-        if (source.is(ModTags.DamageTypes.PROJECTILE_ABSOLUTE)) {
-            damage *= 1 - 0.2 * Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE.get()), 0, 1);
-        }
-
-        ItemStack armor = entity.getItemBySlot(EquipmentSlot.CHEST);
-
-        double armorValue = 0;
-
-        if (armor != ItemStack.EMPTY) {
-            armorValue = armor.getOrCreateTag().getDouble("ArmorPlate");
-            armor.getOrCreateTag().putDouble("ArmorPlate", Math.max(armor.getOrCreateTag().getDouble("ArmorPlate") - damage, 0));
-        }
-
-        event.setAmount((float) (Math.max(damage - armorValue, 0)));
+        event.setAmount((float) damage);
 
         if (entity instanceof TargetEntity && sourceEntity instanceof Player player) {
             player.displayClientMessage(Component.literal("Damage:" + new DecimalFormat("##.#").format(damage) +
