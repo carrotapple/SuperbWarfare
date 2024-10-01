@@ -9,7 +9,6 @@ import net.mcreator.superbwarfare.tools.TraceTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -53,8 +52,8 @@ public class CannonHudOverlay {
             } else if (diffY < -180.0f) {
                 diffY += 360.0f;
             }
-            float f = (float)Math.min(w, h);
-            float f1 = Math.min((float)w / f, (float)h / f) * fovAdjust;
+            float f = (float) Math.min(w, h);
+            float f1 = Math.min((float) w / f, (float) h / f) * fovAdjust;
             int i = Mth.floor(f * f1);
             int j = Mth.floor(f * f1);
             int k = (w - i) / 2;
@@ -87,10 +86,10 @@ public class CannonHudOverlay {
                                 w / 2 + 14, h / 2 - 20, -1, false);
                     }
                 }
-                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
-                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/indicator.png"), k + (float) Math.tan(Mth.clamp(Mth.DEG_TO_RAD * diffY, -1.5, 1.5)) * 5 * i / 1.4f * (90 - Math.abs(player.getXRot())) / 90, l + (float) Math.tan(Mth.clamp(Mth.DEG_TO_RAD * diffX, -1.5, 1.5)) * 5 * j / 1.4f, 0, 0.0F, i, j, i, j);
+                preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
+                preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/indicator.png"), k + (float) Math.tan(Mth.clamp(Mth.DEG_TO_RAD * diffY, -1.5, 1.5)) * 5 * i / 1.4f * (90 - Math.abs(player.getXRot())) / 90, l + (float) Math.tan(Mth.clamp(Mth.DEG_TO_RAD * diffX, -1.5, 1.5)) * 5 * j / 1.4f, 0, 0.0F, i, j, i, j);
             } else {
-                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
+                preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
             }
         }
         RenderSystem.depthMask(true);

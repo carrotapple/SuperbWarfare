@@ -19,7 +19,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTableMenu> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(ModUtils.MODID, "textures/gui/reforging_table.png");
+    private static final ResourceLocation TEXTURE = ModUtils.loc("textures/gui/reforging_table.png");
 
     public ReforgingTableScreen(ReforgingTableMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

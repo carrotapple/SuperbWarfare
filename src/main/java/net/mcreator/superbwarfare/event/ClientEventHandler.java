@@ -18,7 +18,6 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -282,7 +281,7 @@ public class ClientEventHandler {
 
         if (drone != null && stack.getOrCreateTag().getBoolean("Using")) {
             if (Minecraft.getInstance().gameRenderer.currentEffect() == null) {
-                Minecraft.getInstance().gameRenderer.loadEffect(new ResourceLocation(ModUtils.MODID, "shaders/post/scan_pincushion.json"));
+                Minecraft.getInstance().gameRenderer.loadEffect(ModUtils.loc("shaders/post/scan_pincushion.json"));
             }
         }
     }

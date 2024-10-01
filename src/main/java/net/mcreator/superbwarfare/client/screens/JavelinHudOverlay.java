@@ -8,7 +8,6 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -43,21 +42,21 @@ public class JavelinHudOverlay {
                 RenderSystem.setShaderColor(1, 1, 1, 1);
                 float deltaFrame = Minecraft.getInstance().getDeltaFrameTime();
                 float moveX = (float) (-32 * ClientEventHandler.turnRot[1] - (player.isSprinting() ? 100 : 67) * ClientEventHandler.movePosX + 3 * ClientEventHandler.cameraRot[2]);
-                float moveY = (float) (-32 * ClientEventHandler.turnRot[0] + 100 * (float)ClientEventHandler.velocityY - (player.isSprinting() ? 100 : 67) * ClientEventHandler.movePosY - 12 * ClientEventHandler.firePos + 3 * ClientEventHandler.cameraRot[1]);
+                float moveY = (float) (-32 * ClientEventHandler.turnRot[0] + 100 * (float) ClientEventHandler.velocityY - (player.isSprinting() ? 100 : 67) * ClientEventHandler.movePosY - 12 * ClientEventHandler.firePos + 3 * ClientEventHandler.cameraRot[1]);
                 scopeScale = (float) Mth.lerp(0.5F * deltaFrame, scopeScale, 1.35F + (0.2f * ClientEventHandler.firePos));
-                float f = (float)Math.min(w, h);
-                float f1 = Math.min((float)w / f, (float)h / f) * scopeScale;
+                float f = (float) Math.min(w, h);
+                float f1 = Math.min((float) w / f, (float) h / f) * scopeScale;
                 float i = Mth.floor(f * f1);
                 float j = Mth.floor(f * f1);
                 float k = ((w - i) / 2) + moveX;
                 float l = ((h - j) / 2) + moveY;
                 float i1 = k + i;
                 float j1 = l + j;
-                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/javelin/javelin_hud.png"), k, l, 0, 0.0F, i, j, i, j);
-                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, stack.getOrCreateTag().getBoolean("TopMode") ? "textures/screens/javelin/top.png" : "textures/screens/javelin/dir.png"), k, l, 0, 0.0F, i, j, i, j);
-                preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, stack.getOrCreateTag().getInt("ammo") > 0 ? "textures/screens/javelin/missile_green.png" : "textures/screens/javelin/missile_red.png"), k, l, 0, 0.0F, i, j, i, j);
+                preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/javelin/javelin_hud.png"), k, l, 0, 0.0F, i, j, i, j);
+                preciseBlit(event.getGuiGraphics(), ModUtils.loc(stack.getOrCreateTag().getBoolean("TopMode") ? "textures/screens/javelin/top.png" : "textures/screens/javelin/dir.png"), k, l, 0, 0.0F, i, j, i, j);
+                preciseBlit(event.getGuiGraphics(), ModUtils.loc(stack.getOrCreateTag().getInt("ammo") > 0 ? "textures/screens/javelin/missile_green.png" : "textures/screens/javelin/missile_red.png"), k, l, 0, 0.0F, i, j, i, j);
                 if (stack.getOrCreateTag().getInt("SeekTime") > 1 && stack.getOrCreateTag().getInt("SeekTime") < 20) {
-                    preciseBlit(event.getGuiGraphics(), new ResourceLocation(ModUtils.MODID, "textures/screens/javelin/seek.png"), k, l, 0, 0.0F, i, j, i, j);
+                    preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/javelin/seek.png"), k, l, 0, 0.0F, i, j, i, j);
                 }
                 event.getGuiGraphics().fill(RenderType.guiOverlay(), 0, (int) l, (int) k + 3, (int) j1, -90, -16777216);
                 event.getGuiGraphics().fill(RenderType.guiOverlay(), (int) i1, (int) l, w, (int) j1, -90, -16777216);

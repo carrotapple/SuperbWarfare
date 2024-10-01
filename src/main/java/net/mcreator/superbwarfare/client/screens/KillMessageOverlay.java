@@ -31,18 +31,18 @@ import static net.mcreator.superbwarfare.tools.RenderTool.preciseBlit;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class KillMessageOverlay {
-    private static final ResourceLocation HEADSHOT = new ResourceLocation(ModUtils.MODID, "textures/screens/damage_types/headshot.png");
+    private static final ResourceLocation HEADSHOT = ModUtils.loc("textures/screens/damage_types/headshot.png");
 
-    private static final ResourceLocation KNIFE = new ResourceLocation(ModUtils.MODID, "textures/screens/damage_types/knife.png");
-    private static final ResourceLocation EXPLOSION = new ResourceLocation(ModUtils.MODID, "textures/screens/damage_types/explosion.png");
-    private static final ResourceLocation CLAYMORE = new ResourceLocation(ModUtils.MODID, "textures/screens/damage_types/claymore.png");
-    private static final ResourceLocation GENERIC = new ResourceLocation(ModUtils.MODID, "textures/screens/damage_types/generic.png");
-    private static final ResourceLocation BEAST = new ResourceLocation(ModUtils.MODID, "textures/screens/damage_types/beast.png");
-    private static final ResourceLocation BLEEDING = new ResourceLocation(ModUtils.MODID, "textures/screens/damage_types/bleeding.png");
-    private static final ResourceLocation SHOCK = new ResourceLocation(ModUtils.MODID, "textures/screens/damage_types/shock.png");
-    private static final ResourceLocation BLOOD_CRYSTAL = new ResourceLocation(ModUtils.MODID, "textures/screens/damage_types/blood_crystal.png");
+    private static final ResourceLocation KNIFE = ModUtils.loc("textures/screens/damage_types/knife.png");
+    private static final ResourceLocation EXPLOSION = ModUtils.loc("textures/screens/damage_types/explosion.png");
+    private static final ResourceLocation CLAYMORE = ModUtils.loc("textures/screens/damage_types/claymore.png");
+    private static final ResourceLocation GENERIC = ModUtils.loc("textures/screens/damage_types/generic.png");
+    private static final ResourceLocation BEAST = ModUtils.loc("textures/screens/damage_types/beast.png");
+    private static final ResourceLocation BLEEDING = ModUtils.loc("textures/screens/damage_types/bleeding.png");
+    private static final ResourceLocation SHOCK = ModUtils.loc("textures/screens/damage_types/shock.png");
+    private static final ResourceLocation BLOOD_CRYSTAL = ModUtils.loc("textures/screens/damage_types/blood_crystal.png");
 
-    private static final ResourceLocation WORLD_PEACE_STAFF = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/compat/world_peace_staff.png");
+    private static final ResourceLocation WORLD_PEACE_STAFF = ModUtils.loc("textures/gun_icon/compat/world_peace_staff.png");
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void onRenderGui(RenderGuiEvent.Pre event) {

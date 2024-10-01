@@ -20,12 +20,12 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class AmmoBarOverlay {
-    private static final ResourceLocation LINE = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/fire_mode/line.png");
-    private static final ResourceLocation SEMI = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/fire_mode/semi.png");
-    private static final ResourceLocation BURST = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/fire_mode/burst.png");
-    private static final ResourceLocation AUTO = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/fire_mode/auto.png");
-    private static final ResourceLocation TOP = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/fire_mode/top.png");
-    private static final ResourceLocation DIR = new ResourceLocation(ModUtils.MODID, "textures/gun_icon/fire_mode/dir.png");
+    private static final ResourceLocation LINE = ModUtils.loc("textures/gun_icon/fire_mode/line.png");
+    private static final ResourceLocation SEMI = ModUtils.loc("textures/gun_icon/fire_mode/semi.png");
+    private static final ResourceLocation BURST = ModUtils.loc("textures/gun_icon/fire_mode/burst.png");
+    private static final ResourceLocation AUTO = ModUtils.loc("textures/gun_icon/fire_mode/auto.png");
+    private static final ResourceLocation TOP = ModUtils.loc("textures/gun_icon/fire_mode/top.png");
+    private static final ResourceLocation DIR = ModUtils.loc("textures/gun_icon/fire_mode/dir.png");
 
     private static boolean creativeAmmo() {
         Player player = Minecraft.getInstance().player;

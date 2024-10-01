@@ -130,4 +130,8 @@ public class ModUtils {
         event.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotion.SHOCK.get())),
                 Ingredient.of(Items.GLOWSTONE_DUST), PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotion.STRONG_SHOCK.get())));
     }
+
+    public static ResourceLocation loc(String path) {
+        return new ResourceLocation(MODID, path);
+    }
 }

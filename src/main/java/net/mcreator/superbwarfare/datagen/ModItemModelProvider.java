@@ -138,12 +138,12 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     private ItemModelBuilder simpleItem(RegistryObject<Item> item, String location) {
         return withExistingParent(item.getId().getPath(), new ResourceLocation("item/generated"))
-                .texture("layer0", new ResourceLocation(ModUtils.MODID, "item/" + location + item.getId().getPath()));
+                .texture("layer0", ModUtils.loc("item/" + location + item.getId().getPath()));
     }
 
     private ItemModelBuilder simpleItem(RegistryObject<Item> item, String location, String renderType) {
         return withExistingParent(item.getId().getPath(), new ResourceLocation("item/generated"))
-                .texture("layer0", new ResourceLocation(ModUtils.MODID, "item/" + location + item.getId().getPath())).renderType(renderType);
+                .texture("layer0", ModUtils.loc("item/" + location + item.getId().getPath())).renderType(renderType);
     }
 
     public void evenSimplerBlockItem(RegistryObject<Block> block) {
@@ -153,7 +153,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     private ItemModelBuilder blueprintItem(RegistryObject<Item> item) {
         return withExistingParent(item.getId().getPath(), new ResourceLocation("item/generated"))
-                .texture("layer0", new ResourceLocation(ModUtils.MODID, "item/gun_blueprint"));
+                .texture("layer0", ModUtils.loc("item/gun_blueprint"));
     }
 
 }
