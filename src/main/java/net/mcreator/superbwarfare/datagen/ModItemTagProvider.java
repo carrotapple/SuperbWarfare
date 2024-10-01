@@ -90,6 +90,8 @@ public class ModItemTagProvider extends ItemTagsProvider {
         this.tag(ModTags.Items.IS_AUTO_WEAPON).add(ModItems.AA_12.get(), ModItems.AK_47.get(), ModItems.HK_416.get(), ModItems.AA_12.get(), ModItems.M_4.get(),
                 ModItems.QBZ_95.get(), ModItems.MK_14.get(), ModItems.AA_12.get(), ModItems.GLOCK_18.get(), ModItems.VECTOR.get(), ModItems.AA_12.get(), ModItems.MINIGUN.get(),
                 ModItems.DEVOTION.get(), ModItems.M_60.get(), ModItems.RPK.get());
+
+        this.tag(ModTags.Items.MILITARY_ARMOR).add(ModItems.RU_CHEST_6B43.get(), ModItems.US_CHEST_IOTV.get());
     }
 
     private static TagKey<Item> forgeTag(String name) {

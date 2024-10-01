@@ -1,9 +1,11 @@
 package net.mcreator.superbwarfare.item;
 
 
+import net.mcreator.superbwarfare.init.ModTags;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -23,12 +25,17 @@ public class ArmorPlate extends Item {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
-
         ItemStack armor = playerIn.getItemBySlot(EquipmentSlot.CHEST);
 
-        if (armor.getItem() != ItemStack.EMPTY.getItem() && armor.getOrCreateTag().getDouble("armorPlate") < 50) {
+        if (armor.getItem() == ItemStack.EMPTY.getItem()) return InteractionResultHolder.fail(stack);
+
+        int armorLevel = 1;
+        if (armor.is(ModTags.Items.MILITARY_ARMOR)) {
+            armorLevel = 2;
+        }
+
+        if (armor.getOrCreateTag().getDouble("armorPlate") < armorLevel * 30) {
             playerIn.startUsingItem(handIn);
-            return InteractionResultHolder.consume(stack);
         }
 
         return InteractionResultHolder.fail(stack);
@@ -45,9 +52,12 @@ public class ArmorPlate extends Item {
 
             ItemStack armor = pLivingEntity.getItemBySlot(EquipmentSlot.CHEST);
 
-            if (armor.getItem() != ItemStack.EMPTY.getItem()) {
-                armor.getOrCreateTag().putDouble("ArmorPlate", armor.getOrCreateTag().getDouble("ArmorPlate") + 50);
+            int armorLevel = 1;
+            if (armor.is(ModTags.Items.MILITARY_ARMOR)) {
+                armorLevel = 2;
             }
+
+            armor.getOrCreateTag().putDouble("ArmorPlate", Mth.clamp(armor.getOrCreateTag().getDouble("ArmorPlate") + 30, 0, armorLevel * 30));
 
             if (pLivingEntity instanceof ServerPlayer serverPlayer) {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.PLAYERS, 0.5f, 1);

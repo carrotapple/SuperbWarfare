@@ -419,7 +419,7 @@ public class ClientEventHandler {
 
     private static void handleWeaponZoom() {
         float times = 5 * Minecraft.getInstance().getDeltaFrameTime();
-        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
+        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS && !notInGame()) {
             zoomTime = Mth.clamp(zoomTime + 0.03 * times, 0, 1);
         } else {
             zoomTime = Mth.clamp(zoomTime - 0.04 * times, 0, 1);
