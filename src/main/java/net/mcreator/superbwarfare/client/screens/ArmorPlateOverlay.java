@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.screens;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.config.client.DisplayConfig;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -27,6 +28,8 @@ public class ArmorPlateOverlay {
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void onRenderGui(RenderGuiEvent.Pre event) {
+        if (!DisplayConfig.ARMOR_PLATE_HUD.get()) return;
+
         int h = event.getWindow().getGuiScaledHeight();
         GuiGraphics guiGraphics = event.getGuiGraphics();
 

@@ -50,5 +50,13 @@ public class DisplayClothConfig {
                 .setTooltip(Component.translatable("config.superbwarfare.client.display.camera_rotate.des"))
                 .build()
         );
+
+        category.addEntry(entryBuilder
+                .startBooleanToggle(Component.translatable("config.superbwarfare.client.display.armor_plate_hud"), DisplayConfig.ARMOR_PLATE_HUD.get())
+                .setDefaultValue(true)
+                .setSaveConsumer(DisplayConfig.ARMOR_PLATE_HUD::set)
+                .setTooltip(Component.translatable("config.superbwarfare.client.display.armor_plate_hud.des"))
+                .build()
+        );
     }
 }

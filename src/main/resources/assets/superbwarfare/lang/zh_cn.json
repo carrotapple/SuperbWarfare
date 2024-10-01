@@ -366,5 +366,7 @@
   "config.superbwarfare.client.display.float_cross_hair": "浮动准星",
   "config.superbwarfare.client.display.float_cross_hair.des": "开启时，准星会跟随视角进行一定程度的移动",
   "config.superbwarfare.client.display.camera_rotate": "视角摇晃",
-  "config.superbwarfare.client.display.camera_rotate.des": "手持枪械时，视角会出现轻微的摇晃"
+  "config.superbwarfare.client.display.camera_rotate.des": "手持枪械时，视角会出现轻微的摇晃",
+  "config.superbwarfare.client.display.armor_plate_hud": "防弹插板信息",
+  "config.superbwarfare.client.display.armor_plate_hud.des": "开启时，在屏幕左下角显示当前胸甲装备的防弹插板的耐久"
 }

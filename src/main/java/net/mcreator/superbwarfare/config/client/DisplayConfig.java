@@ -9,6 +9,7 @@ public class DisplayConfig {
     public static ForgeConfigSpec.BooleanValue AMMO_HUD;
     public static ForgeConfigSpec.BooleanValue FLOAT_CROSS_HAIR;
     public static ForgeConfigSpec.BooleanValue CAMERA_ROTATE;
+    public static ForgeConfigSpec.BooleanValue ARMOR_PLATE_HUD;
 
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("display");
@@ -27,6 +28,9 @@ public class DisplayConfig {
 
         builder.comment("Set TRUE to enable camera rotate when holding a gun");
         CAMERA_ROTATE = builder.define("camera_rotate", true);
+
+        builder.comment("Set TRUE to enable armor plate hud");
+        ARMOR_PLATE_HUD = builder.define("armor_plate_hud", true);
 
         builder.pop();
     }
