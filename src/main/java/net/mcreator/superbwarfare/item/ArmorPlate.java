@@ -32,6 +32,8 @@ public class ArmorPlate extends Item {
         int armorLevel = 1;
         if (armor.is(ModTags.Items.MILITARY_ARMOR)) {
             armorLevel = 2;
+        } else if (armor.is(ModTags.Items.MILITARY_ARMOR_HEAVY)) {
+            armorLevel = 3;
         }
 
         if (armor.getOrCreateTag().getDouble("ArmorPlate") < armorLevel * 30) {
@@ -55,6 +57,8 @@ public class ArmorPlate extends Item {
             int armorLevel = 1;
             if (armor.is(ModTags.Items.MILITARY_ARMOR)) {
                 armorLevel = 2;
+            } else if (armor.is(ModTags.Items.MILITARY_ARMOR_HEAVY)) {
+                armorLevel = 3;
             }
 
             armor.getOrCreateTag().putDouble("ArmorPlate", Mth.clamp(armor.getOrCreateTag().getDouble("ArmorPlate") + 30, 0, armorLevel * 30));
