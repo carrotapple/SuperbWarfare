@@ -41,7 +41,7 @@ public class AmmoBarOverlay {
     }
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
-    public static void eventHandler(RenderGuiEvent.Pre event) {
+    public static void onRenderGui(RenderGuiEvent.Pre event) {
         if (!DisplayConfig.AMMO_HUD.get()) return;
 
         int w = event.getWindow().getGuiScaledWidth();

@@ -107,12 +107,12 @@ public class LivingEventHandler {
 
         double armorValue = 0;
 
-        if (armor.getItem() != ItemStack.EMPTY.getItem()) {
+        if (armor != ItemStack.EMPTY) {
             armorValue = armor.getOrCreateTag().getDouble("ArmorPlate");
             armor.getOrCreateTag().putDouble("ArmorPlate", Math.max(armor.getOrCreateTag().getDouble("ArmorPlate") - damage, 0));
         }
 
-        event.setAmount((float)(Math.max(damage - armorValue, 0)));
+        event.setAmount((float) (Math.max(damage - armorValue, 0)));
 
         if (entity instanceof TargetEntity && sourceEntity instanceof Player player) {
             player.displayClientMessage(Component.literal("Damage:" + new DecimalFormat("##.#").format(damage) +

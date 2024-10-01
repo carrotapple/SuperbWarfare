@@ -1,6 +1,5 @@
 package net.mcreator.superbwarfare.item;
 
-
 import net.mcreator.superbwarfare.init.ModTags;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -27,7 +26,7 @@ public class ArmorPlate extends Item {
         ItemStack stack = playerIn.getItemInHand(handIn);
         ItemStack armor = playerIn.getItemBySlot(EquipmentSlot.CHEST);
 
-        if (armor.getItem() == ItemStack.EMPTY.getItem()) return InteractionResultHolder.fail(stack);
+        if (armor == ItemStack.EMPTY) return InteractionResultHolder.fail(stack);
 
         int armorLevel = 1;
         if (armor.is(ModTags.Items.MILITARY_ARMOR)) {
@@ -51,7 +50,6 @@ public class ArmorPlate extends Item {
     @Override
     public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
         if (!pLevel.isClientSide) {
-
             ItemStack armor = pLivingEntity.getItemBySlot(EquipmentSlot.CHEST);
 
             int armorLevel = 1;
