@@ -85,6 +85,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.EPIC_MATERIAL_PACK);
         simpleItem(ModItems.LEGENDARY_MATERIAL_PACK);
 
+        simpleItem(ModItems.ARMOR_PLATE);
+
         // armor
 
         simpleItem(ModItems.RU_HELMET_6B47);

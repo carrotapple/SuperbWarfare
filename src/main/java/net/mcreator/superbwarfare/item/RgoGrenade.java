@@ -79,6 +79,10 @@ public class RgoGrenade extends Item {
             if (pLivingEntity instanceof Player player) {
                 player.getCooldowns().addCooldown(pStack.getItem(), 20);
             }
+
+            if (pLivingEntity instanceof Player player && !player.isCreative()) {
+                pStack.shrink(1);
+            }
         }
 
         return super.finishUsingItem(pStack, pLevel, pLivingEntity);
