@@ -261,8 +261,6 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         this.container.setChanged();
     }
 
-    //TODO 修复不点重铸按钮直接拿出武器而导致的点数异常bug
-
     /**
      * 从Perk槽中取出对应的Perk物品时，根据其类型移除输入槽中枪械的Perk
      *
@@ -386,7 +384,6 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
             }
         }
 
-        handleUpgradePoint(pStack);
         this.upgradePoint.set(0);
 
         this.container.setChanged();
