@@ -12,9 +12,11 @@ import net.mcreator.superbwarfare.network.message.PlayerGunKillMessage;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.DamageTypeTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -24,9 +26,11 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameRules;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -61,6 +65,42 @@ public class LivingEventHandler {
         killIndication(event.getSource());
         handleGunPerksWhenDeath(event);
         handlePlayerKillEntity(event);
+
+        //开启死亡掉落时掉落一个弹药盒
+
+        if (!event.getEntity().level().getLevelData().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) && event.getEntity() instanceof Player player) {
+
+            var cap =player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
+
+            boolean drop = (cap.rifleAmmo + cap.handgunAmmo + cap.shotgunAmmo + cap.sniperAmmo > 0);
+
+            if (drop) {
+                ItemStack stack = new ItemStack(ModItems.AMMOBOX.get());
+                CompoundTag tag = stack.getOrCreateTag();
+
+                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    tag.putInt("rifleAmmo",cap.rifleAmmo);
+                    capability.rifleAmmo = 0;
+                    tag.putInt("handgunAmmo",cap.handgunAmmo);
+                    capability.handgunAmmo = 0;
+                    tag.putInt("shotgunAmmo",cap.shotgunAmmo);
+                    capability.shotgunAmmo = 0;
+                    tag.putInt("sniperAmmo",cap.sniperAmmo);
+                    capability.sniperAmmo = 0;
+                    tag.putBoolean("isDrop",true);
+                    capability.syncPlayerVariables(player);
+                });
+
+                if (player.level() instanceof ServerLevel level) {
+                    var x = player.getX();
+                    var y = player.getY();
+                    var z = player.getZ();
+                    ItemEntity ammobox = new ItemEntity(level, x, (y + 1), z, stack);
+                    ammobox.setPickUpDelay(10);
+                    level.addFreshEntity(ammobox);
+                }
+            }
+        }
     }
 
     /**

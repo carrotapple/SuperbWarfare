@@ -93,14 +93,6 @@ public class Glock18Item extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.reload_normal"));
             }
 
-            if (stack.getOrCreateTag().getInt("fire_mode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.change_fire_rate"));
-            }
-
-            if (stack.getOrCreateTag().getInt("fire_mode") == 2 && stack.getOrCreateTag().getDouble("cg") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.change_fire_rate2"));
-            }
-
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.idle"));
         }
         return PlayState.STOP;

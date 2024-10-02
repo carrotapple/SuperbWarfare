@@ -235,6 +235,35 @@ public class ClientEventHandler {
     }
 
     @SubscribeEvent
+    public static void handleWeaponBreathSway(TickEvent.RenderTickEvent event) {
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+        if (!player.getMainHandItem().is(ModTags.Items.GUN)) return;
+
+        float pose;
+        float times = 2 * Minecraft.getInstance().getDeltaFrameTime();
+
+        if (player.isCrouching() && player.getBbHeight() >= 1 && !isProne(player)) {
+            pose = 0.85f;
+        } else if (isProne(player)) {
+            pose = player.getMainHandItem().getOrCreateTag().getDouble("bipod") == 1 ? 0 : 0.25f;
+        } else {
+            pose = 1;
+        }
+
+        if (!player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breath &&
+                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom) {
+            float newPitch = (float) (player.getXRot() - 0.01f * Mth.sin((float) (0.03 * player.tickCount)) * pose * Mth.nextDouble(RandomSource.create(), 0.1, 1) * times);
+            player.setXRot(newPitch);
+            player.xRotO = player.getXRot();
+
+            float newYaw = (float) (player.getYRot() - 0.005f * Mth.cos((float) (0.025 * (player.tickCount + 2 * Math.PI))) * pose * Mth.nextDouble(RandomSource.create(), 0.05, 1.25) * times);
+            player.setYRot(newYaw);
+            player.yRotO = player.getYRot();
+        }
+    }
+
+    @SubscribeEvent
     public static void computeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
         ClientLevel level = Minecraft.getInstance().level;
         Entity entity = event.getCamera().getEntity();
@@ -507,7 +536,7 @@ public class ClientEventHandler {
         float times = Minecraft.getInstance().getDeltaFrameTime();
         float recoilX = (float) tag.getDouble("recoil_x");
         float recoilY = (float) tag.getDouble("recoil_y");
-        float recoilPitch = 30f;
+        float recoilPitch = 50f;
         float recoilYaw = 25f;
 
         /*

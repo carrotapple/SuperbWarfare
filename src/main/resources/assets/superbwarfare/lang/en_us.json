@@ -53,6 +53,21 @@
   "des.superbwarfare.tips.upgradepoint": "Upgrade Point: ",
   "des.superbwarfare.tips.rpm": "Rpm: ",
 
+  "item.superbwarfare.ammobox": "AmmoBox",
+  "des.superbwarfare.tips.rifleammo": "Storage Rifle Ammo: ",
+  "des.superbwarfare.tips.handgunammo": "Storage Handgun Ammo: ",
+  "des.superbwarfare.tips.shotgunammo": "Storage Shotgun Ammo: ",
+  "des.superbwarfare.tips.sniperammo": "Storage Sniper Ammo: ",
+
+  "des.superbwarfare.tips.ammo_type.all": "All Ammo Choosed",
+  "des.superbwarfare.tips.ammo_type.rifle": "Rifle Ammo Choosed",
+  "des.superbwarfare.tips.ammo_type.handgun": "Handgun Ammo Choosed",
+  "des.superbwarfare.tips.ammo_type.shotgun": "Shotgun Ammo Choosed",
+  "des.superbwarfare.tips.ammo_type.sniper": "Sniper Ammo Choosed",
+
+  "des.superbwarfare.tips.shortcutpack": "Really?",
+  "des.superbwarfare.use_tip.shortcutpack": "将枪械和捷径包在铁砧合成，可直接获得一个升级点数",
+
   "item.superbwarfare.vector_blueprint": "VECTOR Blueprint",
   "item.superbwarfare.m_60_blueprint": "M60 Blueprint",
   "item.superbwarfare.hk_416_blueprint": "Hk-416 Blueprint",
@@ -370,5 +385,7 @@
   "config.superbwarfare.client.display.camera_rotate": "视角摇晃",
   "config.superbwarfare.client.display.camera_rotate.des": "手持枪械时，视角会出现轻微的摇晃",
   "config.superbwarfare.client.display.armor_plate_hud": "Armor Plate HUD",
-  "config.superbwarfare.client.display.armor_plate_hud.des": "开启时，在屏幕左下角显示当前胸甲装备的防弹插板的耐久"
+  "config.superbwarfare.client.display.armor_plate_hud.des": "开启时，在屏幕左下角显示当前胸甲装备的防弹插板的耐久",
+  "des.superbwarfare.use_tip.ammobox": "潜行左键切换弹药种类，潜行右键取出身上该类型弹药，非潜行右键取出相应种类弹药。"
+
 }

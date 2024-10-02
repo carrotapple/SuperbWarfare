@@ -14,7 +14,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -87,11 +86,8 @@ public class PlayerEventHandler {
 
         if (event.phase == TickEvent.Phase.END) {
             if (stack.is(ModTags.Items.GUN)) {
-                handleWeaponSway(player);
                 handlePlayerSprint(player);
-                handleAmmoCount(player);
                 handleSpecialWeaponAmmo(player);
-                handleChangeFireRate(player);
                 handleBocekPulling(player);
                 isProne(player);
             }
@@ -109,31 +105,6 @@ public class PlayerEventHandler {
 
         return player.isCrouching() && level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 0.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude()
                 && !level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 1.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude();
-    }
-
-    private static void handleWeaponSway(Player player) {
-        if (player.getMainHandItem().is(ModTags.Items.GUN)) {
-            float pose;
-
-            if (player.isCrouching() && player.getBbHeight() >= 1 && !isProne(player)) {
-                pose = 0.85f;
-            } else if (isProne(player)) {
-                pose = player.getMainHandItem().getOrCreateTag().getDouble("bipod") == 1 ? 0 : 0.25f;
-            } else {
-                pose = 1;
-            }
-
-            if (!player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breath &&
-                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom) {
-                float newPitch = (float) (player.getXRot() - 0.03f * Mth.sin((float) (0.08 * player.tickCount)) * pose * Mth.nextDouble(RandomSource.create(), 0.1, 1));
-                player.setXRot(newPitch);
-                player.xRotO = player.getXRot();
-
-                float newYaw = (float) (player.getYRot() - 0.015f * Mth.cos((float) (0.07 * (player.tickCount + 2 * Math.PI))) * pose * Mth.nextDouble(RandomSource.create(), 0.05, 1.25));
-                player.setYRot(newYaw);
-                player.yRotO = player.getYRot();
-            }
-        }
     }
 
     private static void handleBreath(Player player) {
@@ -266,27 +237,6 @@ public class PlayerEventHandler {
         }
     }
 
-    public static void handleAmmoCount(Player player) {
-        ItemStack stack = player.getMainHandItem();
-
-        if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-            stack.getOrCreateTag().putInt("max_ammo",
-                    ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo));
-        }
-        if (stack.is(ModTags.Items.USE_HANDGUN_AMMO) || stack.is(ModTags.Items.SMG)) {
-            stack.getOrCreateTag().putInt("max_ammo",
-                    ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).handgunAmmo));
-        }
-        if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-            stack.getOrCreateTag().putInt("max_ammo",
-                    ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).shotgunAmmo));
-        }
-        if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-            stack.getOrCreateTag().putInt("max_ammo",
-                    ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).sniperAmmo));
-        }
-    }
-
     private static void handleGround(Player player) {
         if (player.onGround()) {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
@@ -304,15 +254,6 @@ public class PlayerEventHandler {
         }
         if (stack.getItem() == ModItems.BOCEK.get() && stack.getOrCreateTag().getInt("ammo") == 1) {
             stack.getOrCreateTag().putDouble("empty", 0);
-        }
-    }
-
-    private static void handleChangeFireRate(Player player) {
-        ItemStack stack = player.getMainHandItem();
-        if (stack.is(ModTags.Items.GUN)) {
-            if (stack.getOrCreateTag().getDouble("cg") > 0) {
-                stack.getOrCreateTag().putDouble("cg", (stack.getOrCreateTag().getDouble("cg") - 1));
-            }
         }
     }
 

@@ -260,4 +260,29 @@ public class TooltipTool {
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal("Distance:" + new DecimalFormat("##.#").format(player.distanceTo(entity)) + "M").withStyle(ChatFormatting.GRAY)));
     }
+
+    public static void ammoBoxTips(List<Component> tooltip, ItemStack stack) {
+        tooltip.add(Component.translatable("des.superbwarfare.use_tip.ammobox").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("des.superbwarfare.tips.rifleammo").withStyle(ChatFormatting.GREEN)
+                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getInt(stack, "rifleAmmo", 0)) + ((stack.getOrCreateTag().getInt("type") == 0 || stack.getOrCreateTag().getInt("type") == 1) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
+
+        tooltip.add(Component.translatable("des.superbwarfare.tips.handgunammo").withStyle(ChatFormatting.AQUA)
+                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getInt(stack, "handgunAmmo", 0)) + ((stack.getOrCreateTag().getInt("type") == 0 || stack.getOrCreateTag().getInt("type") == 2) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
+
+        tooltip.add(Component.translatable("des.superbwarfare.tips.shotgunammo").withStyle(ChatFormatting.RED)
+                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getInt(stack, "shotgunAmmo", 0)) + ((stack.getOrCreateTag().getInt("type") == 0 || stack.getOrCreateTag().getInt("type") == 3) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
+
+        tooltip.add(Component.translatable("des.superbwarfare.tips.sniperammo").withStyle(ChatFormatting.GOLD)
+                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getInt(stack, "sniperAmmo", 0)) + ((stack.getOrCreateTag().getInt("type") == 0 || stack.getOrCreateTag().getInt("type") == 4) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
+
+    }
+
+    public static void shortcutPackTips(List<Component> tooltip) {
+        tooltip.add(Component.translatable("des.superbwarfare.tips.shortcutpack").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("des.superbwarfare.use_tip.shortcutpack"));
+    }
 }

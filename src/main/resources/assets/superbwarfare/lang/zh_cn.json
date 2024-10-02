@@ -53,6 +53,21 @@
   "des.superbwarfare.tips.distance": "无人机距离你: ",
   "des.superbwarfare.tips.rpm": "射速: ",
 
+  "item.superbwarfare.ammobox": "弹药盒",
+  "des.superbwarfare.tips.rifleammo": "已存储的步枪弹药: ",
+  "des.superbwarfare.tips.handgunammo": "已存储的手枪弹药: ",
+  "des.superbwarfare.tips.shotgunammo": "已存储的霰弹弹药: ",
+  "des.superbwarfare.tips.sniperammo": "已存储的狙击弹药: ",
+
+  "des.superbwarfare.tips.ammo_type.all": "已选择所有弹药种类",
+  "des.superbwarfare.tips.ammo_type.rifle": "已选择步枪弹药",
+  "des.superbwarfare.tips.ammo_type.handgun": "已选择手枪弹药",
+  "des.superbwarfare.tips.ammo_type.shotgun": "已选择霰弹弹药",
+  "des.superbwarfare.tips.ammo_type.sniper": "已选择狙击弹药",
+
+  "des.superbwarfare.tips.shortcutpack": "真的吗?",
+  "des.superbwarfare.use_tip.shortcutpack": "将枪械和捷径包在铁砧合成，可直接获得一个升级点数",
+
   "item.superbwarfare.vector_blueprint": "短剑冲锋枪蓝图",
   "item.superbwarfare.m_60_blueprint": "M60通用机枪蓝图",
   "item.superbwarfare.hk_416_blueprint": "Hk-416突击步枪蓝图",

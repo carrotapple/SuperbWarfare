@@ -102,14 +102,6 @@ public class M60Item extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m60.reload2"));
             }
 
-            if (stack.getOrCreateTag().getInt("fire_mode") == 0 && stack.getOrCreateTag().getDouble("cg") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m60.changefirerate2"));
-            }
-
-            if (stack.getOrCreateTag().getInt("fire_mode") == 2 && stack.getOrCreateTag().getDouble("cg") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m60.changefirerate"));
-            }
-
             if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
                 if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m60.run_fast"));

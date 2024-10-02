@@ -302,7 +302,6 @@ public class FireMessage {
                 player.getInventory().clearOrCountMatchingItems(p -> Items.ARROW == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
             }
 
-            stack.getOrCreateTag().putBoolean("shoot", true);
             if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
             }
@@ -467,7 +466,6 @@ public class FireMessage {
                 stack.getOrCreateTag().putInt("fire_animation", 2);
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
 
-                stack.getOrCreateTag().putBoolean("shoot", true);
                 if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
                     ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
                 }
@@ -527,7 +525,6 @@ public class FireMessage {
             tag.putInt("fire_animation", 2);
             tag.putInt("ammo", tag.getInt("ammo") - 1);
 
-            stack.getOrCreateTag().putBoolean("shoot", true);
             if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
             }
@@ -588,7 +585,6 @@ public class FireMessage {
         tag.putInt("fire_animation", 2);
         tag.putInt("ammo", tag.getInt("ammo") - 1);
 
-        stack.getOrCreateTag().putBoolean("shoot", true);
         if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
             ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
         }
