@@ -364,7 +364,6 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         if (ammoPerk != null) {
             if (this.container.getItem(AMMO_PERK_SLOT).getItem() instanceof PerkItem perkItem && perkItem.getPerk() == ammoPerk) {
                 this.container.setItem(AMMO_PERK_SLOT, ItemStack.EMPTY);
-                this.ammoPerkLevel.set(0);
             }
         }
 
@@ -372,7 +371,6 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         if (funcPerk != null) {
             if (this.container.getItem(FUNC_PERK_SLOT).getItem() instanceof PerkItem perkItem && perkItem.getPerk() == funcPerk) {
                 this.container.setItem(FUNC_PERK_SLOT, ItemStack.EMPTY);
-                this.funcPerkLevel.set(0);
             }
         }
 
@@ -380,11 +378,28 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         if (damagePerk != null) {
             if (this.container.getItem(DAMAGE_PERK_SLOT).getItem() instanceof PerkItem perkItem && perkItem.getPerk() == damagePerk) {
                 this.container.setItem(DAMAGE_PERK_SLOT, ItemStack.EMPTY);
-                this.damagePerkLevel.set(0);
             }
         }
 
         this.upgradePoint.set(0);
+        this.ammoPerkLevel.set(0);
+        this.funcPerkLevel.set(0);
+        this.damagePerkLevel.set(0);
+
+        var ammo = this.container.getItem(AMMO_PERK_SLOT);
+        if (ammo != ItemStack.EMPTY) {
+            this.moveItemStackTo(ammo, RESULT_SLOT + 1, RESULT_SLOT + 37, false);
+        }
+
+        var func = this.container.getItem(FUNC_PERK_SLOT);
+        if (func != ItemStack.EMPTY) {
+            this.moveItemStackTo(func, RESULT_SLOT + 1, RESULT_SLOT + 37, false);
+        }
+
+        var damage = this.container.getItem(DAMAGE_PERK_SLOT);
+        if (damage != ItemStack.EMPTY) {
+            this.moveItemStackTo(damage, RESULT_SLOT + 1, RESULT_SLOT + 37, false);
+        }
 
         this.container.setChanged();
     }
@@ -404,14 +419,14 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         }
 
         public boolean mayPlace(ItemStack pStack) {
-            if (pStack.getItem() instanceof GunItem gunItem) {
+            if (pStack.getItem() instanceof GunItem) {
                 ItemStack ammoPerk = this.container.getItem(AMMO_PERK_SLOT);
                 ItemStack funcPerk = this.container.getItem(FUNC_PERK_SLOT);
                 ItemStack damagePerk = this.container.getItem(DAMAGE_PERK_SLOT);
 
-                boolean flag1 = ammoPerk.isEmpty() || (ammoPerk.getItem() instanceof PerkItem perkItem && gunItem.canApplyPerk(perkItem.getPerk()));
-                boolean flag2 = funcPerk.isEmpty() || (funcPerk.getItem() instanceof PerkItem perkItem && gunItem.canApplyPerk(perkItem.getPerk()));
-                boolean flag3 = damagePerk.isEmpty() || (damagePerk.getItem() instanceof PerkItem perkItem && gunItem.canApplyPerk(perkItem.getPerk()));
+                boolean flag1 = ammoPerk.isEmpty();
+                boolean flag2 = funcPerk.isEmpty();
+                boolean flag3 = damagePerk.isEmpty();
 
                 return flag1 && flag2 && flag3 && this.container.getItem(RESULT_SLOT).isEmpty() && this.container.getItem(INPUT_SLOT).isEmpty();
             }
