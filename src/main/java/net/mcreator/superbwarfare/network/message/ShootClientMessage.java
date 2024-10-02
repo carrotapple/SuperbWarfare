@@ -8,22 +8,22 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ShootAnimationMessage {
+public class ShootClientMessage {
     public double time;
 
-    public ShootAnimationMessage(double time) {
+    public ShootClientMessage(double time) {
         this.time = time;
     }
 
-    public static void encode(ShootAnimationMessage message, FriendlyByteBuf buffer) {
+    public static void encode(ShootClientMessage message, FriendlyByteBuf buffer) {
         buffer.writeDouble(message.time);
     }
 
-    public static ShootAnimationMessage decode(FriendlyByteBuf buffer) {
-        return new ShootAnimationMessage(buffer.readDouble());
+    public static ShootClientMessage decode(FriendlyByteBuf buffer) {
+        return new ShootClientMessage(buffer.readDouble());
     }
 
-    public static void handle(ShootAnimationMessage message, Supplier<NetworkEvent.Context> context) {
+    public static void handle(ShootClientMessage message, Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
                 () -> () -> ClientEventHandler.handleFireRecoilTimeMessage(message.time, context)));
         context.get().setPacketHandled(true);

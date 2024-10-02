@@ -46,7 +46,8 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntity {
-    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public String animationprocedure = "empty";
@@ -70,7 +71,22 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(ANIMATION, "undefined");
+        this.entityData.define(COOL_DOWN, 0);
+        this.entityData.define(TYPE, 0);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putInt("cool_down", this.entityData.get(COOL_DOWN));
+        compound.putInt("type", this.entityData.get(TYPE));
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        this.entityData.set(COOL_DOWN, compound.getInt("cool_down"));
+        this.entityData.set(TYPE, compound.getInt("type"));
     }
 
     @Override
@@ -164,46 +180,24 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-    }
-
-    @Override
     public void baseTick() {
         super.baseTick();
-
-        if (this.getFirstPassenger() == null) return;
-
-        Entity gunner = this.getFirstPassenger();
-
-        if (this.getPersistentData().getInt("FireCooldown") > 0) {
-            this.getPersistentData().putInt("FireCooldown", this.getPersistentData().getInt("FireCooldown") - 1);
+        if (this.entityData.get(COOL_DOWN) > 0) {
+            this.entityData.set(COOL_DOWN, this.entityData.get(COOL_DOWN) - 1);
         }
-
-        if (this.getPersistentData().getInt("FireCooldown") > 28) {
-            gunner.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-
-                if (Math.random() < 0.5) {
-                    capability.recoilHorizon = -1;
-                } else {
-                    capability.recoilHorizon = 1;
-                }
-
-                capability.cannonRecoil = 10;
-                capability.syncPlayerVariables(gunner);
-            });
+        if (this.entityData.get(COOL_DOWN) > 28) {
+            if (Math.random() < 0.5) {
+                this.entityData.set(TYPE, -1);
+            } else {
+                this.entityData.set(TYPE, 1);
+            }
         }
         this.refreshDimensions();
     }
 
     @Override
     public void cannonShoot(Player player) {
-        if (this.getPersistentData().getInt("FireCooldown") > 0) {
+        if (this.entityData.get(COOL_DOWN) > 0) {
             return;
         }
 
@@ -258,7 +252,7 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_VERYFAR.get(), SoundSource.PLAYERS, 32, 1);
             }
 
-            this.getPersistentData().putInt("FireCooldown", 30);
+            this.entityData.set(COOL_DOWN, 30);
 
             server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
                     this.getX() + 5 * this.getLookAngle().x,
@@ -365,8 +359,8 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
             if (this.getFirstPassenger() != null) {
                 Entity gunner = this.getFirstPassenger();
                 var capability = gunner.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null);
-                if (capability.orElse(new ModVariables.PlayerVariables()).cannonRecoil > 0) {
-                    if (capability.orElse(new ModVariables.PlayerVariables()).recoilHorizon == 1) {
+                if (this.entityData.get(COOL_DOWN) > 0) {
+                    if (this.entityData.get(TYPE) == 1) {
                         return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire"));
                     } else {
                         return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire2"));
@@ -379,19 +373,6 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState<Mk42Entity> event) {
-        if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
-            if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                this.animationprocedure = "empty";
-                event.getController().forceAnimationReset();
-            }
-        } else if (animationprocedure.equals("empty")) {
-            return PlayState.STOP;
-        }
-        return PlayState.CONTINUE;
-    }
-
     @Override
     protected void tickDeath() {
         ++this.deathTime;
@@ -402,17 +383,15 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
     }
 
     public String getSyncedAnimation() {
-        return this.entityData.get(ANIMATION);
+        return null;
     }
 
     public void setAnimation(String animation) {
-        this.entityData.set(ANIMATION, animation);
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         data.add(new AnimationController<>(this, "movement", 0, this::movementPredicate));
-        data.add(new AnimationController<>(this, "procedure", 0, this::procedurePredicate));
     }
 
     @Override

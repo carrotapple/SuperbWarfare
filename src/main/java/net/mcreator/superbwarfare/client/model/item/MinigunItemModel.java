@@ -4,7 +4,6 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.machinegun.MinigunItem;
-import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -70,7 +69,7 @@ public class MinigunItemModel extends GeoModel<MinigunItem> {
         shen.setPosZ(2.2f * (float) (0.5 * fp + 1.54f * fr));
         shen.setRotX(0.05f * (float) (0.18f * fp + fr));
         shen.setRotZ(-0.02f * (float) (fp + 1.3 * fr));
-        shen.setPosX(0.5f * (float) fr * (float) ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
+        shen.setPosX(0.5f * (float) fr * (float) (ClientEventHandler.recoilHorizon * fp));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         CoreGeoBone move = getAnimationProcessor().getBone("move");

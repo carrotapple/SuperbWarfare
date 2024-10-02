@@ -71,8 +71,6 @@ public class ModVariables {
             PlayerVariables clone = event.getEntity().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
             clone.zoom = original.zoom;
             clone.holdFire = original.holdFire;
-            clone.recoil = original.recoil;
-            clone.recoilHorizon = original.recoilHorizon;
             clone.rifleAmmo = original.rifleAmmo;
             clone.handgunAmmo = original.handgunAmmo;
             clone.shotgunAmmo = original.shotgunAmmo;
@@ -261,10 +259,6 @@ public class ModVariables {
     public static class PlayerVariables {
         public boolean zoom = false;
         public boolean holdFire = false;
-        public double recoil = 0;
-        public double recoilHorizon = 0;
-        public int cannonRecoil = 0;
-
         public int rifleAmmo = 0;
         public int handgunAmmo = 0;
         public int shotgunAmmo = 0;
@@ -288,9 +282,6 @@ public class ModVariables {
             CompoundTag nbt = new CompoundTag();
             nbt.putBoolean("zoom", zoom);
             nbt.putBoolean("holdFire", holdFire);
-            nbt.putDouble("recoil", recoil);
-            nbt.putDouble("recoil_horizon", recoilHorizon);
-            nbt.putInt("cannonRecoil", cannonRecoil);
             nbt.putInt("rifle_ammo", rifleAmmo);
             nbt.putInt("handgun_ammo", handgunAmmo);
             nbt.putInt("shotgun_ammo", shotgunAmmo);
@@ -312,9 +303,6 @@ public class ModVariables {
             CompoundTag nbt = (CompoundTag) Tag;
             zoom = nbt.getBoolean("zoom");
             holdFire = nbt.getBoolean("holdFire");
-            recoil = nbt.getDouble("recoil");
-            recoilHorizon = nbt.getDouble("recoil_horizon");
-            cannonRecoil = nbt.getInt("cannonRecoil");
             rifleAmmo = nbt.getInt("rifle_ammo");
             handgunAmmo = nbt.getInt("handgun_ammo");
             shotgunAmmo = nbt.getInt("shotgun_ammo");
@@ -367,9 +355,6 @@ public class ModVariables {
                 PlayerVariables variables = entity.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables());
                 variables.zoom = message.data.zoom;
                 variables.holdFire = message.data.holdFire;
-                variables.recoil = message.data.recoil;
-                variables.recoilHorizon = message.data.recoilHorizon;
-                variables.cannonRecoil = message.data.cannonRecoil;
                 variables.rifleAmmo = message.data.rifleAmmo;
                 variables.handgunAmmo = message.data.handgunAmmo;
                 variables.shotgunAmmo = message.data.shotgunAmmo;

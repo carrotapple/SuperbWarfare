@@ -48,7 +48,8 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEntity {
-    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public String animationprocedure = "empty";
@@ -71,7 +72,22 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(ANIMATION, "undefined");
+        this.entityData.define(COOL_DOWN, 0);
+        this.entityData.define(TYPE, 0);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putInt("cool_down", this.entityData.get(COOL_DOWN));
+        compound.putInt("type", this.entityData.get(TYPE));
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        this.entityData.set(COOL_DOWN, compound.getInt("cool_down"));
+        this.entityData.set(TYPE, compound.getInt("type"));
     }
 
     @Override
@@ -165,32 +181,11 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-    }
-
-    @Override
     public void baseTick() {
         super.baseTick();
 
-        if (this.getFirstPassenger() == null) return;
-
-        Entity gunner = this.getFirstPassenger();
-
-        if (this.getPersistentData().getInt("FireCooldown") > 0) {
-            this.getPersistentData().putInt("FireCooldown", this.getPersistentData().getInt("FireCooldown") - 1);
-        }
-
-        if (this.getPersistentData().getInt("FireCooldown") > 72) {
-            gunner.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.cannonRecoil = 10;
-                capability.syncPlayerVariables(gunner);
-            });
+        if (this.entityData.get(COOL_DOWN) > 0) {
+            this.entityData.set(COOL_DOWN, this.entityData.get(COOL_DOWN) - 1);
         }
 
         this.refreshDimensions();
@@ -198,7 +193,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
 
     @Override
     public void cannonShoot(Player player) {
-        if (this.getPersistentData().getInt("FireCooldown") > 0) {
+        if (this.entityData.get(COOL_DOWN) > 0) {
             return;
         }
 
@@ -338,9 +333,9 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
                             Mth.clamp(countR--,1,5), 0.1, 0.1, 0.1, 0.002);
                 }
 
-                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> capability.recoilHorizon = 1);
+                this.entityData.set(TYPE, 1);
             } else {
-                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> capability.recoilHorizon = -1);
+                this.entityData.set(TYPE, -1);
             }
 
             if (player instanceof ServerPlayer serverPlayer) {
@@ -351,7 +346,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_VERYFAR.get(), SoundSource.PLAYERS, 32, 1);
             }
 
-            this.getPersistentData().putInt("FireCooldown", 74);
+            this.entityData.set(COOL_DOWN, 74);
 
             server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE,
                     this.getX() + 5 * this.getLookAngle().x,
@@ -440,8 +435,8 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
             if (this.getFirstPassenger() != null) {
                 Entity gunner = this.getFirstPassenger();
                 var capability = gunner.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null);
-                if (capability.orElse(new ModVariables.PlayerVariables()).cannonRecoil > 0) {
-                    if (capability.orElse(new ModVariables.PlayerVariables()).recoilHorizon == 1) {
+                if (this.entityData.get(COOL_DOWN) > 64) {
+                    if (this.entityData.get(TYPE) == 1) {
                         return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mle1934.salvo_fire"));
                     } else {
                         return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mle1934.fire"));
@@ -454,19 +449,6 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
         return PlayState.STOP;
     }
 
-    private PlayState procedurePredicate(AnimationState<Mle1934Entity> event) {
-        if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
-            if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                this.animationprocedure = "empty";
-                event.getController().forceAnimationReset();
-            }
-        } else if (animationprocedure.equals("empty")) {
-            return PlayState.STOP;
-        }
-        return PlayState.CONTINUE;
-    }
-
     @Override
     protected void tickDeath() {
         ++this.deathTime;
@@ -477,17 +459,15 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
     }
 
     public String getSyncedAnimation() {
-        return this.entityData.get(ANIMATION);
+        return null;
     }
 
     public void setAnimation(String animation) {
-        this.entityData.set(ANIMATION, animation);
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         data.add(new AnimationController<>(this, "movement", 0, this::movementPredicate));
-        data.add(new AnimationController<>(this, "procedure", 0, this::procedurePredicate));
     }
 
     @Override

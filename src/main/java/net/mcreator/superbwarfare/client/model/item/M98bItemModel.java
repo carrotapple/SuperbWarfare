@@ -4,7 +4,6 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.sniper.M98bItem;
-import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -72,7 +71,7 @@ public class M98bItemModel extends GeoModel<M98bItem> {
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
         }
         scope.setPosZ(75.2f * (float) (fp + 0.54f * fr));
-        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
+        shen.setPosX(0.5f * (float)fr * (float)(ClientEventHandler.recoilHorizon * fp));
 
         gun.setPosX(2.245f * (float) zp);
         gun.setPosY(0.3f * (float) zp - (float) (0.2f * zpz));

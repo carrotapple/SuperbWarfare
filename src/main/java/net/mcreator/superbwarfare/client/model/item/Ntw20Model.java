@@ -4,7 +4,6 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.sniper.Ntw20Item;
-import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -79,7 +78,7 @@ public class Ntw20Model extends GeoModel<Ntw20Item> {
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
         }
 
-        shen.setPosX(0.5f * (float)fr * (float)((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
+        shen.setPosX(0.5f * (float)fr * (float)(ClientEventHandler.recoilHorizon * fp));
         gun.setPosX(4.54f * (float) zp);
         gun.setPosY(-0.45f * (float) zp - (float) (0.2f * zpz));
         gun.setPosZ(10.0f * (float) zp + (float) (0.3f * zpz));

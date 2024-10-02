@@ -163,7 +163,7 @@ public class ShootMessage {
                 stack.getOrCreateTag().putBoolean("shoot", true);
 
                 if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
-                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootAnimationMessage(10));
+                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
                 }
 
             }
@@ -216,7 +216,7 @@ public class ShootMessage {
 
                 stack.getOrCreateTag().putBoolean("shoot", true);
                 if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
-                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootAnimationMessage(10));
+                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
                 }
             }
         }

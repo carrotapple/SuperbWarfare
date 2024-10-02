@@ -4,7 +4,6 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.handgun.M1911Item;
-import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -70,16 +69,16 @@ public class M1911ItemModel extends GeoModel<M1911Item> {
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
             shen.setPosY(0.03f * (float) (fp + 2 * fr));
             shen.setPosZ(2.6f * (float) (fp + 0.84f * fr));
-            shen.setRotY(0.05f * (float) ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
+            shen.setRotY(0.05f * (float) (ClientEventHandler.recoilHorizon * fp));
             shen.setRotX(0.005f * (float) (fp + fr));
         } else {
             shen.setPosY(0.08f * (float) (fp + 2 * fr));
             shen.setPosZ(1.9f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.17f * (float) (0.18f * fp + fr));
-            shen.setRotY(0.1f * (float) ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
+            shen.setRotY(0.1f * (float) (ClientEventHandler.recoilHorizon * fp));
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
         }
-        shen.setPosX(0.7f * (float) fr * (float) ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).recoilHorizon * fp));
+        shen.setPosX(0.7f * (float) fr * (float) (ClientEventHandler.recoilHorizon * fp));
 
         slide.setPosZ(2.75f * (float) fp);
 
