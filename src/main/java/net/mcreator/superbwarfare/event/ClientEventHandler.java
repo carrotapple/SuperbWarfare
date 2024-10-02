@@ -579,11 +579,11 @@ public class ClientEventHandler {
         }
 
         if (0 < recoilTime && recoilTime < 2.5) {
-            float newPitch = (float) (player.getXRot() - recoilPitch * recoilY * ry * (sinRes + Mth.clamp(0.5 - recoilTime, 0, 0.5)) * times * fireSpread);
+            float newPitch = (float) (player.getXRot() - recoilPitch * recoilY * ry * (sinRes + Mth.clamp(0.5 - recoilTime, 0, 0.5)) * times * (0.7 + fireSpread));
             player.setXRot(newPitch);
             player.xRotO = player.getXRot();
 
-            float newYaw = (float) (player.getYRot() - recoilYaw * recoilHorizon * recoilX * rx * sinRes * times - 100 * recoilHorizon * firePos * recoilX * rx * times * fireSpread);
+            float newYaw = (float) (player.getYRot() - recoilYaw * recoilHorizon * recoilX * rx * sinRes * times - 100 * recoilHorizon * firePos * recoilX * rx * times * (0.7 + fireSpread));
             player.setYRot(newYaw);
             player.yRotO = player.getYRot();
         }
