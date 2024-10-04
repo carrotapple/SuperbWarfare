@@ -282,7 +282,7 @@ public class ClientEventHandler {
         if (level != null && entity instanceof LivingEntity living && living.getMainHandItem().is(ModTags.Items.GUN)) {
             handleWeaponSway(living);
             handleWeaponMove(living);
-            handleWeaponZoom();
+            handleWeaponZoom(living);
             handlePlayerBreath(living);
             handleWeaponFire(event, living);
             handleGunRecoil();
@@ -453,9 +453,10 @@ public class ClientEventHandler {
         }
     }
 
-    private static void handleWeaponZoom() {
+    private static void handleWeaponZoom(LivingEntity entity) {
+        if (!(entity instanceof Player player)) return;
         float times = 5 * Minecraft.getInstance().getDeltaFrameTime();
-        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS && !notInGame()) {
+        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS && !notInGame() && !player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem())) {
             zoomTime = Mth.clamp(zoomTime + 0.03 * times, 0, 1);
         } else {
             zoomTime = Mth.clamp(zoomTime - 0.04 * times, 0, 1);

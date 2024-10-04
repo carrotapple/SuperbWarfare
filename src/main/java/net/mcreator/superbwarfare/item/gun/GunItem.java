@@ -90,7 +90,7 @@ public abstract class GunItem extends Item {
 
     @Override
     public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        return super.onEntitySwing(stack, entity);
+        return false;
     }
 
     @Override
@@ -124,6 +124,7 @@ public abstract class GunItem extends Item {
     public static void onPickup(EntityItemPickupEvent event) {
         if (event.getItem().getItem().is(ModTags.Items.GUN)) {
             event.getItem().getItem().getOrCreateTag().putBoolean("draw", true);
+            event.getItem().getItem().getOrCreateTag().putBoolean("init", false);
         }
     }
 

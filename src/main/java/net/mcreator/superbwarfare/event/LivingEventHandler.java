@@ -286,17 +286,22 @@ public class LivingEventHandler {
                         oldTags.putBoolean("is_empty_reloading", false);
                         oldTags.putInt("gun_reloading_time", 0);
 
-                        oldTags.putBoolean("force_stop", false);
-                        oldTags.putBoolean("stop", false);
-                        oldTags.putInt("reload_stage", 0);
-                        oldTags.putBoolean("reloading", false);
-                        oldTags.putDouble("prepare", 0);
-                        oldTags.putDouble("prepare_load", 0);
-                        oldTags.putDouble("iterative", 0);
-                        oldTags.putDouble("finish", 0);
+                        if (oldTags.getDouble("iterative_time") != 0) {
+                            oldTags.putBoolean("force_stop", false);
+                            oldTags.putBoolean("stop", false);
+                            oldTags.putInt("reload_stage", 0);
+                            oldTags.putBoolean("reloading", false);
+                            oldTags.putDouble("prepare", 0);
+                            oldTags.putDouble("prepare_load", 0);
+                            oldTags.putDouble("iterative", 0);
+                            oldTags.putDouble("finish", 0);
+                        }
 
-                        oldTags.putBoolean("sentinel_is_charging", false);
-                        oldTags.putInt("sentinel_charge_time", 0);
+                        if (oldStack.is(ModItems.SENTINEL.get())) {
+                            oldTags.putBoolean("sentinel_is_charging", false);
+                            oldTags.putInt("sentinel_charge_time", 0);
+                        }
+
                     }
 
                     if (newStack.getItem() instanceof GunItem) {
@@ -308,17 +313,21 @@ public class LivingEventHandler {
                         newStack.getOrCreateTag().putBoolean("is_empty_reloading", false);
                         newStack.getOrCreateTag().putInt("gun_reloading_time", 0);
 
-                        newStack.getOrCreateTag().putBoolean("force_stop", false);
-                        newStack.getOrCreateTag().putBoolean("stop", false);
-                        newStack.getOrCreateTag().putInt("reload_stage", 0);
-                        newStack.getOrCreateTag().putBoolean("reloading", false);
-                        newStack.getOrCreateTag().putDouble("prepare", 0);
-                        newStack.getOrCreateTag().putDouble("prepare_load", 0);
-                        newStack.getOrCreateTag().putDouble("iterative", 0);
-                        newStack.getOrCreateTag().putDouble("finish", 0);
+                        if (newStack.getOrCreateTag().getDouble("iterative_time") != 0) {
+                            newStack.getOrCreateTag().putBoolean("force_stop", false);
+                            newStack.getOrCreateTag().putBoolean("stop", false);
+                            newStack.getOrCreateTag().putInt("reload_stage", 0);
+                            newStack.getOrCreateTag().putBoolean("reloading", false);
+                            newStack.getOrCreateTag().putDouble("prepare", 0);
+                            newStack.getOrCreateTag().putDouble("prepare_load", 0);
+                            newStack.getOrCreateTag().putDouble("iterative", 0);
+                            newStack.getOrCreateTag().putDouble("finish", 0);
+                        }
 
-                        newStack.getOrCreateTag().putBoolean("sentinel_is_charging", false);
-                        newStack.getOrCreateTag().putInt("sentinel_charge_time", 0);
+                        if (newStack.is(ModItems.SENTINEL.get())) {
+                            newStack.getOrCreateTag().putBoolean("sentinel_is_charging", false);
+                            newStack.getOrCreateTag().putInt("sentinel_charge_time", 0);
+                        }
 
                         int level = PerkHelper.getItemPerkLevel(ModPerks.KILLING_TALLY.get(), newStack);
                         if (level != 0) {

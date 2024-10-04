@@ -8,13 +8,11 @@ import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -34,11 +32,14 @@ import net.minecraftforge.network.PlayMessages;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 @Mod.EventBusSubscriber
 public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEntity {
-    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(TargetEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> DOWN_TIME = SynchedEntityData.defineId(TargetEntity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -55,7 +56,6 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(ANIMATION, "undefined");
         this.entityData.define(DOWN_TIME, 0);
     }
 
@@ -107,25 +107,11 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
         }
 
         if (!this.level().isClientSide()) {
-            this.level().playSound(null, BlockPos.containing(this.getX(), this.getY(), this.getZ()), ModSounds.HIT.get(), SoundSource.BLOCKS, 8, 1);
+            this.level().playSound(null, BlockPos.containing(this.getX(), this.getY(), this.getZ()), ModSounds.HIT.get(), SoundSource.BLOCKS, 3, 1);
         } else {
-            this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), ModSounds.HIT.get(), SoundSource.BLOCKS, 8, 1, false);
+            this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), ModSounds.HIT.get(), SoundSource.BLOCKS, 3, 1, false);
         }
         return super.hurt(source, amount);
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putInt("DownTime", this.entityData.get(DOWN_TIME));
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        if (compound.contains("DownTime")) {
-            this.entityData.set(DOWN_TIME, compound.getInt("DownTime"));
-        }
     }
 
     @SubscribeEvent
@@ -143,8 +129,8 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
 
             if (sourceEntity instanceof Player player) {
                 player.displayClientMessage(Component.literal(("Target Down " + new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceEntity.position()))) + "M")), true);
-                SoundTool.playLocalSound(player, ModSounds.TARGET_DOWN.get(), 100, 1);
-                targetEntity.entityData.set(DOWN_TIME, 91);
+                SoundTool.playLocalSound(player, ModSounds.TARGET_DOWN.get(), 1, 1);
+                targetEntity.entityData.set(DOWN_TIME, 40);
             }
         }
     }
@@ -167,14 +153,8 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
         } else {
             if (!(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
                 this.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3((player.getX()), this.getY(), (player.getZ())));
-
-                this.setYRot(this.getYRot());
                 this.setXRot(0);
-                this.setYBodyRot(this.getYRot());
-                this.setYHeadRot(this.getYRot());
-                this.yRotO = this.getYRot();
                 this.xRotO = this.getXRot();
-
                 this.entityData.set(DOWN_TIME, 0);
             }
         }
@@ -188,11 +168,6 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
         if (this.entityData.get(DOWN_TIME) > 0) {
             this.entityData.set(DOWN_TIME, this.entityData.get(DOWN_TIME) - 1);
         }
-    }
-
-    @Override
-    public void travel(Vec3 dir) {
-        this.setXRot(-Mth.clamp(this.entityData.get(DOWN_TIME), 0, 90));
     }
 
     @Override
@@ -251,20 +226,26 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
     }
 
     public String getSyncedAnimation() {
-        return this.entityData.get(ANIMATION);
+        return null;
     }
 
     public void setAnimation(String animation) {
-        this.entityData.set(ANIMATION, animation);
     }
 
     @Override
     public void setAnimationProcedure(String procedure) {
-        this.animationProcedure = procedure;
+    }
+
+    private PlayState movementPredicate(AnimationState<TargetEntity> event) {
+        if (this.entityData.get(DOWN_TIME) > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.target.down"));
+        }
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.target.idle"));
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        data.add(new AnimationController<>(this, "movement", 0, this::movementPredicate));
     }
 
     @Override

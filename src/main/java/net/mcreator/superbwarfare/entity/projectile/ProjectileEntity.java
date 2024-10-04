@@ -278,7 +278,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 if (!this.beast) {
                     this.bypassArmorRate -= 0.2F;
                     if (this.bypassArmorRate < 0.8F) {
-                        break;
+                        if (result != null && !(((EntityHitResult) result).getEntity() instanceof TargetEntity target && target.getEntityData().get(DOWN_TIME) > 0)) {
+                            break;
+                        }
+
                     }
                 }
             }

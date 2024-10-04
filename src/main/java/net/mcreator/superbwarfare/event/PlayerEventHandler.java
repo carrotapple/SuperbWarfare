@@ -6,7 +6,6 @@ import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.SimulationDistanceMessage;
-import net.mcreator.superbwarfare.tools.ItemNBTTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -16,13 +15,11 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -63,14 +60,6 @@ public class PlayerEventHandler {
             if (stack.is(ModTags.Items.GUN)) {
                 stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag"));
             }
-        }
-    }
-
-    @SubscribeEvent
-    public static void onPickup(EntityItemPickupEvent event) {
-        ItemEntity stack = event.getItem();
-        if (stack.getItem().is(ModTags.Items.GUN)) {
-            ItemNBTTool.setBoolean(stack.getItem(), "init", false);
         }
     }
 

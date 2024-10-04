@@ -4,7 +4,6 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.projectile.CannonShellEntity;
 import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.item.common.ammo.CannonShellItem;
-import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
@@ -430,23 +429,14 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
     }
 
     private PlayState movementPredicate(AnimationState<Mle1934Entity> event) {
-        if (this.animationprocedure.equals("empty")) {
-
-            if (this.getFirstPassenger() != null) {
-                Entity gunner = this.getFirstPassenger();
-                var capability = gunner.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null);
-                if (this.entityData.get(COOL_DOWN) > 64) {
-                    if (this.entityData.get(TYPE) == 1) {
-                        return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mle1934.salvo_fire"));
-                    } else {
-                        return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mle1934.fire"));
-                    }
-                }
+        if (this.entityData.get(COOL_DOWN) > 64) {
+            if (this.entityData.get(TYPE) == 1) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mle1934.salvo_fire"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mle1934.fire"));
             }
-
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mle1934.idle"));
         }
-        return PlayState.STOP;
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mle1934.idle"));
     }
 
     @Override

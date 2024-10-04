@@ -3,7 +3,6 @@ package net.mcreator.superbwarfare.entity;
 import net.mcreator.superbwarfare.entity.projectile.CannonShellEntity;
 import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.item.common.ammo.CannonShellItem;
-import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
@@ -354,23 +353,15 @@ public class Mk42Entity extends PathfinderMob implements GeoEntity, ICannonEntit
     }
 
     private PlayState movementPredicate(AnimationState<Mk42Entity> event) {
-        if (this.animationprocedure.equals("empty")) {
-
-            if (this.getFirstPassenger() != null) {
-                Entity gunner = this.getFirstPassenger();
-                var capability = gunner.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null);
-                if (this.entityData.get(COOL_DOWN) > 0) {
-                    if (this.entityData.get(TYPE) == 1) {
-                        return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire"));
-                    } else {
-                        return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire2"));
-                    }
-                }
+        if (this.entityData.get(COOL_DOWN) > 0) {
+            if (this.entityData.get(TYPE) == 1) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire2"));
             }
-
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mk42.idle"));
         }
-        return PlayState.STOP;
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mk42.idle"));
     }
 
     @Override
