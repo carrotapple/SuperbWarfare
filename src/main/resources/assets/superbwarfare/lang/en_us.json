@@ -386,6 +386,12 @@
   "config.superbwarfare.client.display.camera_rotate.des": "手持枪械时，视角会出现轻微的摇晃",
   "config.superbwarfare.client.display.armor_plate_hud": "Armor Plate HUD",
   "config.superbwarfare.client.display.armor_plate_hud.des": "开启时，在屏幕左下角显示当前胸甲装备的防弹插板的耐久",
-  "des.superbwarfare.use_tip.ammobox": "潜行左键切换弹药种类，潜行右键取出身上该类型弹药，非潜行右键取出相应种类弹药。"
+  "des.superbwarfare.use_tip.ammobox": "潜行左键切换弹药种类，潜行右键取出身上该类型弹药，非潜行右键取出相应种类弹药。",
+
+  "des.superbwarfare.perk_damage_reduce": "Damage -",
+  "des.superbwarfare.perk_damage_plus": "Damage +",
+  "des.superbwarfare.perk_speed_reduce": "Velocity -",
+  "des.superbwarfare.perk_speed_plus": "Velocity +",
+  "des.superbwarfare.perk_slug": "Slug"
 
 }

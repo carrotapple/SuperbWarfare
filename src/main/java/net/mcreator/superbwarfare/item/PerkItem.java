@@ -1,5 +1,6 @@
 package net.mcreator.superbwarfare.item;
 
+import net.mcreator.superbwarfare.perk.AmmoPerk;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -42,5 +43,22 @@ public class PerkItem extends Item {
         tooltips.add(Component.literal(""));
         tooltips.add(Component.translatable("perk.superbwarfare.slot").withStyle(ChatFormatting.GOLD)
                 .append(Component.translatable("perk.superbwarfare.slot_" + this.getPerk().type.getName()).withStyle(chatFormatting)));
+        if (this.getPerk() instanceof AmmoPerk ammoPerk) {
+            if (ammoPerk.damageRate < 1) {
+                tooltips.add(Component.translatable("des.superbwarfare.perk_damage_reduce").withStyle(ChatFormatting.RED));
+            } else if (ammoPerk.damageRate > 1) {
+                tooltips.add(Component.translatable("des.superbwarfare.perk_damage_plus").withStyle(ChatFormatting.GREEN));
+            }
+
+            if (ammoPerk.speedRate < 1) {
+                tooltips.add(Component.translatable("des.superbwarfare.perk_speed_reduce").withStyle(ChatFormatting.RED));
+            } else if (ammoPerk.speedRate > 1) {
+                tooltips.add(Component.translatable("des.superbwarfare.perk_speed_plus").withStyle(ChatFormatting.GREEN));
+            }
+
+            if (ammoPerk.slug) {
+                tooltips.add(Component.translatable("des.superbwarfare.perk_slug").withStyle(ChatFormatting.YELLOW));
+            }
+        }
     }
 }

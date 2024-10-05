@@ -28,15 +28,36 @@ public class TooltipTool {
         }
     }
 
+    public static double perkDamage(ItemStack stack) {
+        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+        if (perk instanceof AmmoPerk ammoPerk) {
+            return ammoPerk.damageRate;
+        }
+        return 1;
+    }
+
+    public static boolean heBullet(ItemStack stack) {
+        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+        return perk == ModPerks.HE_BULLET.get();
+    }
+
+    public static int heBulletLevel(ItemStack stack) {
+        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+        if (perk == ModPerks.HE_BULLET.get()) {
+            return PerkHelper.getItemPerkLevel(perk, stack);
+        }
+        return 0;
+    }
+
     public static void addGunTips(List<Component> tooltip, ItemStack stack) {
         tooltip.add(Component.literal(""));
 
         double damage = ItemNBTTool.getDouble(stack, "damage", 0)
-                * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1);
+                * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1) * perkDamage(stack);
 
         tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##.#").format(damage)).withStyle(ChatFormatting.GREEN)));
+                .append(Component.literal(new DecimalFormat("##.#").format(damage) + (heBullet(stack) ? " + " + new DecimalFormat("##.#").format(0.8 * damage * (1 + 0.1 * heBulletLevel(stack))) : "")).withStyle(ChatFormatting.GREEN)));
         if (stack.is(ModTags.Items.IS_AUTO_WEAPON)) {
             addRpmTips(tooltip, stack);
         }
@@ -48,12 +69,29 @@ public class TooltipTool {
     public static void addShotgunTips(List<Component> tooltip, ItemStack stack) {
         tooltip.add(Component.literal(""));
 
-        double damage = ItemNBTTool.getDouble(stack, "damage", 0)
-                * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1);
+        boolean slug = false;
 
-        tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
-                .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##.#").format(damage) + " * " + new DecimalFormat("##").format(ItemNBTTool.getDouble(stack, "projectile_amount", 0))).withStyle(ChatFormatting.GREEN)));
+        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+        if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
+            slug = true;
+        }
+
+        if (slug) {
+            double damage = ItemNBTTool.getDouble(stack, "damage", 0) * ItemNBTTool.getDouble(stack, "projectile_amount", 0)
+                    * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1) * perkDamage(stack);
+
+            tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                    .append(Component.literal(new DecimalFormat("##.#").format(damage) + (heBullet(stack) ? " + " + new DecimalFormat("##.#").format(0.8 * damage * (1 + 0.1 * heBulletLevel(stack))) : "")).withStyle(ChatFormatting.GREEN)));
+
+        } else {
+            double damage = ItemNBTTool.getDouble(stack, "damage", 0)
+                    * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1) * perkDamage(stack);
+
+            tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                    .append(Component.literal(new DecimalFormat("##.#").format(damage) + " * " + new DecimalFormat("##").format(ItemNBTTool.getDouble(stack, "projectile_amount", 0))).withStyle(ChatFormatting.GREEN)));
+        }
 
         if (stack.is(ModTags.Items.IS_AUTO_WEAPON)) {
             addRpmTips(tooltip, stack);
@@ -126,12 +164,30 @@ public class TooltipTool {
 
         if (!ammoTag.isEmpty()) {
             String id = ammoTag.getString("id").split(":")[1];
+            var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
             tooltip.add(Component.translatable("perk.superbwarfare.slot_Ammo").withStyle(ChatFormatting.YELLOW)
                     .append(Component.literal(" >> "))
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.translatable("item.superbwarfare." + id).withStyle(ChatFormatting.WHITE))
                     .append(Component.literal(" Lvl. " + ammoTag.getInt("level")).withStyle(ChatFormatting.WHITE)));
             addHideText(tooltip, Component.translatable("des.superbwarfare." + id).withStyle(ChatFormatting.GRAY));
+            if (perk instanceof AmmoPerk ammoPerk) {
+                if (ammoPerk.damageRate < 1) {
+                    addHideText(tooltip, Component.translatable("des.superbwarfare.perk_damage_reduce").withStyle(ChatFormatting.RED));
+                } else if (ammoPerk.damageRate > 1) {
+                    addHideText(tooltip, Component.translatable("des.superbwarfare.perk_damage_plus").withStyle(ChatFormatting.GREEN));
+                }
+
+                if (ammoPerk.speedRate < 1) {
+                    addHideText(tooltip, Component.translatable("des.superbwarfare.perk_speed_reduce").withStyle(ChatFormatting.RED));
+                } else if (ammoPerk.speedRate > 1) {
+                    addHideText(tooltip, Component.translatable("des.superbwarfare.perk_speed_plus").withStyle(ChatFormatting.GREEN));
+                }
+
+                if (ammoPerk.slug && stack.is(ModTags.Items.SHOTGUN)) {
+                    addHideText(tooltip, Component.translatable("des.superbwarfare.perk_slug").withStyle(ChatFormatting.YELLOW));
+                }
+            }
         }
 
         if (!functionalTag.isEmpty()) {
@@ -157,14 +213,26 @@ public class TooltipTool {
 
     public static void addBocekTips(List<Component> tooltip, ItemStack stack) {
         tooltip.add(Component.literal(""));
+        boolean slug = false;
 
-        double total = ItemNBTTool.getDouble(stack, "damage", 0) * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1);
+        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+        if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
+            slug = true;
+        }
 
-        tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
-                .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##.#").format(total * 0.1) + " * 10").withStyle(ChatFormatting.GREEN))
-                .append(Component.literal(" / ").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##.#").format(total)).withStyle(ChatFormatting.GREEN)));
+        double total = ItemNBTTool.getDouble(stack, "damage", 0) * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1) * perkDamage(stack);
+
+        if (slug) {
+            tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                    .append(Component.literal(new DecimalFormat("##.#").format(total) + (heBullet(stack) ? " + " + new DecimalFormat("##.#").format(0.8 * total * (1 + 0.1 * heBulletLevel(stack))) : "")).withStyle(ChatFormatting.GREEN)));
+        } else {
+            tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                    .append(Component.literal(new DecimalFormat("##.#").format(total * 0.1) + " * 10").withStyle(ChatFormatting.GREEN))
+                    .append(Component.literal(" / ").withStyle(ChatFormatting.RESET))
+                    .append(Component.literal(new DecimalFormat("##.#").format(total)).withStyle(ChatFormatting.GREEN)));
+        }
 
         addLevelTips(tooltip, stack);
         addBypassTips(tooltip, stack);
@@ -183,17 +251,18 @@ public class TooltipTool {
         if (flag.get()) {
             double damage = (ItemNBTTool.getDouble(stack, "damage", 0) +
                     ItemNBTTool.getDouble(stack, "sentinelChargeDamage", 0))
-                    * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1);
+                    * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1)
+                    * perkDamage(stack);
 
             tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                    .append(Component.literal(new DecimalFormat("##.#").format(damage)).withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.BOLD)));
+                    .append(Component.literal(new DecimalFormat("##.#").format(damage) + (heBullet(stack) ? " + " + new DecimalFormat("##.#").format(0.8 * damage * (1 + 0.1 * heBulletLevel(stack))) : "")).withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.BOLD)));
         } else {
-            double damage = ItemNBTTool.getDouble(stack, "damage", 0) * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1);
+            double damage = ItemNBTTool.getDouble(stack, "damage", 0) * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1) * perkDamage(stack);
 
             tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                    .append(Component.literal(new DecimalFormat("##.#").format(damage)).withStyle(ChatFormatting.GREEN)));
+                    .append(Component.literal(new DecimalFormat("##.#").format(damage) + (heBullet(stack) ? new DecimalFormat("##.#").format(0.4 * damage * (1 + 0.1 * heBulletLevel(stack))) : "")).withStyle(ChatFormatting.GREEN)));
         }
 
         if (stack.is(ModTags.Items.IS_AUTO_WEAPON)) {

@@ -9,6 +9,8 @@ import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.mcreator.superbwarfare.network.message.PlayerGunKillMessage;
+import net.mcreator.superbwarfare.perk.AmmoPerk;
+import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.DamageTypeTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
@@ -117,21 +119,26 @@ public class LivingEventHandler {
         double damage = amount;
 
         ItemStack stack = sourceEntity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
+        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
         //距离衰减
         if (DamageTypeTool.isGunDamage(source)) {
             double distance = entity.position().distanceTo(sourceEntity.position());
 
             if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-                damage = reduceDamageByDistance(amount, distance, 0.03, 25);
+                if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
+                    damage = reduceDamageByDistance(amount, distance, 0.015, 50);
+                } else {
+                    damage = reduceDamageByDistance(amount, distance, 0.03, 25);
+                }
             } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-                damage = reduceDamageByDistance(amount, distance, 0.001, 200);
+                damage = reduceDamageByDistance(amount, distance, 0.001, 150);
             } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-                damage = reduceDamageByDistance(amount, distance, 0.03, 50);
+                damage = reduceDamageByDistance(amount, distance, 0.02, 50);
             } else if (stack.is(ModTags.Items.SMG)) {
-                damage = reduceDamageByDistance(amount, distance, 0.03, 50);
+                damage = reduceDamageByDistance(amount, distance, 0.02, 50);
             } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) || stack.getItem() == ModItems.BOCEK.get()) {
-                damage = reduceDamageByDistance(amount, distance, 0.0025, 150);
+                damage = reduceDamageByDistance(amount, distance, 0.007, 100);
             }
         }
 
@@ -159,7 +166,7 @@ public class LivingEventHandler {
         event.setAmount((float) damage);
 
         if (entity instanceof TargetEntity && sourceEntity instanceof Player player) {
-            player.displayClientMessage(Component.literal("Damage:" + new DecimalFormat("##.#").format(damage) +
+            player.displayClientMessage(Component.literal("Damage:" + new DecimalFormat("##.##").format(damage) +
                     " Distance:" + new DecimalFormat("##.#").format(entity.position().distanceTo(sourceEntity.position())) + "M"), false);
         }
     }

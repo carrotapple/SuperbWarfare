@@ -6,10 +6,10 @@ import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModMobEffects;
-import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.ShootMessage;
+import net.mcreator.superbwarfare.perk.AmmoPerk;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.MillisTimer;
@@ -162,7 +162,7 @@ public class ClientEventHandler {
         if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
             zoomSpread = 1 - (0.995 * zoomTime);
         } else if (stack.is(ModTags.Items.SHOTGUN)) {
-            if (perk == ModPerks.HE_BULLET.get()) {
+            if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
                 zoomSpread = 1 - (0.85 * zoomTime);
             } else {
                 zoomSpread = 1 - (0.25 * zoomTime);
@@ -456,7 +456,7 @@ public class ClientEventHandler {
     private static void handleWeaponZoom(LivingEntity entity) {
         if (!(entity instanceof Player player)) return;
         float times = 5 * Minecraft.getInstance().getDeltaFrameTime();
-        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS && !notInGame() && !player.getCooldowns().isOnCooldown(player.getMainHandItem().getItem())) {
+        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS && !notInGame()) {
             zoomTime = Mth.clamp(zoomTime + 0.03 * times, 0, 1);
         } else {
             zoomTime = Mth.clamp(zoomTime - 0.04 * times, 0, 1);

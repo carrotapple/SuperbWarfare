@@ -384,5 +384,11 @@
   "config.superbwarfare.client.display.camera_rotate": "视角摇晃",
   "config.superbwarfare.client.display.camera_rotate.des": "手持枪械时，视角会出现轻微的摇晃",
   "config.superbwarfare.client.display.armor_plate_hud": "防弹插板信息",
-  "config.superbwarfare.client.display.armor_plate_hud.des": "开启时，在屏幕左下角显示当前胸甲装备的防弹插板的耐久"
+  "config.superbwarfare.client.display.armor_plate_hud.des": "开启时，在屏幕左下角显示当前胸甲装备的防弹插板的耐久",
+
+  "des.superbwarfare.perk_damage_reduce": "伤害 -",
+  "des.superbwarfare.perk_damage_plus": "伤害 +",
+  "des.superbwarfare.perk_speed_reduce": "子弹初速 -",
+  "des.superbwarfare.perk_speed_plus": "子弹初速 +",
+  "des.superbwarfare.perk_slug": "独头弹"
 }

@@ -29,15 +29,15 @@ public class ModPerks {
     public static final DeferredRegister<Perk> AMMO_PERKS = DeferredRegister.create(new ResourceLocation(ModUtils.MODID, "perk"), ModUtils.MODID);
 
     public static final RegistryObject<Perk> AP_BULLET = AMMO_PERKS.register("ap_bullet",
-            () -> new AmmoPerk(new AmmoPerk.Builder("ap_bullet", Perk.Type.AMMO).bypassArmorRate(0.4f).rgb(230, 70, 35)));
+            () -> new AmmoPerk(new AmmoPerk.Builder("ap_bullet", Perk.Type.AMMO).bypassArmorRate(0.4f).damageRate(0.9f).speedRate(1.2f).slug(true).rgb(230, 70, 35)));
     public static final RegistryObject<Perk> JHP_BULLET = AMMO_PERKS.register("jhp_bullet",
-            () -> new AmmoPerk(new AmmoPerk.Builder("jhp_bullet", Perk.Type.AMMO).bypassArmorRate(-0.2f).rgb(230, 131, 65)));
+            () -> new AmmoPerk(new AmmoPerk.Builder("jhp_bullet", Perk.Type.AMMO).bypassArmorRate(-0.2f).damageRate(1.1f).speedRate(0.9f).slug(true).rgb(230, 131, 65)));
     public static final RegistryObject<Perk> HE_BULLET = AMMO_PERKS.register("he_bullet",
-            () -> new AmmoPerk(new AmmoPerk.Builder("he_bullet", Perk.Type.AMMO).bypassArmorRate(-0.3f).rgb(240, 20, 10)));
+            () -> new AmmoPerk(new AmmoPerk.Builder("he_bullet", Perk.Type.AMMO).bypassArmorRate(-0.3f).damageRate(0.5f).speedRate(0.6f).slug(true).rgb(240, 20, 10)));
     public static final RegistryObject<Perk> SILVER_BULLET = AMMO_PERKS.register("silver_bullet",
-            () -> new AmmoPerk(new AmmoPerk.Builder("silver_bullet", Perk.Type.AMMO).bypassArmorRate(0.05f).rgb(87, 166, 219)));
+            () -> new AmmoPerk(new AmmoPerk.Builder("silver_bullet", Perk.Type.AMMO).bypassArmorRate(0.05f).damageRate(0.8f).speedRate(1.1f).rgb(87, 166, 219)));
     public static final RegistryObject<Perk> POISONOUS_BULLET = AMMO_PERKS.register("poisonous_bullet",
-            () -> new AmmoPerk(new AmmoPerk.Builder("poisonous_bullet", Perk.Type.AMMO).bypassArmorRate(0.0f).rgb(48, 131, 6)
+            () -> new AmmoPerk(new AmmoPerk.Builder("poisonous_bullet", Perk.Type.AMMO).bypassArmorRate(0.0f).damageRate(1.0f).speedRate(1.0f).rgb(48, 131, 6)
                     .mobEffect(() -> MobEffects.POISON)));
     public static final RegistryObject<Perk> BEAST_BULLET = AMMO_PERKS.register("beast_bullet",
             () -> new AmmoPerk(new AmmoPerk.Builder("beast_bullet", Perk.Type.AMMO).bypassArmorRate(0.0f).rgb(134, 65, 14)));
@@ -69,11 +69,11 @@ public class ModPerks {
     public static void registerCompatPerks() {
         if (ModList.get().isLoaded(CompatHolder.DMV)) {
             AMMO_PERKS.register("blade_bullet", () -> new AmmoPerk(new AmmoPerk.Builder("blade_bullet", Perk.Type.AMMO)
-                    .bypassArmorRate(-0.2f).rgb(0xB4, 0x4B, 0x88).mobEffect(() -> CompatHolder.DMV_BLEEDING)));
+                    .bypassArmorRate(-0.2f).damageRate(0.7f).speedRate(0.8f).rgb(0xB4, 0x4B, 0x88).mobEffect(() -> CompatHolder.DMV_BLEEDING)));
         }
         if (ModList.get().isLoaded(CompatHolder.VRC)) {
             AMMO_PERKS.register("curse_flame_bullet", () -> new AmmoPerk(new AmmoPerk.Builder("curse_flame_bullet", Perk.Type.AMMO)
-                    .bypassArmorRate(0.0f).rgb(0xB1, 0xC1, 0xF2).mobEffect(() -> CompatHolder.VRC_CURSE_FLAME)));
+                    .bypassArmorRate(0.0f).damageRate(1.2f).speedRate(0.9f).rgb(0xB1, 0xC1, 0xF2).mobEffect(() -> CompatHolder.VRC_CURSE_FLAME)));
         }
     }
 

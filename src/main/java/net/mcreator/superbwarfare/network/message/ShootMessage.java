@@ -6,6 +6,7 @@ import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
+import net.mcreator.superbwarfare.perk.AmmoPerk;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.ParticleTool;
@@ -67,6 +68,7 @@ public class ShootMessage {
 
             int coolDownTick = (int) Math.ceil(20 / (rpm / 60));
             double mode = stack.getOrCreateTag().getInt("fire_mode");
+            int projectileAmount = (int) stack.getOrCreateTag().getDouble("projectile_amount");
 
             if (((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).holdFire || stack.getOrCreateTag().getInt("burst_fire") > 0)
                     && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
@@ -154,7 +156,7 @@ public class ShootMessage {
 
                 var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
-                for (int index0 = 0; index0 < (perk == ModPerks.HE_BULLET.get() ? 1 : (int) stack.getOrCreateTag().getDouble("projectile_amount")); index0++) {
+                for (int index0 = 0; index0 < (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 1 : projectileAmount); index0++) {
                     gunShoot(player, spared);
                 }
 
@@ -167,6 +169,8 @@ public class ShootMessage {
             }
         } else if (stack.is(ModItems.MINIGUN.get())) {
             var tag = stack.getOrCreateTag();
+
+            int projectileAmount = (int) tag.getDouble("projectile_amount");
 
             int count = 0;
             for (var inv : player.getInventory().items) {
@@ -199,7 +203,7 @@ public class ShootMessage {
                     }
                 }
 
-                for (int index0 = 0; index0 < (perk == ModPerks.HE_BULLET.get() ? 1 : (int) stack.getOrCreateTag().getDouble("projectile_amount")); index0++) {
+                for (int index0 = 0; index0 < (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 1 : projectileAmount); index0++) {
                     gunShoot(player, spared);
                 }
 

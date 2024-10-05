@@ -7,6 +7,9 @@ import net.mcreator.superbwarfare.config.client.DisplayConfig;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModTags;
+import net.mcreator.superbwarfare.perk.AmmoPerk;
+import net.mcreator.superbwarfare.perk.Perk;
+import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -53,6 +56,7 @@ public class CrossHairOverlay {
         float deltaFrame = Minecraft.getInstance().getDeltaFrameTime();
         float moveX = 0;
         float moveY = 0;
+        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
         if (DisplayConfig.FLOAT_CROSS_HAIR.get()) {
             moveX = (float) (-6 * ClientEventHandler.turnRot[1] - (player.isSprinting() ? 10 : 6) * ClientEventHandler.movePosX);
@@ -77,12 +81,13 @@ public class CrossHairOverlay {
             preciseBlit(guiGraphics, ModUtils.loc("textures/screens/point.png"), w / 2f - 7.5f + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
             if (!player.isSprinting() || player.getPersistentData().getDouble("noRun") > 0) {
                 if (stack.is(ModTags.Items.SHOTGUN)) {
-                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/shotgun_hud.png"), finPosX, finPosY, 0, 0.0F, finLength, finLength, finLength, finLength);
+                    if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
+                        normalCrossHair(guiGraphics, w ,h , spread, moveX, moveY);
+                    } else {
+                        shotgunCrossHair(guiGraphics, finPosX, finPosY, finLength);
+                    }
                 } else {
-                    preciseBlit(guiGraphics, REX_HORIZONTAL, (float) (w / 2f - 13.5f - 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
-                    preciseBlit(guiGraphics, REX_HORIZONTAL, (float) (w / 2f - 2.5f + 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
-                    preciseBlit(guiGraphics, REX_VERTICAL, w / 2f - 7.5f + moveX, (float) (h / 2f - 2.5f + 2.8f * spread) + moveY, 0, 0, 16, 16, 16, 16);
-                    preciseBlit(guiGraphics, REX_VERTICAL, w / 2f - 7.5f + moveX, (float) (h / 2f - 13.5f - 2.8f * spread) + moveY, 0, 0, 16, 16, 16, 16);
+                    normalCrossHair(guiGraphics, w ,h , spread, moveX, moveY);
                 }
             }
         }
@@ -92,16 +97,19 @@ public class CrossHairOverlay {
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/point.png"), w / 2f - 7.5f + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
                 if (!player.isSprinting() || player.getPersistentData().getDouble("noRun") > 0 || ClientEventHandler.pullPos > 0) {
                     if (ClientEventHandler.zoomTime < 0.1) {
-                        preciseBlit(guiGraphics, ModUtils.loc("textures/screens/shotgun_hud.png"), finPosX, finPosY, 0, 0.0F, finLength, finLength, finLength, finLength);
+                        if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
+                            normalCrossHair(guiGraphics, w ,h , spread, moveX, moveY);
+                        } else {
+                            shotgunCrossHair(guiGraphics, finPosX, finPosY, finLength);
+                        }
                     } else {
-                        preciseBlit(guiGraphics, REX_HORIZONTAL, (float) (w / 2f - 13.5f - 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
-                        preciseBlit(guiGraphics, REX_HORIZONTAL, (float) (w / 2f - 2.5f + 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
-                        preciseBlit(guiGraphics, REX_VERTICAL, w / 2f - 7.5f + moveX, (float) (h / 2f - 2.5f + 2.8f * spread) + moveY, 0, 0, 16, 16, 16, 16);
-                        preciseBlit(guiGraphics, REX_VERTICAL, w / 2f - 7.5f + moveX, (float) (h / 2f - 13.5f - 2.8f * spread) + moveY, 0, 0, 16, 16, 16, 16);
+                        normalCrossHair(guiGraphics, w ,h , spread, moveX, moveY);
                     }
                 }
             }
         }
+
+
 
         // 在开启伤害指示器时才进行渲染
         if (DisplayConfig.KILL_INDICATION.get()) {
@@ -123,6 +131,17 @@ public class CrossHairOverlay {
             guiGraphics.drawString(font, component, w / 2 - font.width(component) / 2, h / 2 + 50, 0xFF6969);
         }
 
+    }
+
+    private static void normalCrossHair(GuiGraphics guiGraphics, int w, int h, double spread, float moveX, float moveY ) {
+        preciseBlit(guiGraphics, REX_HORIZONTAL, (float) (w / 2f - 13.5f - 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
+        preciseBlit(guiGraphics, REX_HORIZONTAL, (float) (w / 2f - 2.5f + 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
+        preciseBlit(guiGraphics, REX_VERTICAL, w / 2f - 7.5f + moveX, (float) (h / 2f - 2.5f + 2.8f * spread) + moveY, 0, 0, 16, 16, 16, 16);
+        preciseBlit(guiGraphics, REX_VERTICAL, w / 2f - 7.5f + moveX, (float) (h / 2f - 13.5f - 2.8f * spread) + moveY, 0, 0, 16, 16, 16, 16);
+    }
+
+    private static void shotgunCrossHair(GuiGraphics guiGraphics, float finPosX, float finPosY, float finLength) {
+        preciseBlit(guiGraphics, ModUtils.loc("textures/screens/shotgun_hud.png"), finPosX, finPosY, 0, 0.0F, finLength, finLength, finLength, finLength);
     }
 
     private static boolean shouldRenderCrossHair(Player player) {

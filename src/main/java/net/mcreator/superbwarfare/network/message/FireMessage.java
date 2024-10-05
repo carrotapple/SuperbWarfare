@@ -174,10 +174,27 @@ public class FireMessage {
         }
     }
 
-    private static void handleBowShoot(Player player) {
-        ItemStack stack = player.getMainHandItem();
+    public static double perkDamage(ItemStack stack) {
+        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+        if (perk instanceof AmmoPerk ammoPerk) {
+            return ammoPerk.damageRate;
+        }
+        return 1;
+    }
 
-        double power = stack.getOrCreateTag().getDouble("power");
+    public static double perkSpeed(ItemStack stack) {
+        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+        if (perk instanceof AmmoPerk ammoPerk) {
+            return ammoPerk.speedRate;
+        }
+        return 1;
+    }
+
+    private static void handleBowShoot(Player player) {
+        if (player.level().isClientSide()) return;
+
+        ItemStack stack = player.getMainHandItem();
+        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
         if (player instanceof ServerPlayer serverPlayer) {
             SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_1P.getId(), SoundSource.PLAYERS);
@@ -187,96 +204,22 @@ public class FireMessage {
         if (stack.getOrCreateTag().getDouble("power") >= 6) {
             stack.getOrCreateTag().putDouble("speed", stack.getOrCreateTag().getDouble("power"));
             if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
-                Level plevel = player.level();
-                if (!plevel.isClientSide()) {
-                    ItemStack heldItem = player.getMainHandItem();
 
-                    if (player.level().isClientSide()) return;
+                spawnBullet(player);
+                spawnFakeArrow(player);
 
-                    CompoundTag tag = heldItem.getOrCreateTag();
-                    double damage;
-                    float headshot = (float) tag.getDouble("headshot");
-                    float velocity = 2 * (float) tag.getDouble("speed");
-                    boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
-                    float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
+                SoundTool.playLocalSound(player, ModSounds.BOCEK_ZOOM_FIRE_1P.get(), 10, 1);
+                player.playSound(ModSounds.BOCEK_ZOOM_FIRE_3P.get(), 2, 1);
 
-                    ProjectileEntity projectile = new ProjectileEntity(player.level())
-                            .shooter(player)
-                            .headShot(headshot)
-                            .zoom(zoom);
-
-                    var perk = PerkHelper.getPerkByType(heldItem, Perk.Type.AMMO);
-                    if (perk instanceof AmmoPerk ammoPerk) {
-                        int level = PerkHelper.getItemPerkLevel(perk, heldItem);
-
-                        bypassArmorRate += ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (level - 1) : 0);
-                        projectile.setRGB(ammoPerk.rgb);
-
-                        if (ammoPerk.mobEffect.get() != null) {
-                            projectile.effect(() -> new MobEffectInstance(ammoPerk.mobEffect.get(), 70 + 30 * level, level - 1));
-                        }
-                    }
-
-                    bypassArmorRate = Math.max(bypassArmorRate, 0);
-                    projectile.bypassArmorRate(bypassArmorRate);
-
-                    if (perk == ModPerks.SILVER_BULLET.get()) {
-                        int level = PerkHelper.getItemPerkLevel(perk, heldItem);
-                        projectile.undeadMultiple(1.0f + 0.5f * level);
-                    } else if (perk == ModPerks.BEAST_BULLET.get()) {
-                        projectile.beast();
-                    } else if (perk == ModPerks.JHP_BULLET.get()) {
-                        int level = PerkHelper.getItemPerkLevel(perk, heldItem);
-                        projectile.jhpBullet(true, level);
-                    } else if (perk == ModPerks.HE_BULLET.get()) {
-                        int level = PerkHelper.getItemPerkLevel(perk, heldItem);
-                        projectile.heBullet(true, level);
-                        velocity *= 0.6f;
-                    }
-
-                    var dmgPerk = PerkHelper.getPerkByType(heldItem, Perk.Type.DAMAGE);
-                    if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
-                        int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, heldItem);
-                        projectile.monsterMultiple(0.1f + 0.1f * perkLevel);
-                    }
-
-                    projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
-
-                    damage = 0.08333333 * tag.getDouble("damage") * tag.getDouble("speed") * tag.getDouble("levelDamageMultiple");
-                    projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, velocity, 0);
-                    projectile.damage((float) damage);
-                    player.level().addFreshEntity(projectile);
-
-                    BocekArrowEntity arrow = new BocekArrowEntity(player, plevel);
-                    arrow.setBaseDamage(0);
-                    arrow.setKnockback(0);
-                    arrow.setSilent(true);
-                    arrow.setPierceLevel((byte) 2);
-                    arrow.pickup = AbstractArrow.Pickup.DISALLOWED;
-
-                    arrow.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
-                    arrow.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) (2 * power), 0);
-                    plevel.addFreshEntity(arrow);
-                }
-
-                if (!player.level().isClientSide()) {
-                    SoundTool.playLocalSound(player, ModSounds.BOCEK_ZOOM_FIRE_1P.get(), 10, 1);
-                    player.playSound(ModSounds.BOCEK_ZOOM_FIRE_3P.get(), 2, 1);
-                }
             } else {
-                var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
-                for (int index0 = 0; index0 < (perk == ModPerks.HE_BULLET.get() ? 1 : 10); index0++) {
+                for (int index0 = 0; index0 < (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 1 : 10); index0++) {
                     spawnBullet(player);
                 }
 
-                if (!player.level().isClientSide() && player.getServer() != null) {
-                    SoundTool.playLocalSound(player, ModSounds.BOCEK_SHATTER_CAP_FIRE_1P.get(), 10, 1);
-                    player.playSound(ModSounds.BOCEK_SHATTER_CAP_FIRE_3P.get(), 2, 1);
-                }
+                SoundTool.playLocalSound(player, ModSounds.BOCEK_SHATTER_CAP_FIRE_1P.get(), 10, 1);
+                player.playSound(ModSounds.BOCEK_SHATTER_CAP_FIRE_3P.get(), 2, 1);
             }
-
-            var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
             if (perk == ModPerks.BEAST_BULLET.get()) {
                 player.playSound(ModSounds.HENG.get(), 4f, 1f);
@@ -314,18 +257,30 @@ public class FireMessage {
         if (player.level().isClientSide()) return;
 
         CompoundTag tag = heldItem.getOrCreateTag();
-        double damage;
+        var perk = PerkHelper.getPerkByType(heldItem, Perk.Type.AMMO);
         float headshot = (float) tag.getDouble("headshot");
-        float velocity = 2 * (float) tag.getDouble("speed");
-        boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
+        float velocity = 2 * (float) tag.getDouble("speed") * (float)perkSpeed(heldItem);
         float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
+        double damage;
+        boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
+
+
+        float spread;
+
+        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
+            spread = 0.01f;
+            damage = 0.08333333 * tag.getDouble("damage") * tag.getDouble("speed") * tag.getDouble("levelDamageMultiple") * perkDamage(heldItem);
+        } else {
+            spread = perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 1 : 2.5f;
+            damage = (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.08333333 : 0.008333333) * tag.getDouble("damage") * tag.getDouble("speed") * tag.getDouble("levelDamageMultiple") * perkDamage(heldItem);
+        }
 
         ProjectileEntity projectile = new ProjectileEntity(player.level())
                 .shooter(player)
                 .headShot(headshot)
                 .zoom(zoom);
 
-        var perk = PerkHelper.getPerkByType(heldItem, Perk.Type.AMMO);
+
         if (perk instanceof AmmoPerk ammoPerk) {
             int level = PerkHelper.getItemPerkLevel(perk, heldItem);
 
@@ -351,7 +306,6 @@ public class FireMessage {
         } else if (perk == ModPerks.HE_BULLET.get()) {
             int level = PerkHelper.getItemPerkLevel(perk, heldItem);
             projectile.heBullet(true, level);
-            velocity *= 0.6f;
         }
 
         var dmgPerk = PerkHelper.getPerkByType(heldItem, Perk.Type.DAMAGE);
@@ -362,10 +316,30 @@ public class FireMessage {
 
         projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
 
-        damage = 0.008333333 * tag.getDouble("damage") * tag.getDouble("speed") * tag.getDouble("levelDamageMultiple");
-        projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, velocity, 2.5f);
-        projectile.damage((float) (perk == ModPerks.HE_BULLET.get() ? 10 * damage : damage));
+        projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, velocity, spread);
+
+        projectile.damage((float) damage);
+
         player.level().addFreshEntity(projectile);
+    }
+
+    private static void spawnFakeArrow(Player player) {
+
+        ItemStack heldItem = player.getMainHandItem();
+        CompoundTag tag = heldItem.getOrCreateTag();
+
+        float velocity = 2 * (float) tag.getDouble("speed") * (float)perkSpeed(heldItem);
+
+        BocekArrowEntity arrow = new BocekArrowEntity(player, player.level());
+        arrow.setBaseDamage(0);
+        arrow.setKnockback(0);
+        arrow.setSilent(true);
+        arrow.setPierceLevel((byte) 2);
+        arrow.pickup = AbstractArrow.Pickup.DISALLOWED;
+
+        arrow.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
+        arrow.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, velocity, 0);
+        player.level().addFreshEntity(arrow);
     }
 
     private static void handleTaserFire(Player player) {
