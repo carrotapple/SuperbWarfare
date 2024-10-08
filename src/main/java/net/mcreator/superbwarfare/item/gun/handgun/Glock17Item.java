@@ -179,6 +179,6 @@ public class Glock17Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public boolean canApplyPerk(Perk perk) {
-        return PerkHelper.HANDGUN_PERKS.test(perk);
+        return PerkHelper.HANDGUN_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk);
     }
 }

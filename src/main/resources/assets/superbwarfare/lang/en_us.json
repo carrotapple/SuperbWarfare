@@ -254,6 +254,8 @@
   "des.superbwarfare.field_doctor": "Bullets can heal teammate when shooting without the scope",
   "item.superbwarfare.super_recharge": "Super Recharge",
   "des.superbwarfare.super_recharge": "Increases the recharge speed of Taser Gun",
+  "item.superbwarfare.dimension_magazine": "Dimension Magazine",
+  "des.superbwarfare.dimension_magazine": "Increases the magazine capacity",
 
   "item.superbwarfare.kill_clip": "Kill Clip",
   "des.superbwarfare.kill_clip": "Increases the damage of weapon after dealing a final blow",

@@ -4,6 +4,7 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
@@ -85,6 +86,29 @@ public abstract class GunItem extends Item {
             }
 
             handleGunPerks(itemstack);
+
+            if ((itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) && itemstack.getOrCreateTag().getInt("ammo") > itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag") + 1)
+                    ||(!itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) && itemstack.getOrCreateTag().getInt("ammo") > itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag"))
+            ) {
+
+                int count = itemstack.getOrCreateTag().getInt("ammo") - itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag") - (itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0);
+
+                entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+
+                    if (itemstack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
+                        capability.shotgunAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).shotgunAmmo + count;
+                    } else if (itemstack.is(ModTags.Items.USE_SNIPER_AMMO)) {
+                        capability.sniperAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).sniperAmmo + count;
+                    } else if (itemstack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
+                        capability.handgunAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).handgunAmmo + count;
+                    } else if (itemstack.is(ModTags.Items.USE_RIFLE_AMMO)) {
+                        capability.rifleAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).rifleAmmo + count;
+                    }
+                    capability.syncPlayerVariables(entity);
+                });
+
+                itemstack.getOrCreateTag().putInt("ammo",itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag") + (itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0));
+            }
         }
     }
 
@@ -162,7 +186,7 @@ public abstract class GunItem extends Item {
                 stack.getOrCreateTag().putInt("FourthTimesCharmTick", 0);
                 stack.getOrCreateTag().putInt("FourthTimesCharmCount", 0);
 
-                int mag = stack.getOrCreateTag().getInt("mag");
+                int mag = stack.getOrCreateTag().getInt("mag") + stack.getOrCreateTag().getInt("customMag");
                 stack.getOrCreateTag().putInt("ammo", Math.min(mag, stack.getOrCreateTag().getInt("ammo") + 2));
             }
         }
@@ -170,6 +194,9 @@ public abstract class GunItem extends Item {
         if (stack.getOrCreateTag().getInt("HeadSeeker") > 0) {
             stack.getOrCreateTag().putInt("HeadSeeker", Math.max(0, stack.getOrCreateTag().getInt("HeadSeeker") - 1));
         }
+
+        int mag_ = stack.getOrCreateTag().getInt("mag");
+        stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.15 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * mag_)));
     }
 
     public boolean canApplyPerk(Perk perk) {

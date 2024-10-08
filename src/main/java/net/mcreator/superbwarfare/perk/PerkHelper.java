@@ -11,7 +11,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -284,6 +283,8 @@ public class PerkHelper {
             }
         }
     };
+
+    public static final Predicate<Perk> MAGAZINE_PERKS = perk -> perk == ModPerks.DIMENSION_MAGAZINE.get();
 
     public static final Predicate<Perk> LAUNCHER_PERKS = perk -> perk == ModPerks.MONSTER_HUNTER.get();
 

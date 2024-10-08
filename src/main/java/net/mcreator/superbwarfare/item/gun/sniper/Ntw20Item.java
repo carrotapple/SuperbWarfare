@@ -182,6 +182,6 @@ public class Ntw20Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public boolean canApplyPerk(Perk perk) {
-        return PerkHelper.SNIPER_RIFLE_PERKS.test(perk);
+        return PerkHelper.SNIPER_RIFLE_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk);
     }
 }

@@ -599,7 +599,7 @@ public class ClientEventHandler {
         }
 
         if (0 < recoilTime && recoilTime < 2.5) {
-            float newPitch = (float) (player.getXRot() - 1.5 * gunRecoilX * (sinRes + Mth.clamp(0.5 - recoilTime, 0, 0.5)) * times * (0.5 + fireSpread));
+            float newPitch = (float) (player.getXRot() - 1.5 * pose * gunRecoilX * (sinRes + Mth.clamp(0.5 - recoilTime, 0, 0.5)) * times * (0.5 + fireSpread));
             player.setXRot(newPitch);
             player.xRotO = player.getXRot();
         }

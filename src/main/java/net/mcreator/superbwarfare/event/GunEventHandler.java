@@ -368,39 +368,31 @@ public class GunEventHandler {
 
         if (count == 0) {
             if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-                if (stack.getItem() == ModItems.ABEKIRI.get()) {
-                    GunsTool.reload(player, GunInfo.Type.SHOTGUN);
-                } else {
+                if (stack.is(ModTags.Items.EXTRA_ONE_AMMO)) {
                     GunsTool.reload(player, GunInfo.Type.SHOTGUN, true);
+                } else {
+                    GunsTool.reload(player, GunInfo.Type.SHOTGUN);
                 }
             } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
                 GunsTool.reload(player, GunInfo.Type.SNIPER, true);
             } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
                 GunsTool.reload(player, GunInfo.Type.HANDGUN, true);
             } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-                if (stack.getItem() == ModItems.M_60.get()) {
-                    GunsTool.reload(player, GunInfo.Type.RIFLE);
-                } else {
+                if (stack.is(ModTags.Items.EXTRA_ONE_AMMO)) {
                     GunsTool.reload(player, GunInfo.Type.RIFLE, true);
+                } else {
+                    GunsTool.reload(player, GunInfo.Type.RIFLE);
                 }
             }
         } else {
             if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-                if (stack.getItem() == ModItems.ABEKIRI.get()) {
-                    stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag"));
-                } else {
-                    stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + 1);
-                }
+                stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + stack.getOrCreateTag().getInt("customMag") + (stack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0));
             } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-                stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + 1);
+                stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + stack.getOrCreateTag().getInt("customMag") + (stack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0));
             } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-                stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + 1);
+                stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + stack.getOrCreateTag().getInt("customMag") + (stack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0));
             } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-                if (stack.getItem() == ModItems.M_60.get()) {
-                    stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag"));
-                } else {
-                    stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + 1);
-                }
+                stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + stack.getOrCreateTag().getInt("customMag") + (stack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0));
             }
         }
 
@@ -444,7 +436,7 @@ public class GunEventHandler {
                 player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.JAVELIN_MISSILE.get(), 1, player.inventoryMenu.getCraftSlots());
             }
         } else {
-            stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag"));
+            stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + stack.getOrCreateTag().getInt("customMag"));
         }
 
 
@@ -583,7 +575,7 @@ public class GunEventHandler {
                 && tag.getInt("reload_stage") == 2
                 && tag.getInt("iterative") == 0
                 && !tag.getBoolean("stop")
-                && tag.getInt("ammo") < (int) tag.getDouble("mag")) {
+                && tag.getInt("ammo") < (int) tag.getDouble("mag") + tag.getInt("customMag")) {
 
             playGunLoopReloadSounds(player);
             tag.putDouble("iterative", (int) tag.getDouble("iterative_time"));
@@ -613,7 +605,7 @@ public class GunEventHandler {
         if (tag.getInt("iterative") == 1) {
 
             // 装满结束
-            if (tag.getInt("ammo") >= (int) tag.getDouble("mag")) {
+            if (tag.getInt("ammo") >= (int) tag.getDouble("mag") + tag.getInt("customMag")) {
                 tag.putInt("reload_stage", 3);
             }
 

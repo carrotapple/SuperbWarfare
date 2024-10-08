@@ -214,6 +214,6 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public boolean canApplyPerk(Perk perk) {
-        return PerkHelper.RIFLE_PERKS.test(perk);
+        return PerkHelper.RIFLE_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk);
     }
 }

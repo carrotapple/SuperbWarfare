@@ -90,23 +90,23 @@ public class ReloadMessage {
 
                 if (canReload || clipLoad) {
                     if (stack.is(ModTags.Items.OPEN_BOLT)) {
-                        if (stack.getItem() == ModItems.M_60.get() || stack.getItem() == ModItems.ABEKIRI.get()) {
-                            if (tag.getInt("ammo") < tag.getDouble("mag")) {
+                        if (stack.is(ModTags.Items.EXTRA_ONE_AMMO)) {
+                            if (tag.getInt("ammo") < tag.getDouble("mag") + tag.getInt("customMag") + 1) {
                                 tag.putBoolean("start_reload", true);
                             }
                         } else {
-                            if (tag.getInt("ammo") < tag.getDouble("mag") + 1) {
+                            if (tag.getInt("ammo") < tag.getDouble("mag") + tag.getInt("customMag")) {
                                 tag.putBoolean("start_reload", true);
                             }
                         }
-                    } else if (tag.getInt("ammo") < tag.getDouble("mag")) {
+                    } else if (tag.getInt("ammo") < tag.getDouble("mag") + tag.getInt("customMag")) {
                         tag.putBoolean("start_reload", true);
                     }
                     return;
                 }
 
                 if (canSingleReload) {
-                    if (tag.getInt("ammo") < tag.getDouble("mag")) {
+                    if (tag.getInt("ammo") < tag.getDouble("mag") + tag.getInt("customMag")) {
                         tag.putBoolean("start_single_reload", true);
                     }
                 }

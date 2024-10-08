@@ -60,7 +60,7 @@ public class GunsTool {
     public static void initCreativeGun(ItemStack stack, String location) {
         if (gunsData != null && gunsData.get(location) != null) {
             gunsData.get(location).forEach((k, v) -> stack.getOrCreateTag().putDouble(k, v));
-            stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag"));
+            stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + stack.getOrCreateTag().getInt("customMag"));
         }
     }
 
@@ -102,7 +102,7 @@ public class GunsTool {
 
         CompoundTag tag = living.getMainHandItem().getOrCreateTag();
 
-        int mag = tag.getInt("mag");
+        int mag = tag.getInt("mag") + tag.getInt("customMag");
         int ammo = tag.getInt("ammo");
         int ammoToAdd = mag - ammo + (extraOne ? 1 : 0);
         /*

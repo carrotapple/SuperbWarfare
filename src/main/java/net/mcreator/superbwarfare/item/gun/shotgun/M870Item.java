@@ -201,6 +201,6 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public boolean canApplyPerk(Perk perk) {
-        return PerkHelper.SHOTGUN_PERKS.test(perk);
+        return PerkHelper.SHOTGUN_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk);
     }
 }

@@ -267,6 +267,8 @@
   "des.superbwarfare.monster_hunter": "增加武器对怪物的伤害",
   "item.superbwarfare.volt_overload": "电压过载",
   "des.superbwarfare.volt_overload": "增加泰瑟枪电击的伤害",
+  "item.superbwarfare.dimension_magazine": "次元弹匣",
+  "des.superbwarfare.dimension_magazine": "增加弹匣容量",
 
   "perk.superbwarfare.tips": "[武器模组]",
   "perk.superbwarfare.slot": "类型: ",
