@@ -86,14 +86,14 @@ public class VectorItemModel extends GeoModel<VectorItem> {
             shen.setPosY(0.05f * (float) (fp + 2 * fr));
             holo.setPosY(-0.43f * (float) (fp + 2.3 * fr));
             shen.setPosZ(0.9f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.006f * (float) (fp + fr));
+            shen.setRotX(0.01f * (float) (fp + fr));
         } else {
             shen.setPosY(0.08f * (float) (fp + 2 * fr));
             shen.setPosZ(0.9f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.03f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
         }
-        shen.setPosX(0.5f * (float) fr * (float) (ClientEventHandler.recoilHorizon * fp));
+        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         CoreGeoBone move = getAnimationProcessor().getBone("move");

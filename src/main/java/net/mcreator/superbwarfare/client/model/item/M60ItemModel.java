@@ -120,7 +120,7 @@ public class M60ItemModel extends GeoModel<M60Item> {
             shen.setRotX(0.04f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
         }
-        shen.setPosX(0.5f * (float)fr * (float)(ClientEventHandler.recoilHorizon * fp));
+        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
 
         tiba.setRotZ((float) (-0.25f * fp + 0.4 * fr));
 

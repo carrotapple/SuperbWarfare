@@ -65,7 +65,7 @@ public class TracheliumItemModel extends GeoModel<Trachelium> {
 
         gun.setScaleZ(1f - (0.2f * (float) zp));
 
-        shen.setPosX(-0.4f * (float) (fp + 0.2 * fr));
+        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
         shen.setPosY(0.6f * (float) (fp + 2 * fr));
         shen.setPosZ(4.2f * (float) (1.3 * fp + 0.54f * fr));
         shen.setRotX(0.18f * (float) (1.28f * fp + fr));

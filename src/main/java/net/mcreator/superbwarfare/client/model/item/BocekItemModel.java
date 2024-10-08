@@ -114,6 +114,7 @@ public class BocekItemModel extends GeoModel<BocekItem> {
             fire.setRotX(0.07f * (float) (0.18f * fp + fr));
             fire.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
         }
+        fire.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         CoreGeoBone move = getAnimationProcessor().getBone("move");

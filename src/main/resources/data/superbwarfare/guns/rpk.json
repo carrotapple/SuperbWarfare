@@ -3,7 +3,7 @@
   "zoom": 1.25,
   "spread": 5.5,
   "bipod": 1,
-  "recoil_x": 0.0035,
+  "recoil_x": 0.0018,
   "recoil_y": 0.012,
   "damage": 8.75,
   "headshot": 2,

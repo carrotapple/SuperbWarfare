@@ -69,7 +69,7 @@ public class MinigunItemModel extends GeoModel<MinigunItem> {
         shen.setPosZ(2.2f * (float) (0.5 * fp + 1.54f * fr));
         shen.setRotX(0.05f * (float) (0.18f * fp + fr));
         shen.setRotZ(-0.02f * (float) (fp + 1.3 * fr));
-        shen.setPosX(0.5f * (float) fr * (float) (ClientEventHandler.recoilHorizon * fp));
+        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         CoreGeoBone move = getAnimationProcessor().getBone("move");

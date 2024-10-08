@@ -72,7 +72,7 @@ public class RpgItemModel extends GeoModel<RpgItem> {
             shen.setRotX(0.07f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
         }
-        shen.setPosX(0.5f * (float)fr * (float)(ClientEventHandler.recoilHorizon * fp));
+        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
 
         gun.setPosX(0.91f * (float) zp);
         gun.setPosY(-0.04f * (float) zp - (float) (0.2f * zpz));

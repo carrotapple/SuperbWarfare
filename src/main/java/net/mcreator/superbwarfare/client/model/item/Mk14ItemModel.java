@@ -100,7 +100,7 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
 
         rex.setPosY(-0.23f * (float) (fp + 2.3 * fr));
 
-        shen.setPosX(0.5f * (float)fr * (float)(ClientEventHandler.recoilHorizon * fp));
+        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
 
         action.setPosZ(2.5f * (float) fp);
 

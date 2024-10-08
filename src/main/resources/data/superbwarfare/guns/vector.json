@@ -2,7 +2,7 @@
   "zoom_speed": 1.6,
   "zoom": 1.25,
   "spread": 2.3,
-  "recoil_x": 0.007,
+  "recoil_x": 0.002,
   "recoil_y": 0.007,
   "damage": 6,
   "headshot": 1.5,

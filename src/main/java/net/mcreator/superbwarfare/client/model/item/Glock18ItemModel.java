@@ -88,7 +88,7 @@ public class Glock18ItemModel extends GeoModel<Glock18Item> {
             shen.setRotY(0.1f * (float) (ClientEventHandler.recoilHorizon * fp));
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
         }
-        shen.setPosX(0.7f * (float) fr * (float) (ClientEventHandler.recoilHorizon * fp));
+        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
 
         slide.setPosZ(1.5f * (float) fp);
 

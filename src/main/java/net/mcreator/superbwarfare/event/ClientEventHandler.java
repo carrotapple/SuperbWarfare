@@ -19,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -77,6 +78,10 @@ public class ClientEventHandler {
     public static double recoilTime = 0;
 
     public static double recoilHorizon = 0;
+
+    public static boolean recoil = false;
+
+    public static double recoilY = 0;
     public static double droneCameraRotX = 0;
     public static double droneCameraRotY = 0;
     public static double droneRotX = 0;
@@ -110,7 +115,7 @@ public class ClientEventHandler {
         float xRot = player.getViewXRot(event.getPartialTick()) - xRotOffset;
         float yRot = player.getViewYRot(event.getPartialTick()) - yRotOffset;
         turnRot[0] = Mth.clamp(0.05 * xRot, -5, 5) * (1 - 0.75 * zoomTime);
-        turnRot[1] = Mth.clamp(0.05 * yRot, -10, 10) * (1 - 0.75 * zoomTime);
+        turnRot[1] = Mth.clamp(0.05 * yRot, -10, 10) * (1 - 0.75 * zoomTime) + 1.5f * (Mth.DEG_TO_RAD * recoilHorizon) * (0.5 + 0.4 * fireSpread);
         turnRot[2] = Mth.clamp(0.1 * yRot, -10, 10) * (1 - zoomTime);
 
         droneCameraRotX = Mth.clamp(0.25f * xRot, -10, 10);
@@ -358,8 +363,10 @@ public class ClientEventHandler {
             } else {
                 pose = 1;
             }
+            if (fireRecoilTime == 0) {
+                swayTime += 0.05 * times;
+            }
 
-            swayTime += 0.05 * times;
             swayX = pose * -0.008 * Math.sin(swayTime) * (1 - 0.95 * zoomTime);
             swayY = pose * 0.125 * Math.sin(swayTime - 1.585) * (1 - 0.95 * zoomTime) - 3 * moveRotZ;
         }
@@ -484,9 +491,7 @@ public class ClientEventHandler {
             fireRotTimer = 0.001;
             firePosZ = 0.1;
             fireRecoilTime -= 7 * times;
-            recoilHorizon = 2 * Math.random() - 1;
             fireSpread += 0.1;
-            recoilTime = 0.01;
         }
 
         fireSpread = Mth.clamp(fireSpread - 0.1 * (Math.pow(fireSpread, 2) * times), 0, 100);
@@ -508,11 +513,11 @@ public class ClientEventHandler {
 
         if (0 < fireRotTimer && fireRotTimer < 1.732) {
             fireRot = 1 / 6.3 * (fireRotTimer - 0.5) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2));
-            if (recoilHorizon > 0) {
+            if (recoilY> 0) {
                 event.setYaw((float) (yaw - 1.3 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 1 * Mth.clamp(0.3 - fireRotTimer, 0, 1) * (2 * Math.random() - 1)));
                 event.setPitch((float) (pitch + 1.3 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 1 * Mth.clamp(0.3 - fireRotTimer, 0, 1) * (2 * Math.random() - 1)));
                 event.setRoll((float) (roll + 4.2 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 3 * Mth.clamp(0.5 - fireRotTimer, 0, 0.5) * (2 * Math.random() - 1)));
-            } else if (recoilHorizon <= 0) {
+            } else if (recoilY <= 0) {
                 event.setYaw((float) (yaw + 1.3 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 1 * Mth.clamp(0.3 - fireRotTimer, 0, 1) * (2 * Math.random() - 1)));
                 event.setPitch((float) (pitch - 1.3 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 1 * Mth.clamp(0.3 - fireRotTimer, 0, 1) * (2 * Math.random() - 1)));
                 event.setRoll((float) (roll - 4.2 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 3 * Mth.clamp(0.5 - fireRotTimer, 0, 0.5) * (2 * Math.random() - 1)));
@@ -535,36 +540,51 @@ public class ClientEventHandler {
 
         CompoundTag tag = player.getMainHandItem().getOrCreateTag();
         float times = Minecraft.getInstance().getDeltaFrameTime();
-        float recoilX = (float) tag.getDouble("recoil_x");
-        float recoilY = (float) tag.getDouble("recoil_y");
-        float recoilPitch = 50f;
-        float recoilYaw = 25f;
+        float gunRecoilX = (float) tag.getDouble("recoil_x") * 80;
+        float gunRecoilY = (float) tag.getDouble("recoil_y") * 60;
+
+        if (fireRecoilTime > 0) {
+            recoil = true;
+        }
+
+        if (recoil) {
+            recoilTime = 0.01;
+            recoilY = (float) (2 * Math.random() - 1) * gunRecoilY;
+            recoil = false;
+        }
+
+        if (recoilHorizon > 0) {
+            recoilHorizon -= (4 * Math.pow(recoilHorizon, 2) + recoilY) * times;
+        } else {
+            recoilHorizon += (4 * Math.pow(recoilHorizon, 2) + recoilY) * times;
+        }
+        recoilY = 0;
+
+        player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.##").format(recoilY) + " " + new java.text.DecimalFormat("##.#").format(recoilHorizon)), true);
 
         /*
          计算后坐力
         */
 
-        float rx, ry;
+        float pose = 1;
         if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && !isProne(player)) {
-            rx = 0.7f;
-            ry = 0.8f;
+            pose = 0.7f;
         } else if (isProne(player)) {
             if (tag.getDouble("bipod") == 1) {
-                rx = 0.05f;
-                ry = 0.1f;
+                pose = 0.1f;
             } else {
-                rx = 0.5f;
-                ry = 0.7f;
+                pose = 0.5f;
             }
-        } else {
-            rx = 1f;
-            ry = 1f;
         }
+
+        float newYaw = (float) (player.getYRot() - 0.6 * recoilHorizon * pose * times * (0.5 + fireSpread));
+        player.setYRot(newYaw);
+        player.yRotO = player.getYRot();
 
         double sinRes = 0;
 
         if (0 < recoilTime && recoilTime < 0.5) {
-            float newPitch = player.getXRot() - 0.02f * ry * times;
+            float newPitch = player.getXRot() - 0.02f * gunRecoilX * times;
             player.setXRot(newPitch);
             player.xRotO = player.getXRot();
         }
@@ -580,13 +600,9 @@ public class ClientEventHandler {
         }
 
         if (0 < recoilTime && recoilTime < 2.5) {
-            float newPitch = (float) (player.getXRot() - recoilPitch * recoilY * ry * (sinRes + Mth.clamp(0.5 - recoilTime, 0, 0.5)) * times * (0.7 + fireSpread));
+            float newPitch = (float) (player.getXRot() - 1.5 * gunRecoilX * (sinRes + Mth.clamp(0.5 - recoilTime, 0, 0.5)) * times * (0.5 + fireSpread));
             player.setXRot(newPitch);
             player.xRotO = player.getXRot();
-
-            float newYaw = (float) (player.getYRot() - recoilYaw * recoilHorizon * recoilX * rx * sinRes * times - 100 * recoilHorizon * firePos * recoilX * rx * times * (0.7 + fireSpread));
-            player.setYRot(newYaw);
-            player.yRotO = player.getYRot();
         }
 
         if (recoilTime >= 2.5) recoilTime = 0d;

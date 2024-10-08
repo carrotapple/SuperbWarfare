@@ -64,7 +64,7 @@ public class AbekiriItemModel extends GeoModel<AbekiriItem> {
 
         gun.setRotZ((float) (0.05f * zpz));
 
-        shen.setPosX(-0.2f * (float) (fp + 2 * fr));
+        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
         shen.setPosY(0.2f * (float) (fp + 2 * fr));
         shen.setPosZ(4.2f * (float) (1.3 * fp + 0.54f * fr));
         shen.setRotX(0.25f * (float) (1.28f * fp + fr));

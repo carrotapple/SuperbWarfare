@@ -69,7 +69,7 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
             shen.setPosY(-0.01f * (float) (fp + 2 * fr));
             shen.setPosZ(1.2f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.003f * (float) (fp + fr));
+            shen.setRotX(0.007f * (float) (fp + fr));
             shen.setRotZ(0f);
         } else {
             shen.setPosY(-0.03f * (float) (fp + 2 * fr));
@@ -77,7 +77,7 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
             shen.setRotX(0.07f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
         }
-        shen.setPosX(0.5f * (float)fr * (float)(ClientEventHandler.recoilHorizon * fp));
+        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         CoreGeoBone move = getAnimationProcessor().getBone("move");

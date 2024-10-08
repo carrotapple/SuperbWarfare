@@ -98,7 +98,7 @@ public class SvdItemModel extends GeoModel<SvdItem> {
             shen.setRotX(0.07f * (float) (0.18f * fp + fr));
             shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
         }
-        shen.setPosX(0.5f * (float)fr * (float)(ClientEventHandler.recoilHorizon * fp));
+        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
         holo.setPosY(0.05f + 1.1f * (float) fp);
         holo.setRotZ(-0.04f * (float) fp);
         holo.setScaleX(0.75f);

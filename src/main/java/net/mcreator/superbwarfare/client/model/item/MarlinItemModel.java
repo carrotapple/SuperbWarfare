@@ -66,7 +66,7 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
 
         gun.setScaleZ(1f - (0.5f * (float) zp));
 
-        shen.setPosX(-0.2f * (float) (fp + 2 * fr));
+        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
         shen.setPosY(0.4f * (float) (fp + 2 * fr));
         shen.setPosZ(1.9f * (float) (1.3 * fp + 0.54f * fr));
         shen.setRotX(0.085f * (float) (1.28f * fp + fr));

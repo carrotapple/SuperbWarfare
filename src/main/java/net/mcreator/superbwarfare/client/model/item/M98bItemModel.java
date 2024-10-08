@@ -71,7 +71,7 @@ public class M98bItemModel extends GeoModel<M98bItem> {
             shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
         }
         scope.setPosZ(75.2f * (float) (fp + 0.54f * fr));
-        shen.setPosX(0.5f * (float)fr * (float)(ClientEventHandler.recoilHorizon * fp));
+        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
 
         gun.setPosX(2.245f * (float) zp);
         gun.setPosY(0.3f * (float) zp - (float) (0.2f * zpz));
