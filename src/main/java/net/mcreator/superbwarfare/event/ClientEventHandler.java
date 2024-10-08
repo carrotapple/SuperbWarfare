@@ -19,7 +19,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -560,7 +559,7 @@ public class ClientEventHandler {
         }
         recoilY = 0;
 
-        player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.##").format(recoilY) + " " + new java.text.DecimalFormat("##.#").format(recoilHorizon)), true);
+//        player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.##").format(recoilY) + " " + new java.text.DecimalFormat("##.#").format(recoilHorizon)), true);
 
         /*
          计算后坐力
