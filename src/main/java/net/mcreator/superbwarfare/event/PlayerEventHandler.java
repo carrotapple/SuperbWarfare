@@ -6,6 +6,8 @@ import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.SimulationDistanceMessage;
+import net.mcreator.superbwarfare.tools.GunInfo;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -52,13 +54,29 @@ public class PlayerEventHandler {
             capability.syncPlayerVariables(player);
         });
 
-        if (!ModVariables.MapVariables.get(player.level()).pvpMode) {
-            return;
-        }
-
         for (ItemStack stack : player.getInventory().items) {
             if (stack.is(ModTags.Items.GUN)) {
-                stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag"));
+                if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
+                    GunsTool.reload(player, GunInfo.Type.SHOTGUN);
+                } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
+                    GunsTool.reload(player, GunInfo.Type.SNIPER);
+                } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
+                    GunsTool.reload(player, GunInfo.Type.HANDGUN);
+                } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
+                    GunsTool.reload(player, GunInfo.Type.RIFLE);
+                } else if (stack.getItem() == ModItems.TASER.get()) {
+                    stack.getOrCreateTag().putInt("ammo", 1);
+                    player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.TASER_ELECTRODE.get(), 1, player.inventoryMenu.getCraftSlots());
+                } else if (stack.getItem() == ModItems.M_79.get()) {
+                    stack.getOrCreateTag().putInt("ammo", 1);
+                    player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.GRENADE_40MM.get(), 1, player.inventoryMenu.getCraftSlots());
+                } else if (stack.getItem() == ModItems.RPG.get()) {
+                    stack.getOrCreateTag().putInt("ammo", 1);
+                    player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.ROCKET.get(), 1, player.inventoryMenu.getCraftSlots());
+                } else if (stack.getItem() == ModItems.JAVELIN.get()) {
+                    stack.getOrCreateTag().putInt("ammo", 1);
+                    player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.JAVELIN_MISSILE.get(), 1, player.inventoryMenu.getCraftSlots());
+                }
             }
         }
     }

@@ -13,7 +13,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.FakePlayer;
@@ -95,11 +94,7 @@ public class ModVariables {
         @SubscribeEvent
         public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
             if (event.getEntity().level().isClientSide()) return;
-
-            SavedData mapData = MapVariables.get(event.getEntity().level());
             SavedData worldData = WorldVariables.get(event.getEntity().level());
-            if (mapData != null)
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new SavedDataSyncMessage(0, mapData));
             if (worldData != null)
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new SavedDataSyncMessage(1, worldData));
         }
@@ -107,7 +102,6 @@ public class ModVariables {
         @SubscribeEvent
         public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
             if (event.getEntity().level().isClientSide()) return;
-
             SavedData worldData = WorldVariables.get(event.getEntity().level());
             if (worldData != null)
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new SavedDataSyncMessage(1, worldData));
@@ -146,44 +140,6 @@ public class ModVariables {
         }
     }
 
-    public static class MapVariables extends SavedData {
-        public static final String DATA_NAME = ModUtils.MODID + "_map_variables";
-        public boolean pvpMode = false;
-
-        public static MapVariables load(CompoundTag tag) {
-            MapVariables data = new MapVariables();
-            data.read(tag);
-            return data;
-        }
-
-        public static MapVariables get(LevelAccessor world) {
-            if (world instanceof ServerLevelAccessor serverLevelAcc) {
-                var level = serverLevelAcc.getLevel().getServer().getLevel(Level.OVERWORLD);
-                if (level != null) {
-                    return level.getDataStorage().computeIfAbsent(MapVariables::load, MapVariables::new, DATA_NAME);
-                }
-            }
-            return clientSide;
-        }
-
-        public void read(CompoundTag nbt) {
-            pvpMode = nbt.getBoolean("pvp_mode");
-        }
-
-        public void syncData(LevelAccessor world) {
-            this.setDirty();
-            if (world instanceof Level && !world.isClientSide())
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.ALL.noArg(), new SavedDataSyncMessage(0, this));
-        }
-
-        static MapVariables clientSide = new MapVariables();
-
-        @Override
-        public CompoundTag save(CompoundTag nbt) {
-            nbt.putBoolean("pvp_mode", pvpMode);
-            return nbt;
-        }
-    }
 
     public static class SavedDataSyncMessage {
         private final int type;
@@ -194,11 +150,7 @@ public class ModVariables {
             CompoundTag nbt = buffer.readNbt();
             if (nbt == null) return;
 
-            this.data = this.type == 0 ? new MapVariables() : new WorldVariables();
-            if (this.data instanceof MapVariables mapVariables)
-                mapVariables.read(nbt);
-            else if (this.data instanceof WorldVariables worldVariables)
-                worldVariables.read(nbt);
+            new WorldVariables();
         }
 
         public SavedDataSyncMessage(int type, SavedData data) {
@@ -216,9 +168,7 @@ public class ModVariables {
             NetworkEvent.Context context = contextSupplier.get();
             context.enqueueWork(() -> {
                 if (!context.getDirection().getReceptionSide().isServer() && message.data != null) {
-                    if (message.type == 0)
-                        MapVariables.clientSide = (MapVariables) message.data;
-                    else
+                    if (message.type != 0)
                         WorldVariables.clientSide = (WorldVariables) message.data;
                 }
             });

@@ -211,7 +211,7 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
                     int energyStored = energy.getEnergyStored();
                     if (energyStored > 0) {
                         energy.extractEnergy(5, false);
-                        tag.putDouble("sentinelChargeDamage", 0.2857142857142857 * tag.getDouble("damage") * tag.getDouble("levelDamageMultiple"));
+                        tag.putDouble("sentinelChargeDamage", 0.2857142857142857 * tag.getDouble("damage"));
                     } else {
                         tag.putDouble("sentinelChargeDamage", 0);
                     }

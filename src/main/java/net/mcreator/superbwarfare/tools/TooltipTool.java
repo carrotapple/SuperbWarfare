@@ -52,8 +52,7 @@ public class TooltipTool {
     public static void addGunTips(List<Component> tooltip, ItemStack stack) {
         tooltip.add(Component.literal(""));
 
-        double damage = ItemNBTTool.getDouble(stack, "damage", 0)
-                * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1) * perkDamage(stack);
+        double damage = ItemNBTTool.getDouble(stack, "damage", 0) * perkDamage(stack);
 
         tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
@@ -77,16 +76,14 @@ public class TooltipTool {
         }
 
         if (slug) {
-            double damage = ItemNBTTool.getDouble(stack, "damage", 0) * ItemNBTTool.getDouble(stack, "projectile_amount", 0)
-                    * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1) * perkDamage(stack);
+            double damage = ItemNBTTool.getDouble(stack, "damage", 0) * ItemNBTTool.getDouble(stack, "projectile_amount", 0) * perkDamage(stack);
 
             tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.literal(new DecimalFormat("##.#").format(damage) + (heBullet(stack) ? " + " + new DecimalFormat("##.#").format(0.8 * damage * (1 + 0.1 * heBulletLevel(stack))) : "")).withStyle(ChatFormatting.GREEN)));
 
         } else {
-            double damage = ItemNBTTool.getDouble(stack, "damage", 0)
-                    * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1) * perkDamage(stack);
+            double damage = ItemNBTTool.getDouble(stack, "damage", 0) * perkDamage(stack);
 
             tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
@@ -220,7 +217,7 @@ public class TooltipTool {
             slug = true;
         }
 
-        double total = ItemNBTTool.getDouble(stack, "damage", 0) * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1) * perkDamage(stack);
+        double total = ItemNBTTool.getDouble(stack, "damage", 0) * perkDamage(stack);
 
         if (slug) {
             tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
@@ -251,14 +248,13 @@ public class TooltipTool {
         if (flag.get()) {
             double damage = (ItemNBTTool.getDouble(stack, "damage", 0) +
                     ItemNBTTool.getDouble(stack, "sentinelChargeDamage", 0))
-                    * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1)
                     * perkDamage(stack);
 
             tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.literal(new DecimalFormat("##.#").format(damage) + (heBullet(stack) ? " + " + new DecimalFormat("##.#").format(0.8 * damage * (1 + 0.1 * heBulletLevel(stack))) : "")).withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.BOLD)));
         } else {
-            double damage = ItemNBTTool.getDouble(stack, "damage", 0) * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1) * perkDamage(stack);
+            double damage = ItemNBTTool.getDouble(stack, "damage", 0) * perkDamage(stack);
 
             tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
@@ -280,8 +276,7 @@ public class TooltipTool {
     public static void addTaserTips(List<Component> tooltip, ItemStack stack) {
         tooltip.add(Component.literal(""));
 
-        double damage = ItemNBTTool.getDouble(stack, "damage", 0)
-                * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1);
+        double damage = ItemNBTTool.getDouble(stack, "damage", 0);
 
         tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
@@ -302,8 +297,7 @@ public class TooltipTool {
     public static void addLauncherTips(List<Component> tooltip, ItemStack stack) {
         tooltip.add(Component.literal(""));
 
-        double damage = ItemNBTTool.getDouble(stack, "damage", 0)
-                * ItemNBTTool.getDouble(stack, "levelDamageMultiple", 1);
+        double damage = ItemNBTTool.getDouble(stack, "damage", 0);
 
         tooltip.add(Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))

@@ -212,7 +212,7 @@ public class LivingEventHandler {
         var tag = stack.getOrCreateTag();
         int level = stack.getOrCreateTag().getInt("Level");
         double exp = stack.getOrCreateTag().getDouble("Exp");
-        double upgradeExpNeeded = 20 * Math.pow(level, 2) + 160 * level + 20;
+        double upgradeExpNeeded = 20 * Math.pow(level, 2) + 140 * level + 20;
 
         if (exp >= upgradeExpNeeded) {
             tag.putDouble("Exp", exp - upgradeExpNeeded);

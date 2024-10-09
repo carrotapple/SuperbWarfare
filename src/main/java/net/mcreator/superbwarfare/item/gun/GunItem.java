@@ -54,7 +54,6 @@ public abstract class GunItem extends Item {
                 GunsTool.genUUID(itemstack);
                 ItemNBTTool.setBoolean(itemstack, "init", true);
             }
-            GunsTool.pvpModeCheck(itemstack, level);
 
             if (itemstack.getOrCreateTag().getBoolean("draw")) {
                 itemstack.getOrCreateTag().putBoolean("draw", false);

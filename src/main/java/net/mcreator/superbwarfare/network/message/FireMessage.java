@@ -269,10 +269,10 @@ public class FireMessage {
 
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
             spread = 0.01f;
-            damage = 0.08333333 * tag.getDouble("damage") * tag.getDouble("speed") * tag.getDouble("levelDamageMultiple") * perkDamage(heldItem);
+            damage = 0.08333333 * tag.getDouble("damage") * tag.getDouble("speed") * perkDamage(heldItem);
         } else {
             spread = perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 1 : 2.5f;
-            damage = (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.08333333 : 0.008333333) * tag.getDouble("damage") * tag.getDouble("speed") * tag.getDouble("levelDamageMultiple") * perkDamage(heldItem);
+            damage = (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.08333333 : 0.008333333) * tag.getDouble("damage") * tag.getDouble("speed") * perkDamage(heldItem);
         }
 
         ProjectileEntity projectile = new ProjectileEntity(player.level())
@@ -408,7 +408,7 @@ public class FireMessage {
                 Level level = player.level();
                 if (!level.isClientSide()) {
                     GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, level,
-                            (float) stack.getOrCreateTag().getDouble("damage") * (float) stack.getOrCreateTag().getDouble("levelDamageMultiple"));
+                            (float) stack.getOrCreateTag().getDouble("damage"));
 
                     var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
                     if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
@@ -461,7 +461,7 @@ public class FireMessage {
 
             if (!level.isClientSide()) {
                 RpgRocketEntity rocketEntity = new RpgRocketEntity(player, level,
-                        (float) tag.getDouble("damage") * (float) tag.getDouble("levelDamageMultiple"));
+                        (float) tag.getDouble("damage"));
 
                 var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
                 if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
@@ -526,7 +526,7 @@ public class FireMessage {
 
         if (!level.isClientSide()) {
             JavelinMissileEntity missileEntity = new JavelinMissileEntity(player, level,
-                    (float) tag.getDouble("damage") * (float) tag.getDouble("levelDamageMultiple"));
+                    (float) tag.getDouble("damage"));
 
             var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
             if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
