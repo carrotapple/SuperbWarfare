@@ -362,9 +362,7 @@ public class ClientEventHandler {
             } else {
                 pose = 1;
             }
-            if (fireRecoilTime == 0) {
-                swayTime += 0.05 * times;
-            }
+            swayTime += 0.05 * times;
 
             swayX = pose * -0.008 * Math.sin(swayTime) * (1 - 0.95 * zoomTime);
             swayY = pose * 0.125 * Math.sin(swayTime - 1.585) * (1 - 0.95 * zoomTime) - 3 * moveRotZ;
