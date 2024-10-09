@@ -196,7 +196,13 @@ public abstract class GunItem extends Item {
         }
 
         int mag_ = stack.getOrCreateTag().getInt("mag");
-        stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.15 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * mag_)));
+        if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
+            stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.1 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * mag_)));
+        } else if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
+            stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.075 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * mag_)));
+        } else {
+            stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.15 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * mag_)));
+        }
     }
 
     public boolean canApplyPerk(Perk perk) {
