@@ -387,6 +387,8 @@
   "config.superbwarfare.client.display.armor_plate_hud.des": "Display the durability of the bulletproof insert currently equipped on the chest armor in the lower left corner when turned on",
 
   "config.superbwarfare.common.gameplay": "Gameplay Config",
+  "config.superbwarfare.common.gameplay.respawn_reload": "Respawn Reload",
+  "config.superbwarfare.common.gameplay.respawn_reload.des": "Whether to reload all weapons in the inventory after respawning automatically",
   "config.superbwarfare.common.gameplay.global_indication": "Global damage indicator",
   "config.superbwarfare.common.gameplay.global_indication.des": "Whether to show a kill indication around the cross hair when killing a creature with only the damage type of this module",
 

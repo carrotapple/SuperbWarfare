@@ -12,6 +12,14 @@ public class GameplayClothConfig {
         ConfigCategory category = root.getOrCreateCategory(Component.translatable("config.superbwarfare.common.gameplay"));
 
         category.addEntry(entryBuilder
+                .startBooleanToggle(Component.translatable("config.superbwarfare.common.gameplay.respawn_reload"), GameplayConfig.RESPAWN_RELOAD.get())
+                .setDefaultValue(true)
+                .setSaveConsumer(GameplayConfig.RESPAWN_RELOAD::set)
+                .setTooltip(Component.translatable("config.superbwarfare.common.gameplay.respawn_reload.des"))
+                .build()
+        );
+
+        category.addEntry(entryBuilder
                 .startBooleanToggle(Component.translatable("config.superbwarfare.common.gameplay.global_indication"), GameplayConfig.GLOBAL_INDICATION.get())
                 .setDefaultValue(false)
                 .setSaveConsumer(GameplayConfig.GLOBAL_INDICATION::set)

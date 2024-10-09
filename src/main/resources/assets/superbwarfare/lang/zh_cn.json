@@ -387,6 +387,8 @@
   "config.superbwarfare.client.display.armor_plate_hud.des": "开启时，在屏幕左下角显示当前胸甲装备的防弹插板的耐久",
 
   "config.superbwarfare.common.gameplay": "游戏内容配置",
+  "config.superbwarfare.common.gameplay.respawn_reload": "重生换弹",
+  "config.superbwarfare.common.gameplay.respawn_reload.des": "开启时，玩家在重生时会自动装填全部武器的弹药",
   "config.superbwarfare.common.gameplay.global_indication": "全局伤害提示",
   "config.superbwarfare.common.gameplay.global_indication.des": "是否在仅使用本模组的伤害类型击杀生物时，在准星周围显示击杀提示",
 
