@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.event;
 
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.config.client.DisplayConfig;
+import net.mcreator.superbwarfare.config.common.GameplayConfig;
 import net.mcreator.superbwarfare.entity.TargetEntity;
 import net.mcreator.superbwarfare.entity.projectile.ProjectileEntity;
 import net.mcreator.superbwarfare.init.*;
@@ -193,12 +193,12 @@ public class LivingEventHandler {
         }
 
         // 如果配置不选择全局伤害提示，则只在伤害类型为mod添加的时显示指示器
-        if (!DisplayConfig.GLOBAL_INDICATION.get() && !DamageTypeTool.isModDamage(source)) {
+        if (!GameplayConfig.GLOBAL_INDICATION.get() && !DamageTypeTool.isModDamage(source)) {
             return;
         }
 
         if (!sourceEntity.level().isClientSide() && sourceEntity instanceof ServerPlayer player) {
-            SoundTool.playLocalSound(player, ModSounds.TARGET_DOWN.get(), 100f, 1f);
+            SoundTool.playLocalSound(player, ModSounds.TARGET_DOWN.get(), 3f, 1f);
 
             ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(2, 8));
         }

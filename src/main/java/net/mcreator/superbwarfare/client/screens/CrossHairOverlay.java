@@ -82,12 +82,12 @@ public class CrossHairOverlay {
             if (!player.isSprinting() || player.getPersistentData().getDouble("noRun") > 0) {
                 if (stack.is(ModTags.Items.SHOTGUN)) {
                     if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
-                        normalCrossHair(guiGraphics, w ,h , spread, moveX, moveY);
+                        normalCrossHair(guiGraphics, w, h, spread, moveX, moveY);
                     } else {
                         shotgunCrossHair(guiGraphics, finPosX, finPosY, finLength);
                     }
                 } else {
-                    normalCrossHair(guiGraphics, w ,h , spread, moveX, moveY);
+                    normalCrossHair(guiGraphics, w, h, spread, moveX, moveY);
                 }
             }
         }
@@ -98,18 +98,16 @@ public class CrossHairOverlay {
                 if (!player.isSprinting() || player.getPersistentData().getDouble("noRun") > 0 || ClientEventHandler.pullPos > 0) {
                     if (ClientEventHandler.zoomTime < 0.1) {
                         if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
-                            normalCrossHair(guiGraphics, w ,h , spread, moveX, moveY);
+                            normalCrossHair(guiGraphics, w, h, spread, moveX, moveY);
                         } else {
                             shotgunCrossHair(guiGraphics, finPosX, finPosY, finLength);
                         }
                     } else {
-                        normalCrossHair(guiGraphics, w ,h , spread, moveX, moveY);
+                        normalCrossHair(guiGraphics, w, h, spread, moveX, moveY);
                     }
                 }
             }
         }
-
-
 
         // 在开启伤害指示器时才进行渲染
         if (DisplayConfig.KILL_INDICATION.get()) {
@@ -133,7 +131,7 @@ public class CrossHairOverlay {
 
     }
 
-    private static void normalCrossHair(GuiGraphics guiGraphics, int w, int h, double spread, float moveX, float moveY ) {
+    private static void normalCrossHair(GuiGraphics guiGraphics, int w, int h, double spread, float moveX, float moveY) {
         preciseBlit(guiGraphics, REX_HORIZONTAL, (float) (w / 2f - 13.5f - 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
         preciseBlit(guiGraphics, REX_HORIZONTAL, (float) (w / 2f - 2.5f + 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
         preciseBlit(guiGraphics, REX_VERTICAL, w / 2f - 7.5f + moveX, (float) (h / 2f - 2.5f + 2.8f * spread) + moveY, 0, 0, 16, 16, 16, 16);

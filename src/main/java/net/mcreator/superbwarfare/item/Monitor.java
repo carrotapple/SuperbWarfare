@@ -4,7 +4,8 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.tools.ItemNBTTool;
-import net.mcreator.superbwarfare.tools.TooltipTool;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class Monitor extends Item {
@@ -65,28 +67,39 @@ public class Monitor extends Item {
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
-        if (equipmentSlot == EquipmentSlot.MAINHAND) {
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+        if (slot == EquipmentSlot.MAINHAND) {
             ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-            builder.putAll(super.getDefaultAttributeModifiers(equipmentSlot));
+            builder.putAll(super.getAttributeModifiers(slot, stack));
             builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Item modifier", 2d, AttributeModifier.Operation.ADDITION));
             builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Item modifier", -2.4, AttributeModifier.Operation.ADDITION));
             return builder.build();
         }
-        return super.getDefaultAttributeModifiers(equipmentSlot);
-    }
 
+        return super.getAttributeModifiers(slot, stack);
+    }
 
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
-        TooltipTool.addMonitorTips(list, stack.getOrCreateTag().getString(LINKED_DRONE));
+        if (stack.getOrCreateTag().getString(LINKED_DRONE).equals("none")) return;
+
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+
+        DroneEntity entity = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
+                .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString(LINKED_DRONE))).findFirst().orElse(null);
+        if (entity == null) return;
+
+        list.add(Component.translatable("des.superbwarfare.tips.distance").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.literal("Distance:" + new DecimalFormat("##.#").format(player.distanceTo(entity)) + "M").withStyle(ChatFormatting.GRAY)));
     }
 
     @Override
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
         if (!selected) {
-            itemstack.getOrCreateTag().putBoolean("Using",false);
+            itemstack.getOrCreateTag().putBoolean("Using", false);
             DroneEntity drone = entity.level().getEntitiesOfClass(DroneEntity.class, entity.getBoundingBox().inflate(512))
                     .stream().filter(e -> e.getStringUUID().equals(itemstack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
 

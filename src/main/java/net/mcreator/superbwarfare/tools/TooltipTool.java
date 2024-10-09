@@ -1,18 +1,15 @@
 package net.mcreator.superbwarfare.tools;
 
-import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.perk.AmmoPerk;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
@@ -306,22 +303,6 @@ public class TooltipTool {
         addLevelTips(tooltip, stack);
         addPerkTips(tooltip, stack);
 
-    }
-
-    public static void addMonitorTips(List<Component> tooltip, String id) {
-        if (id.equals("none")) return;
-
-        Player player = Minecraft.getInstance().player;
-        if (player == null) return;
-
-        DroneEntity entity = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
-                .stream().filter(e -> e.getStringUUID().equals(id)).findFirst().orElse(null);
-
-        if (entity == null) return;
-
-        tooltip.add(Component.translatable("des.superbwarfare.tips.distance").withStyle(ChatFormatting.GRAY)
-                .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal("Distance:" + new DecimalFormat("##.#").format(player.distanceTo(entity)) + "M").withStyle(ChatFormatting.GRAY)));
     }
 
 }

@@ -5,7 +5,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 public class DisplayConfig {
 
     public static ForgeConfigSpec.BooleanValue KILL_INDICATION;
-    public static ForgeConfigSpec.BooleanValue GLOBAL_INDICATION;
     public static ForgeConfigSpec.BooleanValue AMMO_HUD;
     public static ForgeConfigSpec.BooleanValue FLOAT_CROSS_HAIR;
     public static ForgeConfigSpec.BooleanValue CAMERA_ROTATE;
@@ -16,9 +15,6 @@ public class DisplayConfig {
 
         builder.comment("Set TRUE if you want to show kill indication while killing an entity");
         KILL_INDICATION = builder.define("kill_indication", true);
-
-        builder.comment("Set FALSE if you want to show kill indication ONLY while killing an entity with a gun");
-        GLOBAL_INDICATION = builder.define("global_indication", true);
 
         builder.comment("Set TRUE to show ammo and gun info on HUD");
         AMMO_HUD = builder.define("ammo_hud", true);
