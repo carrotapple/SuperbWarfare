@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "superbwarfare:item/ammobox",
-		"particle": "superbwarfare:item/ammobox"
+		"0": "superbwarfare:item/ammo_box",
+		"particle": "superbwarfare:item/ammo_box"
 	},
 	"elements": [
 		{

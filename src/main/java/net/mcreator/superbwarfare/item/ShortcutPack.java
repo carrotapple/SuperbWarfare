@@ -1,6 +1,6 @@
 package net.mcreator.superbwarfare.item;
 
-import net.mcreator.superbwarfare.tools.TooltipTool;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -11,14 +11,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class shortcutPack extends Item {
-    public shortcutPack() {
+public class ShortcutPack extends Item {
+    public ShortcutPack() {
         super(new Properties().rarity(Rarity.EPIC));
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
-        TooltipTool.shortcutPackTips(list);
+        list.add(Component.translatable("des.superbwarfare.tips.shortcut_pack").withStyle(ChatFormatting.GRAY));
+        list.add(Component.translatable("des.superbwarfare.use_tip.shortcut_pack"));
     }
 
 }

@@ -87,7 +87,7 @@ public abstract class GunItem extends Item {
             handleGunPerks(itemstack);
 
             if ((itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) && itemstack.getOrCreateTag().getInt("ammo") > itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag") + 1)
-                    ||(!itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) && itemstack.getOrCreateTag().getInt("ammo") > itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag"))
+                    || (!itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) && itemstack.getOrCreateTag().getInt("ammo") > itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag"))
             ) {
 
                 int count = itemstack.getOrCreateTag().getInt("ammo") - itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag") - (itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0);
@@ -106,14 +106,14 @@ public abstract class GunItem extends Item {
                     capability.syncPlayerVariables(entity);
                 });
 
-                itemstack.getOrCreateTag().putInt("ammo",itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag") + (itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0));
+                itemstack.getOrCreateTag().putInt("ammo", itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag") + (itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0));
             }
         }
     }
 
     @Override
     public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        return false;
+        return super.onEntitySwing(stack, entity);
     }
 
     @Override
@@ -194,13 +194,13 @@ public abstract class GunItem extends Item {
             stack.getOrCreateTag().putInt("HeadSeeker", Math.max(0, stack.getOrCreateTag().getInt("HeadSeeker") - 1));
         }
 
-        int mag_ = stack.getOrCreateTag().getInt("mag");
+        int ctmMag = stack.getOrCreateTag().getInt("mag");
         if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-            stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.1 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * mag_)));
+            stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.1 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * ctmMag)));
         } else if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-            stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.075 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * mag_)));
+            stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.075 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * ctmMag)));
         } else {
-            stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.15 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * mag_)));
+            stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.15 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * ctmMag)));
         }
     }
 

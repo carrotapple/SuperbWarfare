@@ -67,42 +67,7 @@ public class LivingEventHandler {
         killIndication(event.getSource());
         handleGunPerksWhenDeath(event);
         handlePlayerKillEntity(event);
-
-        //开启死亡掉落时掉落一个弹药盒
-
-        if (!event.getEntity().level().getLevelData().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) && event.getEntity() instanceof Player player) {
-
-            var cap =player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
-
-            boolean drop = (cap.rifleAmmo + cap.handgunAmmo + cap.shotgunAmmo + cap.sniperAmmo > 0);
-
-            if (drop) {
-                ItemStack stack = new ItemStack(ModItems.AMMOBOX.get());
-                CompoundTag tag = stack.getOrCreateTag();
-
-                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    tag.putInt("rifleAmmo",cap.rifleAmmo);
-                    capability.rifleAmmo = 0;
-                    tag.putInt("handgunAmmo",cap.handgunAmmo);
-                    capability.handgunAmmo = 0;
-                    tag.putInt("shotgunAmmo",cap.shotgunAmmo);
-                    capability.shotgunAmmo = 0;
-                    tag.putInt("sniperAmmo",cap.sniperAmmo);
-                    capability.sniperAmmo = 0;
-                    tag.putBoolean("isDrop",true);
-                    capability.syncPlayerVariables(player);
-                });
-
-                if (player.level() instanceof ServerLevel level) {
-                    var x = player.getX();
-                    var y = player.getY();
-                    var z = player.getZ();
-                    ItemEntity ammobox = new ItemEntity(level, x, (y + 1), z, stack);
-                    ammobox.setPickUpDelay(10);
-                    level.addFreshEntity(ammobox);
-                }
-            }
-        }
+        handlePlayerDeathDropAmmo(event.getEntity());
     }
 
     /**
@@ -603,6 +568,41 @@ public class LivingEventHandler {
 
         if (stack.getOrCreateTag().getInt("HeadSeeker") > 0) {
             event.setAmount(event.getAmount() * (1.095f + 0.0225f * level));
+        }
+    }
+
+    /**
+     * 开启死亡掉落时掉落一个弹药盒
+     */
+    private static void handlePlayerDeathDropAmmo(LivingEntity entity) {
+        if (!entity.level().getLevelData().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) && entity instanceof Player player) {
+            var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
+
+            boolean drop = cap.rifleAmmo + cap.handgunAmmo + cap.shotgunAmmo + cap.sniperAmmo > 0;
+
+            if (drop) {
+                ItemStack stack = new ItemStack(ModItems.AMMO_BOX.get());
+                CompoundTag tag = stack.getOrCreateTag();
+
+                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    tag.putInt("RifleAmmo", cap.rifleAmmo);
+                    capability.rifleAmmo = 0;
+                    tag.putInt("HandgunAmmo", cap.handgunAmmo);
+                    capability.handgunAmmo = 0;
+                    tag.putInt("ShotgunAmmo", cap.shotgunAmmo);
+                    capability.shotgunAmmo = 0;
+                    tag.putInt("SniperAmmo", cap.sniperAmmo);
+                    capability.sniperAmmo = 0;
+                    tag.putBoolean("IsDrop", true);
+                    capability.syncPlayerVariables(player);
+                });
+
+                if (player.level() instanceof ServerLevel level) {
+                    ItemEntity itemEntity = new ItemEntity(level, player.getX(), player.getY() + 1, player.getZ(), stack);
+                    itemEntity.setPickUpDelay(10);
+                    level.addFreshEntity(itemEntity);
+                }
+            }
         }
     }
 }

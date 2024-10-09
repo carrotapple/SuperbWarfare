@@ -128,21 +128,21 @@ public class TooltipTool {
 
         int upgradePoint = Mth.floor(ItemNBTTool.getDouble(stack, "UpgradePoint", 0));
 
-        tooltip.add(Component.translatable("des.superbwarfare.tips.upgradepoint").withStyle(ChatFormatting.GRAY)
+        tooltip.add(Component.translatable("des.superbwarfare.tips.upgrade_point").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(String.valueOf(upgradePoint)).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.BOLD)));
 
     }
 
     private static void addBypassTips(List<Component> tooltip, ItemStack stack) {
-        double perkbypassArmorRate = 0;
+        double perkBypassArmorRate = 0;
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
         if (perk instanceof AmmoPerk ammoPerk) {
             int level = PerkHelper.getItemPerkLevel(perk, stack);
-            perkbypassArmorRate = ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (level - 1) : 0);
+            perkBypassArmorRate = ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (level - 1) : 0);
         }
-        double byPassRate = Math.max(ItemNBTTool.getDouble(stack, "BypassesArmor", 0) + perkbypassArmorRate, 0);
+        double byPassRate = Math.max(ItemNBTTool.getDouble(stack, "BypassesArmor", 0) + perkBypassArmorRate, 0);
 
         tooltip.add(Component.translatable("des.superbwarfare.tips.bypass").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
@@ -284,7 +284,7 @@ public class TooltipTool {
 
         int upgradePoint = Mth.floor(ItemNBTTool.getDouble(stack, "UpgradePoint", 0));
 
-        tooltip.add(Component.translatable("des.superbwarfare.tips.upgradepoint").withStyle(ChatFormatting.GRAY)
+        tooltip.add(Component.translatable("des.superbwarfare.tips.upgrade_point").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(String.valueOf(upgradePoint)).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.BOLD)));
         addPerkTips(tooltip, stack);
@@ -324,28 +324,4 @@ public class TooltipTool {
                 .append(Component.literal("Distance:" + new DecimalFormat("##.#").format(player.distanceTo(entity)) + "M").withStyle(ChatFormatting.GRAY)));
     }
 
-    public static void ammoBoxTips(List<Component> tooltip, ItemStack stack) {
-        tooltip.add(Component.translatable("des.superbwarfare.use_tip.ammobox").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("des.superbwarfare.tips.rifleammo").withStyle(ChatFormatting.GREEN)
-                .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getInt(stack, "rifleAmmo", 0)) + ((stack.getOrCreateTag().getInt("type") == 0 || stack.getOrCreateTag().getInt("type") == 1) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
-
-        tooltip.add(Component.translatable("des.superbwarfare.tips.handgunammo").withStyle(ChatFormatting.AQUA)
-                .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getInt(stack, "handgunAmmo", 0)) + ((stack.getOrCreateTag().getInt("type") == 0 || stack.getOrCreateTag().getInt("type") == 2) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
-
-        tooltip.add(Component.translatable("des.superbwarfare.tips.shotgunammo").withStyle(ChatFormatting.RED)
-                .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getInt(stack, "shotgunAmmo", 0)) + ((stack.getOrCreateTag().getInt("type") == 0 || stack.getOrCreateTag().getInt("type") == 3) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
-
-        tooltip.add(Component.translatable("des.superbwarfare.tips.sniperammo").withStyle(ChatFormatting.GOLD)
-                .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getInt(stack, "sniperAmmo", 0)) + ((stack.getOrCreateTag().getInt("type") == 0 || stack.getOrCreateTag().getInt("type") == 4) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
-
-    }
-
-    public static void shortcutPackTips(List<Component> tooltip) {
-        tooltip.add(Component.translatable("des.superbwarfare.tips.shortcutpack").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("des.superbwarfare.use_tip.shortcutpack"));
-    }
 }

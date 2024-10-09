@@ -92,7 +92,7 @@ public class ModItems {
     public static final RegistryObject<Item> SNIPER_AMMO_BOX = AMMO.register("sniper_ammo_box", SniperAmmoBox::new);
     public static final RegistryObject<Item> SHOTGUN_AMMO_BOX = AMMO.register("shotgun_ammo_box", ShotgunAmmoBox::new);
     public static final RegistryObject<Item> CREATIVE_AMMO_BOX = AMMO.register("creative_ammo_box", () -> new Item(new Item.Properties().rarity(Rarity.EPIC)));
-    public static final RegistryObject<Item> AMMOBOX = AMMO.register("ammobox", AmmoBox::new);
+    public static final RegistryObject<Item> AMMO_BOX = AMMO.register("ammo_box", AmmoBox::new);
     public static final RegistryObject<Item> TASER_ELECTRODE = AMMO.register("taser_electrode", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> GRENADE_40MM = AMMO.register("grenade_40mm", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> JAVELIN_MISSILE = AMMO.register("javelin_missile", () -> new Item(new Item.Properties()));
@@ -251,13 +251,11 @@ public class ModItems {
         ModPerks.DAMAGE_PERKS.getEntries().forEach(registryObject -> PERKS.register(registryObject.getId().getPath(), () -> new PerkItem(registryObject)));
     }
 
+    public static final RegistryObject<Item> SHORTCUT_PACK = PERKS.register("shortcut_pack", ShortcutPack::new);
+    public static final RegistryObject<Item> EMPTY_PERK = PERKS.register("empty_perk", () -> new Item(new Item.Properties()));
     /**
      * 单独注册，用于Tab图标，不要删
      */
-    public static final RegistryObject<Item> SHORTCUT_PACK = PERKS.register("shortcut_pack", shortcutPack::new);
-
-    public static final RegistryObject<Item> EMPTY_PERK = PERKS.register("empty_perk", () -> new Item(new Item.Properties()));
-
     public static final RegistryObject<Item> AP_BULLET = PERKS.register("ap_bullet", () -> new PerkItem(ModPerks.AP_BULLET));
 
     public static void register(IEventBus bus) {
