@@ -109,15 +109,9 @@ public class ClientEventHandler {
 
     public static int shellIndex = 0;
 
-    public static double shellIndexTime1 = 0;
-    public static double shellIndexTime2 = 0;
-    public static double shellIndexTime3 = 0;
-    public static double shellIndexTime4 = 0;
-    public static double shellIndexTime5 = 0;
+    public static double[] shellIndexTime = {0, 0, 0, 0, 0};
 
-    public static double randomShell1 = 0;
-    public static double randomShell2 = 0;
-    public static double randomShell3 = 0;
+    public static double[] randomShell = {0, 0, 0};
     public static MillisTimer clientTimer = new MillisTimer();
 
     @SubscribeEvent
@@ -514,24 +508,11 @@ public class ClientEventHandler {
             fireRecoilTime = time;
             shellIndex++;
 
-            switch (shellIndex) {
-                case 0 ->
-                        shellIndexTime1 = 0;
-                case 1 ->
-                        shellIndexTime2 = 0;
-                case 2 ->
-                        shellIndexTime3 = 0;
-                case 3 ->
-                        shellIndexTime4 = 0;
-                case 4 ->
-                        shellIndexTime5 = 0;
-            }
+            shellIndexTime[shellIndex] = 0;
 
-            randomShell1 = (1 + 2 * Math.random());
-
-            randomShell2 = (1 + 2 * Math.random());
-
-            randomShell3 = (1 + 2 * Math.random());
+            randomShell[0] = (1 + 2 * Math.random());
+            randomShell[1] = (1 + 2 * Math.random());
+            randomShell[2] = (1 + 2 * Math.random());
         }
     }
 
@@ -598,18 +579,18 @@ public class ClientEventHandler {
 
         if (shellIndex >= 5) {
             shellIndex = 0;
-            shellIndexTime1 = 0;
+            shellIndexTime[0] = 0;
         }
 
-        shellIndexTime1 = Math.min(shellIndexTime1 + 6 * times * ((50 - shellIndexTime1) / 50), 50);
+        shellIndexTime[0] = Math.min(shellIndexTime[0] + 6 * times * ((50 - shellIndexTime[0]) / 50), 50);
 
-        shellIndexTime2 = Math.min(shellIndexTime2 + 6 * times * ((50 - shellIndexTime2) / 50), 50);
+        shellIndexTime[1] = Math.min(shellIndexTime[1] + 6 * times * ((50 - shellIndexTime[1]) / 50), 50);
 
-        shellIndexTime3 = Math.min(shellIndexTime3 + 6 * times * ((50 - shellIndexTime3) / 50), 50);
+        shellIndexTime[2] = Math.min(shellIndexTime[2] + 6 * times * ((50 - shellIndexTime[2]) / 50), 50);
 
-        shellIndexTime4 = Math.min(shellIndexTime4 + 6 * times * ((50 - shellIndexTime4) / 50), 50);
+        shellIndexTime[3] = Math.min(shellIndexTime[3] + 6 * times * ((50 - shellIndexTime[3]) / 50), 50);
 
-        shellIndexTime5 = Math.min(shellIndexTime5 + 6 * times * ((50 - shellIndexTime5) / 50), 50);
+        shellIndexTime[4] = Math.min(shellIndexTime[4] + 6 * times * ((50 - shellIndexTime[4]) / 50), 50);
 
 //        player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.##").format(shellIndex) + " "
 //                + new java.text.DecimalFormat("##").format(shellIndexTime1) + " "
@@ -899,30 +880,30 @@ public class ClientEventHandler {
 
     public static void handleShell(CoreGeoBone shell1, CoreGeoBone shell2, CoreGeoBone shell3, CoreGeoBone shell4, CoreGeoBone shell5) {
 
-        shell1.setPosX((float) -shellIndexTime1);
-        shell1.setPosY((float) (randomShell1 * Math.sin(0.15 * shellIndexTime1)));
-        shell1.setRotX((float) (randomShell1 * shellIndexTime1));
-        shell1.setRotY((float) (randomShell3 * shellIndexTime1));
+        shell1.setPosX((float) -shellIndexTime[0]);
+        shell1.setPosY((float) (randomShell[0] * Math.sin(0.15 * shellIndexTime[0])));
+        shell1.setRotX((float) (randomShell[1] * shellIndexTime[0]));
+        shell1.setRotY((float) (randomShell[2] * shellIndexTime[0]));
 
-        shell2.setPosX((float) -shellIndexTime2);
-        shell2.setPosY((float) (randomShell1 * Math.sin(0.15 * shellIndexTime2)));
-        shell2.setRotX((float) (randomShell1 * shellIndexTime2));
-        shell2.setRotY((float) (randomShell3 * shellIndexTime2));
+        shell2.setPosX((float) -shellIndexTime[1]);
+        shell2.setPosY((float) (randomShell[0] * Math.sin(0.15 * shellIndexTime[1])));
+        shell2.setRotX((float) (randomShell[1] * shellIndexTime[1]));
+        shell2.setRotY((float) (randomShell[2] * shellIndexTime[1]));
 
-        shell3.setPosX((float) -shellIndexTime3);
-        shell3.setPosY((float) (randomShell1* Math.sin(0.15 * shellIndexTime3)));
-        shell2.setRotX((float) (randomShell1* shellIndexTime2));
-        shell3.setRotY((float) (randomShell3* shellIndexTime3));
+        shell3.setPosX((float) -shellIndexTime[2]);
+        shell3.setPosY((float) (randomShell[0]* Math.sin(0.15 * shellIndexTime[2])));
+        shell2.setRotX((float) (randomShell[1]* shellIndexTime[2]));
+        shell3.setRotY((float) (randomShell[2]* shellIndexTime[2]));
 
-        shell4.setPosX((float) -shellIndexTime4);
-        shell4.setPosY((float) (randomShell1* Math.sin(0.15 * shellIndexTime4)));
-        shell2.setRotX((float) (randomShell1* shellIndexTime2));
-        shell4.setRotY((float) (randomShell3* shellIndexTime4));
+        shell4.setPosX((float) -shellIndexTime[3]);
+        shell4.setPosY((float) (randomShell[0]* Math.sin(0.15 * shellIndexTime[3])));
+        shell2.setRotX((float) (randomShell[1]* shellIndexTime[3]));
+        shell4.setRotY((float) (randomShell[2]* shellIndexTime[3]));
 
-        shell5.setPosX((float) -shellIndexTime5);
-        shell5.setPosY((float) (randomShell1* Math.sin(0.15 * shellIndexTime5)));
-        shell2.setRotX((float) (randomShell1* shellIndexTime2));
-        shell5.setRotY((float) (randomShell3* shellIndexTime5));
+        shell5.setPosX((float) -shellIndexTime[4]);
+        shell5.setPosY((float) (randomShell[0]* Math.sin(0.15 * shellIndexTime[4])));
+        shell2.setRotX((float) (randomShell[1]* shellIndexTime[4]));
+        shell5.setRotY((float) (randomShell[2]* shellIndexTime[4]));
 
     }
 
