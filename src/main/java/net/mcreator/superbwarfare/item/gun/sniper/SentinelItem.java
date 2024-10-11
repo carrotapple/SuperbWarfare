@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.SentinelItemRenderer;
 import net.mcreator.superbwarfare.energy.ItemEnergyProvider;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
@@ -163,14 +164,11 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
-            if (stack.getOrCreateTag().getInt("draw_time") < 16) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.draw"));
-            }
 
             if (player.isSprinting() && player.onGround()
                     && player.getPersistentData().getDouble("noRun") == 0
                     && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                    && !stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
+                    && !stack.getOrCreateTag().getBoolean("sentinel_is_charging") && ClientEventHandler.drawTime < 0.01) {
                 if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && stack.getOrCreateTag().getInt("bolt_action_anim") == 0) {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.run_fast"));
                 } else {

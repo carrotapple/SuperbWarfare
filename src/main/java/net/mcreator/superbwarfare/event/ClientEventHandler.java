@@ -7,6 +7,7 @@ import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModMobEffects;
 import net.mcreator.superbwarfare.init.ModTags;
+import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.ShootMessage;
 import net.mcreator.superbwarfare.perk.AmmoPerk;
@@ -23,6 +24,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -35,11 +37,13 @@ import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkEvent;
 import org.lwjgl.glfw.GLFW;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 
 import java.util.function.Supplier;
 
@@ -101,6 +105,19 @@ public class ClientEventHandler {
     public static double lookDistance = 0;
     public static double cameraLocation = 0.6;
 
+    public static double drawTime = 1;
+
+    public static int shellIndex = 0;
+
+    public static double shellIndexTime1 = 0;
+    public static double shellIndexTime2 = 0;
+    public static double shellIndexTime3 = 0;
+    public static double shellIndexTime4 = 0;
+    public static double shellIndexTime5 = 0;
+
+    public static double randomShell1 = 0;
+    public static double randomShell2 = 0;
+    public static double randomShell3 = 0;
     public static MillisTimer clientTimer = new MillisTimer();
 
     @SubscribeEvent
@@ -187,16 +204,29 @@ public class ClientEventHandler {
 
         // 开火部分
 
+        double weight = stack.getOrCreateTag().getDouble("weight");
+
+        double speed = 1;
+
+        if (weight == 0) {
+            speed = 1.05;
+        } else if (weight == 1) {
+            speed = 0.85;
+        } else if (weight == 2) {
+            speed = 0.6;
+        }
+
         if (player.getPersistentData().getDouble("noRun") == 0 && player.isSprinting() && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS) {
             cantFireTime = Mth.clamp(cantFireTime + 3 * times, 0, 24);
         } else {
-            cantFireTime = Mth.clamp(cantFireTime - 6 * times, 0, 24);
+            cantFireTime = Mth.clamp(cantFireTime - 6 * speed * times, 0, 24);
         }
 
 
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS
                 && (player.getMainHandItem().is(ModTags.Items.NORMAL_GUN)
                 && cantFireTime == 0
+                && drawTime < 0.01
                 && !notInGame()
                 || (stack.is(ModItems.MINIGUN.get()) && !player.isSprinting() && stack.getOrCreateTag().getDouble("overheat") == 0 && !player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getDouble("minigun_rotation") >= 10
         ))) {
@@ -289,9 +319,11 @@ public class ClientEventHandler {
             handleWeaponZoom(living);
             handlePlayerBreath(living);
             handleWeaponFire(event, living);
+            handleWeaponShell(living);
             handleGunRecoil();
             handleShockCamera(event, living);
             handleBowPullAnimation(living);
+            handleWeaponDraw(living);
         }
     }
 
@@ -343,6 +375,12 @@ public class ClientEventHandler {
             }
         }
 
+        if (event.getHand() == rightHand) {
+            if (rightHandItem.is(ModTags.Items.GUN) && drawTime > 0.15) {
+                event.setCanceled(true);
+            }
+        }
+
         ItemStack stack = player.getMainHandItem();
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
             player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
@@ -371,7 +409,7 @@ public class ClientEventHandler {
 
     private static void handleWeaponMove(LivingEntity entity) {
         if (entity.getMainHandItem().is(ModTags.Items.GUN)) {
-            float times = 4.5f * Minecraft.getInstance().getDeltaFrameTime();
+            float times = 3.7f * Minecraft.getInstance().getDeltaFrameTime();
             double moveSpeed = (float) Mth.clamp(entity.getDeltaMovement().horizontalDistanceSqr(), 0, 0.02);
             double onGround;
             if (entity.onGround()) {
@@ -459,11 +497,13 @@ public class ClientEventHandler {
 
     private static void handleWeaponZoom(LivingEntity entity) {
         if (!(entity instanceof Player player)) return;
+        ItemStack stack = player.getMainHandItem();
         float times = 5 * Minecraft.getInstance().getDeltaFrameTime();
-        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS && !notInGame()) {
-            zoomTime = Mth.clamp(zoomTime + 0.03 * times, 0, 1);
+        double speed = stack.getOrCreateTag().getDouble("zoom_speed");
+        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS && !notInGame() && drawTime < 0.01) {
+            zoomTime = Mth.clamp(zoomTime + 0.03 * speed * times, 0, 1);
         } else {
-            zoomTime = Mth.clamp(zoomTime - 0.04 * times, 0, 1);
+            zoomTime = Mth.clamp(zoomTime - 0.04 * speed * times, 0, 1);
         }
         zoomPos = 0.5 * Math.cos(Math.PI * Math.pow(Math.pow(zoomTime, 2) - 1, 2)) + 0.5;
         zoomPosZ = -Math.pow(2 * zoomTime - 1, 2) + 1;
@@ -472,6 +512,26 @@ public class ClientEventHandler {
     public static void handleFireRecoilTimeMessage(double time, Supplier<NetworkEvent.Context> ctx) {
         if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
             fireRecoilTime = time;
+            shellIndex++;
+
+            switch (shellIndex) {
+                case 0 ->
+                        shellIndexTime1 = 0;
+                case 1 ->
+                        shellIndexTime2 = 0;
+                case 2 ->
+                        shellIndexTime3 = 0;
+                case 3 ->
+                        shellIndexTime4 = 0;
+                case 4 ->
+                        shellIndexTime5 = 0;
+            }
+
+            randomShell1 = (1 + 2 * Math.random());
+
+            randomShell2 = (1 + 2 * Math.random());
+
+            randomShell3 = (1 + 2 * Math.random());
         }
     }
 
@@ -528,6 +588,38 @@ public class ClientEventHandler {
             fireRotTimer = 0;
             fireRot = 0;
         }
+    }
+
+    private static void handleWeaponShell(LivingEntity entity) {
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+
+        float times = Minecraft.getInstance().getDeltaFrameTime();
+
+        if (shellIndex >= 5) {
+            shellIndex = 0;
+            shellIndexTime1 = 0;
+        }
+
+        shellIndexTime1 = Math.min(shellIndexTime1 + 6 * times * ((50 - shellIndexTime1) / 50), 50);
+
+        shellIndexTime2 = Math.min(shellIndexTime2 + 6 * times * ((50 - shellIndexTime2) / 50), 50);
+
+        shellIndexTime3 = Math.min(shellIndexTime3 + 6 * times * ((50 - shellIndexTime3) / 50), 50);
+
+        shellIndexTime4 = Math.min(shellIndexTime4 + 6 * times * ((50 - shellIndexTime4) / 50), 50);
+
+        shellIndexTime5 = Math.min(shellIndexTime5 + 6 * times * ((50 - shellIndexTime5) / 50), 50);
+
+//        player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.##").format(shellIndex) + " "
+//                + new java.text.DecimalFormat("##").format(shellIndexTime1) + " "
+//                + new java.text.DecimalFormat("##").format(shellIndexTime2) + " "
+//                + new java.text.DecimalFormat("##").format(shellIndexTime3) + " "
+//                + new java.text.DecimalFormat("##").format(shellIndexTime4) + " "
+//                + new java.text.DecimalFormat("##").format(shellIndexTime5)
+//        ), true);
+
+
     }
 
     private static void handleGunRecoil() {
@@ -763,6 +855,84 @@ public class ClientEventHandler {
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
             event.setCanceled(true);
         }
+    }
+
+    @SubscribeEvent
+    public static void handleChangeSlot(LivingEquipmentChangeEvent event) {
+        if (event.getEntity() instanceof Player player && event.getSlot() == EquipmentSlot.MAINHAND) {
+
+            ItemStack oldStack = event.getFrom();
+            ItemStack newStack = event.getTo();
+
+            if (newStack.getItem() != oldStack.getItem()
+                    || newStack.getTag() == null || oldStack.getTag() == null
+                    || !newStack.getTag().hasUUID("gun_uuid") || !oldStack.getTag().hasUUID("gun_uuid")
+                    || !newStack.getTag().getUUID("gun_uuid").equals(oldStack.getTag().getUUID("gun_uuid"))
+            ) {
+                if (newStack.getItem() instanceof GunItem) {
+                    drawTime = 1;
+                }
+            }
+        }
+    }
+
+    private static void handleWeaponDraw(LivingEntity entity) {
+        float times = Minecraft.getInstance().getDeltaFrameTime();
+        ItemStack stack = entity.getMainHandItem();
+        double weight = stack.getOrCreateTag().getDouble("weight");
+        double speed = 1;
+
+        if (weight == 0) {
+            speed = 3;
+        } else if (weight == 1) {
+            speed = 2;
+        } else if (weight == 2) {
+            speed = 1.2;
+        }
+
+        drawTime = Math.max(drawTime - Math.max(0.2 * speed * times * drawTime, 0.0008), 0);
+//        Player player = Minecraft.getInstance().player;
+//        if (player != null) {
+//            player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.##").format(drawTime)), true);
+//        }
+    }
+
+    public static void handleShell(CoreGeoBone shell1, CoreGeoBone shell2, CoreGeoBone shell3, CoreGeoBone shell4, CoreGeoBone shell5) {
+
+        shell1.setPosX((float) -shellIndexTime1);
+        shell1.setPosY((float) (randomShell1 * Math.sin(0.15 * shellIndexTime1)));
+        shell1.setRotX((float) (randomShell1 * shellIndexTime1));
+        shell1.setRotY((float) (randomShell3 * shellIndexTime1));
+
+        shell2.setPosX((float) -shellIndexTime2);
+        shell2.setPosY((float) (randomShell1 * Math.sin(0.15 * shellIndexTime2)));
+        shell2.setRotX((float) (randomShell1 * shellIndexTime2));
+        shell2.setRotY((float) (randomShell3 * shellIndexTime2));
+
+        shell3.setPosX((float) -shellIndexTime3);
+        shell3.setPosY((float) (randomShell1* Math.sin(0.15 * shellIndexTime3)));
+        shell2.setRotX((float) (randomShell1* shellIndexTime2));
+        shell3.setRotY((float) (randomShell3* shellIndexTime3));
+
+        shell4.setPosX((float) -shellIndexTime4);
+        shell4.setPosY((float) (randomShell1* Math.sin(0.15 * shellIndexTime4)));
+        shell2.setRotX((float) (randomShell1* shellIndexTime2));
+        shell4.setRotY((float) (randomShell3* shellIndexTime4));
+
+        shell5.setPosX((float) -shellIndexTime5);
+        shell5.setPosY((float) (randomShell1* Math.sin(0.15 * shellIndexTime5)));
+        shell2.setRotX((float) (randomShell1* shellIndexTime2));
+        shell5.setRotY((float) (randomShell3* shellIndexTime5));
+
+    }
+
+    public static void handleMove(CoreGeoBone root) {
+
+        root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * movePosHorizon));
+        root.setPosY((float) (swayY + movePosY - 40 * ClientEventHandler.drawTime - 2f * velocityY));
+        root.setRotX((float) (swayX - Mth.DEG_TO_RAD * 60 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRot[0] - 0.15f * velocityY));
+        root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRot[1]));
+        root.setRotZ((float) (0.2f * movePosX + moveRotZ + Mth.DEG_TO_RAD * 90 * ClientEventHandler.drawTime + 2.7f * movePosHorizon + Mth.DEG_TO_RAD * turnRot[3]));
     }
 }
 

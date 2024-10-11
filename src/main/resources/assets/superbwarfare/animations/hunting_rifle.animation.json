@@ -5,62 +5,6 @@
 			"loop": true,
 			"animation_length": 2
 		},
-		"animation.hunting_rifle.draw": {
-			"animation_length": 1,
-			"bones": {
-				"0": {
-					"rotation": {
-						"0.0": {
-							"vector": [27.21312, -47.42646, -2.0218]
-						},
-						"0.3": {
-							"vector": [12.5, -15, 0]
-						},
-						"0.4": {
-							"vector": [3.48268, 0.40464, 8.20687]
-						},
-						"0.6": {
-							"vector": [0, 0, -2]
-						},
-						"0.7": {
-							"vector": [0, 0, 0]
-						}
-					},
-					"position": {
-						"0.0": {
-							"vector": [3, -17.3, 0]
-						},
-						"0.4": {
-							"vector": [0, 0, -1.65]
-						},
-						"0.5": {
-							"vector": [0, 0, 0.93]
-						},
-						"0.7": {
-							"vector": [0, 0, 0]
-						}
-					}
-				},
-				"camera": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.4": {
-							"vector": [0, 0, 0]
-						},
-						"0.5": {
-							"vector": [0.25, -0.5, 0.5],
-							"easing": "easeInSine"
-						},
-						"0.6": {
-							"vector": [0, 0, 0],
-							"easing": "easeOutSine"
-						}
-					}
-				}
-			}
-		},
 		"animation.hunting_rifle.run": {
 			"loop": true,
 			"animation_length": 0.8,
@@ -68,29 +12,29 @@
 				"0": {
 					"rotation": {
 						"0.0": {
-							"vector": [-37.32442, -57.81517, 38.62375],
+							"vector": [-27.32442, -57.81517, 38.62375],
 							"easing": "easeOutSine"
 						},
 						"0.2": {
-							"vector": [-39.32442, -57.81517, 38.62375],
+							"vector": [-31.82442, -57.81517, 38.62375],
 							"easing": "easeInSine"
 						},
 						"0.4": {
-							"vector": [-37.32442, -57.81517, 38.62375],
+							"vector": [-29.82442, -57.81517, 38.62375],
 							"easing": "easeOutSine"
 						},
 						"0.6": {
-							"vector": [-35.32442, -57.81517, 38.62375],
+							"vector": [-27.82442, -57.81517, 38.62375],
 							"easing": "easeInSine"
 						},
 						"0.8": {
-							"vector": [-37.32442, -57.81517, 38.62375],
+							"vector": [-27.32442, -57.81517, 38.62375],
 							"easing": "easeOutSine"
 						}
 					},
 					"position": {
 						"0.0": {
-							"vector": [3.5, -2, 3],
+							"vector": [2.5, -2, 3],
 							"easing": "easeOutSine"
 						},
 						"0.2": {
@@ -106,7 +50,7 @@
 							"easing": "easeInSine"
 						},
 						"0.8": {
-							"vector": [3.5, -2, 3],
+							"vector": [2.5, -2, 3],
 							"easing": "easeOutSine"
 						}
 					}
@@ -139,53 +83,45 @@
 				"0": {
 					"rotation": {
 						"0.0": {
-							"vector": [-69.0441, 21.19359, 4.89071]
+							"vector": [-40.22249, -46.4793, 37.4509]
 						},
 						"0.175": {
-							"vector": [-68.56583, 25.29655, 11.27976],
-							"easing": "easeInSine"
+							"vector": [-52.41973, -45.43811, 49.66922],
+							"easing": "linear"
 						},
 						"0.35": {
-							"vector": [-72.46787, 23.53474, 9.68283],
-							"easing": "easeOutSine"
+							"vector": [-40.22249, -46.4793, 37.4509],
+							"easing": "linear"
 						},
 						"0.525": {
-							"vector": [-74.63904, 19.33922, 0.51567],
-							"easing": "easeInSine"
+							"vector": [-29.15604, -45.73107, 25.36033],
+							"easing": "linear"
 						},
 						"0.7": {
-							"vector": [-69.0441, 21.19359, 4.89071]
+							"vector": [-40.22249, -46.4793, 37.4509],
+							"easing": "linear"
 						}
 					},
 					"position": {
 						"0.0": {
-							"vector": [-5.5, 6, -1],
-							"easing": "easeOutSine"
+							"vector": [4.5, -3, 1]
 						},
 						"0.175": {
-							"vector": [-6.5, 9, -1],
+							"vector": [1.75, -1.75, 1],
 							"easing": "easeInSine"
 						},
 						"0.35": {
-							"vector": [-8.5, 6, -2],
-							"easing": "easeOutSine"
+							"vector": [-0.5, -3, 1],
+							"easing": "easeInSine"
 						},
 						"0.525": {
-							"vector": [-6.5, 9, -1],
+							"vector": [1.75, -1.75, 1],
 							"easing": "easeInSine"
 						},
 						"0.7": {
-							"vector": [-5.5, 6, -1],
-							"easing": "easeOutSine"
+							"vector": [4.5, -3, 1],
+							"easing": "easeInSine"
 						}
-					}
-				},
-				"Lefthand": {
-					"rotation": {
-						"vector": [-1.41476, -16.33468, -1.66483]
-					},
-					"position": {
-						"vector": [6, -13, 49]
 					}
 				},
 				"camera": {

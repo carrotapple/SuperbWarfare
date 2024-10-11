@@ -57,7 +57,7 @@ public abstract class GunItem extends Item {
 
             if (itemstack.getOrCreateTag().getBoolean("draw")) {
                 itemstack.getOrCreateTag().putBoolean("draw", false);
-                itemstack.getOrCreateTag().putInt("draw_time", 0);
+//                itemstack.getOrCreateTag().putInt("draw_time", 0);
 
                 if (itemstack.getItem() == ModItems.RPG.get() && itemstack.getOrCreateTag().getInt("ammo") == 0) {
                     itemstack.getOrCreateTag().putDouble("empty", 1);
@@ -67,12 +67,6 @@ public abstract class GunItem extends Item {
                 }
                 if (itemstack.getItem() == ModItems.M_60.get() && itemstack.getOrCreateTag().getInt("ammo") <= 5) {
                     itemstack.getOrCreateTag().putBoolean("bullet_chain", true);
-                }
-            }
-
-            if (mainHandItem.getItem() == itemstack.getItem()) {
-                if (itemstack.getOrCreateTag().getInt("draw_time") < 50) {
-                    itemstack.getOrCreateTag().putInt("draw_time", (itemstack.getOrCreateTag().getInt("draw_time") + 1));
                 }
             }
 

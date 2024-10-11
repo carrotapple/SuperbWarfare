@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.M1911ItemRenderer;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
@@ -106,13 +107,9 @@ public class M1911Item extends GunItem implements GeoItem, AnimatedItem {
 
         if (this.animationProcedure.equals("empty")) {
 
-            if (stack.getOrCreateTag().getInt("draw_time") < 10) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.draw"));
-            }
-
             if (player.isSprinting() && player.onGround()
                     && player.getPersistentData().getDouble("noRun") == 0
-                    && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))) {
+                    && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading")) && ClientEventHandler.drawTime < 0.01) {
                 if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.run_fast"));
                 } else {

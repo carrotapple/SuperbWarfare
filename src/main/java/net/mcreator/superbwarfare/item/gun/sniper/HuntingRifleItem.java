@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.HuntingRifleItemRenderer;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
@@ -87,9 +88,6 @@ public class HuntingRifleItem extends GunItem implements GeoItem, AnimatedItem {
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
-            if (stack.getOrCreateTag().getInt("draw_time") < 16) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.hunting_rifle.draw"));
-            }
 
             if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.hunting_rifle.fire"));
@@ -99,7 +97,7 @@ public class HuntingRifleItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.hunting_rifle.reload"));
             }
 
-            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
+            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
                 if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.hunting_rifle.run_fast"));
                 } else {

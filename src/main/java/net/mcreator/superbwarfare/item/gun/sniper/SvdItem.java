@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.SvdItemRenderer;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
@@ -83,9 +84,6 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
 
         if (this.animationProcedure.equals("empty")) {
             var tag = stack.getOrCreateTag();
-            if (tag.getInt("draw_time") < 16) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.svd.draw"));
-            }
 
             if (tag.getInt("fire_animation") > 0) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.svd.fire"));
@@ -99,7 +97,7 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.svd.reload_normal"));
             }
 
-            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
+            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
                 if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.svd.run_fast"));
                 } else {

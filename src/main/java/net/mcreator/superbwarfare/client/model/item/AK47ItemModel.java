@@ -83,19 +83,12 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         shuan.setPosZ(2.4f * (float) fp);
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
-        CoreGeoBone move = getAnimationProcessor().getBone("move");
 
-        root.setPosX(movePosX);
-        root.setPosY((float) swayY + movePosY);
-        root.setRotX((float) swayX);
-        root.setRotY(0.2f * movePosX);
-        root.setRotZ(0.2f * movePosX + moveRotZ);
-
-        move.setPosX(9.3f * (float) mph);
-        move.setPosY(-2f * (float) vY);
-        move.setRotX(Mth.DEG_TO_RAD * (float) turnRotX - 0.15f * (float) vY);
-        move.setRotY(Mth.DEG_TO_RAD * (float) turnRotY);
-        move.setRotZ(2.7f * (float) mph + Mth.DEG_TO_RAD * (float) turnRotZ);
+        root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * mph));
+        root.setPosY((float) (swayY + movePosY - 40 * ClientEventHandler.drawTime - 2f * vY));
+        root.setRotX((float) (swayX - Mth.DEG_TO_RAD * 60 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotX - 0.15f * vY));
+        root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotY));
+        root.setRotZ((float) (0.2f * movePosX + moveRotZ + Mth.DEG_TO_RAD * 90 * ClientEventHandler.drawTime + 2.7f * mph + Mth.DEG_TO_RAD * turnRotZ));
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
@@ -115,5 +108,13 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
             camera.setRotZ(numR * camera.getRotZ());
         }
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
+
+        CoreGeoBone shell1 = getAnimationProcessor().getBone("shell1");
+        CoreGeoBone shell2 = getAnimationProcessor().getBone("shell2");
+        CoreGeoBone shell3 = getAnimationProcessor().getBone("shell3");
+        CoreGeoBone shell4 = getAnimationProcessor().getBone("shell4");
+        CoreGeoBone shell5 = getAnimationProcessor().getBone("shell5");
+
+        ClientEventHandler.handleShell(shell1, shell2, shell3, shell4, shell5);
     }
 }

@@ -289,6 +289,7 @@ public class LivingEventHandler {
                     }
 
                     if (newStack.getItem() instanceof GunItem) {
+                        player.getPersistentData().putDouble("noRun", 40);
                         newStack.getOrCreateTag().putBoolean("draw", true);
                         if (newStack.getOrCreateTag().getInt("bolt_action_time") > 0) {
                             newStack.getOrCreateTag().putInt("bolt_action_anim", 0);
@@ -318,15 +319,10 @@ public class LivingEventHandler {
                             newStack.getOrCreateTag().putInt("KillingTally", 0);
                         }
 
-                        double weight = newStack.getOrCreateTag().getDouble("weight");
-
-                        if (weight == 0) {
-                            player.getCooldowns().addCooldown(newStack.getItem(), 12);
-                        } else if (weight == 1) {
-                            player.getCooldowns().addCooldown(newStack.getItem(), 17);
-                        } else if (weight == 2) {
-                            player.getCooldowns().addCooldown(newStack.getItem(), 30);
-                        }
+                        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                            capability.tacticalSprint = false;
+                            capability.syncPlayerVariables(player);
+                        });
                     }
                 }
             }

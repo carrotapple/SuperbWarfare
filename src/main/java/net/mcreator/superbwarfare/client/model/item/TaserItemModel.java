@@ -105,19 +105,11 @@ public class TaserItemModel extends GeoModel<TaserItem> {
         gun.setRotZ((float) (0.05f * zpz));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
-        CoreGeoBone move = getAnimationProcessor().getBone("move");
-
-        root.setPosX(movePosX);
-        root.setPosY((float) swayY + movePosY);
-        root.setRotX((float) swayX);
-        root.setRotY(0.2f * movePosX);
-        root.setRotZ(0.2f * movePosX + moveRotZ);
-
-        move.setPosX(9.3f * (float) mph);
-        move.setPosY(-2f * (float) vY);
-        move.setRotX(Mth.DEG_TO_RAD * (float) turnRotX - 0.15f * (float) vY);
-        move.setRotY(Mth.DEG_TO_RAD * (float) turnRotY);
-        move.setRotZ(2.7f * (float) mph + Mth.DEG_TO_RAD * (float) turnRotZ);
+        root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * mph));
+        root.setPosY((float) (swayY + movePosY - 40 * ClientEventHandler.drawTime - 2f * vY));
+        root.setRotX((float) (swayX - Mth.DEG_TO_RAD * 60 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotX - 0.15f * vY));
+        root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotY));
+        root.setRotZ((float) (0.2f * movePosX + moveRotZ + Mth.DEG_TO_RAD * 90 * ClientEventHandler.drawTime + 2.7f * mph + Mth.DEG_TO_RAD * turnRotZ));
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");

@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.BocekItemRenderer;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
@@ -79,11 +80,7 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (stack.getOrCreateTag().getInt("draw_time") < 16) {
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.bocek.draw"));
-        }
-
-        if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0) {
+        if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
             if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.bocek.run_fast"));
             } else {

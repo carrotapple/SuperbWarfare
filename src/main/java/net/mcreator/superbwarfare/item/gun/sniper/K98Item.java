@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.K98ItemRenderer;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
@@ -121,16 +122,14 @@ public class K98Item extends GunItem implements GeoItem, AnimatedItem {
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (this.animationProcedure.equals("empty")) {
-            if (stack.getOrCreateTag().getInt("draw_time") < 16) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.draw"));
-            }
 
             if (player.isSprinting() && player.onGround()
                     && player.getPersistentData().getDouble("noRun") == 0
                     && !(stack.getOrCreateTag().getBoolean("is_empty_reloading"))
                     && stack.getOrCreateTag().getInt("reload_stage") != 1
                     && stack.getOrCreateTag().getInt("reload_stage") != 2
-                    && stack.getOrCreateTag().getInt("reload_stage") != 3) {
+                    && stack.getOrCreateTag().getInt("reload_stage") != 3
+                    && ClientEventHandler.drawTime < 0.01) {
                 if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && stack.getOrCreateTag().getInt("bolt_action_anim") == 0) {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.run_fast"));
                 } else {
