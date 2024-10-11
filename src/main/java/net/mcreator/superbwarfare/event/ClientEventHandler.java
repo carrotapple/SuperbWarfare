@@ -7,7 +7,6 @@ import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModMobEffects;
 import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.ShootMessage;
 import net.mcreator.superbwarfare.perk.AmmoPerk;
@@ -24,7 +23,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -37,7 +35,6 @@ import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
@@ -817,23 +814,32 @@ public class ClientEventHandler {
         }
     }
 
-    @SubscribeEvent
-    public static void handleChangeSlot(LivingEquipmentChangeEvent event) {
-        if (event.getEntity() instanceof Player && event.getSlot() == EquipmentSlot.MAINHAND) {
-            ItemStack oldStack = event.getFrom();
-            ItemStack newStack = event.getTo();
+//    @SubscribeEvent
+//    public static void handleChangeSlot(LivingEquipmentChangeEvent event) {
+//        if (event.getEntity() instanceof Player && event.getSlot() == EquipmentSlot.MAINHAND) {
+//            ItemStack oldStack = event.getFrom();
+//            ItemStack newStack = event.getTo();
+//
+//            if (newStack.getItem() != oldStack.getItem()
+//                    || newStack.getTag() == null || oldStack.getTag() == null
+//                    || !newStack.getTag().hasUUID("gun_uuid") || !oldStack.getTag().hasUUID("gun_uuid")
+//                    || !newStack.getTag().getUUID("gun_uuid").equals(oldStack.getTag().getUUID("gun_uuid"))
+//            ) {
+//                if (newStack.getItem() instanceof GunItem) {
+//                    drawTime = 1;
+//                    for (int i = 0; i < 5; i++) {
+//                        shellIndexTime[i] = 0;
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-            if (newStack.getItem() != oldStack.getItem()
-                    || newStack.getTag() == null || oldStack.getTag() == null
-                    || !newStack.getTag().hasUUID("gun_uuid") || !oldStack.getTag().hasUUID("gun_uuid")
-                    || !newStack.getTag().getUUID("gun_uuid").equals(oldStack.getTag().getUUID("gun_uuid"))
-            ) {
-                if (newStack.getItem() instanceof GunItem) {
-                    drawTime = 1;
-                    for (int i = 0; i < 5; i++) {
-                        shellIndexTime[i] = 0;
-                    }
-                }
+    public static void handleDrawMessage(boolean draw, Supplier<NetworkEvent.Context> ctx) {
+        if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+            drawTime = 1;
+            for (int i = 0; i < 5; i++) {
+                shellIndexTime[i] = 0;
             }
         }
     }

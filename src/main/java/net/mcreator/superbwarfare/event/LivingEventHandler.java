@@ -8,6 +8,7 @@ import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
+import net.mcreator.superbwarfare.network.message.DrawClientMessage;
 import net.mcreator.superbwarfare.network.message.PlayerGunKillMessage;
 import net.mcreator.superbwarfare.perk.AmmoPerk;
 import net.mcreator.superbwarfare.perk.Perk;
@@ -317,6 +318,10 @@ public class LivingEventHandler {
                         int level = PerkHelper.getItemPerkLevel(ModPerks.KILLING_TALLY.get(), newStack);
                         if (level != 0) {
                             newStack.getOrCreateTag().putInt("KillingTally", 0);
+                        }
+
+                        if (player.level() instanceof ServerLevel) {
+                            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new DrawClientMessage(true));
                         }
 
                         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
