@@ -878,42 +878,33 @@ public class ClientEventHandler {
 //        }
     }
 
-    public static void handleShell(CoreGeoBone shell1, CoreGeoBone shell2, CoreGeoBone shell3, CoreGeoBone shell4, CoreGeoBone shell5) {
+    public static void handleShell(CoreGeoBone shell1, CoreGeoBone shell2, CoreGeoBone shell3, CoreGeoBone shell4, CoreGeoBone shell5, float x, float y) {
 
-        shell1.setPosX((float) -shellIndexTime[0]);
-        shell1.setPosY((float) (randomShell[0] * Math.sin(0.15 * shellIndexTime[0])));
+        shell1.setPosX((float) (-x * shellIndexTime[0]));
+        shell1.setPosY((float) (randomShell[0] * y * Math.sin(0.15 * shellIndexTime[0])));
         shell1.setRotX((float) (randomShell[1] * shellIndexTime[0]));
         shell1.setRotY((float) (randomShell[2] * shellIndexTime[0]));
 
-        shell2.setPosX((float) -shellIndexTime[1]);
-        shell2.setPosY((float) (randomShell[0] * Math.sin(0.15 * shellIndexTime[1])));
+        shell2.setPosX((float) (-x * shellIndexTime[1]));
+        shell2.setPosY((float) (randomShell[0] * y * Math.sin(0.15 * shellIndexTime[1])));
         shell2.setRotX((float) (randomShell[1] * shellIndexTime[1]));
         shell2.setRotY((float) (randomShell[2] * shellIndexTime[1]));
 
-        shell3.setPosX((float) -shellIndexTime[2]);
-        shell3.setPosY((float) (randomShell[0]* Math.sin(0.15 * shellIndexTime[2])));
-        shell2.setRotX((float) (randomShell[1]* shellIndexTime[2]));
-        shell3.setRotY((float) (randomShell[2]* shellIndexTime[2]));
+        shell3.setPosX((float) (-x * shellIndexTime[2]));
+        shell3.setPosY((float) (randomShell[0] * y* Math.sin(0.15 * shellIndexTime[2])));
+        shell2.setRotX((float) (randomShell[1] * shellIndexTime[2]));
+        shell3.setRotY((float) (randomShell[2] * shellIndexTime[2]));
 
-        shell4.setPosX((float) -shellIndexTime[3]);
-        shell4.setPosY((float) (randomShell[0]* Math.sin(0.15 * shellIndexTime[3])));
-        shell2.setRotX((float) (randomShell[1]* shellIndexTime[3]));
-        shell4.setRotY((float) (randomShell[2]* shellIndexTime[3]));
+        shell4.setPosX((float) (-x * shellIndexTime[3]));
+        shell4.setPosY((float) (randomShell[0] * y * Math.sin(0.15 * shellIndexTime[3])));
+        shell2.setRotX((float) (randomShell[1] * shellIndexTime[3]));
+        shell4.setRotY((float) (randomShell[2] * shellIndexTime[3]));
 
-        shell5.setPosX((float) -shellIndexTime[4]);
-        shell5.setPosY((float) (randomShell[0]* Math.sin(0.15 * shellIndexTime[4])));
-        shell2.setRotX((float) (randomShell[1]* shellIndexTime[4]));
-        shell5.setRotY((float) (randomShell[2]* shellIndexTime[4]));
+        shell5.setPosX((float) (-x * shellIndexTime[4]));
+        shell5.setPosY((float) (randomShell[0] * y * Math.sin(0.15 * shellIndexTime[4])));
+        shell2.setRotX((float) (randomShell[1] * shellIndexTime[4]));
+        shell5.setRotY((float) (randomShell[2] * shellIndexTime[4]));
 
-    }
-
-    public static void handleMove(CoreGeoBone root) {
-
-        root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * movePosHorizon));
-        root.setPosY((float) (swayY + movePosY - 40 * ClientEventHandler.drawTime - 2f * velocityY));
-        root.setRotX((float) (swayX - Mth.DEG_TO_RAD * 60 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRot[0] - 0.15f * velocityY));
-        root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRot[1]));
-        root.setRotZ((float) (0.2f * movePosX + moveRotZ + Mth.DEG_TO_RAD * 90 * ClientEventHandler.drawTime + 2.7f * movePosHorizon + Mth.DEG_TO_RAD * turnRot[3]));
     }
 }
 

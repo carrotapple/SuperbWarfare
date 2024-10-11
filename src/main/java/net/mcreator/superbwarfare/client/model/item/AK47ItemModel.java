@@ -115,6 +115,6 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         CoreGeoBone shell4 = getAnimationProcessor().getBone("shell4");
         CoreGeoBone shell5 = getAnimationProcessor().getBone("shell5");
 
-        ClientEventHandler.handleShell(shell1, shell2, shell3, shell4, shell5);
+        ClientEventHandler.handleShell(shell1, shell2, shell3, shell4, shell5, 1f, 1f);
     }
 }

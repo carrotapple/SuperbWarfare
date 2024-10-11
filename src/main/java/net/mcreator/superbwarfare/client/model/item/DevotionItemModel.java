@@ -68,15 +68,7 @@ public class DevotionItemModel extends GeoModel<DevotionItem> {
         gun.setScaleZ(1f - (0.7f * (float) zp));
 
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
-        CoreGeoBone number = getAnimationProcessor().getBone("number");
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
-        if (gun.getPosX() > 1.2) {
-            number.setScaleX(1);
-            number.setScaleY(1);
-        } else {
-            number.setScaleX(0);
-            number.setScaleY(0);
-        }
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.8));
 
