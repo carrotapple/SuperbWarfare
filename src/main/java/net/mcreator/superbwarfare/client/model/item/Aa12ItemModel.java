@@ -106,6 +106,6 @@ public class Aa12ItemModel extends GeoModel<Aa12Item> {
         CoreGeoBone shell4 = getAnimationProcessor().getBone("shell4");
         CoreGeoBone shell5 = getAnimationProcessor().getBone("shell5");
 
-        ClientEventHandler.handleShells(1f, 0.6f, shell1, shell2, shell3, shell4, shell5);
+        ClientEventHandler.handleShells(1f, 0.55f, shell1, shell2, shell3, shell4, shell5);
     }
 }

@@ -68,7 +68,7 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
 
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
             shen.setPosY(-0.01f * (float) (fp + 2 * fr));
-            shen.setPosZ(1.2f * (float) (fp + 0.54f * fr));
+            shen.setPosZ(0.4f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.007f * (float) (fp + fr));
             shen.setRotZ(0f);
         } else {
@@ -104,5 +104,13 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
             camera.setRotZ(numR * camera.getRotZ());
         }
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
+
+        CoreGeoBone shell1 = getAnimationProcessor().getBone("shell1");
+        CoreGeoBone shell2 = getAnimationProcessor().getBone("shell2");
+        CoreGeoBone shell3 = getAnimationProcessor().getBone("shell3");
+        CoreGeoBone shell4 = getAnimationProcessor().getBone("shell4");
+        CoreGeoBone shell5 = getAnimationProcessor().getBone("shell5");
+
+        ClientEventHandler.handleShells(1f, 0.55f, shell1, shell2, shell3, shell4, shell5);
     }
 }

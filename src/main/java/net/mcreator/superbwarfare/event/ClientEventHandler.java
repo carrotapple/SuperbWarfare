@@ -509,9 +509,9 @@ public class ClientEventHandler {
 
             shellIndexTime[shellIndex] = 0.001;
 
-            randomShell[0] = (1 + 2.5 * Math.random());
-            randomShell[1] = (0.2 * Math.random());
-            randomShell[2] = (0.7 * Math.random());
+            randomShell[0] = (1 + 0.2 * (Math.random() - 0.5));
+            randomShell[1] = (0.2 + (Math.random() - 0.5));
+            randomShell[2] = (0.7 + (Math.random() - 0.5));
         }
     }
 
@@ -583,7 +583,7 @@ public class ClientEventHandler {
 
         for (int i = 0; i < 5; i++) {
             if (shellIndexTime[i] > 0) {
-                shellIndexTime[i] = Math.min(shellIndexTime[i] + 6 * times * ((50 - shellIndexTime[i]) / 50), 50);
+                shellIndexTime[i] = Math.min(shellIndexTime[i] + 5 * times, 50);
             }
         }
     }
@@ -856,11 +856,13 @@ public class ClientEventHandler {
     }
 
     public static void handleShells(float x, float y, CoreGeoBone... shells) {
+        float times = Minecraft.getInstance().getDeltaFrameTime();
+
         for (int i = 0; i < shells.length; i++) {
             if (i >= 5) break;
 
-            shells[i].setPosX((float) (-x * shellIndexTime[i]));
-            shells[i].setPosY((float) (randomShell[0] * y * Math.sin(0.18 * shellIndexTime[i])));
+            shells[i].setPosX((float) (-x * shellIndexTime[i] * ((150 - shellIndexTime[i]) / 150)));
+            shells[i].setPosY((float) (y * randomShell[0] * shellIndexTime[i] - 0.045 * Math.pow(shellIndexTime[i], 2)));
             shells[i].setRotX((float) (randomShell[1] * shellIndexTime[i]));
             shells[i].setRotY((float) (randomShell[2] * shellIndexTime[i]));
         }

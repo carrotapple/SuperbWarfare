@@ -132,5 +132,13 @@ public class SvdItemModel extends GeoModel<SvdItem> {
             camera.setRotZ(numR * camera.getRotZ());
         }
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
+
+        CoreGeoBone shell1 = getAnimationProcessor().getBone("shell1");
+        CoreGeoBone shell2 = getAnimationProcessor().getBone("shell2");
+        CoreGeoBone shell3 = getAnimationProcessor().getBone("shell3");
+        CoreGeoBone shell4 = getAnimationProcessor().getBone("shell4");
+        CoreGeoBone shell5 = getAnimationProcessor().getBone("shell5");
+
+        ClientEventHandler.handleShells(1f, 0.65f, shell1, shell2, shell3, shell4, shell5);
     }
 }

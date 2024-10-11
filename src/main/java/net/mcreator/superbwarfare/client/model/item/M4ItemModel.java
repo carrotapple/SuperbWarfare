@@ -68,7 +68,7 @@ public class M4ItemModel extends GeoModel<M4Item> {
 
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
             shen.setPosY(0.02f * (float) (fp + 2 * fr));
-            shen.setPosZ(1.6f * (float) (fp + 0.54f * fr));
+            shen.setPosZ(0.8f * (float) (fp + 0.54f * fr));
             shen.setRotX(0.003f * (float) (fp + fr));
             shen.setRotZ(0f);
         } else {
@@ -111,6 +111,6 @@ public class M4ItemModel extends GeoModel<M4Item> {
         CoreGeoBone shell4 = getAnimationProcessor().getBone("shell4");
         CoreGeoBone shell5 = getAnimationProcessor().getBone("shell5");
 
-        ClientEventHandler.handleShells(1f, 1f, shell1, shell2, shell3, shell4, shell5);
+        ClientEventHandler.handleShells(1f, 0.55f, shell1, shell2, shell3, shell4, shell5);
     }
 }
