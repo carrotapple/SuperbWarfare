@@ -507,11 +507,11 @@ public class ClientEventHandler {
             fireRecoilTime = time;
             shellIndex++;
 
-            shellIndexTime[shellIndex] = 0;
+            shellIndexTime[shellIndex] = 0.001;
 
-            randomShell[0] = (1 + 2 * Math.random());
-            randomShell[1] = (1 + 2 * Math.random());
-            randomShell[2] = (1 + 2 * Math.random());
+            randomShell[0] = (1 + 2.5 * Math.random());
+            randomShell[1] = (0.2 * Math.random());
+            randomShell[2] = (0.7 * Math.random());
         }
     }
 
@@ -576,10 +576,15 @@ public class ClientEventHandler {
 
         float times = Minecraft.getInstance().getDeltaFrameTime();
 
-        shellIndex %= 5;
+        if (shellIndex >= 5) {
+            shellIndex = 0;
+            shellIndexTime[0] = 0.001;
+        }
 
         for (int i = 0; i < 5; i++) {
-            shellIndexTime[i] = Math.min(shellIndexTime[i] + 6 * times * ((50 - shellIndexTime[i]) / 50), 50);
+            if (shellIndexTime[i] > 0) {
+                shellIndexTime[i] = Math.min(shellIndexTime[i] + 6 * times * ((50 - shellIndexTime[i]) / 50), 50);
+            }
         }
     }
 
@@ -825,6 +830,9 @@ public class ClientEventHandler {
             ) {
                 if (newStack.getItem() instanceof GunItem) {
                     drawTime = 1;
+                    for (int i = 0; i < 5; i++) {
+                        shellIndexTime[i] = 0;
+                    }
                 }
             }
         }
@@ -852,7 +860,7 @@ public class ClientEventHandler {
             if (i >= 5) break;
 
             shells[i].setPosX((float) (-x * shellIndexTime[i]));
-            shells[i].setPosY((float) (randomShell[0] * y * Math.sin(0.15 * shellIndexTime[i])));
+            shells[i].setPosY((float) (randomShell[0] * y * Math.sin(0.18 * shellIndexTime[i])));
             shells[i].setRotX((float) (randomShell[1] * shellIndexTime[i]));
             shells[i].setRotY((float) (randomShell[2] * shellIndexTime[i]));
         }
