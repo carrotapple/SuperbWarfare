@@ -77,7 +77,6 @@ public class ClientEventHandler {
     public static double firePosZ = 0;
     public static double fireRot = 0;
 
-
     public static double recoilTime = 0;
 
     public static double recoilHorizon = 0;
@@ -313,7 +312,7 @@ public class ClientEventHandler {
             handleWeaponZoom(living);
             handlePlayerBreath(living);
             handleWeaponFire(event, living);
-            handleWeaponShell(living);
+            handleWeaponShell();
             handleGunRecoil();
             handleShockCamera(event, living);
             handleBowPullAnimation(living);
@@ -551,7 +550,7 @@ public class ClientEventHandler {
 
         if (0 < fireRotTimer && fireRotTimer < 1.732) {
             fireRot = 1 / 6.3 * (fireRotTimer - 0.5) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2));
-            if (recoilY> 0) {
+            if (recoilY > 0) {
                 event.setYaw((float) (yaw - 1.3 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 1 * Mth.clamp(0.3 - fireRotTimer, 0, 1) * (2 * Math.random() - 1)));
                 event.setPitch((float) (pitch + 1.3 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 1 * Mth.clamp(0.3 - fireRotTimer, 0, 1) * (2 * Math.random() - 1)));
                 event.setRoll((float) (roll + 4.2 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 3 * Mth.clamp(0.5 - fireRotTimer, 0, 0.5) * (2 * Math.random() - 1)));
@@ -571,36 +570,17 @@ public class ClientEventHandler {
         }
     }
 
-    private static void handleWeaponShell(LivingEntity entity) {
+    private static void handleWeaponShell() {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
 
         float times = Minecraft.getInstance().getDeltaFrameTime();
 
-        if (shellIndex >= 5) {
-            shellIndex = 0;
-            shellIndexTime[0] = 0;
+        shellIndex %= 5;
+
+        for (int i = 0; i < 5; i++) {
+            shellIndexTime[i] = Math.min(shellIndexTime[i] + 6 * times * ((50 - shellIndexTime[i]) / 50), 50);
         }
-
-        shellIndexTime[0] = Math.min(shellIndexTime[0] + 6 * times * ((50 - shellIndexTime[0]) / 50), 50);
-
-        shellIndexTime[1] = Math.min(shellIndexTime[1] + 6 * times * ((50 - shellIndexTime[1]) / 50), 50);
-
-        shellIndexTime[2] = Math.min(shellIndexTime[2] + 6 * times * ((50 - shellIndexTime[2]) / 50), 50);
-
-        shellIndexTime[3] = Math.min(shellIndexTime[3] + 6 * times * ((50 - shellIndexTime[3]) / 50), 50);
-
-        shellIndexTime[4] = Math.min(shellIndexTime[4] + 6 * times * ((50 - shellIndexTime[4]) / 50), 50);
-
-//        player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.##").format(shellIndex) + " "
-//                + new java.text.DecimalFormat("##").format(shellIndexTime1) + " "
-//                + new java.text.DecimalFormat("##").format(shellIndexTime2) + " "
-//                + new java.text.DecimalFormat("##").format(shellIndexTime3) + " "
-//                + new java.text.DecimalFormat("##").format(shellIndexTime4) + " "
-//                + new java.text.DecimalFormat("##").format(shellIndexTime5)
-//        ), true);
-
-
     }
 
     private static void handleGunRecoil() {
@@ -630,12 +610,7 @@ public class ClientEventHandler {
         }
         recoilY = 0;
 
-//        player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.##").format(recoilY) + " " + new java.text.DecimalFormat("##.#").format(recoilHorizon)), true);
-
-        /*
-         计算后坐力
-        */
-
+        // 计算后坐力
         float pose = 1;
         if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && !isProne(player)) {
             pose = 0.7f;
@@ -675,8 +650,7 @@ public class ClientEventHandler {
             player.xRotO = player.getXRot();
         }
 
-        if (recoilTime >= 2.5) recoilTime = 0d;
-
+        if (recoilTime >= 2.5) recoilTime = 0;
     }
 
     private static void handlePlayerBreath(LivingEntity entity) {
@@ -840,8 +814,7 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public static void handleChangeSlot(LivingEquipmentChangeEvent event) {
-        if (event.getEntity() instanceof Player player && event.getSlot() == EquipmentSlot.MAINHAND) {
-
+        if (event.getEntity() instanceof Player && event.getSlot() == EquipmentSlot.MAINHAND) {
             ItemStack oldStack = event.getFrom();
             ItemStack newStack = event.getTo();
 
@@ -872,40 +845,16 @@ public class ClientEventHandler {
         }
 
         drawTime = Math.max(drawTime - Math.max(0.2 * speed * times * drawTime, 0.0008), 0);
-//        Player player = Minecraft.getInstance().player;
-//        if (player != null) {
-//            player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.##").format(drawTime)), true);
-//        }
     }
 
-    public static void handleShell(CoreGeoBone shell1, CoreGeoBone shell2, CoreGeoBone shell3, CoreGeoBone shell4, CoreGeoBone shell5, float x, float y) {
+    public static void handleShells(float x, float y, CoreGeoBone... shells) {
+        for (int i = 0; i < shells.length; i++) {
+            if (i >= 5) break;
 
-        shell1.setPosX((float) (-x * shellIndexTime[0]));
-        shell1.setPosY((float) (randomShell[0] * y * Math.sin(0.15 * shellIndexTime[0])));
-        shell1.setRotX((float) (randomShell[1] * shellIndexTime[0]));
-        shell1.setRotY((float) (randomShell[2] * shellIndexTime[0]));
-
-        shell2.setPosX((float) (-x * shellIndexTime[1]));
-        shell2.setPosY((float) (randomShell[0] * y * Math.sin(0.15 * shellIndexTime[1])));
-        shell2.setRotX((float) (randomShell[1] * shellIndexTime[1]));
-        shell2.setRotY((float) (randomShell[2] * shellIndexTime[1]));
-
-        shell3.setPosX((float) (-x * shellIndexTime[2]));
-        shell3.setPosY((float) (randomShell[0] * y* Math.sin(0.15 * shellIndexTime[2])));
-        shell2.setRotX((float) (randomShell[1] * shellIndexTime[2]));
-        shell3.setRotY((float) (randomShell[2] * shellIndexTime[2]));
-
-        shell4.setPosX((float) (-x * shellIndexTime[3]));
-        shell4.setPosY((float) (randomShell[0] * y * Math.sin(0.15 * shellIndexTime[3])));
-        shell2.setRotX((float) (randomShell[1] * shellIndexTime[3]));
-        shell4.setRotY((float) (randomShell[2] * shellIndexTime[3]));
-
-        shell5.setPosX((float) (-x * shellIndexTime[4]));
-        shell5.setPosY((float) (randomShell[0] * y * Math.sin(0.15 * shellIndexTime[4])));
-        shell2.setRotX((float) (randomShell[1] * shellIndexTime[4]));
-        shell5.setRotY((float) (randomShell[2] * shellIndexTime[4]));
-
+            shells[i].setPosX((float) (-x * shellIndexTime[i]));
+            shells[i].setPosY((float) (randomShell[0] * y * Math.sin(0.15 * shellIndexTime[i])));
+            shells[i].setRotX((float) (randomShell[1] * shellIndexTime[i]));
+            shells[i].setRotY((float) (randomShell[2] * shellIndexTime[i]));
+        }
     }
 }
-
-

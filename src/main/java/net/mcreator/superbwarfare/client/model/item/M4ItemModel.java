@@ -80,7 +80,7 @@ public class M4ItemModel extends GeoModel<M4Item> {
         shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
-        root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * mph));
+        root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));
         root.setPosY((float) (swayY + movePosY - 40 * ClientEventHandler.drawTime - 2f * vY));
         root.setRotX((float) (swayX - Mth.DEG_TO_RAD * 60 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotX - 0.15f * vY));
         root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotY));
@@ -103,7 +103,7 @@ public class M4ItemModel extends GeoModel<M4Item> {
             camera.setRotY(numR * camera.getRotY());
             camera.setRotZ(numR * camera.getRotZ());
         }
-        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
+        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
 
         CoreGeoBone shell1 = getAnimationProcessor().getBone("shell1");
         CoreGeoBone shell2 = getAnimationProcessor().getBone("shell2");
@@ -111,6 +111,6 @@ public class M4ItemModel extends GeoModel<M4Item> {
         CoreGeoBone shell4 = getAnimationProcessor().getBone("shell4");
         CoreGeoBone shell5 = getAnimationProcessor().getBone("shell5");
 
-        ClientEventHandler.handleShell(shell1, shell2, shell3, shell4, shell5,1f, 1f);
+        ClientEventHandler.handleShells(1f, 1f, shell1, shell2, shell3, shell4, shell5);
     }
 }
