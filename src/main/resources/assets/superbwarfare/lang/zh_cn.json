@@ -393,6 +393,8 @@
   "config.superbwarfare.common.gameplay.respawn_reload.des": "开启时，玩家在重生时会自动装填全部武器的弹药",
   "config.superbwarfare.common.gameplay.global_indication": "全局伤害提示",
   "config.superbwarfare.common.gameplay.global_indication.des": "是否在仅使用本模组的伤害类型击杀生物时，在准星周围显示击杀提示",
+  "config.superbwarfare.common.gameplay.respawn_auto_armor": "重生自动装备防弹插板",
+  "config.superbwarfare.common.gameplay.respawn_auto_armor.des": "开启时，玩家在重生时会自动补满防弹插板",
 
   "des.superbwarfare.perk_damage_reduce": "伤害 -",
   "des.superbwarfare.perk_damage_plus": "伤害 +",

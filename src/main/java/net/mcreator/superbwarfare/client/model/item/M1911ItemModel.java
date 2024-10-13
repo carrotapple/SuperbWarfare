@@ -82,17 +82,6 @@ public class M1911ItemModel extends GeoModel<M1911Item> {
 
         slide.setPosZ(2.75f * (float) fp);
 
-        if (stack.getOrCreateTag().getBoolean("HoldOpen")) {
-            slide.setPosZ(1.5f);
-            bullet.setScaleX(0);
-            bullet.setScaleY(0);
-            bullet.setScaleZ(0);
-        } else {
-            bullet.setScaleX(1);
-            bullet.setScaleY(1);
-            bullet.setScaleZ(1);
-        }
-
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * mph));
         root.setPosY((float) (swayY + movePosY - 40 * ClientEventHandler.drawTime - 2f * vY));
@@ -126,6 +115,7 @@ public class M1911ItemModel extends GeoModel<M1911Item> {
         }
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
 
+        CoreGeoBone shell = getAnimationProcessor().getBone("shell");
         CoreGeoBone shell1 = getAnimationProcessor().getBone("shell1");
         CoreGeoBone shell2 = getAnimationProcessor().getBone("shell2");
         CoreGeoBone shell3 = getAnimationProcessor().getBone("shell3");
@@ -133,5 +123,24 @@ public class M1911ItemModel extends GeoModel<M1911Item> {
         CoreGeoBone shell5 = getAnimationProcessor().getBone("shell5");
 
         ClientEventHandler.handleShells(0.7f, 1f, shell1, shell2, shell3, shell4, shell5);
+
+        if (stack.getOrCreateTag().getBoolean("HoldOpen")) {
+            slide.setPosZ(1.5f);
+            bullet.setScaleX(0);
+            bullet.setScaleY(0);
+            bullet.setScaleZ(0);
+
+            shell.setScaleX(0);
+            shell.setScaleY(0);
+            shell.setScaleZ(0);
+        } else {
+            bullet.setScaleX(1);
+            bullet.setScaleY(1);
+            bullet.setScaleZ(1);
+
+            shell.setScaleX(1);
+            shell.setScaleY(1);
+            shell.setScaleZ(1);
+        }
     }
 }

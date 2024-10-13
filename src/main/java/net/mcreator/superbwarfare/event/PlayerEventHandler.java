@@ -18,6 +18,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -56,6 +57,7 @@ public class PlayerEventHandler {
         });
 
         handleRespawnReload(player);
+        handleRespawnAutoArmor(player);
     }
 
     @SubscribeEvent
@@ -328,6 +330,32 @@ public class PlayerEventHandler {
                 if (stack.getItem() == ModItems.JAVELIN.get() && stack.getOrCreateTag().getInt("max_ammo") > 0) {
                     stack.getOrCreateTag().putInt("ammo", 1);
                     player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.JAVELIN_MISSILE.get(), 1, player.inventoryMenu.getCraftSlots());
+                }
+            }
+        }
+    }
+
+    private static void handleRespawnAutoArmor(Player player) {
+        if (!GameplayConfig.RESPAWN_AUTO_ARMOR.get()) return;
+
+        ItemStack armor = player.getItemBySlot(EquipmentSlot.CHEST);
+        if (armor == ItemStack.EMPTY) return;
+
+        double armorPlate = armor.getOrCreateTag().getDouble("ArmorPlate");
+
+        int armorLevel = 1;
+        if (armor.is(ModTags.Items.MILITARY_ARMOR)) {
+            armorLevel = 2;
+        } else if (armor.is(ModTags.Items.MILITARY_ARMOR_HEAVY)) {
+            armorLevel = 3;
+        }
+
+        if (armorPlate < armorLevel * 30) {
+            for (var stack : player.getInventory().items) {
+                if (stack.is(ModItems.ARMOR_PLATE.get())) {
+                    for (int index0 = 0; index0 < Math.ceil(((armorLevel * 30) - armorPlate) / 30); index0++) {
+                        stack.finishUsingItem(player.level(),player);
+                    }
                 }
             }
         }

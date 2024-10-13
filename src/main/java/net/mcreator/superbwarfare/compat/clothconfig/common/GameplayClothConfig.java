@@ -26,5 +26,13 @@ public class GameplayClothConfig {
                 .setTooltip(Component.translatable("config.superbwarfare.common.gameplay.global_indication.des"))
                 .build()
         );
+
+        category.addEntry(entryBuilder
+                .startBooleanToggle(Component.translatable("config.superbwarfare.common.gameplay.respawn_auto_armor"), GameplayConfig.RESPAWN_AUTO_ARMOR.get())
+                .setDefaultValue(true)
+                .setSaveConsumer(GameplayConfig.RESPAWN_AUTO_ARMOR::set)
+                .setTooltip(Component.translatable("config.superbwarfare.common.gameplay.respawn_auto_armor.des"))
+                .build()
+        );
     }
 }

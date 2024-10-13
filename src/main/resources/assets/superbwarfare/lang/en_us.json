@@ -393,6 +393,8 @@
   "config.superbwarfare.common.gameplay.respawn_reload.des": "Whether to reload all weapons in the inventory after respawning automatically",
   "config.superbwarfare.common.gameplay.global_indication": "Global damage indicator",
   "config.superbwarfare.common.gameplay.global_indication.des": "Whether to show a kill indication around the cross hair when killing a creature with only the damage type of this module",
+  "config.superbwarfare.common.gameplay.respawn_auto_armor": "Respawn Auto Armor Plate",
+  "config.superbwarfare.common.gameplay.respawn_auto_armor.des": "Whether to refill your armor plate after respawning automatically",
 
   "des.superbwarfare.perk_damage_reduce": "Damage -",
   "des.superbwarfare.perk_damage_plus": "Damage +",
