@@ -582,6 +582,9 @@ public class ClientEventHandler {
             if (shellIndexTime[i] > 0) {
                 shellIndexTime[i] = Math.min(shellIndexTime[i] + 5 * times, 50);
             }
+            if (shellIndexTime[i] == 50) {
+                shellIndexTime[i] = 0;
+            }
         }
     }
 
@@ -813,27 +816,6 @@ public class ClientEventHandler {
             event.setCanceled(true);
         }
     }
-
-//    @SubscribeEvent
-//    public static void handleChangeSlot(LivingEquipmentChangeEvent event) {
-//        if (event.getEntity() instanceof Player && event.getSlot() == EquipmentSlot.MAINHAND) {
-//            ItemStack oldStack = event.getFrom();
-//            ItemStack newStack = event.getTo();
-//
-//            if (newStack.getItem() != oldStack.getItem()
-//                    || newStack.getTag() == null || oldStack.getTag() == null
-//                    || !newStack.getTag().hasUUID("gun_uuid") || !oldStack.getTag().hasUUID("gun_uuid")
-//                    || !newStack.getTag().getUUID("gun_uuid").equals(oldStack.getTag().getUUID("gun_uuid"))
-//            ) {
-//                if (newStack.getItem() instanceof GunItem) {
-//                    drawTime = 1;
-//                    for (int i = 0; i < 5; i++) {
-//                        shellIndexTime[i] = 0;
-//                    }
-//                }
-//            }
-//        }
-//    }
 
     public static void handleDrawMessage(boolean draw, Supplier<NetworkEvent.Context> ctx) {
         if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {

@@ -75,6 +75,13 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> AK_47_RELOAD_NORMAL = REGISTRY.register("ak_47_reload_normal", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "ak_47_reload_normal")));
     public static final RegistryObject<SoundEvent> AK_47_RELOAD_EMPTY = REGISTRY.register("ak_47_reload_empty", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "ak_47_reload_empty")));
 
+    public static final RegistryObject<SoundEvent> AK_12_FIRE_1P = REGISTRY.register("ak_12_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "ak_12_fire_1p")));
+    public static final RegistryObject<SoundEvent> AK_12_FIRE_3P = REGISTRY.register("ak_12_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "ak_12_fire_3p")));
+    public static final RegistryObject<SoundEvent> AK_12_FAR = REGISTRY.register("ak_12_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "ak_12_far")));
+    public static final RegistryObject<SoundEvent> AK_12_VERYFAR = REGISTRY.register("ak_12_veryfar", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "ak_12_veryfar")));
+    public static final RegistryObject<SoundEvent> AK_12_RELOAD_NORMAL = REGISTRY.register("ak_12_reload_normal", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "ak_12_reload_normal")));
+    public static final RegistryObject<SoundEvent> AK_12_RELOAD_EMPTY = REGISTRY.register("ak_12_reload_empty", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "ak_12_reload_empty")));
+
     public static final RegistryObject<SoundEvent> LAND = REGISTRY.register("land", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "land")));
     public static final RegistryObject<SoundEvent> HEADSHOT = REGISTRY.register("headshot", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "headshot")));
 

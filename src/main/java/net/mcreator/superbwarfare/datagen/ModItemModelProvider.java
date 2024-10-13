@@ -118,6 +118,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         blueprintItem(ModItems.MARLIN_BLUEPRINT);
         blueprintItem(ModItems.M_870_BLUEPRINT);
         blueprintItem(ModItems.M_98B_BLUEPRINT);
+        blueprintItem(ModItems.AK_12_BLUEPRINT);
         blueprintItem(ModItems.AK_47_BLUEPRINT);
         blueprintItem(ModItems.DEVOTION_BLUEPRINT);
         blueprintItem(ModItems.TASER_BLUEPRINT);

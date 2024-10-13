@@ -1557,6 +1557,55 @@
     ]
   },
 
+  "ak_12_fire_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:ak_12/ak_12_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "ak_12_fire_3p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:ak_12/ak_12_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "ak_12_far": {
+    "sounds": [
+      {
+        "name": "superbwarfare:ak_12/ak_12_far",
+        "stream": false
+      }
+    ]
+  },
+  "ak_12_veryfar": {
+    "sounds": [
+      {
+        "name": "superbwarfare:ak_12/ak_12_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "ak_12_reload_normal": {
+    "sounds": [
+      {
+        "name": "superbwarfare:ak_12/ak_12_reload_normal",
+        "stream": false
+      }
+    ]
+  },
+  "ak_12_reload_empty": {
+    "sounds": [
+      {
+        "name": "superbwarfare:ak_12/ak_12_reload_empty",
+        "stream": false
+      }
+    ]
+  },
+
   "lightsaber": {
     "sounds": [
       {

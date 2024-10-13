@@ -1,5 +1,5 @@
 {
-  "zoom_speed": 1,
+  "zoom_speed": 0.75,
   "zoom": 1.25,
   "spread": 7,
   "recoil_x": 0.004,

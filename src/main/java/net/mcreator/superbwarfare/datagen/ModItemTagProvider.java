@@ -67,27 +67,27 @@ public class ModItemTagProvider extends ItemTagsProvider {
         this.tag(ModTags.Items.SMG).add(ModItems.VECTOR.get());
         this.tag(ModTags.Items.HANDGUN).add(ModItems.TRACHELIUM.get(), ModItems.GLOCK_17.get(), ModItems.GLOCK_18.get(), ModItems.M_1911.get());
         this.tag(ModTags.Items.RIFLE).add(ModItems.M_4.get(), ModItems.HK_416.get(), ModItems.SKS.get(),
-                ModItems.MK_14.get(), ModItems.MARLIN.get(), ModItems.AK_47.get(), ModItems.QBZ_95.get());
+                ModItems.MK_14.get(), ModItems.MARLIN.get(), ModItems.AK_47.get(), ModItems.AK_12.get(), ModItems.QBZ_95.get());
         this.tag(ModTags.Items.SNIPER_RIFLE).add(ModItems.HUNTING_RIFLE.get(), ModItems.NTW_20.get(), ModItems.SENTINEL.get(),
                 ModItems.SVD.get(), ModItems.M_98B.get(), ModItems.K_98.get(), ModItems.MOSIN_NAGANT.get());
         this.tag(ModTags.Items.SHOTGUN).add(ModItems.ABEKIRI.get(), ModItems.M_870.get(), ModItems.AA_12.get());
         this.tag(ModTags.Items.MACHINE_GUN).add(ModItems.MINIGUN.get(), ModItems.DEVOTION.get(), ModItems.RPK.get(), ModItems.M_60.get());
-        this.tag(ModTags.Items.NORMAL_GUN).add(ModItems.ABEKIRI.get(), ModItems.AK_47.get(), ModItems.SVD.get(), ModItems.M_60.get(), ModItems.MK_14.get(), ModItems.VECTOR.get(),
+        this.tag(ModTags.Items.NORMAL_GUN).add(ModItems.ABEKIRI.get(), ModItems.AK_47.get(), ModItems.AK_12.get(), ModItems.SVD.get(), ModItems.M_60.get(), ModItems.MK_14.get(), ModItems.VECTOR.get(),
                 ModItems.SKS.get(), ModItems.RPK.get(), ModItems.HK_416.get(), ModItems.AA_12.get(), ModItems.M_4.get(), ModItems.DEVOTION.get(), ModItems.TRACHELIUM.get(),
                 ModItems.HUNTING_RIFLE.get(), ModItems.NTW_20.get(), ModItems.M_98B.get(), ModItems.SENTINEL.get(), ModItems.M_870.get(), ModItems.MARLIN.get(), ModItems.GLOCK_17.get(),
                 ModItems.GLOCK_18.get(), ModItems.M_1911.get(), ModItems.QBZ_95.get(), ModItems.K_98.get(), ModItems.MOSIN_NAGANT.get());
-        this.tag(ModTags.Items.OPEN_BOLT).add(ModItems.ABEKIRI.get(), ModItems.AK_47.get(), ModItems.SVD.get(), ModItems.M_60.get(), ModItems.MK_14.get(), ModItems.VECTOR.get(),
+        this.tag(ModTags.Items.OPEN_BOLT).add(ModItems.ABEKIRI.get(), ModItems.AK_47.get(), ModItems.AK_12.get(), ModItems.SVD.get(), ModItems.M_60.get(), ModItems.MK_14.get(), ModItems.VECTOR.get(),
                 ModItems.SKS.get(), ModItems.RPK.get(), ModItems.HK_416.get(), ModItems.AA_12.get(), ModItems.M_4.get(), ModItems.DEVOTION.get(), ModItems.NTW_20.get(),
                 ModItems.M_98B.get(), ModItems.SENTINEL.get(), ModItems.GLOCK_17.get(), ModItems.GLOCK_18.get(), ModItems.M_1911.get(), ModItems.QBZ_95.get());
         this.tag(ModTags.Items.USE_HANDGUN_AMMO).add(ModItems.TRACHELIUM.get(), ModItems.GLOCK_17.get(), ModItems.GLOCK_18.get(), ModItems.M_1911.get(), ModItems.VECTOR.get());
         this.tag(ModTags.Items.USE_RIFLE_AMMO).add(ModItems.M_4.get(), ModItems.HK_416.get(), ModItems.SKS.get(), ModItems.MINIGUN.get(), ModItems.DEVOTION.get(), ModItems.M_60.get(),
-                ModItems.MK_14.get(), ModItems.MARLIN.get(), ModItems.AK_47.get(), ModItems.QBZ_95.get(), ModItems.RPK.get());
+                ModItems.MK_14.get(), ModItems.MARLIN.get(), ModItems.AK_47.get(), ModItems.AK_12.get(), ModItems.QBZ_95.get(), ModItems.RPK.get());
         this.tag(ModTags.Items.USE_SHOTGUN_AMMO).add(ModItems.ABEKIRI.get(), ModItems.M_870.get(), ModItems.AA_12.get());
         this.tag(ModTags.Items.USE_SNIPER_AMMO).add(ModItems.HUNTING_RIFLE.get(), ModItems.NTW_20.get(), ModItems.SENTINEL.get(),
                 ModItems.SVD.get(), ModItems.M_98B.get(), ModItems.K_98.get(), ModItems.MOSIN_NAGANT.get());
         this.tag(ModTags.Items.LAUNCHER).add(ModItems.M_79.get(), ModItems.RPG.get(), ModItems.JAVELIN.get());
         this.tag(ModTags.Items.CANNOT_RELOAD).add(ModItems.MINIGUN.get(), ModItems.BOCEK.get());
-        this.tag(ModTags.Items.IS_AUTO_WEAPON).add(ModItems.AA_12.get(), ModItems.AK_47.get(), ModItems.HK_416.get(), ModItems.AA_12.get(), ModItems.M_4.get(),
+        this.tag(ModTags.Items.IS_AUTO_WEAPON).add(ModItems.AA_12.get(), ModItems.AK_47.get(), ModItems.AK_12.get(), ModItems.HK_416.get(), ModItems.AA_12.get(), ModItems.M_4.get(),
                 ModItems.QBZ_95.get(), ModItems.MK_14.get(), ModItems.AA_12.get(), ModItems.GLOCK_18.get(), ModItems.VECTOR.get(), ModItems.AA_12.get(), ModItems.MINIGUN.get(),
                 ModItems.DEVOTION.get(), ModItems.M_60.get(), ModItems.RPK.get());
         this.tag(ModTags.Items.EXTRA_ONE_AMMO).add(ModItems.AK_47.get(), ModItems.SVD.get(), ModItems.MK_14.get(), ModItems.VECTOR.get(),ModItems.SKS.get(),

@@ -50,6 +50,7 @@ public class ModTabs {
                                 output.accept(VectorItem.getGunInstance());
                                 output.accept(SksItem.getGunInstance());
                                 output.accept(AK47Item.getGunInstance());
+                                output.accept(AK12Item.getGunInstance());
                                 output.accept(M4Item.getGunInstance());
                                 output.accept(Hk416Item.getGunInstance());
                                 output.accept(Qbz95Item.getGunInstance());
