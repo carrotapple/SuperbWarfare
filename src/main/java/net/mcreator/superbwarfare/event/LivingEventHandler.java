@@ -451,6 +451,10 @@ public class LivingEventHandler {
             handleKillingTallyAddCount(stack);
             handleSubsistence(stack, attacker);
         }
+
+        if (DamageTypeTool.isHeadshotDamage(source)) {
+            handleDesperado(stack);
+        }
     }
 
     private static void handleClipPerks(ItemStack stack) {
@@ -582,6 +586,15 @@ public class LivingEventHandler {
         if (stack.getOrCreateTag().getInt("HeadSeeker") > 0) {
             event.setAmount(event.getAmount() * (1.095f + 0.0225f * level));
         }
+    }
+
+    private static void handleDesperado(ItemStack stack) {
+        int level = PerkHelper.getItemPerkLevel(ModPerks.DESPERADO.get(), stack);
+        if (level == 0) {
+            return;
+        }
+
+        stack.getOrCreateTag().putInt("DesperadoTime", 90 + level * 10);
     }
 
     /**

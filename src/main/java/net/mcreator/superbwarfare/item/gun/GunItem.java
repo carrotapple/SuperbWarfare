@@ -43,8 +43,7 @@ public abstract class GunItem extends Item {
 
     @Override
     public void inventoryTick(ItemStack itemstack, Level level, Entity entity, int slot, boolean selected) {
-        if (entity instanceof LivingEntity living) {
-            ItemStack mainHandItem = living.getMainHandItem();
+        if (entity instanceof LivingEntity) {
             if (!itemstack.is(ModTags.Items.GUN)) {
                 return;
             }
@@ -57,7 +56,6 @@ public abstract class GunItem extends Item {
 
             if (itemstack.getOrCreateTag().getBoolean("draw")) {
                 itemstack.getOrCreateTag().putBoolean("draw", false);
-//                itemstack.getOrCreateTag().putInt("draw_time", 0);
 
                 if (itemstack.getItem() == ModItems.RPG.get() && itemstack.getOrCreateTag().getInt("ammo") == 0) {
                     itemstack.getOrCreateTag().putDouble("empty", 1);
@@ -83,9 +81,7 @@ public abstract class GunItem extends Item {
             if ((itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) && itemstack.getOrCreateTag().getInt("ammo") > itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag") + 1)
                     || (!itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) && itemstack.getOrCreateTag().getInt("ammo") > itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag"))
             ) {
-
                 int count = itemstack.getOrCreateTag().getInt("ammo") - itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag") - (itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0);
-
                 entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
 
                     if (itemstack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
@@ -156,22 +152,8 @@ public abstract class GunItem extends Item {
     }
 
     private void handleGunPerks(ItemStack stack) {
-        if (stack.getOrCreateTag().getInt("HealClipTime") > 0) {
-            stack.getOrCreateTag().putInt("HealClipTime", Math.max(0, stack.getOrCreateTag().getInt("HealClipTime") - 1));
-        }
-
-        if (stack.getOrCreateTag().getInt("KillClipReloadTime") > 0) {
-            stack.getOrCreateTag().putInt("KillClipReloadTime", Math.max(0, stack.getOrCreateTag().getInt("KillClipReloadTime") - 1));
-        }
-
-        if (stack.getOrCreateTag().getInt("KillClipTime") > 0) {
-            stack.getOrCreateTag().putInt("KillClipTime", Math.max(0, stack.getOrCreateTag().getInt("KillClipTime") - 1));
-        }
-
-        if (stack.getOrCreateTag().getInt("FourthTimesCharmTick") > 0) {
-            stack.getOrCreateTag().putInt("FourthTimesCharmTick",
-                    Math.max(0, stack.getOrCreateTag().getInt("FourthTimesCharmTick") - 1));
-        }
+        reduceTagTime(stack, "HealClipTime", "KillClipReloadTime", "KillClipTime", "FourthTimesCharmTick", "HeadSeeker",
+                "DesperadoTime", "DesperadoTimePost");
 
         if (PerkHelper.getItemPerkLevel(ModPerks.FOURTH_TIMES_CHARM.get(), stack) > 0) {
             int count = stack.getOrCreateTag().getInt("FourthTimesCharmCount");
@@ -182,10 +164,6 @@ public abstract class GunItem extends Item {
                 int mag = stack.getOrCreateTag().getInt("mag") + stack.getOrCreateTag().getInt("customMag");
                 stack.getOrCreateTag().putInt("ammo", Math.min(mag, stack.getOrCreateTag().getInt("ammo") + 2));
             }
-        }
-
-        if (stack.getOrCreateTag().getInt("HeadSeeker") > 0) {
-            stack.getOrCreateTag().putInt("HeadSeeker", Math.max(0, stack.getOrCreateTag().getInt("HeadSeeker") - 1));
         }
 
         int ctmMag = stack.getOrCreateTag().getInt("mag");
@@ -200,5 +178,21 @@ public abstract class GunItem extends Item {
 
     public boolean canApplyPerk(Perk perk) {
         return true;
+    }
+
+    private void reduceTagTime(ItemStack stack, String... tag) {
+        if (!stack.hasTag() || stack.getTag() == null) {
+            return;
+        }
+
+        for (String t : tag) {
+            if (!stack.getTag().contains(t)) {
+                continue;
+            }
+
+            if (stack.getOrCreateTag().getInt(t) > 0) {
+                stack.getOrCreateTag().putInt(t, Math.max(0, stack.getOrCreateTag().getInt(t) - 1));
+            }
+        }
     }
 }

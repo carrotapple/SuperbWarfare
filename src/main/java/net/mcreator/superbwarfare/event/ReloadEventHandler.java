@@ -29,6 +29,7 @@ public class ReloadEventHandler {
         handleHealClipPre(stack);
         handleKillClipPre(stack);
         handleKillingTallyPre(stack);
+        handleDesperadoPre(stack);
     }
 
     @SubscribeEvent
@@ -45,6 +46,7 @@ public class ReloadEventHandler {
 
         handleHealClipPost(player, stack);
         handleKillClipPost(stack);
+        handleDesperadoPost(stack);
     }
 
     private static void handleHealClipPre(ItemStack stack) {
@@ -102,5 +104,24 @@ public class ReloadEventHandler {
         if (stack.getOrCreateTag().contains("KillingTally")) {
             stack.getOrCreateTag().putInt("KillingTally", 0);
         }
+    }
+
+    private static void handleDesperadoPre(ItemStack stack) {
+        int time = stack.getOrCreateTag().getInt("DesperadoTime");
+        if (time > 0) {
+            stack.getOrCreateTag().putInt("DesperadoTime", 0);
+            stack.getOrCreateTag().putBoolean("Desperado", true);
+        } else {
+            stack.getOrCreateTag().putBoolean("Desperado", false);
+        }
+    }
+
+    private static void handleDesperadoPost(ItemStack stack) {
+        if (!stack.getOrCreateTag().getBoolean("Desperado")) {
+            return;
+        }
+
+        int level = PerkHelper.getItemPerkLevel(ModPerks.DESPERADO.get(), stack);
+        stack.getOrCreateTag().putInt("DesperadoTimePost", 110 + level * 10);
     }
 }

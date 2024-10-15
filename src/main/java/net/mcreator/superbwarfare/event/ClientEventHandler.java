@@ -191,7 +191,6 @@ public class ClientEventHandler {
         }
 
         // 开火部分
-
         double weight = stack.getOrCreateTag().getDouble("weight");
 
         double speed = 1;
@@ -210,7 +209,6 @@ public class ClientEventHandler {
             cantFireTime = Mth.clamp(cantFireTime - 6 * speed * times, 0, 24);
         }
 
-
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS
                 && (player.getMainHandItem().is(ModTags.Items.NORMAL_GUN)
                 && cantFireTime == 0
@@ -218,7 +216,6 @@ public class ClientEventHandler {
                 && !notInGame()
                 || (stack.is(ModItems.MINIGUN.get()) && !player.isSprinting() && stack.getOrCreateTag().getDouble("overheat") == 0 && !player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getDouble("minigun_rotation") >= 10
         ))) {
-
             double customRpm = 0;
 
             if (stack.getItem() == ModItems.DEVOTION.get()) {
@@ -233,11 +230,15 @@ public class ClientEventHandler {
             if (rpm == 0) {
                 rpm = 600;
             }
+
+            if (stack.getOrCreateTag().getInt("DesperadoTimePost") > 0) {
+                rpm *= 1.3;
+            }
+
             double rps = rpm / 60;
 
             // cooldown in ms
             double cooldown = 1000 / rps;
-
 
             if (!clientTimer.started()) {
                 clientTimer.start();
@@ -249,7 +250,6 @@ public class ClientEventHandler {
                 ModUtils.PACKET_HANDLER.sendToServer(new ShootMessage(spread));
                 clientTimer.setProgress((long) (clientTimer.getProgress() - cooldown));
             }
-
         } else {
             clientTimer.stop();
             fireSpread = 0;
