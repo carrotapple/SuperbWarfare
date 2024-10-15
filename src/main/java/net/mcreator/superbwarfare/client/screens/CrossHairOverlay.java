@@ -52,7 +52,7 @@ public class CrossHairOverlay {
         GuiGraphics guiGraphics = event.getGuiGraphics();
 
         ItemStack stack = player.getMainHandItem();
-        double spread = ClientEventHandler.gunSpread + 3 * ClientEventHandler.firePos;
+        double spread = ClientEventHandler.gunSpread + 1 * ClientEventHandler.firePos;
         float deltaFrame = Minecraft.getInstance().getDeltaFrameTime();
         float moveX = 0;
         float moveY = 0;
@@ -60,7 +60,7 @@ public class CrossHairOverlay {
 
         if (DisplayConfig.FLOAT_CROSS_HAIR.get()) {
             moveX = (float) (-6 * ClientEventHandler.turnRot[1] - (player.isSprinting() ? 10 : 6) * ClientEventHandler.movePosX);
-            moveY = (float) (-6 * ClientEventHandler.turnRot[0] + 6 * (float) ClientEventHandler.velocityY - (player.isSprinting() ? 10 : 6) * ClientEventHandler.movePosY - 2 * ClientEventHandler.firePos);
+            moveY = (float) (-6 * ClientEventHandler.turnRot[0] + 6 * (float) ClientEventHandler.velocityY - (player.isSprinting() ? 10 : 6) * ClientEventHandler.movePosY - 0.25 * ClientEventHandler.firePos);
         }
 
         RenderSystem.disableDepthTest();

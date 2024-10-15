@@ -110,7 +110,6 @@ public class ShootMessage {
 
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
                 stack.getOrCreateTag().putInt("fire_animation", coolDownTick);
-                player.getPersistentData().putInt("noRun_time", coolDownTick + 2);
                 stack.getOrCreateTag().putDouble("flash_time", 2);
 
                 stack.getOrCreateTag().putDouble("empty", 1);

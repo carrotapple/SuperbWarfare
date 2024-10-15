@@ -197,9 +197,9 @@ public class PlayerEventHandler {
      * 判断玩家是否在奔跑
      */
     private static void handlePlayerSprint(Player player) {
-        if (player.getMainHandItem().getOrCreateTag().getInt("flash_time") > 0 || player.getMainHandItem().getOrCreateTag().getInt("fire_animation") > 0) {
-            player.getPersistentData().putDouble("noRun", 20);
-        }
+//        if (player.getMainHandItem().getOrCreateTag().getInt("flash_time") > 0 || player.getMainHandItem().getOrCreateTag().getInt("fire_animation") > 0) {
+//            player.getPersistentData().putDouble("noRun", 20);
+//        }
 
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).holdFire) {
             player.getPersistentData().putDouble("noRun", 10);

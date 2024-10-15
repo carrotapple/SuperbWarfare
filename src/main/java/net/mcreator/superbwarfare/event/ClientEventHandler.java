@@ -78,8 +78,6 @@ public class ClientEventHandler {
 
     public static double recoilHorizon = 0;
 
-    public static boolean recoil = false;
-
     public static double recoilY = 0;
     public static double droneCameraRotX = 0;
     public static double droneCameraRotY = 0;
@@ -158,7 +156,7 @@ public class ClientEventHandler {
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
         // 精准度
-        float times = Minecraft.getInstance().getDeltaFrameTime();
+        float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
 
         double basicDev = stack.getOrCreateTag().getDouble("spread");
         double walk = isMoving() ? 0.3 * basicDev : 0;
@@ -265,7 +263,7 @@ public class ClientEventHandler {
         if (!player.getMainHandItem().is(ModTags.Items.GUN)) return;
 
         float pose;
-        float times = 2 * Minecraft.getInstance().getDeltaFrameTime();
+        float times = 2 * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
 
         if (player.isCrouching() && player.getBbHeight() >= 1 && !isProne(player)) {
             pose = 0.85f;
@@ -380,7 +378,7 @@ public class ClientEventHandler {
 
     private static void handleWeaponSway(LivingEntity entity) {
         if (entity.getMainHandItem().is(ModTags.Items.GUN) && entity instanceof Player player) {
-            float times = 2 * Minecraft.getInstance().getDeltaFrameTime();
+            float times = 2 * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
             double pose;
 
             if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && isProne(player)) {
@@ -399,7 +397,7 @@ public class ClientEventHandler {
 
     private static void handleWeaponMove(LivingEntity entity) {
         if (entity.getMainHandItem().is(ModTags.Items.GUN)) {
-            float times = 3.7f * Minecraft.getInstance().getDeltaFrameTime();
+            float times = 3.7f * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
             double moveSpeed = (float) Mth.clamp(entity.getDeltaMovement().horizontalDistanceSqr(), 0, 0.02);
             double onGround;
             if (entity.onGround()) {
@@ -501,6 +499,11 @@ public class ClientEventHandler {
 
     public static void handleFireRecoilTimeMessage(double time, Supplier<NetworkEvent.Context> ctx) {
         if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+            Player player = Minecraft.getInstance().player;
+            if (player == null) return;
+            CompoundTag tag = player.getMainHandItem().getOrCreateTag();
+            if (!player.getMainHandItem().is(ModTags.Items.GUN)) return;
+
             fireRecoilTime = time;
             shellIndex++;
 
@@ -509,14 +512,22 @@ public class ClientEventHandler {
             randomShell[0] = (1 + 0.2 * (Math.random() - 0.5));
             randomShell[1] = (0.2 + (Math.random() - 0.5));
             randomShell[2] = (0.7 + (Math.random() - 0.5));
+
+            Minecraft.getInstance().player.getPersistentData().putDouble("noRun", 20);
+
+            float gunRecoilY = (float) tag.getDouble("recoil_y") * 10;
+
+            recoilTime = 0.01;
+            recoilY = (float) (2 * Math.random() - 1) * gunRecoilY;
+
         }
     }
 
     private static void handleWeaponFire(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
-        float times = 1.5f * Minecraft.getInstance().getDeltaFrameTime();
-        double yaw = event.getYaw();
-        double pitch = event.getPitch();
-        double roll = event.getRoll();
+        float times = 1.5f * Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1);
+        float yaw = event.getYaw();
+        float pitch = event.getPitch();
+        float roll = event.getRoll();
         ItemStack stack = entity.getMainHandItem();
         double amplitude = 15000 * stack.getOrCreateTag().getDouble("recoil_y") * stack.getOrCreateTag().getDouble("recoil_x");
 
@@ -528,7 +539,7 @@ public class ClientEventHandler {
             fireSpread += 0.1;
         }
 
-        fireSpread = Mth.clamp(fireSpread - 0.1 * (Math.pow(fireSpread, 2) * times), 0, 100);
+        fireSpread = Mth.clamp(fireSpread - 0.1 * (Math.pow(fireSpread, 2) * times), 0, 2);
         firePosZ = Mth.clamp(firePosZ - 0.02 * times, 0, 0.6);
 
         if (0 < firePosTimer) {
@@ -545,16 +556,20 @@ public class ClientEventHandler {
             fireRotTimer += 0.18 * (1.9 - fireRotTimer) * times;
         }
 
+        float[] shake = {0,0};
+        shake[0] = (float) (1.3 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 1 * Mth.clamp(0.3 - fireRotTimer, 0, 1) * (2 * Math.random() - 1));
+        shake[1] = (float) (4.2 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 3 * Mth.clamp(0.5 - fireRotTimer, 0, 0.5) * (2 * Math.random() - 1));
+
         if (0 < fireRotTimer && fireRotTimer < 1.732) {
             fireRot = 1 / 6.3 * (fireRotTimer - 0.5) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2));
             if (recoilY > 0) {
-                event.setYaw((float) (yaw - 1.3 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 1 * Mth.clamp(0.3 - fireRotTimer, 0, 1) * (2 * Math.random() - 1)));
-                event.setPitch((float) (pitch + 1.3 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 1 * Mth.clamp(0.3 - fireRotTimer, 0, 1) * (2 * Math.random() - 1)));
-                event.setRoll((float) (roll + 4.2 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 3 * Mth.clamp(0.5 - fireRotTimer, 0, 0.5) * (2 * Math.random() - 1)));
+                event.setYaw(yaw - shake[0]);
+                event.setPitch(pitch + shake[0]);
+                event.setRoll(roll + shake[1]);
             } else if (recoilY <= 0) {
-                event.setYaw((float) (yaw + 1.3 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 1 * Mth.clamp(0.3 - fireRotTimer, 0, 1) * (2 * Math.random() - 1)));
-                event.setPitch((float) (pitch - 1.3 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 1 * Mth.clamp(0.3 - fireRotTimer, 0, 1) * (2 * Math.random() - 1)));
-                event.setRoll((float) (roll - 4.2 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 3 * Mth.clamp(0.5 - fireRotTimer, 0, 0.5) * (2 * Math.random() - 1)));
+                event.setYaw(yaw + shake[0]);
+                event.setPitch(pitch - shake[0]);
+                event.setRoll(roll - shake[1]);
             }
         }
 
@@ -571,7 +586,7 @@ public class ClientEventHandler {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
 
-        float times = Minecraft.getInstance().getDeltaFrameTime();
+        float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
 
         if (shellIndex >= 5) {
             shellIndex = 0;
@@ -594,25 +609,15 @@ public class ClientEventHandler {
         if (!player.getMainHandItem().is(ModTags.Items.GUN)) return;
 
         CompoundTag tag = player.getMainHandItem().getOrCreateTag();
-        float times = Minecraft.getInstance().getDeltaFrameTime();
-        float gunRecoilX = (float) tag.getDouble("recoil_x") * 80;
-        float gunRecoilY = (float) tag.getDouble("recoil_y") * 60;
-
-        if (fireRecoilTime > 0) {
-            recoil = true;
-        }
-
-        if (recoil) {
-            recoilTime = 0.01;
-            recoilY = (float) (2 * Math.random() - 1) * gunRecoilY;
-            recoil = false;
-        }
+        float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
+        float gunRecoilX = (float) tag.getDouble("recoil_x") * 60;
 
         if (recoilHorizon > 0) {
-            recoilHorizon -= (4 * Math.pow(recoilHorizon, 2) + recoilY) * times;
+            recoilHorizon = recoilHorizon - Math.min(Math.pow(recoilHorizon, 2), 6) * times + recoilY;
         } else {
-            recoilHorizon += (4 * Math.pow(recoilHorizon, 2) + recoilY) * times;
+            recoilHorizon = recoilHorizon + Math.min(Math.pow(recoilHorizon, 2), 6) * times + recoilY ;
         }
+
         recoilY = 0;
 
         // 计算后坐力
@@ -627,7 +632,7 @@ public class ClientEventHandler {
             }
         }
 
-        float newYaw = (float) (player.getYRot() - 0.6 * recoilHorizon * pose * times * (0.5 + fireSpread));
+        float newYaw = player.getYRot() - (float) (0.6 * recoilHorizon * pose * times * (0.5 + fireSpread));
         player.setYRot(newYaw);
         player.yRotO = player.getYRot();
 
@@ -650,7 +655,7 @@ public class ClientEventHandler {
         }
 
         if (0 < recoilTime && recoilTime < 2.5) {
-            float newPitch = (float) (player.getXRot() - 1.5 * pose * gunRecoilX * (sinRes + Mth.clamp(0.5 - recoilTime, 0, 0.5)) * times * (0.5 + fireSpread));
+            float newPitch = player.getXRot() - (float) (1.5 * pose * gunRecoilX * (sinRes + Mth.clamp(0.5 - recoilTime, 0, 0.5)) * times * (0.5 + fireSpread));
             player.setXRot(newPitch);
             player.xRotO = player.getXRot();
         }
@@ -659,7 +664,7 @@ public class ClientEventHandler {
     }
 
     private static void handlePlayerBreath(LivingEntity entity) {
-        float times = 4 * Minecraft.getInstance().getDeltaFrameTime();
+        float times = 4 * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
 
         if ((entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).breath) {
             breathTime = Mth.clamp(breathTime + 0.06 * times, 0, 1);
@@ -737,7 +742,7 @@ public class ClientEventHandler {
     }
 
     private static void handleBowPullAnimation(LivingEntity entity) {
-        float times = 4 * Minecraft.getInstance().getDeltaFrameTime();
+        float times = 4 * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
 
         if ((entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).bowPull) {
             pullTimer = Math.min(pullTimer + 0.018 * times, 1);
@@ -844,7 +849,6 @@ public class ClientEventHandler {
     }
 
     public static void handleShells(float x, float y, CoreGeoBone... shells) {
-        float times = Minecraft.getInstance().getDeltaFrameTime();
 
         for (int i = 0; i < shells.length; i++) {
             if (i >= 5) break;
