@@ -143,7 +143,7 @@
   "item.superbwarfare.handgun_ammo_box": "Handgun Ammo Box",
   "des.superbwarfare.handgun_ammo_box": "Handgun Ammo *30",
   "item.superbwarfare.creative_ammo_box": "Creative Ammo Box",
-  "item.superbwarfare.ammo_supplier.supply": "%s Ammo +%s",
+  "item.superbwarfare.ammo_supplier.supply": "%1$s Ammo +%2$s",
   "item.superbwarfare.he_5_inches": "HE Shell",
   "item.superbwarfare.ap_5_inches": "AP Shell",
   "item.superbwarfare.javelin_missile": "Javelin Missile",

@@ -143,7 +143,7 @@
   "item.superbwarfare.handgun_ammo_box": "手枪弹药盒",
   "des.superbwarfare.handgun_ammo_box": "手枪弹药 *30",
   "item.superbwarfare.creative_ammo_box": "创造弹药盒",
-  "item.superbwarfare.ammo_supplier.supply": "%s弹药 +%s",
+  "item.superbwarfare.ammo_supplier.supply": "%1$s弹药 +%2$s",
   "item.superbwarfare.he_5_inches": "高爆弹",
   "item.superbwarfare.ap_5_inches": "穿甲弹",
   "item.superbwarfare.javelin_missile": "标枪导弹",
