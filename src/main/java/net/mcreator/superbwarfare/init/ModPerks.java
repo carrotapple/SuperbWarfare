@@ -54,7 +54,6 @@ public class ModPerks {
     public static final RegistryObject<Perk> FIELD_DOCTOR = FUNC_PERKS.register("field_doctor", () -> new Perk("field_doctor", Perk.Type.FUNCTIONAL));
     public static final RegistryObject<Perk> SUPER_RECHARGE = FUNC_PERKS.register("super_recharge", () -> new Perk("super_recharge", Perk.Type.FUNCTIONAL));
     public static final RegistryObject<Perk> DIMENSION_MAGAZINE = FUNC_PERKS.register("dimension_magazine", () -> new Perk("dimension_magazine", Perk.Type.FUNCTIONAL));
-    public static final RegistryObject<Perk> DESPERADO = FUNC_PERKS.register("desperado", () -> new Perk("desperado", Perk.Type.FUNCTIONAL));
 
     /**
      * Damage Perks
@@ -67,6 +66,7 @@ public class ModPerks {
     public static final RegistryObject<Perk> HEAD_SEEKER = DAMAGE_PERKS.register("head_seeker", () -> new Perk("head_seeker", Perk.Type.DAMAGE));
     public static final RegistryObject<Perk> MONSTER_HUNTER = DAMAGE_PERKS.register("monster_hunter", () -> new Perk("monster_hunter", Perk.Type.DAMAGE));
     public static final RegistryObject<Perk> VOLT_OVERLOAD = DAMAGE_PERKS.register("volt_overload", () -> new Perk("volt_overload", Perk.Type.DAMAGE));
+    public static final RegistryObject<Perk> DESPERADO = DAMAGE_PERKS.register("desperado", () -> new Perk("desperado", Perk.Type.DAMAGE));
 
     public static void registerCompatPerks() {
         if (ModList.get().isLoaded(CompatHolder.DMV)) {

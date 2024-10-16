@@ -272,6 +272,8 @@
   "des.superbwarfare.monster_hunter": "Increases the damage of weapon against monsters",
   "item.superbwarfare.volt_overload": "Volt Overload",
   "des.superbwarfare.volt_overload": "Increases the shock damage of Taser Gun",
+  "item.superbwarfare.desperado": "Desperado",
+  "des.superbwarfare.desperado": "精准击杀后进行换弹，可暂时提升射速",
 
   "item.superbwarfare.empty_perk": "Empty Perk",
   "item.superbwarfare.shortcut_pack": "Shortcut Pack",

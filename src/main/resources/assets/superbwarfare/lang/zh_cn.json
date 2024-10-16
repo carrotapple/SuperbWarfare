@@ -272,6 +272,8 @@
   "des.superbwarfare.monster_hunter": "增加武器对怪物的伤害",
   "item.superbwarfare.volt_overload": "电压过载",
   "des.superbwarfare.volt_overload": "增加泰瑟枪电击的伤害",
+  "item.superbwarfare.desperado": "亡命之徒",
+  "des.superbwarfare.desperado": "精准击杀后进行换弹，可暂时提升射速",
 
   "item.superbwarfare.empty_perk": "空白模组",
   "item.superbwarfare.shortcut_pack": "捷径包",

@@ -203,11 +203,11 @@ public class PerkHelper {
             }
             case FUNCTIONAL -> {
                 return perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FIELD_DOCTOR.get() ||
-                        perk == ModPerks.FOURTH_TIMES_CHARM.get() || perk == ModPerks.SUBSISTENCE.get() || perk == ModPerks.DESPERADO.get();
+                        perk == ModPerks.FOURTH_TIMES_CHARM.get() || perk == ModPerks.SUBSISTENCE.get();
             }
             case DAMAGE -> {
                 return perk == ModPerks.KILL_CLIP.get() || perk == ModPerks.GUTSHOT_STRAIGHT.get() ||
-                        perk == ModPerks.MONSTER_HUNTER.get() || perk == ModPerks.HEAD_SEEKER.get();
+                        perk == ModPerks.MONSTER_HUNTER.get() || perk == ModPerks.HEAD_SEEKER.get() || perk == ModPerks.DESPERADO.get();
             }
             default -> {
                 return false;

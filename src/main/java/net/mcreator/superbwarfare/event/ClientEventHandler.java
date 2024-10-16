@@ -6,6 +6,7 @@ import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModMobEffects;
+import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.ShootMessage;
@@ -232,7 +233,8 @@ public class ClientEventHandler {
             }
 
             if (stack.getOrCreateTag().getInt("DesperadoTimePost") > 0) {
-                rpm *= 1.3;
+                int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.DESPERADO.get(), stack);
+                rpm *= 1.25 + 0.05 * perkLevel;
             }
 
             double rps = rpm / 60;
@@ -556,7 +558,7 @@ public class ClientEventHandler {
             fireRotTimer += 0.18 * (1.9 - fireRotTimer) * times;
         }
 
-        float[] shake = {0,0};
+        float[] shake = {0, 0};
         shake[0] = (float) (1.3 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 1 * Mth.clamp(0.3 - fireRotTimer, 0, 1) * (2 * Math.random() - 1));
         shake[1] = (float) (4.2 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 3 * Mth.clamp(0.5 - fireRotTimer, 0, 0.5) * (2 * Math.random() - 1));
 
@@ -615,7 +617,7 @@ public class ClientEventHandler {
         if (recoilHorizon > 0) {
             recoilHorizon = recoilHorizon - Math.min(Math.pow(recoilHorizon, 2), 6) * times + recoilY;
         } else {
-            recoilHorizon = recoilHorizon + Math.min(Math.pow(recoilHorizon, 2), 6) * times + recoilY ;
+            recoilHorizon = recoilHorizon + Math.min(Math.pow(recoilHorizon, 2), 6) * times + recoilY;
         }
 
         recoilY = 0;
