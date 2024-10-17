@@ -491,7 +491,12 @@ public class ClientEventHandler {
         float times = 5 * Minecraft.getInstance().getDeltaFrameTime();
         double speed = stack.getOrCreateTag().getDouble("zoom_speed");
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS && !notInGame() && drawTime < 0.01) {
-            zoomTime = Mth.clamp(zoomTime + 0.03 * speed * times, 0, 1);
+            if (Minecraft.getInstance().player != null) {
+                Minecraft.getInstance().player.getPersistentData().putDouble("noRun", 5);
+            }
+            if (cantFireTime <= 10) {
+                zoomTime = Mth.clamp(zoomTime + 0.03 * speed * times, 0, 1);
+            }
         } else {
             zoomTime = Mth.clamp(zoomTime - 0.04 * speed * times, 0, 1);
         }

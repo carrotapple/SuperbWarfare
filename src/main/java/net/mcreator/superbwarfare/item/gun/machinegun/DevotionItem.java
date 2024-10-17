@@ -6,6 +6,7 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.DevotionItemRenderer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
@@ -47,7 +48,6 @@ import java.util.function.Consumer;
 
 public class DevotionItem extends GunItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
     public DevotionItem() {
@@ -82,51 +82,28 @@ public class DevotionItem extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (this.animationProcedure.equals("empty")) {
-
-            if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.devotion.fire"));
-            }
-
-            if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.devotion.reload_empty"));
-            }
-
-            if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.devotion.reload_normal"));
-            }
-
-            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
-                if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.devotion.run_fast"));
-                } else {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.devotion.run"));
-                }
-            }
-
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.devotion.idle"));
+        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.devotion.reload_empty"));
         }
-        return PlayState.STOP;
-    }
 
-    private PlayState procedurePredicate(AnimationState<DevotionItem> event) {
-        if (transformType != null && transformType.firstPerson()) {
-            if (!(this.animationProcedure.equals("empty")) && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
-                if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                    this.animationProcedure = "empty";
-                    event.getController().forceAnimationReset();
-                }
+        if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.devotion.reload_normal"));
+        }
+
+        if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
+            if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.devotion.run_fast"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.devotion.run"));
             }
         }
-        return PlayState.CONTINUE;
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.devotion.idle"));
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        var procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
-        data.add(procedureController);
-        var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
+        var idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
     }
 
@@ -160,7 +137,6 @@ public class DevotionItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void setAnimationProcedure(String procedure) {
-        this.animationProcedure = procedure;
     }
 
     @Override
@@ -175,6 +151,6 @@ public class DevotionItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public boolean canApplyPerk(Perk perk) {
-        return PerkHelper.MACHINE_GUN_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk);
+        return PerkHelper.MACHINE_GUN_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk) || perk == ModPerks.DESPERADO.get();
     }
 }

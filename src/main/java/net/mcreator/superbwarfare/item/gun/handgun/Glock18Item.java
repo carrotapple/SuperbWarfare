@@ -6,6 +6,7 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.Glock18ItemRenderer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
@@ -46,7 +47,6 @@ import java.util.function.Consumer;
 
 public class Glock18Item extends GunItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
     public Glock18Item() {
@@ -81,22 +81,19 @@ public class Glock18Item extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (this.animationProcedure.equals("empty")) {
-            if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.fire"));
-            }
-
-            if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.reload_empty"));
-            }
-
-            if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.reload_normal"));
-            }
-
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.idle"));
+        if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.fire"));
         }
-        return PlayState.STOP;
+
+        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.reload_empty"));
+        }
+
+        if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.reload_normal"));
+        }
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.idle"));
     }
 
     private PlayState idlePredicate(AnimationState<Glock18Item> event) {
@@ -105,21 +102,17 @@ public class Glock18Item extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (this.animationProcedure.equals("empty")) {
-
-            if (player.isSprinting() && player.onGround()
-                    && player.getPersistentData().getDouble("noRun") == 0
-                    && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading")) && ClientEventHandler.drawTime < 0.01) {
-                if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.run_fast"));
-                } else {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.run"));
-                }
+        if (player.isSprinting() && player.onGround()
+                && player.getPersistentData().getDouble("noRun") == 0
+                && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading")) && ClientEventHandler.drawTime < 0.01) {
+            if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.run_fast"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.run"));
             }
-
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.idle"));
         }
-        return PlayState.STOP;
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.idle"));
     }
 
 
@@ -164,7 +157,6 @@ public class Glock18Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void setAnimationProcedure(String procedure) {
-        this.animationProcedure = procedure;
     }
 
     @Override
@@ -179,6 +171,6 @@ public class Glock18Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public boolean canApplyPerk(Perk perk) {
-        return PerkHelper.HANDGUN_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk);
+        return PerkHelper.HANDGUN_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk) || perk == ModPerks.DESPERADO.get();
     }
 }

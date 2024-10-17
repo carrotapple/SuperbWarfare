@@ -50,7 +50,6 @@ import java.util.function.Consumer;
 
 public class M79Item extends GunItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
     @Override
@@ -90,53 +89,34 @@ public class M79Item extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (this.animationProcedure.equals("empty")) {
-
-            if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m79.fire"));
-            }
-
-            if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m79.reload"));
-            }
-
-            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
-                if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m79.run_fast"));
-                } else {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m79.run"));
-                }
-            }
-
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m79.idle"));
+        if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m79.fire"));
         }
-        return PlayState.STOP;
-    }
 
-    private PlayState procedurePredicate(AnimationState<M79Item> event) {
-        if (transformType != null && transformType.firstPerson()) {
-            if (!(this.animationProcedure.equals("empty")) && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
-                if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                    this.animationProcedure = "empty";
-                    event.getController().forceAnimationReset();
-                }
+        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m79.reload"));
+        }
+
+        if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
+            if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m79.run_fast"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m79.run"));
             }
         }
-        return PlayState.CONTINUE;
-    }
 
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        var procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
-        data.add(procedureController);
-        var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
-        data.add(idleController);
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m79.idle"));
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        var idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
+        data.add(idleController);
     }
 
     @Override
@@ -192,7 +172,6 @@ public class M79Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void setAnimationProcedure(String procedure) {
-        this.animationProcedure = procedure;
     }
 
     @Override

@@ -12,6 +12,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ItemSupplier;
@@ -90,7 +91,11 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
                 return;
             }
             if (!living.level().isClientSide()) {
-                living.addEffect(new MobEffectInstance(ModMobEffects.SHOCK.get(), 100 + volt * 30, volt), this.getOwner());
+                if (living.getClass() == Creeper.class) {
+                    //TODO 命中苦力怕时转化为闪电苦力怕
+                } else {
+                    living.addEffect(new MobEffectInstance(ModMobEffects.SHOCK.get(), 100 + volt * 30, volt), this.getOwner());
+                }
             }
         }
         this.discard();

@@ -204,29 +204,6 @@
 				}
 			}
 		},
-		"animation.m60.fire2": {
-			"animation_length": 0.0833,
-			"bones": {
-				"m60_bullet_chain": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 19.25]
-						},
-						"0.0833": {
-							"vector": [0, 0, 0]
-						}
-					},
-					"position": {
-						"0.0": {
-							"vector": [0.57813, -0.37109, 0]
-						},
-						"0.0833": {
-							"vector": [0, 0, 0]
-						}
-					}
-				}
-			}
-		},
 		"animation.m60.reload": {
 			"animation_length": 6.375,
 			"bones": {

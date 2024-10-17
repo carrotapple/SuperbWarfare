@@ -6,9 +6,11 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.BocekItemRenderer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
 import net.mcreator.superbwarfare.item.gun.GunItem;
+import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
@@ -45,7 +47,6 @@ import java.util.function.Consumer;
 
 public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
     public BocekItem() {
@@ -88,33 +89,11 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
             }
         }
 
-        if (this.animationProcedure.equals("empty")) {
-            event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.bocek.idle"));
-            return PlayState.CONTINUE;
-        }
-
-        return PlayState.STOP;
-    }
-
-    private PlayState procedurePredicate(AnimationState<BocekItem> event) {
-        if (transformType != null && transformType.firstPerson()) {
-            if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
-                if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                    this.animationProcedure = "empty";
-                    event.getController().forceAnimationReset();
-                }
-            } else if (this.animationProcedure.equals("empty")) {
-                return PlayState.STOP;
-            }
-        }
-        return PlayState.CONTINUE;
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.bocek.idle"));
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        var procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
-        data.add(procedureController);
         var idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
     }
@@ -187,7 +166,6 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void setAnimationProcedure(String procedure) {
-        this.animationProcedure = procedure;
     }
 
     @Override
@@ -198,5 +176,14 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public String getGunDisplayName() {
         return "   Bocek";
+    }
+
+    @Override
+    public boolean canApplyPerk(Perk perk) {
+        return switch (perk.type) {
+            case AMMO -> true;
+            case FUNCTIONAL -> perk == ModPerks.FIELD_DOCTOR.get();
+            case DAMAGE -> perk == ModPerks.MONSTER_HUNTER.get() || perk == ModPerks.KILLING_TALLY.get();
+        };
     }
 }

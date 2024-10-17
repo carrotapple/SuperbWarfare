@@ -61,7 +61,6 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
     private final Supplier<Integer> energyCapacity;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
     public SentinelItem() {
@@ -131,30 +130,23 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (this.animationProcedure.equals("empty")) {
-            if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.shift"));
-            }
-
-            if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.fire"));
-            }
-
-            if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload_empty"));
-            }
-
-            if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload_normal"));
-            }
-
-            if (stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.charge"));
-            }
-
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.idle"));
+        if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.shift"));
         }
-        return PlayState.STOP;
+
+        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload_empty"));
+        }
+
+        if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload_normal"));
+        }
+
+        if (stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.charge"));
+        }
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.idle"));
     }
 
     private PlayState idlePredicate(AnimationState<SentinelItem> event) {
@@ -163,22 +155,18 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (this.animationProcedure.equals("empty")) {
-
-            if (player.isSprinting() && player.onGround()
-                    && player.getPersistentData().getDouble("noRun") == 0
-                    && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                    && !stack.getOrCreateTag().getBoolean("sentinel_is_charging") && ClientEventHandler.drawTime < 0.01) {
-                if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && stack.getOrCreateTag().getInt("bolt_action_anim") == 0) {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.run_fast"));
-                } else {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.run"));
-                }
+        if (player.isSprinting() && player.onGround()
+                && player.getPersistentData().getDouble("noRun") == 0
+                && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+                && !stack.getOrCreateTag().getBoolean("sentinel_is_charging") && ClientEventHandler.drawTime < 0.01) {
+            if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && stack.getOrCreateTag().getInt("bolt_action_anim") == 0) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.run_fast"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.run"));
             }
-
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.idle"));
         }
-        return PlayState.STOP;
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.idle"));
     }
 
     @Override
@@ -251,7 +239,6 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void setAnimationProcedure(String procedure) {
-        this.animationProcedure = procedure;
     }
 
     @Override

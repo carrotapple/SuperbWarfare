@@ -55,7 +55,6 @@ import java.util.function.Consumer;
 public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
     private static final String TAG_HEAT = "heat";
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
     public MinigunItem() {
@@ -120,18 +119,14 @@ public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (this.animationProcedure.equals("empty")) {
-
-            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
-                if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.minigun.run_fast"));
-                } else {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.minigun.run"));
-                }
+        if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
+            if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.minigun.run_fast"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.minigun.run"));
             }
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.minigun.idle"));
         }
-        return PlayState.STOP;
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.minigun.idle"));
     }
 
     @Override
@@ -216,7 +211,6 @@ public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void setAnimationProcedure(String procedure) {
-        this.animationProcedure = procedure;
     }
 
     @Override
@@ -233,7 +227,7 @@ public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
     public boolean canApplyPerk(Perk perk) {
         return switch (perk.type) {
             case AMMO -> true;
-            case FUNCTIONAL -> false;
+            case FUNCTIONAL -> perk == ModPerks.FIELD_DOCTOR.get();
             case DAMAGE -> perk == ModPerks.MONSTER_HUNTER.get() || perk == ModPerks.KILLING_TALLY.get();
         };
     }

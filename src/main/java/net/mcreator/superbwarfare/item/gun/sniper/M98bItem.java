@@ -47,7 +47,6 @@ import java.util.function.Consumer;
 
 public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
     public M98bItem() {
@@ -82,26 +81,19 @@ public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (this.animationProcedure.equals("empty")) {
-            if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.shift"));
-            }
-
-            if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.fire"));
-            }
-
-            if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.reload_empty"));
-            }
-
-            if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.reload_normal"));
-            }
-
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.idle"));
+        if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.shift"));
         }
-        return PlayState.STOP;
+
+        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.reload_empty"));
+        }
+
+        if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m98b.reload_normal"));
+        }
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.idle"));
     }
 
     private PlayState idlePredicate(AnimationState<M98bItem> event) {
@@ -110,28 +102,24 @@ public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (this.animationProcedure.equals("empty")) {
-
-            if (player.isSprinting() && player.onGround()
-                    && player.getPersistentData().getDouble("noRun") == 0
-                    && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading")) && ClientEventHandler.drawTime < 0.01) {
-                if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && stack.getOrCreateTag().getInt("bolt_action_anim") == 0) {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.run_fast"));
-                } else {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.run"));
-                }
+        if (player.isSprinting() && player.onGround()
+                && player.getPersistentData().getDouble("noRun") == 0
+                && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading")) && ClientEventHandler.drawTime < 0.01) {
+            if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && stack.getOrCreateTag().getInt("bolt_action_anim") == 0) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.run_fast"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.run"));
             }
-
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.idle"));
         }
-        return PlayState.STOP;
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m98b.idle"));
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         var fireAnimController = new AnimationController<>(this, "fireAnimController", 1, this::fireAnimPredicate);
         data.add(fireAnimController);
-        var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
+        var idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
     }
 
@@ -165,7 +153,6 @@ public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void setAnimationProcedure(String procedure) {
-        this.animationProcedure = procedure;
     }
 
     @Override

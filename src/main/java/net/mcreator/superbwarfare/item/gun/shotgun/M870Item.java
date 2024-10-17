@@ -49,7 +49,6 @@ import java.util.function.Consumer;
 
 public class M870Item extends GunItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
     public M870Item() {
@@ -84,67 +83,44 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (transformType != null && transformType.firstPerson()) {
-            if (this.animationProcedure.equals("empty")) {
+        if (stack.getOrCreateTag().getDouble("fire_animation") > 0 && stack.getOrCreateTag().getDouble("fire_animation") < 15) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.shift"));
+        }
 
-                if (stack.getOrCreateTag().getDouble("fire_animation") > 0 && stack.getOrCreateTag().getDouble("fire_animation") < 15) {
-                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.shift"));
-                }
+        if (stack.getOrCreateTag().getInt("reload_stage") == 1 && stack.getOrCreateTag().getDouble("prepare_load") > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.preparealt"));
+        }
 
-                if (stack.getOrCreateTag().getInt("reload_stage") == 1 && stack.getOrCreateTag().getDouble("prepare_load") > 0) {
-                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.preparealt"));
-                }
+        if (stack.getOrCreateTag().getInt("reload_stage") == 1 && stack.getOrCreateTag().getDouble("prepare") > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.prepare"));
+        }
 
-                if (stack.getOrCreateTag().getInt("reload_stage") == 1 && stack.getOrCreateTag().getDouble("prepare") > 0) {
-                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.prepare"));
-                }
+        if (stack.getOrCreateTag().getDouble("load_index") == 0 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.iterativeload"));
+        }
 
-                if (stack.getOrCreateTag().getDouble("load_index") == 0 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
-                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.iterativeload"));
-                }
+        if (stack.getOrCreateTag().getDouble("load_index") == 1 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.iterativeload2"));
+        }
 
-                if (stack.getOrCreateTag().getDouble("load_index") == 1 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
-                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.iterativeload2"));
-                }
+        if (stack.getOrCreateTag().getInt("reload_stage") == 3) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.finish"));
+        }
 
-                if (stack.getOrCreateTag().getInt("reload_stage") == 3) {
-                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.finish"));
-                }
-
-                if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
-                    if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
-                        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m870.run_fast"));
-                    } else {
-                        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m870.run"));
-                    }
-                }
-
-                event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.m870.idle"));
-                return PlayState.CONTINUE;
+        if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
+            if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m870.run_fast"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m870.run"));
             }
         }
-        return PlayState.STOP;
-    }
 
-    private PlayState procedurePredicate(AnimationState<M870Item> event) {
-        if (transformType != null && transformType.firstPerson()) {
-            if (!this.animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
-                if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                    this.animationProcedure = "empty";
-                    event.getController().forceAnimationReset();
-                }
-            } else if (this.animationProcedure.equals("empty")) {
-                return PlayState.STOP;
-            }
-        }
+        event.getController().setAnimation(RawAnimation.begin().thenLoop("animation.m870.idle"));
         return PlayState.CONTINUE;
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        var procedureController = new AnimationController<>(this, "procedureController", 0, this::procedurePredicate);
-        data.add(procedureController);
         var idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
     }
@@ -184,7 +160,6 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void setAnimationProcedure(String procedure) {
-        this.animationProcedure = procedure;
     }
 
     @Override

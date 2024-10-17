@@ -6,6 +6,7 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.Aa12ItemRenderer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
@@ -188,6 +189,6 @@ public class Aa12Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public boolean canApplyPerk(Perk perk) {
-        return PerkHelper.SHOTGUN_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk);
+        return PerkHelper.SHOTGUN_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk) || perk == ModPerks.DESPERADO.get();
     }
 }

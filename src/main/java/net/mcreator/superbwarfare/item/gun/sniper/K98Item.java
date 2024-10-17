@@ -46,7 +46,6 @@ import java.util.function.Consumer;
 
 public class K98Item extends GunItem implements GeoItem, AnimatedItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
     public K98Item() {
@@ -81,38 +80,31 @@ public class K98Item extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (this.animationProcedure.equals("empty")) {
-            if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.shift"));
-            }
-
-            if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.fire"));
-            }
-
-            if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.reload_empty"));
-            }
-
-            if (stack.getOrCreateTag().getInt("reload_stage") == 1 && stack.getOrCreateTag().getDouble("prepare") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.prepare"));
-            }
-
-            if (stack.getOrCreateTag().getDouble("load_index") == 0 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.iterativeload"));
-            }
-
-            if (stack.getOrCreateTag().getDouble("load_index") == 1 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.iterativeload2"));
-            }
-
-            if (stack.getOrCreateTag().getInt("reload_stage") == 3) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.finish"));
-            }
-
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.idle"));
+        if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.shift"));
         }
-        return PlayState.STOP;
+
+        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.reload_empty"));
+        }
+
+        if (stack.getOrCreateTag().getInt("reload_stage") == 1 && stack.getOrCreateTag().getDouble("prepare") > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.prepare"));
+        }
+
+        if (stack.getOrCreateTag().getDouble("load_index") == 0 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.iterativeload"));
+        }
+
+        if (stack.getOrCreateTag().getDouble("load_index") == 1 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.iterativeload2"));
+        }
+
+        if (stack.getOrCreateTag().getInt("reload_stage") == 3) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.k98.finish"));
+        }
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.idle"));
     }
 
     private PlayState idlePredicate(AnimationState<K98Item> event) {
@@ -121,32 +113,28 @@ public class K98Item extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (this.animationProcedure.equals("empty")) {
-
-            if (player.isSprinting() && player.onGround()
-                    && player.getPersistentData().getDouble("noRun") == 0
-                    && !(stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                    && stack.getOrCreateTag().getInt("reload_stage") != 1
-                    && stack.getOrCreateTag().getInt("reload_stage") != 2
-                    && stack.getOrCreateTag().getInt("reload_stage") != 3
-                    && ClientEventHandler.drawTime < 0.01) {
-                if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && stack.getOrCreateTag().getInt("bolt_action_anim") == 0) {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.run_fast"));
-                } else {
-                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.run"));
-                }
+        if (player.isSprinting() && player.onGround()
+                && player.getPersistentData().getDouble("noRun") == 0
+                && !(stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+                && stack.getOrCreateTag().getInt("reload_stage") != 1
+                && stack.getOrCreateTag().getInt("reload_stage") != 2
+                && stack.getOrCreateTag().getInt("reload_stage") != 3
+                && ClientEventHandler.drawTime < 0.01) {
+            if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && stack.getOrCreateTag().getInt("bolt_action_anim") == 0) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.run_fast"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.run"));
             }
-
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.idle"));
         }
-        return PlayState.STOP;
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.idle"));
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         var fireAnimController = new AnimationController<>(this, "fireAnimController", 1, this::fireAnimPredicate);
         data.add(fireAnimController);
-        var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
+        var idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
     }
 
@@ -186,7 +174,6 @@ public class K98Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void setAnimationProcedure(String procedure) {
-        this.animationProcedure = procedure;
     }
 
     @Override
