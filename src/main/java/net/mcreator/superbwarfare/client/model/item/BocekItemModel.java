@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
@@ -52,6 +51,7 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
+        double fpz = ClientEventHandler.firePosZ;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
         double pp = ClientEventHandler.pullPos;
@@ -69,6 +69,7 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         double turnRotX = ClientEventHandler.turnRot[0];
         double turnRotY = ClientEventHandler.turnRot[1];
         double turnRotZ = ClientEventHandler.turnRot[2];
+        double zt = ClientEventHandler.zoomTime;
 
         arrow.setPosZ(9f * (float) bp);
         rh.setPosZ(9f * (float) hp);
@@ -103,18 +104,12 @@ public class BocekItemModel extends GeoModel<BocekItem> {
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !((shen_pos.getPosX() < -0.7 && gun.getPosZ() < -2.6)));
 
-        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
-            fire.setPosY(-0.01f * (float) (fp + 2 * fr));
-            fire.setPosZ(3f * (float) (fp + 0.54f * fr));
-            fire.setRotX(0.003f * (float) (fp + fr));
-            fire.setRotZ(0f);
-        } else {
-            fire.setPosY(-0.03f * (float) (fp + 2 * fr));
-            fire.setPosZ(4f * (float) (fp + 0.54f * fr));
-            fire.setRotX(0.07f * (float) (0.18f * fp + fr));
-            fire.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
-        }
-        fire.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
+        fire.setPosX((float) (0.75f * ClientEventHandler.recoilHorizon * fpz * fp));
+        fire.setPosY((float) (-0.03f * fp - 0.06f * fr));
+        fire.setPosZ((float) (0.325 * fp + 0.34f * fr + 0.65 * fpz));
+        fire.setRotX((float) (0.01f * fp + 0.01f * fr + 0.01f * fpz));
+        fire.setRotY((float) (0.01f * ClientEventHandler.recoilHorizon * fpz));
+        fire.setRotZ((float) ((0.02f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * mph));

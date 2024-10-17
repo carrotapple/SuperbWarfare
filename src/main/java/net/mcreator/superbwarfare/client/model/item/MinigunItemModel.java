@@ -56,6 +56,7 @@ public class MinigunItemModel extends GeoModel<MinigunItem> {
         double turnRotX = ClientEventHandler.turnRot[0];
         double turnRotY = ClientEventHandler.turnRot[1];
         double turnRotZ = ClientEventHandler.turnRot[2];
+        double fpz = ClientEventHandler.firePosZ;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
@@ -65,11 +66,12 @@ public class MinigunItemModel extends GeoModel<MinigunItem> {
 
         gun.setRotZ((float) (gun.getRotZ() + times * -0.008f * stack.getOrCreateTag().getDouble("minigun_rotation")));
 
-        shen.setPosY(0.1f * (float) (fp + 2 * fr));
-        shen.setPosZ(2.2f * (float) (0.5 * fp + 1.54f * fr));
-        shen.setRotX(0.05f * (float) (0.18f * fp + fr));
-        shen.setRotZ(-0.02f * (float) (fp + 1.3 * fr));
-        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
+        shen.setPosX((float) (0.75f * ClientEventHandler.recoilHorizon * fpz * fp));
+        shen.setPosY((float) (-0.03f * fp - 0.06f * fr));
+        shen.setPosZ((float) (0.625 * fp + 0.34f * fr + 1.15 * fpz));
+        shen.setRotX((float) (0.02f * fp + 0.02f * fr + 0.02f * fpz));
+        shen.setRotY((float) (0.02f * ClientEventHandler.recoilHorizon * fpz));
+        shen.setRotZ((float) ((0.02f + 0.02 * fr) * ClientEventHandler.recoilHorizon));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * mph));

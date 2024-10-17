@@ -53,6 +53,7 @@ public class AbekiriItemModel extends GeoModel<AbekiriItem> {
         double turnRotX = ClientEventHandler.turnRot[0];
         double turnRotY = ClientEventHandler.turnRot[1];
         double turnRotZ = ClientEventHandler.turnRot[2];
+        double fpz = ClientEventHandler.firePosZ;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
@@ -64,12 +65,12 @@ public class AbekiriItemModel extends GeoModel<AbekiriItem> {
 
         gun.setRotZ((float) (0.05f * zpz));
 
-        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
-        shen.setPosY(0.2f * (float) (fp + 2 * fr));
-        shen.setPosZ(4.2f * (float) (1.3 * fp + 0.54f * fr));
-        shen.setRotX(0.25f * (float) (1.28f * fp + fr));
-        shen.setRotZ(-0.1f * (float) (fp + 1.3 * fr));
-        shen.setRotY(-0.15f * (float) fr);
+        shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
+        shen.setPosY((float) (0.4f * fp + 0.44f * fr));
+        shen.setPosZ((float) (5.825 * fp + 0.34f * fr + 2.35 * fpz));
+        shen.setRotX((float) (0.01f * fp + 0.15f * fr + 0.01f * fpz));
+        shen.setRotY((float) (0.1f * ClientEventHandler.recoilHorizon * fpz));
+        shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * mph));

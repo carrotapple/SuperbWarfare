@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
@@ -65,6 +64,7 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
         double turnRotX = ClientEventHandler.turnRot[0];
         double turnRotY = ClientEventHandler.turnRot[1];
         double turnRotZ = ClientEventHandler.turnRot[2];
+        double fpz = ClientEventHandler.firePosZ;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
@@ -84,33 +84,28 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
 
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
 
-        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
-            shen.setPosY(0.06f * (float) (fp + 2 * fr));
-            shen.setPosZ(0.9f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.005f * (float) (fp + fr));
-            shen.setRotZ(0.01f * (float)(ClientEventHandler.recoilHorizon * fp));
-        } else {
-            shen.setPosY(0.04f * (float) (fp + 2 * fr));
-            shen.setPosZ(1.2f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.07f * (float) (0.18f * fp + fr));
-            shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
-        }
+        shen.setPosX((float) (0.75f * ClientEventHandler.recoilHorizon * fpz * fp));
+        shen.setPosY((float) (-0.03f * fp - 0.06f * fr));
+        shen.setPosZ((float) (0.325 * fp + 0.34f * fr + 0.75 * fpz));
+        shen.setRotX((float) (0.02f * fp + 0.02f * fr + 0.02f * fpz));
+        shen.setRotY((float) (0.07f * ClientEventHandler.recoilHorizon * fpz));
+        shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
+
+        shen.setPosX((float) (shen.getPosX() * (1 - 0.5 * zt)));
+        shen.setPosY((float) (shen.getPosY() * (1 + 0.2 * zt)));
+        shen.setPosZ((float) (shen.getPosZ() * (1 - 0.6 * zt)));
+        shen.setRotX((float) (shen.getRotX() * (1 - 0.9 * zt)));
+        shen.setRotY((float) (shen.getRotY() * (1 - 0.9 * zt)));
+        shen.setRotZ((float) (shen.getRotZ() * (1 - 0.9 * zt)));
 
         rex.setRotZ(0.01f * (float)(ClientEventHandler.recoilHorizon * fp));
-
         rex.setPosY(-0.23f * (float) (fp + 2.3 * fr));
-
-        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
 
         action.setPosZ(2.5f * (float) fp);
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 2.5));
 
         CoreGeoBone bolt = getAnimationProcessor().getBone("bolt");
-
-        if (stack.getOrCreateTag().getBoolean("HoldOpen")) {
-            bolt.setPosZ(2.5f);
-        }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * mph));
@@ -138,6 +133,7 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
         }
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
 
+        CoreGeoBone shell = getAnimationProcessor().getBone("shell");
         CoreGeoBone shell1 = getAnimationProcessor().getBone("shell1");
         CoreGeoBone shell2 = getAnimationProcessor().getBone("shell2");
         CoreGeoBone shell3 = getAnimationProcessor().getBone("shell3");
@@ -145,5 +141,17 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
         CoreGeoBone shell5 = getAnimationProcessor().getBone("shell5");
 
         ClientEventHandler.handleShells(0.9f, 0.95f, shell1, shell2, shell3, shell4, shell5);
+
+        if (stack.getOrCreateTag().getBoolean("HoldOpen")) {
+            bolt.setPosZ(2.5f);
+            shell.setScaleX(0);
+            shell.setScaleY(0);
+            shell.setScaleZ(0);
+        } else {
+
+            shell.setScaleX(1);
+            shell.setScaleY(1);
+            shell.setScaleZ(1);
+        }
     }
 }

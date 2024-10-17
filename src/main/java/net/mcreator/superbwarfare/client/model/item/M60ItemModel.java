@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
@@ -98,6 +97,7 @@ public class M60ItemModel extends GeoModel<M60Item> {
         double turnRotX = ClientEventHandler.turnRot[0];
         double turnRotY = ClientEventHandler.turnRot[1];
         double turnRotZ = ClientEventHandler.turnRot[2];
+        double fpz = ClientEventHandler.firePosZ;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
@@ -109,18 +109,19 @@ public class M60ItemModel extends GeoModel<M60Item> {
 
         gun.setRotZ(-0.087f * (float) zp + (float) (0.05f * zpz));
 
-        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
-            shen.setPosY(-0.03f * (float) (fp + 2 * fr));
-            shen.setPosZ(0.6f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.003f * (float) (fp + fr));
-            shen.setRotZ(0f);
-        } else {
-            shen.setPosY(-0.05f * (float) (fp + 2 * fr));
-            shen.setPosZ(0.8f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.04f * (float) (0.18f * fp + fr));
-            shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
-        }
-        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
+        shen.setPosX((float) (0.75f * ClientEventHandler.recoilHorizon * fpz * fp));
+        shen.setPosY((float) (-0.04f * fp - 0.08f * fr));
+        shen.setPosZ((float) (0.325 * fp + 0.34f * fr + 0.95 * fpz));
+        shen.setRotX((float) (0.03f * fp + 0.03f * fr + 0.02f * fpz));
+        shen.setRotY((float) (0.07f * ClientEventHandler.recoilHorizon * fpz));
+        shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
+
+        shen.setPosX((float) (shen.getPosX() * (1 - 0.2 * zt)));
+        shen.setPosY((float) (shen.getPosY() * (1 + 0.3 * zt)));
+        shen.setPosZ((float) (shen.getPosZ() * (1 + 0.2 * zt)));
+        shen.setRotX((float) (shen.getRotX() * (1 - 0.9 * zt)));
+        shen.setRotY((float) (shen.getRotY() * (1 - 0.9 * zt)));
+        shen.setRotZ((float) (shen.getRotZ() * (1 - 0.7 * zt)));
 
         tiba.setRotZ((float) (-0.25f * fp + 0.4 * fr));
 
@@ -137,6 +138,15 @@ public class M60ItemModel extends GeoModel<M60Item> {
         float numR = (float) (1 - 0.88 * zt);
         float numP = (float) (1 - 0.28 * zt);
 
+        CoreGeoBone shell = getAnimationProcessor().getBone("shell");
+        CoreGeoBone shell1 = getAnimationProcessor().getBone("shell1");
+        CoreGeoBone shell2 = getAnimationProcessor().getBone("shell2");
+        CoreGeoBone shell3 = getAnimationProcessor().getBone("shell3");
+        CoreGeoBone shell4 = getAnimationProcessor().getBone("shell4");
+        CoreGeoBone shell5 = getAnimationProcessor().getBone("shell5");
+
+        ClientEventHandler.handleShells(1f, 0.45f, shell1, shell2, shell3, shell4, shell5);
+
         if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
             main.setRotX(numR * main.getRotX());
             main.setRotY(numR * main.getRotY());
@@ -147,15 +157,14 @@ public class M60ItemModel extends GeoModel<M60Item> {
             camera.setRotX(numR * camera.getRotX());
             camera.setRotY(numR * camera.getRotY());
             camera.setRotZ(numR * camera.getRotZ());
+            shell.setScaleX(0);
+            shell.setScaleY(0);
+            shell.setScaleZ(0);
+        } else {
+            shell.setScaleX(1);
+            shell.setScaleY(1);
+            shell.setScaleZ(1);
         }
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
-
-        CoreGeoBone shell1 = getAnimationProcessor().getBone("shell1");
-        CoreGeoBone shell2 = getAnimationProcessor().getBone("shell2");
-        CoreGeoBone shell3 = getAnimationProcessor().getBone("shell3");
-        CoreGeoBone shell4 = getAnimationProcessor().getBone("shell4");
-        CoreGeoBone shell5 = getAnimationProcessor().getBone("shell5");
-
-        ClientEventHandler.handleShells(1f, 0.45f, shell1, shell2, shell3, shell4, shell5);
     }
 }

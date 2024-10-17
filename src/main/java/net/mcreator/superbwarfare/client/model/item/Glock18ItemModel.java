@@ -9,7 +9,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
@@ -63,6 +62,7 @@ public class Glock18ItemModel extends GeoModel<Glock18Item> {
         double turnRotX = ClientEventHandler.turnRot[0];
         double turnRotY = ClientEventHandler.turnRot[1];
         double turnRotZ = ClientEventHandler.turnRot[2];
+        double fpz = ClientEventHandler.firePosZ;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
@@ -76,19 +76,19 @@ public class Glock18ItemModel extends GeoModel<Glock18Item> {
 
         gun.setRotZ(-11 * Mth.DEG_TO_RAD * (float) zp + (float) (0.05f * zpz));
 
-        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
-            shen.setPosY(0.03f * (float) (fp + 2 * fr));
-            shen.setPosZ(2.6f * (float) (fp + 0.84f * fr));
-            shen.setRotY(0.05f * (float) (ClientEventHandler.recoilHorizon * fp));
-            shen.setRotX(0.005f * (float) (fp + fr));
-        } else {
-            shen.setPosY(0.08f * (float) (fp + 2 * fr));
-            shen.setPosZ(1.9f * (float) (fp + 0.54f * fr));
-            shen.setRotX(0.17f * (float) (0.18f * fp + fr));
-            shen.setRotY(0.1f * (float) (ClientEventHandler.recoilHorizon * fp));
-            shen.setRotZ(-0.01f * (float) (fp + 1.3 * fr));
-        }
-        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
+        shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
+        shen.setPosY((float) (-0.06f * fp - 0.09f * fr));
+        shen.setPosZ((float) (0.825 * fp + 0.34f * fr + 0.35 * fpz));
+        shen.setRotX((float) (0.1f * fp + 0.05f * fr + 0.01f * fpz));
+        shen.setRotY((float) (0.1f * ClientEventHandler.recoilHorizon * fpz));
+        shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
+
+        shen.setPosX((float) (shen.getPosX() * (1 - 0.4 * zt)));
+        shen.setPosY((float) (shen.getPosY() * (1 + 0.5 * zt)));
+        shen.setPosZ((float) (shen.getPosZ() * (1 + 0.3 * zt)));
+        shen.setRotX((float) (shen.getRotX() * (1 - 0.27 * zt)));
+        shen.setRotY((float) (shen.getRotY() * (1 - 0.27 * zt)));
+        shen.setRotZ((float) (shen.getRotZ() * (1 - 0.25 * zt)));
 
         slide.setPosZ(1.5f * (float) fp);
 

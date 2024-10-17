@@ -158,9 +158,9 @@
 				}
 			}
 		},
-		"animation.glock.fire": {
+		"animation.m1911.fire": {
 			"loop": "hold_on_last_frame",
-			"animation_length": 0.0833,
+			"animation_length": 0.1667,
 			"override_previous_animation": true,
 			"bones": {
 				"lun": {
@@ -190,6 +190,11 @@
 							"vector": [0, 0, 0],
 							"easing": "easeInElastic"
 						}
+					}
+				},
+				"hammer": {
+					"rotation": {
+						"vector": [60, 0, 0]
 					}
 				}
 			}

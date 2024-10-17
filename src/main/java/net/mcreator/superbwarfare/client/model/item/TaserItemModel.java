@@ -61,6 +61,7 @@ public class TaserItemModel extends GeoModel<TaserItem> {
         double turnRotX = ClientEventHandler.turnRot[0];
         double turnRotY = ClientEventHandler.turnRot[1];
         double turnRotZ = ClientEventHandler.turnRot[2];
+        double fpz = ClientEventHandler.firePosZ;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
@@ -89,12 +90,19 @@ public class TaserItemModel extends GeoModel<TaserItem> {
             redcover.setScaleZ(1);
         }
 
-        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
-        shen.setPosY(0.1f * (float) (fp + 2 * fr));
-        shen.setPosZ(1.2f * (float) (1.3 * fp + 0.54f * fr));
-        shen.setRotX(0.04f * (float) (1.28f * fp + fr));
-        shen.setRotY(0.02f * (float) fr);
-        shen.setRotZ(-0.02f * (float) (fp + 1.3 * fr));
+        shen.setPosX((float) (0.75f * ClientEventHandler.recoilHorizon * fpz * fp));
+        shen.setPosY((float) (-0.03f * fp - 0.06f * fr));
+        shen.setPosZ((float) (0.725 * fp + 0.34f * fr + 0.45 * fpz));
+        shen.setRotX((float) (0.03f * fp + 0.02f * fr + 0.02f * fpz));
+        shen.setRotY((float) (0.07f * ClientEventHandler.recoilHorizon * fpz));
+        shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
+
+        shen.setPosX((float) (shen.getPosX() * (1 - 0.5 * zt)));
+        shen.setPosY((float) (shen.getPosY() * (1 + 0.2 * zt)));
+        shen.setPosZ((float) (shen.getPosZ() * (1 - 0.3 * zt)));
+        shen.setRotX((float) (shen.getRotX() * (1 - 0.9 * zt)));
+        shen.setRotY((float) (shen.getRotY() * (1 - 0.9 * zt)));
+        shen.setRotZ((float) (shen.getRotZ() * (1 - 0.9 * zt)));
 
         gun.setPosX(1.82f * (float) zp);
 

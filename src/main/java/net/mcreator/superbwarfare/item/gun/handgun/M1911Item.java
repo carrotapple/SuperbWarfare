@@ -74,6 +74,8 @@ public class M1911Item extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
+
+
     private PlayState fireAnimPredicate(AnimationState<M1911Item> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
@@ -81,15 +83,7 @@ public class M1911Item extends GunItem implements GeoItem, AnimatedItem {
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.fire"));
-        }
-
-        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m1911.reload_empty"));
-        }
-
-        if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.reload_normal"));
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m1911.fire"));
         }
 
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.idle"));
@@ -100,6 +94,14 @@ public class M1911Item extends GunItem implements GeoItem, AnimatedItem {
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
+
+        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m1911.reload_empty"));
+        }
+
+        if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.reload_normal"));
+        }
 
         if (player.isSprinting() && player.onGround()
                 && player.getPersistentData().getDouble("noRun") == 0
@@ -117,9 +119,9 @@ public class M1911Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        var fireAnimController = new AnimationController<>(this, "fireAnimController", 1, this::fireAnimPredicate);
+        var fireAnimController = new AnimationController<>(this, "fireAnimController", 0, this::fireAnimPredicate);
         data.add(fireAnimController);
-        var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
+        var idleController = new AnimationController<>(this, "idleController", 2, this::idlePredicate);
         data.add(idleController);
     }
 

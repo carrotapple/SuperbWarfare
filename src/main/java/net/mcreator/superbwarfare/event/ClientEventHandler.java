@@ -541,22 +541,22 @@ public class ClientEventHandler {
         if (fireRecoilTime > 0) {
             firePosTimer = 0.001;
             fireRotTimer = 0.001;
-            firePosZ = 0.1;
             fireRecoilTime -= 7 * times;
             fireSpread += 0.1;
+            firePosZ += 0.5 * firePosZ + 0.15;
         }
 
         fireSpread = Mth.clamp(fireSpread - 0.1 * (Math.pow(fireSpread, 2) * times), 0, 2);
-        firePosZ = Mth.clamp(firePosZ - 0.02 * times, 0, 0.6);
+        firePosZ = Mth.clamp(firePosZ - 1.2 * (Math.pow(firePosZ, 2) * times), 0, 1.5);
 
         if (0 < firePosTimer) {
-            firePosTimer += 0.25 * (1.1 - firePosTimer) * times;
+            firePosTimer += 0.35 * (1.1 - firePosTimer) * times;
         }
         if (0 < firePosTimer && firePosTimer < 0.454) {
-            firePos = (-18.34) * Math.pow(firePosTimer, 2) + 8.58 * firePosTimer + firePosZ;
+            firePos = (-18.34) * Math.pow(firePosTimer, 2) + 8.58 * firePosTimer;
         }
         if (0.454 <= firePosTimer && firePosTimer < 1) {
-            firePos = 4.34 * Math.pow(firePosTimer, 2) - 6.5 * firePosTimer + 2.167 + firePosZ;
+            firePos = 4.34 * Math.pow(firePosTimer, 2) - 6.5 * firePosTimer + 2.167;
         }
 
         if (0 < fireRotTimer && fireRotTimer < 1.732) {
@@ -602,7 +602,7 @@ public class ClientEventHandler {
 
         for (int i = 0; i < 5; i++) {
             if (shellIndexTime[i] > 0) {
-                shellIndexTime[i] = Math.min(shellIndexTime[i] + 5 * times, 50);
+                shellIndexTime[i] = Math.min(shellIndexTime[i] + 8 * times, 50);
             }
             if (shellIndexTime[i] == 50) {
                 shellIndexTime[i] = 0;
@@ -861,7 +861,7 @@ public class ClientEventHandler {
             if (i >= 5) break;
 
             shells[i].setPosX((float) (-x * shellIndexTime[i] * ((150 - shellIndexTime[i]) / 150)));
-            shells[i].setPosY((float) (y * randomShell[0] * shellIndexTime[i] - 0.045 * Math.pow(shellIndexTime[i], 2)));
+            shells[i].setPosY((float) (y * randomShell[0] * shellIndexTime[i] - 0.025 * Math.pow(shellIndexTime[i], 2)));
             shells[i].setRotX((float) (randomShell[1] * shellIndexTime[i]));
             shells[i].setRotY((float) (randomShell[2] * shellIndexTime[i]));
         }

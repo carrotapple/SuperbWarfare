@@ -52,6 +52,7 @@ public class JavelinItemModel extends GeoModel<JavelinItem> {
         double turnRotX = ClientEventHandler.turnRot[0];
         double turnRotY = ClientEventHandler.turnRot[1];
         double turnRotZ = ClientEventHandler.turnRot[2];
+        double fpz = ClientEventHandler.firePosZ;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
@@ -64,11 +65,12 @@ public class JavelinItemModel extends GeoModel<JavelinItem> {
         javelin.setHidden(gun.getPosZ() > 15.85);
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosZ() > 15.85));
 
-        shen.setPosY(0.28f * (float) (fp + 2 * fr));
-        shen.setPosZ(3.8f * (float) (fp + 0.54f * fr));
-        shen.setRotX(0.17f * (float) (0.18f * fp + fr));
-        shen.setRotZ(-0.04f * (float) (fp + 1.3 * fr));
-        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
+        shen.setPosX((float) (0.75f * ClientEventHandler.recoilHorizon * fpz * fp));
+        shen.setPosY((float) (-0.03f * fp - 0.06f * fr));
+        shen.setPosZ((float) (0.725 * fp + 0.34f * fr + 0.95 * fpz));
+        shen.setRotX((float) (0.03f * fp + 0.02f * fr + 0.02f * fpz));
+        shen.setRotY((float) (0.07f * ClientEventHandler.recoilHorizon * fpz));
+        shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * mph));
