@@ -6,11 +6,13 @@ import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
@@ -91,8 +93,8 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
                 return;
             }
             if (!living.level().isClientSide()) {
-                if (living.getClass() == Creeper.class) {
-                    //TODO 命中苦力怕时转化为闪电苦力怕
+                if (living instanceof Creeper creeper && living.level() instanceof ServerLevel serverLevel) {
+                    creeper.thunderHit(serverLevel, new LightningBolt(EntityType.LIGHTNING_BOLT, serverLevel));
                 } else {
                     living.addEffect(new MobEffectInstance(ModMobEffects.SHOCK.get(), 100 + volt * 30, volt), this.getOwner());
                 }

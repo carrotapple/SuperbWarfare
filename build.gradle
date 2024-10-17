@@ -27,9 +27,14 @@ minecraft {
 
     copyIdeResources = true
     runs {
+        configureEach {
+            property 'geckolib.disable_examples', 'true'
+        }
+
         client {
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            property 'geckolib.disable_examples', 'true'
         }
 
         server {

@@ -56,13 +56,15 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
+    public static final int MAX_ENERGY = 12000;
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
     private final Supplier<Integer> energyCapacity;
 
     public TaserItem() {
         super(new Item.Properties().stacksTo(1).rarity(Rarity.COMMON));
-        this.energyCapacity = () -> 12000;
+        this.energyCapacity = () -> MAX_ENERGY;
     }
 
     @Override
@@ -75,7 +77,7 @@ public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
         pStack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                 e -> energy.set(e.getEnergyStored())
         );
-        return energy.get() != 0;
+        return energy.get() != 0 && energy.get() != MAX_ENERGY;
     }
 
     @Override
@@ -85,7 +87,7 @@ public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
                 e -> energy.set(e.getEnergyStored())
         );
 
-        return Math.round((float) energy.get() * 13.0F / 12000F);
+        return Math.round((float) energy.get() * 13.0F / MAX_ENERGY);
     }
 
     @Override
@@ -203,15 +205,8 @@ public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
         }
 
         int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.SUPER_RECHARGE.get(), stack);
-//        var tag = stack.getOrCreateTag();
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                energy -> {
-                    energy.receiveEnergy(10 + 10 * perkLevel, false);
-//                    int energyStored = energy.getEnergyStored();
-//                    if (energyStored > 0) {
-//                        energy.receiveEnergy(10, false);
-//                    }
-                }
+                energy -> energy.receiveEnergy(10 + 10 * perkLevel, false)
         );
     }
 
@@ -222,6 +217,9 @@ public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(ModItems.TASER.get());
         GunsTool.initCreativeGun(stack, ModItems.TASER.getId().getPath());
+        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                energy -> energy.receiveEnergy(MAX_ENERGY, false)
+        );
         return stack;
     }
 

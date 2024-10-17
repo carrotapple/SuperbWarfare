@@ -259,7 +259,7 @@ public class PerkHelper {
             }
             case DAMAGE -> {
                 return perk == ModPerks.KILL_CLIP.get() || perk == ModPerks.GUTSHOT_STRAIGHT.get() ||
-                        perk == ModPerks.MONSTER_HUNTER.get() || perk == ModPerks.HEAD_SEEKER.get();
+                        perk == ModPerks.MONSTER_HUNTER.get() || perk == ModPerks.HEAD_SEEKER.get() || perk == ModPerks.DESPERADO.get();
             }
             default -> {
                 return false;
