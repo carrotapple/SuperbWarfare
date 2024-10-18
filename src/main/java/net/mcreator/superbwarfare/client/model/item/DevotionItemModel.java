@@ -72,15 +72,15 @@ public class DevotionItemModel extends GeoModel<DevotionItem> {
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.8));
 
-        shen.setPosX((float) (0.75f * ClientEventHandler.recoilHorizon * fpz * fp));
-        shen.setPosY((float) (-0.03f * fp - 0.06f * fr));
-        shen.setPosZ((float) (0.725 * fp + 0.34f * fr + 0.45 * fpz));
-        shen.setRotX((float) (0.01f * fp + 0.01f * fr + 0.04f * fpz));
-        shen.setRotY((float) (0.07f * ClientEventHandler.recoilHorizon * fpz));
+        shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
+        shen.setPosY((float) (0.15f * fp + 0.18f * fr));
+        shen.setPosZ((float) (0.315 * fp + 0.34f * fr + 0.65 * fpz));
+        shen.setRotX((float) (0.01f * fp + 0.05f * fr + 0.01f * fpz));
+        shen.setRotY((float) (0.04f * ClientEventHandler.recoilHorizon * fpz));
         shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
 
         shen.setPosX((float) (shen.getPosX() * (1 - 0.5 * zt)));
-        shen.setPosY((float) (shen.getPosY() * (1 + 0.2 * zt)));
+        shen.setPosY((float) (shen.getPosY() * (-1 + 0.9 * zt)));
         shen.setPosZ((float) (shen.getPosZ() * (1 - 0.3 * zt)));
         shen.setRotX((float) (shen.getRotX() * (1 - 0.9 * zt)));
         shen.setRotY((float) (shen.getRotY() * (1 - 0.9 * zt)));

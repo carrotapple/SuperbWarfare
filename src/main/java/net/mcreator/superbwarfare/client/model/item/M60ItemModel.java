@@ -105,23 +105,23 @@ public class M60ItemModel extends GeoModel<M60Item> {
 
         gun.setPosY(-0.1f * (float) zp - (float) (0.1f * zpz));
 
-        gun.setPosZ((float) zp + (float) (0.3f * zpz));
+        gun.setPosZ(3.24f * (float) zp + (float) (0.3f * zpz));
 
         gun.setRotZ(-0.087f * (float) zp + (float) (0.05f * zpz));
 
-        shen.setPosX((float) (0.75f * ClientEventHandler.recoilHorizon * fpz * fp));
-        shen.setPosY((float) (-0.04f * fp - 0.08f * fr));
-        shen.setPosZ((float) (0.325 * fp + 0.34f * fr + 0.95 * fpz));
-        shen.setRotX((float) (0.03f * fp + 0.03f * fr + 0.02f * fpz));
-        shen.setRotY((float) (0.07f * ClientEventHandler.recoilHorizon * fpz));
+        shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
+        shen.setPosY((float) (0.15f * fp + 0.18f * fr));
+        shen.setPosZ((float) (0.325 * fp + 0.34f * fr + 0.75 * fpz));
+        shen.setRotX((float) (0.01f * fp + 0.05f * fr + 0.01f * fpz));
+        shen.setRotY((float) (0.04f * ClientEventHandler.recoilHorizon * fpz));
         shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
 
-        shen.setPosX((float) (shen.getPosX() * (1 - 0.2 * zt)));
-        shen.setPosY((float) (shen.getPosY() * (1 + 0.3 * zt)));
-        shen.setPosZ((float) (shen.getPosZ() * (1 + 0.2 * zt)));
+        shen.setPosX((float) (shen.getPosX() * (1 - 0.5 * zt)));
+        shen.setPosY((float) (shen.getPosY() * (-1 + 0.4 * zt)));
+        shen.setPosZ((float) (shen.getPosZ() * (1 - 0.6 * zt)));
         shen.setRotX((float) (shen.getRotX() * (1 - 0.9 * zt)));
         shen.setRotY((float) (shen.getRotY() * (1 - 0.9 * zt)));
-        shen.setRotZ((float) (shen.getRotZ() * (1 - 0.7 * zt)));
+        shen.setRotZ((float) (shen.getRotZ() * (1 - 0.9 * zt)));
 
         tiba.setRotZ((float) (-0.25f * fp + 0.4 * fr));
 

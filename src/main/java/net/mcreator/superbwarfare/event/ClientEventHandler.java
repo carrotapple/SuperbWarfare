@@ -523,8 +523,6 @@ public class ClientEventHandler {
             Minecraft.getInstance().player.getPersistentData().putDouble("noRun", 20);
 
             float gunRecoilY = (float) tag.getDouble("recoil_y") * 10;
-
-            recoilTime = 0.01;
             recoilY = (float) (2 * Math.random() - 1) * gunRecoilY;
 
         }
@@ -544,6 +542,7 @@ public class ClientEventHandler {
             fireRecoilTime -= 7 * times;
             fireSpread += 0.1;
             firePosZ += 0.5 * firePosZ + 0.15;
+            recoilTime = 0.01;
         }
 
         fireSpread = Mth.clamp(fireSpread - 0.1 * (Math.pow(fireSpread, 2) * times), 0, 2);

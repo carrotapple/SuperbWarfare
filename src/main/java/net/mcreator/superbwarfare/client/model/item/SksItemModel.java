@@ -41,10 +41,6 @@ public class SksItemModel extends GeoModel<SksItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        if (stack.getOrCreateTag().getBoolean("HoldOpen")) {
-            bolt.setPosZ(2.5f);
-        }
-
         double zt = ClientEventHandler.zoomTime;
         double zp = ClientEventHandler.zoomPos;
         double zpz = ClientEventHandler.zoomPosZ;
@@ -74,15 +70,15 @@ public class SksItemModel extends GeoModel<SksItem> {
 
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
 
-        shen.setPosX((float) (0.75f * ClientEventHandler.recoilHorizon * fpz * fp));
-        shen.setPosY((float) (-0.03f * fp - 0.06f * fr));
-        shen.setPosZ((float) (0.325 * fp + 0.34f * fr + 0.75 * fpz));
-        shen.setRotX((float) (0.02f * fp + 0.02f * fr + 0.02f * fpz));
-        shen.setRotY((float) (0.07f * ClientEventHandler.recoilHorizon * fpz));
+        shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
+        shen.setPosY((float) (0.2f * fp + 0.24f * fr));
+        shen.setPosZ((float) (0.825 * fp + 0.34f * fr + 1.35 * fpz));
+        shen.setRotX((float) (0.01f * fp + 0.05f * fr + 0.01f * fpz));
+        shen.setRotY((float) (0.1f * ClientEventHandler.recoilHorizon * fpz));
         shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
 
         shen.setPosX((float) (shen.getPosX() * (1 - 0.5 * zt)));
-        shen.setPosY((float) (shen.getPosY() * (1 + 0.2 * zt)));
+        shen.setPosY((float) (shen.getPosY() * (-1 + 0.5 * zt)));
         shen.setPosZ((float) (shen.getPosZ() * (1 - 0.6 * zt)));
         shen.setRotX((float) (shen.getRotX() * (1 - 0.9 * zt)));
         shen.setRotY((float) (shen.getRotY() * (1 - 0.9 * zt)));
@@ -116,6 +112,7 @@ public class SksItemModel extends GeoModel<SksItem> {
         }
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
 
+        CoreGeoBone shell = getAnimationProcessor().getBone("shell");
         CoreGeoBone shell1 = getAnimationProcessor().getBone("shell1");
         CoreGeoBone shell2 = getAnimationProcessor().getBone("shell2");
         CoreGeoBone shell3 = getAnimationProcessor().getBone("shell3");
@@ -123,5 +120,16 @@ public class SksItemModel extends GeoModel<SksItem> {
         CoreGeoBone shell5 = getAnimationProcessor().getBone("shell5");
 
         ClientEventHandler.handleShells(0.7f, 1.2f, shell1, shell2, shell3, shell4, shell5);
+
+        if (stack.getOrCreateTag().getBoolean("HoldOpen")) {
+            shell.setScaleX(0);
+            shell.setScaleY(0);
+            shell.setScaleZ(0);
+            bolt.setPosZ(2.5f);
+        } else {
+            shell.setScaleX(1);
+            shell.setScaleY(1);
+            shell.setScaleZ(1);
+        }
     }
 }
