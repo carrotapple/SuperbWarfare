@@ -12,16 +12,16 @@
   "velocity": 31,
   "projectile_amount": 1,
   "mag": 3,
-  "bolt_action_time": 30,
+  "bolt_action_time": 37,
   "weight": 2,
   "fire_mode": 0,
   "semi": 1,
   "burst": 0,
   "auto": 0,
   "burst_size": 1,
-  "normal_reload_time": 64,
-  "empty_reload_time": 87,
+  "normal_reload_time": 63,
+  "empty_reload_time": 92,
   "BypassesArmor": 1,
   "SoundRadius": 22,
-  "rpm": 180
+  "rpm": 90
 }
