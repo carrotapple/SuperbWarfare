@@ -7,8 +7,7 @@ import net.mcreator.superbwarfare.network.message.GunsDataMessage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -81,33 +80,30 @@ public class GunsTool {
         initJsonData(event.getServer().getResourceManager());
     }
 
-    public static void reload(Entity entity, GunInfo.Type type) {
-        reload(entity, type, false);
+    public static void reload(Player player, ItemStack stack, GunInfo.Type type) {
+        reload(player, stack, type, false);
     }
 
-    public static void reload(Entity entity, GunInfo.Type type, boolean extraOne) {
-        if (!(entity instanceof LivingEntity living)) return;
-
-        CompoundTag tag = living.getMainHandItem().getOrCreateTag();
+    public static void reload(Player player, ItemStack stack, GunInfo.Type type, boolean extraOne) {
+        CompoundTag tag = stack.getOrCreateTag();
 
         int mag = tag.getInt("mag") + tag.getInt("customMag");
         int ammo = tag.getInt("ammo");
         int ammoToAdd = mag - ammo + (extraOne ? 1 : 0);
-        /*
-         * 空仓换弹的栓动武器应该在换单后取消待上膛标记
-         */
+
+        // 空仓换弹的栓动武器应该在换单后取消待上膛标记
         if (ammo == 0 && tag.getDouble("bolt_action_time") > 0) {
             tag.putDouble("need_bolt_action", 0);
         }
 
-        int playerAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> switch (type) {
+        int playerAmmo = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> switch (type) {
             case RIFLE -> c.rifleAmmo;
             case HANDGUN -> c.handgunAmmo;
             case SHOTGUN -> c.shotgunAmmo;
             case SNIPER -> c.sniperAmmo;
         }).orElse(0);
 
-        entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
             var newAmmoCount = Math.max(0, playerAmmo - ammoToAdd);
             switch (type) {
                 case RIFLE -> capability.rifleAmmo = newAmmoCount;
@@ -116,7 +112,7 @@ public class GunsTool {
                 case SNIPER -> capability.sniperAmmo = newAmmoCount;
             }
 
-            capability.syncPlayerVariables(entity);
+            capability.syncPlayerVariables(player);
         });
 
         int needToAdd = ammo + Math.min(ammoToAdd, playerAmmo);

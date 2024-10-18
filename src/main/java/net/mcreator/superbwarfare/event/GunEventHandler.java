@@ -83,7 +83,7 @@ public class GunEventHandler {
 
         var tag = stack.getOrCreateTag();
 
-        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).holdFire|| (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
+        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).holdFire || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
             if (tag.getDouble("minigun_rotation") < 10) {
                 tag.putDouble("minigun_rotation", (tag.getDouble("minigun_rotation") + 1));
             }
@@ -128,12 +128,12 @@ public class GunEventHandler {
 
                     SoundEvent soundFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, "sentinel_charge_far"));
                     if (soundFar != null) {
-                        player.level().playSound(null, player.getOnPos(), soundFar, SoundSource.PLAYERS,  (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.5f, 1f);
+                        player.level().playSound(null, player.getOnPos(), soundFar, SoundSource.PLAYERS, (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.5f, 1f);
                     }
 
                     SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, "sentinel_charge_veryfar"));
                     if (soundVeryFar != null) {
-                        player.level().playSound(null, player.getOnPos(), soundVeryFar, SoundSource.PLAYERS,  (float) stack.getOrCreateTag().getDouble("SoundRadius"), 1f);
+                        player.level().playSound(null, player.getOnPos(), soundVeryFar, SoundSource.PLAYERS, (float) stack.getOrCreateTag().getDouble("SoundRadius"), 1f);
                     }
 
                     return;
@@ -162,12 +162,12 @@ public class GunEventHandler {
 
             SoundEvent soundFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, name + "_far"));
             if (soundFar != null) {
-                player.level().playSound(null, player.getOnPos(), soundFar, SoundSource.PLAYERS,  (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.5f, 1f);
+                player.level().playSound(null, player.getOnPos(), soundFar, SoundSource.PLAYERS, (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.5f, 1f);
             }
 
             SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, name + "_veryfar"));
             if (soundVeryFar != null) {
-                player.level().playSound(null, player.getOnPos(), soundVeryFar, SoundSource.PLAYERS,  (float) stack.getOrCreateTag().getDouble("SoundRadius"), 1f);
+                player.level().playSound(null, player.getOnPos(), soundVeryFar, SoundSource.PLAYERS, (float) stack.getOrCreateTag().getDouble("SoundRadius"), 1f);
             }
         }
     }
@@ -369,19 +369,19 @@ public class GunEventHandler {
         if (count == 0) {
             if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
                 if (stack.is(ModTags.Items.EXTRA_ONE_AMMO)) {
-                    GunsTool.reload(player, GunInfo.Type.SHOTGUN, true);
+                    GunsTool.reload(player, stack, GunInfo.Type.SHOTGUN, true);
                 } else {
-                    GunsTool.reload(player, GunInfo.Type.SHOTGUN);
+                    GunsTool.reload(player, stack, GunInfo.Type.SHOTGUN);
                 }
             } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-                GunsTool.reload(player, GunInfo.Type.SNIPER, true);
+                GunsTool.reload(player, stack, GunInfo.Type.SNIPER, true);
             } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-                GunsTool.reload(player, GunInfo.Type.HANDGUN, true);
+                GunsTool.reload(player, stack, GunInfo.Type.HANDGUN, true);
             } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
                 if (stack.is(ModTags.Items.EXTRA_ONE_AMMO)) {
-                    GunsTool.reload(player, GunInfo.Type.RIFLE, true);
+                    GunsTool.reload(player, stack, GunInfo.Type.RIFLE, true);
                 } else {
-                    GunsTool.reload(player, GunInfo.Type.RIFLE);
+                    GunsTool.reload(player, stack, GunInfo.Type.RIFLE);
                 }
             }
         } else {
@@ -395,7 +395,6 @@ public class GunEventHandler {
                 stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + stack.getOrCreateTag().getInt("customMag") + (stack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0));
             }
         }
-
 
         stack.getOrCreateTag().putBoolean("is_normal_reloading", false);
         stack.getOrCreateTag().putBoolean("is_empty_reloading", false);
@@ -415,13 +414,13 @@ public class GunEventHandler {
 
         if (count == 0) {
             if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-                GunsTool.reload(player, GunInfo.Type.SHOTGUN);
+                GunsTool.reload(player, stack, GunInfo.Type.SHOTGUN);
             } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-                GunsTool.reload(player, GunInfo.Type.SNIPER);
+                GunsTool.reload(player, stack, GunInfo.Type.SNIPER);
             } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-                GunsTool.reload(player, GunInfo.Type.HANDGUN);
+                GunsTool.reload(player, stack, GunInfo.Type.HANDGUN);
             } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-                GunsTool.reload(player, GunInfo.Type.RIFLE);
+                GunsTool.reload(player, stack, GunInfo.Type.RIFLE);
             } else if (stack.getItem() == ModItems.TASER.get()) {
                 stack.getOrCreateTag().putInt("ammo", 1);
                 player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.TASER_ELECTRODE.get(), 1, player.inventoryMenu.getCraftSlots());
@@ -438,8 +437,6 @@ public class GunEventHandler {
         } else {
             stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + stack.getOrCreateTag().getInt("customMag"));
         }
-
-
 
         stack.getOrCreateTag().putBoolean("is_normal_reloading", false);
         stack.getOrCreateTag().putBoolean("is_empty_reloading", false);
@@ -537,7 +534,6 @@ public class GunEventHandler {
 
         // 一阶段结束，检查备弹，如果有则二阶段启动，无则直接跳到三阶段
         if ((tag.getDouble("prepare") == 1 || tag.getDouble("prepare_load") == 1)) {
-
             int count = 0;
             for (var inv : player.getInventory().items) {
                 if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
@@ -603,14 +599,12 @@ public class GunEventHandler {
 
         // 二阶段结束
         if (tag.getInt("iterative") == 1) {
-
             // 装满结束
             if (tag.getInt("ammo") >= (int) tag.getDouble("mag") + tag.getInt("customMag")) {
                 tag.putInt("reload_stage", 3);
             }
 
             // 备弹耗尽结束
-
             int count = 0;
             for (var inv : player.getInventory().items) {
                 if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
@@ -630,7 +624,6 @@ public class GunEventHandler {
                     tag.putInt("reload_stage", 3);
                 }
             }
-
 
             // 强制结束
             if (tag.getBoolean("stop")) {
@@ -696,7 +689,6 @@ public class GunEventHandler {
                 });
             }
         }
-
     }
 
     public static void playGunPrepareReloadSounds(Player player) {
@@ -790,7 +782,7 @@ public class GunEventHandler {
     private static void handleSentinelCharge(Player player) {
         ItemStack stack = player.getMainHandItem();
         CompoundTag tag = stack.getOrCreateTag();
-        //启动换弹
+        // 启动换弹
         if (tag.getBoolean("start_sentinel_charge")) {
             tag.putInt("sentinel_charge_time", 127);
             stack.getOrCreateTag().putBoolean("sentinel_is_charging", true);

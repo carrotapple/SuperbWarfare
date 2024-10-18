@@ -304,16 +304,16 @@ public class PlayerEventHandler {
                 var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
 
                 if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && cap.shotgunAmmo > 0) {
-                    GunsTool.reload(player, GunInfo.Type.SHOTGUN);
+                    GunsTool.reload(player, stack, GunInfo.Type.SHOTGUN);
                 }
                 if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && cap.sniperAmmo > 0) {
-                    GunsTool.reload(player, GunInfo.Type.SNIPER);
+                    GunsTool.reload(player, stack, GunInfo.Type.SNIPER);
                 }
-                if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)&& cap.handgunAmmo > 0) {
-                    GunsTool.reload(player, GunInfo.Type.HANDGUN);
+                if (stack.is(ModTags.Items.USE_HANDGUN_AMMO) && cap.handgunAmmo > 0) {
+                    GunsTool.reload(player, stack, GunInfo.Type.HANDGUN);
                 }
-                if (stack.is(ModTags.Items.USE_RIFLE_AMMO)&& cap.rifleAmmo > 0) {
-                    GunsTool.reload(player, GunInfo.Type.RIFLE);
+                if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && cap.rifleAmmo > 0) {
+                    GunsTool.reload(player, stack, GunInfo.Type.RIFLE);
                 }
                 if (stack.getItem() == ModItems.TASER.get() && stack.getOrCreateTag().getInt("max_ammo") > 0) {
                     stack.getOrCreateTag().putInt("ammo", 1);
@@ -354,7 +354,7 @@ public class PlayerEventHandler {
             for (var stack : player.getInventory().items) {
                 if (stack.is(ModItems.ARMOR_PLATE.get())) {
                     for (int index0 = 0; index0 < Math.ceil(((armorLevel * 30) - armorPlate) / 30); index0++) {
-                        stack.finishUsingItem(player.level(),player);
+                        stack.finishUsingItem(player.level(), player);
                     }
                 }
             }
