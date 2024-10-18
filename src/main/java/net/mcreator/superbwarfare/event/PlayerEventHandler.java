@@ -197,9 +197,9 @@ public class PlayerEventHandler {
      * 判断玩家是否在奔跑
      */
     private static void handlePlayerSprint(Player player) {
-//        if (player.getMainHandItem().getOrCreateTag().getInt("flash_time") > 0 || player.getMainHandItem().getOrCreateTag().getInt("fire_animation") > 0) {
-//            player.getPersistentData().putDouble("noRun", 20);
-//        }
+        if (player.getMainHandItem().getOrCreateTag().getInt("flash_time") > 0 || player.getMainHandItem().getOrCreateTag().getInt("fire_animation") > 0) {
+            player.getPersistentData().putDouble("noRun", 40);
+        }
 
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).holdFire) {
             player.getPersistentData().putDouble("noRun", 10);
@@ -299,37 +299,48 @@ public class PlayerEventHandler {
     private static void handleRespawnReload(Player player) {
         if (!GameplayConfig.RESPAWN_RELOAD.get()) return;
 
+        int count = 0;
+        for (var inv : player.getInventory().items) {
+            if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
+                count++;
+            }
+        }
+
         for (ItemStack stack : player.getInventory().items) {
             if (stack.is(ModTags.Items.GUN)) {
-                var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
+                if (count == 0) {
+                    var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
 
-                if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && cap.shotgunAmmo > 0) {
-                    GunsTool.reload(player, stack, GunInfo.Type.SHOTGUN);
-                }
-                if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && cap.sniperAmmo > 0) {
-                    GunsTool.reload(player, stack, GunInfo.Type.SNIPER);
-                }
-                if (stack.is(ModTags.Items.USE_HANDGUN_AMMO) && cap.handgunAmmo > 0) {
-                    GunsTool.reload(player, stack, GunInfo.Type.HANDGUN);
-                }
-                if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && cap.rifleAmmo > 0) {
-                    GunsTool.reload(player, stack, GunInfo.Type.RIFLE);
-                }
-                if (stack.getItem() == ModItems.TASER.get() && stack.getOrCreateTag().getInt("max_ammo") > 0) {
-                    stack.getOrCreateTag().putInt("ammo", 1);
-                    player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.TASER_ELECTRODE.get(), 1, player.inventoryMenu.getCraftSlots());
-                }
-                if (stack.getItem() == ModItems.M_79.get() && stack.getOrCreateTag().getInt("max_ammo") > 0) {
-                    stack.getOrCreateTag().putInt("ammo", 1);
-                    player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.GRENADE_40MM.get(), 1, player.inventoryMenu.getCraftSlots());
-                }
-                if (stack.getItem() == ModItems.RPG.get() && stack.getOrCreateTag().getInt("max_ammo") > 0) {
-                    stack.getOrCreateTag().putInt("ammo", 1);
-                    player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.ROCKET.get(), 1, player.inventoryMenu.getCraftSlots());
-                }
-                if (stack.getItem() == ModItems.JAVELIN.get() && stack.getOrCreateTag().getInt("max_ammo") > 0) {
-                    stack.getOrCreateTag().putInt("ammo", 1);
-                    player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.JAVELIN_MISSILE.get(), 1, player.inventoryMenu.getCraftSlots());
+                    if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && cap.shotgunAmmo > 0) {
+                        GunsTool.reload(player, stack, GunInfo.Type.SHOTGUN);
+                    }
+                    if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && cap.sniperAmmo > 0) {
+                        GunsTool.reload(player, stack, GunInfo.Type.SNIPER);
+                    }
+                    if (stack.is(ModTags.Items.USE_HANDGUN_AMMO) && cap.handgunAmmo > 0) {
+                        GunsTool.reload(player, stack, GunInfo.Type.HANDGUN);
+                    }
+                    if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && cap.rifleAmmo > 0) {
+                        GunsTool.reload(player, stack, GunInfo.Type.RIFLE);
+                    }
+                    if (stack.getItem() == ModItems.TASER.get() && stack.getOrCreateTag().getInt("max_ammo") > 0) {
+                        stack.getOrCreateTag().putInt("ammo", 1);
+                        player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.TASER_ELECTRODE.get(), 1, player.inventoryMenu.getCraftSlots());
+                    }
+                    if (stack.getItem() == ModItems.M_79.get() && stack.getOrCreateTag().getInt("max_ammo") > 0) {
+                        stack.getOrCreateTag().putInt("ammo", 1);
+                        player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.GRENADE_40MM.get(), 1, player.inventoryMenu.getCraftSlots());
+                    }
+                    if (stack.getItem() == ModItems.RPG.get() && stack.getOrCreateTag().getInt("max_ammo") > 0) {
+                        stack.getOrCreateTag().putInt("ammo", 1);
+                        player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.ROCKET.get(), 1, player.inventoryMenu.getCraftSlots());
+                    }
+                    if (stack.getItem() == ModItems.JAVELIN.get() && stack.getOrCreateTag().getInt("max_ammo") > 0) {
+                        stack.getOrCreateTag().putInt("ammo", 1);
+                        player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.JAVELIN_MISSILE.get(), 1, player.inventoryMenu.getCraftSlots());
+                    }
+                } else {
+                    stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + stack.getOrCreateTag().getInt("customMag"));
                 }
             }
         }

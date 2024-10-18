@@ -520,8 +520,6 @@ public class ClientEventHandler {
             randomShell[1] = (0.2 + (Math.random() - 0.5));
             randomShell[2] = (0.7 + (Math.random() - 0.5));
 
-            Minecraft.getInstance().player.getPersistentData().putDouble("noRun", 20);
-
             float gunRecoilY = (float) tag.getDouble("recoil_y") * 10;
             recoilY = (float) (2 * Math.random() - 1) * gunRecoilY;
 
