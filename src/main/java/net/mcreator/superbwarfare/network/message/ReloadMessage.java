@@ -45,6 +45,11 @@ public class ReloadMessage {
         }
 
         if (type == 0) {
+            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.edit = false;
+                capability.syncPlayerVariables(player);
+            });
+
             ItemStack stack = player.getMainHandItem();
             var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
 

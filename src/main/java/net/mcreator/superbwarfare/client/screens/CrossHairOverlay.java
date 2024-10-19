@@ -7,6 +7,7 @@ import net.mcreator.superbwarfare.config.client.DisplayConfig;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModTags;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.perk.AmmoPerk;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
@@ -48,6 +49,8 @@ public class CrossHairOverlay {
         if (player == null) {
             return;
         }
+
+        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) return;
 
         GuiGraphics guiGraphics = event.getGuiGraphics();
 

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -24,6 +25,10 @@ public class M79UIOverlay {
         int w = event.getWindow().getGuiScaledWidth();
         int h = event.getWindow().getGuiScaledHeight();
         Player player = Minecraft.getInstance().player;
+
+        if (player != null && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit)
+            return;
+
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();

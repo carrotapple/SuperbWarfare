@@ -215,6 +215,7 @@ public class ClientEventHandler {
                 && cantFireTime == 0
                 && drawTime < 0.01
                 && !notInGame()
+                && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit
                 || (stack.is(ModItems.MINIGUN.get()) && !player.isSprinting() && stack.getOrCreateTag().getDouble("overheat") == 0 && !player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getDouble("minigun_rotation") >= 10
         ))) {
             double customRpm = 0;
@@ -490,7 +491,10 @@ public class ClientEventHandler {
         ItemStack stack = player.getMainHandItem();
         float times = 5 * Minecraft.getInstance().getDeltaFrameTime();
         double speed = stack.getOrCreateTag().getDouble("zoom_speed");
-        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS && !notInGame() && drawTime < 0.01) {
+        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS
+                && !notInGame()
+                && drawTime < 0.01
+                && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
             if (Minecraft.getInstance().player != null) {
                 Minecraft.getInstance().player.getPersistentData().putDouble("noRun", 5);
             }

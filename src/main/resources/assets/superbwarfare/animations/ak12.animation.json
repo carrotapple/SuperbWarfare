@@ -4,6 +4,28 @@
 		"animation.ak12.idle": {
 			"animation_length": 1
 		},
+		"animation.ak12.edit": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.1,
+			"bones": {
+				"0": {
+					"rotation": {
+						"vector": [-22.5, -22.5, -22.5]
+					},
+					"position": {
+						"vector": [0.5, 2.5, -4.75]
+					}
+				},
+				"Lefthand": {
+					"rotation": {
+						"vector": [-20.80188, -23.88158, -14.35972]
+					},
+					"position": {
+						"vector": [-4, -10, 20]
+					}
+				}
+			}
+		},
 		"animation.ak12.run": {
 			"loop": true,
 			"animation_length": 0.8,

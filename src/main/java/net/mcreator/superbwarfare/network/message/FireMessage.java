@@ -73,6 +73,7 @@ public class FireMessage {
         if (type == 0) {
             handlePlayerShoot(player);
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                capability.edit = false;
                 capability.holdFire = true;
                 capability.syncPlayerVariables(player);
             });

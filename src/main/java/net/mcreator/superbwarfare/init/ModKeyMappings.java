@@ -103,6 +103,76 @@ public class ModKeyMappings {
     public static final KeyMapping CONFIG = new KeyMapping("key.superbwarfare.config", KeyConflictContext.IN_GAME,
             KeyModifier.ALT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_O, "key.categories.superbwarfare");
 
+    public static final KeyMapping EDIT_MODE = new KeyMapping("key.superbwarfare.edit_mode", GLFW.GLFW_KEY_H, "key.categories.superbwarfare") {
+        private boolean isDownOld = false;
+
+        @Override
+        public void setDown(boolean isDown) {
+            super.setDown(isDown);
+            if (isDownOld != isDown && isDown) {
+                ModUtils.PACKET_HANDLER.sendToServer(new EditModeMessage(0));
+                EditModeMessage.pressAction(Minecraft.getInstance().player, 0);
+            }
+            isDownOld = isDown;
+        }
+    };
+
+    public static final KeyMapping EDIT_SCOPE = new KeyMapping("key.superbwarfare.edit_scope", GLFW.GLFW_KEY_UP, "key.categories.superbwarfare") {
+        private boolean isDownOld = false;
+
+        @Override
+        public void setDown(boolean isDown) {
+            super.setDown(isDown);
+            if (isDownOld != isDown && isDown) {
+                ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(0));
+                EditMessage.pressAction(Minecraft.getInstance().player, 0);
+            }
+            isDownOld = isDown;
+        }
+    };
+
+    public static final KeyMapping EDIT_BARREL = new KeyMapping("key.superbwarfare.edit_barrel", GLFW.GLFW_KEY_LEFT, "key.categories.superbwarfare") {
+        private boolean isDownOld = false;
+
+        @Override
+        public void setDown(boolean isDown) {
+            super.setDown(isDown);
+            if (isDownOld != isDown && isDown) {
+                ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(1));
+                EditMessage.pressAction(Minecraft.getInstance().player, 1);
+            }
+            isDownOld = isDown;
+        }
+    };
+
+    public static final KeyMapping EDIT_MAGAZINE = new KeyMapping("key.superbwarfare.edit_magazine", GLFW.GLFW_KEY_DOWN, "key.categories.superbwarfare") {
+        private boolean isDownOld = false;
+
+        @Override
+        public void setDown(boolean isDown) {
+            super.setDown(isDown);
+            if (isDownOld != isDown && isDown) {
+                ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(2));
+                EditMessage.pressAction(Minecraft.getInstance().player, 2);
+            }
+            isDownOld = isDown;
+        }
+    };
+
+    public static final KeyMapping EDIT_STOCK = new KeyMapping("key.superbwarfare.edit_stock", GLFW.GLFW_KEY_RIGHT, "key.categories.superbwarfare") {
+        private boolean isDownOld = false;
+
+        @Override
+        public void setDown(boolean isDown) {
+            super.setDown(isDown);
+            if (isDownOld != isDown && isDown) {
+                ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(3));
+                EditMessage.pressAction(Minecraft.getInstance().player, 3);
+            }
+            isDownOld = isDown;
+        }
+    };
+
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(RELOAD);
@@ -112,6 +182,11 @@ public class ModKeyMappings {
         event.register(INTERACT);
         event.register(BREATH);
         event.register(CONFIG);
+        event.register(EDIT_MODE);
+        event.register(EDIT_SCOPE);
+        event.register(EDIT_BARREL);
+        event.register(EDIT_MAGAZINE);
+        event.register(EDIT_STOCK);
     }
 
     @Mod.EventBusSubscriber(value = Dist.CLIENT)

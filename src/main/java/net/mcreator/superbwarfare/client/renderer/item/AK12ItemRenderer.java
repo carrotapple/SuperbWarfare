@@ -101,7 +101,20 @@ public class AK12ItemRenderer extends GeoItemRenderer<AK12Item> {
                 itemStack = player.getMainHandItem();
             }
             if (player != null) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS);
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                        || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
+                        || itemStack.getOrCreateTag().getInt("scope_type") != 1);
+            }
+        }
+
+        if (name.equals("okp")) {
+            Player player = Minecraft.getInstance().player;
+            ItemStack itemStack = null;
+            if (player != null) {
+                itemStack = player.getMainHandItem();
+            }
+            if (player != null) {
+                bone.setHidden(itemStack.getOrCreateTag().getInt("scope_type") != 1);
             }
         }
 

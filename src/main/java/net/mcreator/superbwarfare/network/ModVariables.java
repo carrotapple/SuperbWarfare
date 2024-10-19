@@ -83,6 +83,7 @@ public class ModVariables {
             clone.breath = original.breath;
             clone.breathTime = original.breathTime;
             clone.breathExhaustion = original.breathExhaustion;
+            clone.edit = original.edit;
 
             if (event.getEntity().level().isClientSide()) return;
 
@@ -222,6 +223,7 @@ public class ModVariables {
         public boolean breath = false;
         public int breathTime = 160;
         public boolean breathExhaustion = false;
+        public boolean edit = false;
 
         public void syncPlayerVariables(Entity entity) {
             if (entity instanceof ServerPlayer)
@@ -245,6 +247,7 @@ public class ModVariables {
             nbt.putBoolean("breath", breath);
             nbt.putInt("breathTime", breathTime);
             nbt.putBoolean("breathExhaustion", breathExhaustion);
+            nbt.putBoolean("edit", edit);
 
             return nbt;
         }
@@ -266,6 +269,7 @@ public class ModVariables {
             breath = nbt.getBoolean("breath");
             breathTime = nbt.getInt("breathTime");
             breathExhaustion = nbt.getBoolean("breathExhaustion");
+            edit = nbt.getBoolean("edit");
         }
     }
 
@@ -318,6 +322,7 @@ public class ModVariables {
                 variables.breath = message.data.breath;
                 variables.breathTime = message.data.breathTime;
                 variables.breathExhaustion = message.data.breathExhaustion;
+                variables.edit = message.data.edit;
             });
         }
     }

@@ -10,6 +10,7 @@ import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
 import net.mcreator.superbwarfare.item.gun.GunItem;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
@@ -84,6 +85,10 @@ public class AK12Item extends GunItem implements GeoItem, AnimatedItem {
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
+
+        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak12.edit"));
+        }
 
         if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak12.reload_empty"));

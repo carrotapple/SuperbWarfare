@@ -287,6 +287,11 @@ public class LivingEventHandler {
                             oldTags.putInt("sentinel_charge_time", 0);
                         }
 
+                        player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                            capability.edit = false;
+                            capability.syncPlayerVariables(player);
+                        });
+
                     }
 
                     if (newStack.getItem() instanceof GunItem) {

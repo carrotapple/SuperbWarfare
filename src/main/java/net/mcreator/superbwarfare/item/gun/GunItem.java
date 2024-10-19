@@ -48,6 +48,13 @@ public abstract class GunItem extends Item {
                 return;
             }
 
+//            if (entity instanceof Player player) {
+//                player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.##").format(itemstack.getOrCreateTag().getInt("scope_type"))
+//                        + " " + new java.text.DecimalFormat("##.#").format(itemstack.getOrCreateTag().getInt("barrel_type"))
+//                        + " " + new java.text.DecimalFormat("##.#").format(itemstack.getOrCreateTag().getInt("magazine_type"))
+//                        + " " + new java.text.DecimalFormat("##.#").format(itemstack.getOrCreateTag().getInt("stock_type"))), true);
+//            }
+
             if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
                 GunsTool.initGun(level, itemstack, this.getDescriptionId().substring(this.getDescriptionId().lastIndexOf('.') + 1));
                 GunsTool.genUUID(itemstack);

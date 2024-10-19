@@ -46,8 +46,10 @@ public class ZoomMessage {
                 if (message.type == 0) {
                     player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                         capability.zoom = true;
+                        capability.edit = false;
                         capability.syncPlayerVariables(player);
                     });
+
 
                     if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity) {
                         SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_IN.get(), 2, 1);

@@ -332,6 +332,11 @@
   "key.superbwarfare.interact": "Interact",
   "key.superbwarfare.breath": "Breathe",
   "key.superbwarfare.config": "Open Config Screen",
+  "key.superbwarfare.edit_mode": "Edit Weapon",
+  "key.superbwarfare.edit_scope": "Switch Scope",
+  "key.superbwarfare.edit_barrel": "Switch Barrel",
+  "key.superbwarfare.edit_magazine": "Switch Magazine",
+  "key.superbwarfare.edit_stock": "Switch Stock",
 
   "effect.superbwarfare.shock": "Shock",
   "item.minecraft.potion.effect.superbwarfare_shock": "Potion of Shock",
