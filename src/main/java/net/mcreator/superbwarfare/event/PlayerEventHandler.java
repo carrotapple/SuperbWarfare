@@ -198,7 +198,7 @@ public class PlayerEventHandler {
      */
     private static void handlePlayerSprint(Player player) {
         if (player.getMainHandItem().getOrCreateTag().getInt("flash_time") > 0 || player.getMainHandItem().getOrCreateTag().getInt("fire_animation") > 0) {
-            player.getPersistentData().putDouble("noRun", 40);
+            player.getPersistentData().putDouble("noRun", 20);
         }
 
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).holdFire) {
@@ -342,6 +342,7 @@ public class PlayerEventHandler {
                 } else {
                     stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + stack.getOrCreateTag().getInt("customMag"));
                 }
+                stack.getOrCreateTag().putBoolean("HoldOpen", false);
             }
         }
     }

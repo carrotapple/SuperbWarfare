@@ -53,7 +53,7 @@ public class GunEventHandler {
     }
 
     /**
-     * 通用的武器开火流程
+     * 拉大栓
      */
     private static void handleGunBolt(Player player) {
         ItemStack stack = player.getMainHandItem();
