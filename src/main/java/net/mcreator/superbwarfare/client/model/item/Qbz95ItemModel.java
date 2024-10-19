@@ -86,7 +86,7 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
-        root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * mph));
+        root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));
         root.setPosY((float) (swayY + movePosY - 40 * ClientEventHandler.drawTime - 2f * vY));
         root.setRotX((float) (swayX - Mth.DEG_TO_RAD * 60 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotX - 0.15f * vY));
         root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotY));
@@ -109,6 +109,6 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
             camera.setRotY(numR * camera.getRotY());
             camera.setRotZ(numR * camera.getRotZ());
         }
-        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
+        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

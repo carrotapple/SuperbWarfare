@@ -4,6 +4,7 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.handgun.M1911Item;
+import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -115,14 +116,8 @@ public class M1911ItemModel extends GeoModel<M1911Item> {
         }
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
 
+        AnimUtils.handleShellsAnimation(getAnimationProcessor(), 0.7f, 1f);
         CoreGeoBone shell = getAnimationProcessor().getBone("shell");
-        CoreGeoBone shell1 = getAnimationProcessor().getBone("shell1");
-        CoreGeoBone shell2 = getAnimationProcessor().getBone("shell2");
-        CoreGeoBone shell3 = getAnimationProcessor().getBone("shell3");
-        CoreGeoBone shell4 = getAnimationProcessor().getBone("shell4");
-        CoreGeoBone shell5 = getAnimationProcessor().getBone("shell5");
-
-        ClientEventHandler.handleShells(0.7f, 1f, shell1, shell2, shell3, shell4, shell5);
 
         if (stack.getOrCreateTag().getBoolean("HoldOpen")) {
             slide.setPosZ(1.5f);

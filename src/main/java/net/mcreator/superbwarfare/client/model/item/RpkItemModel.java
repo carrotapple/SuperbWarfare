@@ -4,6 +4,7 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.machinegun.RpkItem;
+import net.mcreator.superbwarfare.tools.AnimUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -61,23 +62,14 @@ public class RpkItemModel extends GeoModel<RpkItem> {
         double fr = ClientEventHandler.fireRot;
 
         gun.setPosX(1.69f * (float) zp);
-
         gun.setPosY(-0.33f * (float) zp - (float) (0.1f * zpz));
-
         gun.setPosZ(3.2f * (float) zp + (float) (0.2f * zpz));
-
         gun.setRotZ((float) (0.05f * zpz));
-
         gun.setScaleZ(1f - (0.55f * (float) zp));
-
         scope.setScaleZ(1f - (0.9f * (float) zp));
-
         button.setScaleX(1f - (0.2f * (float) zp));
-
         button.setScaleY(1f - (0.3f * (float) zp));
-
         button.setScaleZ(1f - (0.3f * (float) zp));
-
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.65));
 
@@ -98,7 +90,7 @@ public class RpkItemModel extends GeoModel<RpkItem> {
         shuan.setPosZ(2.4f * (float) fp);
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
-        root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * mph));
+        root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));
         root.setPosY((float) (swayY + movePosY - 40 * ClientEventHandler.drawTime - 2f * vY));
         root.setRotX((float) (swayX - Mth.DEG_TO_RAD * 60 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotX - 0.15f * vY));
         root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotY));
@@ -121,14 +113,8 @@ public class RpkItemModel extends GeoModel<RpkItem> {
             camera.setRotY(numR * camera.getRotY());
             camera.setRotZ(numR * camera.getRotZ());
         }
-        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
+        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
 
-        CoreGeoBone shell1 = getAnimationProcessor().getBone("shell1");
-        CoreGeoBone shell2 = getAnimationProcessor().getBone("shell2");
-        CoreGeoBone shell3 = getAnimationProcessor().getBone("shell3");
-        CoreGeoBone shell4 = getAnimationProcessor().getBone("shell4");
-        CoreGeoBone shell5 = getAnimationProcessor().getBone("shell5");
-
-        ClientEventHandler.handleShells(1f, 0.55f, shell1, shell2, shell3, shell4, shell5);
+        AnimUtils.handleShellsAnimation(getAnimationProcessor(), 1f, 0.55f);
     }
 }
