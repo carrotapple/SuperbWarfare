@@ -14,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -358,8 +359,16 @@ public class PlayerEventHandler {
         if (armorPlate < armorLevel * 30) {
             for (var stack : player.getInventory().items) {
                 if (stack.is(ModItems.ARMOR_PLATE.get())) {
-                    for (int index0 = 0; index0 < Math.ceil(((armorLevel * 30) - armorPlate) / 30); index0++) {
-                        stack.finishUsingItem(player.level(), player);
+                    if (stack.getTag() != null && stack.getTag().getBoolean("Infinite")) {
+                        armor.getOrCreateTag().putDouble("ArmorPlate", armorLevel * 30);
+
+                        if (player instanceof ServerPlayer serverPlayer) {
+                            serverPlayer.level().playSound(null, serverPlayer.getOnPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.PLAYERS, 0.5f, 1);
+                        }
+                    } else {
+                        for (int index0 = 0; index0 < Math.ceil(((armorLevel * 30) - armorPlate) / 30); index0++) {
+                            stack.finishUsingItem(player.level(), player);
+                        }
                     }
                 }
             }
