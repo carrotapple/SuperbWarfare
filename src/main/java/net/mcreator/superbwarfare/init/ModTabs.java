@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.init;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.item.ArmorPlate;
 import net.mcreator.superbwarfare.item.gun.handgun.Glock17Item;
 import net.mcreator.superbwarfare.item.gun.handgun.Glock18Item;
 import net.mcreator.superbwarfare.item.gun.handgun.M1911Item;
@@ -98,7 +99,12 @@ public class ModTabs {
                     .title(Component.translatable("item_group.superbwarfare.item"))
                     .icon(() -> new ItemStack(ModItems.TARGET_DEPLOYER.get()))
                     .withTabsBefore(AMMO_TAB.getKey())
-                    .displayItems((param, output) -> ModItems.ITEMS.getEntries().forEach(registryObject -> output.accept(registryObject.get())))
+                    .displayItems((param, output) -> ModItems.ITEMS.getEntries().forEach(registryObject -> {
+                        output.accept(registryObject.get());
+                        if (registryObject.get() == ModItems.ARMOR_PLATE.get()) {
+                            output.accept(ArmorPlate.getInfiniteInstance());
+                        }
+                    }))
                     .build());
 
     public static final RegistryObject<CreativeModeTab> BLOCK_TAB = TABS.register("block",
