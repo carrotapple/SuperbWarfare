@@ -21,11 +21,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -88,8 +90,6 @@ public class M60Item extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-
-
         if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m60.reload"));
         }
@@ -134,12 +134,24 @@ public class M60Item extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
+    public void inventoryTick(ItemStack itemstack, Level level, Entity entity, int slot, boolean selected) {
+        if (itemstack.getOrCreateTag().getBoolean("draw")) {
+            itemstack.getOrCreateTag().putBoolean("draw", false);
+
+            if (itemstack.getOrCreateTag().getInt("ammo") <= 5) {
+                itemstack.getOrCreateTag().putBoolean("bullet_chain", true);
+            }
+        }
+        super.inventoryTick(itemstack, level, entity, slot, selected);
+    }
+
+    @Override
     public void setAnimationProcedure(String procedure) {
     }
 
     @Override
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/m60_icon.png");
+        return ModUtils.loc("textures/gun_icon/m60_icon.png");
     }
 
     @Override

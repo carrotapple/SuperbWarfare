@@ -20,11 +20,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -113,6 +115,18 @@ public class SksItem extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = new ItemStack(ModItems.SKS.get());
         GunsTool.initCreativeGun(stack, ModItems.SKS.getId().getPath());
         return stack;
+    }
+
+    @Override
+    public void inventoryTick(ItemStack itemstack, Level level, Entity entity, int slot, boolean selected) {
+        if (itemstack.getOrCreateTag().getBoolean("draw")) {
+            itemstack.getOrCreateTag().putBoolean("draw", false);
+
+            if (itemstack.getOrCreateTag().getInt("ammo") == 0) {
+                itemstack.getOrCreateTag().putBoolean("HoldOpen", true);
+            }
+        }
+        super.inventoryTick(itemstack, level, entity, slot, selected);
     }
 
     @Override

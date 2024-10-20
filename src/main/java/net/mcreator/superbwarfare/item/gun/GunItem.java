@@ -3,7 +3,6 @@ package net.mcreator.superbwarfare.item.gun;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -64,16 +63,6 @@ public abstract class GunItem extends Item {
 
             if (itemstack.getOrCreateTag().getBoolean("draw")) {
                 itemstack.getOrCreateTag().putBoolean("draw", false);
-
-                if (itemstack.getItem() == ModItems.RPG.get() && itemstack.getOrCreateTag().getInt("ammo") == 0) {
-                    itemstack.getOrCreateTag().putDouble("empty", 1);
-                }
-                if (itemstack.getItem() == ModItems.SKS.get() && itemstack.getOrCreateTag().getInt("ammo") == 0) {
-                    itemstack.getOrCreateTag().putBoolean("HoldOpen", true);
-                }
-                if (itemstack.getItem() == ModItems.M_60.get() && itemstack.getOrCreateTag().getInt("ammo") <= 5) {
-                    itemstack.getOrCreateTag().putBoolean("bullet_chain", true);
-                }
             }
 
             if (itemstack.getOrCreateTag().getInt("fire_animation") > 0) {
@@ -144,7 +133,7 @@ public abstract class GunItem extends Item {
     }
 
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/default_icon.png");
+        return ModUtils.loc("textures/gun_icon/default_icon.png");
     }
 
     public String getGunDisplayName() {

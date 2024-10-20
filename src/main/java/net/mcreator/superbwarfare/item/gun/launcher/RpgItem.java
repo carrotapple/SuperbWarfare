@@ -137,13 +137,20 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemStack, world, entity, slot, selected);
+        if (itemStack.getOrCreateTag().getBoolean("draw")) {
+            itemStack.getOrCreateTag().putBoolean("draw", false);
+
+            if (itemStack.getOrCreateTag().getInt("ammo") == 0) {
+                itemStack.getOrCreateTag().putDouble("empty", 1);
+            }
+        }
 
         if (entity instanceof Player player) {
             var tag = itemStack.getOrCreateTag();
             tag.putInt("max_ammo", getAmmoCount(player));
-
         }
+
+        super.inventoryTick(itemStack, world, entity, slot, selected);
     }
 
     protected static boolean check(ItemStack stack) {
