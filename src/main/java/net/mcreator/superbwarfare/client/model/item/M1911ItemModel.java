@@ -4,7 +4,7 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.handgun.M1911Item;
-import net.mcreator.superbwarfare.tools.AnimUtils;
+import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -116,7 +116,7 @@ public class M1911ItemModel extends GeoModel<M1911Item> {
         }
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
 
-        AnimUtils.handleShellsAnimation(getAnimationProcessor(), 0.7f, 1f);
+        AnimationHelper.handleShellsAnimation(getAnimationProcessor(), 0.7f, 1f);
         CoreGeoBone shell = getAnimationProcessor().getBone("shell");
 
         if (stack.getOrCreateTag().getBoolean("HoldOpen")) {

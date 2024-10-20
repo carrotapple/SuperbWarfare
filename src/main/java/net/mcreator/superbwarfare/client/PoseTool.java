@@ -1,4 +1,4 @@
-package net.mcreator.superbwarfare.tools;
+package net.mcreator.superbwarfare.client;
 
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.InteractionHand;

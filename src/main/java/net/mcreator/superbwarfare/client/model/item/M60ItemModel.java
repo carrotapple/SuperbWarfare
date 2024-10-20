@@ -4,7 +4,7 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.machinegun.M60Item;
-import net.mcreator.superbwarfare.tools.AnimUtils;
+import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -139,7 +139,7 @@ public class M60ItemModel extends GeoModel<M60Item> {
         float numR = (float) (1 - 0.88 * zt);
         float numP = (float) (1 - 0.28 * zt);
 
-        AnimUtils.handleShellsAnimation(getAnimationProcessor(), 1f, 0.45f);
+        AnimationHelper.handleShellsAnimation(getAnimationProcessor(), 1f, 0.45f);
         CoreGeoBone shell = getAnimationProcessor().getBone("shell");
 
         if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {

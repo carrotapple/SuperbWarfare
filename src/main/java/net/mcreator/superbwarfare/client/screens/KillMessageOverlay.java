@@ -27,7 +27,7 @@ import top.theillusivec4.curios.api.CuriosApi;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import static net.mcreator.superbwarfare.tools.RenderTool.preciseBlit;
+import static net.mcreator.superbwarfare.client.RenderHelper.preciseBlit;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class KillMessageOverlay {

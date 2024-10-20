@@ -4,7 +4,7 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.smg.VectorItem;
-import net.mcreator.superbwarfare.tools.AnimUtils;
+import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -123,6 +123,6 @@ public class VectorItemModel extends GeoModel<VectorItem> {
 
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
 
-        AnimUtils.handleShellsAnimation(getAnimationProcessor(), 1.2f, 0.45f);
+        AnimationHelper.handleShellsAnimation(getAnimationProcessor(), 1.2f, 0.45f);
     }
 }

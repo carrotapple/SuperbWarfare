@@ -25,7 +25,7 @@ import org.lwjgl.glfw.GLFW;
 import java.text.DecimalFormat;
 import java.util.Objects;
 
-import static net.mcreator.superbwarfare.tools.RenderTool.preciseBlit;
+import static net.mcreator.superbwarfare.client.RenderHelper.preciseBlit;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class CannonHudOverlay {
