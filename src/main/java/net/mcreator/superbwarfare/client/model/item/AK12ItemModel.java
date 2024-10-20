@@ -35,7 +35,7 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
     public void setCustomAnimations(AK12Item animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
-        CoreGeoBone scope = getAnimationProcessor().getBone("okp");
+        CoreGeoBone Scope1 = getAnimationProcessor().getBone("Scope1");
         CoreGeoBone shuan = getAnimationProcessor().getBone("shuan");
 
         Player player = Minecraft.getInstance().player;
@@ -83,7 +83,7 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
         gun.setPosY(posY * (float) zp - (float) (0.2f * zpz));
         gun.setPosZ(2.8f * (float) zp + (float) (0.5f * zpz));
         gun.setScaleZ(1f - (scaleZ * (float) zp));
-        scope.setScaleZ(1f - (0.4f * (float) zp));
+        Scope1.setScaleZ(1f - (0.4f * (float) zp));
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.8));
 

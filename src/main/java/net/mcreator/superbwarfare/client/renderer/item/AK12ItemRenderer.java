@@ -103,39 +103,39 @@ public class AK12ItemRenderer extends GeoItemRenderer<AK12Item> {
                 }
             }
 
-            if (name.equals("okp")) {
+            if (name.equals("Scope1")) {
                 bone.setHidden(itemStack.getOrCreateTag().getInt("scope_type") != 1);
             }
 
-            if (name.equals("normalmag")) {
+            if (name.equals("Magazine0")) {
                 bone.setHidden(itemStack.getOrCreateTag().getInt("magazine_type") != 0);
             }
 
-            if (name.equals("extendmag")) {
+            if (name.equals("Magazine1")) {
                 bone.setHidden(itemStack.getOrCreateTag().getInt("magazine_type") != 1);
             }
 
-            if (name.equals("drum")) {
+            if (name.equals("Magazine2")) {
                 bone.setHidden(itemStack.getOrCreateTag().getInt("magazine_type") != 2);
             }
 
-            if (name.equals("oringinbarrel")) {
+            if (name.equals("Barrel0")) {
                 bone.setHidden(itemStack.getOrCreateTag().getInt("barrel_type") != 0);
             }
 
-            if (name.equals("huomao")) {
+            if (name.equals("Barrel1")) {
                 bone.setHidden(itemStack.getOrCreateTag().getInt("barrel_type") != 1);
             }
 
-            if (name.equals("sup")) {
+            if (name.equals("Barrel2")) {
                 bone.setHidden(itemStack.getOrCreateTag().getInt("barrel_type") != 2);
             }
 
-            if (name.equals("originstock")) {
+            if (name.equals("Stock0")) {
                 bone.setHidden(itemStack.getOrCreateTag().getInt("stock_type") != 0);
             }
 
-            if (name.equals("light_stock")) {
+            if (name.equals("Stock1")) {
                 bone.setHidden(itemStack.getOrCreateTag().getInt("stock_type") != 1);
             }
 
