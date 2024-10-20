@@ -13,6 +13,7 @@ import net.mcreator.superbwarfare.network.message.ShootMessage;
 import net.mcreator.superbwarfare.perk.AmmoPerk;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.MillisTimer;
 import net.mcreator.superbwarfare.tools.SeekTool;
 import net.minecraft.client.CameraType;
@@ -613,20 +614,16 @@ public class ClientEventHandler {
 
         CompoundTag tag = player.getMainHandItem().getOrCreateTag();
         float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
-        int barrelType = tag.getInt("barrel_type");
+        int barrelType = GunsTool.getAttachmentType(player.getMainHandItem(), GunsTool.AttachmentType.BARREL);
 
-        double recoil = 1.8;
-
-        if (barrelType == 1) {
-            recoil = 0.7;
-        } else if (barrelType == 2) {
-            recoil = 1;
-        }
+        double recoil = switch (barrelType) {
+            case 1 -> 0.7;
+            case 2 -> 1;
+            default -> 1.8;
+        };
 
 
         float gunRecoilX = (float) tag.getDouble("recoil_x") * 60;
-
-
 
         if (recoilHorizon > 0) {
             recoilHorizon = recoilHorizon - Math.min(Math.pow(recoilHorizon, 2), 6) * times + recoilY;

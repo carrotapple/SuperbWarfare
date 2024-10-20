@@ -135,16 +135,14 @@ public class AK12Item extends GunItem implements GeoItem, AnimatedItem {
 
         int scopeType = stack.getOrCreateTag().getInt("scope_type");
         int barrelType = stack.getOrCreateTag().getInt("barrel_type");
-        int magType = stack.getOrCreateTag().getInt("magazine_type");
+        int magType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE);
         int stockType = stack.getOrCreateTag().getInt("stock_type");
 
-        int customMag = 0;
-
-        if (magType == 1) {
-            customMag = 15;
-        } else if (magType == 2) {
-            customMag = 45;
-        }
+        int customMag = switch (magType) {
+            case 1 -> 15;
+            case 2 -> 45;
+            default -> 0;
+        };
 
 //        if (scopeType == 1) {
 //
