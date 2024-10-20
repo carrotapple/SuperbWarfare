@@ -192,7 +192,7 @@ public class ClientEventHandler {
         }
 
         // 开火部分
-        double weight = stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("custom_weight");
+        double weight = stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("CustomWeight");
 
         double speed = 1 - (0.04 * weight);
 
@@ -483,7 +483,7 @@ public class ClientEventHandler {
         ItemStack stack = player.getMainHandItem();
         float times = 5 * Minecraft.getInstance().getDeltaFrameTime();
 
-        double weight = stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("custom_weight");
+        double weight = stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("CustomWeight");
         double speed = 1.5 - (0.07 * weight);
 
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS
@@ -850,7 +850,7 @@ public class ClientEventHandler {
     private static void handleWeaponDraw(LivingEntity entity) {
         float times = Minecraft.getInstance().getDeltaFrameTime();
         ItemStack stack = entity.getMainHandItem();
-        double weight = stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("custom_weight");
+        double weight = stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("CustomWeight");
 
         double speed = 3.2 - (0.13 * weight);
 

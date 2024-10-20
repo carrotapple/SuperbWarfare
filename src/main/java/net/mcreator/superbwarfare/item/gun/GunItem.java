@@ -13,6 +13,7 @@ import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.ItemNBTTool;
 import net.mcreator.superbwarfare.tools.TooltipTool;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -126,7 +127,9 @@ public abstract class GunItem extends Item {
         if (slot == EquipmentSlot.MAINHAND) {
             map = HashMultimap.create(map);
             map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER, -0.01f - 0.005f * (stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("custom_weight")), AttributeModifier.Operation.MULTIPLY_BASE));
+                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER,
+                            -0.01f - 0.005f * (stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("CustomWeight")),
+                            AttributeModifier.Operation.MULTIPLY_BASE));
         }
         return map;
     }
@@ -197,45 +200,37 @@ public abstract class GunItem extends Item {
     }
 
     private void handleGunAttachment(ItemStack stack) {
+        CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
 
-        int scopeType = stack.getOrCreateTag().getInt("scope_type");
-        int barrelType = stack.getOrCreateTag().getInt("barrel_type");
-        int magType = stack.getOrCreateTag().getInt("magazine_type");
-        int stockType = stack.getOrCreateTag().getInt("stock_type");
+        double scopeWeight = switch (tag.getInt("Scope")) {
+            case 1 -> 0.5;
+            case 2 -> 1;
+            case 3 -> 2;
+            default -> 0;
+        };
 
-        double ScopeWeight = 0;
-        double BarrelWeight = 0;
-        double MagWeight = 0;
-        double StockWeight = 0;
+        double barrelWeight = switch (tag.getInt("Barrel")) {
+            case 1 -> 1;
+            case 2 -> 2;
+            default -> 0;
+        };
 
-        if (scopeType == 1) {
-            ScopeWeight = 0.5;
-        } else if (scopeType == 2) {
-            ScopeWeight = 1;
-        } else if (scopeType == 3) {
-            ScopeWeight = 2;
-        }
+        double magazineWeight = switch (tag.getInt("Magazine")) {
+            case 1 -> 1.5;
+            case 2 -> 3;
+            default -> 0;
+        };
 
-        if (barrelType == 1) {
-            BarrelWeight = 1;
-        } else if (magType == 2) {
-            BarrelWeight = 2;
-        }
+        double stockWeight = switch (tag.getInt("Stock")) {
+            case 1 -> -2;
+            case 2 -> 2;
+            default -> 0;
+        };
 
-        if (magType == 1) {
-            MagWeight = 1.5;
-        } else if (magType == 2) {
-            MagWeight = 3;
-        }
+        double soundRadius = tag.getInt("Barrel") == 2 ? 0.25 : 1;
 
-        if (stockType == 1) {
-            StockWeight = -2;
-        } else if (stockType == 2) {
-            ScopeWeight = 2;
-        }
-
-        stack.getOrCreateTag().putDouble("custom_weight",  ScopeWeight + BarrelWeight + MagWeight + StockWeight);
-        stack.getOrCreateTag().putDouble("CustomSoundRadius", barrelType == 2 ? 0.25 : 1);
+        stack.getOrCreateTag().putDouble("CustomWeight", scopeWeight + barrelWeight + magazineWeight + stockWeight);
+        stack.getOrCreateTag().putDouble("CustomSoundRadius", soundRadius);
     }
 
     public boolean canApplyPerk(Perk perk) {

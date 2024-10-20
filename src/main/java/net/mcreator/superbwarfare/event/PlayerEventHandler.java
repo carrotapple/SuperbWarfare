@@ -131,7 +131,7 @@ public class PlayerEventHandler {
         int sprintCost;
 
         if (stack.is(ModTags.Items.GUN)) {
-            double weight = stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("custom_weight");
+            double weight = stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("CustomWeight");
             sprintCost = (int) (2 + 0.2 * weight);
         } else {
             sprintCost = 2;
