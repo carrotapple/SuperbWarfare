@@ -131,6 +131,14 @@ public class AK12ItemRenderer extends GeoItemRenderer<AK12Item> {
                 bone.setHidden(itemStack.getOrCreateTag().getInt("barrel_type") != 2);
             }
 
+            if (name.equals("originstock")) {
+                bone.setHidden(itemStack.getOrCreateTag().getInt("stock_type") != 0);
+            }
+
+            if (name.equals("light_stock")) {
+                bone.setHidden(itemStack.getOrCreateTag().getInt("stock_type") != 1);
+            }
+
         }
 
 
