@@ -157,7 +157,9 @@ public class TooltipTool {
         }
 
         if (!ammoTag.isEmpty()) {
-            String id = ammoTag.getString("id").split(":")[1];
+            var ids = ammoTag.getString("id").split(":");
+            if (ids.length <= 1) return;
+            String id = ids[1];
             var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
             tooltip.add(Component.translatable("perk.superbwarfare.slot_Ammo").withStyle(ChatFormatting.YELLOW)
                     .append(Component.literal(" >> "))
@@ -185,7 +187,9 @@ public class TooltipTool {
         }
 
         if (!functionalTag.isEmpty()) {
-            String id = functionalTag.getString("id").split(":")[1];
+            var ids = functionalTag.getString("id").split(":");
+            if (ids.length <= 1) return;
+            String id = ids[1];
             tooltip.add(Component.translatable("perk.superbwarfare.slot_Functional").withStyle(ChatFormatting.GREEN)
                     .append(Component.literal(" >> "))
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
@@ -195,7 +199,9 @@ public class TooltipTool {
         }
 
         if (!damageTag.isEmpty()) {
-            String id = damageTag.getString("id").split(":")[1];
+            var ids = damageTag.getString("id").split(":");
+            if (ids.length <= 1) return;
+            String id = ids[1];
             tooltip.add(Component.translatable("perk.superbwarfare.slot_Damage").withStyle(ChatFormatting.RED)
                     .append(Component.literal(" >> "))
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
