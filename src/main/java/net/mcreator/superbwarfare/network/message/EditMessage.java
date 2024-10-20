@@ -1,7 +1,9 @@
 package net.mcreator.superbwarfare.network.message;
 
+import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
+import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -67,6 +69,7 @@ public class EditMessage {
                 }
             }
             stack.addTagElement("Attachments", tag);
+            SoundTool.playLocalSound(player, ModSounds.EDIT.get(), 1f, 1f);
         }
     }
 }

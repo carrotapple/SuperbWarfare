@@ -48,7 +48,7 @@ public class MouseHandlerMixin {
             return original;
         }
 
-        double zoom = stack.getOrCreateTag().getDouble("zoom") + stack.getOrCreateTag().getDouble("custom_zoom");
+        double zoom = 1.25 + stack.getOrCreateTag().getDouble("CustomZoom");
         float customSens = (float) stack.getOrCreateTag().getInt("sensitivity");
 
 

@@ -269,13 +269,24 @@ public class ClientEventHandler {
             pose = 1;
         }
 
+        int stockType = GunsTool.getAttachmentType(player.getMainHandItem(), GunsTool.AttachmentType.STOCK);
+
+        double sway = switch (stockType) {
+            case 1 -> 1;
+            case 2 -> 0.55;
+            default -> 0.8;
+        };
+
+        double cusWeight = player.getMainHandItem().getOrCreateTag().getDouble("CustomWeight");
+
+
         if (!player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breath &&
                 player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom) {
-            float newPitch = (float) (player.getXRot() - 0.01f * Mth.sin((float) (0.03 * player.tickCount)) * pose * Mth.nextDouble(RandomSource.create(), 0.1, 1) * times);
+            float newPitch = (float) (player.getXRot() - 0.01f * Mth.sin((float) (0.03 * player.tickCount)) * pose * Mth.nextDouble(RandomSource.create(), 0.1, 1) * times * sway * (1 - 0.03 * cusWeight));
             player.setXRot(newPitch);
             player.xRotO = player.getXRot();
 
-            float newYaw = (float) (player.getYRot() - 0.005f * Mth.cos((float) (0.025 * (player.tickCount + 2 * Math.PI))) * pose * Mth.nextDouble(RandomSource.create(), 0.05, 1.25) * times);
+            float newYaw = (float) (player.getYRot() - 0.005f * Mth.cos((float) (0.025 * (player.tickCount + 2 * Math.PI))) * pose * Mth.nextDouble(RandomSource.create(), 0.05, 1.25) * times * sway * (1 - 0.03 * cusWeight));
             player.setYRot(newYaw);
             player.yRotO = player.getYRot();
         }
@@ -384,6 +395,7 @@ public class ClientEventHandler {
             } else {
                 pose = 1;
             }
+
             swayTime += 0.05 * times;
 
             swayX = pose * -0.008 * Math.sin(swayTime) * (1 - 0.95 * zoomTime);
@@ -618,10 +630,11 @@ public class ClientEventHandler {
 
         double recoil = switch (barrelType) {
             case 1 -> 0.7;
-            case 2 -> 1;
+            case 2 -> 1.3;
             default -> 1.8;
         };
 
+        double cusWeight = player.getMainHandItem().getOrCreateTag().getDouble("CustomWeight");
 
         float gunRecoilX = (float) tag.getDouble("recoil_x") * 60;
 
@@ -645,14 +658,14 @@ public class ClientEventHandler {
             }
         }
 
-        float newYaw = player.getYRot() - (float) (0.6 * recoilHorizon * pose * times * (0.5 + fireSpread) * recoil);
+        float newYaw = player.getYRot() - (float) (0.6 * recoilHorizon * pose * times * (0.5 + fireSpread) * recoil * (1 - 0.06 * cusWeight));
         player.setYRot(newYaw);
         player.yRotO = player.getYRot();
 
         double sinRes = 0;
 
         if (0 < recoilTime && recoilTime < 0.5) {
-            float newPitch = (float) (player.getXRot() - 0.02f * gunRecoilX * times * recoil);
+            float newPitch = (float) (player.getXRot() - 0.02f * gunRecoilX * times * recoil * (1 - 0.06 * cusWeight));
             player.setXRot(newPitch);
             player.xRotO = player.getXRot();
         }
@@ -668,7 +681,7 @@ public class ClientEventHandler {
         }
 
         if (0 < recoilTime && recoilTime < 2.5) {
-            float newPitch = player.getXRot() - (float) (1.5 * pose * gunRecoilX * (sinRes + Mth.clamp(0.5 - recoilTime, 0, 0.5)) * times * (0.5 + fireSpread) * recoil);
+            float newPitch = player.getXRot() - (float) (1.5 * pose * gunRecoilX * (sinRes + Mth.clamp(0.5 - recoilTime, 0, 0.5)) * times * (0.5 + fireSpread) * recoil * (1 - 0.06 * cusWeight));
             player.setXRot(newPitch);
             player.xRotO = player.getXRot();
         }
@@ -796,7 +809,7 @@ public class ClientEventHandler {
                 p = zoomPos;
             }
 
-            double zoom = stack.getOrCreateTag().getDouble("zoom") + stack.getOrCreateTag().getDouble("custom_zoom");
+            double zoom = 1.25 + stack.getOrCreateTag().getDouble("CustomZoom");
 
             if (mc.options.getCameraType().isFirstPerson()) {
                 event.setFOV(event.getFOV() / (1.0 + p * (zoom - 1)) * (1 - 0.4 * breathTime));

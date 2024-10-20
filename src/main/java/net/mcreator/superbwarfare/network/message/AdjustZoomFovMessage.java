@@ -39,10 +39,12 @@ public class AdjustZoomFovMessage {
             }
             var tag = stack.getOrCreateTag();
 
-            double min_zoom = tag.getDouble("min_zoom") - tag.getDouble("zoom");
-            double max_zoom = tag.getDouble("max_zoom") - tag.getDouble("zoom");
-            tag.putDouble("custom_zoom", Mth.clamp(tag.getDouble("custom_zoom") + 0.5 * message.scroll, min_zoom, max_zoom));
-            if (tag.getDouble("custom_zoom") > min_zoom && tag.getDouble("custom_zoom") < max_zoom) {
+            if (!tag.getBoolean("CanAdjustZoomFov")) return;
+
+            double min_zoom = tag.getDouble("MinZoom") - 1.25;
+            double max_zoom = tag.getDouble("MaxZoom") - 1.25;
+            tag.putDouble("CustomZoom", Mth.clamp(tag.getDouble("CustomZoom") + 0.5 * message.scroll, min_zoom, max_zoom));
+            if (tag.getDouble("CustomZoom") > min_zoom && tag.getDouble("CustomZoom") < max_zoom) {
                 SoundTool.playLocalSound(player, ModSounds.ADJUST_FOV.get(), 1f, 0.7f);
             }
         });

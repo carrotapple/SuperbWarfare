@@ -2077,5 +2077,21 @@
         "stream": false
       }
     ]
+  },
+  "edit_mode": {
+    "sounds": [
+      {
+        "name": "superbwarfare:edit_mode",
+        "stream": false
+      }
+    ]
+  },
+  "edit": {
+    "sounds": [
+      {
+        "name": "superbwarfare:edit",
+        "stream": false
+      }
+    ]
   }
 }

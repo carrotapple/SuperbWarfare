@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.item.gun.rifle;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.PoseTool;
 import net.mcreator.superbwarfare.client.renderer.item.AK12ItemRenderer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
@@ -12,7 +13,6 @@ import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
-import net.mcreator.superbwarfare.client.PoseTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -133,10 +133,10 @@ public class AK12Item extends GunItem implements GeoItem, AnimatedItem {
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
 
-        int scopeType = stack.getOrCreateTag().getInt("scope_type");
-        int barrelType = stack.getOrCreateTag().getInt("barrel_type");
+        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        int barrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
         int magType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE);
-        int stockType = stack.getOrCreateTag().getInt("stock_type");
+        int stockType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK);
 
         int customMag = switch (magType) {
             case 1 -> 15;
@@ -144,20 +144,15 @@ public class AK12Item extends GunItem implements GeoItem, AnimatedItem {
             default -> 0;
         };
 
-//        if (scopeType == 1) {
-//
-//        } else if (scopeType == 2) {
-//
-//        } else if (scopeType == 3) {
-//
-//        }
+        double customZoom = switch (scopeType) {
+            case 0, 1 -> 0;
+            case 2 -> 2.15;
+            default -> stack.getOrCreateTag().getDouble("CustomZoom");
+        };
 
-//        if (entity instanceof Player player) {
-//            player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.##").format(stack.getOrCreateTag().getInt("scope_type"))
-//                    + " " + new java.text.DecimalFormat("##.#").format(barrelType)
-//                    + " " + new java.text.DecimalFormat("##.#").format(magType)
-//                    + " " + new java.text.DecimalFormat("##.#").format(stockType)), true);
-//        }
+        stack.getOrCreateTag().putBoolean("CanAdjustZoomFov", scopeType == 3);
+
+        stack.getOrCreateTag().putDouble("CustomZoom", customZoom);
 
         stack.getOrCreateTag().putInt("customMag", customMag);
     }

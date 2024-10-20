@@ -293,4 +293,7 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> DRONE_SOUND = REGISTRY.register("drone_sound", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "drone_sound")));
     public static final RegistryObject<SoundEvent> GRENADE_PULL = REGISTRY.register("grenade_pull", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "grenade_pull")));
     public static final RegistryObject<SoundEvent> GRENADE_THROW = REGISTRY.register("grenade_throw", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "grenade_throw")));
+
+    public static final RegistryObject<SoundEvent> EDIT_MODE = REGISTRY.register("edit_mode", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "edit_mode")));
+    public static final RegistryObject<SoundEvent> EDIT = REGISTRY.register("edit", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "edit")));
 }
