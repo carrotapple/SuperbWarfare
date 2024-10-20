@@ -4,6 +4,7 @@ import net.mcreator.superbwarfare.event.modevent.ReloadEvent;
 import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.perk.PerkHelper;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -50,17 +51,17 @@ public class ReloadEventHandler {
     }
 
     private static void handleHealClipPre(ItemStack stack) {
-        int time = stack.getOrCreateTag().getInt("HealClipTime");
+        int time = GunsTool.getPerkIntTag(stack, "HealClipTime");
         if (time > 0) {
-            stack.getOrCreateTag().putInt("HealClipTime", 0);
-            stack.getOrCreateTag().putBoolean("HealClip", true);
+            GunsTool.setPerkIntTag(stack, "HealClipTime", 0);
+            GunsTool.setPerkBooleanTag(stack, "HealClip", true);
         } else {
-            stack.getOrCreateTag().putBoolean("HealClip", false);
+            GunsTool.setPerkBooleanTag(stack, "HealClip", false);
         }
     }
 
     private static void handleHealClipPost(Player player, ItemStack stack) {
-        if (!stack.getOrCreateTag().getBoolean("HealClip")) {
+        if (!GunsTool.getPerkBooleanTag(stack, "HealClip")) {
             return;
         }
 
@@ -77,22 +78,22 @@ public class ReloadEventHandler {
     }
 
     private static void handleKillClipPre(ItemStack stack) {
-        int time = stack.getOrCreateTag().getInt("KillClipReloadTime");
+        int time = GunsTool.getPerkIntTag(stack, "KillClipReloadTime");
         if (time > 0) {
-            stack.getOrCreateTag().putInt("KillClipReloadTime", 0);
-            stack.getOrCreateTag().putBoolean("KillClip", true);
+            GunsTool.setPerkIntTag(stack, "KillClipReloadTime", 0);
+            GunsTool.setPerkBooleanTag(stack, "KillClip", true);
         } else {
-            stack.getOrCreateTag().putBoolean("KillClip", false);
+            GunsTool.setPerkBooleanTag(stack, "KillClip", false);
         }
     }
 
     private static void handleKillClipPost(ItemStack stack) {
-        if (!stack.getOrCreateTag().getBoolean("KillClip")) {
+        if (!GunsTool.getPerkBooleanTag(stack, "KillClip")) {
             return;
         }
 
         int level = PerkHelper.getItemPerkLevel(ModPerks.KILL_CLIP.get(), stack);
-        stack.getOrCreateTag().putInt("KillClipTime", 90 + 10 * level);
+        GunsTool.setPerkIntTag(stack, "KillClipTime", 90 + 10 * level);
     }
 
     private static void handleKillingTallyPre(ItemStack stack) {
@@ -101,27 +102,25 @@ public class ReloadEventHandler {
             return;
         }
 
-        if (stack.getOrCreateTag().contains("KillingTally")) {
-            stack.getOrCreateTag().putInt("KillingTally", 0);
-        }
+        GunsTool.setPerkIntTag(stack, "KillingTally", 0);
     }
 
     private static void handleDesperadoPre(ItemStack stack) {
-        int time = stack.getOrCreateTag().getInt("DesperadoTime");
+        int time = GunsTool.getPerkIntTag(stack, "DesperadoTime");
         if (time > 0) {
-            stack.getOrCreateTag().putInt("DesperadoTime", 0);
-            stack.getOrCreateTag().putBoolean("Desperado", true);
+            GunsTool.setPerkIntTag(stack, "DesperadoTime", 0);
+            GunsTool.setPerkBooleanTag(stack, "Desperado", true);
         } else {
-            stack.getOrCreateTag().putBoolean("Desperado", false);
+            GunsTool.setPerkBooleanTag(stack, "Desperado", false);
         }
     }
 
     private static void handleDesperadoPost(ItemStack stack) {
-        if (!stack.getOrCreateTag().getBoolean("Desperado")) {
+        if (!GunsTool.getPerkBooleanTag(stack, "Desperado")) {
             return;
         }
 
         int level = PerkHelper.getItemPerkLevel(ModPerks.DESPERADO.get(), stack);
-        stack.getOrCreateTag().putInt("DesperadoTimePost", 110 + level * 10);
+        GunsTool.setPerkIntTag(stack, "DesperadoTimePost", 110 + level * 10);
     }
 }

@@ -122,6 +122,39 @@ public class GunsTool {
         tag.putBoolean("is_empty_reloading", false);
     }
 
+    public static void setPerkIntTag(ItemStack stack, String name, int num) {
+        CompoundTag tag = stack.getOrCreateTag().getCompound("PerkData");
+        tag.putInt(name, num);
+        stack.addTagElement("PerkData", tag);
+    }
+
+    public static int getPerkIntTag(ItemStack stack, String name) {
+        CompoundTag tag = stack.getOrCreateTag().getCompound("PerkData");
+        return tag.getInt(name);
+    }
+
+    public static void setPerkDoubleTag(ItemStack stack, String name, double num) {
+        CompoundTag tag = stack.getOrCreateTag().getCompound("PerkData");
+        tag.putDouble(name, num);
+        stack.addTagElement("PerkData", tag);
+    }
+
+    public static double getPerkDoubleTag(ItemStack stack, String name) {
+        CompoundTag tag = stack.getOrCreateTag().getCompound("PerkData");
+        return tag.getDouble(name);
+    }
+
+    public static void setPerkBooleanTag(ItemStack stack, String name, boolean flag) {
+        CompoundTag tag = stack.getOrCreateTag().getCompound("PerkData");
+        tag.putBoolean(name, flag);
+        stack.addTagElement("PerkData", tag);
+    }
+
+    public static boolean getPerkBooleanTag(ItemStack stack, String name) {
+        CompoundTag tag = stack.getOrCreateTag().getCompound("PerkData");
+        return tag.getBoolean(name);
+    }
+
     public static int getAttachmentType(ItemStack stack, AttachmentType type) {
         CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
         return tag.getInt(type.getName());

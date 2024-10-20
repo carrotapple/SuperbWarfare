@@ -14,6 +14,7 @@ import net.mcreator.superbwarfare.perk.AmmoPerk;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.DamageTypeTool;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -465,17 +466,17 @@ public class LivingEventHandler {
     private static void handleClipPerks(ItemStack stack) {
         int healClipLevel = PerkHelper.getItemPerkLevel(ModPerks.HEAL_CLIP.get(), stack);
         if (healClipLevel != 0) {
-            stack.getOrCreateTag().putInt("HealClipTime", 80 + healClipLevel * 20);
+            GunsTool.setPerkIntTag(stack, "HealClipTime", 80 + healClipLevel * 20);
         }
 
         int killClipLevel = PerkHelper.getItemPerkLevel(ModPerks.KILL_CLIP.get(), stack);
         if (killClipLevel != 0) {
-            stack.getOrCreateTag().putInt("KillClipReloadTime", 80);
+            GunsTool.setPerkIntTag(stack, "KillClipReloadTime", 80);
         }
     }
 
     private static void handleKillClipDamage(ItemStack stack, LivingHurtEvent event) {
-        if (stack.getOrCreateTag().getInt("KillClipTime") > 0) {
+        if (GunsTool.getPerkIntTag(stack, "KillClipTime") > 0) {
             int level = PerkHelper.getItemPerkLevel(ModPerks.KILL_CLIP.get(), stack);
             if (level == 0) {
                 return;
@@ -500,7 +501,7 @@ public class LivingEventHandler {
             return;
         }
 
-        int killTally = stack.getOrCreateTag().getInt("KillingTally");
+        int killTally = GunsTool.getPerkIntTag(stack, "KillingTally");
         if (killTally == 0) {
             return;
         }
@@ -511,7 +512,7 @@ public class LivingEventHandler {
     private static void handleKillingTallyAddCount(ItemStack stack) {
         int level = PerkHelper.getItemPerkLevel(ModPerks.KILLING_TALLY.get(), stack);
         if (level != 0) {
-            stack.getOrCreateTag().putInt("KillingTally", Math.min(3, stack.getOrCreateTag().getInt("KillingTally") + 1));
+            GunsTool.setPerkIntTag(stack, "KillingTally", Math.min(3, GunsTool.getPerkIntTag(stack, "KillingTally") + 1));
         }
     }
 
@@ -521,14 +522,14 @@ public class LivingEventHandler {
             return;
         }
 
-        int fourthTimesCharmTick = stack.getOrCreateTag().getInt("FourthTimesCharmTick");
+        int fourthTimesCharmTick = GunsTool.getPerkIntTag(stack, "FourthTimesCharmTick");
         if (fourthTimesCharmTick <= 0) {
-            stack.getOrCreateTag().putInt("FourthTimesCharmTick", 40 + 10 * level);
-            stack.getOrCreateTag().putInt("FourthTimesCharmCount", 1);
+            GunsTool.setPerkIntTag(stack, "FourthTimesCharmTick", 40 + 10 * level);
+            GunsTool.setPerkIntTag(stack, "FourthTimesCharmCount", 1);
         } else {
-            int count = stack.getOrCreateTag().getInt("FourthTimesCharmCount");
+            int count = GunsTool.getPerkIntTag(stack, "FourthTimesCharmCount");
             if (count < 4) {
-                stack.getOrCreateTag().putInt("FourthTimesCharmCount", Math.min(4, count + 1));
+                GunsTool.setPerkIntTag(stack, "FourthTimesCharmCount", Math.min(4, count + 1));
             }
         }
     }
@@ -579,7 +580,7 @@ public class LivingEventHandler {
             return;
         }
 
-        stack.getOrCreateTag().putInt("HeadSeeker", 11 + level * 2);
+        GunsTool.setPerkIntTag(stack, "HeadSeeker", 11 + level * 2);
     }
 
     private static void handleHeadSeekerDamage(ItemStack stack, LivingHurtEvent event) {
@@ -588,7 +589,7 @@ public class LivingEventHandler {
             return;
         }
 
-        if (stack.getOrCreateTag().getInt("HeadSeeker") > 0) {
+        if (GunsTool.getPerkIntTag(stack, "HeadSeeker") > 0) {
             event.setAmount(event.getAmount() * (1.095f + 0.0225f * level));
         }
     }
@@ -599,7 +600,7 @@ public class LivingEventHandler {
             return;
         }
 
-        stack.getOrCreateTag().putInt("DesperadoTime", 90 + level * 10);
+        GunsTool.setPerkIntTag(stack, "DesperadoTime", 90 + level * 10);
     }
 
     /**

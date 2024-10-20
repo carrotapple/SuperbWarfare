@@ -367,7 +367,6 @@ public class PlayerEventHandler {
         }
     }
 
-
     @SubscribeEvent
     public static void onAnvilUpdate(AnvilUpdateEvent event) {
         ItemStack left = event.getLeft();

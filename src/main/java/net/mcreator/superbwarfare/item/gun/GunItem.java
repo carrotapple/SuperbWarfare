@@ -164,14 +164,14 @@ public abstract class GunItem extends Item {
     }
 
     private void handleGunPerks(ItemStack stack) {
-        reduceTagTime(stack, "HealClipTime", "KillClipReloadTime", "KillClipTime", "FourthTimesCharmTick", "HeadSeeker",
+        reducePerkTagTime(stack, "HealClipTime", "KillClipReloadTime", "KillClipTime", "FourthTimesCharmTick", "HeadSeeker",
                 "DesperadoTime", "DesperadoTimePost");
 
         if (PerkHelper.getItemPerkLevel(ModPerks.FOURTH_TIMES_CHARM.get(), stack) > 0) {
-            int count = stack.getOrCreateTag().getInt("FourthTimesCharmCount");
+            int count = GunsTool.getPerkIntTag(stack, "FourthTimesCharmCount");
             if (count >= 4) {
-                stack.getOrCreateTag().putInt("FourthTimesCharmTick", 0);
-                stack.getOrCreateTag().putInt("FourthTimesCharmCount", 0);
+                GunsTool.setPerkIntTag(stack, "FourthTimesCharmTick", 0);
+                GunsTool.setPerkIntTag(stack, "FourthTimesCharmCount", 0);
 
                 int mag = stack.getOrCreateTag().getInt("mag") + stack.getOrCreateTag().getInt("customMag");
                 stack.getOrCreateTag().putInt("ammo", Math.min(mag, stack.getOrCreateTag().getInt("ammo") + 2));
@@ -226,13 +226,15 @@ public abstract class GunItem extends Item {
         return true;
     }
 
-    private void reduceTagTime(ItemStack stack, String... tag) {
+    private void reducePerkTagTime(ItemStack stack, String... tag) {
         if (!stack.hasTag() || stack.getTag() == null) {
             return;
         }
 
+        var compound = stack.getOrCreateTag().getCompound("PerkData");
+
         for (String t : tag) {
-            if (!stack.getTag().contains(t)) {
+            if (!compound.contains(t)) {
                 continue;
             }
 

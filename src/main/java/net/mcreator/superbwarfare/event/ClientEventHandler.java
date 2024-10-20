@@ -226,7 +226,7 @@ public class ClientEventHandler {
                 rpm = 600;
             }
 
-            if (stack.getOrCreateTag().getInt("DesperadoTimePost") > 0) {
+            if (GunsTool.getPerkIntTag(stack, "DesperadoTimePost") > 0) {
                 int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.DESPERADO.get(), stack);
                 rpm *= 1.25 + 0.05 * perkLevel;
             }
