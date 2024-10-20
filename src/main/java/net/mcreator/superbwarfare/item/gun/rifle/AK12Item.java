@@ -90,7 +90,11 @@ public class AK12Item extends GunItem implements GeoItem, AnimatedItem {
         }
 
         if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak12.reload_normal"));
+            if (stack.getOrCreateTag().getInt("magazine_type") == 2) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak12.reload_normal_drum"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak12.reload_normal"));
+            }
         }
 
         if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
