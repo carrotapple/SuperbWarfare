@@ -1573,6 +1573,22 @@
       }
     ]
   },
+  "ak_12_fire_1p_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:ak_12/ak_12_fire_1p_s",
+        "stream": false
+      }
+    ]
+  },
+  "ak_12_fire_3p_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:ak_12/ak_12_fire_3p_s",
+        "stream": false
+      }
+    ]
+  },
   "ak_12_far": {
     "sounds": [
       {
@@ -1585,6 +1601,22 @@
     "sounds": [
       {
         "name": "superbwarfare:ak_12/ak_12_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "ak_12_far_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:ak_12/ak_12_far_s",
+        "stream": false
+      }
+    ]
+  },
+  "ak_12_veryfar_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:ak_12/ak_12_veryfar_s",
         "stream": false
       }
     ]

@@ -1,7 +1,5 @@
 package net.mcreator.superbwarfare.item.gun.shotgun;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.Aa12ItemRenderer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
@@ -26,11 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -49,7 +43,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.function.Consumer;
 
 public class Aa12Item extends GunItem implements GeoItem, AnimatedItem {
@@ -142,18 +135,6 @@ public class Aa12Item extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> map = super.getAttributeModifiers(slot, stack);
-        UUID uuid = new UUID(slot.toString().hashCode(), 0);
-        if (slot == EquipmentSlot.MAINHAND) {
-            map = HashMultimap.create(map);
-            map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER, -0.06f, AttributeModifier.Operation.MULTIPLY_BASE));
-        }
-        return map;
     }
 
     @Override

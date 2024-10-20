@@ -1,5 +1,7 @@
 package net.mcreator.superbwarfare.item.gun;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModPerks;
@@ -15,7 +17,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -29,6 +35,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Mod.EventBusSubscriber
 public abstract class GunItem extends Item {
@@ -47,13 +54,6 @@ public abstract class GunItem extends Item {
             if (!itemstack.is(ModTags.Items.GUN)) {
                 return;
             }
-
-//            if (entity instanceof Player player) {
-//                player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.##").format(itemstack.getOrCreateTag().getInt("scope_type"))
-//                        + " " + new java.text.DecimalFormat("##.#").format(itemstack.getOrCreateTag().getInt("barrel_type"))
-//                        + " " + new java.text.DecimalFormat("##.#").format(itemstack.getOrCreateTag().getInt("magazine_type"))
-//                        + " " + new java.text.DecimalFormat("##.#").format(itemstack.getOrCreateTag().getInt("stock_type"))), true);
-//            }
 
             if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
                 GunsTool.initGun(level, itemstack, this.getDescriptionId().substring(this.getDescriptionId().lastIndexOf('.') + 1));
@@ -84,6 +84,7 @@ public abstract class GunItem extends Item {
             }
 
             handleGunPerks(itemstack);
+            handleGunAttachment(itemstack);
 
             if ((itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) && itemstack.getOrCreateTag().getInt("ammo") > itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag") + 1)
                     || (!itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) && itemstack.getOrCreateTag().getInt("ammo") > itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag"))
@@ -116,6 +117,18 @@ public abstract class GunItem extends Item {
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return false;
+    }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+        Multimap<Attribute, AttributeModifier> map = super.getAttributeModifiers(slot, stack);
+        UUID uuid = new UUID(slot.toString().hashCode(), 0);
+        if (slot == EquipmentSlot.MAINHAND) {
+            map = HashMultimap.create(map);
+            map.put(Attributes.MOVEMENT_SPEED,
+                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER, -0.01f - 0.005f * (stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("custom_weight")), AttributeModifier.Operation.MULTIPLY_BASE));
+        }
+        return map;
     }
 
     @Override
@@ -173,14 +186,56 @@ public abstract class GunItem extends Item {
             }
         }
 
-        int ctmMag = stack.getOrCreateTag().getInt("mag");
-        if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-            stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.1 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * ctmMag)));
-        } else if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-            stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.075 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * ctmMag)));
-        } else {
-            stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.15 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * ctmMag)));
+//        int ctmMag = stack.getOrCreateTag().getInt("mag");
+//        if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
+//            stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.1 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * ctmMag)));
+//        } else if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
+//            stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.075 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * ctmMag)));
+//        } else {
+//            stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.15 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * ctmMag)));
+//        }
+    }
+
+    private void handleGunAttachment(ItemStack stack) {
+
+        int scopeType = stack.getOrCreateTag().getInt("scope_type");
+        int barrelType = stack.getOrCreateTag().getInt("barrel_type");
+        int magType = stack.getOrCreateTag().getInt("magazine_type");
+        int stockType = stack.getOrCreateTag().getInt("stock_type");
+
+        double ScopeWeight = 0;
+        double BarrelWeight = 0;
+        double MagWeight = 0;
+        double StockWeight = 0;
+
+        if (scopeType == 1) {
+            ScopeWeight = 0.5;
+        } else if (scopeType == 2) {
+            ScopeWeight = 1;
+        } else if (scopeType == 3) {
+            ScopeWeight = 2;
         }
+
+        if (barrelType == 1) {
+            BarrelWeight = 1;
+        } else if (magType == 2) {
+            BarrelWeight = 2;
+        }
+
+        if (magType == 1) {
+            MagWeight = 1.5;
+        } else if (magType == 2) {
+            MagWeight = 3;
+        }
+
+        if (stockType == 1) {
+            StockWeight = -2;
+        } else if (stockType == 2) {
+            ScopeWeight = 2;
+        }
+
+        stack.getOrCreateTag().putDouble("custom_weight",  ScopeWeight + BarrelWeight + MagWeight + StockWeight);
+        stack.getOrCreateTag().putDouble("CustomSoundRadius", barrelType == 2 ? 0.25 : 1);
     }
 
     public boolean canApplyPerk(Perk perk) {

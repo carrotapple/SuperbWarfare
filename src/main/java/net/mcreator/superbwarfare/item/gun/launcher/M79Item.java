@@ -1,7 +1,5 @@
 package net.mcreator.superbwarfare.item.gun.launcher;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.M79ItemRenderer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
@@ -25,11 +23,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
@@ -45,7 +39,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.function.Consumer;
 
 public class M79Item extends GunItem implements GeoItem, AnimatedItem {
@@ -117,18 +110,6 @@ public class M79Item extends GunItem implements GeoItem, AnimatedItem {
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         var idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
-    }
-
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> map = super.getAttributeModifiers(slot, stack);
-        UUID uuid = new UUID(slot.toString().hashCode(), 0);
-        if (slot == EquipmentSlot.MAINHAND) {
-            map = HashMultimap.create(map);
-            map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER, -0.07f, AttributeModifier.Operation.MULTIPLY_BASE));
-        }
-        return map;
     }
 
     public static int getAmmoCount(Player player) {

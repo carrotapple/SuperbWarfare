@@ -1,7 +1,5 @@
 package net.mcreator.superbwarfare.item.gun.rifle;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.AK12ItemRenderer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
@@ -23,14 +21,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -42,7 +38,6 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Set;
-import java.util.UUID;
 import java.util.function.Consumer;
 
 public class AK12Item extends GunItem implements GeoItem, AnimatedItem {
@@ -120,18 +115,6 @@ public class AK12Item extends GunItem implements GeoItem, AnimatedItem {
         return this.cache;
     }
 
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> map = super.getAttributeModifiers(slot, stack);
-        UUID uuid = new UUID(slot.toString().hashCode(), 0);
-        if (slot == EquipmentSlot.MAINHAND) {
-            map = HashMultimap.create(map);
-            map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER, -0.04f, AttributeModifier.Operation.MULTIPLY_BASE));
-        }
-        return map;
-    }
-
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(ModItems.AK_12.get());
         GunsTool.initCreativeGun(stack, ModItems.AK_12.getId().getPath());
@@ -140,6 +123,41 @@ public class AK12Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void setAnimationProcedure(String procedure) {
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
+
+        int scopeType = stack.getOrCreateTag().getInt("scope_type");
+        int barrelType = stack.getOrCreateTag().getInt("barrel_type");
+        int magType = stack.getOrCreateTag().getInt("magazine_type");
+        int stockType = stack.getOrCreateTag().getInt("stock_type");
+
+        int customMag = 0;
+
+        if (magType == 1) {
+            customMag = 15;
+        } else if (magType == 2) {
+            customMag = 45;
+        }
+
+//        if (scopeType == 1) {
+//
+//        } else if (scopeType == 2) {
+//
+//        } else if (scopeType == 3) {
+//
+//        }
+
+//        if (entity instanceof Player player) {
+//            player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.##").format(stack.getOrCreateTag().getInt("scope_type"))
+//                    + " " + new java.text.DecimalFormat("##.#").format(barrelType)
+//                    + " " + new java.text.DecimalFormat("##.#").format(magType)
+//                    + " " + new java.text.DecimalFormat("##.#").format(stockType)), true);
+//        }
+
+        stack.getOrCreateTag().putInt("customMag", customMag);
     }
 
     @Override

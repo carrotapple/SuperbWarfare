@@ -1,5 +1,4 @@
 {
-  "zoom_speed": 1.7,
   "zoom": 1.25,
   "spread": 2.5,
   "recoil_x": 0.006,
@@ -9,7 +8,7 @@
   "velocity": 14,
   "mag": 7,
   "projectile_amount": 1,
-  "weight": 0,
+  "weight": 2,
   "fire_mode": 0,
   "semi": 1,
   "burst": 0,

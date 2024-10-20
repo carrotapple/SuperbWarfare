@@ -37,7 +37,7 @@ public class EditMessage {
 
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.is(ModTags.Items.GUN) && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
+        if (stack.is(ModTags.Items.CAN_CUSTOM_GUN) && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
             switch (type) {
                 case 0:
                     stack.getOrCreateTag().putInt("scope_type", stack.getOrCreateTag().getInt("scope_type") + 1);

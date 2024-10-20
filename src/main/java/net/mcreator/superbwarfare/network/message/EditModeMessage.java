@@ -44,7 +44,7 @@ public class EditModeMessage {
         ItemStack mainHandItem = player.getMainHandItem();
         var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null);
 
-        if (mainHandItem.is(ModTags.Items.GUN)) {
+        if (mainHandItem.is(ModTags.Items.CAN_CUSTOM_GUN)) {
             cap.ifPresent(capability -> {
                 capability.edit = !cap.orElse(new ModVariables.PlayerVariables()).edit;
                     capability.syncPlayerVariables(player);

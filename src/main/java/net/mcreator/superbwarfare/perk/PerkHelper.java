@@ -284,7 +284,7 @@ public class PerkHelper {
         }
     };
 
-    public static final Predicate<Perk> MAGAZINE_PERKS = perk -> perk == ModPerks.DIMENSION_MAGAZINE.get();
+    public static final Predicate<Perk> MAGAZINE_PERKS = perk -> false;
 
     public static final Predicate<Perk> LAUNCHER_PERKS = perk -> perk == ModPerks.MONSTER_HUNTER.get();
 

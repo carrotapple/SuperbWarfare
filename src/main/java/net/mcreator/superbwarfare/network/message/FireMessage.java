@@ -272,7 +272,7 @@ public class FireMessage {
             spread = 0.01f;
             damage = 0.08333333 * tag.getDouble("damage") * tag.getDouble("speed") * perkDamage(heldItem);
         } else {
-            spread = perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 1 : 2.5f;
+            spread = perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.5f : 2.5f;
             damage = (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.08333333 : 0.008333333) * tag.getDouble("damage") * tag.getDouble("speed") * perkDamage(heldItem);
         }
 
@@ -369,7 +369,6 @@ public class FireMessage {
 
                 boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
                 double spread = stack.getOrCreateTag().getDouble("spread");
-                double zoomSpread = stack.getOrCreateTag().getDouble("zoomSpread");
 
                 Level level = player.level();
                 if (!level.isClientSide()) {
@@ -377,7 +376,7 @@ public class FireMessage {
 
                     taserBulletProjectile.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                     taserBulletProjectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) stack.getOrCreateTag().getDouble("velocity"),
-                            (float) (zoom ? zoomSpread : spread));
+                            (float) (zoom ? 0.1 : spread));
                     level.addFreshEntity(taserBulletProjectile);
                 }
 
@@ -404,7 +403,6 @@ public class FireMessage {
             if (!player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getInt("ammo") > 0) {
                 boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
                 double spread = stack.getOrCreateTag().getDouble("spread");
-                double zoomSpread = stack.getOrCreateTag().getDouble("zoomSpread");
 
                 Level level = player.level();
                 if (!level.isClientSide()) {
@@ -419,7 +417,7 @@ public class FireMessage {
 
                     gunGrenadeEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                     gunGrenadeEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) stack.getOrCreateTag().getDouble("velocity"),
-                            (float) (zoom ? zoomSpread : spread));
+                            (float) (zoom ? 0.1 : spread));
                     level.addFreshEntity(gunGrenadeEntity);
                 }
 
@@ -458,7 +456,6 @@ public class FireMessage {
         if (!tag.getBoolean("reloading") && !player.getCooldowns().isOnCooldown(stack.getItem()) && tag.getInt("ammo") > 0) {
             boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
             double spread = stack.getOrCreateTag().getDouble("spread");
-            double zoomSpread = stack.getOrCreateTag().getDouble("zoomSpread");
 
             if (!level.isClientSide()) {
                 RpgRocketEntity rocketEntity = new RpgRocketEntity(player, level,
@@ -472,7 +469,7 @@ public class FireMessage {
 
                 rocketEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                 rocketEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) tag.getDouble("velocity"),
-                        (float) (zoom ? zoomSpread : spread));
+                        (float) (zoom ? 0.1 : spread));
                 level.addFreshEntity(rocketEntity);
             }
 

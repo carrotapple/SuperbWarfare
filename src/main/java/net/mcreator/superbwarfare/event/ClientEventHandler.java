@@ -192,17 +192,9 @@ public class ClientEventHandler {
         }
 
         // 开火部分
-        double weight = stack.getOrCreateTag().getDouble("weight");
+        double weight = stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("custom_weight");
 
-        double speed = 1;
-
-        if (weight == 0) {
-            speed = 1.05;
-        } else if (weight == 1) {
-            speed = 0.85;
-        } else if (weight == 2) {
-            speed = 0.6;
-        }
+        double speed = 1 - (0.04 * weight);
 
         if (player.getPersistentData().getDouble("noRun") == 0 && player.isSprinting() && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS) {
             cantFireTime = Mth.clamp(cantFireTime + 3 * times, 0, 24);
@@ -490,7 +482,10 @@ public class ClientEventHandler {
         if (!(entity instanceof Player player)) return;
         ItemStack stack = player.getMainHandItem();
         float times = 5 * Minecraft.getInstance().getDeltaFrameTime();
-        double speed = stack.getOrCreateTag().getDouble("zoom_speed");
+
+        double weight = stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("custom_weight");
+        double speed = 1.5 - (0.07 * weight);
+
         if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS
                 && !notInGame()
                 && drawTime < 0.01
@@ -618,7 +613,20 @@ public class ClientEventHandler {
 
         CompoundTag tag = player.getMainHandItem().getOrCreateTag();
         float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
+        int barrelType = tag.getInt("barrel_type");
+
+        double recoil = 1.8;
+
+        if (barrelType == 1) {
+            recoil = 0.7;
+        } else if (barrelType == 2) {
+            recoil = 1;
+        }
+
+
         float gunRecoilX = (float) tag.getDouble("recoil_x") * 60;
+
+
 
         if (recoilHorizon > 0) {
             recoilHorizon = recoilHorizon - Math.min(Math.pow(recoilHorizon, 2), 6) * times + recoilY;
@@ -640,14 +648,14 @@ public class ClientEventHandler {
             }
         }
 
-        float newYaw = player.getYRot() - (float) (0.6 * recoilHorizon * pose * times * (0.5 + fireSpread));
+        float newYaw = player.getYRot() - (float) (0.6 * recoilHorizon * pose * times * (0.5 + fireSpread) * recoil);
         player.setYRot(newYaw);
         player.yRotO = player.getYRot();
 
         double sinRes = 0;
 
         if (0 < recoilTime && recoilTime < 0.5) {
-            float newPitch = player.getXRot() - 0.02f * gunRecoilX * times;
+            float newPitch = (float) (player.getXRot() - 0.02f * gunRecoilX * times * recoil);
             player.setXRot(newPitch);
             player.xRotO = player.getXRot();
         }
@@ -663,7 +671,7 @@ public class ClientEventHandler {
         }
 
         if (0 < recoilTime && recoilTime < 2.5) {
-            float newPitch = player.getXRot() - (float) (1.5 * pose * gunRecoilX * (sinRes + Mth.clamp(0.5 - recoilTime, 0, 0.5)) * times * (0.5 + fireSpread));
+            float newPitch = player.getXRot() - (float) (1.5 * pose * gunRecoilX * (sinRes + Mth.clamp(0.5 - recoilTime, 0, 0.5)) * times * (0.5 + fireSpread) * recoil);
             player.setXRot(newPitch);
             player.xRotO = player.getXRot();
         }
@@ -842,16 +850,9 @@ public class ClientEventHandler {
     private static void handleWeaponDraw(LivingEntity entity) {
         float times = Minecraft.getInstance().getDeltaFrameTime();
         ItemStack stack = entity.getMainHandItem();
-        double weight = stack.getOrCreateTag().getDouble("weight");
-        double speed = 1;
+        double weight = stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("custom_weight");
 
-        if (weight == 0) {
-            speed = 3;
-        } else if (weight == 1) {
-            speed = 2;
-        } else if (weight == 2) {
-            speed = 1.2;
-        }
+        double speed = 3.2 - (0.13 * weight);
 
         drawTime = Math.max(drawTime - Math.max(0.2 * speed * times * drawTime, 0.0008), 0);
     }

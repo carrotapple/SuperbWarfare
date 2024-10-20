@@ -1,7 +1,5 @@
 package net.mcreator.superbwarfare.item.gun.sniper;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.client.renderer.item.SentinelItemRenderer;
 import net.mcreator.superbwarfare.energy.ItemEnergyProvider;
@@ -28,11 +26,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -52,7 +46,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -217,18 +210,6 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
                 ModSounds.SENTINEL_CHARGE.get(),
                 ModSounds.SENTINEL_BOLT.get()
         );
-    }
-
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-        Multimap<Attribute, AttributeModifier> map = super.getAttributeModifiers(slot, stack);
-        UUID uuid = new UUID(slot.toString().hashCode(), 0);
-        if (slot == EquipmentSlot.MAINHAND) {
-            map = HashMultimap.create(map);
-            map.put(Attributes.MOVEMENT_SPEED,
-                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER, -0.06f, AttributeModifier.Operation.MULTIPLY_BASE));
-        }
-        return map;
     }
 
     public static ItemStack getGunInstance() {

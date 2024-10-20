@@ -78,44 +78,59 @@ public class AK12ItemRenderer extends GeoItemRenderer<AK12Item> {
             bone.setHidden(this.hiddenBones.contains(name));
         }
 
-        if (name.equals("flare")) {
-            Player player = Minecraft.getInstance().player;
-            ItemStack itemStack = null;
-            if (player != null) {
-                itemStack = player.getMainHandItem();
-            }
-            if (itemStack != null && itemStack.getOrCreateTag().getDouble("flash_time") > 0) {
-                bone.setHidden(false);
-                bone.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-                bone.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-                bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-            } else {
-                bone.setHidden(true);
-            }
-        }
+        Player player_ = Minecraft.getInstance().player;
+        if (player_ != null) {
+            ItemStack itemStack = player_.getMainHandItem();
 
-        if (name.equals("holo")) {
-            Player player = Minecraft.getInstance().player;
-            ItemStack itemStack = null;
-            if (player != null) {
-                itemStack = player.getMainHandItem();
-            }
-            if (player != null) {
+            if (name.equals("holo")) {
+
                 bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
                         || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
                         || itemStack.getOrCreateTag().getInt("scope_type") != 1);
             }
-        }
 
-        if (name.equals("okp")) {
-            Player player = Minecraft.getInstance().player;
-            ItemStack itemStack = null;
-            if (player != null) {
-                itemStack = player.getMainHandItem();
+            if (name.equals("flare")) {
+                if (itemStack.getOrCreateTag().getInt("barrel_type") == 1) {
+                    bone.setPosZ(2.25f);
+                }
+                if (itemStack.getOrCreateTag().getDouble("flash_time") == 0 || itemStack.getOrCreateTag().getInt("barrel_type") == 2) {
+                    bone.setHidden(true);
+                } else {
+                    bone.setHidden(false);
+                    bone.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                    bone.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                    bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
+                }
             }
-            if (player != null) {
+
+            if (name.equals("okp")) {
                 bone.setHidden(itemStack.getOrCreateTag().getInt("scope_type") != 1);
             }
+
+            if (name.equals("normalmag")) {
+                bone.setHidden(itemStack.getOrCreateTag().getInt("magazine_type") != 0);
+            }
+
+            if (name.equals("extendmag")) {
+                bone.setHidden(itemStack.getOrCreateTag().getInt("magazine_type") != 1);
+            }
+
+            if (name.equals("drum")) {
+                bone.setHidden(itemStack.getOrCreateTag().getInt("magazine_type") != 2);
+            }
+
+            if (name.equals("oringinbarrel")) {
+                bone.setHidden(itemStack.getOrCreateTag().getInt("barrel_type") != 0);
+            }
+
+            if (name.equals("huomao")) {
+                bone.setHidden(itemStack.getOrCreateTag().getInt("barrel_type") != 1);
+            }
+
+            if (name.equals("sup")) {
+                bone.setHidden(itemStack.getOrCreateTag().getInt("barrel_type") != 2);
+            }
+
         }
 
 
