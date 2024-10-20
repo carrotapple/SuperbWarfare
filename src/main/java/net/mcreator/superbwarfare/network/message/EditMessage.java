@@ -17,8 +17,8 @@ public class EditMessage {
         this.type = type;
     }
 
-    public EditMessage(FriendlyByteBuf buffer) {
-        this.type = buffer.readInt();
+    public static EditMessage decode(FriendlyByteBuf buffer) {
+        return new EditMessage(buffer.readInt());
     }
 
     public static void encode(EditMessage message, FriendlyByteBuf buffer) {

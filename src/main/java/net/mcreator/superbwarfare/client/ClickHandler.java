@@ -160,11 +160,28 @@ public class ClickHandler {
         setKeyState(event);
 
         int key = event.getKey();
-        if (key == Minecraft.getInstance().options.keyJump.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
-            handleDoubleJump(player);
-        }
-        if (key == ModKeyMappings.CONFIG.getKey().getValue() && event.getAction() == GLFW.GLFW_PRESS) {
-            handleConfigScreen(player);
+        if (event.getAction() == GLFW.GLFW_PRESS) {
+            if (key == Minecraft.getInstance().options.keyJump.getKey().getValue()) {
+                handleDoubleJump(player);
+            }
+            if (key == ModKeyMappings.CONFIG.getKey().getValue()) {
+                handleConfigScreen(player);
+            }
+            if (key == ModKeyMappings.EDIT_MODE.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new EditModeMessage(0));
+            }
+            if (key == ModKeyMappings.EDIT_SCOPE.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(0));
+            }
+            if (key == ModKeyMappings.EDIT_BARREL.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(1));
+            }
+            if (key == ModKeyMappings.EDIT_MAGAZINE.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(2));
+            }
+            if (key == ModKeyMappings.EDIT_STOCK.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(3));
+            }
         }
     }
 

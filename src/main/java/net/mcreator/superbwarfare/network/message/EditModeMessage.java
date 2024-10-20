@@ -16,8 +16,8 @@ public class EditModeMessage {
         this.type = type;
     }
 
-    public EditModeMessage(FriendlyByteBuf buffer) {
-        this.type = buffer.readInt();
+    public static EditModeMessage decode(FriendlyByteBuf buffer) {
+        return new EditModeMessage(buffer.readInt());
     }
 
     public static void encode(EditModeMessage message, FriendlyByteBuf buffer) {
@@ -32,23 +32,19 @@ public class EditModeMessage {
 
     public static void pressAction(Player player, int type) {
         if (player == null) return;
-        // security measure to prevent arbitrary chunk generation
-        if (!player.level().isLoaded(player.blockPosition()))
-            return;
+
+        if (!player.level().isLoaded(player.blockPosition())) return;
+
         if (type == 0) {
-            EditMode(player);
-        }
-    }
+            ItemStack mainHandItem = player.getMainHandItem();
+            var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null);
 
-    public static void EditMode(Player player) {
-        ItemStack mainHandItem = player.getMainHandItem();
-        var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null);
-
-        if (mainHandItem.is(ModTags.Items.CAN_CUSTOM_GUN)) {
-            cap.ifPresent(capability -> {
-                capability.edit = !cap.orElse(new ModVariables.PlayerVariables()).edit;
+            if (mainHandItem.is(ModTags.Items.CAN_CUSTOM_GUN)) {
+                cap.ifPresent(capability -> {
+                    capability.edit = !cap.orElse(new ModVariables.PlayerVariables()).edit;
                     capability.syncPlayerVariables(player);
                 });
+            }
         }
     }
 }
