@@ -2,11 +2,11 @@ package net.mcreator.superbwarfare.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.mcreator.superbwarfare.client.ItemModelHelper;
 import net.mcreator.superbwarfare.client.layer.AK12Layer;
 import net.mcreator.superbwarfare.client.model.item.AK12ItemModel;
 import net.mcreator.superbwarfare.item.gun.rifle.AK12Item;
-import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
@@ -84,10 +84,21 @@ public class AK12ItemRenderer extends GeoItemRenderer<AK12Item> {
         if (player != null) {
             ItemStack itemStack = player.getMainHandItem();
 
-            if (name.equals("holo")) {
+            if (name.equals("Cross1")) {
                 bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
                         || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
                         || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
+            }
+
+            if (name.equals("Cross3")) {
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                        || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
+                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 3);
+            }
+
+            if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 3
+                    && (name.equals("jing") || name.equals("Barrel") || name.equals("humu") || name.equals("qiangguan") || name.equals("houzhunxing") || name.equals("flare"))) {
+                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS);
             }
 
             if (name.equals("flare")) {

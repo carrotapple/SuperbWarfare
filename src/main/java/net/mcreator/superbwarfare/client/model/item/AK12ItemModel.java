@@ -1,10 +1,10 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.rifle.AK12Item;
-import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -37,6 +37,8 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone scope1 = getAnimationProcessor().getBone("Scope1");
+        CoreGeoBone scope3 = getAnimationProcessor().getBone("Scope3");
+        CoreGeoBone cross3 = getAnimationProcessor().getBone("Cross3");
         CoreGeoBone shuan = getAnimationProcessor().getBone("shuan");
 
         Player player = Minecraft.getInstance().player;
@@ -64,22 +66,30 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
         int type = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
 
         float posY = switch (type) {
-            case 0, 2, 3 -> 0.781f;
+            case 0, 2 -> 0.781f;
             case 1 -> 0.351f;
+            case 3 -> -0.01f;
             default -> 0f;
         };
         float scaleZ = switch (type) {
-            case 0, 2, 3 -> 0.55f;
+            case 0, 2 -> 0.55f;
             case 1 -> 0.4f;
+            case 3 -> 0.78f;
+            default -> 0f;
+        };
+        float posZ = switch (type) {
+            case 0, 1, 2 -> 2.8f;
+            case 3 -> 4.3f;
             default -> 0f;
         };
 
-        gun.setPosX(1.97f * (float) zp);
+        gun.setPosX(1.96f * (float) zp);
 
         gun.setPosY(posY * (float) zp - (float) (0.2f * zpz));
-        gun.setPosZ(2.8f * (float) zp + (float) (0.5f * zpz));
+        gun.setPosZ(posZ * (float) zp + (float) (0.5f * zpz));
         gun.setScaleZ(1f - (scaleZ * (float) zp));
         scope1.setScaleZ(1f - (0.4f * (float) zp));
+        scope3.setScaleZ(1f - (0.7f * (float) zp));
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.8));
 
@@ -98,6 +108,9 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.9 * zt)));
 
         shuan.setPosZ(2.4f * (float) fp);
+
+        cross3.setRotZ(0.01f * (float) (ClientEventHandler.recoilHorizon * fp));
+        cross3.setPosY(-0.23f * (float) (fp + 2.3 * fr));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
