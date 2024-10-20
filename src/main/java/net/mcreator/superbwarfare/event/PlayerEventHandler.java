@@ -128,21 +128,13 @@ public class PlayerEventHandler {
     private static void handleTacticalSprint(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        int sprint_cost;
+        int sprintCost;
 
         if (stack.is(ModTags.Items.GUN)) {
-            double weight = stack.getOrCreateTag().getDouble("weight");
-            if (weight == 0) {
-                sprint_cost = 3;
-            } else if (weight == 1) {
-                sprint_cost = 4;
-            } else if (weight == 2) {
-                sprint_cost = 5;
-            } else {
-                sprint_cost = 2;
-            }
+            double weight = stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("custom_weight");
+            sprintCost = (int) (2 + 0.2 * weight);
         } else {
-            sprint_cost = 2;
+            sprintCost = 2;
         }
 
         if (!player.isSprinting()) {
@@ -165,7 +157,7 @@ public class PlayerEventHandler {
 
         if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprint) {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.tacticalSprintTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime - sprint_cost, 0, 1000);
+                capability.tacticalSprintTime = Mth.clamp(player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).tacticalSprintTime - sprintCost, 0, 1000);
                 capability.syncPlayerVariables(player);
             });
             player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 2, 0, false, false));
