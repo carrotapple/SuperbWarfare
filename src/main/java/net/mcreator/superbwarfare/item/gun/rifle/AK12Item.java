@@ -90,7 +90,7 @@ public class AK12Item extends GunItem implements GeoItem, AnimatedItem {
         }
 
         if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-            if (stack.getOrCreateTag().getInt("magazine_type") == 2) {
+            if (GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE) == 2) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak12.reload_normal_drum"));
             } else {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak12.reload_normal"));

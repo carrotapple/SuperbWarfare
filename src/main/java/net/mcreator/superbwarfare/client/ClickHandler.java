@@ -131,7 +131,7 @@ public class ClickHandler {
 
         if (stack.is(ModTags.Items.GUN) && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom) {
             var tag = stack.getOrCreateTag();
-            if (tag.getDouble("min_zoom") != 0 && tag.getDouble("max_zoom") != 0) {
+            if (tag.getBoolean("CanAdjustZoomFov")) {
                 ModUtils.PACKET_HANDLER.sendToServer(new AdjustZoomFovMessage(scroll));
             }
             event.setCanceled(true);

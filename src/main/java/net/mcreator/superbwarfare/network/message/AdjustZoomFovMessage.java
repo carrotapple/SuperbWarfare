@@ -39,7 +39,6 @@ public class AdjustZoomFovMessage {
             }
             var tag = stack.getOrCreateTag();
 
-            if (!tag.getBoolean("CanAdjustZoomFov")) return;
 
             double min_zoom = tag.getDouble("MinZoom") - 1.25;
             double max_zoom = tag.getDouble("MaxZoom") - 1.25;
