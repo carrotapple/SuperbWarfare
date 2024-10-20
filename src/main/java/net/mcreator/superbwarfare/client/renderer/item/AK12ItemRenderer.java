@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.mcreator.superbwarfare.client.ItemModelHelper;
 import net.mcreator.superbwarfare.client.layer.AK12Layer;
 import net.mcreator.superbwarfare.client.model.item.AK12ItemModel;
 import net.mcreator.superbwarfare.item.gun.rifle.AK12Item;
@@ -103,42 +104,7 @@ public class AK12ItemRenderer extends GeoItemRenderer<AK12Item> {
                 }
             }
 
-            if (name.equals("Scope1")) {
-                bone.setHidden(itemStack.getOrCreateTag().getInt("scope_type") != 1);
-            }
-
-            if (name.equals("Magazine0")) {
-                bone.setHidden(itemStack.getOrCreateTag().getInt("magazine_type") != 0);
-            }
-
-            if (name.equals("Magazine1")) {
-                bone.setHidden(itemStack.getOrCreateTag().getInt("magazine_type") != 1);
-            }
-
-            if (name.equals("Magazine2")) {
-                bone.setHidden(itemStack.getOrCreateTag().getInt("magazine_type") != 2);
-            }
-
-            if (name.equals("Barrel0")) {
-                bone.setHidden(itemStack.getOrCreateTag().getInt("barrel_type") != 0);
-            }
-
-            if (name.equals("Barrel1")) {
-                bone.setHidden(itemStack.getOrCreateTag().getInt("barrel_type") != 1);
-            }
-
-            if (name.equals("Barrel2")) {
-                bone.setHidden(itemStack.getOrCreateTag().getInt("barrel_type") != 2);
-            }
-
-            if (name.equals("Stock0")) {
-                bone.setHidden(itemStack.getOrCreateTag().getInt("stock_type") != 0);
-            }
-
-            if (name.equals("Stock1")) {
-                bone.setHidden(itemStack.getOrCreateTag().getInt("stock_type") != 1);
-            }
-
+            ItemModelHelper.handleGunAttachments(bone, itemStack, name);
         }
 
 

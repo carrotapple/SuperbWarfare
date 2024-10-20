@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.network.message;
 
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -20,11 +21,11 @@ public class EditMessage {
         this.type = buffer.readInt();
     }
 
-    public static void encode(net.mcreator.superbwarfare.network.message.EditMessage message, FriendlyByteBuf buffer) {
+    public static void encode(EditMessage message, FriendlyByteBuf buffer) {
         buffer.writeInt(message.type);
     }
 
-    public static void handler(net.mcreator.superbwarfare.network.message.EditMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
+    public static void handler(EditMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> pressAction(context.getSender(), message.type));
         context.setPacketHandled(true);
@@ -38,32 +39,34 @@ public class EditMessage {
         ItemStack stack = player.getMainHandItem();
 
         if (stack.is(ModTags.Items.CAN_CUSTOM_GUN) && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
+            CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
             switch (type) {
-                case 0:
-                    stack.getOrCreateTag().putInt("scope_type", stack.getOrCreateTag().getInt("scope_type") + 1);
-                    if (stack.getOrCreateTag().getInt("scope_type") == 4) {
-                        stack.getOrCreateTag().putInt("scope_type", 0);
-                    }
-                    break;
-                case 1:
-                    stack.getOrCreateTag().putInt("barrel_type", stack.getOrCreateTag().getInt("barrel_type") + 1);
-                    if (stack.getOrCreateTag().getInt("barrel_type") == 3) {
-                        stack.getOrCreateTag().putInt("barrel_type", 0);
-                    }
-                    break;
-                case 2:
-                    stack.getOrCreateTag().putInt("magazine_type", stack.getOrCreateTag().getInt("magazine_type") + 1);
-                    if (stack.getOrCreateTag().getInt("magazine_type") == 3) {
-                        stack.getOrCreateTag().putInt("magazine_type", 0);
-                    }
-                    break;
-                case 3:
-                    stack.getOrCreateTag().putInt("stock_type", stack.getOrCreateTag().getInt("stock_type") + 1);
-                    if (stack.getOrCreateTag().getInt("stock_type") == 3) {
-                        stack.getOrCreateTag().putInt("stock_type", 0);
-                    }
-                    break;
+                case 0 -> {
+                    int att = tag.getInt("Scope");
+                    att++;
+                    att %= 4;
+                    tag.putInt("Scope", att);
+                }
+                case 1 -> {
+                    int att = tag.getInt("Barrel");
+                    att++;
+                    att %= 3;
+                    tag.putInt("Barrel", att);
+                }
+                case 2 -> {
+                    int att = tag.getInt("Magazine");
+                    att++;
+                    att %= 3;
+                    tag.putInt("Magazine", att);
+                }
+                case 3 -> {
+                    int att = tag.getInt("Stock");
+                    att++;
+                    att %= 3;
+                    tag.putInt("Stock", att);
+                }
             }
+            stack.addTagElement("Attachments", tag);
         }
     }
 }
