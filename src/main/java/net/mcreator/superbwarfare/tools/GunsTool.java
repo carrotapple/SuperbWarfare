@@ -122,4 +122,26 @@ public class GunsTool {
         tag.putBoolean("is_empty_reloading", false);
     }
 
+    public static int getAttachmentType(ItemStack stack, AttachmentType type) {
+        CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
+        return tag.getInt(type.getName());
+    }
+
+    public enum AttachmentType {
+        SCOPE("Scope"),
+        MAGAZINE("Magazine"),
+        BARREL("Barrel"),
+        STOCK("Stock");
+
+        private final String name;
+
+        AttachmentType(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
 }

@@ -5,6 +5,7 @@ import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.rifle.AK12Item;
 import net.mcreator.superbwarfare.tools.AnimUtils;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -18,24 +19,24 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
 
     @Override
     public ResourceLocation getAnimationResource(AK12Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/ak12.animation.json");
+        return ModUtils.loc("animations/ak12.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(AK12Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/ak12.geo.json");
+        return ModUtils.loc("geo/ak12.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(AK12Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/ak12.png");
+        return ModUtils.loc("textures/item/ak12.png");
     }
 
     @Override
     public void setCustomAnimations(AK12Item animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
-        CoreGeoBone Scope1 = getAnimationProcessor().getBone("Scope1");
+        CoreGeoBone scope1 = getAnimationProcessor().getBone("Scope1");
         CoreGeoBone shuan = getAnimationProcessor().getBone("shuan");
 
         Player player = Minecraft.getInstance().player;
@@ -60,30 +61,25 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
-        int type = stack.getOrCreateTag().getInt("scope_type");
+        int type = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
 
-        float posY = 0;
-        float scaleZ = 0;
+        float posY = switch (type) {
+            case 0, 2, 3 -> 0.781f;
+            case 1 -> 0.351f;
+            default -> 0f;
+        };
+        float scaleZ = switch (type) {
+            case 0, 2, 3 -> 0.55f;
+            case 1 -> 0.4f;
+            default -> 0f;
+        };
 
         gun.setPosX(1.97f * (float) zp);
-        if (type == 0) {
-            posY = 0.781f;
-            scaleZ = 0.55f;
-        } else if (type == 1) {
-            posY = 0.351f;
-            scaleZ = 0.4f;
-        } else if (type == 2) {
-            posY = 0.781f;
-            scaleZ = 0.55f;
-        } else if (type == 3) {
-            posY = 0.781f;
-            scaleZ = 0.55f;
-        }
 
         gun.setPosY(posY * (float) zp - (float) (0.2f * zpz));
         gun.setPosZ(2.8f * (float) zp + (float) (0.5f * zpz));
         gun.setScaleZ(1f - (scaleZ * (float) zp));
-        Scope1.setScaleZ(1f - (0.4f * (float) zp));
+        scope1.setScaleZ(1f - (0.4f * (float) zp));
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.8));
 

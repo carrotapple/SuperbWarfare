@@ -7,6 +7,7 @@ import net.mcreator.superbwarfare.client.layer.AK12Layer;
 import net.mcreator.superbwarfare.client.model.item.AK12ItemModel;
 import net.mcreator.superbwarfare.item.gun.rifle.AK12Item;
 import net.mcreator.superbwarfare.tools.AnimUtils;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -79,22 +80,21 @@ public class AK12ItemRenderer extends GeoItemRenderer<AK12Item> {
             bone.setHidden(this.hiddenBones.contains(name));
         }
 
-        Player player_ = Minecraft.getInstance().player;
-        if (player_ != null) {
-            ItemStack itemStack = player_.getMainHandItem();
+        Player player = mc.player;
+        if (player != null) {
+            ItemStack itemStack = player.getMainHandItem();
 
             if (name.equals("holo")) {
-
                 bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
                         || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
-                        || itemStack.getOrCreateTag().getInt("scope_type") != 1);
+                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
             }
 
             if (name.equals("flare")) {
-                if (itemStack.getOrCreateTag().getInt("barrel_type") == 1) {
+                if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 1) {
                     bone.setPosZ(2.25f);
                 }
-                if (itemStack.getOrCreateTag().getDouble("flash_time") == 0 || itemStack.getOrCreateTag().getInt("barrel_type") == 2) {
+                if (itemStack.getOrCreateTag().getDouble("flash_time") == 0 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {
                     bone.setHidden(true);
                 } else {
                     bone.setHidden(false);
@@ -107,15 +107,14 @@ public class AK12ItemRenderer extends GeoItemRenderer<AK12Item> {
             ItemModelHelper.handleGunAttachments(bone, itemStack, name);
         }
 
-
         if (this.transformType.firstPerson() && renderingArms) {
-            AbstractClientPlayer player = mc.player;
+            AbstractClientPlayer localPlayer = mc.player;
 
-            if (player == null) {
+            if (localPlayer == null) {
                 return;
             }
 
-            PlayerRenderer playerRenderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(player);
+            PlayerRenderer playerRenderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(localPlayer);
             PlayerModel<AbstractClientPlayer> model = playerRenderer.getModel();
             stack.pushPose();
             RenderUtils.translateMatrixToBone(stack, bone);
@@ -123,7 +122,7 @@ public class AK12ItemRenderer extends GeoItemRenderer<AK12Item> {
             RenderUtils.rotateMatrixAroundBone(stack, bone);
             RenderUtils.scaleMatrixForBone(stack, bone);
             RenderUtils.translateAwayFromPivotPoint(stack, bone);
-            ResourceLocation loc = player.getSkinTextureLocation();
+            ResourceLocation loc = localPlayer.getSkinTextureLocation();
             VertexConsumer armBuilder = this.currentBuffer.getBuffer(RenderType.entitySolid(loc));
             VertexConsumer sleeveBuilder = this.currentBuffer.getBuffer(RenderType.entityTranslucent(loc));
             if (name.equals("Lefthand")) {
