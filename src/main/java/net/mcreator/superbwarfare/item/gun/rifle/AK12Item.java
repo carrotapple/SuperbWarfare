@@ -81,10 +81,6 @@ public class AK12Item extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak12.edit"));
-        }
-
         if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak12.reload_empty"));
         }
@@ -108,10 +104,25 @@ public class AK12Item extends GunItem implements GeoItem, AnimatedItem {
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ak12.idle"));
     }
 
+    private PlayState editPredicate(AnimationState<AK12Item> event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
+
+        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak12.edit"));
+        }
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ak12.idle"));
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         var idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
+        var editController = new AnimationController<>(this, "editController", 1, this::editPredicate);
+        data.add(editController);
     }
 
     @Override

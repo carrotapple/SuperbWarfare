@@ -7,6 +7,7 @@ import net.mcreator.superbwarfare.compat.clothconfig.ClothConfigHelper;
 import net.mcreator.superbwarfare.config.client.ReloadConfig;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.entity.MortarEntity;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.item.common.ammo.CannonShellItem;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -173,17 +174,23 @@ public class ClickHandler {
             if (key == ModKeyMappings.EDIT_MODE.getKey().getValue()) {
                 ModUtils.PACKET_HANDLER.sendToServer(new EditModeMessage(0));
             }
-            if (key == ModKeyMappings.EDIT_SCOPE.getKey().getValue()) {
-                ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(0));
-            }
-            if (key == ModKeyMappings.EDIT_BARREL.getKey().getValue()) {
-                ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(1));
-            }
-            if (key == ModKeyMappings.EDIT_MAGAZINE.getKey().getValue()) {
-                ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(2));
-            }
-            if (key == ModKeyMappings.EDIT_STOCK.getKey().getValue()) {
-                ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(3));
+
+            if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
+                if (key == ModKeyMappings.EDIT_SCOPE.getKey().getValue()) {
+                    ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(0));
+                }
+                if (key == ModKeyMappings.EDIT_BARREL.getKey().getValue()) {
+                    ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(1));
+                }
+                if (key == ModKeyMappings.EDIT_MAGAZINE.getKey().getValue()) {
+                    ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(2));
+                }
+                if (key == ModKeyMappings.EDIT_STOCK.getKey().getValue()) {
+                    ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(3));
+                }
+
+                ClientEventHandler.movePosY = -0.8;
+                ClientEventHandler.fireRotTimer = 0.4;
             }
             if (key == ModKeyMappings.SENSITIVITY_INCREASE.getKey().getValue()) {
                 ModUtils.PACKET_HANDLER.sendToServer(new SensitivityMessage(true));

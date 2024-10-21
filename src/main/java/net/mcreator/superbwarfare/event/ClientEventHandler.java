@@ -408,6 +408,7 @@ public class ClientEventHandler {
             float times = 3.7f * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
             double moveSpeed = (float) Mth.clamp(entity.getDeltaMovement().horizontalDistanceSqr(), 0, 0.02);
             double onGround;
+
             if (entity.onGround()) {
                 if (entity.isSprinting()) {
                     onGround = 1.35;
@@ -418,27 +419,31 @@ public class ClientEventHandler {
                 onGround = 0.001;
             }
 
-            if (Minecraft.getInstance().options.keyUp.isDown() && firePosTimer == 0) {
-                moveRotZ = Mth.clamp(moveRotZ + 0.007 * times, 0, 0.14) * (1 - zoomTime);
-            } else {
-                moveRotZ = Mth.clamp(moveRotZ - 0.007 * times, 0, 0.14) * (1 - zoomTime);
+            if (!entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
+                if (Minecraft.getInstance().options.keyUp.isDown() && firePosTimer == 0) {
+                    moveRotZ = Mth.clamp(moveRotZ + 0.007 * times, 0, 0.14) * (1 - zoomTime);
+                } else {
+                    moveRotZ = Mth.clamp(moveRotZ - 0.007 * times, 0, 0.14) * (1 - zoomTime);
+                }
             }
 
             if (isMoving() && firePosTimer == 0) {
-                if (moveYTime < 1.25) {
-                    moveYTime += 1.2 * onGround * times * moveSpeed;
-                } else {
-                    moveYTime = 0.25;
-                }
+                if (!entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
+                    if (moveYTime < 1.25) {
+                        moveYTime += 1.2 * onGround * times * moveSpeed;
+                    } else {
+                        moveYTime = 0.25;
+                    }
 
-                if (moveXTime < 2) {
-                    moveXTime += 1.2 * onGround * times * moveSpeed;
-                } else {
-                    moveXTime = 0;
-                }
+                    if (moveXTime < 2) {
+                        moveXTime += 1.2 * onGround * times * moveSpeed;
+                    } else {
+                        moveXTime = 0;
+                    }
 
-                movePosX = 0.2 * Math.sin(1 * Math.PI * moveXTime) * (1 - 0.95 * zoomTime);
-                movePosY = -0.135 * Math.sin(2 * Math.PI * (moveYTime - 0.25)) * (1 - 0.95 * zoomTime);
+                    movePosX = 0.2 * Math.sin(1 * Math.PI * moveXTime) * (1 - 0.95 * zoomTime);
+                    movePosY = -0.135 * Math.sin(2 * Math.PI * (moveYTime - 0.25)) * (1 - 0.95 * zoomTime);
+                }
             } else {
                 if (moveYTime > 0.25) {
                     moveYTime -= 0.5 * times;

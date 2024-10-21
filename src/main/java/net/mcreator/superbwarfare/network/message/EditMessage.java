@@ -1,8 +1,6 @@
 package net.mcreator.superbwarfare.network.message;
 
 import net.mcreator.superbwarfare.init.ModSounds;
-import net.mcreator.superbwarfare.init.ModTags;
-import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -40,37 +38,35 @@ public class EditMessage {
 
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.is(ModTags.Items.CAN_CUSTOM_GUN) && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
-            CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
-            switch (type) {
-                case 0 -> {
-                    int att = tag.getInt("Scope");
-                    att++;
-                    att %= 4;
-                    tag.putInt("Scope", att);
-                }
-                case 1 -> {
-                    int att = tag.getInt("Barrel");
-                    att++;
-                    att %= 3;
-                    tag.putInt("Barrel", att);
-                }
-                case 2 -> {
-                    int att = tag.getInt("Magazine");
-                    att++;
-                    att %= 3;
-                    tag.putInt("Magazine", att);
-                }
-                case 3 -> {
-                    int att = tag.getInt("Stock");
-                    att++;
-                    att %= 3;
-                    tag.putInt("Stock", att);
-                }
+        CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
+        switch (type) {
+            case 0 -> {
+                int att = tag.getInt("Scope");
+                att++;
+                att %= 4;
+                tag.putInt("Scope", att);
             }
-            stack.addTagElement("Attachments", tag);
-            SoundTool.playLocalSound(player, ModSounds.EDIT.get(), 1f, 1f);
+            case 1 -> {
+                int att = tag.getInt("Barrel");
+                att++;
+                att %= 3;
+                tag.putInt("Barrel", att);
+            }
+            case 2 -> {
+                int att = tag.getInt("Magazine");
+                att++;
+                att %= 3;
+                tag.putInt("Magazine", att);
+            }
+            case 3 -> {
+                int att = tag.getInt("Stock");
+                att++;
+                att %= 3;
+                tag.putInt("Stock", att);
+            }
         }
+        stack.addTagElement("Attachments", tag);
+        SoundTool.playLocalSound(player, ModSounds.EDIT.get(), 1f, 1f);
     }
 }
 
