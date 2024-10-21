@@ -37,8 +37,10 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone scope1 = getAnimationProcessor().getBone("Scope1");
+        CoreGeoBone scope2 = getAnimationProcessor().getBone("Scope2");
         CoreGeoBone scope3 = getAnimationProcessor().getBone("Scope3");
         CoreGeoBone cross3 = getAnimationProcessor().getBone("Cross3");
+        CoreGeoBone frontSight = getAnimationProcessor().getBone("qianjimiao");
         CoreGeoBone shuan = getAnimationProcessor().getBone("shuan");
 
         Player player = Minecraft.getInstance().player;
@@ -66,22 +68,29 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
         int type = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
 
         float posY = switch (type) {
-            case 0, 2 -> 0.781f;
+            case 0 -> 0.781f;
             case 1 -> 0.351f;
+            case 2 -> -0.04f;
             case 3 -> -0.01f;
             default -> 0f;
         };
         float scaleZ = switch (type) {
-            case 0, 2 -> 0.55f;
+            case 0 -> 0.55f;
             case 1 -> 0.4f;
+            case 2 -> 0.77f;
             case 3 -> 0.78f;
             default -> 0f;
         };
         float posZ = switch (type) {
-            case 0, 1, 2 -> 2.8f;
+            case 0, 1 -> 2.8f;
+            case 2 -> 4.1f;
             case 3 -> 4.3f;
             default -> 0f;
         };
+
+        if (type == 2) {
+            frontSight.setPosY(-0.4f * (float) zp);
+        }
 
         gun.setPosX(1.96f * (float) zp);
 
@@ -89,6 +98,7 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
         gun.setPosZ(posZ * (float) zp + (float) (0.5f * zpz));
         gun.setScaleZ(1f - (scaleZ * (float) zp));
         scope1.setScaleZ(1f - (0.4f * (float) zp));
+        scope2.setScaleZ(1f - (0.3f * (float) zp));
         scope3.setScaleZ(1f - (0.7f * (float) zp));
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.8));
