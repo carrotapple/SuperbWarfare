@@ -1,7 +1,5 @@
 {
-  "zoom": 4,
-  "min_zoom": 1.25,
-  "max_zoom": 6,
+  "CustomZoom": 3.75,
   "spread": 5,
   "bipod": 1,
   "recoil_x": 0.006,
