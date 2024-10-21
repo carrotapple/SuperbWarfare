@@ -167,6 +167,9 @@ public class ClickHandler {
             if (key == ModKeyMappings.CONFIG.getKey().getValue()) {
                 handleConfigScreen(player);
             }
+            if (key == ModKeyMappings.RELOAD.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
+            }
             if (key == ModKeyMappings.EDIT_MODE.getKey().getValue()) {
                 ModUtils.PACKET_HANDLER.sendToServer(new EditModeMessage(0));
             }
@@ -181,6 +184,12 @@ public class ClickHandler {
             }
             if (key == ModKeyMappings.EDIT_STOCK.getKey().getValue()) {
                 ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(3));
+            }
+            if (key == ModKeyMappings.SENSITIVITY_INCREASE.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new SensitivityMessage(true));
+            }
+            if (key == ModKeyMappings.SENSITIVITY_REDUCE.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new SensitivityMessage(false));
             }
         }
     }
