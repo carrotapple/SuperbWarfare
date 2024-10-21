@@ -7,6 +7,7 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.phys.*;
 
 public class TraceTool {
+
     public static Entity findLookingEntity(Entity player, double entityReach) {
         double distance = entityReach * entityReach;
         Vec3 eyePos = player.getEyePosition(1.0f);

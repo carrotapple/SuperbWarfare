@@ -6,7 +6,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -185,7 +184,7 @@ public class ModVariables {
         @SubscribeEvent
         public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
             if (event.getObject() instanceof Player && !(event.getObject() instanceof FakePlayer))
-                event.addCapability(new ResourceLocation(ModUtils.MODID, "player_variables"), new PlayerVariablesProvider());
+                event.addCapability(ModUtils.loc("player_variables"), new PlayerVariablesProvider());
         }
 
         private final PlayerVariables playerVariables = new PlayerVariables();

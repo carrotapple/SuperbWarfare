@@ -2,7 +2,7 @@ package net.mcreator.superbwarfare.tools;
 
 import net.minecraft.world.item.ItemStack;
 
-//from Botania
+// From Botania
 public final class ItemNBTTool {
     public static boolean verifyExistence(ItemStack stack, String tag) {
         return !stack.isEmpty() && stack.getOrCreateTag().contains(tag);

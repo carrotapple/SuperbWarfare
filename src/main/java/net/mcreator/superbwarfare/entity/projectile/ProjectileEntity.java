@@ -355,7 +355,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 }
             }
 
-            this.onHitEntity(entity, entityHitResult.isHeadshot(), entityHitResult.isLegshot());
+            this.onHitEntity(entity, entityHitResult.isHeadshot(), entityHitResult.isLegShot());
             entity.invulnerableTime = 0;
         }
     }
