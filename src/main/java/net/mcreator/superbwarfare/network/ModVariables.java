@@ -232,44 +232,45 @@ public class ModVariables {
 
         public Tag writeNBT() {
             CompoundTag nbt = new CompoundTag();
-            nbt.putBoolean("zoom", zoom);
-            nbt.putBoolean("holdFire", holdFire);
-            nbt.putInt("rifle_ammo", rifleAmmo);
-            nbt.putInt("handgun_ammo", handgunAmmo);
-            nbt.putInt("shotgun_ammo", shotgunAmmo);
-            nbt.putInt("sniper_ammo", sniperAmmo);
-            nbt.putBoolean("bow_pull_hold", bowPullHold);
-            nbt.putBoolean("bow_pull", bowPull);
-            nbt.putBoolean("player_double_jump", playerDoubleJump);
-            nbt.putBoolean("tacticalSprint", tacticalSprint);
-            nbt.putInt("tacticalSprintTime", tacticalSprintTime);
-            nbt.putBoolean("tacticalSprintExhaustion", tacticalSprintExhaustion);
-            nbt.putBoolean("breath", breath);
-            nbt.putInt("breathTime", breathTime);
-            nbt.putBoolean("breathExhaustion", breathExhaustion);
-            nbt.putBoolean("edit", edit);
+            nbt.putBoolean("Zoom", zoom);
+            nbt.putBoolean("HoldFire", holdFire);
+            nbt.putInt("RifleAmmo", rifleAmmo);
+            nbt.putInt("HandgunAmmo", handgunAmmo);
+            nbt.putInt("ShotgunAmmo", shotgunAmmo);
+            nbt.putInt("SniperAmmo", sniperAmmo);
+            nbt.putBoolean("BowPullHold", bowPullHold);
+            nbt.putBoolean("BowPull", bowPull);
+            nbt.putBoolean("DoubleJump", playerDoubleJump);
+            nbt.putBoolean("TacticalSprint", tacticalSprint);
+            nbt.putInt("TacticalSprintTime", tacticalSprintTime);
+            nbt.putBoolean("TacticalSprintExhaustion", tacticalSprintExhaustion);
+            nbt.putBoolean("Breath", breath);
+            nbt.putInt("BreathTime", breathTime);
+            nbt.putBoolean("BreathExhaustion", breathExhaustion);
+            nbt.putBoolean("EditMode", edit);
 
             return nbt;
         }
 
-        public void readNBT(Tag Tag) {
-            CompoundTag nbt = (CompoundTag) Tag;
-            zoom = nbt.getBoolean("zoom");
-            holdFire = nbt.getBoolean("holdFire");
-            rifleAmmo = nbt.getInt("rifle_ammo");
-            handgunAmmo = nbt.getInt("handgun_ammo");
-            shotgunAmmo = nbt.getInt("shotgun_ammo");
-            sniperAmmo = nbt.getInt("sniper_ammo");
-            bowPullHold = nbt.getBoolean("bow_pull_hold");
-            bowPull = nbt.getBoolean("bow_pull");
-            playerDoubleJump = nbt.getBoolean("player_double_jump");
-            tacticalSprint = nbt.getBoolean("tacticalSprint");
-            tacticalSprintTime = nbt.getInt("tacticalSprintTime");
-            tacticalSprintExhaustion = nbt.getBoolean("tacticalSprintExhaustion");
-            breath = nbt.getBoolean("breath");
-            breathTime = nbt.getInt("breathTime");
-            breathExhaustion = nbt.getBoolean("breathExhaustion");
-            edit = nbt.getBoolean("edit");
+        public void readNBT(Tag tag) {
+            CompoundTag nbt = (CompoundTag) tag;
+
+            zoom = nbt.getBoolean("Zoom");
+            holdFire = nbt.getBoolean("HoldFire");
+            rifleAmmo = nbt.getInt("RifleAmmo");
+            handgunAmmo = nbt.getInt("HandgunAmmo");
+            shotgunAmmo = nbt.getInt("ShotgunAmmo");
+            sniperAmmo = nbt.getInt("SniperAmmo");
+            bowPullHold = nbt.getBoolean("BowPullHold");
+            bowPull = nbt.getBoolean("BowPull");
+            playerDoubleJump = nbt.getBoolean("DoubleJump");
+            tacticalSprint = nbt.getBoolean("TacticalSprint");
+            tacticalSprintTime = nbt.getInt("TacticalSprintTime");
+            tacticalSprintExhaustion = nbt.getBoolean("TacticalSprintExhaustion");
+            breath = nbt.getBoolean("Breath");
+            breathTime = nbt.getInt("BreathTime");
+            breathExhaustion = nbt.getBoolean("BreathExhaustion");
+            edit = nbt.getBoolean("EditMode");
         }
     }
 
