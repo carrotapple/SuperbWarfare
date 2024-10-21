@@ -173,24 +173,28 @@ public class ClickHandler {
             }
             if (key == ModKeyMappings.EDIT_MODE.getKey().getValue()) {
                 ModUtils.PACKET_HANDLER.sendToServer(new EditModeMessage(0));
+                editModelShake();
             }
 
             if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
                 if (key == ModKeyMappings.EDIT_SCOPE.getKey().getValue()) {
                     ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(0));
+                    editModelShake();
                 }
                 if (key == ModKeyMappings.EDIT_BARREL.getKey().getValue()) {
                     ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(1));
+                    editModelShake();
                 }
                 if (key == ModKeyMappings.EDIT_MAGAZINE.getKey().getValue()) {
                     ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(2));
+                    editModelShake();
                 }
                 if (key == ModKeyMappings.EDIT_STOCK.getKey().getValue()) {
                     ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(3));
+                    editModelShake();
                 }
 
-                ClientEventHandler.movePosY = -0.8;
-                ClientEventHandler.fireRotTimer = 0.4;
+
             }
             if (key == ModKeyMappings.SENSITIVITY_INCREASE.getKey().getValue()) {
                 ModUtils.PACKET_HANDLER.sendToServer(new SensitivityMessage(true));
@@ -199,6 +203,11 @@ public class ClickHandler {
                 ModUtils.PACKET_HANDLER.sendToServer(new SensitivityMessage(false));
             }
         }
+    }
+
+    private static void editModelShake() {
+        ClientEventHandler.movePosY = -0.8;
+        ClientEventHandler.fireRotTimer = 0.4;
     }
 
     private static void setKeyState(InputEvent.Key event) {

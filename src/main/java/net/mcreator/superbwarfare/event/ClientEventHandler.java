@@ -428,22 +428,20 @@ public class ClientEventHandler {
             }
 
             if (isMoving() && firePosTimer == 0) {
-                if (!entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
-                    if (moveYTime < 1.25) {
-                        moveYTime += 1.2 * onGround * times * moveSpeed;
-                    } else {
-                        moveYTime = 0.25;
-                    }
-
-                    if (moveXTime < 2) {
-                        moveXTime += 1.2 * onGround * times * moveSpeed;
-                    } else {
-                        moveXTime = 0;
-                    }
-
-                    movePosX = 0.2 * Math.sin(1 * Math.PI * moveXTime) * (1 - 0.95 * zoomTime);
-                    movePosY = -0.135 * Math.sin(2 * Math.PI * (moveYTime - 0.25)) * (1 - 0.95 * zoomTime);
+                if (moveYTime < 1.25) {
+                    moveYTime += 1.2 * onGround * times * moveSpeed;
+                } else {
+                    moveYTime = 0.25;
                 }
+
+                if (moveXTime < 2) {
+                    moveXTime += 1.2 * onGround * times * moveSpeed;
+                } else {
+                    moveXTime = 0;
+                }
+
+                movePosX = 0.2 * Math.sin(1 * Math.PI * moveXTime) * (1 - 0.95 * zoomTime);
+                movePosY = -0.135 * Math.sin(2 * Math.PI * (moveYTime - 0.25)) * (1 - 0.95 * zoomTime);
             } else {
                 if (moveYTime > 0.25) {
                     moveYTime -= 0.5 * times;
