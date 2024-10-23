@@ -164,7 +164,8 @@ public class GunsTool {
         SCOPE("Scope"),
         MAGAZINE("Magazine"),
         BARREL("Barrel"),
-        STOCK("Stock");
+        STOCK("Stock"),
+        GRIP("Grip");
 
         private final String name;
 

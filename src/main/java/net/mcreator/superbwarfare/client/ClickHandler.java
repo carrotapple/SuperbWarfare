@@ -158,6 +158,8 @@ public class ClickHandler {
         if (player == null) return;
         if (player.isSpectator()) return;
 
+        ItemStack stack = player.getMainHandItem();
+
         setKeyState(event);
 
         int key = event.getKey();
@@ -173,27 +175,30 @@ public class ClickHandler {
             }
             if (key == ModKeyMappings.EDIT_MODE.getKey().getValue()) {
                 ModUtils.PACKET_HANDLER.sendToServer(new EditModeMessage(0));
-                editModelShake();
             }
 
+
             if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
-                if (key == ModKeyMappings.EDIT_SCOPE.getKey().getValue()) {
+                if (key == ModKeyMappings.EDIT_SCOPE.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_SCOPE)) {
                     ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(0));
                     editModelShake();
                 }
-                if (key == ModKeyMappings.EDIT_BARREL.getKey().getValue()) {
+                if (key == ModKeyMappings.EDIT_BARREL.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_BARREL) && !player.isCrouching()) {
                     ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(1));
                     editModelShake();
                 }
-                if (key == ModKeyMappings.EDIT_MAGAZINE.getKey().getValue()) {
+                if (key == ModKeyMappings.EDIT_MAGAZINE.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_MAGAZINE)) {
                     ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(2));
                     editModelShake();
                 }
-                if (key == ModKeyMappings.EDIT_STOCK.getKey().getValue()) {
+                if (key == ModKeyMappings.EDIT_STOCK.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_STOCK)) {
                     ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(3));
                     editModelShake();
                 }
-
+                if (key == ModKeyMappings.EDIT_BARREL.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_GRIP) && player.isCrouching()) {
+                    ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(4));
+                    editModelShake();
+                }
 
             }
             if (key == ModKeyMappings.SENSITIVITY_INCREASE.getKey().getValue()) {

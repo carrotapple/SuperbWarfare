@@ -2,7 +2,9 @@ package net.mcreator.superbwarfare.init;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.network.message.*;
+import net.mcreator.superbwarfare.network.message.BreathMessage;
+import net.mcreator.superbwarfare.network.message.FireModeMessage;
+import net.mcreator.superbwarfare.network.message.InteractMessage;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
@@ -74,6 +76,8 @@ public class ModKeyMappings {
     public static final KeyMapping EDIT_BARREL = new KeyMapping("key.superbwarfare.edit_barrel", GLFW.GLFW_KEY_LEFT, "key.categories.superbwarfare");
     public static final KeyMapping EDIT_MAGAZINE = new KeyMapping("key.superbwarfare.edit_magazine", GLFW.GLFW_KEY_DOWN, "key.categories.superbwarfare");
     public static final KeyMapping EDIT_STOCK = new KeyMapping("key.superbwarfare.edit_stock", GLFW.GLFW_KEY_RIGHT, "key.categories.superbwarfare");
+//    public static final KeyMapping EDIT_GRIP = new KeyMapping("key.superbwarfare.edit_grip", KeyConflictContext.IN_GAME,
+//            KeyModifier.SHIFT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_LEFT, "key.categories.superbwarfare");
 
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {

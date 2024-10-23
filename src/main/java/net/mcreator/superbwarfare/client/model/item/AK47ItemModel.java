@@ -1,10 +1,11 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.rifle.AK47Item;
-import net.mcreator.superbwarfare.client.AnimationHelper;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -35,7 +36,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
     public void setCustomAnimations(AK47Item animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
-        CoreGeoBone scope = getAnimationProcessor().getBone("kobra");
+        CoreGeoBone scope = getAnimationProcessor().getBone("Scope1");
         CoreGeoBone shuan = getAnimationProcessor().getBone("shuan");
 
         Player player = Minecraft.getInstance().player;
@@ -60,10 +61,29 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
-        gun.setPosX(1.97f * (float) zp);
-        gun.setPosY(0.011f * (float) zp - (float) (0.2f * zpz));
-        gun.setPosZ(3.8f * (float) zp + (float) (0.5f * zpz));
-        gun.setScaleZ(1f - (0.2f * (float) zp));
+        int type = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+
+        float posY = switch (type) {
+            case 0,2,3 -> 1.071f;
+            case 1 -> 0.261f;
+            default -> 0f;
+        };
+        float scaleZ = switch (type) {
+            case 0,2,3 -> 0.55f;
+            case 1 -> 0.2f;
+            default -> 0f;
+        };
+//        float posZ = switch (type) {
+//            case 0, 1 -> 2.8f;
+//            case 2 -> 2.8f;
+//            case 3 -> 2.8f;
+//            default -> 0f;
+//        };
+
+        gun.setPosX(1.962f * (float) zp);
+        gun.setPosY(posY * (float) zp - (float) (0.2f * zpz));
+        gun.setPosZ(2.8f * (float) zp + (float) (0.5f * zpz));
+        gun.setScaleZ(1f - (scaleZ * (float) zp));
         scope.setScaleZ(1f - (0.4f * (float) zp));
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.8));
@@ -71,12 +91,12 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
         shen.setPosY((float) (0.15f * fp + 0.18f * fr));
         shen.setPosZ((float) (0.275 * fp + 0.34f * fr + 0.65 * fpz));
-        shen.setRotX((float) (0.01f * fp + 0.05f * fr + 0.01f * fpz));
+        shen.setRotX((float) (0.01f * fp + 0.08f * fr + 0.01f * fpz));
         shen.setRotY((float) (0.1f * ClientEventHandler.recoilHorizon * fpz));
         shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
 
         shen.setPosX((float) (shen.getPosX() * (1 - 0.5 * zt)));
-        shen.setPosY((float) (shen.getPosY() * (-1 + 0.4 * zt)));
+        shen.setPosY((float) (shen.getPosY() * (-1 + 0.8 * zt)));
         shen.setPosZ((float) (shen.getPosZ() * (1 - 0.6 * zt)));
         shen.setRotX((float) (shen.getRotX() * (1 - 0.9 * zt)));
         shen.setRotY((float) (shen.getRotY() * (1 - 0.9 * zt)));
@@ -96,7 +116,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         CoreGeoBone main = getAnimationProcessor().getBone("0");
 
         float numR = (float) (1 - 0.94 * zt);
-        float numP = (float) (1 - 0.8 * zt);
+        float numP = (float) (1 - 0.92 * zt);
 
         if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
             main.setRotX(numR * main.getRotX());

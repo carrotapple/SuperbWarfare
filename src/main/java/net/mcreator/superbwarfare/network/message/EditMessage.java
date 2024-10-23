@@ -64,6 +64,12 @@ public class EditMessage {
                 att %= 3;
                 tag.putInt("Stock", att);
             }
+            case 4 -> {
+                int att = tag.getInt("Grip");
+                att++;
+                att %= 4;
+                tag.putInt("Grip", att);
+            }
         }
         stack.addTagElement("Attachments", tag);
         SoundTool.playLocalSound(player, ModSounds.EDIT.get(), 1f, 1f);

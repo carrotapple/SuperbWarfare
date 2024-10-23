@@ -73,6 +73,7 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> AK_47_FAR = REGISTRY.register("ak_47_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "ak_47_far")));
     public static final RegistryObject<SoundEvent> AK_47_VERYFAR = REGISTRY.register("ak_47_veryfar", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "ak_47_veryfar")));
     public static final RegistryObject<SoundEvent> AK_47_RELOAD_NORMAL = REGISTRY.register("ak_47_reload_normal", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "ak_47_reload_normal")));
+    public static final RegistryObject<SoundEvent> AK_47_RELOAD_NORMAL_DRUM = REGISTRY.register("ak_47_reload_normal_drum", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "ak_47_reload_normal_drum")));
     public static final RegistryObject<SoundEvent> AK_47_RELOAD_EMPTY = REGISTRY.register("ak_47_reload_empty", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "ak_47_reload_empty")));
 
     public static final RegistryObject<SoundEvent> AK_12_FIRE_1P = REGISTRY.register("ak_12_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "ak_12_fire_1p")));

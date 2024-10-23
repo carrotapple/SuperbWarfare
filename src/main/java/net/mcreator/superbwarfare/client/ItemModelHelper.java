@@ -13,6 +13,7 @@ public class ItemModelHelper {
         splitBoneName(bone, name, "Magazine", tag);
         splitBoneName(bone, name, "Barrel", tag);
         splitBoneName(bone, name, "Stock", tag);
+        splitBoneName(bone, name, "Grip", tag);
     }
 
     private static void splitBoneName(GeoBone bone, String boneName, String tagName, CompoundTag tag) {

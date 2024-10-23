@@ -279,6 +279,14 @@
       }
     ]
   },
+  "ak_47_reload_normal_drum": {
+    "sounds": [
+      {
+        "name": "superbwarfare:ak_47/ak_47_reload_normal_drum",
+        "stream": false
+      }
+    ]
+  },
   "ak_47_reload_empty": {
     "sounds": [
       {

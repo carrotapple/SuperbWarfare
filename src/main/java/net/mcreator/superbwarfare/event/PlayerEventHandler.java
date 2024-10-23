@@ -191,7 +191,7 @@ public class PlayerEventHandler {
      */
     private static void handlePlayerSprint(Player player) {
         if (player.getMainHandItem().getOrCreateTag().getInt("flash_time") > 0 || player.getMainHandItem().getOrCreateTag().getInt("fire_animation") > 0) {
-            player.getPersistentData().putDouble("noRun", 20);
+            player.getPersistentData().putDouble("noRun", 10);
         }
 
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).holdFire) {

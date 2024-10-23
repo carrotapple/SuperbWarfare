@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.item.gun.rifle;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.PoseTool;
 import net.mcreator.superbwarfare.client.renderer.item.AK47ItemRenderer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
@@ -8,10 +9,10 @@ import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
 import net.mcreator.superbwarfare.item.gun.GunItem;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
-import net.mcreator.superbwarfare.client.PoseTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -20,11 +21,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -84,7 +87,11 @@ public class AK47Item extends GunItem implements GeoItem, AnimatedItem {
         }
 
         if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_normal"));
+            if (GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE) == 2) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_normal_drum"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_normal"));
+            }
         }
 
         if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
@@ -98,10 +105,25 @@ public class AK47Item extends GunItem implements GeoItem, AnimatedItem {
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ak47.idle"));
     }
 
+    private PlayState editPredicate(AnimationState<AK47Item> event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
+
+        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.edit"));
+        }
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ak47.idle"));
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         var idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
+        var editController = new AnimationController<>(this, "editController", 1, this::editPredicate);
+        data.add(editController);
     }
 
     @Override
@@ -117,6 +139,34 @@ public class AK47Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void setAnimationProcedure(String procedure) {
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
+
+        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        int barrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
+        int magType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE);
+        int stockType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK);
+
+        int customMag = switch (magType) {
+            case 1 -> 15;
+            case 2 -> 40;
+            default -> 0;
+        };
+
+        double customZoom = switch (scopeType) {
+            case 0, 1 -> 0;
+            case 2 -> 2.75;
+            default -> stack.getOrCreateTag().getDouble("CustomZoom");
+        };
+
+        stack.getOrCreateTag().putBoolean("CanAdjustZoomFov", scopeType == 3);
+
+        stack.getOrCreateTag().putDouble("CustomZoom", customZoom);
+
+        stack.getOrCreateTag().putInt("customMag", customMag);
     }
 
     @Override

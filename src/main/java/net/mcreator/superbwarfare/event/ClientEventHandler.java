@@ -264,7 +264,7 @@ public class ClientEventHandler {
         if (player.isCrouching() && player.getBbHeight() >= 1 && !isProne(player)) {
             pose = 0.85f;
         } else if (isProne(player)) {
-            pose = player.getMainHandItem().getOrCreateTag().getDouble("bipod") == 1 ? 0 : 0.25f;
+            pose = GunsTool.getAttachmentType(player.getMainHandItem(), GunsTool.AttachmentType.GRIP) == 3 ? 0 : 0.25f;
         } else {
             pose = 1;
         }
@@ -391,7 +391,7 @@ public class ClientEventHandler {
             if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && isProne(player)) {
                 pose = 0.85;
             } else if (isProne(player)) {
-                pose = player.getMainHandItem().getOrCreateTag().getDouble("bipod") == 1 ? 0 : 0.25f;
+                pose = GunsTool.getAttachmentType(player.getMainHandItem(), GunsTool.AttachmentType.GRIP) == 3 ? 0 : 0.25f;
             } else {
                 pose = 1;
             }
@@ -630,11 +630,24 @@ public class ClientEventHandler {
         CompoundTag tag = player.getMainHandItem().getOrCreateTag();
         float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
         int barrelType = GunsTool.getAttachmentType(player.getMainHandItem(), GunsTool.AttachmentType.BARREL);
+        int gripType = GunsTool.getAttachmentType(player.getMainHandItem(), GunsTool.AttachmentType.GRIP);
 
         double recoil = switch (barrelType) {
-            case 1 -> 0.7;
+            case 1 -> 0.9;
             case 2 -> 1.3;
             default -> 1.8;
+        };
+
+        double gripRecoilX = switch (gripType) {
+            case 1 -> 0.95;
+            case 2 -> 0.65;
+            default -> 1;
+        };
+
+        double gripRecoilY = switch (gripType) {
+            case 1 -> 0.6;
+            case 2 -> 0.95;
+            default -> 1;
         };
 
         double cusWeight = player.getMainHandItem().getOrCreateTag().getDouble("CustomWeight");
@@ -654,21 +667,25 @@ public class ClientEventHandler {
         if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && !isProne(player)) {
             pose = 0.7f;
         } else if (isProne(player)) {
-            if (tag.getDouble("bipod") == 1) {
+            if (GunsTool.getAttachmentType(player.getMainHandItem(), GunsTool.AttachmentType.GRIP) == 3) {
                 pose = 0.1f;
             } else {
                 pose = 0.5f;
             }
         }
 
-        float newYaw = player.getYRot() - (float) (0.6 * recoilHorizon * pose * times * (0.5 + fireSpread) * recoil * (1 - 0.06 * cusWeight));
+        // 水平后座
+
+        float newYaw = player.getYRot() - (float) (0.6 * recoilHorizon * pose * times * (0.5 + fireSpread) * recoil * (1 - 0.06 * cusWeight) * gripRecoilX);
         player.setYRot(newYaw);
         player.yRotO = player.getYRot();
 
         double sinRes = 0;
 
+        // 竖直后座
+
         if (0 < recoilTime && recoilTime < 0.5) {
-            float newPitch = (float) (player.getXRot() - 0.02f * gunRecoilX * times * recoil * (1 - 0.06 * cusWeight));
+            float newPitch = (float) (player.getXRot() - 0.02f * gunRecoilX * times * recoil * (1 - 0.06 * cusWeight) * gripRecoilY);
             player.setXRot(newPitch);
             player.xRotO = player.getXRot();
         }
@@ -684,7 +701,7 @@ public class ClientEventHandler {
         }
 
         if (0 < recoilTime && recoilTime < 2.5) {
-            float newPitch = player.getXRot() - (float) (1.5 * pose * gunRecoilX * (sinRes + Mth.clamp(0.5 - recoilTime, 0, 0.5)) * times * (0.5 + fireSpread) * recoil * (1 - 0.06 * cusWeight));
+            float newPitch = player.getXRot() - (float) (1.5 * pose * gunRecoilX * (sinRes + Mth.clamp(0.5 - recoilTime, 0, 0.5)) * times * (0.5 + fireSpread) * recoil * (1 - 0.06 * cusWeight) * gripRecoilY);
             player.setXRot(newPitch);
             player.xRotO = player.getXRot();
         }

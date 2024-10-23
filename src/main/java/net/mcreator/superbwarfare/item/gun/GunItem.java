@@ -177,15 +177,6 @@ public abstract class GunItem extends Item {
                 stack.getOrCreateTag().putInt("ammo", Math.min(mag, stack.getOrCreateTag().getInt("ammo") + 2));
             }
         }
-
-//        int ctmMag = stack.getOrCreateTag().getInt("mag");
-//        if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-//            stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.1 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * ctmMag)));
-//        } else if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-//            stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.075 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * ctmMag)));
-//        } else {
-//            stack.getOrCreateTag().putInt("customMag", (int) (Math.ceil(0.15 * PerkHelper.getItemPerkLevel(ModPerks.DIMENSION_MAGAZINE.get(), stack) * ctmMag)));
-//        }
     }
 
     private void handleGunAttachment(ItemStack stack) {
@@ -216,9 +207,15 @@ public abstract class GunItem extends Item {
             default -> 0;
         };
 
+        double gripWeight = switch (tag.getInt("Grip")) {
+            case 1, 2 -> 0.5;
+            case 3 -> 1;
+            default -> 0;
+        };
+
         double soundRadius = tag.getInt("Barrel") == 2 ? 0.25 : 1;
 
-        stack.getOrCreateTag().putDouble("CustomWeight", scopeWeight + barrelWeight + magazineWeight + stockWeight);
+        stack.getOrCreateTag().putDouble("CustomWeight", scopeWeight + barrelWeight + magazineWeight + stockWeight + gripWeight);
         stack.getOrCreateTag().putDouble("CustomSoundRadius", soundRadius);
     }
 

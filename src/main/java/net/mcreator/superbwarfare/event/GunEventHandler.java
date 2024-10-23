@@ -252,7 +252,7 @@ public class GunEventHandler {
             }
 
             projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
-            projectile.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.0005f, player.getLookAngle().z, velocity,
+            projectile.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.001f, player.getLookAngle().z, velocity,
                     (float) spared);
             player.level().addFreshEntity(projectile);
         }
@@ -475,7 +475,14 @@ public class GunEventHandler {
             String origin = stack.getItem().getDescriptionId();
             String name = origin.substring(origin.lastIndexOf(".") + 1);
 
-            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, name + "_reload_normal"));
+            SoundEvent sound1p;
+
+            if (stack.is(ModItems.AK_47.get()) && GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE) == 2) {
+                sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, name + "_reload_normal_drum"));
+            } else {
+                sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, name + "_reload_normal"));
+            }
+
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
             }

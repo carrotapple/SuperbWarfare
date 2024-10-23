@@ -15,6 +15,8 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
+import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
+
 public class AK12ItemModel extends GeoModel<AK12Item> {
 
     @Override
@@ -75,7 +77,7 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
             default -> 0f;
         };
         float scaleZ = switch (type) {
-            case 0 -> 0.55f;
+            case 0 -> 0.45f;
             case 1 -> 0.4f;
             case 2 -> 0.77f;
             case 3 -> 0.78f;
@@ -101,7 +103,7 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
         scope2.setScaleZ(1f - (0.3f * (float) zp));
         scope3.setScaleZ(1f - (0.7f * (float) zp));
 
-        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.8));
+        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.85));
 
         shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
         shen.setPosY((float) (0.15f * fp + 0.18f * fr));
@@ -121,6 +123,13 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
 
         cross3.setRotZ(0.01f * (float) (ClientEventHandler.recoilHorizon * fp));
         cross3.setPosY(-0.23f * (float) (fp + 2.3 * fr));
+
+        CoreGeoBone l = getAnimationProcessor().getBone("l");
+        CoreGeoBone r = getAnimationProcessor().getBone("r");
+        if (isProne(player)) {
+            l.setRotX(-90 * Mth.DEG_TO_RAD);
+            r.setRotX(-90 * Mth.DEG_TO_RAD);
+        }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 

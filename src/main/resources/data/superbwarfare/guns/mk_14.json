@@ -1,7 +1,6 @@
 {
   "CustomZoom": 3.75,
   "spread": 5,
-  "bipod": 1,
   "recoil_x": 0.006,
   "recoil_y": 0.014,
   "damage": 12,
