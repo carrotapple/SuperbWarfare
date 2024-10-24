@@ -86,7 +86,7 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
         float posZ = switch (type) {
             case 0, 1 -> 2.8f;
             case 2 -> 4.1f;
-            case 3 -> 4.3f;
+            case 3 -> 4.5f;
             default -> 0f;
         };
 

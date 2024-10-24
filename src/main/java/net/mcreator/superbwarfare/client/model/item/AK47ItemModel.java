@@ -38,6 +38,8 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone scope = getAnimationProcessor().getBone("Scope1");
         CoreGeoBone scope2 = getAnimationProcessor().getBone("Scope2");
+        CoreGeoBone scope3 = getAnimationProcessor().getBone("Scope3");
+        CoreGeoBone cross3 = getAnimationProcessor().getBone("Cross3");
         CoreGeoBone shuan = getAnimationProcessor().getBone("shuan");
 
         Player player = Minecraft.getInstance().player;
@@ -79,7 +81,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
             case 0 -> 1.071f;
             case 1 -> 0.261f;
             case 2 -> 0.162f + posYAlt;
-            case 3 -> 0.263f;
+            case 3 -> 0.099f + posYAlt;
             default -> 0f;
         };
         float scaleZ = switch (type) {
@@ -92,7 +94,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         float posZ = switch (type) {
             case 0, 1 -> 2.8f;
             case 2 -> 4.2f;
-            case 3 -> 4.3f;
+            case 3 -> 3.9f;
             default -> 0f;
         };
 
@@ -102,6 +104,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         gun.setScaleZ(1f - (scaleZ * (float) zp));
         scope.setScaleZ(1f - (0.4f * (float) zp));
         scope2.setScaleZ(1f - (0.3f * (float) zp));
+        scope3.setScaleZ(1f - (0.7f * (float) zp));
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.8));
 
@@ -120,6 +123,9 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.9 * zt)));
 
         shuan.setPosZ(2.4f * (float) fp);
+
+        cross3.setRotZ(0.01f * (float) (ClientEventHandler.recoilHorizon * fp));
+        cross3.setPosY(-0.23f * (float) (fp + 2.3 * fr));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 
