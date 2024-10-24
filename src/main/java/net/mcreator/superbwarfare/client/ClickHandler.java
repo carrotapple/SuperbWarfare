@@ -177,7 +177,6 @@ public class ClickHandler {
                 ModUtils.PACKET_HANDLER.sendToServer(new EditModeMessage(0));
             }
 
-
             if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
                 if (key == ModKeyMappings.EDIT_SCOPE.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_SCOPE)) {
                     ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(0));
@@ -199,7 +198,6 @@ public class ClickHandler {
                     ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(4));
                     editModelShake();
                 }
-
             }
             if (key == ModKeyMappings.SENSITIVITY_INCREASE.getKey().getValue()) {
                 ModUtils.PACKET_HANDLER.sendToServer(new SensitivityMessage(true));
