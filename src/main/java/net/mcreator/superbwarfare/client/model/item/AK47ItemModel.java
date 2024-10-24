@@ -37,6 +37,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone scope = getAnimationProcessor().getBone("Scope1");
+        CoreGeoBone scope2 = getAnimationProcessor().getBone("Scope2");
         CoreGeoBone shuan = getAnimationProcessor().getBone("shuan");
 
         Player player = Minecraft.getInstance().player;
@@ -63,28 +64,44 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
 
         int type = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
 
+        float posYAlt = switch (type) {
+            case 2 -> 0.45f;
+            case 3 -> 0.5f;
+            default -> 0f;
+        };
+
+        float posX = switch (type) {
+            case 0, 1, 3 -> 1.962f;
+            case 2 -> 1.852f;
+            default -> 0f;
+        };
         float posY = switch (type) {
-            case 0,2,3 -> 1.071f;
+            case 0 -> 1.071f;
             case 1 -> 0.261f;
+            case 2 -> 0.162f + posYAlt;
+            case 3 -> 0.263f;
             default -> 0f;
         };
         float scaleZ = switch (type) {
-            case 0,2,3 -> 0.55f;
+            case 0 -> 0.55f;
             case 1 -> 0.2f;
+            case 2 -> 0.87f;
+            case 3 -> 0.78f;
             default -> 0f;
         };
-//        float posZ = switch (type) {
-//            case 0, 1 -> 2.8f;
-//            case 2 -> 2.8f;
-//            case 3 -> 2.8f;
-//            default -> 0f;
-//        };
+        float posZ = switch (type) {
+            case 0, 1 -> 2.8f;
+            case 2 -> 4.2f;
+            case 3 -> 4.3f;
+            default -> 0f;
+        };
 
-        gun.setPosX(1.962f * (float) zp);
-        gun.setPosY(posY * (float) zp - (float) (0.2f * zpz));
-        gun.setPosZ(2.8f * (float) zp + (float) (0.5f * zpz));
+        gun.setPosX(posX * (float) zp);
+        gun.setPosY((posY) * (float) zp - (float) (0.2f * zpz) - posYAlt);
+        gun.setPosZ(posZ * (float) zp + (float) (0.5f * zpz));
         gun.setScaleZ(1f - (scaleZ * (float) zp));
         scope.setScaleZ(1f - (0.4f * (float) zp));
+        scope2.setScaleZ(1f - (0.3f * (float) zp));
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.8));
 
@@ -115,7 +132,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
 
-        float numR = (float) (1 - 0.94 * zt);
+        float numR = (float) (1 - 0.98 * zt);
         float numP = (float) (1 - 0.92 * zt);
 
         if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {

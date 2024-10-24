@@ -114,7 +114,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
         this.tag(ModTags.Items.CAN_CUSTOM_GUN).add(ModItems.AK_12.get(), ModItems.AK_47.get());
 
-        this.tag(ModTags.Items.CAN_APPLY_BARREL).add(ModItems.AK_12.get());
+        this.tag(ModTags.Items.CAN_APPLY_BARREL).add(ModItems.AK_12.get(), ModItems.AK_47.get());
 
         this.tag(ModTags.Items.CAN_APPLY_GRIP).add(ModItems.AK_12.get());
 
@@ -122,7 +122,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
         this.tag(ModTags.Items.CAN_APPLY_MAGAZINE).add(ModItems.AK_12.get(), ModItems.AK_47.get());
 
-        this.tag(ModTags.Items.CAN_APPLY_STOCK).add(ModItems.AK_12.get());
+        this.tag(ModTags.Items.CAN_APPLY_STOCK).add(ModItems.AK_12.get(), ModItems.AK_47.get());
 
     }
 

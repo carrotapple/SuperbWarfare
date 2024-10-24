@@ -90,11 +90,11 @@ public class AK47ItemRenderer extends GeoItemRenderer<AK47Item> {
                         || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
             }
 
-//            if (name.equals("Cross2")) {
-//                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
-//                        || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
-//                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2);
-//            }
+            if (name.equals("Cross2")) {
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                        || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
+                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2);
+            }
 
 //            if (name.equals("Cross3")) {
 //                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
@@ -102,10 +102,10 @@ public class AK47ItemRenderer extends GeoItemRenderer<AK47Item> {
 //                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 3);
 //            }
 
-//            if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2
-//                    && (name.equals("hidden"))) {
-//                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS);
-//            }
+            if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2
+                    && (name.equals("Hidden") || name.equals("Barrel") || name.equals("humu") || name.equals("qiangguan") || name.equals("houzhunxing"))) {
+                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS);
+            }
 //
 //            if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 3
 //                    && (name.equals("jing") || name.equals("Barrel") || name.equals("humu") || name.equals("qiangguan") || name.equals("houzhunxing"))) {
@@ -113,9 +113,6 @@ public class AK47ItemRenderer extends GeoItemRenderer<AK47Item> {
 //            }
 
             if (name.equals("flare")) {
-//                if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 1) {
-//                    bone.setPosZ(2.25f);
-//                }
                 if (itemStack.getOrCreateTag().getDouble("flash_time") == 0 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {
                     bone.setHidden(true);
                 } else {
@@ -124,10 +121,6 @@ public class AK47ItemRenderer extends GeoItemRenderer<AK47Item> {
                     bone.setScaleY((float) (0.55 + 0.5 * (Math.random() - 0.5)));
                     bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
                 }
-            }
-
-            if (name.equals("daogui")) {
-                bone.setHidden(GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 0);
             }
 
             if (name.equals("Mag0")) {

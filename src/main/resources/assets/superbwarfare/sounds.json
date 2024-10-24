@@ -247,10 +247,26 @@
       }
     ]
   },
+  "ak_47_fire_1p_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:ak_47/ak_47_fire_1p_s",
+        "stream": false
+      }
+    ]
+  },
   "ak_47_fire_3p": {
     "sounds": [
       {
         "name": "superbwarfare:ak_47/ak_47_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "ak_47_fire_3p_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:ak_47/ak_47_fire_3p_s",
         "stream": false
       }
     ]

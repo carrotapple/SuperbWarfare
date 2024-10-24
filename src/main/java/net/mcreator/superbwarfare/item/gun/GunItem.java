@@ -185,30 +185,30 @@ public abstract class GunItem extends Item {
         double scopeWeight = switch (tag.getInt("Scope")) {
             case 1 -> 0.5;
             case 2 -> 1;
-            case 3 -> 2;
+            case 3 -> 1.5;
             default -> 0;
         };
 
         double barrelWeight = switch (tag.getInt("Barrel")) {
+            case 1 -> 0.5;
+            case 2 -> 1;
+            default -> 0;
+        };
+
+        double magazineWeight = switch (tag.getInt("Magazine")) {
             case 1 -> 1;
             case 2 -> 2;
             default -> 0;
         };
 
-        double magazineWeight = switch (tag.getInt("Magazine")) {
-            case 1 -> 1.5;
-            case 2 -> 3;
-            default -> 0;
-        };
-
         double stockWeight = switch (tag.getInt("Stock")) {
             case 1 -> -2;
-            case 2 -> 2;
+            case 2 -> 1.5;
             default -> 0;
         };
 
         double gripWeight = switch (tag.getInt("Grip")) {
-            case 1, 2 -> 0.5;
+            case 1, 2 -> 0.25;
             case 3 -> 1;
             default -> 0;
         };
