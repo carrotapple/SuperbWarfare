@@ -93,6 +93,7 @@ public class ModKeyMappings {
         event.register(EDIT_BARREL);
         event.register(EDIT_MAGAZINE);
         event.register(EDIT_STOCK);
+        event.register(EDIT_GRIP);
     }
 
     @Mod.EventBusSubscriber(value = Dist.CLIENT)

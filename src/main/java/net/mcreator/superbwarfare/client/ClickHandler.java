@@ -24,6 +24,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
@@ -178,21 +179,25 @@ public class ClickHandler {
             }
 
             if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
-                if (key == ModKeyMappings.EDIT_SCOPE.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_SCOPE)) {
-                    ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(0));
-                    editModelShake();
-                } else if (key == ModKeyMappings.EDIT_GRIP.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_GRIP)) {
-                    ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(4));
-                    editModelShake();
-                } else if (key == ModKeyMappings.EDIT_BARREL.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_BARREL)) {
-                    ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(1));
-                    editModelShake();
-                } else if (key == ModKeyMappings.EDIT_MAGAZINE.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_MAGAZINE)) {
-                    ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(2));
-                    editModelShake();
-                } else if (key == ModKeyMappings.EDIT_STOCK.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_STOCK)) {
-                    ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(3));
-                    editModelShake();
+                if (ModKeyMappings.EDIT_GRIP.getKeyModifier().isActive(KeyConflictContext.IN_GAME)) {
+                    if (key == ModKeyMappings.EDIT_GRIP.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_GRIP)) {
+                        ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(4));
+                        editModelShake();
+                    }
+                } else {
+                    if (key == ModKeyMappings.EDIT_SCOPE.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_SCOPE)) {
+                        ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(0));
+                        editModelShake();
+                    } else if (key == ModKeyMappings.EDIT_BARREL.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_BARREL)) {
+                        ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(1));
+                        editModelShake();
+                    } else if (key == ModKeyMappings.EDIT_MAGAZINE.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_MAGAZINE)) {
+                        ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(2));
+                        editModelShake();
+                    } else if (key == ModKeyMappings.EDIT_STOCK.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_STOCK)) {
+                        ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(3));
+                        editModelShake();
+                    }
                 }
             }
             if (key == ModKeyMappings.SENSITIVITY_INCREASE.getKey().getValue()) {
