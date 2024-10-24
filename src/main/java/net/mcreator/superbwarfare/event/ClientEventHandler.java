@@ -455,17 +455,20 @@ public class ClientEventHandler {
                     moveXTime = 0;
                 }
 
-                if (movePosX > 0) {
-                    movePosX -= 1.5 * (Math.pow(movePosX, 2) * times) * (1 - 0.75 * zoomTime);
-                } else {
-                    movePosX += 1.5 * (Math.pow(movePosX, 2) * times) * (1 - 0.75 * zoomTime);
-                }
+//                if (movePosX > 0) {
+//                    movePosX -= 1.5 * (Math.pow(movePosX, 2) * times) * (1 - 0.75 * zoomTime);
+//                } else {
+//                    movePosX += 1.5 * (Math.pow(movePosX, 2) * times) * (1 - 0.75 * zoomTime);
+//                }
 
-                if (movePosY > 0) {
-                    movePosY -= 1.5 * (Math.pow(movePosY, 2) * times) * (1 - 0.75 * zoomTime);
-                } else {
-                    movePosY += 1.5 * (Math.pow(movePosY, 2) * times) * (1 - 0.75 * zoomTime);
-                }
+                movePosX = Mth.lerp(0.1f * times, movePosX, 0);
+                movePosY = Mth.lerp(0.1f * times, movePosY, 0);
+
+//                if (movePosY > 0) {
+//                    movePosY -= 1.5 * (Math.pow(movePosY, 2) * times) * (1 - 0.75 * zoomTime);
+//                } else {
+//                    movePosY += 1.5 * (Math.pow(movePosY, 2) * times) * (1 - 0.75 * zoomTime);
+//                }
             }
 
             if (Minecraft.getInstance().options.keyRight.isDown()) {
