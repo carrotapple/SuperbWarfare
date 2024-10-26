@@ -142,7 +142,7 @@ public class AK47ItemRenderer extends GeoItemRenderer<AK47Item> {
         if (this.transformType.firstPerson() && renderingArms) {
             AbstractClientPlayer localPlayer = mc.player;
 
-            if (player == null) {
+            if (localPlayer == null) {
                 return;
             }
 

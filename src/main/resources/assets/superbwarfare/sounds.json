@@ -407,10 +407,26 @@
       }
     ]
   },
+  "m_4_fire_1p_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:m_4/m_4_fire_1p_s",
+        "stream": false
+      }
+    ]
+  },
   "m_4_fire_3p": {
     "sounds": [
       {
         "name": "superbwarfare:m_4/m_4_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "m_4_fire_3p_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:m_4/m_4_fire_3p_s",
         "stream": false
       }
     ]

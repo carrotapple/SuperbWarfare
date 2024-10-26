@@ -56,22 +56,24 @@
 				},
 				"Righthand": {
 					"rotation": {
-						"vector": [1.90371, -57.62597, -9.69366],
-						"easing": "easeInElastic"
+						"vector": ["easeInElastic", "easeInElastic", "easeInElastic"]
 					},
 					"position": {
-						"vector": [9.7, -12.5, 17],
-						"easing": "easeInElastic"
+						"vector": ["easeInElastic", "easeInElastic", "easeInElastic"]
+					},
+					"scale": {
+						"vector": [0, 0, 0]
 					}
 				},
 				"Lefthand": {
 					"rotation": {
-						"vector": [-20.80188, -23.88158, -14.35972],
-						"easing": "easeInElastic"
+						"vector": ["easeInElastic", "easeInElastic", "easeInElastic"]
 					},
 					"position": {
-						"vector": [-4, -10, 20],
-						"easing": "easeInElastic"
+						"vector": ["easeInElastic", "easeInElastic", "easeInElastic"]
+					},
+					"scale": {
+						"vector": [0, 0, 0]
 					}
 				}
 			}

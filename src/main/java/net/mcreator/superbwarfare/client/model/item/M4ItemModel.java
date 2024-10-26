@@ -1,10 +1,11 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.rifle.M4Item;
-import net.mcreator.superbwarfare.client.AnimationHelper;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -13,6 +14,8 @@ import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
+
+import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
 
 public class M4ItemModel extends GeoModel<M4Item> {
     @Override
@@ -34,6 +37,13 @@ public class M4ItemModel extends GeoModel<M4Item> {
     public void setCustomAnimations(M4Item animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
+        CoreGeoBone scope = getAnimationProcessor().getBone("Scope1");
+        CoreGeoBone scope2 = getAnimationProcessor().getBone("Scope2");
+        CoreGeoBone cross1 = getAnimationProcessor().getBone("Cross1");
+        CoreGeoBone cross2 = getAnimationProcessor().getBone("Cross2");
+        CoreGeoBone crossAlt = getAnimationProcessor().getBone("CrossAlt");
+        CoreGeoBone sight1fold = getAnimationProcessor().getBone("sight1fold");
+        CoreGeoBone sight2fold = getAnimationProcessor().getBone("sight2fold");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -57,31 +67,78 @@ public class M4ItemModel extends GeoModel<M4Item> {
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
+        int type = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+
+//        float posYAlt = switch (type) {
+//            case 2 -> 0.45f;
+//            case 3 -> 0.5f;
+//            default -> 0f;
+//        };
+//
+//        float posX = switch (type) {
+//            case 0, 1, 3 -> 1.962f;
+//            case 2 -> 1.852f;
+//            default -> 0f;
+//        };
+        float posY = switch (type) {
+            case 0, 3 -> 0.65f;
+            case 1 -> 0.2225f;
+            case 2 -> stack.getOrCreateTag().getBoolean("ScopeAlt")? -0.6875f : 0.5625f;
+            default -> 0f;
+        };
+        float scaleZ = switch (type) {
+            case 0 -> 0.2f;
+            case 1 -> 0.4f;
+            case 2 -> stack.getOrCreateTag().getBoolean("ScopeAlt")? 0.4f : 0.88f;
+            case 3 -> 0.78f;
+            default -> 0f;
+        };
+        float posZ = switch (type) {
+            case 0 -> 3f;
+            case 1 -> 3.5f;
+            case 2 -> stack.getOrCreateTag().getBoolean("ScopeAlt")? 5.5f : 7.6f;
+            case 3 -> 3.9f;
+            default -> 0f;
+        };
+
+        sight1fold.setRotX((type == 0 ? 0 : 90) * Mth.DEG_TO_RAD);
+        sight2fold.setRotX((type == 0 ? 0 : 90) * Mth.DEG_TO_RAD);
+
         gun.setPosX(2.935f * (float) zp);
-
-        gun.setPosY(0.65f * (float) zp - (float) (0.2f * zpz));
-
-        gun.setPosZ(3f * (float) zp + (float) (0.2f * zpz));
-
-        gun.setScaleZ(1f - (0.2f * (float) zp));
-
+        gun.setPosY(posY * (float) zp - (float) (0.2f * zpz));
+        gun.setPosZ(posZ * (float) zp + (float) (0.2f * zpz));
+        gun.setScaleZ(1f - (scaleZ * (float) zp));
         gun.setRotZ((float) (0.05f * zpz));
+        scope.setScaleZ(1f - (0.4f * (float) zp));
+        scope2.setScaleZ(1f - (0.1f * (float) zp));
 
-        shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
+        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 2.385));
+
+        shen.setPosX((float) (1.35f * ClientEventHandler.recoilHorizon * fpz * fp));
         shen.setPosY((float) (0.15f * fp + 0.18f * fr));
-        shen.setPosZ((float) (0.275 * fp + 0.34f * fr + 0.65 * fpz));
+        shen.setPosZ((float) (0.345 * fp + 0.44f * fr + 0.75 * fpz));
         shen.setRotX((float) (0.01f * fp + 0.05f * fr + 0.01f * fpz));
-        shen.setRotY((float) (0.04f * ClientEventHandler.recoilHorizon * fpz));
+        shen.setRotY((float) (0.07f * ClientEventHandler.recoilHorizon * fpz));
         shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
+        cross1.setPosY(-0.75f * (float) fpz);
+        cross2.setPosY(-0.1f * (float) fpz);
+        crossAlt.setPosY(-0.2f * (float) fpz);
 
         shen.setPosX((float) (shen.getPosX() * (1 - 0.5 * zt)));
-        shen.setPosY((float) (shen.getPosY() * (-1 + 0.4 * zt)));
+        shen.setPosY((float) (shen.getPosY() * (-1 + 0.8 * zt)));
         shen.setPosZ((float) (shen.getPosZ() * (1 - 0.6 * zt)));
-        shen.setRotX((float) (shen.getRotX() * (1 - 0.9 * zt)));
+        shen.setRotX((float) (shen.getRotX() * (1 - (type == 1 ? 0.4 : 0.9) * zt)));
         shen.setRotY((float) (shen.getRotY() * (1 - 0.9 * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.9 * zt)));
 
         shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
+
+        CoreGeoBone l = getAnimationProcessor().getBone("l");
+        CoreGeoBone r = getAnimationProcessor().getBone("r");
+        if (isProne(player)) {
+            l.setRotX(-90 * Mth.DEG_TO_RAD);
+            r.setRotX(-90 * Mth.DEG_TO_RAD);
+        }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));
@@ -93,8 +150,8 @@ public class M4ItemModel extends GeoModel<M4Item> {
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
 
-        float numR = (float) (1 - 0.8 * zt);
-        float numP = (float) (1 - 0.65 * zt);
+        float numR = (float) (1 - 0.97 * zt);
+        float numP = (float) (1 - 0.92 * zt);
 
         if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
             main.setRotX(numR * main.getRotX());
