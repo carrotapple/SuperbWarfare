@@ -1,8 +1,6 @@
 {
   "CustomZoom": 0.75,
   "spread": 4,
-  "recoil_x": 0.005,
-  "recoil_y": 0.003,
   "headshot": 2.5,
   "damage": 36,
   "weight": 3,

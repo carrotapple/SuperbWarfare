@@ -794,19 +794,19 @@ public class ClientEventHandler {
         float times = 4 * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
 
         if ((entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).bowPull) {
-            pullTimer = Math.min(pullTimer + 0.018 * times, 1);
+            pullTimer = Math.min(pullTimer + 0.024 * times, 1.4);
             bowTimer = Math.min(bowTimer + 0.018 * times, 1);
             handTimer = Math.min(handTimer + 0.018 * times, 1);
             handPos = 0.5 * Math.cos(Math.PI * Math.pow(Math.pow(handTimer, 2) - 1, 2)) + 0.5;
         } else {
-            pullTimer = Math.max(pullTimer - 0.009 * times, 0);
+            pullTimer = Math.max(pullTimer - 0.015 * times, 0);
             bowTimer = Math.max(bowTimer - 1 * times, 0);
             handTimer = Math.max(handTimer - 0.04 * times, 0);
             if (handTimer > 0 && handTimer < 0.5) {
                 handPos = 0.5 * Math.cos(Math.PI * Math.pow(Math.pow(handTimer, 2) - 1, 2)) + 0.5;
             }
         }
-        pullPos = 0.5 * Math.cos(Math.PI * Math.pow(Math.pow(pullTimer, 2) - 1, 2)) + 0.5;
+        pullPos = 0.5 * Math.cos(Math.PI * Math.pow(Math.pow(Mth.clamp(pullTimer, 0, 1), 2) - 1, 2)) + 0.5;
         bowPos = 0.5 * Math.cos(Math.PI * Math.pow(Math.pow(bowTimer, 2) - 1, 2)) + 0.5;
     }
 

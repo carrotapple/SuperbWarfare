@@ -39,8 +39,11 @@ public class M4ItemModel extends GeoModel<M4Item> {
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone scope = getAnimationProcessor().getBone("Scope1");
         CoreGeoBone scope2 = getAnimationProcessor().getBone("Scope2");
+        CoreGeoBone scope3 = getAnimationProcessor().getBone("Scope3");
         CoreGeoBone cross1 = getAnimationProcessor().getBone("Cross1");
         CoreGeoBone cross2 = getAnimationProcessor().getBone("Cross2");
+        CoreGeoBone cross3 = getAnimationProcessor().getBone("Cross3");
+        CoreGeoBone lh = getAnimationProcessor().getBone("Lefthand");
         CoreGeoBone crossAlt = getAnimationProcessor().getBone("CrossAlt");
         CoreGeoBone sight1fold = getAnimationProcessor().getBone("sight1fold");
         CoreGeoBone sight2fold = getAnimationProcessor().getBone("sight2fold");
@@ -81,23 +84,24 @@ public class M4ItemModel extends GeoModel<M4Item> {
 //            default -> 0f;
 //        };
         float posY = switch (type) {
-            case 0, 3 -> 0.65f;
+            case 0 -> 0.65f;
             case 1 -> 0.2225f;
             case 2 -> stack.getOrCreateTag().getBoolean("ScopeAlt")? -0.6875f : 0.5625f;
+            case 3 -> 0.6525f;
             default -> 0f;
         };
         float scaleZ = switch (type) {
             case 0 -> 0.2f;
             case 1 -> 0.4f;
             case 2 -> stack.getOrCreateTag().getBoolean("ScopeAlt")? 0.4f : 0.88f;
-            case 3 -> 0.78f;
+            case 3 -> 0.94f;
             default -> 0f;
         };
         float posZ = switch (type) {
             case 0 -> 3f;
             case 1 -> 3.5f;
             case 2 -> stack.getOrCreateTag().getBoolean("ScopeAlt")? 5.5f : 7.6f;
-            case 3 -> 3.9f;
+            case 3 -> 8.4f;
             default -> 0f;
         };
 
@@ -110,9 +114,14 @@ public class M4ItemModel extends GeoModel<M4Item> {
         gun.setScaleZ(1f - (scaleZ * (float) zp));
         gun.setRotZ((float) (0.05f * zpz));
         scope.setScaleZ(1f - (0.4f * (float) zp));
-        scope2.setScaleZ(1f - (0.1f * (float) zp));
+        scope2.setScaleZ(1f - (0.4f * (float) zp));
+        scope3.setScaleZ(1f + (0.2f * (float) zp));
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 2.385));
+
+        if (type == 3 && zt > 0.5) {
+            lh.setPosY((float) (-zt * 4));
+        }
 
         shen.setPosX((float) (1.35f * ClientEventHandler.recoilHorizon * fpz * fp));
         shen.setPosY((float) (0.15f * fp + 0.18f * fr));
@@ -123,12 +132,13 @@ public class M4ItemModel extends GeoModel<M4Item> {
         cross1.setPosY(-0.75f * (float) fpz);
         cross2.setPosY(-0.1f * (float) fpz);
         crossAlt.setPosY(-0.2f * (float) fpz);
+        cross3.setPosY(-0.2f * (float) fpz);
 
         shen.setPosX((float) (shen.getPosX() * (1 - 0.5 * zt)));
         shen.setPosY((float) (shen.getPosY() * (-1 + 0.8 * zt)));
         shen.setPosZ((float) (shen.getPosZ() * (1 - 0.6 * zt)));
-        shen.setRotX((float) (shen.getRotX() * (1 - (type == 1 ? 0.4 : 0.9) * zt)));
-        shen.setRotY((float) (shen.getRotY() * (1 - 0.9 * zt)));
+        shen.setRotX((float) (shen.getRotX() * (1 - (type == 3 ? 0.96 : type == 1 ? 0.4 : 0.9) * zt)));
+        shen.setRotY((float) (shen.getRotY() * (1 - (type == 3 ? 0.98 : 0.9) * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.9 * zt)));
 
         shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
@@ -150,7 +160,7 @@ public class M4ItemModel extends GeoModel<M4Item> {
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
 
-        float numR = (float) (1 - 0.97 * zt);
+        float numR = (float) (1 - 0.985 * zt);
         float numP = (float) (1 - 0.92 * zt);
 
         if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {

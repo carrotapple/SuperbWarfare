@@ -73,6 +73,7 @@ public class BocekItemModel extends GeoModel<BocekItem> {
 
         arrow.setPosZ(9f * (float) bp);
         rh.setPosZ(9f * (float) hp);
+        rh.setRotZ((float) (160 * Mth.DEG_TO_RAD + 45 * Mth.DEG_TO_RAD * ClientEventHandler.handTimer));
         lun.setRotX(1.6f * (float) bp);
 
         xian.setRotX(0.56f * (float) bp);
@@ -83,9 +84,9 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         xian2.setPosZ(9f * (float) bp);
 
         gun.setScaleZ(1f - (0.2f * (float) pp));
-        gun.setRotZ(0.2f * (float) pp);
+        gun.setRotZ((float) (-0.1 + 0.2f * pp + 0.07142857142857143f * ClientEventHandler.pullTimer));
         gun.setRotX(0.01f * (float) pp);
-        gun.setPosZ(-3f * (float) pp);
+        gun.setPosZ((float) (3 + -3f * pp - 2.142857142857143 * ClientEventHandler.pullTimer));
         gun.setPosY(0.1f * (float) pp);
         r.setScaleZ(1f - (0.2f * (float) pp));
         deng2.setRotX(1.6f * (float) bp);
@@ -96,18 +97,18 @@ public class BocekItemModel extends GeoModel<BocekItem> {
 
 
         lh.setRotX(0.2f * (float) zp);
-        shen_pos.setPosX(-3.4f * (float) zp);
-        shen_pos.setPosY(6.76f * (float) zp - (float) (0.2f * zpz));
+        shen_pos.setPosX(-3.64f * (float) zp);
+        shen_pos.setPosY(6.46f * (float) zp - (float) (0.2f * zpz));
         shen_pos.setPosZ(6.4f * (float) zp + (float) (0.3f * zpz));
         r.setScaleZ(1f - (0.31f * (float) zp));
         shen.setRotZ(60 * Mth.DEG_TO_RAD * (float) zp + (float) (0.05f * zpz) - 0.2f);
 
-        stack.getOrCreateTag().putBoolean("HoloHidden", !((shen_pos.getPosX() < -0.7 && gun.getPosZ() < -2.6)));
+        stack.getOrCreateTag().putBoolean("HoloHidden", !((shen_pos.getPosX() < -0.6 && gun.getPosZ() < -2)));
 
         fire.setPosX((float) (0.75f * ClientEventHandler.recoilHorizon * fpz * fp));
         fire.setPosY((float) (-0.03f * fp - 0.06f * fr));
-        fire.setPosZ((float) (0.325 * fp + 0.34f * fr + 0.65 * fpz));
-        fire.setRotX((float) (0.01f * fp + 0.01f * fr + 0.01f * fpz));
+        fire.setPosZ((float) (0.625 * fp + 0.34f * fr + 0.95 * fpz));
+        fire.setRotX((float) (0.001f * fp + 0.001f * fr + 0.001f * fpz));
         fire.setRotY((float) (0.01f * ClientEventHandler.recoilHorizon * fpz));
         fire.setRotZ((float) ((0.02f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
 
