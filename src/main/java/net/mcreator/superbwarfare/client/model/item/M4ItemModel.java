@@ -132,7 +132,7 @@ public class M4ItemModel extends GeoModel<M4Item> {
         crossAlt.setPosY(-0.2f * (float) fpz);
         cross3.setPosY(-0.2f * (float) fpz);
 
-        shen.setPosX((float) (shen.getPosX() * (1 - 0.5 * zt)));
+        shen.setPosX((float) (shen.getPosX() * (1 - 0.8 * zt)));
         shen.setPosY((float) (shen.getPosY() * (-1 + 0.8 * zt)));
         shen.setPosZ((float) (shen.getPosZ() * (1 - 0.6 * zt)));
         shen.setRotX((float) (shen.getRotX() * (1 - (type == 3 ? 0.96 : type == 1 ? 0.4 : 0.9) * zt)));
