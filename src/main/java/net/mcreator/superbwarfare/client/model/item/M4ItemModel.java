@@ -18,6 +18,10 @@ import software.bernie.geckolib.model.GeoModel;
 import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
 
 public class M4ItemModel extends GeoModel<M4Item> {
+    public static float posYAlt = 0.5625f;
+    public static float scaleZAlt = 0.88f;
+    public static float posZAlt = 7.6f;
+
     @Override
     public ResourceLocation getAnimationResource(M4Item animatable) {
         return new ResourceLocation(ModUtils.MODID, "animations/m4.animation.json");
@@ -71,36 +75,30 @@ public class M4ItemModel extends GeoModel<M4Item> {
         double fr = ClientEventHandler.fireRot;
 
         int type = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        float times = 0.6f * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
 
-//        float posYAlt = switch (type) {
-//            case 2 -> 0.45f;
-//            case 3 -> 0.5f;
-//            default -> 0f;
-//        };
-//
-//        float posX = switch (type) {
-//            case 0, 1, 3 -> 1.962f;
-//            case 2 -> 1.852f;
-//            default -> 0f;
-//        };
+        posYAlt = Mth.lerp(times, posYAlt, stack.getOrCreateTag().getBoolean("ScopeAlt")? -0.6875f : 0.5625f);
+        scaleZAlt = Mth.lerp(times, scaleZAlt, stack.getOrCreateTag().getBoolean("ScopeAlt")? 0.4f : 0.88f);
+        posZAlt = Mth.lerp(times, posZAlt, stack.getOrCreateTag().getBoolean("ScopeAlt")? 5.5f : 7.6f);
+
         float posY = switch (type) {
             case 0 -> 0.65f;
             case 1 -> 0.2225f;
-            case 2 -> stack.getOrCreateTag().getBoolean("ScopeAlt")? -0.6875f : 0.5625f;
+            case 2 -> posYAlt;
             case 3 -> 0.6525f;
             default -> 0f;
         };
         float scaleZ = switch (type) {
             case 0 -> 0.2f;
             case 1 -> 0.4f;
-            case 2 -> stack.getOrCreateTag().getBoolean("ScopeAlt")? 0.4f : 0.88f;
+            case 2 -> scaleZAlt;
             case 3 -> 0.94f;
             default -> 0f;
         };
         float posZ = switch (type) {
             case 0 -> 3f;
             case 1 -> 3.5f;
-            case 2 -> stack.getOrCreateTag().getBoolean("ScopeAlt")? 5.5f : 7.6f;
+            case 2 -> posZAlt;
             case 3 -> 8.4f;
             default -> 0f;
         };

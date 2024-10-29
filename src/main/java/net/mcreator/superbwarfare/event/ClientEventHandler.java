@@ -104,10 +104,10 @@ public class ClientEventHandler {
     public static double drawTime = 1;
 
     public static int shellIndex = 0;
-
     public static double[] shellIndexTime = {0, 0, 0, 0, 0};
-
     public static double[] randomShell = {0, 0, 0};
+
+    public static double customZoom = 0;
     public static MillisTimer clientTimer = new MillisTimer();
 
     @SubscribeEvent
@@ -324,6 +324,7 @@ public class ClientEventHandler {
 
     private static void handleDroneCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
         ItemStack stack = entity.getMainHandItem();
+        float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
         double pitch = event.getPitch();
         double roll = event.getRoll();
 
@@ -331,17 +332,9 @@ public class ClientEventHandler {
                 .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
 
         if (drone != null) {
-            if (droneRotZ > drone.getEntityData().get(ROT_Z)) {
-                droneRotZ = Mth.clamp(droneRotZ - 0.3 * Math.pow(drone.getEntityData().get(ROT_Z) - droneRotZ, 2), drone.getEntityData().get(ROT_Z), Double.POSITIVE_INFINITY);
-            } else {
-                droneRotZ = Mth.clamp(droneRotZ + 0.3 * Math.pow(drone.getEntityData().get(ROT_Z) - droneRotZ, 2), Double.NEGATIVE_INFINITY, drone.getEntityData().get(ROT_Z));
-            }
+            droneRotZ = Mth.lerp(0.1 * times, droneRotZ, drone.getEntityData().get(ROT_Z));
 
-            if (droneRotX > drone.getEntityData().get(ROT_X)) {
-                droneRotX = Mth.clamp(droneRotX - 0.2 * Math.pow(drone.getEntityData().get(ROT_X) - droneRotX, 2), drone.getEntityData().get(ROT_X), Double.POSITIVE_INFINITY);
-            } else {
-                droneRotX = Mth.clamp(droneRotX + 0.2 * Math.pow(drone.getEntityData().get(ROT_X) - droneRotX, 2), Double.NEGATIVE_INFINITY, drone.getEntityData().get(ROT_X));
-            }
+            droneRotX = Mth.lerp(0.1 * times, droneRotX, drone.getEntityData().get(ROT_X));
 
             event.setPitch((float) (pitch + droneCameraRotX - 0.15f * Mth.RAD_TO_DEG * droneRotZ));
             event.setRoll((float) (roll + droneCameraRotY - 0.5f * Mth.RAD_TO_DEG * droneRotX));
@@ -421,9 +414,9 @@ public class ClientEventHandler {
 
             if (!entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
                 if (Minecraft.getInstance().options.keyUp.isDown() && firePosTimer == 0) {
-                    moveRotZ = Mth.clamp(moveRotZ + 0.007 * times, 0, 0.14) * (1 - zoomTime);
+                    moveRotZ = Mth.lerp(0.2f * times, moveRotZ, 0.14) * (1 - zoomTime);
                 } else {
-                    moveRotZ = Mth.clamp(moveRotZ - 0.007 * times, 0, 0.14) * (1 - zoomTime);
+                    moveRotZ = Mth.lerp(0.2f * times, moveRotZ, 0) * (1 - zoomTime);
                 }
             }
 
@@ -443,56 +436,26 @@ public class ClientEventHandler {
                 movePosX = 0.2 * Math.sin(1 * Math.PI * moveXTime) * (1 - 0.95 * zoomTime);
                 movePosY = -0.135 * Math.sin(2 * Math.PI * (moveYTime - 0.25)) * (1 - 0.95 * zoomTime);
             } else {
-                if (moveYTime > 0.25) {
-                    moveYTime -= 0.5 * times;
-                } else {
-                    moveYTime = 0.25;
-                }
-
-                if (moveXTime > 0) {
-                    moveXTime -= 0.5 * times;
-                } else {
-                    moveXTime = 0;
-                }
-
-//                if (movePosX > 0) {
-//                    movePosX -= 1.5 * (Math.pow(movePosX, 2) * times) * (1 - 0.75 * zoomTime);
-//                } else {
-//                    movePosX += 1.5 * (Math.pow(movePosX, 2) * times) * (1 - 0.75 * zoomTime);
-//                }
+                moveXTime = Math.max(moveXTime - 0.5 * times, 0);
+                moveYTime = Math.max(moveYTime - 0.5 * times, 0.25);
 
                 movePosX = Mth.lerp(0.1f * times, movePosX, 0);
                 movePosY = Mth.lerp(0.1f * times, movePosY, 0);
 
-//                if (movePosY > 0) {
-//                    movePosY -= 1.5 * (Math.pow(movePosY, 2) * times) * (1 - 0.75 * zoomTime);
-//                } else {
-//                    movePosY += 1.5 * (Math.pow(movePosY, 2) * times) * (1 - 0.75 * zoomTime);
-//                }
             }
 
             if (Minecraft.getInstance().options.keyRight.isDown()) {
-                movePosHorizon = Mth.clamp(movePosHorizon + Math.pow(Math.abs(movePosHorizon) + 0.05, 2) * 0.2 * times, -0.5, 0.5) * (1 - zoomTime);
+                movePosHorizon = Mth.lerp(0.05f * times, movePosHorizon, 0.04) * (1 - zoomTime);
             } else if (Minecraft.getInstance().options.keyLeft.isDown()) {
-                movePosHorizon = Mth.clamp(movePosHorizon - Math.pow(Math.abs(movePosHorizon) + 0.05, 2) * 0.2 * times, -0.5, 0.5) * (1 - zoomTime);
-            }
-
-            if (movePosHorizon < 0) {
-                movePosHorizon += 4 * times * Math.pow(movePosHorizon, 2);
+                movePosHorizon = Mth.lerp(0.05f * times, movePosHorizon, -0.04) * (1 - zoomTime);
             } else {
-                movePosHorizon -= 4 * times * Math.pow(movePosHorizon, 2);
+                movePosHorizon = Mth.lerp(0.1f * times, movePosHorizon, 0);
             }
 
-            movePosHorizon *= (1 - zoomTime);
+            double velocity = entity.getDeltaMovement().y() + 0.078;
 
-            double velocity = entity.getDeltaMovement().y();
-
-            if (-0.8 < velocity + 0.078 && velocity + 0.078 < 0.8) {
-                if (velocityY < entity.getDeltaMovement().y() + 0.078) {
-                    velocityY = Mth.clamp((velocityY + 0.55 * Math.pow((velocity + 0.078) - velocityY, 2)), -0.8, 0.8) * (1 - 0.8 * zoomTime);
-                } else {
-                    velocityY = Mth.clamp((velocityY - 0.55 * Math.pow((velocity + 0.078) - velocityY, 2)), -0.8, 0.8) * (1 - 0.8 * zoomTime);
-                }
+            if (-0.8 < velocity && velocity < 0.8) {
+                velocityY = Mth.lerp(0.5f * times, velocityY, velocity) * (1 - 0.8 * zoomTime);
             }
         }
     }
@@ -657,11 +620,7 @@ public class ClientEventHandler {
 
         float gunRecoilX = (float) tag.getDouble("recoil_x") * 60;
 
-        if (recoilHorizon > 0) {
-            recoilHorizon = recoilHorizon - Math.min(Math.pow(recoilHorizon, 2), 6) * times + recoilY;
-        } else {
-            recoilHorizon = recoilHorizon + Math.min(Math.pow(recoilHorizon, 2), 6) * times + recoilY;
-        }
+        recoilHorizon = Mth.lerp(0.2 * times, recoilHorizon, 0) + recoilY;
 
         recoilY = 0;
 
@@ -713,13 +672,10 @@ public class ClientEventHandler {
     }
 
     private static void handlePlayerBreath(LivingEntity entity) {
-        float times = 4 * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
+        float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
+        boolean breath = (entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).breath;
 
-        if ((entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).breath) {
-            breathTime = Mth.clamp(breathTime + 0.06 * times, 0, 1);
-        } else {
-            breathTime = Mth.clamp(breathTime - 0.06 * times, 0, 1);
-        }
+        breathTime = Mth.lerp(0.08f * times, breathTime, breath? 1 : 0);
     }
 
     private static void handleShockCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
@@ -743,6 +699,7 @@ public class ClientEventHandler {
         double yaw = event.getYaw();
         double pitch = event.getPitch();
         double roll = event.getRoll();
+        float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
         LocalPlayer player = Minecraft.getInstance().player;
 
         if (GLFW.glfwGetKey(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_RIGHT) == GLFW.GLFW_PRESS) {
@@ -759,18 +716,14 @@ public class ClientEventHandler {
         Entity lookingEntity = SeekTool.seekEntity(player, player.level(), 520, 5);
 
         if (lookingEntity != null) {
-            range = player.distanceTo(lookingEntity);
+            range = Math.max(player.distanceTo(lookingEntity), 0.01);
         } else {
-            range = player.position().distanceTo((Vec3.atLowerCornerOf(player.level().clip(
+            range = Math.max(player.position().distanceTo((Vec3.atLowerCornerOf(player.level().clip(
                     new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(520)),
-                            ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
+                            ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos()))), 0.01);
         }
 
-        if (lookDistance < range) {
-            lookDistance = Mth.clamp(lookDistance + 0.002 * Math.pow(range - lookDistance, 2) * Minecraft.getInstance().getDeltaFrameTime(), 0.01, 520);
-        } else {
-            lookDistance = Mth.clamp(lookDistance - 0.002 * Math.pow(range - lookDistance, 2) * Minecraft.getInstance().getDeltaFrameTime(), 0.01, 520);
-        }
+        lookDistance = Mth.lerp(0.2f * times, lookDistance, range);
 
         double angle = 0;
 
@@ -813,6 +766,7 @@ public class ClientEventHandler {
     @SubscribeEvent
     public static void onFovUpdate(ViewportEvent.ComputeFov event) {
         Minecraft mc = Minecraft.getInstance();
+        float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
         Player player = mc.player;
         if (player == null) {
             return;
@@ -832,7 +786,9 @@ public class ClientEventHandler {
                 p = zoomPos;
             }
 
-            double zoom = 1.25 + stack.getOrCreateTag().getDouble("CustomZoom");
+            customZoom = Mth.lerp(0.5 * times, customZoom, stack.getOrCreateTag().getDouble("CustomZoom"));
+
+            double zoom = 1.25 + customZoom;
 
             if (mc.options.getCameraType().isFirstPerson()) {
                 event.setFOV(event.getFOV() / (1.0 + p * (zoom - 1)) * (1 - 0.4 * breathTime));
