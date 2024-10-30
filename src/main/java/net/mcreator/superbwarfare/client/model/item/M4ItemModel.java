@@ -21,6 +21,8 @@ public class M4ItemModel extends GeoModel<M4Item> {
     public static float posYAlt = 0.5625f;
     public static float scaleZAlt = 0.88f;
     public static float posZAlt = 7.6f;
+    public static float rotXSight = 0f;
+    public static float rotXBipod = 0f;
 
     @Override
     public ResourceLocation getAnimationResource(M4Item animatable) {
@@ -80,6 +82,7 @@ public class M4ItemModel extends GeoModel<M4Item> {
         posYAlt = Mth.lerp(times, posYAlt, stack.getOrCreateTag().getBoolean("ScopeAlt")? -0.6875f : 0.5625f);
         scaleZAlt = Mth.lerp(times, scaleZAlt, stack.getOrCreateTag().getBoolean("ScopeAlt")? 0.4f : 0.88f);
         posZAlt = Mth.lerp(times, posZAlt, stack.getOrCreateTag().getBoolean("ScopeAlt")? 5.5f : 7.6f);
+        rotXSight = Mth.lerp(1.5f * times, rotXSight, type == 0 ? 0 : 90);
 
         float posY = switch (type) {
             case 0 -> 0.65f;
@@ -103,8 +106,8 @@ public class M4ItemModel extends GeoModel<M4Item> {
             default -> 0f;
         };
 
-        sight1fold.setRotX((type == 0 ? 0 : 90) * Mth.DEG_TO_RAD);
-        sight2fold.setRotX((type == 0 ? 0 : 90) * Mth.DEG_TO_RAD);
+        sight1fold.setRotX(rotXSight * Mth.DEG_TO_RAD);
+        sight2fold.setRotX(rotXSight * Mth.DEG_TO_RAD);
 
         gun.setPosX(2.935f * (float) zp);
         gun.setPosY(posY * (float) zp - (float) (0.2f * zpz));
@@ -143,10 +146,9 @@ public class M4ItemModel extends GeoModel<M4Item> {
 
         CoreGeoBone l = getAnimationProcessor().getBone("l");
         CoreGeoBone r = getAnimationProcessor().getBone("r");
-        if (isProne(player)) {
-            l.setRotX(-90 * Mth.DEG_TO_RAD);
-            r.setRotX(-90 * Mth.DEG_TO_RAD);
-        }
+        rotXBipod = Mth.lerp(1.5f * times, rotXBipod, isProne(player) ? -90 : 0);
+        l.setRotX(rotXBipod * Mth.DEG_TO_RAD);
+        r.setRotX(rotXBipod * Mth.DEG_TO_RAD);
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));

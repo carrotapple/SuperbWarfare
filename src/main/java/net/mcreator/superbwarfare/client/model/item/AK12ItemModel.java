@@ -19,6 +19,8 @@ import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
 
 public class AK12ItemModel extends GeoModel<AK12Item> {
 
+    public static float rotXBipod = 0f;
+
     @Override
     public ResourceLocation getAnimationResource(AK12Item animatable) {
         return ModUtils.loc("animations/ak12.animation.json");
@@ -68,6 +70,7 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
         double fr = ClientEventHandler.fireRot;
 
         int type = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        float times = 0.6f * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
 
         float posY = switch (type) {
             case 0 -> 0.781f;
@@ -126,10 +129,9 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
 
         CoreGeoBone l = getAnimationProcessor().getBone("l");
         CoreGeoBone r = getAnimationProcessor().getBone("r");
-        if (isProne(player)) {
-            l.setRotX(-90 * Mth.DEG_TO_RAD);
-            r.setRotX(-90 * Mth.DEG_TO_RAD);
-        }
+        rotXBipod = Mth.lerp(1.5f * times, rotXBipod, isProne(player) ? -90 : 0);
+        l.setRotX(rotXBipod * Mth.DEG_TO_RAD);
+        r.setRotX(rotXBipod * Mth.DEG_TO_RAD);
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 

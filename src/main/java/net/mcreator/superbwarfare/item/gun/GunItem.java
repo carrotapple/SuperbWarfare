@@ -213,7 +213,7 @@ public abstract class GunItem extends Item {
             default -> 0;
         };
 
-        double soundRadius = tag.getInt("Barrel") == 2 ? 0.25 : 1;
+        double soundRadius = tag.getInt("Barrel") == 2 ? 0.6 : 1;
 
         stack.getOrCreateTag().putDouble("CustomWeight", scopeWeight + barrelWeight + magazineWeight + stockWeight + gripWeight);
         stack.getOrCreateTag().putDouble("CustomSoundRadius", soundRadius);

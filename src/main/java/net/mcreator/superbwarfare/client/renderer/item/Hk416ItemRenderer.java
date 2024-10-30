@@ -2,10 +2,12 @@ package net.mcreator.superbwarfare.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.mcreator.superbwarfare.client.AnimationHelper;
+import net.mcreator.superbwarfare.client.ItemModelHelper;
 import net.mcreator.superbwarfare.client.layer.Hk416Layer;
 import net.mcreator.superbwarfare.client.model.item.Hk416ItemModel;
 import net.mcreator.superbwarfare.item.gun.rifle.Hk416Item;
-import net.mcreator.superbwarfare.client.AnimationHelper;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -94,26 +96,61 @@ public class Hk416ItemRenderer extends GeoItemRenderer<Hk416Item> {
             }
         }
 
-        if (name.equals("holo")) {
-            Player player = Minecraft.getInstance().player;
-            ItemStack itemStack = null;
-            if (player != null) {
-                itemStack = player.getMainHandItem();
+        Player player = mc.player;
+        if (player != null) {
+            ItemStack itemStack = player.getMainHandItem();
+
+            if (name.equals("Cross1")) {
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                        || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
+                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
             }
-            if (player != null) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS);
+
+            if (name.equals("Cross2")) {
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                        || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
+                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2);
             }
+
+            if (name.equals("Cross3")) {
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                        || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
+                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 3);
+            }
+
+            if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2
+                    && (name.equals("hidden"))) {
+                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS);
+            }
+
+            if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 3
+                    && (name.equals("jing") || name.equals("Barrel") || name.equals("yugu") || name.equals("qiangguan"))) {
+                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS);
+            }
+
+            if (name.equals("flare")) {
+                if (itemStack.getOrCreateTag().getDouble("flash_time") == 0 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {
+                    bone.setHidden(true);
+                } else {
+                    bone.setHidden(false);
+                    bone.setScaleX((float) (0.55 + 0.5 * (Math.random() - 0.5)));
+                    bone.setScaleY((float) (0.55 + 0.5 * (Math.random() - 0.5)));
+                    bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
+                }
+            }
+
+            ItemModelHelper.handleGunAttachments(bone, itemStack, name);
+
         }
 
-
         if (this.transformType.firstPerson() && renderingArms) {
-            AbstractClientPlayer player = mc.player;
+            AbstractClientPlayer localPlayer = mc.player;
 
-            if (player == null) {
+            if (localPlayer == null) {
                 return;
             }
 
-            PlayerRenderer playerRenderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(player);
+            PlayerRenderer playerRenderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(localPlayer);
             PlayerModel<AbstractClientPlayer> model = playerRenderer.getModel();
             stack.pushPose();
             RenderUtils.translateMatrixToBone(stack, bone);
@@ -121,7 +158,7 @@ public class Hk416ItemRenderer extends GeoItemRenderer<Hk416Item> {
             RenderUtils.rotateMatrixAroundBone(stack, bone);
             RenderUtils.scaleMatrixForBone(stack, bone);
             RenderUtils.translateAwayFromPivotPoint(stack, bone);
-            ResourceLocation loc = player.getSkinTextureLocation();
+            ResourceLocation loc = localPlayer.getSkinTextureLocation();
             VertexConsumer armBuilder = this.currentBuffer.getBuffer(RenderType.entitySolid(loc));
             VertexConsumer sleeveBuilder = this.currentBuffer.getBuffer(RenderType.entityTranslucent(loc));
             if (name.equals("Lefthand")) {

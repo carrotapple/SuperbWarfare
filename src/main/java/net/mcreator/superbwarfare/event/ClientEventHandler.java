@@ -186,12 +186,6 @@ public class ClientEventHandler {
 
         double spread = stack.is(ModTags.Items.SHOTGUN) || stack.is(ModItems.MINIGUN.get()) ? 1.2 * zoomSpread * (basicDev + 0.2 * (walk + sprint + crouching + prone + jump + ride) + fireSpread) : zoomSpread * (0.7 * basicDev + walk + sprint + crouching + prone + jump + ride + 0.8 * fireSpread);
 
-//        if (gunSpread < spread) {
-//            gunSpread += 0.07 * Math.pow(spread - gunSpread, 2) * times;
-//        } else {
-//            gunSpread -= 0.07 * Math.pow(spread - gunSpread, 2) * times;
-//        }
-
         gunSpread = Mth.lerp(0.07 * times, gunSpread, spread);
 
         // 开火部分
@@ -510,7 +504,7 @@ public class ClientEventHandler {
     }
 
     private static void handleWeaponFire(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
-        float times = 1.5f * Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1);
+        float times = 2f * Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8f);
         float yaw = event.getYaw();
         float pitch = event.getPitch();
         float roll = event.getRoll();

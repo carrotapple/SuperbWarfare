@@ -567,10 +567,26 @@
       }
     ]
   },
+  "hk_416_fire_1p_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:hk_416/hk_416_fire_1p_s",
+        "stream": false
+      }
+    ]
+  },
   "hk_416_fire_3p": {
     "sounds": [
       {
         "name": "superbwarfare:hk_416/hk_416_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "hk_416_fire_3p_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:hk_416/hk_416_fire_3p_s",
         "stream": false
       }
     ]

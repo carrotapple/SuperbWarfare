@@ -1,10 +1,11 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.rifle.Hk416Item;
-import net.mcreator.superbwarfare.client.AnimationHelper;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -14,7 +15,11 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
+import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
+
 public class Hk416ItemModel extends GeoModel<Hk416Item> {
+
+    public static float rotXBipod = 0f;
     @Override
     public ResourceLocation getAnimationResource(Hk416Item animatable) {
         return new ResourceLocation(ModUtils.MODID, "animations/hk416.animation.json");
@@ -34,7 +39,12 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
     public void setCustomAnimations(Hk416Item animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
-        CoreGeoBone scope = getAnimationProcessor().getBone("eotech");
+        CoreGeoBone scope = getAnimationProcessor().getBone("Scope1");
+        CoreGeoBone scope2 = getAnimationProcessor().getBone("Scope2");
+        CoreGeoBone scope3 = getAnimationProcessor().getBone("Scope3");
+        CoreGeoBone cross1 = getAnimationProcessor().getBone("Cross1");
+        CoreGeoBone cross2 = getAnimationProcessor().getBone("Cross2");
+        CoreGeoBone cross3 = getAnimationProcessor().getBone("Cross3");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -58,12 +68,36 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
-        gun.setPosX(3.34f * (float) zp);
-        gun.setPosY(0.54f * (float) zp - (float) (0.2f * zpz));
-        gun.setPosZ(2.5f * (float) zp + (float) (0.3f * zpz));
-        gun.setRotZ((float) (0.05f * zpz));
+        int type = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        float times = 0.6f * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
 
-        scope.setScaleZ(1f - (0.7f * (float) zp));
+        float posY = switch (type) {
+            case 0 -> 1.04f;
+            case 1 -> 0.52f;
+            case 2 -> 0.385f;
+            case 3 -> 0.46f;
+            default -> 0f;
+        };
+        float scaleZ = switch (type) {
+            case 2 -> 0.8f;
+            case 3 -> 0.78f;
+            default -> 0f;
+        };
+        float posZ = switch (type) {
+            case 0, 1 -> 3.8f;
+            case 2 -> 7.4f;
+            case 3 -> 6.8f;
+            default -> 0f;
+        };
+
+        gun.setPosX(3.3055f * (float) zp);
+        gun.setPosY(posY * (float) zp - (float) (0.2f * zpz));
+        gun.setPosZ(posZ * (float) zp + (float) (0.3f * zpz));
+        gun.setRotZ((float) (0.05f * zpz));
+        gun.setScaleZ(1f - (scaleZ * (float) zp));
+        scope.setScaleZ(1f - (0.6f * (float) zp));
+        scope2.setScaleZ(1f - (0.8f * (float) zp));
+        scope3.setScaleZ(1f - (0.5f * (float) zp));
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 3.1));
 
@@ -81,7 +115,17 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
         shen.setRotY((float) (shen.getRotY() * (1 - 0.9 * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.9 * zt)));
 
+        cross1.setPosY(-0.75f * (float) fpz);
+        cross2.setPosY(-0.7f * (float) fpz);
+        cross3.setPosY(-0.2f * (float) fpz);
+
         shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
+
+        CoreGeoBone l = getAnimationProcessor().getBone("l");
+        CoreGeoBone r = getAnimationProcessor().getBone("r");
+        rotXBipod = Mth.lerp(1.5f * times, rotXBipod, isProne(player) ? -90 : 0);
+        l.setRotX(rotXBipod * Mth.DEG_TO_RAD);
+        r.setRotX(rotXBipod * Mth.DEG_TO_RAD);
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));
@@ -93,8 +137,8 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
 
-        float numR = (float) (1 - 0.88 * zt);
-        float numP = (float) (1 - 0.78 * zt);
+        float numR = (float) (1 - 0.985 * zt);
+        float numP = (float) (1 - 0.92 * zt);
 
         if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
             main.setRotX(numR * main.getRotX());

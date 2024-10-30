@@ -140,10 +140,14 @@ public class ModSounds {
 
     public static final RegistryObject<SoundEvent> HK_416_FIRE_1P = REGISTRY.register("hk_416_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "hk_416_fire_1p")));
     public static final RegistryObject<SoundEvent> HK_416_FIRE_3P = REGISTRY.register("hk_416_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "hk_416_fire_3p")));
+    public static final RegistryObject<SoundEvent> HK_416_FIRE_1P_S = REGISTRY.register("hk_416_fire_1p_s", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "hk_416_fire_1p_s")));
+    public static final RegistryObject<SoundEvent> HK_416_FIRE_3P_S = REGISTRY.register("hk_416_fire_3p_s", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "hk_416_fire_3p_s")));
     public static final RegistryObject<SoundEvent> HK_416_FAR = REGISTRY.register("hk_416_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "hk_416_far")));
     public static final RegistryObject<SoundEvent> HK_416_VERYFAR = REGISTRY.register("hk_416_veryfar", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "hk_416_veryfar")));
     public static final RegistryObject<SoundEvent> HK_416_RELOAD_NORMAL = REGISTRY.register("hk_416_reload_normal", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "hk_416_reload_normal")));
     public static final RegistryObject<SoundEvent> HK_416_RELOAD_EMPTY = REGISTRY.register("hk_416_reload_empty", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "hk_416_reload_empty")));
+    public static final RegistryObject<SoundEvent> HK_416_FAR_S = REGISTRY.register("hk_416_far_s", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "ak_12_far_s")));
+    public static final RegistryObject<SoundEvent> HK_416_VERYFAR_S = REGISTRY.register("hk_416_veryfar_s", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "ak_12_veryfar_s")));
 
     public static final RegistryObject<SoundEvent> RPK_FIRE_1P = REGISTRY.register("rpk_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "rpk_fire_1p")));
     public static final RegistryObject<SoundEvent> RPK_FIRE_3P = REGISTRY.register("rpk_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "rpk_fire_3p")));
