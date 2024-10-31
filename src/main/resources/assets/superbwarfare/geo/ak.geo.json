@@ -27,7 +27,7 @@
 				{
 					"name": "shen",
 					"parent": "bone",
-					"pivot": [0, 0, 0]
+					"pivot": [0.5, 3, 2]
 				},
 				{
 					"name": "0",

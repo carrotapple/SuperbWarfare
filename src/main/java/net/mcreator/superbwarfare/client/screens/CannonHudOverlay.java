@@ -4,11 +4,15 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
+import net.mcreator.superbwarfare.entity.Mk42Entity;
+import net.mcreator.superbwarfare.entity.Mle1934Entity;
 import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.tools.TraceTool;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,6 +33,11 @@ import static net.mcreator.superbwarfare.client.RenderHelper.preciseBlit;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class CannonHudOverlay {
+    public static float health = 0;
+    public static float maxHealth = 0;
+    private static final ResourceLocation ARMOR = ModUtils.loc("textures/screens/armor.png");
+    private static final ResourceLocation HEALTH = ModUtils.loc("textures/screens/armor_value.png");
+    private static final ResourceLocation HEALTH_FRAME = ModUtils.loc("textures/screens/armor_value_frame.png");
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
@@ -42,10 +51,11 @@ public class CannonHudOverlay {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
         if (shouldRenderCrossHair(player)) {
+            Entity cannon = Objects.requireNonNull(player.getVehicle());
             float yRotOffset = Mth.lerp(event.getPartialTick(), player.yRotO, player.getYRot());
             float xRotOffset = Mth.lerp(event.getPartialTick(), player.xRotO, player.getXRot());
-            float diffY = Objects.requireNonNull(player.getVehicle()).getViewYRot(event.getPartialTick()) - yRotOffset;
-            float diffX = Objects.requireNonNull(player.getVehicle()).getViewXRot(event.getPartialTick()) - xRotOffset + 1.3f;
+            float diffY = cannon.getViewYRot(event.getPartialTick()) - yRotOffset;
+            float diffX = cannon.getViewXRot(event.getPartialTick()) - xRotOffset + 1.3f;
             float fovAdjust = (float) 70 / Minecraft.getInstance().options.fov().get();
             if (diffY > 180.0f) {
                 diffY -= 360.0f;
@@ -91,6 +101,23 @@ public class CannonHudOverlay {
             } else {
                 preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
             }
+
+            if (cannon instanceof Mk42Entity) {
+                health = cannon.getEntityData().get(net.mcreator.superbwarfare.entity.Mk42Entity.HEALTH);
+                maxHealth = 500;
+            }
+
+            if (cannon instanceof Mle1934Entity) {
+                health = cannon.getEntityData().get(net.mcreator.superbwarfare.entity.Mle1934Entity.HEALTH);
+                maxHealth = 600;
+            }
+
+            GuiGraphics guiGraphics = event.getGuiGraphics();
+            guiGraphics.pose().pushPose();
+            guiGraphics.blit(ARMOR, w - 96, h - 14, 0, 0, 12, 12, 12, 12);
+            guiGraphics.blit(HEALTH_FRAME, w - 83, h - 12, 0, 0, 80, 8, 80, 8);
+            guiGraphics.blit(HEALTH, w - 83, h - 12, 0, 0, (int)(80 * health / maxHealth), 8, 80, 8);
+            guiGraphics.pose().popPose();
         }
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();

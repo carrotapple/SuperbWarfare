@@ -23,6 +23,8 @@ public class M4ItemModel extends GeoModel<M4Item> {
     public static float posZAlt = 7.6f;
     public static float rotXSight = 0f;
     public static float rotXBipod = 0f;
+    public static float fireRotY = 0f;
+    public static float fireRotZ = 0f;
 
     @Override
     public ResourceLocation getAnimationResource(M4Item animatable) {
@@ -124,12 +126,15 @@ public class M4ItemModel extends GeoModel<M4Item> {
             lh.setPosY((float) (-zt * 4));
         }
 
+        fireRotY = (float) Mth.lerp(0.38f * times, fireRotY, 0.25f * ClientEventHandler.recoilHorizon * fpz);
+        fireRotZ = (float) Mth.lerp(0.38f * times, fireRotZ, (0.3f + 0.5 * fr) * ClientEventHandler.recoilHorizon);
+
         shen.setPosX((float) (1.35f * ClientEventHandler.recoilHorizon * fpz * fp));
         shen.setPosY((float) (0.15f * fp + 0.18f * fr));
         shen.setPosZ((float) (0.345 * fp + 0.44f * fr + 0.75 * fpz));
         shen.setRotX((float) (0.01f * fp + 0.05f * fr + 0.01f * fpz));
-        shen.setRotY((float) (0.07f * ClientEventHandler.recoilHorizon * fpz));
-        shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
+        shen.setRotY(fireRotY);
+        shen.setRotZ(fireRotZ);
         cross1.setPosY(-0.75f * (float) fpz);
         cross2.setPosY(-0.1f * (float) fpz);
         crossAlt.setPosY(-0.2f * (float) fpz);

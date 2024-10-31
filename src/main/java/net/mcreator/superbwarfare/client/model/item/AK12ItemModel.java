@@ -19,6 +19,8 @@ import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
 
 public class AK12ItemModel extends GeoModel<AK12Item> {
 
+    public static float fireRotY = 0f;
+    public static float fireRotZ = 0f;
     public static float rotXBipod = 0f;
 
     @Override
@@ -108,12 +110,15 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.85));
 
+        fireRotY = (float) Mth.lerp(0.35f * times, fireRotY, 0.26f * ClientEventHandler.recoilHorizon * fpz);
+        fireRotZ = (float) Mth.lerp(0.35f * times, fireRotZ, (0.4f + 0.5 * fr) * ClientEventHandler.recoilHorizon);
+
         shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
         shen.setPosY((float) (0.15f * fp + 0.18f * fr));
         shen.setPosZ((float) (0.275 * fp + 0.34f * fr + 0.65 * fpz));
         shen.setRotX((float) (0.01f * fp + 0.05f * fr + 0.01f * fpz));
-        shen.setRotY((float) (0.1f * ClientEventHandler.recoilHorizon * fpz));
-        shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
+        shen.setRotY(fireRotY);
+        shen.setRotZ(fireRotZ);
 
         shen.setPosX((float) (shen.getPosX() * (1 - 0.5 * zt)));
         shen.setPosY((float) (shen.getPosY() * (-1 + 0.8 * zt)));

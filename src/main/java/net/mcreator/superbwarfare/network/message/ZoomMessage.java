@@ -4,6 +4,7 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.network.FriendlyByteBuf;
@@ -11,6 +12,7 @@ import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -37,6 +39,7 @@ public class ZoomMessage {
             ServerPlayer player = context.getSender();
 
             if (player != null) {
+                ItemStack stack = player.getMainHandItem();
                 Level level = player.level();
 
                 if (!level.isLoaded(player.blockPosition())) {
@@ -50,8 +53,7 @@ public class ZoomMessage {
                         capability.syncPlayerVariables(player);
                     });
 
-
-                    if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity) {
+                    if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity && !stack.is(ModTags.Items.GUN)) {
                         SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_IN.get(), 2, 1);
                     }
                 }
@@ -63,7 +65,7 @@ public class ZoomMessage {
                         capability.syncPlayerVariables(player);
                     });
 
-                    if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity) {
+                    if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity && !stack.is(ModTags.Items.GUN)) {
                         SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_OUT.get(), 2, 1);
                     }
 

@@ -189,47 +189,31 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
 
         if (this.getPersistentData().getBoolean("left")) {
             this.entityData.set(MOVE_X, -1.5f);
-            this.entityData.set(ROT_X, Mth.clamp(this.entityData.get(ROT_X) + 0.05f, -0.5f, 0.5f));
+            this.entityData.set(ROT_X, Mth.lerp(0.1f ,this.entityData.get(ROT_X) ,0.5f));
         }
         if (this.getPersistentData().getBoolean("right")) {
             this.entityData.set(MOVE_X, 1.5f);
-            this.entityData.set(ROT_X, Mth.clamp(this.entityData.get(ROT_X) - 0.05f, -0.5f, 0.5f));
+            this.entityData.set(ROT_X, Mth.lerp(0.1f ,this.entityData.get(ROT_X) ,-0.5f));
         }
 
-        if (this.entityData.get(ROT_X) > 0) {
-            this.entityData.set(ROT_X, Mth.clamp(this.entityData.get(ROT_X) - 0.025f, 0, 0.5f));
-        } else {
-            this.entityData.set(ROT_X, Mth.clamp(this.entityData.get(ROT_X) + 0.025f, -0.5f, 0));
-        }
+        this.entityData.set(ROT_X, Mth.lerp(0.05f ,this.entityData.get(ROT_X) ,0));
 
         if (!this.getPersistentData().getBoolean("left") && !this.getPersistentData().getBoolean("right")) {
-            if (this.entityData.get(MOVE_X) >= 0) {
-                this.entityData.set(MOVE_X, Mth.clamp(this.entityData.get(MOVE_X) - 0.3f, 0, 1));
-            } else {
-                this.entityData.set(MOVE_X, Mth.clamp(this.entityData.get(MOVE_X) + 0.3f, -1, 0));
-            }
+            this.entityData.set(MOVE_X, Mth.lerp(0.1f ,this.entityData.get(MOVE_X) ,0));
         }
 
         if (this.getPersistentData().getBoolean("forward")) {
-            this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) - 0.15f);
-            this.entityData.set(ROT_Z, Mth.clamp(this.entityData.get(ROT_Z) - 0.05f, -0.5f, 0.5f));
+            this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) - 0.11f);
+            this.entityData.set(ROT_Z, Mth.lerp(0.1f ,this.entityData.get(ROT_Z) ,-0.5f));
         }
         if (this.getPersistentData().getBoolean("backward")) {
-            this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) + 0.15f);
-            this.entityData.set(ROT_Z, Mth.clamp(this.entityData.get(ROT_Z) + 0.05f, -0.5f, 0.5f));
+            this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) + 0.11f);
+            this.entityData.set(ROT_Z, Mth.lerp(0.1f ,this.entityData.get(ROT_Z) ,0.5f));
         }
 
-        if (this.entityData.get(ROT_Z) > 0) {
-            this.entityData.set(ROT_Z, Mth.clamp(this.entityData.get(ROT_Z) - 0.025f, 0, 0.5f));
-        } else {
-            this.entityData.set(ROT_Z, Mth.clamp(this.entityData.get(ROT_Z) + 0.025f, -0.5f, 0));
-        }
+        this.entityData.set(ROT_Z, Mth.lerp(0.05f ,this.entityData.get(ROT_Z) ,0));
 
-        if (this.entityData.get(MOVE_Z) >= 0) {
-            this.entityData.set(MOVE_Z, Mth.clamp(this.entityData.get(MOVE_Z) - 0.1f, 0, 1));
-        } else {
-            this.entityData.set(MOVE_Z, Mth.clamp(this.entityData.get(MOVE_Z) + 0.1f, -1, 0));
-        }
+        this.entityData.set(MOVE_Z, Mth.lerp(0.1f ,this.entityData.get(MOVE_Z) ,0));
 
         if (this.getPersistentData().getBoolean("up")) {
             this.entityData.set(MOVE_Y, -1.5f);
@@ -237,11 +221,8 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
         if (this.getPersistentData().getBoolean("down")) {
             this.entityData.set(MOVE_Y, 1.5f);
         }
-        if (this.entityData.get(MOVE_Y) >= 0) {
-            this.entityData.set(MOVE_Y, Mth.clamp(this.entityData.get(MOVE_Y) - 0.3f, 0, 1));
-        } else {
-            this.entityData.set(MOVE_Y, Mth.clamp(this.entityData.get(MOVE_Y) + 0.3f, -1, 0));
-        }
+
+        this.entityData.set(MOVE_Y, Mth.lerp(0.1f ,this.entityData.get(MOVE_Y) ,0));
 
         this.setDeltaMovement(new Vec3(
                 this.getDeltaMovement().x + -this.entityData.get(MOVE_Z) * 0.1f * this.getLookAngle().x,

@@ -13,7 +13,7 @@
 		},
 		"animation.mk42.fire": {
 			"loop": "hold_on_last_frame",
-			"animation_length": 1,
+			"animation_length": 1.5,
 			"bones": {
 				"paoguan": {
 					"position": {
@@ -120,7 +120,7 @@
 		},
 		"animation.mk42.fire2": {
 			"loop": "hold_on_last_frame",
-			"animation_length": 1,
+			"animation_length": 1.5,
 			"bones": {
 				"paoguan": {
 					"position": {

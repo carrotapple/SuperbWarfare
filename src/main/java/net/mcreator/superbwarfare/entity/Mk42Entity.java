@@ -15,6 +15,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -47,7 +48,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     public static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
+    public static final float MAX_HEALTH = 500.0f;
     protected int interpolationSteps;
     protected double serverYRot;
     protected double serverXRot;
@@ -64,7 +65,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     protected void defineSynchedData() {
         this.entityData.define(COOL_DOWN, 0);
         this.entityData.define(TYPE, 0);
-        this.entityData.define(HEALTH, 500f);
+        this.entityData.define(HEALTH, MAX_HEALTH);
     }
 
     @Override
@@ -130,6 +131,9 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
             return false;
         if (source.is(DamageTypes.WITHER_SKULL))
             return false;
+        if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
+            amount *= 0.25f;
+        }
         if (amount < 32) {
             return false;
         }
@@ -208,9 +212,12 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
                 sendParticle(serverLevel, ParticleTypes.FLAME, this.getX(), this.getY() + 3.2, this.getZ(), 4, 0.6, 0.1, 0.6, 0.05, false);
                 sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 3, this.getZ(), 4, 0.1, 0.1, 0.1, 0.4, false);
             }
+            if (this.tickCount % 15 == 0) {
+                this.level().playSound(null, this.getOnPos(), SoundEvents.FIRE_AMBIENT, SoundSource.PLAYERS, 1, 1);
+            }
             this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.1f);
         } else {
-            this.entityData.set(HEALTH, this.entityData.get(HEALTH) + 0.05f);
+            this.entityData.set(HEALTH, Math.min(this.entityData.get(HEALTH) + 0.05f, MAX_HEALTH));
         }
 
         if (this.entityData.get(HEALTH) <= 0) {
@@ -330,23 +337,20 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
         Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
 
         if (!(passenger instanceof LivingEntity entity)) return;
-        ItemStack stack = entity.getMainHandItem();
 
-        if (!stack.isEmpty() && this.isVehicle() && !stack.is(ModTags.Items.GUN)) {
-            float diffY = entity.getYHeadRot() - this.getYRot();
-            float diffX = entity.getXRot() - 1.3f - this.getXRot();
-            if (diffY > 180.0f) {
-                diffY -= 360.0f;
-            } else if (diffY < -180.0f) {
-                diffY += 360.0f;
-            }
-            diffY = diffY * 0.15f;
-            diffX = diffX * 0.15f;
-
-            this.setYRot(this.getYRot() + Mth.clamp(diffY, -1.75f, 1.75f));
-            this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -3f, 3f), -85, 15));
-            this.setRot(this.getYRot(), this.getXRot());
+        float diffY = entity.getYHeadRot() - this.getYRot();
+        float diffX = entity.getXRot() - 1.3f - this.getXRot();
+        if (diffY > 180.0f) {
+            diffY -= 360.0f;
+        } else if (diffY < -180.0f) {
+            diffY += 360.0f;
         }
+        diffY = diffY * 0.15f;
+        diffX = diffX * 0.15f;
+
+        this.setYRot(this.getYRot() + Mth.clamp(diffY, -1.75f, 1.75f));
+        this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -3f, 3f), -85, 15));
+        this.setRot(this.getYRot(), this.getXRot());
     }
 
     protected void clampRotation(Entity entity) {
