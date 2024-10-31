@@ -5,7 +5,6 @@ import net.mcreator.superbwarfare.entity.projectile.MortarShellEntity;
 import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -63,6 +62,10 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
         this.entityData.define(PITCH, 70f);
     }
 
+    @Override
+    public boolean isPickable() {
+        return !this.isRemoved();
+    }
 
     @Override
     protected float getEyeHeight(Pose pPose, EntityDimensions pSize) {
@@ -72,16 +75,6 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    @Override
-    public Iterable<ItemStack> getArmorSlots() {
-        return NonNullList.withSize(1, ItemStack.EMPTY);
-    }
-
-
-    @Override
-    public void setItemSlot(EquipmentSlot pSlot, ItemStack pStack) {
     }
 
     @Override
@@ -127,7 +120,6 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
 
     @Override
     public InteractionResult interactAt(Player player, Vec3 pVec, InteractionHand pHand) {
-
         player.displayClientMessage(Component.literal("114"), true);
         if (!this.level().isClientSide) {
             ItemStack mainHandItem = player.getMainHandItem();
@@ -239,14 +231,9 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
         if (this.entityData.get(FIRE_TIME) > 0) {
             this.entityData.set(FIRE_TIME, this.entityData.get(FIRE_TIME) - 1);
         }
-            this.setXRot(-Mth.clamp(entityData.get(PITCH), 20, 89));
-            this.xRotO = this.getXRot();
+        this.setXRot(-Mth.clamp(entityData.get(PITCH), 20, 89));
+        this.xRotO = this.getXRot();
         this.refreshDimensions();
-    }
-
-    @Override
-    public boolean isPushable() {
-        return false;
     }
 
 //    @Override
