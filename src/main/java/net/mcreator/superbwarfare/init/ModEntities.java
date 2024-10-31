@@ -70,7 +70,7 @@ public class ModEntities {
     @SubscribeEvent
     public static void registerAttributes(EntityAttributeCreationEvent event) {
         event.put(TARGET.get(), TargetEntity.createAttributes().build());
-        event.put(MORTAR.get(), MortarEntity.createAttributes().build());
+//        event.put(MORTAR.get(), MortarEntity.createAttributes().build());
         event.put(SENPAI.get(), SenpaiEntity.createAttributes().build());
         event.put(MK_42.get(), Mk42Entity.createAttributes().build());
         event.put(DRONE.get(), DroneEntity.createAttributes().build());
