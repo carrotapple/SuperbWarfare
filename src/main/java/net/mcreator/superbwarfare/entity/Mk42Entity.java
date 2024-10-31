@@ -6,7 +6,6 @@ import net.mcreator.superbwarfare.item.common.ammo.CannonShellItem;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -28,6 +27,7 @@ import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -79,6 +79,16 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
         this.entityData.set(COOL_DOWN, compound.getInt("CoolDown"));
         this.entityData.set(TYPE, compound.getInt("Type"));
         this.entityData.set(HEALTH, compound.getFloat("Health"));
+    }
+
+    @Override
+    public boolean canBeCollidedWith() {
+        return true;
+    }
+
+    @Override
+    public boolean canCollideWith(Entity pEntity) {
+        return (pEntity.canBeCollidedWith() || pEntity.isPushable()) && !this.isPassengerOfSameVehicle(pEntity);
     }
 
     @Override
@@ -151,9 +161,11 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     @Override
     public void baseTick() {
         super.baseTick();
+
         if (this.entityData.get(COOL_DOWN) > 0) {
             this.entityData.set(COOL_DOWN, this.entityData.get(COOL_DOWN) - 1);
         }
+
         if (this.entityData.get(COOL_DOWN) > 28) {
             if (Math.random() < 0.5) {
                 this.entityData.set(TYPE, -1);
@@ -162,22 +174,11 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
             }
         }
 
-        this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
-
-        if (!this.level().noCollision(this.getBoundingBox())) {
-            this.moveTowardsClosestSpace(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0, this.getZ());
-        }
-
         this.move(MoverType.SELF, this.getDeltaMovement());
-        float f = 0.98F;
         if (this.onGround()) {
-            BlockPos pos = this.getBlockPosBelowThatAffectsMyMovement();
-            f = this.level().getBlockState(pos).getFriction(this.level(), pos, this) * 0.98F;
-        }
-
-        this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.98, f));
-        if (this.onGround()) {
-            this.setDeltaMovement(this.getDeltaMovement().multiply(1.0, -0.9, 1.0));
+            this.setDeltaMovement(Vec3.ZERO);
+        } else {
+            this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
         }
 
         if (this.entityData.get(HEALTH) <= 300) {
@@ -213,6 +214,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
         }
 
         if (this.entityData.get(HEALTH) <= 0) {
+            this.ejectPassengers();
             destroy();
         }
 
@@ -325,12 +327,12 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     }
 
     public void travel() {
-        Player entity = this.getPassengers().isEmpty() ? null : (Player) this.getPassengers().get(0);
-        ItemStack stack = null;
-        if (entity != null) {
-            stack = entity.getMainHandItem();
-        }
-        if (stack != null && this.isVehicle() && !stack.is(ModTags.Items.GUN)) {
+        Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+
+        if (!(passenger instanceof LivingEntity entity)) return;
+        ItemStack stack = entity.getMainHandItem();
+
+        if (!stack.isEmpty() && this.isVehicle() && !stack.is(ModTags.Items.GUN)) {
             float diffY = entity.getYHeadRot() - this.getYRot();
             float diffX = entity.getXRot() - 1.3f - this.getXRot();
             if (diffY > 180.0f) {
