@@ -146,9 +146,9 @@ public class JavelinItem extends GunItem implements GeoItem, AnimatedItem {
             tag.putInt("max_ammo", getAmmoCount(player));
 
             if (tag.getBoolean("Seeking")) {
-                Entity targetEntity = player.level().getEntitiesOfClass(LivingEntity.class, player.getBoundingBox().inflate(384))
+                Entity targetEntity = player.level().getEntitiesOfClass(Entity.class, player.getBoundingBox().inflate(512))
                         .stream().filter(e -> e.getStringUUID().equals(tag.getString("TargetEntity"))).findFirst().orElse(null);
-                Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 384, 8);
+                Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 512, 8);
                 if (seekingEntity != null && seekingEntity == targetEntity) {
                     tag.putInt("SeekTime", tag.getInt("SeekTime") + 1);
                 } else {
@@ -159,8 +159,11 @@ public class JavelinItem extends GunItem implements GeoItem, AnimatedItem {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.JAVELIN_LOCK.get(), 2, 1);
                 }
 
-                if (tag.getInt("SeekTime") > 20 && seekingEntity instanceof LivingEntity living && !living.level().isClientSide()) {
-                    living.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0));
+                if (seekingEntity != null && tag.getInt("SeekTime") > 20) {
+                    if (seekingEntity instanceof LivingEntity living) {
+                        living.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0));
+                    }
+
                     if (player instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, ModSounds.JAVELIN_LOCKON.get(), 2, 1);
                     }

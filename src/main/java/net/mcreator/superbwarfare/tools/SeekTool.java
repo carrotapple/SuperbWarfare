@@ -1,7 +1,6 @@
 package net.mcreator.superbwarfare.tools;
 
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -16,7 +15,7 @@ public class SeekTool {
         Vec3 pos = new Vec3(entity.getX(), entity.getY(), entity.getZ());
         return level.getEntitiesOfClass(Entity.class, new AABB(pos, pos).inflate(seekRange), e -> true).stream()
                 .filter(e -> {
-                    if (calculateAngle(e, entity) < seekAngle && e instanceof LivingEntity && e != entity) {
+                    if (calculateAngle(e, entity) < seekAngle && e != entity) {
                         return level.clip(new ClipContext(entity.getEyePosition(), e.getEyePosition(),
                                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() != HitResult.Type.BLOCK;
                     }

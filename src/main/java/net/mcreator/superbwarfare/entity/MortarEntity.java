@@ -4,10 +4,11 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.projectile.MortarShellEntity;
 import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.init.ModParticleTypes;
 import net.mcreator.superbwarfare.init.ModSounds;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -21,11 +22,12 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -37,12 +39,14 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import static net.mcreator.superbwarfare.tools.ParticleTool.sendParticle;
+
 public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Integer> FIRE_TIME = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> PITCH = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.FLOAT);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public String animationProcedure = "empty";
 
     protected int interpolationSteps;
     protected double serverYRot;
@@ -60,6 +64,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
     protected void defineSynchedData() {
         this.entityData.define(FIRE_TIME, 0);
         this.entityData.define(PITCH, 70f);
+        this.entityData.define(HEALTH, 100f);
     }
 
     @Override
@@ -79,8 +84,6 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source.is(DamageTypes.IN_FIRE))
-            return false;
         if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
             return false;
         if (source.is(DamageTypes.FALL))
@@ -99,13 +102,21 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
             return false;
         if (source.is(DamageTypes.WITHER_SKULL))
             return false;
-        return super.hurt(source, amount);
+
+        if (this.level() instanceof ServerLevel serverLevel) {
+            sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 1, this.getZ(), 2, 0.05, 0.05, 0.05, 0.1, false);
+        }
+        this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
+        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - amount);
+
+        return true;
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         compound.putInt("FireTime", this.entityData.get(FIRE_TIME));
         compound.putFloat("Pitch", this.entityData.get(PITCH));
+        compound.putFloat("Health", this.entityData.get(HEALTH));
     }
 
     @Override
@@ -116,97 +127,51 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
         if (compound.contains("Pitch")) {
             this.entityData.set(PITCH, compound.getFloat("Pitch"));
         }
+        if (compound.contains("Health")) {
+            this.entityData.set(HEALTH, compound.getFloat("Health"));
+        }
     }
 
     @Override
-    public InteractionResult interactAt(Player player, Vec3 pVec, InteractionHand pHand) {
-        player.displayClientMessage(Component.literal("114"), true);
-        if (!this.level().isClientSide) {
-            ItemStack mainHandItem = player.getMainHandItem();
-            if (mainHandItem.getItem() == ModItems.MORTAR_SHELLS.get() && !player.isShiftKeyDown() && this.entityData.get(FIRE_TIME) == 0) {
-                this.entityData.set(FIRE_TIME, 25);
-
-                if (!player.isCreative()) {
-                    player.getInventory().clearOrCountMatchingItems(p -> ModItems.MORTAR_SHELLS.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
-                }
-                if (!this.level().isClientSide()) {
-                    this.level().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.MORTAR_LOAD.get(), SoundSource.PLAYERS, 1f, 1f);
-                    this.level().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.MORTAR_FIRE.get(), SoundSource.PLAYERS, 8f, 1f);
-                    this.level().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.MORTAR_DISTANT.get(), SoundSource.PLAYERS, 32f, 1f);
-                }
-                ModUtils.queueServerWork(20, () -> {
-                    Level level = this.level();
-                    if (level instanceof ServerLevel server) {
-                        MortarShellEntity entityToSpawn = new MortarShellEntity(ModEntities.MORTAR_SHELL.get(), player, level);
-                        entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
-                        entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 8, (float) 0.5);
-                        level.addFreshEntity(entityToSpawn);
-                        server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, (this.getX() + 3 * this.getLookAngle().x), (this.getY() + 0.1 + 3 * this.getLookAngle().y), (this.getZ() + 3 * this.getLookAngle().z), 8, 0.4, 0.4, 0.4,
-                                0.007);
-                        server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(), 50, 2, 0.02, 2, 0.0005);
-                    }
-                });
+    public InteractionResult interact(Player player, InteractionHand hand) {
+        ItemStack mainHandItem = player.getMainHandItem();
+        if (player.isShiftKeyDown()) {
+            if (mainHandItem.getItem() == ModItems.CROWBAR.get()){
+                this.discard();
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MORTAR_DEPLOYER.get()));
             }
+            this.setYRot(player.getYRot());
+            this.setYBodyRot(this.getYRot());
+            this.setYHeadRot(this.getYRot());
+            this.yRotO = this.getYRot();
         }
-        return InteractionResult.SUCCESS;
-//        return InteractionResult.sidedSuccess(this.level().isClientSide());
+        if (mainHandItem.getItem() == ModItems.MORTAR_SHELLS.get() && !player.isShiftKeyDown() && this.entityData.get(FIRE_TIME) == 0) {
+            this.entityData.set(FIRE_TIME, 25);
+
+            if (!player.isCreative()) {
+                player.getInventory().clearOrCountMatchingItems(p -> ModItems.MORTAR_SHELLS.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
+            }
+            if (!this.level().isClientSide()) {
+                this.level().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.MORTAR_LOAD.get(), SoundSource.PLAYERS, 1f, 1f);
+                this.level().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.MORTAR_FIRE.get(), SoundSource.PLAYERS, 8f, 1f);
+                this.level().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.MORTAR_DISTANT.get(), SoundSource.PLAYERS, 32f, 1f);
+            }
+            ModUtils.queueServerWork(20, () -> {
+                Level level = this.level();
+                if (level instanceof ServerLevel server) {
+                    MortarShellEntity entityToSpawn = new MortarShellEntity(ModEntities.MORTAR_SHELL.get(), player, level);
+                    entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
+                    entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 8, (float) 0.5);
+                    level.addFreshEntity(entityToSpawn);
+                    server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, (this.getX() + 3 * this.getLookAngle().x), (this.getY() + 0.1 + 3 * this.getLookAngle().y), (this.getZ() + 3 * this.getLookAngle().z), 8, 0.4, 0.4, 0.4,
+                            0.007);
+                    server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(), 50, 2, 0.02, 2, 0.0005);
+                }
+            });
+        }
+
+        return InteractionResult.sidedSuccess(this.level().isClientSide());
     }
-
-//    @Override
-//    public InteractionResult interact(Player player, InteractionHand pHand) {
-//        super.interact(player, pHand);
-//        player.displayClientMessage(Component.literal("114"), true);
-//        if (!this.level().isClientSide) {
-//            ItemStack mainHandItem = player.getMainHandItem();
-//            if (mainHandItem.getItem() == ModItems.MORTAR_SHELLS.get() && !player.isShiftKeyDown() && this.entityData.get(FIRE_TIME) == 0) {
-//                this.entityData.set(FIRE_TIME, 25);
-//
-//                if (!player.isCreative()) {
-//                    player.getInventory().clearOrCountMatchingItems(p -> ModItems.MORTAR_SHELLS.get() == p.getItem(), 1, player.inventoryMenu.getCraftSlots());
-//                }
-//                if (!this.level().isClientSide()) {
-//                    this.level().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.MORTAR_LOAD.get(), SoundSource.PLAYERS, 1f, 1f);
-//                    this.level().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.MORTAR_FIRE.get(), SoundSource.PLAYERS, 8f, 1f);
-//                    this.level().playSound(null, this.getX(), this.getY(), this.getZ(), ModSounds.MORTAR_DISTANT.get(), SoundSource.PLAYERS, 32f, 1f);
-//                }
-//                ModUtils.queueServerWork(20, () -> {
-//                    Level level = this.level();
-//                    if (level instanceof ServerLevel server) {
-//                        MortarShellEntity entityToSpawn = new MortarShellEntity(ModEntities.MORTAR_SHELL.get(), player, level);
-//                        entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
-//                        entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 8, (float) 0.5);
-//                        level.addFreshEntity(entityToSpawn);
-//                        server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, (this.getX() + 3 * this.getLookAngle().x), (this.getY() + 0.1 + 3 * this.getLookAngle().y), (this.getZ() + 3 * this.getLookAngle().z), 8, 0.4, 0.4, 0.4,
-//                                0.007);
-//                        server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY(), this.getZ(), 50, 2, 0.02, 2, 0.0005);
-//                    }
-//                });
-//            }
-//        }
-//        return InteractionResult.sidedSuccess(this.level().isClientSide());
-//    }
-
-//    @Override
-//    public InteractionResult interact(Player player, InteractionHand hand) {
-//        ItemStack mainHandItem = player.getMainHandItem();
-//        if (player.isShiftKeyDown()) {
-//            if (mainHandItem.getItem() == ModItems.CROWBAR.get()){
-//                this.discard();
-//                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MORTAR_DEPLOYER.get()));
-//            }
-//            this.setYRot(player.getYRot());
-//            this.setXRot(this.getXRot());
-//            this.setYBodyRot(this.getYRot());
-//            this.setYHeadRot(this.getYRot());
-//            this.yRotO = this.getYRot();
-//            this.xRotO = this.getXRot();
-////            this.yBodyRotO = this.getYRot();
-////            this.yHeadRotO = this.getYRot();
-//        }
-//
-//
-//        return InteractionResult.sidedSuccess(this.level().isClientSide());
-//    }
 
     @Override
     public void lerpTo(double x, double y, double z, float yaw, float pitch, int interpolationSteps, boolean interpolate) {
@@ -214,16 +179,6 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
         serverXRot = pitch;
         this.interpolationSteps = 10;
     }
-
-//    @Override
-//    protected void setRot(float pYRot, float pXRot) {
-//        super.setRot(pYRot, -Mth.clamp(entityData.get(PITCH), 20, 89));
-//    }
-
-    //    @Override
-//    public void travel(Vec3 dir) {
-//        this.setXRot(-Mth.clamp((float) entityData.get(PITCH), 20, 89));
-//    }
 
     @Override
     public void baseTick() {
@@ -233,63 +188,48 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
         }
         this.setXRot(-Mth.clamp(entityData.get(PITCH), 20, 89));
         this.xRotO = this.getXRot();
+
+        this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
+
+        if (!this.level().noCollision(this.getBoundingBox())) {
+            this.moveTowardsClosestSpace(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0, this.getZ());
+        }
+
+        this.move(MoverType.SELF, this.getDeltaMovement());
+        float f = 0.98F;
+        if (this.onGround()) {
+            BlockPos pos = this.getBlockPosBelowThatAffectsMyMovement();
+            f = this.level().getBlockState(pos).getFriction(this.level(), pos, this) * 0.98F;
+        }
+
+        this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.98, f));
+        if (this.onGround()) {
+            this.setDeltaMovement(this.getDeltaMovement().multiply(1.0, -0.9, 1.0));
+        }
+
+        if (this.entityData.get(HEALTH) <= 0) {
+            destroy();
+        }
         this.refreshDimensions();
     }
 
-//    @Override
-//    public HumanoidArm getMainArm() {
-//        return HumanoidArm.RIGHT;
-//    }
-//
-//    @Override
-//    protected void doPush(Entity entityIn) {
-//    }
-//
-//    @Override
-//    protected void pushEntities() {
-//    }
-
-//    public static AttributeSupplier.Builder createAttributes() {
-//        return Mob.createMobAttributes()
-//                .add(Attributes.MOVEMENT_SPEED, 0)
-//                .add(Attributes.MAX_HEALTH, 100)
-//                .add(Attributes.ARMOR, 0)
-//                .add(Attributes.ATTACK_DAMAGE, 0)
-//                .add(Attributes.FOLLOW_RANGE, 16)
-//                .add(Attributes.KNOCKBACK_RESISTANCE, 1);
-//    }
-
     private PlayState movementPredicate(AnimationState<MortarEntity> event) {
-        if (this.animationProcedure.equals("empty")) {
-            if (this.entityData.get(FIRE_TIME) > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mortar.fire"));
-            }
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mortar.idle"));
+        if (this.entityData.get(FIRE_TIME) > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mortar.fire"));
         }
-        return PlayState.STOP;
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mortar.idle"));
     }
-
-//    @Override
-//    protected void tickDeath() {
-//        ++this.deathTime;
-//        if (this.deathTime == 5) {
-//            this.remove(MortarEntity.RemovalReason.KILLED);
-//            this.dropExperience();
-//            if (this.level() instanceof ServerLevel level) {
-//                var x = this.getX();
-//                var y = this.getY();
-//                var z = this.getZ();
-//                level.explode(null, x, y, z, 0, Level.ExplosionInteraction.NONE);
-//                ItemEntity mortar = new ItemEntity(level, x, (y + 1), z, new ItemStack(ModItems.MORTAR_DEPLOYER.get()));
-//                mortar.setPickUpDelay(10);
-//                level.addFreshEntity(mortar);
-//            }
-//        }
-//    }
-
-    @Override
-    public Vec3 getDeltaMovement() {
-        return new Vec3(0, 0, 0);
+    protected void destroy() {
+        if (this.level() instanceof ServerLevel level) {
+            var x = this.getX();
+            var y = this.getY();
+            var z = this.getZ();
+            level.explode(null, x, y, z, 0, Level.ExplosionInteraction.NONE);
+            ItemEntity mortar = new ItemEntity(level, x, (y + 1), z, new ItemStack(ModItems.MORTAR_DEPLOYER.get()));
+            mortar.setPickUpDelay(10);
+            level.addFreshEntity(mortar);
+            this.discard();
+        }
     }
 
     public String getSyncedAnimation() {
@@ -301,7 +241,6 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
 
     @Override
     public void setAnimationProcedure(String procedure) {
-        this.animationProcedure = procedure;
     }
 
     @Override

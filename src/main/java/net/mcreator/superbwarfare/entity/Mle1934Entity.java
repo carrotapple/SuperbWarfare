@@ -7,6 +7,7 @@ import net.mcreator.superbwarfare.item.common.ammo.CannonShellItem;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -16,26 +17,20 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3d;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -46,14 +41,18 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEntity {
-    public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
+import static net.mcreator.superbwarfare.tools.ParticleTool.sendParticle;
+
+public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
+    public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public String animationprocedure = "empty";
 
     protected int interpolationSteps;
+
     protected double serverYRot;
     protected double serverXRot;
 
@@ -63,45 +62,32 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
 
     public Mle1934Entity(EntityType<Mle1934Entity> type, Level world) {
         super(type, world);
-        xpReward = 0;
-        setNoAi(true);
-        setPersistenceRequired();
     }
 
     @Override
     protected void defineSynchedData() {
-        super.defineSynchedData();
         this.entityData.define(COOL_DOWN, 0);
         this.entityData.define(TYPE, 0);
+        this.entityData.define(HEALTH, 600f);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
         compound.putInt("cool_down", this.entityData.get(COOL_DOWN));
         compound.putInt("type", this.entityData.get(TYPE));
+        compound.putFloat("Health", this.entityData.get(HEALTH));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
         this.entityData.set(COOL_DOWN, compound.getInt("cool_down"));
         this.entityData.set(TYPE, compound.getInt("type"));
+        this.entityData.set(HEALTH, compound.getFloat("Health"));
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
+    protected float getEyeHeight(Pose pPose, EntityDimensions pSize) {
         return 2.16F;
-    }
-
-    @Override
-    public boolean canCollideWith(Entity entity) {
-        return true;
-    }
-
-    @Override
-    public boolean canBeCollidedWith() {
-        return true;
     }
 
     @Override
@@ -110,73 +96,63 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
     }
 
     @Override
-    public MobType getMobType() {
-        return super.getMobType();
-    }
-
-    @Override
-    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
-        return false;
-    }
-
-    @Override
     public double getPassengersRidingOffset() {
         return super.getPassengersRidingOffset() - 0.075;
     }
 
     @Override
-    public SoundEvent getHurtSound(DamageSource ds) {
-        return ModSounds.HIT.get();
-    }
-
-    @Override
-    public SoundEvent getDeathSound() {
-        return ModSounds.HIT.get();
-    }
-
-    @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (amount < 34) {
+
+        if (this.level() instanceof ServerLevel serverLevel) {
+            sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
+        }
+
+        if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
+            return false;
+        if (source.is(DamageTypes.FALL))
+            return false;
+        if (source.is(DamageTypes.CACTUS))
+            return false;
+        if (source.is(DamageTypes.DROWN))
+            return false;
+        if (source.is(DamageTypes.LIGHTNING_BOLT))
+            return false;
+        if (source.is(DamageTypes.FALLING_ANVIL))
+            return false;
+        if (source.is(DamageTypes.DRAGON_BREATH))
+            return false;
+        if (source.is(DamageTypes.WITHER))
+            return false;
+        if (source.is(DamageTypes.WITHER_SKULL))
+            return false;
+        if (amount < 32) {
             return false;
         }
-        return super.hurt(source, 0.3f * amount);
+
+        this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
+        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.5f * amount);
+
+        return true;
     }
 
     @Override
-    public @NotNull InteractionResult mobInteract(Player player, InteractionHand hand) {
+    public boolean isPickable() {
+        return !this.isRemoved();
+    }
+
+    @Override
+    public InteractionResult interact(Player player, InteractionHand hand) {
         if (player.isShiftKeyDown() && player.getMainHandItem().getItem() == ModItems.CROWBAR.get() && this.getFirstPassenger() == null) {
             this.discard();
-            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MLE_1934_SPAWN_EGG.get()));
+//            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MK_42_SPAWN_EGG.get()));
         } else {
             player.setXRot(this.getXRot());
             player.setYRot(this.getYRot());
             player.startRiding(this);
 
         }
-        InteractionResult result = InteractionResult.sidedSuccess(this.level().isClientSide());
-        super.mobInteract(player, hand);
-        return result;
-    }
 
-    @Override
-    public void die(DamageSource source) {
-        super.die(source);
-
-        if (level() instanceof ServerLevel) {
-            destroyExplode();
-            this.discard();
-        }
-    }
-
-    private void destroyExplode() {
-        CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this), 30f,
-                this.getX(), this.getY(), this.getZ(), 7.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
-        explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
-        explosion.finalizeExplosion(false);
-
-        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+        return InteractionResult.sidedSuccess(this.level().isClientSide());
     }
 
     @Override
@@ -187,7 +163,74 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
             this.entityData.set(COOL_DOWN, this.entityData.get(COOL_DOWN) - 1);
         }
 
+        this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
+
+        if (!this.level().noCollision(this.getBoundingBox())) {
+            this.moveTowardsClosestSpace(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0, this.getZ());
+        }
+
+        this.move(MoverType.SELF, this.getDeltaMovement());
+        float f = 0.98F;
+        if (this.onGround()) {
+            BlockPos pos = this.getBlockPosBelowThatAffectsMyMovement();
+            f = this.level().getBlockState(pos).getFriction(this.level(), pos, this) * 0.98F;
+        }
+
+        this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.98, f));
+        if (this.onGround()) {
+            this.setDeltaMovement(this.getDeltaMovement().multiply(1.0, -0.9, 1.0));
+        }
+
+        if (this.entityData.get(HEALTH) <= 0) {
+            destroy();
+        }
+
+        if (this.entityData.get(HEALTH) <= 300) {
+            if (this.level() instanceof ServerLevel serverLevel) {
+                sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 2, 0.75, 0.5, 0.75, 0.01, false);
+            }
+        }
+
+        if (this.entityData.get(HEALTH) <= 200) {
+            if (this.level() instanceof ServerLevel serverLevel) {
+                sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
+                sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
+            }
+        }
+
+        if (this.entityData.get(HEALTH) <= 150) {
+            if (this.level() instanceof ServerLevel serverLevel) {
+                sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
+                sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
+            }
+        }
+
+        if (this.entityData.get(HEALTH) <= 100) {
+            if (this.level() instanceof ServerLevel serverLevel) {
+                sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 2, 0.75, 0.5, 0.75, 0.01, false);
+                sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 2, 0.75, 0.5, 0.75, 0.01, false);
+                sendParticle(serverLevel, ParticleTypes.FLAME, this.getX(), this.getY() + 3.2, this.getZ(), 4, 0.6, 0.1, 0.6, 0.05, false);
+                sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 3, this.getZ(), 4, 0.1, 0.1, 0.1, 0.4, false);
+            }
+            this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.1f);
+        } else {
+            this.entityData.set(HEALTH, this.entityData.get(HEALTH) + 0.05f);
+        }
+
+        travel();
         this.refreshDimensions();
+    }
+
+    private void destroy() {
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this), 140f,
+                this.getX(), this.getY(), this.getZ(), 10f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
+
+        this.discard();
     }
 
     @Override
@@ -213,18 +256,18 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
             boolean salvoShoot = false;
 
             if (stack.is(ModItems.HE_5_INCHES.get())) {
-                hitDamage = 700;
+                hitDamage = 200;
                 explosionRadius = 13;
-                explosionDamage = 250;
+                explosionDamage = 240;
                 fireProbability = 0.24F;
                 fireTime = 5;
                 salvoShoot = stack.getCount() > 1 || player.isCreative();
             }
 
             if (stack.is(ModItems.AP_5_INCHES.get())) {
-                hitDamage = 1000;
+                hitDamage = 400;
                 explosionRadius = 3.8f;
-                explosionDamage = 300;
+                explosionDamage = 120;
                 fireProbability = 0;
                 fireTime = 0;
                 durability = 35;
@@ -363,8 +406,7 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
         this.interpolationSteps = 10;
     }
 
-    @Override
-    public void travel(@NotNull Vec3 dir) {
+    public void travel() {
         Player entity = this.getPassengers().isEmpty() ? null : (Player) this.getPassengers().get(0);
         ItemStack stack = null;
         if (entity != null) {
@@ -381,20 +423,9 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
             diffY = diffY * 0.15f;
             diffX = diffX * 0.15f;
             this.setYRot(this.getYRot() + Mth.clamp(diffY, -1.25f, 1.25f));
-            this.yRotO = this.getYRot();
             this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -30, 4));
             this.setRot(this.getYRot(), this.getXRot());
-            this.yBodyRot = this.getYRot() + Mth.clamp(diffY, -1.25f, 1.25f);
-            this.yHeadRot = this.getYRot() + Mth.clamp(diffY, -1.25f, 1.25f);
-            return;
         }
-        super.travel(dir);
-    }
-
-    @Override
-    public void aiStep() {
-        super.aiStep();
-        this.updateSwingTime();
     }
 
     public static void init() {
@@ -418,16 +449,6 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
         this.clampRotation(entity);
     }
 
-    public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 0)
-                .add(Attributes.MAX_HEALTH, 600)
-                .add(Attributes.ARMOR, 30)
-                .add(Attributes.ATTACK_DAMAGE, 0)
-                .add(Attributes.FOLLOW_RANGE, 32)
-                .add(Attributes.KNOCKBACK_RESISTANCE, 1);
-    }
-
     private PlayState movementPredicate(AnimationState<Mle1934Entity> event) {
         if (this.entityData.get(COOL_DOWN) > 64) {
             if (this.entityData.get(TYPE) == 1) {
@@ -437,15 +458,6 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
             }
         }
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mle1934.idle"));
-    }
-
-    @Override
-    protected void tickDeath() {
-        ++this.deathTime;
-        if (this.deathTime == 1) {
-            this.remove(RemovalReason.KILLED);
-            this.dropExperience();
-        }
     }
 
     public String getSyncedAnimation() {
@@ -465,21 +477,4 @@ public class Mle1934Entity extends PathfinderMob implements GeoEntity, ICannonEn
         return this.cache;
     }
 
-    @SubscribeEvent
-    public static void onEntityAttacked(LivingHurtEvent event) {
-        var damagesource = event.getSource();
-        var entity = event.getEntity();
-        if (damagesource == null || entity == null) return;
-
-        var sourceentity = damagesource.getEntity();
-        if (sourceentity == null) return;
-
-        if (entity instanceof Mle1934Entity mle1934) {
-            if (mle1934.getFirstPassenger() == null) return;
-            Entity gunner = mle1934.getFirstPassenger();
-            if (event.getSource().getDirectEntity() == gunner) {
-                event.setCanceled(true);
-            }
-        }
-    }
 }

@@ -150,7 +150,7 @@ public class ClientEventHandler {
     public static void handleWeaponFire(TickEvent.RenderTickEvent event) {
         ClientLevel level = Minecraft.getInstance().level;
         Player player = Minecraft.getInstance().player;
-        if (notInGame()) return;
+//        if (notInGame()) return;
         if (player == null) return;
         if (level == null) return;
 
@@ -242,6 +242,11 @@ public class ClientEventHandler {
                 ModUtils.PACKET_HANDLER.sendToServer(new ShootMessage(spread));
                 clientTimer.setProgress((long) (clientTimer.getProgress() - cooldown));
             }
+
+            if (notInGame()) {
+                clientTimer.stop();
+            }
+
         } else {
             clientTimer.stop();
             fireSpread = 0;

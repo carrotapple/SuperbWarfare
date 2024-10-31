@@ -164,7 +164,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
     @Override
     public void tick() {
         super.tick();
-        Entity entity = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(512))
+        Entity entity = this.level().getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(512))
                 .stream().filter(e -> e.getStringUUID().equals(entityData.get(TARGET_UUID))).findFirst().orElse(null);
 
 
