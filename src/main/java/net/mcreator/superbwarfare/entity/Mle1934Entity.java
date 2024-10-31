@@ -44,6 +44,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import static net.mcreator.superbwarfare.tools.ParticleTool.sendParticle;
 
 public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
+
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.FLOAT);
@@ -52,7 +53,6 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
     public String animationprocedure = "empty";
 
     protected int interpolationSteps;
-
     protected double serverYRot;
     protected double serverXRot;
 
@@ -73,15 +73,15 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
-        compound.putInt("cool_down", this.entityData.get(COOL_DOWN));
-        compound.putInt("type", this.entityData.get(TYPE));
+        compound.putInt("CoolDown", this.entityData.get(COOL_DOWN));
+        compound.putInt("Type", this.entityData.get(TYPE));
         compound.putFloat("Health", this.entityData.get(HEALTH));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
-        this.entityData.set(COOL_DOWN, compound.getInt("cool_down"));
-        this.entityData.set(TYPE, compound.getInt("type"));
+        this.entityData.set(COOL_DOWN, compound.getInt("CoolDown"));
+        this.entityData.set(TYPE, compound.getInt("Type"));
         this.entityData.set(HEALTH, compound.getFloat("Health"));
     }
 
@@ -102,7 +102,6 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-
         if (this.level() instanceof ServerLevel serverLevel) {
             sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
         }
@@ -144,12 +143,10 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (player.isShiftKeyDown() && player.getMainHandItem().getItem() == ModItems.CROWBAR.get() && this.getFirstPassenger() == null) {
             this.discard();
-//            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MK_42_SPAWN_EGG.get()));
         } else {
             player.setXRot(this.getXRot());
             player.setYRot(this.getYRot());
             player.startRiding(this);
-
         }
 
         return InteractionResult.sidedSuccess(this.level().isClientSide());
@@ -288,7 +285,7 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
             leftPos.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
             leftPos.rotateY(-yRot * Mth.DEG_TO_RAD);
 
-            //左炮管
+            // 左炮管
             CannonShellEntity entityToSpawnLeft = new CannonShellEntity(ModEntities.CANNON_SHELL.get(),
                     player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime).durability(durability);
 
@@ -317,7 +314,6 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
             int count = 5;
 
             for (float i = 9.5f; i < 14; i += .5f) {
-
                 var leftPosP = new Vector3d(i, 0, -0.45);
                 leftPosP.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
                 leftPosP.rotateY(-yRot * Mth.DEG_TO_RAD);
@@ -326,10 +322,10 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
                         this.getX() + leftPosP.x,
                         this.getEyeY() - 0.2 + leftPosP.y,
                         this.getZ() + leftPosP.z,
-                        Mth.clamp(count--,1,5), 0.1, 0.1, 0.1, 0.002);
+                        Mth.clamp(count--, 1, 5), 0.1, 0.1, 0.1, 0.002);
             }
 
-            //右炮管
+            // 右炮管
             if (salvoShoot) {
                 var rightPos = new Vector3d(0, 0, 0.45);
                 rightPos.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
@@ -363,7 +359,6 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
                 int countR = 5;
 
                 for (float i = 9.5f; i < 14; i += .5f) {
-
                     var rightPosP = new Vector3d(i, 0, 0.45);
                     rightPosP.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
                     rightPosP.rotateY(-yRot * Mth.DEG_TO_RAD);
@@ -372,7 +367,7 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
                             this.getX() + rightPosP.x,
                             this.getEyeY() - 0.2 + rightPosP.y,
                             this.getZ() + rightPosP.z,
-                            Mth.clamp(countR--,1,5), 0.1, 0.1, 0.1, 0.002);
+                            Mth.clamp(countR--, 1, 5), 0.1, 0.1, 0.1, 0.002);
                 }
 
                 this.entityData.set(TYPE, 1);
@@ -395,7 +390,6 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
                     this.getY(),
                     this.getZ() + 5 * this.getLookAngle().z,
                     100, 7, 0.02, 7, 0.005);
-
         }
     }
 
@@ -428,10 +422,8 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
         }
     }
 
-    public static void init() {
-    }
     protected void clampRotation(Entity entity) {
-        ItemStack stack = null;
+        ItemStack stack = ItemStack.EMPTY;
         if (entity instanceof Player player) {
             stack = player.getMainHandItem();
         }
@@ -458,13 +450,6 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
             }
         }
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mle1934.idle"));
-    }
-
-    public String getSyncedAnimation() {
-        return null;
-    }
-
-    public void setAnimation(String animation) {
     }
 
     @Override

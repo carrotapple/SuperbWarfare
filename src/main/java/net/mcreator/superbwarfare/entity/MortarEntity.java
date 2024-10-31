@@ -136,7 +136,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
     public InteractionResult interact(Player player, InteractionHand hand) {
         ItemStack mainHandItem = player.getMainHandItem();
         if (player.isShiftKeyDown()) {
-            if (mainHandItem.getItem() == ModItems.CROWBAR.get()){
+            if (mainHandItem.getItem() == ModItems.CROWBAR.get()) {
                 this.discard();
                 ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MORTAR_DEPLOYER.get()));
             }
@@ -219,6 +219,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
         }
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mortar.idle"));
     }
+
     protected void destroy() {
         if (this.level() instanceof ServerLevel level) {
             var x = this.getX();

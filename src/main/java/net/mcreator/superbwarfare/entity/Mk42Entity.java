@@ -42,13 +42,13 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import static net.mcreator.superbwarfare.tools.ParticleTool.sendParticle;
 
 public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
+
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     protected int interpolationSteps;
-
     protected double serverYRot;
     protected double serverXRot;
 
@@ -69,15 +69,15 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
-        compound.putInt("cool_down", this.entityData.get(COOL_DOWN));
-        compound.putInt("type", this.entityData.get(TYPE));
+        compound.putInt("CoolDown", this.entityData.get(COOL_DOWN));
+        compound.putInt("Type", this.entityData.get(TYPE));
         compound.putFloat("Health", this.entityData.get(HEALTH));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
-        this.entityData.set(COOL_DOWN, compound.getInt("cool_down"));
-        this.entityData.set(TYPE, compound.getInt("type"));
+        this.entityData.set(COOL_DOWN, compound.getInt("CoolDown"));
+        this.entityData.set(TYPE, compound.getInt("Type"));
         this.entityData.set(HEALTH, compound.getFloat("Health"));
     }
 
@@ -98,7 +98,6 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-
         if (this.level() instanceof ServerLevel serverLevel) {
             sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
         }
@@ -140,12 +139,10 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (player.isShiftKeyDown() && player.getMainHandItem().getItem() == ModItems.CROWBAR.get() && this.getFirstPassenger() == null) {
             this.discard();
-//            ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MK_42_SPAWN_EGG.get()));
         } else {
             player.setXRot(this.getXRot());
             player.setYRot(this.getYRot());
             player.startRiding(this);
-
         }
 
         return InteractionResult.sidedSuccess(this.level().isClientSide());
@@ -315,7 +312,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
                         this.getX() + i * this.getLookAngle().x,
                         this.getEyeY() + i * this.getLookAngle().y,
                         this.getZ() + i * this.getLookAngle().z,
-                        Mth.clamp(count--,1,5), 0.15, 0.15, 0.15, 0.0025);
+                        Mth.clamp(count--, 1, 5), 0.15, 0.15, 0.15, 0.0025);
             }
         }
     }
@@ -350,11 +347,8 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
         }
     }
 
-    public static void init() {
-    }
-
     protected void clampRotation(Entity entity) {
-        ItemStack stack = null;
+        ItemStack stack = ItemStack.EMPTY;
         if (entity instanceof Player player) {
             stack = player.getMainHandItem();
         }
@@ -382,13 +376,6 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
         }
 
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mk42.idle"));
-    }
-
-    public String getSyncedAnimation() {
-        return null;
-    }
-
-    public void setAnimation(String animation) {
     }
 
     @Override

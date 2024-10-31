@@ -38,6 +38,7 @@ import java.util.UUID;
 import static net.mcreator.superbwarfare.tools.ParticleTool.sendParticle;
 
 public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity, OwnableEntity {
+
     protected static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -210,7 +211,8 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
 
         this.refreshDimensions();
     }
-        public void destroy() {
+
+    public void destroy() {
         if (level() instanceof ServerLevel) {
             CustomExplosion explosion = new CustomExplosion(this.level(), this,
                     ModDamageTypes.causeMineDamage(this.level().registryAccess(), this), 15.0f,
@@ -242,10 +244,12 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
         return true;
     }
 
+    @Override
     public String getSyncedAnimation() {
         return null;
     }
 
+    @Override
     public void setAnimation(String animation) {
     }
 
