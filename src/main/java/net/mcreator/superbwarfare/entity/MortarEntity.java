@@ -39,7 +39,6 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
-    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> FIRE_TIME = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> PITCH = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.FLOAT);
 
@@ -60,7 +59,6 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
 
     @Override
     protected void defineSynchedData() {
-        this.entityData.define(ANIMATION, "undefined");
         this.entityData.define(FIRE_TIME, 0);
         this.entityData.define(PITCH, 70f);
     }
@@ -308,11 +306,10 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
     }
 
     public String getSyncedAnimation() {
-        return this.entityData.get(ANIMATION);
+        return null;
     }
 
     public void setAnimation(String animation) {
-        this.entityData.set(ANIMATION, animation);
     }
 
     @Override
