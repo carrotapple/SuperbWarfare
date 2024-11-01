@@ -509,7 +509,7 @@ public class ClientEventHandler {
     }
 
     private static void handleWeaponFire(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
-        float times = 2f * Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8f);
+        float times = 2f * Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.48f);
         float yaw = event.getYaw();
         float pitch = event.getPitch();
         float roll = event.getRoll();
@@ -520,8 +520,8 @@ public class ClientEventHandler {
             firePosTimer = 0.001;
             fireRotTimer = 0.001;
             fireRecoilTime -= 7 * times;
-            fireSpread += 0.1;
-            firePosZ += 0.5 * firePosZ + 0.15;
+            fireSpread += 0.1 * times;
+            firePosZ += (0.8 * firePosZ + 0.25) * (4 * Math.random() + 0.85) * times;
             recoilTime = 0.01;
         }
 

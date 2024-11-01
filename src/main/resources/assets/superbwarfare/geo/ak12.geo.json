@@ -25,13 +25,33 @@
 					"pivot": [0, 0, 0]
 				},
 				{
-					"name": "shen",
+					"name": "fireRootNormal",
 					"parent": "bone",
-					"pivot": [0.5, 3.5, 3]
+					"pivot": [0.5, 0, 3]
+				},
+				{
+					"name": "fireRoot0",
+					"parent": "fireRootNormal",
+					"pivot": [0.5, 3.86953, 2]
+				},
+				{
+					"name": "fireRoot1",
+					"parent": "fireRoot0",
+					"pivot": [0.5, 4.20703, 2]
+				},
+				{
+					"name": "fireRoot2",
+					"parent": "fireRoot1",
+					"pivot": [0.5, 4.70625, 2]
+				},
+				{
+					"name": "fireRoot3",
+					"parent": "fireRoot2",
+					"pivot": [0.5, 4.6625, 2]
 				},
 				{
 					"name": "0",
-					"parent": "shen",
+					"parent": "fireRoot3",
 					"pivot": [0, 0, 0]
 				},
 				{
