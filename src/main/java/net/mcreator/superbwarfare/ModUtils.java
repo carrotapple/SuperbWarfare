@@ -106,9 +106,9 @@ public class ModUtils {
         addNetworkMessage(ZoomMessage.class, ZoomMessage::encode, ZoomMessage::decode, ZoomMessage::handler);
         addNetworkMessage(DoubleJumpMessage.class, DoubleJumpMessage::encode, DoubleJumpMessage::decode, DoubleJumpMessage::handler);
         addNetworkMessage(GunsDataMessage.class, GunsDataMessage::encode, GunsDataMessage::decode, GunsDataMessage::handler, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
-        addNetworkMessage(FireMessage.class, FireMessage::encode, FireMessage::new, FireMessage::handler);
-        addNetworkMessage(VehicleFireMessage.class, VehicleFireMessage::encode, VehicleFireMessage::new, VehicleFireMessage::handler);
-        addNetworkMessage(FireModeMessage.class, FireModeMessage::encode, FireModeMessage::new, FireModeMessage::handler);
+        addNetworkMessage(FireMessage.class, FireMessage::encode, FireMessage::decode, FireMessage::handler);
+        addNetworkMessage(VehicleFireMessage.class, VehicleFireMessage::encode, VehicleFireMessage::decode, VehicleFireMessage::handler);
+        addNetworkMessage(FireModeMessage.class, FireModeMessage::encode, FireModeMessage::decode, FireModeMessage::handler);
         addNetworkMessage(ReloadMessage.class, ReloadMessage::encode, ReloadMessage::decode, ReloadMessage::handler);
         addNetworkMessage(PlayerGunKillMessage.class, PlayerGunKillMessage::encode, PlayerGunKillMessage::decode, PlayerGunKillMessage::handler, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         addNetworkMessage(ClientIndicatorMessage.class, ClientIndicatorMessage::encode, ClientIndicatorMessage::decode, ClientIndicatorMessage::handler, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
@@ -117,7 +117,7 @@ public class ModUtils {
         addNetworkMessage(AdjustMortarAngleMessage.class, AdjustMortarAngleMessage::encode, AdjustMortarAngleMessage::decode, AdjustMortarAngleMessage::handler);
         addNetworkMessage(InteractMessage.class, InteractMessage::encode, InteractMessage::decode, InteractMessage::handler);
         addNetworkMessage(DroneMovementMessage.class, DroneMovementMessage::encode, DroneMovementMessage::decode, DroneMovementMessage::handler);
-        addNetworkMessage(DroneFireMessage.class, DroneFireMessage::encode, DroneFireMessage::new, DroneFireMessage::handler);
+        addNetworkMessage(DroneFireMessage.class, DroneFireMessage::encode, DroneFireMessage::decode, DroneFireMessage::handler);
         addNetworkMessage(SimulationDistanceMessage.class, SimulationDistanceMessage::encode, SimulationDistanceMessage::decode, SimulationDistanceMessage::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         addNetworkMessage(GunReforgeMessage.class, GunReforgeMessage::encode, GunReforgeMessage::decode, GunReforgeMessage::handler);
         addNetworkMessage(SetPerkLevelMessage.class, SetPerkLevelMessage::encode, SetPerkLevelMessage::decode, SetPerkLevelMessage::handler);

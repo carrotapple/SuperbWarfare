@@ -268,9 +268,13 @@ public class LivingEventHandler {
                         if (oldTags.getInt("bolt_action_time") > 0) {
                             oldTags.putInt("bolt_action_anim", 0);
                         }
+
+                        CompoundTag data = oldTags.getCompound("GunData");
+                        data.putInt("ReloadTime", 0);
+                        oldStack.addTagElement("GunData", data);
+
                         oldTags.putBoolean("is_normal_reloading", false);
                         oldTags.putBoolean("is_empty_reloading", false);
-                        oldTags.putInt("gun_reloading_time", 0);
 
                         if (oldTags.getDouble("iterative_time") != 0) {
                             oldTags.putBoolean("force_stop", false);
@@ -292,7 +296,6 @@ public class LivingEventHandler {
                             capability.edit = false;
                             capability.syncPlayerVariables(player);
                         });
-
                     }
 
                     if (newStack.getItem() instanceof GunItem) {
@@ -303,7 +306,10 @@ public class LivingEventHandler {
                         }
                         newStack.getOrCreateTag().putBoolean("is_normal_reloading", false);
                         newStack.getOrCreateTag().putBoolean("is_empty_reloading", false);
-                        newStack.getOrCreateTag().putInt("gun_reloading_time", 0);
+
+                        CompoundTag data = newStack.getOrCreateTag().getCompound("GunData");
+                        data.putInt("ReloadTime", 0);
+                        newStack.addTagElement("GunData", data);
 
                         if (newStack.getOrCreateTag().getDouble("iterative_time") != 0) {
                             newStack.getOrCreateTag().putBoolean("force_stop", false);
@@ -323,7 +329,7 @@ public class LivingEventHandler {
 
                         int level = PerkHelper.getItemPerkLevel(ModPerks.KILLING_TALLY.get(), newStack);
                         if (level != 0) {
-                            newStack.getOrCreateTag().putInt("KillingTally", 0);
+                            GunsTool.setPerkIntTag(newStack, "KillingTally", 0);
                         }
 
                         if (player.level() instanceof ServerLevel) {

@@ -3,6 +3,7 @@ package net.mcreator.superbwarfare.network.message;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -57,7 +58,7 @@ public class ReloadMessage {
                     && stack.is(ModTags.Items.GUN)
                     && !stack.getOrCreateTag().getBoolean("sentinel_is_charging")
                     && !(player.getCooldowns().isOnCooldown(stack.getItem()))
-                    && stack.getOrCreateTag().getInt("gun_reloading_time") == 0
+                    && GunsTool.getGunIntTag(stack, "ReloadTime") == 0
             ) {
                 CompoundTag tag = stack.getOrCreateTag();
 

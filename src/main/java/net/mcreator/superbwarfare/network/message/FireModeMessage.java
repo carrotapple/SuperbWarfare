@@ -3,6 +3,7 @@ package net.mcreator.superbwarfare.network.message;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -22,8 +23,8 @@ public class FireModeMessage {
         this.type = type;
     }
 
-    public FireModeMessage(FriendlyByteBuf buffer) {
-        this.type = buffer.readInt();
+    public static FireModeMessage decode(FriendlyByteBuf buffer) {
+        return new FireModeMessage(buffer.readInt());
     }
 
     public static void encode(FireModeMessage message, FriendlyByteBuf buffer) {
@@ -95,11 +96,10 @@ public class FireModeMessage {
                 }
             }
 
-
             if (mainHandItem.getItem() == ModItems.SENTINEL.get()
                     && !player.isSpectator()
                     && !(player.getCooldowns().isOnCooldown(mainHandItem.getItem()))
-                    && mainHandItem.getOrCreateTag().getInt("gun_reloading_time") == 0
+                    && GunsTool.getGunIntTag(mainHandItem, "ReloadTime") == 0
                     && !mainHandItem.getOrCreateTag().getBoolean("sentinel_is_charging")) {
 
                 int count = 0;

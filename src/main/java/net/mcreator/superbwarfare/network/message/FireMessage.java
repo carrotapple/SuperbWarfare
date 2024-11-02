@@ -45,8 +45,8 @@ public class FireMessage {
         this.type = type;
     }
 
-    public FireMessage(FriendlyByteBuf buffer) {
-        this.type = buffer.readInt();
+    public static FireMessage decode(FriendlyByteBuf buffer) {
+        return new FireMessage(buffer.readInt());
     }
 
     public static void encode(FireMessage message, FriendlyByteBuf buffer) {
@@ -260,7 +260,7 @@ public class FireMessage {
         CompoundTag tag = heldItem.getOrCreateTag();
         var perk = PerkHelper.getPerkByType(heldItem, Perk.Type.AMMO);
         float headshot = (float) tag.getDouble("headshot");
-        float velocity = 2 * (float) tag.getDouble("speed") * (float)perkSpeed(heldItem);
+        float velocity = 2 * (float) tag.getDouble("speed") * (float) perkSpeed(heldItem);
         float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
         double damage;
         boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
@@ -329,7 +329,7 @@ public class FireMessage {
         ItemStack heldItem = player.getMainHandItem();
         CompoundTag tag = heldItem.getOrCreateTag();
 
-        float velocity = 2 * (float) tag.getDouble("speed") * (float)perkSpeed(heldItem);
+        float velocity = 2 * (float) tag.getDouble("speed") * (float) perkSpeed(heldItem);
 
         BocekArrowEntity arrow = new BocekArrowEntity(player, player.level());
         arrow.setBaseDamage(0);

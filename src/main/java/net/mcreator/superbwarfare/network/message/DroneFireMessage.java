@@ -10,14 +10,15 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class DroneFireMessage {
+
     private final int type;
 
     public DroneFireMessage(int type) {
         this.type = type;
     }
 
-    public DroneFireMessage(FriendlyByteBuf buffer) {
-        this.type = buffer.readInt();
+    public static DroneFireMessage decode(FriendlyByteBuf buffer) {
+        return new DroneFireMessage(buffer.readInt());
     }
 
     public static void encode(DroneFireMessage message, FriendlyByteBuf buffer) {
