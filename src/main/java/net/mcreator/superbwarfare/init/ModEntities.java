@@ -1,21 +1,24 @@
 package net.mcreator.superbwarfare.init;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.config.server.SpawnConfig;
 import net.mcreator.superbwarfare.entity.*;
 import net.mcreator.superbwarfare.entity.projectile.*;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.entity.SpawnPlacementRegisterEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEntities {
+
     public static final DeferredRegister<EntityType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ModUtils.MODID);
 
     public static final RegistryObject<EntityType<TargetEntity>> TARGET = register("target",
@@ -63,8 +66,11 @@ public class ModEntities {
     }
 
     @SubscribeEvent
-    public static void init(FMLCommonSetupEvent event) {
-        event.enqueueWork(SenpaiEntity::init);
+    public static void onRegisterSpawnPlacement(SpawnPlacementRegisterEvent event) {
+        event.register(ModEntities.SENPAI.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                (entityType, world, reason, pos, random) -> (world.getDifficulty() != Difficulty.PEACEFUL && SpawnConfig.SPAWN_SENPAI.get()
+                        && Monster.isDarkEnoughToSpawn(world, pos, random) && Mob.checkMobSpawnRules(entityType, world, reason, pos, random)),
+                SpawnPlacementRegisterEvent.Operation.OR);
     }
 
     @SubscribeEvent
