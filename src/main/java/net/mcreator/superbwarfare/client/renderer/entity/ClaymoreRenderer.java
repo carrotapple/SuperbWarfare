@@ -14,6 +14,7 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class ClaymoreRenderer extends GeoEntityRenderer<ClaymoreEntity> {
+
     public ClaymoreRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new ClaymoreModel());
         this.shadowRadius = 0f;

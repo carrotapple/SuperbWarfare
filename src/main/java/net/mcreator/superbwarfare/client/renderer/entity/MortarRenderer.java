@@ -15,6 +15,7 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class MortarRenderer extends GeoEntityRenderer<MortarEntity> {
+
     public MortarRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new MortarModel());
         this.shadowRadius = 0f;

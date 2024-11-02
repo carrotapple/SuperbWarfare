@@ -14,9 +14,10 @@ import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
 public class Mk42Model extends GeoModel<Mk42Entity> {
+
     @Override
     public ResourceLocation getAnimationResource(Mk42Entity entity) {
-        return new ResourceLocation(ModUtils.MODID, "animations/mk_42.animation.json");
+        return ModUtils.loc("animations/mk_42.animation.json");
     }
 
     @Override
@@ -30,28 +31,28 @@ public class Mk42Model extends GeoModel<Mk42Entity> {
         }
 
         if (distance < 32) {
-            return new ResourceLocation(ModUtils.MODID, "geo/sherman.geo.json");
+            return ModUtils.loc("geo/sherman.geo.json");
         } else if (distance < 64) {
-            return new ResourceLocation(ModUtils.MODID, "geo/sherman_lod1.geo.json");
+            return ModUtils.loc("geo/sherman_lod1.geo.json");
         } else {
-            return new ResourceLocation(ModUtils.MODID, "geo/sherman_lod2.geo.json");
+            return ModUtils.loc("geo/sherman_lod2.geo.json");
         }
     }
 
     @Override
     public ResourceLocation getTextureResource(Mk42Entity entity) {
-        return new ResourceLocation(ModUtils.MODID, "textures/entity/sherman.png");
+        return ModUtils.loc("textures/entity/sherman.png");
     }
 
     @Override
-    public void setCustomAnimations(Mk42Entity animatable, long instanceId, AnimationState animationState) {
+    public void setCustomAnimations(Mk42Entity animatable, long instanceId, AnimationState<Mk42Entity> animationState) {
         CoreGeoBone bone = getAnimationProcessor().getBone("maingun");
-        EntityModelData entityData = (EntityModelData) animationState.getData(DataTickets.ENTITY_MODEL_DATA);
+        EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
         bone.setRotX((entityData.headPitch()) * Mth.DEG_TO_RAD);
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
 
         if (animatable.getFirstPassenger() == null) return;
-        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
+        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

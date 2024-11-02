@@ -16,6 +16,7 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class Mk42Renderer extends GeoEntityRenderer<Mk42Entity> {
+
     public Mk42Renderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new Mk42Model());
         this.shadowRadius = 3f;
