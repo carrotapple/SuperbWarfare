@@ -40,11 +40,7 @@ public class MinigunItemModel extends GeoModel<MinigunItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        float fps = Minecraft.getInstance().getFps();
-        if (fps <= 0) {
-            fps = 1f;
-        }
-        float times = 250f / fps;
+        float times = 0.6f * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
 
         double swayX = ClientEventHandler.swayX;
         double swayY = ClientEventHandler.swayY;
@@ -56,7 +52,7 @@ public class MinigunItemModel extends GeoModel<MinigunItem> {
         double turnRotX = ClientEventHandler.turnRot[0];
         double turnRotY = ClientEventHandler.turnRot[1];
         double turnRotZ = ClientEventHandler.turnRot[2];
-        double fpz = ClientEventHandler.firePosZ;
+        double fpz = ClientEventHandler.firePosZ * 13 * times;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 

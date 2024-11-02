@@ -51,7 +51,8 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        double fpz = ClientEventHandler.firePosZ;
+        float times = 0.6f * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
+        double fpz = ClientEventHandler.firePosZ * 13 * times;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
         double pp = ClientEventHandler.pullPos;
@@ -69,7 +70,6 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         double turnRotX = ClientEventHandler.turnRot[0];
         double turnRotY = ClientEventHandler.turnRot[1];
         double turnRotZ = ClientEventHandler.turnRot[2];
-        double zt = ClientEventHandler.zoomTime;
 
         arrow.setPosZ(9f * (float) bp);
         rh.setPosZ(9f * (float) hp);

@@ -80,12 +80,15 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
             default -> 0f;
         };
         float scaleZ = switch (type) {
+            case 0 -> 0.2f;
+            case 1 -> 0.4f;
             case 2 -> 0.8f;
             case 3 -> 0.78f;
             default -> 0f;
         };
         float posZ = switch (type) {
-            case 0, 1 -> 3.8f;
+            case 0 -> 3f;
+            case 1 -> 3.5f;
             case 2 -> 7.4f;
             case 3 -> 6.8f;
             default -> 0f;
@@ -116,9 +119,9 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
         }
 
         fireRotY = (float) Mth.lerp(0.5f * times, fireRotY, 0.2f * ClientEventHandler.recoilHorizon * fpz);
-        fireRotZ = (float) Mth.lerp(0.9f * times, fireRotZ, (0.2f + 0.3 * fr) * ClientEventHandler.recoilHorizon);
+        fireRotZ = (float) Mth.lerp(2f * times, fireRotZ, (0.2f + 0.3 * fpz) * ClientEventHandler.recoilHorizon);
 
-        shen.setPosX((float) (-3.45f * ClientEventHandler.recoilHorizon * fpz * fp));
+        shen.setPosX(-0.4f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
         shen.setPosY((float) (0.15f * fp + 0.18f * fr));
         shen.setPosZ((float) (0.275 * fp + 0.34f * fr + 0.65 * fpz));
         shen.setRotX((float) (0.01f * fp + 0.05f * fr + 0.01f * fpz));
@@ -127,16 +130,14 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
 
         shen.setPosX((float) (shen.getPosX() * (1 - 0.1 * zt)));
         shen.setPosY((float) (shen.getPosY() * (-1 + 0.8 * zt)));
-        shen.setPosZ((float) (shen.getPosZ() * (1 - 0.6 * zt)));
-        shen.setRotX((float) (shen.getRotX() * (1 - 0.9 * zt)));
-        shen.setRotY((float) (shen.getRotY() * (1 - 0.75 * zt)));
+        shen.setPosZ((float) (shen.getPosZ() * (1 + 0.3 * zt)));
+        shen.setRotX((float) (shen.getRotX() * (1 - (type == 3 ? 0.96 : type == 1 ? 0.8 : 0.9) * zt)));
+        shen.setRotY((float) (shen.getRotY() * (1 - (type == 3 ? 0.95 : 0.9) * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.4 * zt)));
 
         cross1.setPosY(-0.75f * (float) fpz);
         cross2.setPosY(-0.7f * (float) fpz);
         cross3.setPosY(-0.2f * (float) fpz);
-
-        shen.setPosX(0.2f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
 
         CoreGeoBone l = getAnimationProcessor().getBone("l");
         CoreGeoBone r = getAnimationProcessor().getBone("r");

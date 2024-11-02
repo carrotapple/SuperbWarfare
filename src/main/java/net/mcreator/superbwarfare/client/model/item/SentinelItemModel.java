@@ -42,6 +42,7 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
+        float times = 0.6f * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
         double zt = ClientEventHandler.zoomTime;
         double zp = ClientEventHandler.zoomPos;
         double zpz = ClientEventHandler.zoomPosZ;
@@ -55,7 +56,7 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         double turnRotX = ClientEventHandler.turnRot[0];
         double turnRotY = ClientEventHandler.turnRot[1];
         double turnRotZ = ClientEventHandler.turnRot[2];
-        double fpz = ClientEventHandler.firePosZ;
+        double fpz = ClientEventHandler.firePosZ * 13 * times;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
@@ -70,12 +71,6 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         gun.setScaleZ(1f - (0.7f * (float) zp));
 
         scope.setScaleZ(1f - (0.8f * (float) zp));
-
-        float fps = Minecraft.getInstance().getFps();
-        if (fps <= 0) {
-            fps = 1f;
-        }
-        float times = 250f / fps;
 
         cb.setRotZ(cb.getRotZ() + times * 0.03f * (float) (stack.getOrCreateTag().getDouble("chamber_rot")));
 

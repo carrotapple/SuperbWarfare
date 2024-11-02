@@ -67,7 +67,7 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
         double turnRotX = ClientEventHandler.turnRot[0];
         double turnRotY = ClientEventHandler.turnRot[1];
         double turnRotZ = ClientEventHandler.turnRot[2];
-        double fpz = ClientEventHandler.firePosZ * 13 * times;;
+        double fpz = ClientEventHandler.firePosZ * 13 * times;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
@@ -122,21 +122,21 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
             };
         }
 
-        fireRotY = (float) Mth.lerp(0.5f * times, fireRotY, 0.2f * ClientEventHandler.recoilHorizon * fpz);
-        fireRotZ = (float) Mth.lerp(0.7f * times, fireRotZ, (0.4f + 0.5 * fr) * ClientEventHandler.recoilHorizon);
+        fireRotY = (float) Mth.lerp(0.3f * times, fireRotY, 0.2f * ClientEventHandler.recoilHorizon * fpz);
+        fireRotZ = (float) Mth.lerp(2f * times, fireRotZ, (0.4f + 0.5 * fpz) * ClientEventHandler.recoilHorizon);
 
-        shen.setPosX((float) (-1.65f * ClientEventHandler.recoilHorizon * fpz * fp));
+        shen.setPosX(-0.4f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
         shen.setPosY((float) (0.15f * fp + 0.18f * fr));
         shen.setPosZ((float) (0.275 * fp + 0.34f * fr + 0.65 * fpz));
         shen.setRotX((float) (0.01f * fp + 0.08f * fr + 0.01f * fpz));
         shen.setRotY(fireRotY);
         shen.setRotZ(fireRotZ);
 
-        shen.setPosX((float) (shen.getPosX() * (1 - 0.1 * zt)));
+        shen.setPosX((float) (shen.getPosX() * (1 - 0.4 * zt)));
         shen.setPosY((float) (shen.getPosY() * (-1 + 0.8 * zt)));
         shen.setPosZ((float) (shen.getPosZ() * (1 - 0.6 * zt)));
         shen.setRotX((float) (shen.getRotX() * (1 - 0.9 * zt)));
-        shen.setRotY((float) (shen.getRotY() * (1 - 0.75 * zt)));
+        shen.setRotY((float) (shen.getRotY() * (1 - 0.85 * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.4 * zt)));
 
         shuan.setPosZ(2.4f * (float) fp);
