@@ -229,15 +229,15 @@ public abstract class GunItem extends Item {
         }
 
         var compound = stack.getOrCreateTag().getCompound("PerkData");
-
         for (String t : tag) {
             if (!compound.contains(t)) {
                 continue;
             }
 
-            if (stack.getOrCreateTag().getInt(t) > 0) {
-                stack.getOrCreateTag().putInt(t, Math.max(0, stack.getOrCreateTag().getInt(t) - 1));
+            if (compound.getInt(t) > 0) {
+                compound.putInt(t, Math.max(0, compound.getInt(t) - 1));
             }
         }
+        stack.addTagElement("PerkData", compound);
     }
 }
