@@ -48,7 +48,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        float times = 0.6f * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
+        float times = 0.6f * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
         double zt = ClientEventHandler.zoomTime;
         double zp = ClientEventHandler.zoomPos;
         double zpz = ClientEventHandler.zoomPosZ;
@@ -128,7 +128,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
 
         shen.setPosX(-0.4f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
         shen.setPosY((float) (0.15f * fp + 0.18f * fr));
-        shen.setPosZ((float) (0.275 * fp + 0.34f * fr + 0.65 * fpz));
+        shen.setPosZ((float) (0.365 * fp + 0.42f * fr + 0.95 * fpz));
         shen.setRotX((float) (0.01f * fp + 0.08f * fr + 0.01f * fpz));
         shen.setRotY(fireRotY);
         shen.setRotZ(fireRotZ);

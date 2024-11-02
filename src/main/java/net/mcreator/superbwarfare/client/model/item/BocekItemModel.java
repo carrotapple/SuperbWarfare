@@ -51,7 +51,7 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        float times = 0.6f * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
+        float times = 0.6f * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
         double fpz = ClientEventHandler.firePosZ * 13 * times;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;

@@ -45,7 +45,7 @@ public class MosinNagantItemModel extends GeoModel<MosinNagantItem> {
         if (!stack.is(ModTags.Items.GUN)) return;
 
 
-        float times = 0.6f * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
+        float times = 0.6f * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
         double zt = ClientEventHandler.zoomTime;
         double zp = ClientEventHandler.zoomPos;
         double zpz = ClientEventHandler.zoomPosZ;
