@@ -14,7 +14,7 @@
   "burst": 0,
   "auto": 0,
   "burst_size": 1,
-  "empty_reload_time": 59,
+  "EmptyReloadTime": 59,
   "clipLoad": 1,
   "prepare_time": 29,
   "iterative_time": 11,

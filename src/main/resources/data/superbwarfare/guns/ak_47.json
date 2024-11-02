@@ -16,7 +16,7 @@
   "auto": 1,
   "burst_size": 1,
   "normal_reload_time": 54,
-  "empty_reload_time": 69,
+  "EmptyReloadTime": 69,
   "BypassesArmor": 0.2,
   "SoundRadius": 14,
   "rpm": 600

@@ -6,5 +6,5 @@
   "velocity": 3,
   "mag": 1,
   "weight": 1,
-  "empty_reload_time": 58
+  "EmptyReloadTime": 58
 }

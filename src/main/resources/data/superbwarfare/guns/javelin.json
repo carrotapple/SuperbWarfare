@@ -4,7 +4,7 @@
   "zoomSpread": 5,
   "mag": 1,
   "weight": 10,
-  "empty_reload_time": 78,
+  "EmptyReloadTime": 78,
   "damage": 300,
   "BypassesArmor": 1
 }

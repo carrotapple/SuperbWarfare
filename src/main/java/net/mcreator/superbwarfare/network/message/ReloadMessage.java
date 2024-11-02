@@ -63,7 +63,7 @@ public class ReloadMessage {
                 CompoundTag tag = stack.getOrCreateTag();
 
                 boolean canSingleReload = tag.getDouble("iterative_time") != 0;
-                boolean canReload = (tag.getDouble("normal_reload_time") != 0 || tag.getDouble("empty_reload_time") != 0) && tag.getDouble("clipLoad") != 1;
+                boolean canReload = (tag.getDouble("normal_reload_time") != 0 || GunsTool.getGunIntTag(stack, "EmptyReloadTime") != 0) && tag.getDouble("clipLoad") != 1;
                 boolean clipLoad = tag.getInt("ammo") == 0 && tag.getDouble("clipLoad") == 1;
 
                 // 检查备弹

@@ -286,7 +286,7 @@ public class GunEventHandler {
             MinecraftForge.EVENT_BUS.post(new ReloadEvent.Pre(player, stack));
             if (stack.is(ModTags.Items.OPEN_BOLT)) {
                 if (tag.getInt("ammo") == 0) {
-                    data.putInt("ReloadTime", (int) tag.getDouble("empty_reload_time") + 2);
+                    data.putInt("ReloadTime", data.getInt("EmptyReloadTime") + 2);
                     stack.getOrCreateTag().putBoolean("is_empty_reloading", true);
                     playGunEmptyReloadSounds(player);
                 } else {
@@ -295,7 +295,7 @@ public class GunEventHandler {
                     playGunNormalReloadSounds(player);
                 }
             } else {
-                data.putInt("ReloadTime", (int) tag.getDouble("empty_reload_time") + 2);
+                data.putInt("ReloadTime", data.getInt("EmptyReloadTime") + 2);
                 stack.getOrCreateTag().putBoolean("is_empty_reloading", true);
                 playGunEmptyReloadSounds(player);
             }

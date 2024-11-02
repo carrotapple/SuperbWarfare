@@ -6,6 +6,6 @@
   "velocity": 4,
   "mag": 1,
   "weight": 7,
-  "empty_reload_time": 103,
+  "EmptyReloadTime": 103,
   "BypassesArmor": 1
 }
