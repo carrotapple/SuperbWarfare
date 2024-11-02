@@ -5,6 +5,7 @@ import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.machinegun.M60Item;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -17,19 +18,20 @@ import software.bernie.geckolib.model.GeoModel;
 import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
 
 public class M60ItemModel extends GeoModel<M60Item> {
+
     @Override
     public ResourceLocation getAnimationResource(M60Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/m60.animation.json");
+        return ModUtils.loc("animations/m60.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(M60Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/m60.geo.json");
+        return ModUtils.loc("geo/m60.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(M60Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/m60.png");
+        return ModUtils.loc("textures/item/m60.png");
     }
 
     @Override
@@ -143,7 +145,7 @@ public class M60ItemModel extends GeoModel<M60Item> {
         AnimationHelper.handleShellsAnimation(getAnimationProcessor(), 1f, 0.45f);
         CoreGeoBone shell = getAnimationProcessor().getBone("shell");
 
-        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
+        if (GunsTool.getGunIntTag(stack, "ReloadTime") > 0) {
             main.setRotX(numR * main.getRotX());
             main.setRotY(numR * main.getRotY());
             main.setRotZ(numR * main.getRotZ());

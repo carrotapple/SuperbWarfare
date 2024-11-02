@@ -178,4 +178,15 @@ public class GunsTool {
         }
     }
 
+    public static void setGunIntTag(ItemStack stack, String name, int num) {
+        CompoundTag tag = stack.getOrCreateTag().getCompound("GunData");
+        tag.putInt(name, num);
+        stack.addTagElement("GunData", tag);
+    }
+
+    public static int getGunIntTag(ItemStack stack, String name) {
+        CompoundTag tag = stack.getOrCreateTag().getCompound("GunData");
+        return tag.getInt(name);
+    }
+
 }

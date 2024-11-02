@@ -14,19 +14,20 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class MarlinItemModel extends GeoModel<MarlinItem> {
+
     @Override
     public ResourceLocation getAnimationResource(MarlinItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/marlin.animation.json");
+        return ModUtils.loc("animations/marlin.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(MarlinItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/marlin.geo.json");
+        return ModUtils.loc("geo/marlin.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(MarlinItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/marlin.png");
+        return ModUtils.loc("textures/item/marlin.png");
     }
 
     @Override
@@ -59,13 +60,9 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
         double fr = ClientEventHandler.fireRot;
 
         gun.setPosX(1.712f * (float) zp);
-
         gun.setPosY(1.06f * (float) zp - (float) (0.7f * zpz));
-
         gun.setPosZ(4f * (float) zp + (float) (0.9f * zpz));
-
         gun.setRotZ((float) (0.02f * zpz));
-
         gun.setScaleZ(1f - (0.5f * (float) zp));
 
         shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
@@ -87,7 +84,7 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
         }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
-        root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * mph));
+        root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));
         root.setPosY((float) (swayY + movePosY - 40 * ClientEventHandler.drawTime - 2f * vY));
         root.setRotX((float) (swayX - Mth.DEG_TO_RAD * 60 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotX - 0.15f * vY));
         root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotY));
@@ -99,6 +96,7 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
         float numR = (float) (1 - 0.55 * zt);
         float numP = (float) (1 - 0.88 * zt);
 
+        // TODO 修改本nbt
         if (stack.getOrCreateTag().getBoolean("reloading")) {
             main.setRotX(numR * main.getRotX());
             main.setRotY(numR * main.getRotY());
@@ -110,6 +108,6 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
             camera.setRotY(numR * camera.getRotY());
             camera.setRotZ(numR * camera.getRotZ());
         }
-        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
+        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

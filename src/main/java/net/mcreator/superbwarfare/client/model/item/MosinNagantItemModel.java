@@ -14,19 +14,20 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class MosinNagantItemModel extends GeoModel<MosinNagantItem> {
+
     @Override
     public ResourceLocation getAnimationResource(MosinNagantItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/mosin_nagant.animation.json");
+        return ModUtils.loc("animations/mosin_nagant.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(MosinNagantItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/mosin_nagant.geo.json");
+        return ModUtils.loc("geo/mosin_nagant.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(MosinNagantItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/mosin_nagant.png");
+        return ModUtils.loc("textures/item/mosin_nagant.png");
     }
 
     @Override
@@ -116,6 +117,7 @@ public class MosinNagantItemModel extends GeoModel<MosinNagantItem> {
         float numR = (float) (1 - 0.97 * zt);
         float numP = (float) (1 - 0.81 * zt);
 
+        // TODO 修改本nbt
         if (stack.getOrCreateTag().getBoolean("reloading") || stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
             main.setRotX(numR * main.getRotX());
             main.setRotY(numR * main.getRotY());

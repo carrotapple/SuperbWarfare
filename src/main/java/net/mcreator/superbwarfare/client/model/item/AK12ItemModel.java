@@ -164,19 +164,8 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
         float numR = (float) (1 - 0.94 * zt);
         float numP = (float) (1 - 0.8 * zt);
 
-        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
-            main.setRotX(numR * main.getRotX());
-            main.setRotY(numR * main.getRotY());
-            main.setRotZ(numR * main.getRotZ());
-            main.setPosX(numP * main.getPosX());
-            main.setPosY(numP * main.getPosY());
-            main.setPosZ(numP * main.getPosZ());
-            camera.setRotX(numR * camera.getRotX());
-            camera.setRotY(numR * camera.getRotY());
-            camera.setRotZ(numR * camera.getRotZ());
-        }
+        AnimationHelper.handleReloadShakeAnimation(stack, main, camera, numR, numP);
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
-
         AnimationHelper.handleShellsAnimation(getAnimationProcessor(), 1f, 0.35f);
     }
 }

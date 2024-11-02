@@ -5,6 +5,7 @@ import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.handgun.Glock17Item;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -15,19 +16,20 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class Glock17ItemModel extends GeoModel<Glock17Item> {
+
     @Override
     public ResourceLocation getAnimationResource(Glock17Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/glock17.animation.json");
+        return ModUtils.loc("animations/glock17.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(Glock17Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/glock17.geo.json");
+        return ModUtils.loc("geo/glock17.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Glock17Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/glock17.png");
+        return ModUtils.loc("textures/item/glock17.png");
     }
 
     @Override
@@ -87,7 +89,7 @@ public class Glock17ItemModel extends GeoModel<Glock17Item> {
         slide.setPosZ(1.5f * (float) fp);
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
-        root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * mph));
+        root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));
         root.setPosY((float) (swayY + movePosY - 40 * ClientEventHandler.drawTime - 2f * vY));
         root.setRotX((float) (swayX - Mth.DEG_TO_RAD * 60 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotX - 0.15f * vY));
         root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotY));
@@ -100,7 +102,7 @@ public class Glock17ItemModel extends GeoModel<Glock17Item> {
         float numR = (float) (1 - 0.12 * zt);
         float numP = (float) (1 - 0.68 * zt);
 
-        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
+        if (GunsTool.getGunIntTag(stack, "ReloadTime") > 0) {
             main.setRotX(numR * main.getRotX());
             main.setRotY(numR * main.getRotY());
             main.setRotZ(numR * main.getRotZ());
@@ -117,8 +119,8 @@ public class Glock17ItemModel extends GeoModel<Glock17Item> {
             camera.setRotY(numR * camera.getRotY());
             camera.setRotZ(numR * camera.getRotZ());
         }
-        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
 
+        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
         AnimationHelper.handleShellsAnimation(getAnimationProcessor(), 0.7f, 1f);
 
         CoreGeoBone shell = getAnimationProcessor().getBone("shell");

@@ -15,19 +15,20 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class Aa12ItemModel extends GeoModel<Aa12Item> {
+
     @Override
     public ResourceLocation getAnimationResource(Aa12Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/aa12.animation.json");
+        return ModUtils.loc("animations/aa12.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(Aa12Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/aa12.geo.json");
+        return ModUtils.loc("geo/aa12.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Aa12Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/aa12_new.png");
+        return ModUtils.loc("textures/item/aa12_new.png");
     }
 
     @Override
@@ -92,19 +93,8 @@ public class Aa12ItemModel extends GeoModel<Aa12Item> {
         float numR = (float) (1 - 0.82 * zt);
         float numP = (float) (1 - 0.68 * zt);
 
-        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
-            main.setRotX(numR * main.getRotX());
-            main.setRotY(numR * main.getRotY());
-            main.setRotZ(numR * main.getRotZ());
-            main.setPosX(numP * main.getPosX());
-            main.setPosY(numP * main.getPosY());
-            main.setPosZ(numP * main.getPosZ());
-            camera.setRotX(numR * camera.getRotX());
-            camera.setRotY(numR * camera.getRotY());
-            camera.setRotZ(numR * camera.getRotZ());
-        }
+        AnimationHelper.handleReloadShakeAnimation(stack, main, camera, numR, numP);
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
-
         AnimationHelper.handleShellsAnimation(getAnimationProcessor(), 1f, 0.55f);
     }
 }

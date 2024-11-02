@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.rifle.Qbz95Item;
@@ -14,19 +15,20 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
+
     @Override
     public ResourceLocation getAnimationResource(Qbz95Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/qbz95.animation.json");
+        return ModUtils.loc("animations/qbz95.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(Qbz95Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/qbz95.geo.json");
+        return ModUtils.loc("geo/qbz95.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Qbz95Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/qbz95.png");
+        return ModUtils.loc("textures/item/qbz95.png");
     }
 
     @Override
@@ -99,17 +101,7 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         float numR = (float) (1 - 0.92 * zt);
         float numP = (float) (1 - 0.88 * zt);
 
-        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
-            main.setRotX(numR * main.getRotX());
-            main.setRotY(numR * main.getRotY());
-            main.setRotZ(numR * main.getRotZ());
-            main.setPosX(numP * main.getPosX());
-            main.setPosY(numP * main.getPosY());
-            main.setPosZ(numP * main.getPosZ());
-            camera.setRotX(numR * camera.getRotX());
-            camera.setRotY(numR * camera.getRotY());
-            camera.setRotZ(numR * camera.getRotZ());
-        }
+        AnimationHelper.handleReloadShakeAnimation(stack, main, camera, numR, numP);
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

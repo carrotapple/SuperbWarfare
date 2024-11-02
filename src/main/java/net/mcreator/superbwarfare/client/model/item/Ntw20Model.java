@@ -4,6 +4,7 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.sniper.Ntw20Item;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -16,19 +17,20 @@ import software.bernie.geckolib.model.GeoModel;
 import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
 
 public class Ntw20Model extends GeoModel<Ntw20Item> {
+
     @Override
     public ResourceLocation getAnimationResource(Ntw20Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/ntw_20.animation.json");
+        return ModUtils.loc("animations/ntw_20.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(Ntw20Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/ntw_20.geo.json");
+        return ModUtils.loc("geo/ntw_20.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Ntw20Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/ntw_20.png");
+        return ModUtils.loc("textures/item/ntw_20.png");
     }
 
     @Override
@@ -103,7 +105,7 @@ public class Ntw20Model extends GeoModel<Ntw20Item> {
         float numR = (float) (1 - 0.92 * zt);
         float numP = (float) (1 - 0.88 * zt);
 
-        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0 || stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+        if (GunsTool.getGunIntTag(stack, "ReloadTime") > 0 || stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
             main.setRotX(numR * main.getRotX());
             main.setRotY(numR * main.getRotY());
             main.setRotZ(numR * main.getRotZ());

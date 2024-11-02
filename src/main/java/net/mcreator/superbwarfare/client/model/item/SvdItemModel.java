@@ -16,19 +16,20 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class SvdItemModel extends GeoModel<SvdItem> {
+
     @Override
     public ResourceLocation getAnimationResource(SvdItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/svd.animation.json");
+        return ModUtils.loc("animations/svd.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(SvdItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/svd.geo.json");
+        return ModUtils.loc("geo/svd.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(SvdItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/svd.png");
+        return ModUtils.loc("textures/item/svd.png");
     }
 
     @Override
@@ -70,22 +71,15 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         double fr = ClientEventHandler.fireRot;
 
         gun.setPosX(2.02f * (float) zp);
-
         gun.setPosY(0.85f * (float) zp - (float) (0.6f * zpz));
-
         gun.setPosZ(13.2f * (float) zp + (float) (0.5f * zpz));
-
         gun.setRotZ((float) (0.05f * zpz));
-
         gun.setScaleZ(1f - (0.8f * (float) zp));
 
         scope.setScaleZ(1f - (0.95f * (float) zp));
-
         bt1.setScaleY(1f - (0.5f * (float) zp));
-
         bt2.setScaleX(1f - (0.5f * (float) zp));
-
-        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 1.9));
+        stack.getOrCreateTag().putBoolean("HoloHidden", gun.getPosX() <= 1.9);
 
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
 
@@ -128,19 +122,8 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         float numR = (float) (1 - 0.94 * zt);
         float numP = (float) (1 - 0.88 * zt);
 
-        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
-            main.setRotX(numR * main.getRotX());
-            main.setRotY(numR * main.getRotY());
-            main.setRotZ(numR * main.getRotZ());
-            main.setPosX(numP * main.getPosX());
-            main.setPosY(numP * main.getPosY());
-            main.setPosZ(numP * main.getPosZ());
-            camera.setRotX(numR * camera.getRotX());
-            camera.setRotY(numR * camera.getRotY());
-            camera.setRotZ(numR * camera.getRotZ());
-        }
+        AnimationHelper.handleReloadShakeAnimation(stack, main, camera, numR, numP);
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
-
         AnimationHelper.handleShellsAnimation(getAnimationProcessor(), 1f, 0.65f);
     }
 }

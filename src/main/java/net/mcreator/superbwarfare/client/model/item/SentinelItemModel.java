@@ -4,6 +4,7 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.sniper.SentinelItem;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -14,19 +15,20 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class SentinelItemModel extends GeoModel<SentinelItem> {
+
     @Override
     public ResourceLocation getAnimationResource(SentinelItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/sentinel.animation.json");
+        return ModUtils.loc("animations/sentinel.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(SentinelItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/sentinel.geo.json");
+        return ModUtils.loc("geo/sentinel.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(SentinelItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/sentinel.png");
+        return ModUtils.loc("textures/item/sentinel.png");
     }
 
     @Override
@@ -61,17 +63,12 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         double fr = ClientEventHandler.fireRot;
 
         gun.setPosX(2.928f * (float) zp);
-
         gun.setPosY(-0.062f * (float) zp - (float) (0.1f * zpz));
-
         gun.setPosZ(10f * (float) zp + (float) (0.3f * zpz));
-
         gun.setRotZ((float) (0.05f * zpz));
-
         gun.setScaleZ(1f - (0.7f * (float) zp));
 
         scope.setScaleZ(1f - (0.8f * (float) zp));
-
         cb.setRotZ(cb.getRotZ() + times * 0.03f * (float) (stack.getOrCreateTag().getDouble("chamber_rot")));
 
         CoreGeoBone holo = getAnimationProcessor().getBone("holo");
@@ -112,7 +109,7 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         float numR = (float) (1 - 0.9 * zt);
         float numP = (float) (1 - 0.98 * zt);
 
-        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0 || stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
+        if (GunsTool.getGunIntTag(stack, "ReloadTime") > 0 || stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
             main.setRotX(numR * main.getRotX());
             main.setRotY(numR * main.getRotY());
             main.setRotZ(numR * main.getRotZ());

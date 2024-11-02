@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
 public class LightSaberItemModel extends GeoModel<LightSaber> {
+
     @Override
     public ResourceLocation getAnimationResource(LightSaber animatable) {
         return null;
@@ -13,11 +14,11 @@ public class LightSaberItemModel extends GeoModel<LightSaber> {
 
     @Override
     public ResourceLocation getModelResource(LightSaber animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/lightsaber.geo.json");
+        return ModUtils.loc("geo/light_saber.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(LightSaber animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/lightsaber.png");
+        return ModUtils.loc("textures/item/light_saber.png");
     }
 }

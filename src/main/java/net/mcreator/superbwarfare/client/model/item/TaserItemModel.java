@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
@@ -22,17 +23,17 @@ public class TaserItemModel extends GeoModel<TaserItem> {
 
     @Override
     public ResourceLocation getAnimationResource(TaserItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/taser.animation.json");
+        return ModUtils.loc("animations/taser.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(TaserItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/taser.geo.json");
+        return ModUtils.loc("geo/taser.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(TaserItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/tasergun.png");
+        return ModUtils.loc("textures/item/tasergun.png");
     }
 
     @Override
@@ -106,15 +107,12 @@ public class TaserItemModel extends GeoModel<TaserItem> {
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.9 * zt)));
 
         gun.setPosX(1.82f * (float) zp);
-
         gun.setPosY(1.3f * (float) zp - (float) (0.3f * zpz));
-
         gun.setPosZ((float) zp + (float) (0.5f * zpz));
-
         gun.setRotZ((float) (0.05f * zpz));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
-        root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * mph));
+        root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));
         root.setPosY((float) (swayY + movePosY - 40 * ClientEventHandler.drawTime - 2f * vY));
         root.setRotX((float) (swayX - Mth.DEG_TO_RAD * 60 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotX - 0.15f * vY));
         root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotY));
@@ -126,17 +124,7 @@ public class TaserItemModel extends GeoModel<TaserItem> {
         float numR = (float) (1 - 0.72 * zt);
         float numP = (float) (1 - 0.68 * zt);
 
-        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
-            main.setRotX(numR * main.getRotX());
-            main.setRotY(numR * main.getRotY());
-            main.setRotZ(numR * main.getRotZ());
-            main.setPosX(numP * main.getPosX());
-            main.setPosY(numP * main.getPosY());
-            main.setPosZ(numP * main.getPosZ());
-            camera.setRotX(numR * camera.getRotX());
-            camera.setRotY(numR * camera.getRotY());
-            camera.setRotZ(numR * camera.getRotZ());
-        }
-        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
+        AnimationHelper.handleReloadShakeAnimation(stack, main, camera, numR, numP);
+        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

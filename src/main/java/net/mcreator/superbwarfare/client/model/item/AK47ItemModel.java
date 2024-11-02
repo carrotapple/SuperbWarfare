@@ -16,22 +16,23 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class AK47ItemModel extends GeoModel<AK47Item> {
+
     public static float fireRotY = 0f;
     public static float fireRotZ = 0f;
 
     @Override
     public ResourceLocation getAnimationResource(AK47Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/ak.animation.json");
+        return ModUtils.loc("animations/ak.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(AK47Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/ak.geo.json");
+        return ModUtils.loc("geo/ak.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(AK47Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/ak47.png");
+        return ModUtils.loc("textures/item/ak47.png");
     }
 
     @Override
@@ -159,19 +160,8 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
         float numR = (float) (1 - 0.98 * zt);
         float numP = (float) (1 - 0.92 * zt);
 
-        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
-            main.setRotX(numR * main.getRotX());
-            main.setRotY(numR * main.getRotY());
-            main.setRotZ(numR * main.getRotZ());
-            main.setPosX(numP * main.getPosX());
-            main.setPosY(numP * main.getPosY());
-            main.setPosZ(numP * main.getPosZ());
-            camera.setRotX(numR * camera.getRotX());
-            camera.setRotY(numR * camera.getRotY());
-            camera.setRotZ(numR * camera.getRotZ());
-        }
+        AnimationHelper.handleReloadShakeAnimation(stack, main, camera, numR, numP);
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
-
         AnimationHelper.handleShellsAnimation(getAnimationProcessor(), 1f, 0.35f);
     }
 }

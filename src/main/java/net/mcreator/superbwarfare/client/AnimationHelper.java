@@ -3,12 +3,15 @@ package net.mcreator.superbwarfare.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationProcessor;
 
 public class AnimationHelper {
+
     public static void renderPartOverBone(ModelPart model, GeoBone bone, PoseStack stack, VertexConsumer buffer, int packedLightIn, int packedOverlayIn, float alpha) {
         renderPartOverBone(model, bone, stack, buffer, packedLightIn, packedOverlayIn, 1.0f, 1.0f, 1.0f, alpha);
     }
@@ -33,5 +36,19 @@ public class AnimationHelper {
         CoreGeoBone shell5 = animationProcessor.getBone("shell5");
 
         ClientEventHandler.handleShells(x, y, shell1, shell2, shell3, shell4, shell5);
+    }
+
+    public static void handleReloadShakeAnimation(ItemStack stack, CoreGeoBone main, CoreGeoBone camera, float roll, float pitch) {
+        if (GunsTool.getGunIntTag(stack, "ReloadTime") > 0) {
+            main.setRotX(roll * main.getRotX());
+            main.setRotY(roll * main.getRotY());
+            main.setRotZ(roll * main.getRotZ());
+            main.setPosX(pitch * main.getPosX());
+            main.setPosY(pitch * main.getPosY());
+            main.setPosZ(pitch * main.getPosZ());
+            camera.setRotX(roll * camera.getRotX());
+            camera.setRotY(roll * camera.getRotY());
+            camera.setRotZ(roll * camera.getRotZ());
+        }
     }
 }

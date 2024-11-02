@@ -280,21 +280,22 @@ public class GunEventHandler {
     private static void handleGunReload(Player player) {
         ItemStack stack = player.getMainHandItem();
         CompoundTag tag = stack.getOrCreateTag();
-        //启动换弹
+        CompoundTag data = stack.getOrCreateTag().getCompound("GunData");
+        // 启动换弹
         if (tag.getBoolean("start_reload")) {
             MinecraftForge.EVENT_BUS.post(new ReloadEvent.Pre(player, stack));
             if (stack.is(ModTags.Items.OPEN_BOLT)) {
                 if (tag.getInt("ammo") == 0) {
-                    tag.putInt("gun_reloading_time", (int) tag.getDouble("empty_reload_time") + 2);
+                    data.putInt("ReloadTime", (int) tag.getDouble("empty_reload_time") + 2);
                     stack.getOrCreateTag().putBoolean("is_empty_reloading", true);
                     playGunEmptyReloadSounds(player);
                 } else {
-                    tag.putInt("gun_reloading_time", (int) tag.getDouble("normal_reload_time") + 2);
+                    data.putInt("ReloadTime", (int) tag.getDouble("normal_reload_time") + 2);
                     stack.getOrCreateTag().putBoolean("is_normal_reloading", true);
                     playGunNormalReloadSounds(player);
                 }
             } else {
-                tag.putInt("gun_reloading_time", (int) tag.getDouble("empty_reload_time") + 2);
+                data.putInt("ReloadTime", (int) tag.getDouble("empty_reload_time") + 2);
                 stack.getOrCreateTag().putBoolean("is_empty_reloading", true);
                 playGunEmptyReloadSounds(player);
             }
@@ -304,50 +305,50 @@ public class GunEventHandler {
             tag.putBoolean("start_reload", false);
         }
 
-        if (tag.getInt("gun_reloading_time") > 0) {
-            tag.putInt("gun_reloading_time", tag.getInt("gun_reloading_time") - 1);
+        if (data.getInt("ReloadTime") > 0) {
+            data.putInt("ReloadTime", data.getInt("ReloadTime") - 1);
         }
 
         if (stack.getItem() == ModItems.RPG.get()) {
-            if (tag.getInt("gun_reloading_time") == 84) {
+            if (data.getInt("ReloadTime") == 84) {
                 tag.putBoolean("empty", false);
             }
-            if (tag.getInt("gun_reloading_time") == 7) {
+            if (data.getInt("ReloadTime") == 7) {
                 tag.putBoolean("close_hammer", false);
             }
         }
 
         if (stack.getItem() == ModItems.MK_14.get()) {
-            if (tag.getInt("gun_reloading_time") == 18) {
+            if (data.getInt("ReloadTime") == 18) {
                 tag.putBoolean("HoldOpen", false);
             }
         }
 
         if (stack.getItem() == ModItems.SKS.get()) {
-            if (tag.getInt("gun_reloading_time") == 14) {
+            if (data.getInt("ReloadTime") == 14) {
                 tag.putBoolean("HoldOpen", false);
             }
         }
 
         if (stack.getItem() == ModItems.M_60.get()) {
-            if (tag.getInt("gun_reloading_time") == 55) {
+            if (data.getInt("ReloadTime") == 55) {
                 tag.putBoolean("bullet_chain", false);
             }
         }
 
         if (stack.getItem() == ModItems.GLOCK_17.get() || stack.getItem() == ModItems.GLOCK_18.get() || stack.getItem() == ModItems.M_1911.get()) {
-            if (tag.getInt("gun_reloading_time") == 5) {
+            if (data.getInt("ReloadTime") == 5) {
                 tag.putBoolean("HoldOpen", false);
             }
         }
 
         if (stack.getItem() == ModItems.QBZ_95.get()) {
-            if (tag.getInt("gun_reloading_time") == 14) {
+            if (data.getInt("ReloadTime") == 14) {
                 tag.putBoolean("HoldOpen", false);
             }
         }
 
-        if (tag.getInt("gun_reloading_time") == 1) {
+        if (data.getInt("ReloadTime") == 1) {
             if (stack.is(ModTags.Items.OPEN_BOLT)) {
                 if (tag.getInt("ammo") == 0) {
                     playGunEmptyReload(player);
@@ -358,6 +359,8 @@ public class GunEventHandler {
                 playGunEmptyReload(player);
             }
         }
+
+        stack.addTagElement("GunData", data);
     }
 
     public static void playGunNormalReload(Player player) {

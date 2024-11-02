@@ -14,19 +14,20 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class JavelinItemModel extends GeoModel<JavelinItem> {
+
     @Override
     public ResourceLocation getAnimationResource(JavelinItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/javelin.animation.json");
+        return ModUtils.loc("animations/javelin.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(JavelinItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/javelin.geo.json");
+        return ModUtils.loc("geo/javelin.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(JavelinItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/javelin.png");
+        return ModUtils.loc("textures/item/javelin.png");
     }
 
     @Override
@@ -74,13 +75,13 @@ public class JavelinItemModel extends GeoModel<JavelinItem> {
         shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
-        root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * mph));
+        root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));
         root.setPosY((float) (swayY + movePosY - 40 * ClientEventHandler.drawTime - 2f * vY));
         root.setRotX((float) (swayX - Mth.DEG_TO_RAD * 60 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotX - 0.15f * vY));
         root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotY));
         root.setRotZ((float) (0.2f * movePosX + moveRotZ + Mth.DEG_TO_RAD * 90 * ClientEventHandler.drawTime + 2.7f * mph + Mth.DEG_TO_RAD * turnRotZ));
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
-        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
+        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

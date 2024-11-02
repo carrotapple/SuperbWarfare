@@ -13,7 +13,7 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class HuntingRifleLayer extends GeoRenderLayer<HuntingRifleItem> {
-    private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/item/huntingrifle_e.png");
+    private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/item/hunting_rifle_e.png");
 
     public HuntingRifleLayer(GeoRenderer<HuntingRifleItem> entityRenderer) {
         super(entityRenderer);

@@ -14,19 +14,20 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class BocekItemModel extends GeoModel<BocekItem> {
+
     @Override
     public ResourceLocation getAnimationResource(BocekItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/bocek.animation.json");
+        return ModUtils.loc("animations/bocek.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(BocekItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/bocek.geo.json");
+        return ModUtils.loc("geo/bocek.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(BocekItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/bocek.png");
+        return ModUtils.loc("textures/item/bocek.png");
     }
 
     @Override
@@ -95,7 +96,6 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         deng3.setPosZ(0.05f * (float) bp);
         deng.setScaleZ(1f + (0.07f * (float) bp));
 
-
         lh.setRotX(0.2f * (float) zp);
         shen_pos.setPosX(-3.64f * (float) zp);
         shen_pos.setPosY(6.46f * (float) zp - (float) (0.2f * zpz));
@@ -113,13 +113,13 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         fire.setRotZ((float) ((0.02f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
-        root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * mph));
+        root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));
         root.setPosY((float) (swayY + movePosY - 40 * ClientEventHandler.drawTime - 2f * vY));
         root.setRotX((float) (swayX - Mth.DEG_TO_RAD * 60 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotX - 0.15f * vY));
         root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotY));
         root.setRotZ((float) (0.2f * movePosX + moveRotZ + Mth.DEG_TO_RAD * 90 * ClientEventHandler.drawTime + 2.7f * mph + Mth.DEG_TO_RAD * turnRotZ));
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
-        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
+        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

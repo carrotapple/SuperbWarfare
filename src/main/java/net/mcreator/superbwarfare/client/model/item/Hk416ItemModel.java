@@ -18,22 +18,24 @@ import software.bernie.geckolib.model.GeoModel;
 import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
 
 public class Hk416ItemModel extends GeoModel<Hk416Item> {
+
     public static float fireRotY = 0f;
     public static float fireRotZ = 0f;
     public static float rotXBipod = 0f;
+
     @Override
     public ResourceLocation getAnimationResource(Hk416Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/hk416.animation.json");
+        return ModUtils.loc("animations/hk416.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(Hk416Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/hk416.geo.json");
+        return ModUtils.loc("geo/hk416.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Hk416Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/hk416.png");
+        return ModUtils.loc("textures/item/hk416.png");
     }
 
     @Override
@@ -158,19 +160,8 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
         float numR = (float) (1 - 0.985 * zt);
         float numP = (float) (1 - 0.92 * zt);
 
-        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
-            main.setRotX(numR * main.getRotX());
-            main.setRotY(numR * main.getRotY());
-            main.setRotZ(numR * main.getRotZ());
-            main.setPosX(numP * main.getPosX());
-            main.setPosY(numP * main.getPosY());
-            main.setPosZ(numP * main.getPosZ());
-            camera.setRotX(numR * camera.getRotX());
-            camera.setRotY(numR * camera.getRotY());
-            camera.setRotZ(numR * camera.getRotZ());
-        }
+        AnimationHelper.handleReloadShakeAnimation(stack, main, camera, numR, numP);
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
-
         AnimationHelper.handleShellsAnimation(getAnimationProcessor(), 1f, 0.55f);
     }
 }

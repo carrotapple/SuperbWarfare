@@ -18,6 +18,7 @@ import software.bernie.geckolib.model.GeoModel;
 import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
 
 public class M4ItemModel extends GeoModel<M4Item> {
+
     public static float posYAlt = 0.5625f;
     public static float scaleZAlt = 0.88f;
     public static float posZAlt = 7.6f;
@@ -28,17 +29,17 @@ public class M4ItemModel extends GeoModel<M4Item> {
 
     @Override
     public ResourceLocation getAnimationResource(M4Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/m4.animation.json");
+        return ModUtils.loc("animations/m4.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(M4Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/m4.geo.json");
+        return ModUtils.loc("geo/m4.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(M4Item animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/m4.png");
+        return ModUtils.loc("textures/item/m4.png");
     }
 
     @Override
@@ -80,9 +81,9 @@ public class M4ItemModel extends GeoModel<M4Item> {
 
         int type = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
 
-        posYAlt = Mth.lerp(times, posYAlt, stack.getOrCreateTag().getBoolean("ScopeAlt")? -0.6875f : 0.5625f);
-        scaleZAlt = Mth.lerp(times, scaleZAlt, stack.getOrCreateTag().getBoolean("ScopeAlt")? 0.4f : 0.88f);
-        posZAlt = Mth.lerp(times, posZAlt, stack.getOrCreateTag().getBoolean("ScopeAlt")? 5.5f : 7.6f);
+        posYAlt = Mth.lerp(times, posYAlt, stack.getOrCreateTag().getBoolean("ScopeAlt") ? -0.6875f : 0.5625f);
+        scaleZAlt = Mth.lerp(times, scaleZAlt, stack.getOrCreateTag().getBoolean("ScopeAlt") ? 0.4f : 0.88f);
+        posZAlt = Mth.lerp(times, posZAlt, stack.getOrCreateTag().getBoolean("ScopeAlt") ? 5.5f : 7.6f);
         rotXSight = Mth.lerp(1.5f * times, rotXSight, type == 0 ? 0 : 90);
 
         float posY = switch (type) {
@@ -178,19 +179,8 @@ public class M4ItemModel extends GeoModel<M4Item> {
         float numR = (float) (1 - 0.985 * zt);
         float numP = (float) (1 - 0.92 * zt);
 
-        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
-            main.setRotX(numR * main.getRotX());
-            main.setRotY(numR * main.getRotY());
-            main.setRotZ(numR * main.getRotZ());
-            main.setPosX(numP * main.getPosX());
-            main.setPosY(numP * main.getPosY());
-            main.setPosZ(numP * main.getPosZ());
-            camera.setRotX(numR * camera.getRotX());
-            camera.setRotY(numR * camera.getRotY());
-            camera.setRotZ(numR * camera.getRotZ());
-        }
+        AnimationHelper.handleReloadShakeAnimation(stack, main, camera, numR, numP);
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
-
         AnimationHelper.handleShellsAnimation(getAnimationProcessor(), 1f, 0.55f);
     }
 }

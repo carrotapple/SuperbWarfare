@@ -13,7 +13,7 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class LightSaberLayer extends GeoRenderLayer<LightSaber> {
-    private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/item/lightsaber_e.png");
+    private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/item/light_saber_e.png");
 
     public LightSaberLayer(GeoRenderer<LightSaber> entityRenderer) {
         super(entityRenderer);

@@ -17,21 +17,21 @@ import software.bernie.geckolib.model.GeoModel;
 import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
 
 public class DevotionItemModel extends GeoModel<DevotionItem> {
+
     @Override
     public ResourceLocation getAnimationResource(DevotionItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/devotion.animation.json");
+        return ModUtils.loc("animations/devotion.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(DevotionItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/devotion.geo.json");
+        return ModUtils.loc("geo/devotion.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(DevotionItem animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/devotion.png");
+        return ModUtils.loc("textures/item/devotion.png");
     }
-
 
     @Override
     public void setCustomAnimations(DevotionItem animatable, long instanceId, AnimationState animationState) {
@@ -91,7 +91,7 @@ public class DevotionItemModel extends GeoModel<DevotionItem> {
         bolt.setPosZ(-2f * (float) fp);
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
-        root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * mph));
+        root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));
         root.setPosY((float) (swayY + movePosY - 40 * ClientEventHandler.drawTime - 2f * vY));
         root.setRotX((float) (swayX - Mth.DEG_TO_RAD * 60 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotX - 0.15f * vY));
         root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotY));
@@ -108,19 +108,8 @@ public class DevotionItemModel extends GeoModel<DevotionItem> {
         float numR = (float) (1 - 0.82 * zt);
         float numP = (float) (1 - 0.78 * zt);
 
-        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
-            main.setRotX(numR * main.getRotX());
-            main.setRotY(numR * main.getRotY());
-            main.setRotZ(numR * main.getRotZ());
-            main.setPosX(numP * main.getPosX());
-            main.setPosY(numP * main.getPosY());
-            main.setPosZ(numP * main.getPosZ());
-            camera.setRotX(numR * camera.getRotX());
-            camera.setRotY(numR * camera.getRotY());
-            camera.setRotZ(numR * camera.getRotZ());
-        }
-        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
-
+        AnimationHelper.handleReloadShakeAnimation(stack, main, camera, numR, numP);
+        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
         AnimationHelper.handleShellsAnimation(getAnimationProcessor(), 1f, 0.55f);
     }
 }

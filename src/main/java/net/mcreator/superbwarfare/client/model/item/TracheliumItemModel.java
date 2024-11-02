@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.client.model.item;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.handgun.Trachelium;
@@ -14,19 +15,20 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class TracheliumItemModel extends GeoModel<Trachelium> {
+
     @Override
     public ResourceLocation getAnimationResource(Trachelium animatable) {
-        return new ResourceLocation(ModUtils.MODID, "animations/trachelium.animation.json");
+        return ModUtils.loc("animations/trachelium.animation.json");
     }
 
     @Override
     public ResourceLocation getModelResource(Trachelium animatable) {
-        return new ResourceLocation(ModUtils.MODID, "geo/trachelium.geo.json");
+        return ModUtils.loc("geo/trachelium.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Trachelium animatable) {
-        return new ResourceLocation(ModUtils.MODID, "textures/item/trachelium_texture.png");
+        return ModUtils.loc("textures/item/trachelium_texture.png");
     }
 
     @Override
@@ -58,13 +60,9 @@ public class TracheliumItemModel extends GeoModel<Trachelium> {
         double fr = ClientEventHandler.fireRot;
 
         gun.setPosX(1.48f * (float) zp);
-
         gun.setPosY(3.2f * (float) zp - (float) (0.6f * zpz));
-
         gun.setPosZ((float) zp + (float) (0.5f * zpz));
-
         gun.setRotZ(-0.087f * (float) zp + (float) (0.05f * zpz));
-
         gun.setScaleZ(1f - (0.2f * (float) zp));
 
         shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
@@ -82,7 +80,7 @@ public class TracheliumItemModel extends GeoModel<Trachelium> {
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.65 * zt)));
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
-        root.setPosX((float) (movePosX + 20 *  ClientEventHandler.drawTime + 9.3f * mph));
+        root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));
         root.setPosY((float) (swayY + movePosY - 40 * ClientEventHandler.drawTime - 2f * vY));
         root.setRotX((float) (swayX - Mth.DEG_TO_RAD * 60 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotX - 0.15f * vY));
         root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotY));
@@ -94,17 +92,7 @@ public class TracheliumItemModel extends GeoModel<Trachelium> {
         float numR = (float) (1 - 0.22 * zt);
         float numP = (float) (1 - 0.48 * zt);
 
-        if (stack.getOrCreateTag().getInt("gun_reloading_time") > 0) {
-            main.setRotX(numR * main.getRotX());
-            main.setRotY(numR * main.getRotY());
-            main.setRotZ(numR * main.getRotZ());
-            main.setPosX(numP * main.getPosX());
-            main.setPosY(numP * main.getPosY());
-            main.setPosZ(numP * main.getPosZ());
-            camera.setRotX(numR * camera.getRotX());
-            camera.setRotY(numR * camera.getRotY());
-            camera.setRotZ(numR * camera.getRotZ());
-        }
-        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
+        AnimationHelper.handleReloadShakeAnimation(stack, main, camera, numR, numP);
+        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }
