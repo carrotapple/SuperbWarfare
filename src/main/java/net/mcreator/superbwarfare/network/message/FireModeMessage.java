@@ -17,6 +17,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class FireModeMessage {
+
     private final int type;
 
     public FireModeMessage(int type) {
@@ -47,80 +48,85 @@ public class FireModeMessage {
         }
     }
 
-    private static void setFireMode(Player player, CompoundTag tag) {
-        if (player instanceof ServerPlayer serverPlayer) {
-            serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ModSounds.FIRE_RATE.get()),
-                    SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1f, 1f, serverPlayer.level().random.nextLong()));
+    public static void changeFireMode(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return;
+
+        CompoundTag data = stack.getOrCreateTag().getCompound("GunData");
+        int fireMode = data.getInt("FireMode");
+
+        CompoundTag tag = stack.getOrCreateTag();
+
+        if (fireMode == 0) {
+            if (tag.getBoolean("burst")) {
+                GunsTool.setGunIntTag(stack, "FireMode", 1);
+                playChangeModeSound(player);
+                return;
+            }
+            if (tag.getBoolean("auto")) {
+                GunsTool.setGunIntTag(stack, "FireMode", 2);
+                playChangeModeSound(player);
+                return;
+            }
+        }
+
+        if (fireMode == 1) {
+            if (tag.getBoolean("auto")) {
+                GunsTool.setGunIntTag(stack, "FireMode", 2);
+                playChangeModeSound(player);
+                return;
+            }
+            if (tag.getBoolean("semi")) {
+                GunsTool.setGunIntTag(stack, "FireMode", 0);
+                playChangeModeSound(player);
+                return;
+            }
+        }
+
+        if (fireMode == 2) {
+            if (tag.getBoolean("semi")) {
+                GunsTool.setGunIntTag(stack, "FireMode", 0);
+                playChangeModeSound(player);
+                return;
+            }
+            if (tag.getBoolean("burst")) {
+                GunsTool.setGunIntTag(stack, "FireMode", 1);
+                playChangeModeSound(player);
+                return;
+            }
+        }
+
+        if (stack.getItem() == ModItems.SENTINEL.get()
+                && !player.isSpectator()
+                && !(player.getCooldowns().isOnCooldown(stack.getItem()))
+                && GunsTool.getGunIntTag(stack, "ReloadTime") == 0
+                && !stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
+
+            int count = 0;
+            for (var inv : player.getInventory().items) {
+                if (inv.is(ModItems.SHIELD_CELL.get())) {
+                    count++;
+                }
+            }
+
+            if (count > 0) {
+                tag.putBoolean("start_sentinel_charge", true);
+            }
+        }
+
+        if (stack.getItem() == ModItems.JAVELIN.get()) {
+            tag.putBoolean("TopMode", !tag.getBoolean("TopMode"));
+            if (player instanceof ServerPlayer serverPlayer) {
+                serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ModSounds.CANNON_ZOOM_OUT.get()),
+                        SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1f, 1f, serverPlayer.level().random.nextLong()));
+            }
         }
     }
 
-    public static void changeFireMode(Player player) {
-        ItemStack mainHandItem = player.getMainHandItem();
-        CompoundTag tag = mainHandItem.getOrCreateTag();
-        int fireMode = tag.getInt("fire_mode");
-
-        if (mainHandItem.is(ModTags.Items.GUN)) {
-            if (fireMode == 0) {
-                if (tag.getDouble("burst") == 1) {
-                    tag.putInt("fire_mode", 1);
-                    setFireMode(player, tag);
-                    return;
-                }
-                if (tag.getDouble("auto") == 1) {
-                    tag.putInt("fire_mode", 2);
-                    setFireMode(player, tag);
-                    return;
-                }
-            }
-            if (fireMode == 1) {
-                if (tag.getDouble("auto") == 1) {
-                    tag.putInt("fire_mode", 2);
-                    setFireMode(player, tag);
-                    return;
-                }
-                if (tag.getDouble("semi") == 1) {
-                    tag.putInt("fire_mode", 0);
-                    setFireMode(player, tag);
-                    return;
-                }
-            }
-            if (fireMode == 2) {
-                if (tag.getDouble("semi") == 1) {
-                    tag.putInt("fire_mode", 0);
-                    setFireMode(player, tag);
-                    return;
-                }
-                if (tag.getDouble("burst") == 1) {
-                    tag.putInt("fire_mode", 1);
-                    setFireMode(player, tag);
-                }
-            }
-
-            if (mainHandItem.getItem() == ModItems.SENTINEL.get()
-                    && !player.isSpectator()
-                    && !(player.getCooldowns().isOnCooldown(mainHandItem.getItem()))
-                    && GunsTool.getGunIntTag(mainHandItem, "ReloadTime") == 0
-                    && !mainHandItem.getOrCreateTag().getBoolean("sentinel_is_charging")) {
-
-                int count = 0;
-                for (var inv : player.getInventory().items) {
-                    if (inv.is(ModItems.SHIELD_CELL.get())) {
-                        count++;
-                    }
-                }
-
-                if (count > 0) {
-                    tag.putBoolean("start_sentinel_charge", true);
-                }
-            }
-
-            if (mainHandItem.getItem() == ModItems.JAVELIN.get()) {
-                tag.putBoolean("TopMode", !tag.getBoolean("TopMode"));
-                if (player instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ModSounds.CANNON_ZOOM_OUT.get()),
-                            SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1f, 1f, serverPlayer.level().random.nextLong()));
-                }
-            }
+    private static void playChangeModeSound(Player player) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ModSounds.FIRE_RATE.get()),
+                    SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1f, 1f, serverPlayer.level().random.nextLong()));
         }
     }
 }

@@ -5,6 +5,7 @@ import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.smg.VectorItem;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -43,13 +44,14 @@ public class VectorItemModel extends GeoModel<VectorItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        if (stack.getOrCreateTag().getInt("fire_mode") == 0) {
+        int mode = GunsTool.getGunIntTag(stack, "FireMode");
+        if (mode == 0) {
             kmj.setRotX(-120 * Mth.DEG_TO_RAD);
         }
-        if (stack.getOrCreateTag().getInt("fire_mode") == 1) {
+        if (mode == 1) {
             kmj.setRotX(-60 * Mth.DEG_TO_RAD);
         }
-        if (stack.getOrCreateTag().getInt("fire_mode") == 2) {
+        if (mode == 2) {
             kmj.setRotX(0);
         }
 

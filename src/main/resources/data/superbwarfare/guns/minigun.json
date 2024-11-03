@@ -6,7 +6,7 @@
   "headshot": 2,
   "velocity": 24,
   "weight": 10,
-  "fire_mode": 2,
+  "FireMode": 2,
   "projectile_amount": 1,
   "BypassesArmor": 0.3,
   "SoundRadius": 14,

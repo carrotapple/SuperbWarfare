@@ -8,6 +8,7 @@ import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.perk.AmmoPerk;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.core.particles.ParticleTypes;
@@ -28,6 +29,7 @@ import static net.mcreator.superbwarfare.event.GunEventHandler.gunShoot;
 import static net.mcreator.superbwarfare.event.GunEventHandler.playGunSounds;
 
 public class ShootMessage {
+
     private final double spread;
 
     public ShootMessage(double spread) {
@@ -62,15 +64,14 @@ public class ShootMessage {
         ItemStack stack = player.getMainHandItem();
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
 
-            double rpm = stack.getOrCreateTag().getDouble("rpm") + stack.getOrCreateTag().getInt("customRpm");;
+            double rpm = stack.getOrCreateTag().getDouble("rpm") + stack.getOrCreateTag().getInt("customRpm");
 
             int coolDownTick = (int) Math.ceil(20 / (rpm / 60));
-            int mode = stack.getOrCreateTag().getInt("fire_mode");
+            int mode = GunsTool.getGunIntTag(stack, "FireMode");
 
             int projectileAmount = (int) stack.getOrCreateTag().getDouble("projectile_amount");
 
             if (stack.getOrCreateTag().getInt("ammo") > 0) {
-
                 int singleInterval = 0;
                 int burstCooldown = 0;
 
@@ -165,7 +166,7 @@ public class ShootMessage {
                 var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
                 float pitch = tag.getDouble("heat") <= 40 ? 1 : (float) (1 - 0.025 * Math.abs(40 - tag.getDouble("heat")));
 
-                if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
+                if (!player.level().isClientSide() && player instanceof ServerPlayer) {
                     player.playSound(ModSounds.MINIGUN_FIRE_3P.get(), (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.2f, pitch);
                     player.playSound(ModSounds.MINIGUN_FAR.get(), (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.5f, pitch);
                     player.playSound(ModSounds.MINIGUN_VERYFAR.get(), (float) stack.getOrCreateTag().getDouble("SoundRadius"), pitch);

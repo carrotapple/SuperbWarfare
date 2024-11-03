@@ -54,6 +54,7 @@ import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
+
     public static double zoomTime = 0;
     public static double zoomPos = 0;
     public static double zoomPosZ = 0;
@@ -269,8 +270,7 @@ public class ClientEventHandler {
         ItemStack stack = player.getMainHandItem();
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
             if (stack.getOrCreateTag().getInt("ammo") > 0) {
-
-                int mode = stack.getOrCreateTag().getInt("fire_mode");
+                int mode = GunsTool.getGunIntTag(stack, "FireMode");
                 if (mode != 2) {
                     holdFire = false;
                 }
@@ -286,7 +286,6 @@ public class ClientEventHandler {
             }
         } else if (stack.is(ModItems.MINIGUN.get())) {
             var tag = stack.getOrCreateTag();
-
 
             if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0
                     || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
@@ -325,7 +324,6 @@ public class ClientEventHandler {
         randomShell[0] = (1 + 0.2 * (Math.random() - 0.5));
         randomShell[1] = (0.2 + (Math.random() - 0.5));
         randomShell[2] = (0.7 + (Math.random() - 0.5));
-
     }
 
     public static void playGunClientSounds(Player player) {
@@ -739,7 +737,6 @@ public class ClientEventHandler {
         double sinRes = 0;
 
         // 竖直后座
-
         if (0 < recoilTime && recoilTime < 0.5) {
             float newPitch = (float) (player.getXRot() - 0.02f * gunRecoilX * times * recoil * (1 - 0.06 * cusWeight) * gripRecoilY);
             player.setXRot(newPitch);
@@ -769,7 +766,7 @@ public class ClientEventHandler {
         float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
         boolean breath = (entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).breath;
 
-        breathTime = Mth.lerp(0.08f * times, breathTime, breath? 1 : 0);
+        breathTime = Mth.lerp(0.08f * times, breathTime, breath ? 1 : 0);
     }
 
     private static void handleShockCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
@@ -934,14 +931,11 @@ public class ClientEventHandler {
         float times = Minecraft.getInstance().getDeltaFrameTime();
         ItemStack stack = entity.getMainHandItem();
         double weight = stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("CustomWeight");
-
         double speed = 3.2 - (0.13 * weight);
-
         drawTime = Math.max(drawTime - Math.max(0.2 * speed * times * drawTime, 0.0008), 0);
     }
 
     public static void handleShells(float x, float y, CoreGeoBone... shells) {
-
         for (int i = 0; i < shells.length; i++) {
             if (i >= 5) break;
 

@@ -12,6 +12,7 @@ import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.item.common.ammo.CannonShellItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.*;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.TraceTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -100,7 +101,7 @@ public class ClickHandler {
                 } else {
                     ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(0));
                     ClientEventHandler.holdFire = true;
-                    if (stack.getOrCreateTag().getInt("fire_mode") == 1) {
+                    if (GunsTool.getGunIntTag(stack, "FireMode") == 1) {
                         ClientEventHandler.burstFireSize = (int) stack.getOrCreateTag().getDouble("burst_size");
                     }
                 }

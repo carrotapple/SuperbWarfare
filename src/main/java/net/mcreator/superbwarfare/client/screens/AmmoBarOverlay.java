@@ -8,6 +8,7 @@ import net.mcreator.superbwarfare.init.ModKeyMappings;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.network.ModVariables;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -168,7 +169,7 @@ public class AmmoBarOverlay {
     }
 
     private static ResourceLocation getFireMode(ItemStack stack) {
-        return switch (stack.getOrCreateTag().getInt("fire_mode")) {
+        return switch (GunsTool.getGunIntTag(stack, "FireMode")) {
             case 1 -> BURST;
             case 2 -> AUTO;
             default -> SEMI;

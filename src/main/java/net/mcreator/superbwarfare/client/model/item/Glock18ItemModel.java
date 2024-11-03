@@ -45,10 +45,11 @@ public class Glock18ItemModel extends GeoModel<Glock18Item> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        if (stack.getOrCreateTag().getInt("fire_mode") == 0) {
+        int mode = GunsTool.getGunIntTag(stack, "FireMode");
+        if (mode == 0) {
             switch_.setRotX(35 * Mth.DEG_TO_RAD);
         }
-        if (stack.getOrCreateTag().getInt("fire_mode") == 2) {
+        if (mode == 2) {
             switch_.setRotX(0);
         }
 

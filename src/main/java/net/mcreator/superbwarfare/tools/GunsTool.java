@@ -54,7 +54,7 @@ public class GunsTool {
     public static void initGun(Level level, ItemStack stack, String location) {
         if (level.getServer() == null) return;
         gunsData.get(location).forEach((k, v) -> {
-            if (k.equals("EmptyReloadTime")) {
+            if (k.equals("EmptyReloadTime") || k.equals("FireMode")) {
                 CompoundTag data = stack.getOrCreateTag().getCompound("GunData");
                 data.putDouble(k, v);
                 stack.addTagElement("GunData", data);
@@ -67,7 +67,7 @@ public class GunsTool {
     public static void initCreativeGun(ItemStack stack, String location) {
         if (gunsData != null && gunsData.get(location) != null) {
             gunsData.get(location).forEach((k, v) -> {
-                if (k.equals("EmptyReloadTime")) {
+                if (k.equals("EmptyReloadTime") || k.equals("FireMode")) {
                     CompoundTag data = stack.getOrCreateTag().getCompound("GunData");
                     data.putDouble(k, v);
                     stack.addTagElement("GunData", data);

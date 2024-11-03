@@ -9,7 +9,7 @@
   "mag": 55,
   "projectile_amount": 1,
   "weight": 6,
-  "fire_mode": 2,
+  "FireMode": 2,
   "semi": 0,
   "burst": 0,
   "auto": 1,
