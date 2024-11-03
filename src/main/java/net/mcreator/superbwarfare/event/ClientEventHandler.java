@@ -252,7 +252,7 @@ public class ClientEventHandler {
 
             if (clientTimer.getProgress() >= cooldown) {
                 shootClient(player);
-                ModUtils.PACKET_HANDLER.sendToServer(new ShootMessage(spread));
+                ModUtils.PACKET_HANDLER.sendToServer(new ShootMessage(spread, burstFireSize));
                 clientTimer.setProgress((clientTimer.getProgress() - cooldown));
             }
 

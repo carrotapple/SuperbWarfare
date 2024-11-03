@@ -31,30 +31,33 @@ import static net.mcreator.superbwarfare.event.GunEventHandler.playGunSounds;
 public class ShootMessage {
 
     private final double spread;
+    private final int burstSize;
 
-    public ShootMessage(double spread) {
+    public ShootMessage(double spread, int burstSize) {
         this.spread = spread;
+        this.burstSize = burstSize;
     }
 
     public static ShootMessage decode(FriendlyByteBuf buffer) {
-        return new ShootMessage(buffer.readDouble());
+        return new ShootMessage(buffer.readDouble(), buffer.readInt());
     }
 
     public static void encode(ShootMessage message, FriendlyByteBuf buffer) {
         buffer.writeDouble(message.spread);
+        buffer.writeInt(message.burstSize);
     }
 
     public static void handler(ShootMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
             if (context.getSender() != null) {
-                pressAction(context.getSender(), message.spread);
+                pressAction(context.getSender(), message.spread, message.burstSize);
             }
         });
         context.setPacketHandled(true);
     }
 
-    public static void pressAction(Player player, double spared) {
+    public static void pressAction(Player player, double spared, int burstSize) {
         Level level = player.level();
 
         if (!level.isLoaded(player.blockPosition())) {
@@ -78,7 +81,7 @@ public class ShootMessage {
                 if (mode == 0) {
                     singleInterval = coolDownTick;
                 } else if (mode == 1) {
-                    burstCooldown = stack.getOrCreateTag().getInt("burst_fire") == 0 ? coolDownTick + 3 : 0;
+                    burstCooldown = burstSize == 0 ? coolDownTick + 3 : 0;
                 }
 
                 /*
