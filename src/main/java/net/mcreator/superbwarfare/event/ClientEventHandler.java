@@ -4,10 +4,7 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.config.client.DisplayConfig;
 import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
-import net.mcreator.superbwarfare.init.ModItems;
-import net.mcreator.superbwarfare.init.ModMobEffects;
-import net.mcreator.superbwarfare.init.ModPerks;
-import net.mcreator.superbwarfare.init.ModTags;
+import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.ShootMessage;
 import net.mcreator.superbwarfare.perk.AmmoPerk;
@@ -21,6 +18,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -36,14 +35,17 @@ import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.lwjgl.glfw.GLFW;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 import static net.mcreator.superbwarfare.entity.DroneEntity.ROT_X;
@@ -205,6 +207,13 @@ public class ClientEventHandler {
                 && drawTime < 0.01
                 && !notInGame()
                 && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit
+                && ((GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_LEFT) == GLFW.GLFW_PRESS || stack.getOrCreateTag().getInt("burst_fire") > 0)
+                && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+                && !stack.getOrCreateTag().getBoolean("reloading")
+                && !stack.getOrCreateTag().getBoolean("charging")
+                && stack.getOrCreateTag().getInt("ammo") > 0
+                && !player.getCooldowns().isOnCooldown(stack.getItem())
+                && !stack.getOrCreateTag().getBoolean("need_bolt_action"))
                 || (stack.is(ModItems.MINIGUN.get()) && !player.isSprinting() && stack.getOrCreateTag().getDouble("overheat") == 0 && !player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getDouble("minigun_rotation") >= 10
         ))) {
             double customRpm = 0;
@@ -239,6 +248,7 @@ public class ClientEventHandler {
             }
 
             if (clientTimer.getProgress() >= cooldown) {
+                shootClient(player);
                 ModUtils.PACKET_HANDLER.sendToServer(new ShootMessage(spread));
                 clientTimer.setProgress((long) (clientTimer.getProgress() - cooldown));
             }
@@ -250,6 +260,106 @@ public class ClientEventHandler {
         } else {
             clientTimer.stop();
             fireSpread = 0;
+        }
+    }
+
+    public static void shootClient(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        if (stack.is(ModTags.Items.NORMAL_GUN)) {
+
+            if (stack.getOrCreateTag().getInt("ammo") > 0) {
+
+                playGunClientSounds(player);
+                handleClientShoot();
+            }
+        } else if (stack.is(ModItems.MINIGUN.get())) {
+            var tag = stack.getOrCreateTag();
+
+
+            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0
+                    || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+
+                var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+                float pitch = tag.getDouble("heat") <= 40 ? 1 : (float) (1 - 0.025 * Math.abs(40 - tag.getDouble("heat")));
+
+                player.playSound(ModSounds.MINIGUN_FIRE_1P.get(), 2f, pitch);
+
+                if (perk == ModPerks.BEAST_BULLET.get()) {
+                    player.playSound(ModSounds.HENG.get(), 4f, 1f);
+                }
+            }
+
+            handleClientShoot();
+        }
+    }
+
+    public static void handleClientShoot() {
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+        CompoundTag tag = player.getMainHandItem().getOrCreateTag();
+        if (!player.getMainHandItem().is(ModTags.Items.GUN)) return;
+
+        fireRecoilTime = 10;
+
+        float gunRecoilY = (float) tag.getDouble("recoil_y") * 10;
+        recoilY = (float) (2 * Math.random() - 1) * gunRecoilY;
+
+    }
+
+    public static void playGunClientSounds(Player player) {
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) {
+            return;
+        }
+
+        String origin = stack.getItem().getDescriptionId();
+        String name = origin.substring(origin.lastIndexOf(".") + 1);
+
+        if (stack.getItem() == ModItems.SENTINEL.get()) {
+            AtomicBoolean charged = new AtomicBoolean(false);
+
+            stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                    e -> charged.set(e.getEnergyStored() > 0)
+            );
+
+            if (charged.get()) {
+                SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, "sentinel_charge_fire_1p"));
+                if (sound1p != null) {
+                    player.playSound(sound1p, 2, 1);
+                }
+                return;
+            }
+        }
+
+        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+
+        if (perk == ModPerks.BEAST_BULLET.get()) {
+            player.playSound(ModSounds.HENG.get(), 4f, 1f);
+        }
+
+        int barrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
+
+        SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(ModUtils.loc(name + (barrelType == 2 ? "_fire_1p_s" : "_fire_1p")));
+
+        if (sound1p != null) {
+            player.playSound(sound1p, 2, 1);
+        }
+    }
+
+    public static void handleFireRecoilTimeMessage(double time, Supplier<NetworkEvent.Context> ctx) {
+        if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+            Player player = Minecraft.getInstance().player;
+            if (player == null) return;
+            if (!player.getMainHandItem().is(ModTags.Items.GUN)) return;
+
+
+//            fireRecoilTime = time;
+            shellIndex++;
+            shellIndexTime[shellIndex] = 0.001;
+
+            randomShell[0] = (1 + 0.2 * (Math.random() - 0.5));
+            randomShell[1] = (0.2 + (Math.random() - 0.5));
+            randomShell[2] = (0.7 + (Math.random() - 0.5));
         }
     }
 
@@ -484,28 +594,6 @@ public class ClientEventHandler {
         }
         zoomPos = 0.5 * Math.cos(Math.PI * Math.pow(Math.pow(zoomTime, 2) - 1, 2)) + 0.5;
         zoomPosZ = -Math.pow(2 * zoomTime - 1, 2) + 1;
-    }
-
-    public static void handleFireRecoilTimeMessage(double time, Supplier<NetworkEvent.Context> ctx) {
-        if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
-            Player player = Minecraft.getInstance().player;
-            if (player == null) return;
-            CompoundTag tag = player.getMainHandItem().getOrCreateTag();
-            if (!player.getMainHandItem().is(ModTags.Items.GUN)) return;
-
-            fireRecoilTime = time;
-            shellIndex++;
-
-            shellIndexTime[shellIndex] = 0.001;
-
-            randomShell[0] = (1 + 0.2 * (Math.random() - 0.5));
-            randomShell[1] = (0.2 + (Math.random() - 0.5));
-            randomShell[2] = (0.7 + (Math.random() - 0.5));
-
-            float gunRecoilY = (float) tag.getDouble("recoil_y") * 10;
-            recoilY = (float) (2 * Math.random() - 1) * gunRecoilY;
-
-        }
     }
 
     private static void handleWeaponFire(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {

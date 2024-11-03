@@ -61,7 +61,7 @@ public class MinigunItemModel extends GeoModel<MinigunItem> {
 
         heat_barrels.setScaleZ(4 * heat);
 
-        gun.setRotZ((float) (gun.getRotZ() + times * -0.008f * stack.getOrCreateTag().getDouble("minigun_rotation")));
+        gun.setRotZ((float) (gun.getRotZ() + times * -0.18f * stack.getOrCreateTag().getDouble("minigun_rotation")));
 
         shen.setPosX((float) (0.75f * ClientEventHandler.recoilHorizon * fpz * fp));
         shen.setPosY((float) (-0.03f * fp - 0.06f * fr));

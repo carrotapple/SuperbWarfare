@@ -70,13 +70,7 @@ public class ShootMessage {
             double mode = stack.getOrCreateTag().getInt("fire_mode");
             int projectileAmount = (int) stack.getOrCreateTag().getDouble("projectile_amount");
 
-            if (((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).holdFire || stack.getOrCreateTag().getInt("burst_fire") > 0)
-                    && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                    && !stack.getOrCreateTag().getBoolean("reloading")
-                    && !stack.getOrCreateTag().getBoolean("charging")
-                    && stack.getOrCreateTag().getInt("ammo") > 0
-                    && !player.getCooldowns().isOnCooldown(stack.getItem())
-                    && !stack.getOrCreateTag().getBoolean("need_bolt_action")) {
+            if (stack.getOrCreateTag().getInt("ammo") > 0) {
 
                 int singleInterval = 0;
                 int burstCooldown = 0;
@@ -171,14 +165,8 @@ public class ShootMessage {
 
             int projectileAmount = (int) tag.getDouble("projectile_amount");
 
-            int count = 0;
-            for (var inv : player.getInventory().items) {
-                if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
-                    count++;
-                }
-            }
-
-            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0 || count > 0) {
+            if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0
+                    || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
                 tag.putDouble("heat", (tag.getDouble("heat") + 0.5));
                 if (tag.getDouble("heat") >= 50.5) {
                     tag.putDouble("overheat", 40);
@@ -191,14 +179,12 @@ public class ShootMessage {
                 float pitch = tag.getDouble("heat") <= 40 ? 1 : (float) (1 - 0.025 * Math.abs(40 - tag.getDouble("heat")));
 
                 if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_FIRE_1P.get(), 2f, pitch);
                     player.playSound(ModSounds.MINIGUN_FIRE_3P.get(), (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.2f, pitch);
                     player.playSound(ModSounds.MINIGUN_FAR.get(), (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.5f, pitch);
                     player.playSound(ModSounds.MINIGUN_VERYFAR.get(), (float) stack.getOrCreateTag().getDouble("SoundRadius"), pitch);
 
                     if (perk == ModPerks.BEAST_BULLET.get()) {
                         player.playSound(ModSounds.HENG.get(), 4f, pitch);
-                        SoundTool.playLocalSound(serverPlayer, ModSounds.HENG.get(), 4f, pitch);
                     }
                 }
 
@@ -206,7 +192,7 @@ public class ShootMessage {
                     gunShoot(player, spared);
                 }
 
-                if (count == 0) {
+                if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
                     player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                         capability.rifleAmmo = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).rifleAmmo - 1;
                         capability.syncPlayerVariables(player);
