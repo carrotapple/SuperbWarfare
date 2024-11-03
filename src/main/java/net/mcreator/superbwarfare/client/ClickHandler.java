@@ -52,6 +52,7 @@ public class ClickHandler {
         int button = event.getButton();
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(1));
+            ClientEventHandler.holdFire = false;
         }
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (player.hasEffect(ModMobEffects.SHOCK.get())) {
@@ -98,6 +99,10 @@ public class ClickHandler {
                     }
                 } else {
                     ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(0));
+                    ClientEventHandler.holdFire = true;
+                    if (stack.getOrCreateTag().getInt("fire_mode") == 1) {
+                        ClientEventHandler.burstFireSize = (int) stack.getOrCreateTag().getDouble("burst_size");
+                    }
                 }
             }
         }

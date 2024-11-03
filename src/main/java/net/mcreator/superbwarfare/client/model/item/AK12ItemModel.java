@@ -75,20 +75,21 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
 
         float posY = switch (type) {
             case 0 -> 0.781f;
-            case 1 -> 0.351f;
+            case 1 -> 0.371f;
             case 2 -> -0.04f;
             case 3 -> -0.01f;
             default -> 0f;
         };
         float scaleZ = switch (type) {
-            case 0 -> 0.45f;
-            case 1 -> 0.4f;
+            case 0 -> 0.52f;
+            case 1 -> 0.6f;
             case 2 -> 0.77f;
             case 3 -> 0.78f;
             default -> 0f;
         };
         float posZ = switch (type) {
-            case 0, 1 -> 2.8f;
+            case 0 -> 3f;
+            case 1 -> 3.4f;
             case 2 -> 4.1f;
             case 3 -> 4.5f;
             default -> 0f;
@@ -123,11 +124,11 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
         }
 
         fireRotY = (float) Mth.lerp(0.3f * times, fireRotY, 0.2f * ClientEventHandler.recoilHorizon * fpz);
-        fireRotZ = (float) Mth.lerp(2f * times, fireRotZ, (0.4f + 0.5 * fpz) * ClientEventHandler.recoilHorizon);
+        fireRotZ = (float) Mth.lerp(2f * times, fireRotZ, (0.3f + 0.38 * fpz) * ClientEventHandler.recoilHorizon);
 
         shen.setPosX(-0.4f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
         shen.setPosY((float) (0.15f * fp + 0.18f * fr));
-        shen.setPosZ((float) (0.275 * fp + 0.34f * fr + 0.65 * fpz));
+        shen.setPosZ((float) (0.245 * fp + 0.29f * fr + 0.55 * fpz));
         shen.setRotX((float) (0.01f * fp + 0.08f * fr + 0.01f * fpz));
         shen.setRotY(fireRotY);
         shen.setRotZ(fireRotZ);

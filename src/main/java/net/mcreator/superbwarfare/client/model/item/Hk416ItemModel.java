@@ -125,14 +125,14 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
 
         shen.setPosX(-0.4f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
         shen.setPosY((float) (0.15f * fp + 0.18f * fr));
-        shen.setPosZ((float) (0.275 * fp + 0.34f * fr + 0.65 * fpz));
+        shen.setPosZ((float) (0.475 * fp + 0.64f * fr + 1.15 * fpz));
         shen.setRotX((float) (0.01f * fp + 0.05f * fr + 0.01f * fpz));
         shen.setRotY(fireRotY);
         shen.setRotZ(fireRotZ);
 
         shen.setPosX((float) (shen.getPosX() * (1 - 0.1 * zt)));
         shen.setPosY((float) (shen.getPosY() * (-1 + 0.8 * zt)));
-        shen.setPosZ((float) (shen.getPosZ() * (1 + 0.3 * zt)));
+        shen.setPosZ((float) (shen.getPosZ() * (1 - 0.1 * zt)));
         shen.setRotX((float) (shen.getRotX() * (1 - (type == 3 ? 0.96 : type == 1 ? 0.8 : 0.9) * zt)));
         shen.setRotY((float) (shen.getRotY() * (1 - (type == 3 ? 0.95 : 0.9) * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.4 * zt)));

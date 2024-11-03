@@ -67,7 +67,8 @@ public class ShootMessage {
             double rpm = stack.getOrCreateTag().getDouble("rpm") + stack.getOrCreateTag().getInt("customRpm");;
 
             int coolDownTick = (int) Math.ceil(20 / (rpm / 60));
-            double mode = stack.getOrCreateTag().getInt("fire_mode");
+            int mode = stack.getOrCreateTag().getInt("fire_mode");
+
             int projectileAmount = (int) stack.getOrCreateTag().getDouble("projectile_amount");
 
             if (stack.getOrCreateTag().getInt("ammo") > 0) {
@@ -75,17 +76,10 @@ public class ShootMessage {
                 int singleInterval = 0;
                 int burstCooldown = 0;
 
-                if (mode != 2) {
-                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                        capability.holdFire = false;
-                        capability.syncPlayerVariables(player);
-                    });
-                    if (mode == 0) {
-                        singleInterval = coolDownTick;
-                    } else if (mode == 1) {
-                        burstCooldown = stack.getOrCreateTag().getInt("burst_fire") == 0 ? coolDownTick + 3 : 0;
-                        stack.getOrCreateTag().putInt("burst_fire", (stack.getOrCreateTag().getInt("burst_fire") - 1));
-                    }
+                if (mode == 0) {
+                    singleInterval = coolDownTick;
+                } else if (mode == 1) {
+                    burstCooldown = stack.getOrCreateTag().getInt("burst_fire") == 0 ? coolDownTick + 3 : 0;
                 }
 
                 /*

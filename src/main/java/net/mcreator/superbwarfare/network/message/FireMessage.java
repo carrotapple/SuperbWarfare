@@ -138,14 +138,6 @@ public class FireMessage {
 
         }
 
-        if (tag.getInt("fire_mode") == 1) {
-            player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                capability.holdFire = false;
-                capability.syncPlayerVariables(player);
-            });
-            tag.putInt("burst_fire", (int) tag.getDouble("burst_size"));
-        }
-
         if (tag.getDouble("prepare") == 0 && tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
             tag.putDouble("force_stop", 1);
         }
