@@ -25,7 +25,7 @@ public class ShootClientMessage {
 
     public static void handle(ShootClientMessage message, Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-                () -> () -> ClientEventHandler.handleFireRecoilTimeMessage(message.time, context)));
+                () -> ClientEventHandler::handleClientShoot));
         context.get().setPacketHandled(true);
     }
 }

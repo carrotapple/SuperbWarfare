@@ -106,7 +106,7 @@ public class ClientEventHandler {
     public static double drawTime = 1;
 
     public static int shellIndex = 0;
-    public static double[] shellIndexTime = {0, 0, 0, 0, 0};
+    public static double[] shellIndexTime = {0, 0, 0, 0, 0, 0};
     public static double[] randomShell = {0, 0, 0};
 
     public static double customZoom = 0;
@@ -316,6 +316,16 @@ public class ClientEventHandler {
         float gunRecoilY = (float) tag.getDouble("recoil_y") * 10;
         recoilY = (float) (2 * Math.random() - 1) * gunRecoilY;
 
+        if (shellIndex < 5) {
+            shellIndex++;
+        }
+
+        shellIndexTime[shellIndex] = 0.001;
+
+        randomShell[0] = (1 + 0.2 * (Math.random() - 0.5));
+        randomShell[1] = (0.2 + (Math.random() - 0.5));
+        randomShell[2] = (0.7 + (Math.random() - 0.5));
+
     }
 
     public static void playGunClientSounds(Player player) {
@@ -355,23 +365,6 @@ public class ClientEventHandler {
 
         if (sound1p != null) {
             player.playSound(sound1p, 2, 1);
-        }
-    }
-
-    public static void handleFireRecoilTimeMessage(double time, Supplier<NetworkEvent.Context> ctx) {
-        if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
-            Player player = Minecraft.getInstance().player;
-            if (player == null) return;
-            if (!player.getMainHandItem().is(ModTags.Items.GUN)) return;
-
-
-//            fireRecoilTime = time;
-            shellIndex++;
-            shellIndexTime[shellIndex] = 0.001;
-
-            randomShell[0] = (1 + 0.2 * (Math.random() - 0.5));
-            randomShell[1] = (0.2 + (Math.random() - 0.5));
-            randomShell[2] = (0.7 + (Math.random() - 0.5));
         }
     }
 

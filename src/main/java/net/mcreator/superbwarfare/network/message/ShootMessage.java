@@ -1,6 +1,5 @@
 package net.mcreator.superbwarfare.network.message;
 
-import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModSounds;
@@ -22,7 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
 
 import java.util.function.Supplier;
 
@@ -148,11 +146,6 @@ public class ShootMessage {
                 }
 
                 playGunSounds(player);
-
-                if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
-                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
-                }
-
             }
         } else if (stack.is(ModItems.MINIGUN.get())) {
             var tag = stack.getOrCreateTag();
@@ -194,10 +187,6 @@ public class ShootMessage {
                 }
 
                 tag.putInt("fire_animation", 2);
-
-                if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
-                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
-                }
             }
         }
     }
