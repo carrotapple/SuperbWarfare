@@ -2,10 +2,11 @@ package net.mcreator.superbwarfare.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.mcreator.superbwarfare.client.layer.MinigunLayer;
 import net.mcreator.superbwarfare.client.model.item.MinigunItemModel;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.item.gun.machinegun.MinigunItem;
-import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -77,35 +78,35 @@ public class MinigunItemRenderer extends GeoItemRenderer<MinigunItem> {
             bone.setHidden(this.hiddenBones.contains(name));
         }
 
-        Player player_ = Minecraft.getInstance().player;
-        ItemStack itemStack = null;
-        if (player_ != null) {
-            itemStack = player_.getMainHandItem();
-        }
+        Player player = mc.player;
+        if (player != null) {
 
-        if (name.equals("flare")) {
-            if (itemStack != null && itemStack.getOrCreateTag().getDouble("fire_animation") > 0) {
-                bone.setHidden(false);
-                bone.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
-                bone.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
-                bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-            } else {
-                bone.setHidden(true);
+            ItemStack itemStack = player.getMainHandItem();
+
+            if (name.equals("flare")) {
+                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
+                    bone.setHidden(true);
+                } else {
+                    bone.setHidden(false);
+                    bone.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
+                    bone.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
+                    bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
+                }
             }
-        }
 
-        if (name.equals("light")) {
-            bone.setHidden(itemStack == null || !(itemStack.getOrCreateTag().getDouble("fire_animation") > 0));
+            if (name.equals("light")) {
+                bone.setHidden(!(itemStack.getOrCreateTag().getDouble("fire_animation") > 0));
+            }
         }
 
         if (this.transformType.firstPerson() && renderingArms) {
-            AbstractClientPlayer player = mc.player;
+            AbstractClientPlayer localPlayer = mc.player;
 
-            if (player == null) {
+            if (localPlayer == null) {
                 return;
             }
 
-            PlayerRenderer playerRenderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(player);
+            PlayerRenderer playerRenderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(localPlayer);
             PlayerModel<AbstractClientPlayer> model = playerRenderer.getModel();
             stack.pushPose();
             RenderUtils.translateMatrixToBone(stack, bone);
@@ -113,7 +114,7 @@ public class MinigunItemRenderer extends GeoItemRenderer<MinigunItem> {
             RenderUtils.rotateMatrixAroundBone(stack, bone);
             RenderUtils.scaleMatrixForBone(stack, bone);
             RenderUtils.translateAwayFromPivotPoint(stack, bone);
-            ResourceLocation loc = player.getSkinTextureLocation();
+            ResourceLocation loc = localPlayer.getSkinTextureLocation();
             VertexConsumer armBuilder = this.currentBuffer.getBuffer(RenderType.entitySolid(loc));
             VertexConsumer sleeveBuilder = this.currentBuffer.getBuffer(RenderType.entityTranslucent(loc));
             if (name.equals("Lefthand")) {

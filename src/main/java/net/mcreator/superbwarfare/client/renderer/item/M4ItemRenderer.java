@@ -6,6 +6,7 @@ import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.mcreator.superbwarfare.client.ItemModelHelper;
 import net.mcreator.superbwarfare.client.layer.M4Layer;
 import net.mcreator.superbwarfare.client.model.item.M4ItemModel;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.item.gun.rifle.M4Item;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
@@ -80,22 +81,6 @@ public class M4ItemRenderer extends GeoItemRenderer<M4Item> {
             bone.setHidden(this.hiddenBones.contains(name));
         }
 
-        if (name.equals("flare")) {
-            Player player = Minecraft.getInstance().player;
-            ItemStack itemStack = null;
-            if (player != null) {
-                itemStack = player.getMainHandItem();
-            }
-            if (itemStack != null && itemStack.getOrCreateTag().getDouble("flash_time") > 0) {
-                bone.setHidden(false);
-                bone.setScaleX((float) (0.55 + 0.5 * (Math.random() - 0.5)));
-                bone.setScaleY((float) (0.55 + 0.5 * (Math.random() - 0.5)));
-                bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-            } else {
-                bone.setHidden(true);
-            }
-        }
-
         Player player = mc.player;
         if (player != null) {
             ItemStack itemStack = player.getMainHandItem();
@@ -136,7 +121,7 @@ public class M4ItemRenderer extends GeoItemRenderer<M4Item> {
             }
 
             if (name.equals("flare")) {
-                if (itemStack.getOrCreateTag().getDouble("flash_time") == 0 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {
+                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {
                     bone.setHidden(true);
                 } else {
                     bone.setHidden(false);

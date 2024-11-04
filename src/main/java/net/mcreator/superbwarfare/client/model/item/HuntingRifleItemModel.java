@@ -83,17 +83,6 @@ public class HuntingRifleItemModel extends GeoModel<HuntingRifleItem> {
         shen.setRotY((float) (shen.getRotY() * (1 - 0.7 * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.65 * zt)));
 
-        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
-
-        if (stack.getOrCreateTag().getDouble("flash_time") > 0) {
-            flare.setHidden(false);
-            flare.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
-            flare.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
-            flare.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-        } else {
-            flare.setHidden(true);
-        }
-
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));
         root.setPosY((float) (swayY + movePosY - 40 * ClientEventHandler.drawTime - 2f * vY));

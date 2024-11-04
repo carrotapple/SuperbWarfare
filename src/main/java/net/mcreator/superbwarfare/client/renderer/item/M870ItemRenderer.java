@@ -2,10 +2,11 @@ package net.mcreator.superbwarfare.client.renderer.item;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.mcreator.superbwarfare.client.layer.M870Layer;
 import net.mcreator.superbwarfare.client.model.item.M870ItemModel;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.item.gun.shotgun.M870Item;
-import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -77,30 +78,29 @@ public class M870ItemRenderer extends GeoItemRenderer<M870Item> {
             bone.setHidden(this.hiddenBones.contains(name));
         }
 
-        if (name.equals("flare")) {
-            Player player = Minecraft.getInstance().player;
-            ItemStack itemStack = null;
-            if (player != null) {
-                itemStack = player.getMainHandItem();
-            }
-            if (itemStack != null && itemStack.getOrCreateTag().getDouble("flash_time") > 0) {
-                bone.setHidden(false);
-                bone.setScaleX((float) (0.55 + 0.5 * (Math.random() - 0.5)));
-                bone.setScaleY((float) (0.55 + 0.5 * (Math.random() - 0.5)));
-                bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-            } else {
-                bone.setHidden(true);
+        Player player = mc.player;
+        if (player != null) {
+
+            if (name.equals("flare")) {
+                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
+                    bone.setHidden(true);
+                } else {
+                    bone.setHidden(false);
+                    bone.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                    bone.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                    bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
+                }
             }
         }
 
         if (this.transformType.firstPerson() && renderingArms) {
-            AbstractClientPlayer player = mc.player;
+            AbstractClientPlayer localPlayer = mc.player;
 
-            if (player == null) {
+            if (localPlayer == null) {
                 return;
             }
 
-            PlayerRenderer playerRenderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(player);
+            PlayerRenderer playerRenderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(localPlayer);
             PlayerModel<AbstractClientPlayer> model = playerRenderer.getModel();
             stack.pushPose();
             RenderUtils.translateMatrixToBone(stack, bone);
@@ -108,7 +108,7 @@ public class M870ItemRenderer extends GeoItemRenderer<M870Item> {
             RenderUtils.rotateMatrixAroundBone(stack, bone);
             RenderUtils.scaleMatrixForBone(stack, bone);
             RenderUtils.translateAwayFromPivotPoint(stack, bone);
-            ResourceLocation loc = player.getSkinTextureLocation();
+            ResourceLocation loc = localPlayer.getSkinTextureLocation();
             VertexConsumer armBuilder = this.currentBuffer.getBuffer(RenderType.entitySolid(loc));
             VertexConsumer sleeveBuilder = this.currentBuffer.getBuffer(RenderType.entityTranslucent(loc));
             if (name.equals("Lefthand")) {

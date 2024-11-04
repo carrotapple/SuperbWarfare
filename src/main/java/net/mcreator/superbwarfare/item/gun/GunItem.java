@@ -69,10 +69,6 @@ public abstract class GunItem extends Item {
                 itemstack.getOrCreateTag().putInt("fire_animation", (itemstack.getOrCreateTag().getInt("fire_animation") - 1));
             }
 
-            if (itemstack.getOrCreateTag().getDouble("flash_time") > 0) {
-                itemstack.getOrCreateTag().putDouble("flash_time", (itemstack.getOrCreateTag().getDouble("flash_time") - 1));
-            }
-
             handleGunPerks(itemstack);
             handleGunAttachment(itemstack);
 

@@ -6,6 +6,7 @@ import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.mcreator.superbwarfare.client.ItemModelHelper;
 import net.mcreator.superbwarfare.client.layer.AK12Layer;
 import net.mcreator.superbwarfare.client.model.item.AK12ItemModel;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.item.gun.rifle.AK12Item;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
@@ -116,7 +117,7 @@ public class AK12ItemRenderer extends GeoItemRenderer<AK12Item> {
                 if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 1) {
                     bone.setPosZ(2.25f);
                 }
-                if (itemStack.getOrCreateTag().getDouble("flash_time") == 0 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {
+                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {
                     bone.setHidden(true);
                 } else {
                     bone.setHidden(false);
