@@ -57,14 +57,14 @@ public class GunEventHandler {
     private static void handleGunBolt(Player player) {
         ItemStack stack = player.getMainHandItem();
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
-            if (stack.getOrCreateTag().getInt("fire_animation") == 1 && stack.getOrCreateTag().getBoolean("need_bolt_action")) {
-                stack.getOrCreateTag().putInt("bolt_action_anim", stack.getOrCreateTag().getInt("bolt_action_time") + 1);
-                player.getCooldowns().addCooldown(stack.getItem(), stack.getOrCreateTag().getInt("bolt_action_time") + 1);
-                playGunBoltSounds(player);
-            }
             if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
                 stack.getOrCreateTag().putInt("bolt_action_anim", stack.getOrCreateTag().getInt("bolt_action_anim") - 1);
             }
+
+            if (stack.getItem() == ModItems.MARLIN.get() && stack.getOrCreateTag().getInt("bolt_action_anim") == 9) {
+                stack.getOrCreateTag().putBoolean("empty", false);
+            }
+
             if (stack.getOrCreateTag().getInt("bolt_action_anim") == 1) {
                 stack.getOrCreateTag().putBoolean("need_bolt_action", false);
             }
@@ -271,11 +271,11 @@ public class GunEventHandler {
             MinecraftForge.EVENT_BUS.post(new ReloadEvent.Pre(player, stack));
             if (stack.is(ModTags.Items.OPEN_BOLT)) {
                 if (tag.getInt("ammo") == 0) {
-                    data.putInt("ReloadTime", data.getInt("EmptyReloadTime") + 2);
+                    data.putInt("ReloadTime", data.getInt("EmptyReloadTime") + 1);
                     stack.getOrCreateTag().putBoolean("is_empty_reloading", true);
                     playGunEmptyReloadSounds(player);
                 } else {
-                    data.putInt("ReloadTime", (int) tag.getDouble("normal_reload_time") + 2);
+                    data.putInt("ReloadTime", (int) tag.getDouble("normal_reload_time") + 1);
                     stack.getOrCreateTag().putBoolean("is_normal_reloading", true);
                     playGunNormalReloadSounds(player);
                 }
@@ -283,9 +283,6 @@ public class GunEventHandler {
                 data.putInt("ReloadTime", data.getInt("EmptyReloadTime") + 2);
                 stack.getOrCreateTag().putBoolean("is_empty_reloading", true);
                 playGunEmptyReloadSounds(player);
-            }
-            if (stack.getItem() == ModItems.DEVOTION.get()) {
-                tag.putInt("customRpm", 0);
             }
             tag.putBoolean("start_reload", false);
         }
@@ -317,7 +314,7 @@ public class GunEventHandler {
 
         if (stack.getItem() == ModItems.M_60.get()) {
             if (data.getInt("ReloadTime") == 55) {
-                tag.putBoolean("bullet_chain", false);
+                tag.putBoolean("HideBulletChain", false);
             }
         }
 
@@ -506,16 +503,16 @@ public class GunEventHandler {
             if (tag.getDouble("prepare_load_time") != 0 && tag.getInt("ammo") == 0) {
                 playGunPrepareLoadReloadSounds(player);
                 tag.putInt("prepare_load", (int) tag.getDouble("prepare_load_time") + 1);
-                player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("prepare_load_time") + 1);
+                player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("prepare_load_time"));
             } else if (tag.getDouble("prepare_empty") != 0 && tag.getInt("ammo") == 0) {
                 // 此处判断空仓换弹，如莫辛纳甘
                 playGunEmptyPrepareSounds(player);
                 tag.putInt("prepare", (int) tag.getDouble("prepare_empty") + 1);
-                player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("prepare_empty") + 1);
+                player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("prepare_empty"));
             } else {
                 playGunPrepareReloadSounds(player);
                 tag.putInt("prepare", (int) tag.getDouble("prepare_time") + 1);
-                player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("prepare_time") + 1);
+                player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("prepare_time"));
             }
 
             tag.putBoolean("force_stop", false);
@@ -635,9 +632,13 @@ public class GunEventHandler {
         // 三阶段
         if ((tag.getInt("iterative") == 1 && tag.getInt("reload_stage") == 3) || tag.getBoolean("force_stage3_start")) {
             tag.putBoolean("force_stage3_start", false);
-            tag.putDouble("finish", (int) tag.getDouble("finish_time") + 2);
+            tag.putInt("finish", (int) tag.getDouble("finish_time") + 2);
             player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("finish_time") + 2);
             playGunEndReloadSounds(player);
+        }
+
+        if (stack.getItem() == ModItems.MARLIN.get() && tag.getInt("finish") == 10) {
+            tag.putBoolean("empty", false);
         }
 
         // 三阶段结束

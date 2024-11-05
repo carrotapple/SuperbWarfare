@@ -166,30 +166,6 @@
 				}
 			}
 		},
-		"animation.trachelium.fire": {
-			"animation_length": 0.0417,
-			"override_previous_animation": true,
-			"bones": {
-				"lun": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.0417": {
-							"vector": [0, 0, -22.5]
-						}
-					},
-					"position": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.0417": {
-							"vector": [0, 0, 0]
-						}
-					}
-				}
-			}
-		},
 		"animation.trachelium.reload": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 3,
@@ -1347,62 +1323,6 @@
 						"2.8333": {
 							"vector": [0, 0, 0],
 							"easing": "linear"
-						}
-					}
-				}
-			}
-		},
-		"animation.trachelium.draw": {
-			"animation_length": 0.6,
-			"bones": {
-				"0": {
-					"rotation": {
-						"0.0": {
-							"vector": [27.21312, -47.42646, -2.0218]
-						},
-						"0.1": {
-							"vector": [12.5, -15, 0]
-						},
-						"0.2": {
-							"vector": [3.48268, 0.40464, 8.20687]
-						},
-						"0.4": {
-							"vector": [0, 0, -2]
-						},
-						"0.5": {
-							"vector": [0, 0, 0]
-						}
-					},
-					"position": {
-						"0.0": {
-							"vector": [3, -17.3, 0]
-						},
-						"0.2": {
-							"vector": [0, 0, -1.65]
-						},
-						"0.3": {
-							"vector": [0, 0, 0.93]
-						},
-						"0.5": {
-							"vector": [0, 0, 0]
-						}
-					}
-				},
-				"camera": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.2": {
-							"vector": [0, 0, 0]
-						},
-						"0.3": {
-							"vector": [0.25, -0.5, 0.5],
-							"easing": "easeInSine"
-						},
-						"0.4": {
-							"vector": [0, 0, 0],
-							"easing": "easeOutSine"
 						}
 					}
 				}

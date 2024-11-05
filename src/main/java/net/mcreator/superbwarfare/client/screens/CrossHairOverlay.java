@@ -13,10 +13,8 @@ import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -123,14 +121,14 @@ public class CrossHairOverlay {
         RenderSystem.disableBlend();
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
-        if (!stack.is(ModTags.Items.GUN)) return;
+//        if (!stack.is(ModTags.Items.GUN)) return;
 
-        if (stack.getOrCreateTag().getBoolean("need_bolt_action")) {
-            Font font = Minecraft.getInstance().font;
-            Component component = Component.translatable("des.superbwarfare.need_bolt_action");
-
-            guiGraphics.drawString(font, component, w / 2 - font.width(component) / 2, h / 2 + 50, 0xFF6969);
-        }
+//        if (stack.getOrCreateTag().getBoolean("need_bolt_action")) {
+//            Font font = Minecraft.getInstance().font;
+//            Component component = Component.translatable("des.superbwarfare.need_bolt_action");
+//
+//            guiGraphics.drawString(font, component, w / 2 - font.width(component) / 2, h / 2 + 50, 0xFF6969);
+//        }
 
     }
 

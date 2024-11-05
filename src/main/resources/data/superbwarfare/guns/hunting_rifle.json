@@ -15,6 +15,5 @@
   "burst_size": 1,
   "EmptyReloadTime": 64,
   "BypassesArmor": 0.7,
-  "SoundRadius": 20,
-  "rpm": 120
+  "SoundRadius": 20
 }

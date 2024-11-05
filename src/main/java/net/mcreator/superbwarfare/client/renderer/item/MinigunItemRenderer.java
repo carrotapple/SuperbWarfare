@@ -80,9 +80,6 @@ public class MinigunItemRenderer extends GeoItemRenderer<MinigunItem> {
 
         Player player = mc.player;
         if (player != null) {
-
-            ItemStack itemStack = player.getMainHandItem();
-
             if (name.equals("flare")) {
                 if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
                     bone.setHidden(true);
@@ -95,7 +92,7 @@ public class MinigunItemRenderer extends GeoItemRenderer<MinigunItem> {
             }
 
             if (name.equals("light")) {
-                bone.setHidden(!(itemStack.getOrCreateTag().getDouble("fire_animation") > 0));
+                bone.setHidden(!(ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5));
             }
         }
 

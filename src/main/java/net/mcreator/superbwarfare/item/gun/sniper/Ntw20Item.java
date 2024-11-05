@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.item.gun.sniper;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.PoseTool;
 import net.mcreator.superbwarfare.client.renderer.item.Ntw20Renderer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
@@ -11,7 +12,6 @@ import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
-import net.mcreator.superbwarfare.client.PoseTool;
 import net.mcreator.superbwarfare.tools.RarityTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -81,10 +81,6 @@ public class Ntw20Item extends GunItem implements GeoItem, AnimatedItem {
 
         if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.shift"));
-        }
-
-        if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.fire"));
         }
 
         if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {

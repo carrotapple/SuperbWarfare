@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.item.gun.machinegun;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.PoseTool;
 import net.mcreator.superbwarfare.client.renderer.item.M60ItemRenderer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
@@ -12,7 +13,6 @@ import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
-import net.mcreator.superbwarfare.client.PoseTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -139,7 +139,7 @@ public class M60Item extends GunItem implements GeoItem, AnimatedItem {
             itemstack.getOrCreateTag().putBoolean("draw", false);
 
             if (itemstack.getOrCreateTag().getInt("ammo") <= 5) {
-                itemstack.getOrCreateTag().putBoolean("bullet_chain", true);
+                itemstack.getOrCreateTag().putBoolean("HideBulletChain", true);
             }
         }
         super.inventoryTick(itemstack, level, entity, slot, selected);

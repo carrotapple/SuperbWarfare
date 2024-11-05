@@ -116,6 +116,11 @@ public class ClientEventHandler {
     public static boolean holdFire = false;
     public static int burstFireSize = 0;
 
+    public static int customRpm = 0;
+
+    public static double chamberRot = 0;
+    public static double actionMove = 0;
+
     @SubscribeEvent
     public static void handleWeaponTurn(RenderHandEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
@@ -162,6 +167,7 @@ public class ClientEventHandler {
 
         ItemStack stack = player.getMainHandItem();
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+        int mode = GunsTool.getGunIntTag(stack, "FireMode");
 
         // 精准度
         float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
@@ -202,8 +208,23 @@ public class ClientEventHandler {
         if (player.getPersistentData().getDouble("noRun") == 0 && player.isSprinting() && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS) {
             cantFireTime = Mth.clamp(cantFireTime + 3 * times, 0, 24);
         } else {
-            cantFireTime = Mth.clamp(cantFireTime - 6 * speed * times, 0, 24);
+            cantFireTime = Mth.clamp(cantFireTime - 6 * speed * times, 0, 40);
         }
+
+        int rpm = (int) (stack.getOrCreateTag().getDouble("rpm") + customRpm);
+        if (rpm == 0) {
+            rpm = 600;
+        }
+
+        if (GunsTool.getPerkIntTag(stack, "DesperadoTimePost") > 0) {
+            int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.DESPERADO.get(), stack);
+            rpm *= (int) (1.25 + 0.05 * perkLevel);
+        }
+
+        double rps = (double) rpm / 60;
+
+        // cooldown in ms
+        int cooldown = (int) (1000 / rps);
 
         if ((holdFire || burstFireSize > 0)
                 && (player.getMainHandItem().is(ModTags.Items.NORMAL_GUN)
@@ -219,50 +240,45 @@ public class ClientEventHandler {
                 && !stack.getOrCreateTag().getBoolean("need_bolt_action"))
                 || (stack.is(ModItems.MINIGUN.get()) && !player.isSprinting() && stack.getOrCreateTag().getDouble("overheat") == 0 && !player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getDouble("minigun_rotation") >= 10
         ))) {
-            int customRpm = 0;
 
-            if (stack.getItem() == ModItems.DEVOTION.get()) {
-                customRpm = stack.getOrCreateTag().getInt("customRpm");
+            if (mode == 0) {
+                if (clientTimer.getProgress() == 0) {
+                    clientTimer.start();
+                    shootClient(player);
+                }
+            } else {
+                if (!clientTimer.started()) {
+                    clientTimer.start();
+                    // 首发瞬间发射
+                    clientTimer.setProgress((cooldown + 1));
+                }
+
+                if (clientTimer.getProgress() >= cooldown) {
+                    shootClient(player);
+                    clientTimer.setProgress((clientTimer.getProgress() - cooldown));
+                }
             }
 
-            if (stack.getItem() == ModItems.MINIGUN.get() && player.isInWater()) {
-                customRpm = (int) (-0.25 * stack.getOrCreateTag().getDouble("rpm"));
-            }
-
-            int rpm = (int) (stack.getOrCreateTag().getDouble("rpm") + customRpm);
-            if (rpm == 0) {
-                rpm = 600;
-            }
-
-            if (GunsTool.getPerkIntTag(stack, "DesperadoTimePost") > 0) {
-                int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.DESPERADO.get(), stack);
-                rpm *= (int) (1.25 + 0.05 * perkLevel);
-            }
-
-            double rps = (double) rpm / 60;
-
-            // cooldown in ms
-            int cooldown = (int) (1000 / rps);
-
-            if (!clientTimer.started()) {
-                clientTimer.start();
-                // 首发瞬间发射
-                clientTimer.setProgress((cooldown + 1));
-            }
-
-            if (clientTimer.getProgress() >= cooldown) {
-                shootClient(player);
-                ModUtils.PACKET_HANDLER.sendToServer(new ShootMessage(spread, burstFireSize));
-                clientTimer.setProgress((clientTimer.getProgress() - cooldown));
-            }
 
             if (notInGame()) {
                 clientTimer.stop();
             }
 
         } else {
-            clientTimer.stop();
+            if (mode != 0) {
+                clientTimer.stop();
+            }
             fireSpread = 0;
+        }
+
+        gunPartMove(times);
+
+        if (mode == 0  && clientTimer.getProgress() >= cooldown) {
+            clientTimer.stop();
+        }
+
+        if (stack.getItem() == ModItems.DEVOTION.get() && (stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))) {
+            customRpm = 0;
         }
     }
 
@@ -275,11 +291,27 @@ public class ClientEventHandler {
                     holdFire = false;
                 }
 
-                if (mode == 1 && stack.getOrCreateTag().getInt("ammo") == 1) {
-                    burstFireSize = 1;
+                if (mode == 1) {
+                    if (stack.getOrCreateTag().getInt("ammo") == 1) {
+                         burstFireSize = 1;
+                    }
+                    if (burstFireSize == 1) {
+                        cantFireTime = 40;
+                    }
+                    burstFireSize--;
                 }
 
-                burstFireSize--;
+                if (stack.is(ModItems.DEVOTION.get())) {
+                    customRpm = Math.min(customRpm + 20, 500);
+                }
+
+                if (stack.getItem() == ModItems.SENTINEL.get()) {
+                    chamberRot = 1;
+                }
+
+                if (stack.getItem() == ModItems.NTW_20.get()) {
+                    actionMove = 1;
+                }
 
                 playGunClientSounds(player);
                 handleClientShoot();
@@ -304,12 +336,18 @@ public class ClientEventHandler {
         }
     }
 
+    public static void gunPartMove(float times) {
+        chamberRot = Mth.lerp(0.07 * times, chamberRot, 0);
+        actionMove = Mth.lerp(0.2 * times, actionMove, 0);
+    }
+
     public static void handleClientShoot() {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         CompoundTag tag = player.getMainHandItem().getOrCreateTag();
         if (!player.getMainHandItem().is(ModTags.Items.GUN)) return;
 
+        ModUtils.PACKET_HANDLER.sendToServer(new ShootMessage(gunSpread));
         fireRecoilTime = 10;
 
         float gunRecoilY = (float) tag.getDouble("recoil_y") * 10;
@@ -766,7 +804,7 @@ public class ClientEventHandler {
         float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
         boolean breath = (entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).breath;
 
-        breathTime = Mth.lerp(0.08f * times, breathTime, breath ? 1 : 0);
+        breathTime = Mth.lerp(0.2f * times, breathTime, breath ? 1 : 0);
     }
 
     private static void handleShockCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {

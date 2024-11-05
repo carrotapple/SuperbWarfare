@@ -1175,6 +1175,14 @@
       }
     ]
   },
+  "marlin_bolt": {
+    "sounds": [
+      {
+        "name": "superbwarfare:marlin/marlin_end",
+        "stream": false
+      }
+    ]
+  },
   "m_870_fire_1p": {
     "sounds": [
       {
@@ -1219,6 +1227,14 @@
     "sounds": [
       {
         "name": "superbwarfare:m_870/m_870_reload_loop",
+        "stream": false
+      }
+    ]
+  },
+  "m_870_bolt": {
+    "sounds": [
+      {
+        "name": "superbwarfare:m_870/m_870_bolt",
         "stream": false
       }
     ]

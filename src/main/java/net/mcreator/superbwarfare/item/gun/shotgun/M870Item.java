@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.item.gun.shotgun;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.PoseTool;
 import net.mcreator.superbwarfare.client.renderer.item.M870ItemRenderer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
@@ -11,7 +12,6 @@ import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
-import net.mcreator.superbwarfare.client.PoseTool;
 import net.mcreator.superbwarfare.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -70,13 +70,13 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState<M870Item> event) {
+    private PlayState fireAnimPredicate(AnimationState<M870Item> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (stack.getOrCreateTag().getDouble("fire_animation") > 0 && stack.getOrCreateTag().getDouble("fire_animation") < 15) {
+        if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.shift"));
         }
 
@@ -100,6 +100,15 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.finish"));
         }
 
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m870.idle"));
+    }
+
+    private PlayState idlePredicate(AnimationState<M870Item> event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
+
         if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
             if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m870.run_fast"));
@@ -114,6 +123,8 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        var fireAnimController = new AnimationController<>(this, "fireAnimController", 1, this::fireAnimPredicate);
+        data.add(fireAnimController);
         var idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
     }
@@ -130,7 +141,9 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(ModSounds.M_870_PREPARE_LOAD.get(), ModSounds.M_870_LOOP.get());
+        return Set.of(ModSounds.M_870_PREPARE_LOAD.get(),
+                ModSounds.M_870_LOOP.get(),
+                ModSounds.M_870_BOLT.get());
     }
 
     public static ItemStack getGunInstance() {

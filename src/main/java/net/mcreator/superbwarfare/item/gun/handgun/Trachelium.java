@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.item.gun.handgun;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.PoseTool;
 import net.mcreator.superbwarfare.client.renderer.item.TracheliumItemRenderer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
@@ -11,7 +12,6 @@ import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
-import net.mcreator.superbwarfare.client.PoseTool;
 import net.mcreator.superbwarfare.tools.TooltipTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -82,10 +82,6 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
-
-        if (stack.getOrCreateTag().getInt("fire_animation") > 1) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.fire"));
-        }
 
         if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.reload"));

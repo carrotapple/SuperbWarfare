@@ -80,12 +80,6 @@ public class JavelinItem extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        var tag = stack.getOrCreateTag();
-
-        if (tag.getInt("fire_animation") > 0) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.javelin.fire"));
-        }
-
         if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.javelin.reload"));
         }

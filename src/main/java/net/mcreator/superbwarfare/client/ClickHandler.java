@@ -54,6 +54,7 @@ public class ClickHandler {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(1));
             ClientEventHandler.holdFire = false;
+            ClientEventHandler.customRpm = 0;
         }
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (player.hasEffect(ModMobEffects.SHOCK.get())) {

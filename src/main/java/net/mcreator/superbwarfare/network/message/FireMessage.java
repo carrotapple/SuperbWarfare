@@ -70,6 +70,8 @@ public class FireMessage {
             return;
         }
 
+        handleGunBolt(player, player.getMainHandItem());
+
         if (type == 0) {
             handlePlayerShoot(player);
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
@@ -86,10 +88,6 @@ public class FireMessage {
 
             if (player.getMainHandItem().getItem() == ModItems.BOCEK.get()) {
                 handleBowShoot(player);
-            }
-
-            if (player.getMainHandItem().getItem() == ModItems.DEVOTION.get()) {
-                player.getMainHandItem().getOrCreateTag().putDouble("customRpm", 0);
             }
 
             if (player.getMainHandItem().getItem() == ModItems.JAVELIN.get()) {
@@ -157,11 +155,12 @@ public class FireMessage {
                 capability.syncPlayerVariables(player);
             });
         }
+    }
 
-        // 栓动武器左键手动拉栓
-        if (tag.getInt("bolt_action_time") > 0 && tag.getInt("ammo") > 0 && tag.getInt("bolt_action_anim") == 0) {
-            if (!player.getCooldowns().isOnCooldown(handItem.getItem()) && handItem.getOrCreateTag().getBoolean("need_bolt_action")) {
-                handItem.getOrCreateTag().putInt("bolt_action_anim", handItem.getOrCreateTag().getInt("bolt_action_time") + 1);
+    private static void handleGunBolt(Player player, ItemStack stack) {
+        if (stack.getOrCreateTag().getInt("bolt_action_time") > 0 && stack.getOrCreateTag().getInt("ammo") > 0 && stack.getOrCreateTag().getInt("bolt_action_anim") == 0) {
+            if (!player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getBoolean("need_bolt_action")) {
+                stack.getOrCreateTag().putInt("bolt_action_anim", stack.getOrCreateTag().getInt("bolt_action_time") + 1);
                 GunEventHandler.playGunBoltSounds(player);
             }
         }
@@ -225,7 +224,6 @@ public class FireMessage {
             player.getCooldowns().addCooldown(player.getMainHandItem().getItem(), 7);
             player.getMainHandItem().getOrCreateTag().putInt("arrow_empty", 7);
             player.getMainHandItem().getOrCreateTag().putDouble("power", 0);
-            stack.getOrCreateTag().putInt("fire_animation", 2);
 
             int count = 0;
             for (var inv : player.getInventory().items) {
@@ -372,7 +370,6 @@ public class FireMessage {
                     level.addFreshEntity(taserBulletProjectile);
                 }
 
-                stack.getOrCreateTag().putInt("fire_animation", 4);
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
 
                 stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
@@ -428,7 +425,6 @@ public class FireMessage {
                     serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_79_VERYFAR.get(), SoundSource.PLAYERS, 10, 1);
                 }
 
-                stack.getOrCreateTag().putInt("fire_animation", 2);
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
 
                 if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
@@ -486,7 +482,6 @@ public class FireMessage {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.RPG_VERYFAR.get(), SoundSource.PLAYERS, 10, 1);
             }
 
-            tag.putInt("fire_animation", 2);
             tag.putInt("ammo", tag.getInt("ammo") - 1);
 
             if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
@@ -546,7 +541,6 @@ public class FireMessage {
             serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.JAVELIN_FAR.get(), SoundSource.PLAYERS, 10, 1);
         }
 
-        tag.putInt("fire_animation", 2);
         tag.putInt("ammo", tag.getInt("ammo") - 1);
 
         if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {

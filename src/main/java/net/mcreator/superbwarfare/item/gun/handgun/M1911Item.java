@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.item.gun.handgun;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.PoseTool;
 import net.mcreator.superbwarfare.client.renderer.item.M1911ItemRenderer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
@@ -11,7 +12,6 @@ import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
-import net.mcreator.superbwarfare.client.PoseTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -67,21 +67,6 @@ public class M1911Item extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-
-
-    private PlayState fireAnimPredicate(AnimationState<M1911Item> event) {
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null) return PlayState.STOP;
-        ItemStack stack = player.getMainHandItem();
-        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
-
-        if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m1911.fire"));
-        }
-
-        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.idle"));
-    }
-
     private PlayState idlePredicate(AnimationState<M1911Item> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
@@ -93,27 +78,25 @@ public class M1911Item extends GunItem implements GeoItem, AnimatedItem {
         }
 
         if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.reload_normal"));
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m1911.reload_normal"));
         }
 
         if (player.isSprinting() && player.onGround()
                 && player.getPersistentData().getDouble("noRun") == 0
                 && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading")) && ClientEventHandler.drawTime < 0.01) {
             if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.run_fast"));
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m1911.run_fast"));
             } else {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.run"));
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m1911.run"));
             }
         }
 
-        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.idle"));
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m1911.idle"));
     }
 
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        var fireAnimController = new AnimationController<>(this, "fireAnimController", 0, this::fireAnimPredicate);
-        data.add(fireAnimController);
         var idleController = new AnimationController<>(this, "idleController", 2, this::idlePredicate);
         data.add(idleController);
     }

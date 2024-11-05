@@ -35,6 +35,8 @@ public class TracheliumItemModel extends GeoModel<Trachelium> {
     public void setCustomAnimations(Trachelium animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
+        CoreGeoBone hammer = getAnimationProcessor().getBone("jichui");
+        CoreGeoBone lun = getAnimationProcessor().getBone("lun");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -67,17 +69,20 @@ public class TracheliumItemModel extends GeoModel<Trachelium> {
 
         shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
         shen.setPosY((float) (0.4f * fp + 0.44f * fr));
-        shen.setPosZ((float) (3.325 * fp + 0.34f * fr + 2.35 * fpz));
-        shen.setRotX((float) (0.05f * fp + 0.3f * fr + 0.2f * fpz));
+        shen.setPosZ((float) (5.825 * fp + 0.34f * fr + 2.35 * fpz));
+        shen.setRotX((float) (0.15f * fp + 0.3f * fr + 0.3f * fpz));
         shen.setRotY((float) (0.1f * ClientEventHandler.recoilHorizon * fpz));
         shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
 
         shen.setPosX((float) (shen.getPosX() * (1 - 0.4 * zt)));
         shen.setPosY((float) (shen.getPosY() * (1 - 0.5 * zt)));
-        shen.setPosZ((float) (shen.getPosZ() * (1 - 0.2 * zt)));
-        shen.setRotX((float) (shen.getRotX() * (1 - 0.3 * zt)));
+        shen.setPosZ((float) (shen.getPosZ() * (1 - 0.7 * zt)));
+        shen.setRotX((float) (shen.getRotX() * (1 - 0.27 * zt)));
         shen.setRotY((float) (shen.getRotY() * (1 - 0.7 * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.65 * zt)));
+
+        hammer.setRotX(60 * Mth.DEG_TO_RAD * (float) fp);
+        lun.setRotZ(-120 * Mth.DEG_TO_RAD * (float) fp);
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));

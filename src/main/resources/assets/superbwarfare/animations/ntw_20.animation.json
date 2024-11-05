@@ -152,47 +152,6 @@
 				}
 			}
 		},
-		"animation.ntw_20.fire": {
-			"loop": "hold_on_last_frame",
-			"animation_length": 0.7917,
-			"bones": {
-				"0": {
-					"rotation": {
-						"0.0": {
-							"vector": [-5, 0, 0]
-						},
-						"0.1667": {
-							"vector": [0, 0, 0],
-							"easing": "easeInElastic"
-						}
-					}
-				},
-				"action": {
-					"position": {
-						"0.0": {
-							"vector": [0, 0, 4]
-						},
-						"0.3333": {
-							"vector": [0, 0, 0],
-							"easing": "easeInBounce",
-							"easingArgs": [0.1]
-						}
-					}
-				},
-				"Lefthand": {
-					"position": {
-						"0.0": {
-							"vector": [0, 0, -4]
-						},
-						"0.3333": {
-							"vector": [0, 0, 0],
-							"easing": "easeInBounce",
-							"easingArgs": [0.1]
-						}
-					}
-				}
-			}
-		},
 		"animation.ntw_20.shift": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 2,

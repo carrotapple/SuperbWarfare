@@ -8,14 +8,12 @@ import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.perk.AmmoPerk;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
-import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -31,33 +29,30 @@ import static net.mcreator.superbwarfare.event.GunEventHandler.playGunSounds;
 public class ShootMessage {
 
     private final double spread;
-    private final int burstSize;
 
-    public ShootMessage(double spread, int burstSize) {
+    public ShootMessage(double spread) {
         this.spread = spread;
-        this.burstSize = burstSize;
     }
 
     public static ShootMessage decode(FriendlyByteBuf buffer) {
-        return new ShootMessage(buffer.readDouble(), buffer.readInt());
+        return new ShootMessage(buffer.readDouble());
     }
 
     public static void encode(ShootMessage message, FriendlyByteBuf buffer) {
         buffer.writeDouble(message.spread);
-        buffer.writeInt(message.burstSize);
     }
 
     public static void handler(ShootMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
             if (context.getSender() != null) {
-                pressAction(context.getSender(), message.spread, message.burstSize);
+                pressAction(context.getSender(), message.spread);
             }
         });
         context.setPacketHandled(true);
     }
 
-    public static void pressAction(Player player, double spared, int burstSize) {
+    public static void pressAction(Player player, double spared) {
         Level level = player.level();
 
         if (!level.isLoaded(player.blockPosition())) {
@@ -66,23 +61,9 @@ public class ShootMessage {
 
         ItemStack stack = player.getMainHandItem();
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
-
-            double rpm = stack.getOrCreateTag().getDouble("rpm") + stack.getOrCreateTag().getInt("customRpm");
-
-            int coolDownTick = (int) Math.ceil(20 / (rpm / 60));
-            int mode = GunsTool.getGunIntTag(stack, "FireMode");
-
             int projectileAmount = (int) stack.getOrCreateTag().getDouble("projectile_amount");
 
             if (stack.getOrCreateTag().getInt("ammo") > 0) {
-                int singleInterval = 0;
-                int burstCooldown = 0;
-
-                if (mode == 0) {
-                    singleInterval = coolDownTick;
-                } else if (mode == 1) {
-                    burstCooldown = burstSize == 0 ? coolDownTick + 3 : 0;
-                }
 
                 /*
                   空仓挂机
@@ -99,16 +80,11 @@ public class ShootMessage {
                 }
 
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
-                stack.getOrCreateTag().putInt("fire_animation", coolDownTick);
 
                 stack.getOrCreateTag().putDouble("empty", 1);
 
-                if (stack.getItem() == ModItems.M_60.get()) {
-                    stack.getOrCreateTag().putBoolean("bullet_chain", true);
-                }
-
-                if (stack.getItem() == ModItems.DEVOTION.get()) {
-                    stack.getOrCreateTag().putInt("customRpm", Mth.clamp(stack.getOrCreateTag().getInt("customRpm") + 20, 0, 500));
+                if (stack.getItem() == ModItems.M_60.get() && stack.getOrCreateTag().getInt("ammo") <= 5) {
+                    stack.getOrCreateTag().putBoolean("HideBulletChain", true);
                 }
 
                 if (stack.getItem() == ModItems.ABEKIRI.get()) {
@@ -123,24 +99,7 @@ public class ShootMessage {
                     stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                             iEnergyStorage -> iEnergyStorage.extractEnergy(3000, false)
                     );
-                    stack.getOrCreateTag().putDouble("chamber_rot", 20);
                 }
-
-                int customCoolDown = 0;
-
-                if (stack.getItem() == ModItems.MARLIN.get()) {
-                    if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
-                        stack.getOrCreateTag().putDouble("marlin_animation_time", 15);
-                        stack.getOrCreateTag().putBoolean("fastfiring", false);
-                        customCoolDown = 5;
-                    } else {
-                        stack.getOrCreateTag().putDouble("marlin_animation_time", 10);
-                        stack.getOrCreateTag().putBoolean("fastfiring", true);
-                    }
-                }
-
-                int cooldown = burstCooldown + singleInterval + customCoolDown;
-                player.getCooldowns().addCooldown(stack.getItem(), cooldown);
 
                 var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
@@ -188,8 +147,6 @@ public class ShootMessage {
                         capability.syncPlayerVariables(player);
                     });
                 }
-
-                tag.putInt("fire_animation", 2);
             }
         }
     }

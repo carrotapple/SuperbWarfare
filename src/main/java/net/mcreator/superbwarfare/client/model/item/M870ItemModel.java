@@ -77,7 +77,7 @@ public class M870ItemModel extends GeoModel<M870Item> {
 
         shen.setPosX((float) (shen.getPosX() * (1 - 0.4 * zt)));
         shen.setPosY((float) (shen.getPosY() * (1 - 0.5 * zt)));
-        shen.setPosZ((float) (shen.getPosZ() * (1 - 0.4 * zt)));
+        shen.setPosZ((float) (shen.getPosZ() * (1 - 0.77 * zt)));
         shen.setRotX((float) (shen.getRotX() * (1 - 0.87 * zt)));
         shen.setRotY((float) (shen.getRotY() * (1 - 0.7 * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.65 * zt)));

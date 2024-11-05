@@ -40,6 +40,8 @@ public class Ntw20Model extends GeoModel<Ntw20Item> {
         CoreGeoBone scope = getAnimationProcessor().getBone("scope");
         CoreGeoBone l = getAnimationProcessor().getBone("l");
         CoreGeoBone r = getAnimationProcessor().getBone("r");
+        CoreGeoBone action = getAnimationProcessor().getBone("action");
+        CoreGeoBone lh = getAnimationProcessor().getBone("lh");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -91,6 +93,9 @@ public class Ntw20Model extends GeoModel<Ntw20Item> {
         scope.setScaleZ(1f - (0.85f * (float) zp));
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 4.3));
+
+        action.setPosZ(6f * (float) ClientEventHandler.actionMove);
+        lh.setPosZ(-6f * (float) ClientEventHandler.actionMove);
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));

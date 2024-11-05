@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.item.gun.sniper;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.PoseTool;
 import net.mcreator.superbwarfare.client.renderer.item.SentinelItemRenderer;
 import net.mcreator.superbwarfare.energy.ItemEnergyProvider;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
@@ -12,7 +13,6 @@ import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
-import net.mcreator.superbwarfare.client.PoseTool;
 import net.mcreator.superbwarfare.tools.RarityTool;
 import net.mcreator.superbwarfare.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
@@ -196,10 +196,6 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
                     }
                 }
         );
-
-        if (tag.getDouble("chamber_rot") > 0) {
-            tag.putDouble("chamber_rot", tag.getDouble("chamber_rot") - 1);
-        }
     }
 
     @Override

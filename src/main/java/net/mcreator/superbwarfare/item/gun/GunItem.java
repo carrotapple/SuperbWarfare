@@ -65,10 +65,6 @@ public abstract class GunItem extends Item {
                 itemstack.getOrCreateTag().putBoolean("draw", false);
             }
 
-            if (itemstack.getOrCreateTag().getInt("fire_animation") > 0) {
-                itemstack.getOrCreateTag().putInt("fire_animation", (itemstack.getOrCreateTag().getInt("fire_animation") - 1));
-            }
-
             handleGunPerks(itemstack);
             handleGunAttachment(itemstack);
 

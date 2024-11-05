@@ -18,6 +18,5 @@
   "normal_reload_time": 59,
   "EmptyReloadTime": 89,
   "BypassesArmor": 0.8,
-  "SoundRadius": 20,
-  "rpm": 240
+  "SoundRadius": 20
 }

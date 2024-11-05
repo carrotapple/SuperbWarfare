@@ -20,13 +20,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -70,6 +68,35 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
+    private PlayState fireAnimPredicate(AnimationState<MarlinItem> event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
+
+        if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.shift"));
+        }
+
+        if (stack.getOrCreateTag().getInt("reload_stage") == 1 && stack.getOrCreateTag().getDouble("prepare") > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.prepare"));
+        }
+
+        if (stack.getOrCreateTag().getDouble("load_index") == 0 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.iterativeload"));
+        }
+
+        if (stack.getOrCreateTag().getDouble("load_index") == 1 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.iterativeload2"));
+        }
+
+        if (stack.getOrCreateTag().getInt("reload_stage") == 3) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.finish"));
+        }
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.marlin.idle"));
+    }
+
     private PlayState idlePredicate(AnimationState<MarlinItem> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
@@ -77,29 +104,7 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (transformType != null && transformType.firstPerson()) {
-            if (stack.getOrCreateTag().getDouble("marlin_animation_time") > 0 && !stack.getOrCreateTag().getBoolean("fastfiring")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.shift"));
-            }
 
-            if (stack.getOrCreateTag().getDouble("marlin_animation_time") > 0 && stack.getOrCreateTag().getBoolean("fastfiring")) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.shift2"));
-            }
-
-            if (stack.getOrCreateTag().getInt("reload_stage") == 1 && stack.getOrCreateTag().getDouble("prepare") > 0) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.prepare"));
-            }
-
-            if (stack.getOrCreateTag().getDouble("load_index") == 0 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.iterativeload"));
-            }
-
-            if (stack.getOrCreateTag().getDouble("load_index") == 1 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.iterativeload2"));
-            }
-
-            if (stack.getOrCreateTag().getInt("reload_stage") == 3) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.marlin.finish"));
-            }
 
             if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
                 if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
@@ -117,6 +122,8 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        var fireAnimController = new AnimationController<>(this, "fireAnimController", 1, this::fireAnimPredicate);
+        data.add(fireAnimController);
         var idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
     }
@@ -127,17 +134,11 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemstack, world, entity, slot, selected);
-        var tag = itemstack.getOrCreateTag();
-        if (tag.getDouble("marlin_animation_time") > 0) {
-            tag.putDouble("marlin_animation_time", tag.getDouble("marlin_animation_time") - 1);
-        }
-    }
-
-    @Override
     public Set<SoundEvent> getReloadSound() {
-        return Set.of(ModSounds.MARLIN_LOOP.get(), ModSounds.MARLIN_PREPARE.get(), ModSounds.MARLIN_END.get());
+        return Set.of(ModSounds.MARLIN_LOOP.get(),
+                ModSounds.MARLIN_PREPARE.get(),
+                ModSounds.MARLIN_END.get(),
+                ModSounds.MARLIN_BOLT.get());
     }
 
     public static ItemStack getGunInstance() {

@@ -20,6 +20,5 @@
   "iterative_time": 11,
   "finish_time": 18,
   "BypassesArmor": 0.54,
-  "SoundRadius": 18,
-  "rpm": 240
+  "SoundRadius": 18
 }
