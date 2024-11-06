@@ -39,6 +39,8 @@ public class ModTags {
         public static final TagKey<Item> CAN_APPLY_MAGAZINE = tag("can_apply_magazine");
         public static final TagKey<Item> CAN_APPLY_STOCK= tag("can_apply_stock");
 
+        public static final TagKey<Item> HAS_SHELL_EFFECT= tag("has_shell_effect");
+
         public static final TagKey<Item> MILITARY_ARMOR = tag("military_armor");
         public static final TagKey<Item> MILITARY_ARMOR_HEAVY = tag("military_armor_heavy");
 

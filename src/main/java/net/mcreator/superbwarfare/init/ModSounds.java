@@ -311,4 +311,6 @@ public class ModSounds {
 
     public static final RegistryObject<SoundEvent> EDIT_MODE = REGISTRY.register("edit_mode", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "edit_mode")));
     public static final RegistryObject<SoundEvent> EDIT = REGISTRY.register("edit", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "edit")));
+    public static final RegistryObject<SoundEvent> SHELL_CASING_NORMAL = REGISTRY.register("shell_casing_normal", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "shell_casing_normal")));
+    public static final RegistryObject<SoundEvent> SHELL_CASING_SHOTGUN = REGISTRY.register("shell_casing_shotgun", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "shell_casing_shotgun")));
 }

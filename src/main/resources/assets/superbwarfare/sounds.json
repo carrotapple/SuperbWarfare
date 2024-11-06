@@ -2165,5 +2165,53 @@
         "stream": false
       }
     ]
+  },
+  "shell_casing_normal": {
+    "sounds": [
+      {
+        "name": "superbwarfare:shells/shell_casing_normal_1",
+        "stream": false
+      },
+      {
+        "name": "superbwarfare:shells/shell_casing_normal_2",
+        "stream": false
+      },
+      {
+        "name": "superbwarfare:shells/shell_casing_normal_3",
+        "stream": false
+      },
+      {
+        "name": "superbwarfare:shells/shell_casing_normal_4",
+        "stream": false
+      },
+      {
+        "name": "superbwarfare:shells/shell_casing_normal_5",
+        "stream": false
+      }
+    ]
+  },
+  "shell_casing_shotgun": {
+    "sounds": [
+      {
+        "name": "superbwarfare:shells/shell_casing_shotgun_1",
+        "stream": false
+      },
+      {
+        "name": "superbwarfare:shells/shell_casing_shotgun_2",
+        "stream": false
+      },
+      {
+        "name": "superbwarfare:shells/shell_casing_shotgun_3",
+        "stream": false
+      },
+      {
+        "name": "superbwarfare:shells/shell_casing_shotgun_4",
+        "stream": false
+      },
+      {
+        "name": "superbwarfare:shells/shell_casing_shotgun_5",
+        "stream": false
+      }
+    ]
   }
 }
