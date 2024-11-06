@@ -2213,5 +2213,29 @@
         "stream": false
       }
     ]
+  },
+  "shell_casing_50cal": {
+    "sounds": [
+      {
+        "name": "superbwarfare:shells/shell_casing_50cal_1",
+        "stream": false
+      },
+      {
+        "name": "superbwarfare:shells/shell_casing_50cal_2",
+        "stream": false
+      },
+      {
+        "name": "superbwarfare:shells/shell_casing_50cal_3",
+        "stream": false
+      },
+      {
+        "name": "superbwarfare:shells/shell_casing_50cal_4",
+        "stream": false
+      },
+      {
+        "name": "superbwarfare:shells/shell_casing_50cal_5",
+        "stream": false
+      }
+    ]
   }
 }

@@ -18,7 +18,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -281,11 +280,6 @@ public class ClientEventHandler {
         if (stack.getItem() == ModItems.DEVOTION.get() && (stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))) {
             customRpm = 0;
         }
-
-        double block_range = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip( new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1 , 0).scale(10)),
-                ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
-
-        player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.#").format(block_range)), true);
     }
 
     public static void shootClient(Player player) {
@@ -416,6 +410,8 @@ public class ClientEventHandler {
             if (stack.is(ModTags.Items.HAS_SHELL_EFFECT)) {
                 if (stack.is(ModTags.Items.SHOTGUN)) {
                     player.playSound(ModSounds.SHELL_CASING_SHOTGUN.get(), (float) Math.max(0.75 - 0.12 * shooterHeight, 0), 1);
+                } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
+                    player.playSound(ModSounds.SHELL_CASING_50CAL.get(), (float) Math.max(1 - 0.15 * shooterHeight, 0), 1);
                 } else {
                     player.playSound(ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);
                 }

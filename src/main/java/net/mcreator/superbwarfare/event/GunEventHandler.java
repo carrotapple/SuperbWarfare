@@ -183,6 +183,8 @@ public class GunEventHandler {
                 ModUtils.queueServerWork((int) (stack.getOrCreateTag().getDouble("bolt_action_time") / 2 + 1.5 * shooterHeight), () -> {
                     if (stack.is(ModTags.Items.SHOTGUN)) {
                         SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_SHOTGUN.get(), (float) Math.max(0.75 - 0.12 * shooterHeight, 0), 1);
+                    } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
+                        SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_50CAL.get(), (float) Math.max(1 - 0.15 * shooterHeight, 0), 1);
                     } else {
                         SoundTool.playLocalSound(serverPlayer,ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);
                     }
@@ -734,6 +736,19 @@ public class GunEventHandler {
             SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, name + "_prepare_empty"));
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
+
+                double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip( new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1 , 0).scale(10)),
+                        ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
+
+                ModUtils.queueServerWork((int) (stack.getOrCreateTag().getDouble("prepare_empty") / 2 + 3 + 1.5 * shooterHeight), () -> {
+                    if (stack.is(ModTags.Items.SHOTGUN)) {
+                        SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_SHOTGUN.get(), (float) Math.max(0.75 - 0.12 * shooterHeight, 0), 1);
+                    } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
+                        SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_50CAL.get(), (float) Math.max(1 - 0.15 * shooterHeight, 0), 1);
+                    } else {
+                        SoundTool.playLocalSound(serverPlayer,ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);
+                    }
+                });
             }
         }
     }
@@ -751,6 +766,19 @@ public class GunEventHandler {
             SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, name + "_prepare_load"));
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
+
+                double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip( new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1 , 0).scale(10)),
+                        ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
+
+                ModUtils.queueServerWork((int) (8 + 1.5 * shooterHeight), () -> {
+                    if (stack.is(ModTags.Items.SHOTGUN)) {
+                        SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_SHOTGUN.get(), (float) Math.max(0.75 - 0.12 * shooterHeight, 0), 1);
+                    } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
+                        SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_50CAL.get(), (float) Math.max(1 - 0.15 * shooterHeight, 0), 1);
+                    } else {
+                        SoundTool.playLocalSound(serverPlayer,ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);
+                    }
+                });
             }
         }
     }
@@ -785,6 +813,15 @@ public class GunEventHandler {
             SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, name + "_end"));
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
+
+                double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip( new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1 , 0).scale(10)),
+                        ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
+
+                if (stack.is(ModItems.MARLIN.get())) {
+                    ModUtils.queueServerWork((int) (5 + 1.5 * shooterHeight), () -> {
+                        SoundTool.playLocalSound(serverPlayer,ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);
+                    });
+                }
             }
         }
     }
