@@ -92,7 +92,7 @@ public class MinigunItemRenderer extends GeoItemRenderer<MinigunItem> {
             }
 
             if (name.equals("light")) {
-                bone.setHidden(!(ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5));
+                bone.setHidden((ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5));
             }
         }
 
