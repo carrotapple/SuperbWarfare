@@ -745,21 +745,21 @@ public class ClientEventHandler {
         int gripType = GunsTool.getAttachmentType(player.getMainHandItem(), GunsTool.AttachmentType.GRIP);
 
         double recoil = switch (barrelType) {
-            case 1 -> 0.9;
-            case 2 -> 1.3;
-            default -> 1.8;
+            case 1 -> 1.5;
+            case 2 -> 2.2;
+            default -> 2.4;
         };
 
         double gripRecoilX = switch (gripType) {
-            case 1 -> 0.95;
-            case 2 -> 0.65;
-            default -> 1;
+            case 1 -> 1.25;
+            case 2 -> 0.25;
+            default -> 1.5;
         };
 
         double gripRecoilY = switch (gripType) {
-            case 1 -> 0.6;
-            case 2 -> 0.95;
-            default -> 1;
+            case 1 -> 0.7;
+            case 2 -> 2.25;
+            default -> 2.5;
         };
 
         double cusWeight = player.getMainHandItem().getOrCreateTag().getDouble("CustomWeight");

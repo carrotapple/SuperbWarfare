@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.item.gun.sniper;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.PoseTool;
 import net.mcreator.superbwarfare.client.renderer.item.MosinNagantItemRenderer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
@@ -11,7 +12,6 @@ import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
-import net.mcreator.superbwarfare.client.PoseTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -112,7 +112,8 @@ public class MosinNagantItem extends GunItem implements GeoItem, AnimatedItem {
                 && stack.getOrCreateTag().getInt("reload_stage") != 1
                 && stack.getOrCreateTag().getInt("reload_stage") != 2
                 && stack.getOrCreateTag().getInt("reload_stage") != 3
-                && ClientEventHandler.drawTime < 0.01) {
+                && ClientEventHandler.drawTime < 0.01
+                && !stack.getOrCreateTag().getBoolean("reloading")) {
             if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && stack.getOrCreateTag().getInt("bolt_action_anim") == 0) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mosin.run_fast"));
             } else {

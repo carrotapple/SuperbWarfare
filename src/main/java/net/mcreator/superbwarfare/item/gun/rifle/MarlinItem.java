@@ -106,7 +106,11 @@ public class MarlinItem extends GunItem implements GeoItem, AnimatedItem {
         if (transformType != null && transformType.firstPerson()) {
 
 
-            if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
+            if (player.isSprinting()
+                    && player.onGround()
+                    && player.getPersistentData().getDouble("noRun") == 0
+                    && ClientEventHandler.drawTime < 0.01
+                    && !stack.getOrCreateTag().getBoolean("reloading")) {
                 if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
                     return event.setAndContinue(RawAnimation.begin().thenLoop("animation.marlin.run_fast"));
                 } else {

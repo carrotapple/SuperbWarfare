@@ -109,7 +109,11 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
+        if (player.isSprinting()
+                && player.onGround()
+                && player.getPersistentData().getDouble("noRun") == 0
+                && ClientEventHandler.drawTime < 0.01
+                && !stack.getOrCreateTag().getBoolean("reloading")) {
             if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m870.run_fast"));
             } else {

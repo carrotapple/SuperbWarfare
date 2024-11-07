@@ -7,7 +7,7 @@
   "mag": 5,
   "projectile_amount": 1,
   "headshot": 3,
-  "velocity": 39,
+  "velocity": 70,
   "bolt_action_time": 22,
   "weight": 7,
   "FireMode": 0,
