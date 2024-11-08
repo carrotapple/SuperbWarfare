@@ -140,12 +140,9 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
         if (source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE)) {
             amount *= 1.6f;
         }
-        if (amount < 3) {
-            return false;
-        }
 
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.5f * (amount - 5));
+        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.5f * Math.max(amount - 5, 0));
 
         return true;
     }
