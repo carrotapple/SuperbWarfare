@@ -405,7 +405,7 @@ public class ClientEventHandler {
             if (charged.get()) {
                 SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, "sentinel_charge_fire_1p"));
                 if (sound1p != null) {
-                    player.playSound(sound1p, 0.4f, 1);
+                    player.playSound(sound1p, 1f, 1);
                 }
                 return;
             }
@@ -422,7 +422,7 @@ public class ClientEventHandler {
         SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(ModUtils.loc(name + (barrelType == 2 ? "_fire_1p_s" : "_fire_1p")));
 
         if (sound1p != null) {
-            player.playSound(sound1p, 0.4f, 1);
+            player.playSound(sound1p, 1f, 1);
         }
 
         double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip( new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1 , 0).scale(10)),
