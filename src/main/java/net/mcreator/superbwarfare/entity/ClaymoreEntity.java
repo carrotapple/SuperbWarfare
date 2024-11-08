@@ -214,7 +214,7 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
 
     public void destroy() {
         if (level() instanceof ServerLevel) {
-            CustomExplosion explosion = new CustomExplosion(this.level(), this,
+            CustomExplosion explosion = new CustomExplosion(this.level(), null,
                     ModDamageTypes.causeMineDamage(this.level().registryAccess(), this), 15.0f,
                     this.getX(), this.getY(), this.getZ(), 7.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
             explosion.explode();

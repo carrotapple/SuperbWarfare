@@ -91,7 +91,7 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
 
         CoreGeoBone charge = getAnimationProcessor().getBone("charge");
 
-        charge.setRotZ(charge.getRotZ() + times * 0.05f);
+        charge.setRotZ(charge.getRotZ() + times * 0.5f);
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));
