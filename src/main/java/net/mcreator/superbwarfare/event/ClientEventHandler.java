@@ -347,10 +347,10 @@ public class ClientEventHandler {
                 var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
                 float pitch = tag.getDouble("heat") <= 40 ? 1 : (float) (1 - 0.025 * Math.abs(40 - tag.getDouble("heat")));
 
-                player.playSound(ModSounds.MINIGUN_FIRE_1P.get(), 2f, pitch);
+                player.playSound(ModSounds.MINIGUN_FIRE_1P.get(), 1f, pitch);
 
                 if (perk == ModPerks.BEAST_BULLET.get()) {
-                    player.playSound(ModSounds.HENG.get(), 4f, 1f);
+                    player.playSound(ModSounds.HENG.get(), 1f, 1f);
                 }
             }
 
@@ -405,7 +405,7 @@ public class ClientEventHandler {
             if (charged.get()) {
                 SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, "sentinel_charge_fire_1p"));
                 if (sound1p != null) {
-                    player.playSound(sound1p, 2, 1);
+                    player.playSound(sound1p, 0.4f, 1);
                 }
                 return;
             }
@@ -414,7 +414,7 @@ public class ClientEventHandler {
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
         if (perk == ModPerks.BEAST_BULLET.get()) {
-            player.playSound(ModSounds.HENG.get(), 4f, 1f);
+            player.playSound(ModSounds.HENG.get(), 1f, 1f);
         }
 
         int barrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
@@ -422,7 +422,7 @@ public class ClientEventHandler {
         SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(ModUtils.loc(name + (barrelType == 2 ? "_fire_1p_s" : "_fire_1p")));
 
         if (sound1p != null) {
-            player.playSound(sound1p, 2, 1);
+            player.playSound(sound1p, 0.4f, 1);
         }
 
         double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip( new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1 , 0).scale(10)),
