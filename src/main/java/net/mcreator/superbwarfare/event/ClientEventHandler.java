@@ -121,6 +121,9 @@ public class ClientEventHandler {
     public static double chamberRot = 0;
     public static double actionMove = 0;
 
+    public static int miniGunRot = 0;
+
+
     @SubscribeEvent
     public static void handleWeaponTurn(RenderHandEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
@@ -155,6 +158,25 @@ public class ClientEventHandler {
                 || Minecraft.getInstance().options.keyUp.isDown()
                 || Minecraft.getInstance().options.keyDown.isDown()
                 || (player != null && player.isSprinting());
+    }
+
+    @SubscribeEvent
+    public static void handleClientTick(TickEvent.ClientTickEvent event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) {
+            return;
+        }
+        ItemStack stack = player.getMainHandItem();
+        if (stack.getItem() == ModItems.MINIGUN.get()) {
+            if (holdFire || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
+                miniGunRot = Math.min(miniGunRot + 5, 21);
+                player.playSound(ModSounds.MINIGUN_ROT.get(), 1, 1);
+            }
+        }
+
+        if (miniGunRot > 0) {
+            miniGunRot -= 1;
+        }
     }
 
     @SubscribeEvent
@@ -238,7 +260,7 @@ public class ClientEventHandler {
                 && stack.getOrCreateTag().getInt("ammo") > 0
                 && !player.getCooldowns().isOnCooldown(stack.getItem())
                 && !stack.getOrCreateTag().getBoolean("need_bolt_action"))
-                || (stack.is(ModItems.MINIGUN.get()) && !player.isSprinting() && stack.getOrCreateTag().getDouble("overheat") == 0 && !player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getDouble("minigun_rotation") >= 10
+                || (stack.is(ModItems.MINIGUN.get()) && !player.isSprinting() && stack.getOrCreateTag().getDouble("overheat") == 0 && !player.getCooldowns().isOnCooldown(stack.getItem()) && miniGunRot >= 20
         ))) {
 
             if (mode == 0) {

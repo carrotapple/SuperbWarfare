@@ -46,7 +46,6 @@ public class GunEventHandler {
 
         if (event.phase == TickEvent.Phase.END && stack.is(ModTags.Items.GUN)) {
             handleGunBolt(player);
-            handleMiniGunFire(player);
             handleGunReload(player);
             handleGunSingleReload(player);
             handleSentinelCharge(player);
@@ -70,29 +69,6 @@ public class GunEventHandler {
             if (stack.getOrCreateTag().getInt("bolt_action_anim") == 1) {
                 stack.getOrCreateTag().putBoolean("need_bolt_action", false);
             }
-        }
-    }
-
-    /**
-     * 加特林开火流程
-     */
-    private static void handleMiniGunFire(Player player) {
-        ItemStack stack = player.getMainHandItem();
-        if (stack.getItem() != ModItems.MINIGUN.get()) {
-            return;
-        }
-
-        var tag = stack.getOrCreateTag();
-
-        if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).holdFire || (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
-            if (tag.getDouble("minigun_rotation") < 10) {
-                tag.putDouble("minigun_rotation", (tag.getDouble("minigun_rotation") + 1));
-            }
-            if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
-                SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_ROT.get(), 2f, 1f);
-            }
-        } else if (tag.getDouble("minigun_rotation") > 0) {
-            tag.putDouble("minigun_rotation", (tag.getDouble("minigun_rotation") - 0.5));
         }
     }
 
