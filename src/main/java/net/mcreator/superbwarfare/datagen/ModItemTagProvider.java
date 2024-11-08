@@ -112,7 +112,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
         this.tag(ModTags.Items.HAS_SHELL_EFFECT).add(ModItems.AK_47.get(), ModItems.AK_12.get(), ModItems.SVD.get(), ModItems.M_60.get(), ModItems.MK_14.get(), ModItems.VECTOR.get(),
                 ModItems.SKS.get(), ModItems.RPK.get(), ModItems.HK_416.get(), ModItems.AA_12.get(), ModItems.M_4.get(), ModItems.DEVOTION.get(), ModItems.GLOCK_17.get(),
-                ModItems.GLOCK_18.get(), ModItems.M_1911.get(), ModItems.QBZ_95.get(), ModItems.MINIGUN.get());
+                ModItems.GLOCK_18.get(), ModItems.M_1911.get(), ModItems.QBZ_95.get());
 
         this.tag(ModTags.Items.MILITARY_ARMOR).add(ModItems.RU_CHEST_6B43.get(), ModItems.US_CHEST_IOTV.get());
 

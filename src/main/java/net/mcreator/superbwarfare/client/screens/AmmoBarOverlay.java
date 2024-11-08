@@ -27,6 +27,7 @@ public class AmmoBarOverlay {
     private static final ResourceLocation AUTO = ModUtils.loc("textures/gun_icon/fire_mode/auto.png");
     private static final ResourceLocation TOP = ModUtils.loc("textures/gun_icon/fire_mode/top.png");
     private static final ResourceLocation DIR = ModUtils.loc("textures/gun_icon/fire_mode/dir.png");
+    private static final ResourceLocation MOUSE = ModUtils.loc("textures/gun_icon/fire_mode/mouse.png");
 
     private static boolean creativeAmmo() {
         Player player = Minecraft.getInstance().player;
@@ -69,14 +70,16 @@ public class AmmoBarOverlay {
                     16);
 
             // 渲染开火模式切换按键
-            event.getGuiGraphics().drawString(
-                    Minecraft.getInstance().font,
-                    "[" + ModKeyMappings.FIRE_MODE.getKey().getDisplayName().getString() + "]",
-                    w - 111.5f,
-                    h - 20,
-                    0xFFFFFF,
-                    false
-            );
+            if (stack.getItem() != ModItems.MINIGUN.get()) {
+                event.getGuiGraphics().drawString(
+                        Minecraft.getInstance().font,
+                        "[" + ModKeyMappings.FIRE_MODE.getKey().getDisplayName().getString() + "]",
+                        w - 111.5f,
+                        h - 20,
+                        0xFFFFFF,
+                        false
+                );
+            }
 
             // 渲染开火模式
             ResourceLocation fireMode = getFireMode(stack);
@@ -85,25 +88,50 @@ public class AmmoBarOverlay {
                 fireMode = stack.getOrCreateTag().getBoolean("TopMode") ? TOP : DIR;
             }
 
-            event.getGuiGraphics().blit(fireMode,
-                    w - 95,
-                    h - 21,
-                    0,
-                    0,
-                    8,
-                    8,
-                    8,
-                    8);
+            if (stack.getItem() == ModItems.MINIGUN.get()) {
+                fireMode = MOUSE;
+                // 渲染加特林射速
+                event.getGuiGraphics().drawString(
+                        Minecraft.getInstance().font,
+                        stack.getOrCreateTag().getInt("rpm") + " RPM",
+                        w - 111f,
+                        h - 20,
+                        0xFFFFFF,
+                        false
+                );
 
-            event.getGuiGraphics().blit(LINE,
-                    w - 95,
-                    h - 16,
-                    0,
-                    0,
-                    8,
-                    8,
-                    8,
-                    8);
+                event.getGuiGraphics().blit(fireMode,
+                        w - 126,
+                        h - 22,
+                        0,
+                        0,
+                        12,
+                        12,
+                        12,
+                        12);
+            } else {
+                event.getGuiGraphics().blit(fireMode,
+                        w - 95,
+                        h - 21,
+                        0,
+                        0,
+                        8,
+                        8,
+                        8,
+                        8);
+            }
+
+            if (stack.getItem() != ModItems.MINIGUN.get()) {
+                event.getGuiGraphics().blit(LINE,
+                        w - 95,
+                        h - 16,
+                        0,
+                        0,
+                        8,
+                        8,
+                        8,
+                        8);
+            }
 
             // 渲染当前弹药量
             poseStack.pushPose();

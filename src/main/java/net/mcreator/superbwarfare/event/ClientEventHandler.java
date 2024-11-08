@@ -170,7 +170,12 @@ public class ClientEventHandler {
         if (stack.getItem() == ModItems.MINIGUN.get()) {
             if (holdFire || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
                 miniGunRot = Math.min(miniGunRot + 5, 21);
-                player.playSound(ModSounds.MINIGUN_ROT.get(), 1, 1);
+                float rpm = 1;
+
+                if (player.getMainHandItem().is(ModItems.MINIGUN.get())) {
+                    rpm = (float) player.getMainHandItem().getOrCreateTag().getInt("rpm") / 3600;
+                }
+                player.playSound(ModSounds.MINIGUN_ROT.get(), 1, 0.7f + rpm);
             }
         }
 
@@ -260,7 +265,11 @@ public class ClientEventHandler {
                 && stack.getOrCreateTag().getInt("ammo") > 0
                 && !player.getCooldowns().isOnCooldown(stack.getItem())
                 && !stack.getOrCreateTag().getBoolean("need_bolt_action"))
-                || (stack.is(ModItems.MINIGUN.get()) && !player.isSprinting() && stack.getOrCreateTag().getDouble("overheat") == 0 && !player.getCooldowns().isOnCooldown(stack.getItem()) && miniGunRot >= 20
+                || (stack.is(ModItems.MINIGUN.get())
+                && !player.isSprinting()
+                && stack.getOrCreateTag().getDouble("overheat") == 0
+                && !player.getCooldowns().isOnCooldown(stack.getItem()) && miniGunRot >= 20
+                && ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())))
         ))) {
 
             if (mode == 0) {
@@ -352,6 +361,13 @@ public class ClientEventHandler {
                 if (perk == ModPerks.BEAST_BULLET.get()) {
                     player.playSound(ModSounds.HENG.get(), 1f, 1f);
                 }
+
+                double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip( new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1 , 0).scale(10)),
+                        ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
+
+                ModUtils.queueClientWork((int) (1 + 1.5 * shooterHeight), () -> {
+                    player.playSound(ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);
+                });
             }
 
             handleClientShoot();
@@ -709,6 +725,12 @@ public class ClientEventHandler {
             fireRotTimer += 0.18 * (1.9 - fireRotTimer) * times;
         }
 
+        double rpm = 1;
+
+        if (entity.getMainHandItem().is(ModItems.MINIGUN.get())) {
+            rpm = (double) entity.getMainHandItem().getOrCreateTag().getInt("rpm") / 1800;
+        }
+
         float[] shake = {0, 0};
         shake[0] = (float) (1.3 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 1 * Mth.clamp(0.3 - fireRotTimer, 0, 1) * (2 * Math.random() - 1));
         shake[1] = (float) (4.2 * amplitude * (1 / 6.3 * (fireRotTimer - 0.5)) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2)) + 3 * Mth.clamp(0.5 - fireRotTimer, 0, 0.5) * (2 * Math.random() - 1));
@@ -716,13 +738,13 @@ public class ClientEventHandler {
         if (0 < fireRotTimer && fireRotTimer < 1.732) {
             fireRot = 1 / 6.3 * (fireRotTimer - 0.5) * Math.sin(6.3 * (fireRotTimer - 0.5)) * (3 - Math.pow(fireRotTimer, 2));
             if (recoilY > 0) {
-                event.setYaw(yaw - shake[0]);
-                event.setPitch(pitch + shake[0]);
-                event.setRoll(roll + shake[1]);
+                event.setYaw((float) (yaw - shake[0] * rpm));
+                event.setPitch((float) (pitch + shake[0] * rpm));
+                event.setRoll((float) (roll + shake[1] * rpm));
             } else if (recoilY <= 0) {
-                event.setYaw(yaw + shake[0]);
-                event.setPitch(pitch - shake[0]);
-                event.setRoll(roll - shake[1]);
+                event.setYaw((float) (yaw + shake[0] * rpm));
+                event.setPitch((float) (pitch - shake[0] * rpm));
+                event.setRoll((float) (roll - shake[1] * rpm));
             }
         }
 
@@ -786,6 +808,12 @@ public class ClientEventHandler {
 
         double cusWeight = player.getMainHandItem().getOrCreateTag().getDouble("CustomWeight");
 
+        double rpm = 1;
+
+        if (player.getMainHandItem().is(ModItems.MINIGUN.get())) {
+            rpm = (double) player.getMainHandItem().getOrCreateTag().getInt("rpm") / 1800;
+        }
+
         float gunRecoilX = (float) tag.getDouble("recoil_x") * 60;
 
         recoilHorizon = Mth.lerp(0.2 * times, recoilHorizon, 0) + recoilY;
@@ -806,7 +834,7 @@ public class ClientEventHandler {
 
         // 水平后座
 
-        float newYaw = player.getYRot() - (float) (0.6 * recoilHorizon * pose * times * (0.5 + fireSpread) * recoil * (1 - 0.06 * cusWeight) * gripRecoilX);
+        float newYaw = player.getYRot() - (float) (0.6 * recoilHorizon * pose * times * (0.5 + fireSpread) * recoil * (1 - 0.06 * cusWeight) * gripRecoilX * rpm);
         player.setYRot(newYaw);
         player.yRotO = player.getYRot();
 
@@ -814,7 +842,7 @@ public class ClientEventHandler {
 
         // 竖直后座
         if (0 < recoilTime && recoilTime < 0.5) {
-            float newPitch = (float) (player.getXRot() - 0.02f * gunRecoilX * times * recoil * (1 - 0.06 * cusWeight) * gripRecoilY);
+            float newPitch = (float) (player.getXRot() - 0.02f * gunRecoilX * times * recoil * (1 - 0.06 * cusWeight) * gripRecoilY * rpm);
             player.setXRot(newPitch);
             player.xRotO = player.getXRot();
         }
@@ -830,7 +858,7 @@ public class ClientEventHandler {
         }
 
         if (0 < recoilTime && recoilTime < 2.5) {
-            float newPitch = player.getXRot() - (float) (1.5 * pose * gunRecoilX * (sinRes + Mth.clamp(0.5 - recoilTime, 0, 0.5)) * times * (0.5 + fireSpread) * recoil * (1 - 0.06 * cusWeight) * gripRecoilY);
+            float newPitch = player.getXRot() - (float) (1.5 * pose * gunRecoilX * (sinRes + Mth.clamp(0.5 - recoilTime, 0, 0.5)) * times * (0.5 + fireSpread) * recoil * (1 - 0.06 * cusWeight) * gripRecoilY * rpm);
             player.setXRot(newPitch);
             player.xRotO = player.getXRot();
         }

@@ -143,7 +143,7 @@ public class ClickHandler {
             if (tag.getBoolean("CanSwitchScope")) {
                 ModUtils.PACKET_HANDLER.sendToServer(new SwitchScopeMessage(scroll));
             }
-            else if (tag.getBoolean("CanAdjustZoomFov")) {
+            else if (tag.getBoolean("CanAdjustZoomFov") || stack.is(ModItems.MINIGUN.get())) {
                 ModUtils.PACKET_HANDLER.sendToServer(new AdjustZoomFovMessage(scroll));
             }
             event.setCanceled(true);
