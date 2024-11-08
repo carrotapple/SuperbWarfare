@@ -155,11 +155,11 @@ public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
 
         double cooldown = 0;
         if (entity.wasInPowderSnow) {
-            cooldown = 0.75;
+            cooldown = 0.15;
         } else if (entity.isInWaterOrRain()) {
-            cooldown = 0.2;
+            cooldown = 0.04;
         } else if (entity.isOnFire() || entity.isInLava()) {
-            cooldown = -0.5;
+            cooldown = -0.1;
         }
 
         if (entity instanceof ServerPlayer serverPlayer && entity.level() instanceof ServerLevel serverLevel && itemstack.getOrCreateTag().getDouble("heat") > 4 && entity.isInWaterOrRain()) {
@@ -177,7 +177,7 @@ public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
                     1, 0.1, 0.1, 0.1, 0.002, true, serverPlayer);
         }
 
-        itemstack.getOrCreateTag().putDouble("heat", Mth.clamp(itemstack.getOrCreateTag().getDouble("heat") - 0.25 - cooldown, 0, 55));
+        itemstack.getOrCreateTag().putDouble("heat", Mth.clamp(itemstack.getOrCreateTag().getDouble("heat") - 0.05 - cooldown, 0, 55));
 
         if (itemstack.getOrCreateTag().getDouble("overheat") > 0) {
             itemstack.getOrCreateTag().putDouble("overheat", (itemstack.getOrCreateTag().getDouble("overheat") - 1));

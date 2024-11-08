@@ -116,7 +116,7 @@ public class ShootMessage {
 
             if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0
                     || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
-                tag.putDouble("heat", (tag.getDouble("heat") + 0.5));
+                tag.putDouble("heat", (tag.getDouble("heat") + 0.1));
                 if (tag.getDouble("heat") >= 50.5) {
                     tag.putDouble("overheat", 40);
                     player.getCooldowns().addCooldown(stack.getItem(), 40);

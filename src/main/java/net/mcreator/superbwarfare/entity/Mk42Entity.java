@@ -134,12 +134,18 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
         if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
             amount *= 0.25f;
         }
-        if (amount < 32) {
+        if (source.is(ModDamageTypes.CANNON_FIRE)) {
+            amount *= 1.4f;
+        }
+        if (source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE)) {
+            amount *= 1.6f;
+        }
+        if (amount < 3) {
             return false;
         }
 
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.5f * amount);
+        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.5f * (amount - 5));
 
         return true;
     }
