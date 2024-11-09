@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.tools.ItemNBTTool;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -51,7 +52,13 @@ public class Monitor extends Item {
             return super.use(world, player, hand);
         }
 
-        stack.getOrCreateTag().putBoolean("Using", !stack.getOrCreateTag().getBoolean("Using"));
+        if (stack.getOrCreateTag().getBoolean("Using")) {
+            stack.getOrCreateTag().putBoolean("Using", false);
+            Minecraft.getInstance().options.setCameraType(CameraType.FIRST_PERSON);
+        } else {
+            stack.getOrCreateTag().putBoolean("Using", true);
+            Minecraft.getInstance().options.setCameraType(CameraType.THIRD_PERSON_BACK);
+        }
 
         DroneEntity drone = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
                 .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
@@ -101,10 +108,14 @@ public class Monitor extends Item {
     @Override
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
+        DroneEntity drone = entity.level().getEntitiesOfClass(DroneEntity.class, entity.getBoundingBox().inflate(512))
+                .stream().filter(e -> e.getStringUUID().equals(itemstack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
+
         if (!selected) {
-            itemstack.getOrCreateTag().putBoolean("Using", false);
-            DroneEntity drone = entity.level().getEntitiesOfClass(DroneEntity.class, entity.getBoundingBox().inflate(512))
-                    .stream().filter(e -> e.getStringUUID().equals(itemstack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
+            if (itemstack.getOrCreateTag().getBoolean("Using")) {
+                itemstack.getOrCreateTag().putBoolean("Using", false);
+                Minecraft.getInstance().options.setCameraType(CameraType.FIRST_PERSON);
+            }
 
             if (drone != null) {
                 drone.getPersistentData().putBoolean("left", false);
@@ -113,6 +124,13 @@ public class Monitor extends Item {
                 drone.getPersistentData().putBoolean("backward", false);
                 drone.getPersistentData().putBoolean("up", false);
                 drone.getPersistentData().putBoolean("down", false);
+            }
+        } else {
+            if (drone == null) {
+                if (itemstack.getOrCreateTag().getBoolean("Using")) {
+                    itemstack.getOrCreateTag().putBoolean("Using", false);
+                    Minecraft.getInstance().options.setCameraType(CameraType.FIRST_PERSON);
+                }
             }
         }
     }
