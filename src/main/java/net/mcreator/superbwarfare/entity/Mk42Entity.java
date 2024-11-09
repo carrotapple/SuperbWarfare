@@ -154,15 +154,27 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
 
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
-        if (player.isShiftKeyDown() && player.getMainHandItem().getItem() == ModItems.CROWBAR.get() && this.getFirstPassenger() == null) {
-            this.discard();
+        if (player.isShiftKeyDown()) {
+            if (player.getMainHandItem().getItem() == ModItems.CROWBAR.get() && this.getFirstPassenger() == null) {
+                this.discard();
+                return InteractionResult.sidedSuccess(this.level().isClientSide());
+            }
+            return InteractionResult.PASS;
         } else {
-            player.setXRot(this.getXRot());
-            player.setYRot(this.getYRot());
-            player.startRiding(this);
+            if (this.getFirstPassenger() == null) {
+                player.setXRot(this.getXRot());
+                player.setYRot(this.getYRot());
+                player.startRiding(this);
+                return InteractionResult.sidedSuccess(this.level().isClientSide());
+            }
         }
 
-        return InteractionResult.sidedSuccess(this.level().isClientSide());
+        return InteractionResult.PASS;
+    }
+
+    @Override
+    public Vec3 getDeltaMovement() {
+        return new Vec3(0, Math.min(super.getDeltaMovement().y, 0), 0);
     }
 
     @Override
