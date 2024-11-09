@@ -7,6 +7,7 @@ import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.mcreator.superbwarfare.tools.ProjectileTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
@@ -24,7 +25,10 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 
 public class MortarShellEntity extends ThrowableItemProjectile {
+
     private float damage = 150f;
+    private int life = 600;
+    private float radius = 12.5f;
 
     public MortarShellEntity(EntityType<? extends MortarShellEntity> type, Level world) {
         super(type, world);
@@ -41,6 +45,36 @@ public class MortarShellEntity extends ThrowableItemProjectile {
 
     public MortarShellEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
         this(ModEntities.MORTAR_SHELL.get(), level);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        pCompound.putFloat("Damage", this.damage);
+        pCompound.putInt("Life", this.life);
+        pCompound.putFloat("Radius", this.radius);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        if (pCompound.contains("Damage")) {
+            this.damage = pCompound.getFloat("Damage");
+        } else {
+            this.damage = 150f;
+        }
+
+        if (pCompound.contains("Life")) {
+            this.life = pCompound.getInt("Life");
+        } else {
+            this.life = 600;
+        }
+
+        if (pCompound.contains("Radius")) {
+            this.radius = pCompound.getFloat("Radius");
+        } else {
+            this.radius = 12.5f;
+        }
     }
 
     @Override
@@ -65,7 +99,7 @@ public class MortarShellEntity extends ThrowableItemProjectile {
         entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
 
         if (this.level() instanceof ServerLevel) {
-            ProjectileTool.causeCustomExplode(this, this.damage, 12.5f);
+            ProjectileTool.causeCustomExplode(this, this.damage, this.radius);
         }
         this.discard();
     }
@@ -79,7 +113,7 @@ public class MortarShellEntity extends ThrowableItemProjectile {
             bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
         }
         if (!this.level().isClientSide() && this.level() instanceof ServerLevel) {
-            ProjectileTool.causeCustomExplode(this, this.damage, 12.5f);
+            ProjectileTool.causeCustomExplode(this, this.damage, this.radius);
         }
         this.discard();
     }
@@ -91,9 +125,9 @@ public class MortarShellEntity extends ThrowableItemProjectile {
             ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.xo, this.yo, this.zo,
                     1, 0, 0, 0, 0.001, true);
         }
-        if (this.tickCount > 600 || this.isInWater()) {
+        if (this.tickCount > this.life || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this, this.damage, 12.5f);
+                ProjectileTool.causeCustomExplode(this, this.damage, this.radius);
             }
             this.discard();
         }

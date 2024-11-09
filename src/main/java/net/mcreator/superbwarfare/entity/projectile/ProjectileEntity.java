@@ -70,6 +70,7 @@ import static net.mcreator.superbwarfare.entity.TargetEntity.DOWN_TIME;
 
 @SuppressWarnings({"unused", "UnusedReturnValue", "SuspiciousNameCombination"})
 public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnData, GeoEntity, AnimatedEntity {
+
     public static final EntityDataAccessor<Float> COLOR_R = SynchedEntityData.defineId(ProjectileEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> COLOR_G = SynchedEntityData.defineId(ProjectileEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> COLOR_B = SynchedEntityData.defineId(ProjectileEntity.class, EntityDataSerializers.FLOAT);
@@ -357,10 +358,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         }
     }
 
-    protected void explosionBulletBlock(Entity projectile , float damage, int heLevel, float monsterMultiple, Vec3 hitVec) {
+    protected void explosionBulletBlock(Entity projectile, float damage, int heLevel, float monsterMultiple, Vec3 hitVec) {
         CustomExplosion explosion = new CustomExplosion(projectile.level(), projectile,
                 ModDamageTypes.causeProjectileBoomDamage(projectile.level().registryAccess(), projectile, this.getShooter()), (float) ((0.9 * damage) * (1 + 0.1 * heLevel)),
-                hitVec.x, hitVec.y, hitVec.z, (float)((1.5 + 0.02 * damage) * (1 + 0.05 * heLevel)) , Explosion.BlockInteraction.KEEP).setDamageMultiplier(monsterMultiple);
+                hitVec.x, hitVec.y, hitVec.z, (float) ((1.5 + 0.02 * damage) * (1 + 0.05 * heLevel)), Explosion.BlockInteraction.KEEP).setDamageMultiplier(monsterMultiple);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(projectile.level(), explosion);
         explosion.finalizeExplosion(false);
@@ -494,7 +495,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         }
 
         if (entity instanceof LivingEntity living && jhpBullet) {
-            this.damage *= (1.0f + 0.12f * jhpLevel) * ((float)(10 / (living.getAttributeValue(Attributes.ARMOR) + 10)) + 0.25f);
+            this.damage *= (1.0f + 0.12f * jhpLevel) * ((float) (10 / (living.getAttributeValue(Attributes.ARMOR) + 10)) + 0.25f);
         }
 
         if (heBullet) {
@@ -543,7 +544,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     protected void explosionBulletEntity(Entity projectile, Entity target, float damage, int heLevel, float monsterMultiple) {
         CustomExplosion explosion = new CustomExplosion(projectile.level(), projectile,
                 ModDamageTypes.causeProjectileBoomDamage(projectile.level().registryAccess(), projectile, this.getShooter()), (float) ((0.8 * damage) * (1 + 0.1 * heLevel)),
-                target.getX(), target.getY(), target.getZ(), (float)((1.5 + 0.02 * damage) * (1 + 0.05 * heLevel)) , Explosion.BlockInteraction.KEEP).setDamageMultiplier(monsterMultiple);
+                target.getX(), target.getY(), target.getZ(), (float) ((1.5 + 0.02 * damage) * (1 + 0.05 * heLevel)), Explosion.BlockInteraction.KEEP).setDamageMultiplier(monsterMultiple);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(projectile.level(), explosion);
         explosion.finalizeExplosion(false);
