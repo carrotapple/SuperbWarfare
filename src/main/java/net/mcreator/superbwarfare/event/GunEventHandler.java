@@ -549,7 +549,7 @@ public class GunEventHandler {
         }
 
         // 强制停止换弹，进入三阶段
-        if (tag.getBoolean("force_stop")) {
+        if (tag.getBoolean("force_stop") && tag.getInt("ammo") > 1) {
             tag.putBoolean("stop", true);
         }
 
