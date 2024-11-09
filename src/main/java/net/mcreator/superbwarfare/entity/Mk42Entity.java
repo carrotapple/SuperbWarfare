@@ -79,7 +79,11 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     public void readAdditionalSaveData(CompoundTag compound) {
         this.entityData.set(COOL_DOWN, compound.getInt("CoolDown"));
         this.entityData.set(TYPE, compound.getInt("Type"));
-        this.entityData.set(HEALTH, compound.getFloat("Health"));
+        if (compound.contains("Health")) {
+            this.entityData.set(HEALTH, compound.getFloat("Health"));
+        } else {
+            this.entityData.set(HEALTH, MAX_HEALTH);
+        }
     }
 
     @Override
