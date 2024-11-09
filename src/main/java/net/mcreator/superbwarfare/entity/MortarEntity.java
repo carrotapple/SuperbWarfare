@@ -44,6 +44,7 @@ import static net.mcreator.superbwarfare.tools.ParticleTool.sendParticle;
 public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Integer> FIRE_TIME = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> PITCH = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> Y_ROT = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.FLOAT);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -64,6 +65,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
     protected void defineSynchedData() {
         this.entityData.define(FIRE_TIME, 0);
         this.entityData.define(PITCH, 70f);
+        this.entityData.define(Y_ROT, 0f);
         this.entityData.define(HEALTH, 100f);
     }
 
@@ -116,6 +118,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
     public void addAdditionalSaveData(CompoundTag compound) {
         compound.putInt("FireTime", this.entityData.get(FIRE_TIME));
         compound.putFloat("Pitch", this.entityData.get(PITCH));
+        compound.putFloat("YRot", this.entityData.get(Y_ROT));
         compound.putFloat("Health", this.entityData.get(HEALTH));
     }
 
@@ -126,6 +129,9 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
         }
         if (compound.contains("Pitch")) {
             this.entityData.set(PITCH, compound.getFloat("Pitch"));
+        }
+        if (compound.contains("YRot")) {
+            this.entityData.set(Y_ROT, compound.getFloat("YRot"));
         }
         if (compound.contains("Health")) {
             this.entityData.set(HEALTH, compound.getFloat("Health"));
@@ -140,11 +146,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
                 this.discard();
                 ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MORTAR_DEPLOYER.get()));
             }
-            this.setYRot(player.getYRot());
-            this.setYBodyRot(this.getYRot());
-            this.setYHeadRot(this.getYRot());
-            this.yRotO = this.getYRot();
-            this.setRot(this.getYRot(), this.getXRot());
+            this.entityData.set(Y_ROT, player.getYRot());
         }
         if (mainHandItem.getItem() == ModItems.MORTAR_SHELLS.get() && !player.isShiftKeyDown() && this.entityData.get(FIRE_TIME) == 0) {
             this.entityData.set(FIRE_TIME, 25);
@@ -189,6 +191,11 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
         }
         this.setXRot(-Mth.clamp(entityData.get(PITCH), 20, 89));
         this.xRotO = this.getXRot();
+        this.setYRot(entityData.get(Y_ROT));
+        this.setYBodyRot(this.getYRot());
+        this.setYHeadRot(this.getYRot());
+        this.yRotO = this.getYRot();
+        this.setRot(this.getYRot(), this.getXRot());
 
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
 
