@@ -144,6 +144,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
             this.setYBodyRot(this.getYRot());
             this.setYHeadRot(this.getYRot());
             this.yRotO = this.getYRot();
+            this.setRot(this.getYRot(), this.getXRot());
         }
         if (mainHandItem.getItem() == ModItems.MORTAR_SHELLS.get() && !player.isShiftKeyDown() && this.entityData.get(FIRE_TIME) == 0) {
             this.entityData.set(FIRE_TIME, 25);
@@ -170,7 +171,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
             });
         }
 
-        return InteractionResult.sidedSuccess(this.level().isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
     @Override
