@@ -14,7 +14,7 @@ def getGitCommitHash() {
     return stdout.toString().trim()
 }
 
-version = '0.2.1-SNAPSHOT-' + getGitCommitHash()
+version = "${mod_version}-SNAPSHOT-${getGitCommitHash()}"
 group = 'com.Atsushio.superbwarfare'
 archivesBaseName = 'superbwarfare'
 
