@@ -116,15 +116,15 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
         this.tag(ModTags.Items.MILITARY_ARMOR).add(ModItems.RU_CHEST_6B43.get(), ModItems.US_CHEST_IOTV.get());
 
-        this.tag(ModTags.Items.CAN_CUSTOM_GUN).add(ModItems.AK_12.get(), ModItems.AK_47.get(), ModItems.M_4.get(), ModItems.HK_416.get());
+        this.tag(ModTags.Items.CAN_CUSTOM_GUN).add(ModItems.AK_12.get(), ModItems.AK_47.get(), ModItems.M_4.get(), ModItems.HK_416.get(), ModItems.QBZ_95.get());
 
-        this.tag(ModTags.Items.CAN_APPLY_BARREL).add(ModItems.AK_12.get(), ModItems.AK_47.get(), ModItems.M_4.get(), ModItems.HK_416.get());
+        this.tag(ModTags.Items.CAN_APPLY_BARREL).add(ModItems.AK_12.get(), ModItems.AK_47.get(), ModItems.M_4.get(), ModItems.HK_416.get(), ModItems.QBZ_95.get());
 
-        this.tag(ModTags.Items.CAN_APPLY_GRIP).add(ModItems.AK_12.get(), ModItems.M_4.get(), ModItems.HK_416.get());
+        this.tag(ModTags.Items.CAN_APPLY_GRIP).add(ModItems.AK_12.get(), ModItems.M_4.get(), ModItems.HK_416.get(), ModItems.QBZ_95.get());
 
-        this.tag(ModTags.Items.CAN_APPLY_SCOPE).add(ModItems.AK_12.get(), ModItems.AK_47.get(), ModItems.M_4.get(), ModItems.HK_416.get());
+        this.tag(ModTags.Items.CAN_APPLY_SCOPE).add(ModItems.AK_12.get(), ModItems.AK_47.get(), ModItems.M_4.get(), ModItems.HK_416.get(), ModItems.QBZ_95.get());
 
-        this.tag(ModTags.Items.CAN_APPLY_MAGAZINE).add(ModItems.AK_12.get(), ModItems.AK_47.get(), ModItems.M_4.get(), ModItems.HK_416.get());
+        this.tag(ModTags.Items.CAN_APPLY_MAGAZINE).add(ModItems.AK_12.get(), ModItems.AK_47.get(), ModItems.M_4.get(), ModItems.HK_416.get(), ModItems.QBZ_95.get());
 
         this.tag(ModTags.Items.CAN_APPLY_STOCK).add(ModItems.AK_12.get(), ModItems.AK_47.get(), ModItems.M_4.get(), ModItems.HK_416.get());
 

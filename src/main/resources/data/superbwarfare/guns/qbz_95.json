@@ -1,4 +1,6 @@
 {
+  "MinZoom": 1.25,
+  "MaxZoom": 6,
   "spread": 3.7,
   "recoil_x": 0.0013,
   "recoil_y": 0.009,

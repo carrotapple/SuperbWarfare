@@ -5,6 +5,7 @@ import net.mcreator.superbwarfare.client.AnimationHelper;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.rifle.Qbz95Item;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -15,6 +16,10 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
+
+    public static float fireRotY = 0f;
+    public static float fireRotZ = 0f;
+    public static float rotXBipod = 0f;
 
     @Override
     public ResourceLocation getAnimationResource(Qbz95Item animatable) {
@@ -34,8 +39,13 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
     @Override
     public void setCustomAnimations(Qbz95Item animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
-        CoreGeoBone shen = getAnimationProcessor().getBone("shen");
         CoreGeoBone bolt = getAnimationProcessor().getBone("bolt2");
+        CoreGeoBone scope = getAnimationProcessor().getBone("Scope1");
+//        CoreGeoBone scope2 = getAnimationProcessor().getBone("Scope2");
+//        CoreGeoBone scope3 = getAnimationProcessor().getBone("Scope3");
+        CoreGeoBone cross1 = getAnimationProcessor().getBone("Cross1");
+//        CoreGeoBone cross2 = getAnimationProcessor().getBone("Cross2");
+//        CoreGeoBone cross3 = getAnimationProcessor().getBone("Cross3");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -60,29 +70,73 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
-        gun.setPosX(3.73f * (float) zp);
-        gun.setPosY(-0.5f * (float) zp - (float) (0.2f * zpz));
-        gun.setPosZ(13f * (float) zp + (float) (0.3f * zpz));
+        int type = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+
+        float posY = switch (type) {
+            case 0 -> 0.535f;
+            case 1 -> -0.155f;
+            case 2 -> 0.5001f;
+            case 3 -> 0.5002f;
+            default -> 0f;
+        };
+        float posZ = switch (type) {
+            case 0 -> 9f;
+            case 1 -> 8.9f;
+            case 2 -> 13.01f;
+            case 3 -> 13.00f;
+            default -> 0f;
+        };
+        float scaleZ = switch (type) {
+            case 0 -> 0.5f;
+            case 1 -> 0.51f;
+            case 2 -> 0.692f;
+            case 3 -> 0.691f;
+            default -> 0f;
+        };
+
+        gun.setPosX(3.71f * (float) zp);
+        gun.setPosY(posY * (float) zp - (float) (0.2f * zpz));
+        gun.setPosZ(posZ  * (float) zp + (float) (0.3f * zpz));
         gun.setRotZ((float) (0.05f * zpz));
-        gun.setScaleZ(1f - (0.7f * (float) zp));
+        gun.setScaleZ(1f - (scaleZ * (float) zp));
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 3.1));
 
-        shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
-        shen.setPosY((float) (0.15f * fp + 0.18f * fr));
-        shen.setPosZ((float) (0.275 * fp + 0.34f * fr + 0.65 * fpz));
-        shen.setRotX((float) (0.01f * fp + 0.05f * fr + 0.01f * fpz));
-        shen.setRotY((float) (0.1f * ClientEventHandler.recoilHorizon * fpz));
-        shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
+        CoreGeoBone shen;
+        if (zt < 0.5) {
+            shen = getAnimationProcessor().getBone("fireRootNormal");
+        } else {
+            shen = switch (type) {
+                case 0 -> getAnimationProcessor().getBone("fireRoot0");
+                case 1 -> getAnimationProcessor().getBone("fireRoot1");
+                case 2 -> getAnimationProcessor().getBone("fireRoot2");
+                case 3 -> getAnimationProcessor().getBone("fireRoot3");
+                default -> getAnimationProcessor().getBone("fireRootNormal");
+            };
+        }
 
-        shen.setPosX((float) (shen.getPosX() * (1 - 0.5 * zt)));
-        shen.setPosY((float) (shen.getPosY() * (-1 + 0.4 * zt)));
-        shen.setPosZ((float) (shen.getPosZ() * (1 - 0.6 * zt)));
-        shen.setRotX((float) (shen.getRotX() * (1 - 0.9 * zt)));
-        shen.setRotY((float) (shen.getRotY() * (1 - 0.9 * zt)));
-        shen.setRotZ((float) (shen.getRotZ() * (1 - 0.9 * zt)));
+        fireRotY = (float) Mth.lerp(0.3f * times, fireRotY, 0.2f * ClientEventHandler.recoilHorizon * fpz);
+        fireRotZ = (float) Mth.lerp(2f * times, fireRotZ, (0.4f + 0.5 * fpz) * ClientEventHandler.recoilHorizon);
+
+        shen.setPosX(-0.4f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
+        shen.setPosY((float) (0.15f * fp + 0.18f * fr));
+        shen.setPosZ((float) (0.375 * fp + 0.44f * fr + 0.75 * fpz));
+        shen.setRotX((float) (0.01f * fp + 0.05f * fr + 0.01f * fpz));
+        shen.setRotY(fireRotY);
+        shen.setRotZ(fireRotZ);
+
+        shen.setPosX((float) (shen.getPosX() * (1 - 0.1 * zt)));
+        shen.setPosY((float) (shen.getPosY() * (-1 + 0.8 * zt)));
+        shen.setPosZ((float) (shen.getPosZ() * (1 - 0.1 * zt)));
+        shen.setRotX((float) (shen.getRotX() * (1 - (type == 3 ? 0.96 : type == 1 ? 0.8 : 0.9) * zt)));
+        shen.setRotY((float) (shen.getRotY() * (1 - (type == 3 ? 0.95 : 0.9) * zt)));
+        shen.setRotZ((float) (shen.getRotZ() * (1 - 0.4 * zt)));
 
         bolt.setPosZ(5f * (float) fp);
+
+        cross1.setPosY(-0.75f * (float) fpz);
+//        cross2.setPosY(-0.7f * (float) fpz);
+//        cross3.setPosY(-0.2f * (float) fpz);
 
         if (stack.getOrCreateTag().getBoolean("HoldOpen")) {
             bolt.setPosZ(5f);

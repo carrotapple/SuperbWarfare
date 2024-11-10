@@ -3,10 +3,12 @@ package net.mcreator.superbwarfare.client.renderer.item;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.AnimationHelper;
+import net.mcreator.superbwarfare.client.ItemModelHelper;
 import net.mcreator.superbwarfare.client.layer.Qbz95Layer;
 import net.mcreator.superbwarfare.client.model.item.Qbz95ItemModel;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.item.gun.rifle.Qbz95Item;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -84,20 +86,55 @@ public class Qbz95ItemRenderer extends GeoItemRenderer<Qbz95Item> {
         if (player != null) {
             ItemStack itemStack = player.getMainHandItem();
 
-            if (name.equals("holo")) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS);
+            if (name.equals("Cross1")) {
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                        || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
+                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
             }
 
+            if (name.equals("tiba")) {
+                bone.setHidden(GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 0);
+            }
+
+            if (name.equals("longbow")) {
+                bone.setHidden(GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 0);
+            }
+
+//            if (name.equals("Cross2")) {
+//                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+//                        || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
+//                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2);
+//            }
+//
+//            if (name.equals("Cross3")) {
+//                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+//                        || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
+//                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 3);
+//            }
+
+//            if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2
+//                    && (name.equals("hidden"))) {
+//                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS);
+//            }
+//
+//            if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 3
+//                    && (name.equals("jing") || name.equals("Barrel") || name.equals("yugu") || name.equals("qiangguan"))) {
+//                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS);
+//            }
+
             if (name.equals("flare")) {
-                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
+                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {
                     bone.setHidden(true);
                 } else {
                     bone.setHidden(false);
-                    bone.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-                    bone.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                    bone.setScaleX((float) (0.55 + 0.5 * (Math.random() - 0.5)));
+                    bone.setScaleY((float) (0.55 + 0.5 * (Math.random() - 0.5)));
                     bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
                 }
             }
+
+            ItemModelHelper.handleGunAttachments(bone, itemStack, name);
+
         }
 
         if (this.transformType.firstPerson() && renderingArms) {
