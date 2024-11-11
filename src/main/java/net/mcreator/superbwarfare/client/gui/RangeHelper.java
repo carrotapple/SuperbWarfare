@@ -116,7 +116,7 @@ public class RangeHelper {
             double radian = Math.toRadians(mid);
             double range = calculateRangeWithDeltaY(initialVelocity, radian, gravity, velocityDecay, targetY);
 
-            if (Math.abs(range - distanceXZ) < tolerance * 4) {
+            if (Math.abs(range - distanceXZ) < tolerance * 8) {
                 return mid;
             } else if (range < distanceXZ) {
                 left = mid;
@@ -134,7 +134,7 @@ public class RangeHelper {
             double radian = Math.toRadians(mid);
             double range = calculateRangeWithDeltaY(initialVelocity, radian, gravity, velocityDecay, targetY);
 
-            if (Math.abs(range - distanceXZ) < tolerance * 4) {
+            if (Math.abs(range - distanceXZ) < tolerance * 8) {
                 return mid;
             } else if (range < distanceXZ) {
                 right = mid;
