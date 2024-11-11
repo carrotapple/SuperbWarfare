@@ -150,6 +150,7 @@ public class ModUtils {
         addNetworkMessage(EditModeMessage.class, EditModeMessage::encode, EditModeMessage::decode, EditModeMessage::handler);
         addNetworkMessage(EditMessage.class, EditMessage::encode, EditMessage::decode, EditMessage::handler);
         addNetworkMessage(SwitchScopeMessage.class, SwitchScopeMessage::encode, SwitchScopeMessage::decode, SwitchScopeMessage::handler);
+        addNetworkMessage(SetFiringParametersMessage.class, SetFiringParametersMessage::encode, SetFiringParametersMessage::decode, SetFiringParametersMessage::handler);
 
         event.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(Ingredient.of(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER)),
                 Ingredient.of(Items.LIGHTNING_ROD), PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotion.SHOCK.get())));

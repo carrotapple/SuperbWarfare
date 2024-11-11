@@ -21,6 +21,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -82,6 +83,9 @@ public class ClickHandler {
             if (player.hasEffect(ModMobEffects.SHOCK.get())) {
                 event.setCanceled(true);
                 return;
+            }
+            if (stack.is(Items.SPYGLASS) && player.isScoping() && player.getOffhandItem().is(ModItems.FIRING_PARAMETERS.get())) {
+                ModUtils.PACKET_HANDLER.sendToServer(new SetFiringParametersMessage(0));
             }
             if (stack.is(ModItems.MONITOR.get())) {
                 event.setCanceled(true);

@@ -148,6 +148,7 @@
   "item.superbwarfare.ap_5_inches": "AP Shell",
   "item.superbwarfare.javelin_missile": "Javelin Missile",
 
+  "item.superbwarfare.firing_parameters": "Firing Parameters",
   "item.superbwarfare.ancient_cpu": "Ancient CPU",
   "item.superbwarfare.target_deployer": "Target",
   "item.superbwarfare.senpai_spawn_egg": "Senpai Spawn Egg",
@@ -409,5 +410,8 @@
   "des.superbwarfare.perk_damage_plus": "Damage +",
   "des.superbwarfare.perk_speed_reduce": "Velocity -",
   "des.superbwarfare.perk_speed_plus": "Velocity +",
-  "des.superbwarfare.perk_slug": "Slug"
+  "des.superbwarfare.perk_slug": "Slug",
+  "des.superbwarfare.mortar.yaw": "Yaw：",
+  "des.superbwarfare.mortar.pitch": "Pitch：",
+  "des.superbwarfare.target.pos": "Target Position："
 }

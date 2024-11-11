@@ -61,6 +61,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.RAW_SILVER);
         simpleItem(ModItems.SILVER_INGOT);
         simpleItem(ModItems.CROWBAR);
+        simpleItem(ModItems.FIRING_PARAMETERS);
 
         simpleItem(ModItems.TUNGSTEN_ROD);
         simpleItem(ModItems.IRON_BARREL);

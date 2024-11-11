@@ -160,6 +160,13 @@ public class M4ItemModel extends GeoModel<M4Item> {
         shen.setRotY((float) (shen.getRotY() * (1 - (type == 3 ? 0.95 : 0.9) * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.4 * zt)));
 
+        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
+        int BarrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
+
+        if (BarrelType == 1) {
+            flare.setPosZ(-2);
+        }
+
         CoreGeoBone l = getAnimationProcessor().getBone("l");
         CoreGeoBone r = getAnimationProcessor().getBone("r");
         rotXBipod = Mth.lerp(1.5f * times, rotXBipod, isProne(player) ? -90 : 0);

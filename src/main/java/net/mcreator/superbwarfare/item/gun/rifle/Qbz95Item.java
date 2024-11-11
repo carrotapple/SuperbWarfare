@@ -17,6 +17,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
@@ -167,11 +168,12 @@ public class Qbz95Item extends GunItem implements GeoItem, AnimatedItem {
         int magType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE);
         int stockType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK);
 
-        int customMag = switch (magType) {
-            case 1 -> 15;
-            case 2 -> 30;
-            default -> 0;
-        };
+        if (magType == 1) {
+            CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
+            tag.putInt("Magazine", 2);
+        }
+
+        int customMag = magType == 2 ? 30 : 0;
 
         double customZoom = switch (scopeType) {
             case 0, 1 -> 0;

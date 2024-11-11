@@ -148,6 +148,8 @@
   "item.superbwarfare.ap_5_inches": "穿甲弹",
   "item.superbwarfare.javelin_missile": "标枪导弹",
 
+
+  "item.superbwarfare.firing_parameters": "射击诸元",
   "item.superbwarfare.ancient_cpu": "古代处理器",
   "item.superbwarfare.target_deployer": "标靶",
   "item.superbwarfare.senpai_spawn_egg": "野兽先辈刷怪蛋",
@@ -409,5 +411,9 @@
   "des.superbwarfare.perk_damage_plus": "伤害 +",
   "des.superbwarfare.perk_speed_reduce": "子弹初速 -",
   "des.superbwarfare.perk_speed_plus": "子弹初速 +",
-  "des.superbwarfare.perk_slug": "独头弹"
+  "des.superbwarfare.perk_slug": "独头弹",
+
+  "des.superbwarfare.mortar.yaw": "水平朝向：",
+  "des.superbwarfare.mortar.pitch": "俯仰角度：",
+  "des.superbwarfare.target.pos": "目标坐标："
 }

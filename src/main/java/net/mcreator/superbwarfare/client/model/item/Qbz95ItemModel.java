@@ -15,12 +15,13 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
+import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
+
 public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
 
     public static float fireRotY = 0f;
     public static float fireRotZ = 0f;
     public static float rotXBipod = 0f;
-
     @Override
     public ResourceLocation getAnimationResource(Qbz95Item animatable) {
         return ModUtils.loc("animations/qbz95.animation.json");
@@ -46,6 +47,8 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         CoreGeoBone cross1 = getAnimationProcessor().getBone("Cross1");
 //        CoreGeoBone cross2 = getAnimationProcessor().getBone("Cross2");
 //        CoreGeoBone cross3 = getAnimationProcessor().getBone("Cross3");
+        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
+        CoreGeoBone main = getAnimationProcessor().getBone("0");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -80,15 +83,15 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
             default -> 0f;
         };
         float posZ = switch (type) {
-            case 0 -> 9f;
-            case 1 -> 8.9f;
+            case 0 -> 5.9f;
+            case 1 -> 5.8f;
             case 2 -> 13.01f;
             case 3 -> 13.00f;
             default -> 0f;
         };
         float scaleZ = switch (type) {
-            case 0 -> 0.5f;
-            case 1 -> 0.51f;
+            case 0 -> 0.2f;
+            case 1 -> 0.21f;
             case 2 -> 0.692f;
             case 3 -> 0.691f;
             default -> 0f;
@@ -100,7 +103,7 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         gun.setRotZ((float) (0.05f * zpz));
         gun.setScaleZ(1f - (scaleZ * (float) zp));
 
-        stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 3.1));
+        stack.getOrCreateTag().putBoolean("HoloHidden", gun.getPosX() < 3.1 || main.getRotZ() > 10 * Mth.DEG_TO_RAD);
 
         CoreGeoBone shen;
         if (zt < 0.5) {
@@ -138,8 +141,21 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
 //        cross2.setPosY(-0.7f * (float) fpz);
 //        cross3.setPosY(-0.2f * (float) fpz);
 
+        CoreGeoBone l = getAnimationProcessor().getBone("l");
+        CoreGeoBone r = getAnimationProcessor().getBone("r");
+        rotXBipod = Mth.lerp(1.5f * times, rotXBipod, isProne(player) ? -90 : 0);
+        l.setRotX(rotXBipod * Mth.DEG_TO_RAD);
+        r.setRotX(rotXBipod * Mth.DEG_TO_RAD);
+
         if (stack.getOrCreateTag().getBoolean("HoldOpen")) {
             bolt.setPosZ(5f);
+        }
+
+        CoreGeoBone flare = getAnimationProcessor().getBone("flare");
+        int BarrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
+
+        if (BarrelType == 1) {
+            flare.setPosZ(-2);
         }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
@@ -149,11 +165,8 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotY));
         root.setRotZ((float) (0.2f * movePosX + moveRotZ + Mth.DEG_TO_RAD * 90 * ClientEventHandler.drawTime + 2.7f * mph + Mth.DEG_TO_RAD * turnRotZ));
 
-        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
-        CoreGeoBone main = getAnimationProcessor().getBone("0");
-
-        float numR = (float) (1 - 0.92 * zt);
-        float numP = (float) (1 - 0.88 * zt);
+        float numR = (float) (1 - 0.88 * zt);
+        float numP = (float) (1 - 0.95 * zt);
 
         AnimationHelper.handleReloadShakeAnimation(stack, main, camera, numR, numP);
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());

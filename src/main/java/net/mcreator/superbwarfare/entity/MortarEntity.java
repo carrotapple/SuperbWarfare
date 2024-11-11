@@ -1,11 +1,13 @@
 package net.mcreator.superbwarfare.entity;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.gui.RangeHelper;
 import net.mcreator.superbwarfare.entity.projectile.MortarShellEntity;
 import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModParticleTypes;
 import net.mcreator.superbwarfare.init.ModSounds;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -27,6 +29,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
@@ -141,6 +144,14 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         ItemStack mainHandItem = player.getMainHandItem();
+        if (player.getMainHandItem().getItem() == ModItems.FIRING_PARAMETERS.get()) {
+            setTarget(player.getMainHandItem());
+            player.swing(InteractionHand.MAIN_HAND);
+        }
+        if (player.getOffhandItem().getItem() == ModItems.FIRING_PARAMETERS.get()) {
+            setTarget(player.getOffhandItem());
+            player.swing(InteractionHand.OFF_HAND);
+        }
         if (player.isShiftKeyDown()) {
             if (mainHandItem.getItem() == ModItems.CROWBAR.get()) {
                 this.discard();
@@ -174,6 +185,32 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
         }
 
         return InteractionResult.SUCCESS;
+    }
+
+    public void setTarget(ItemStack stack) {
+        int targetX = stack.getOrCreateTag().getInt("TargetX");
+        int targetY = stack.getOrCreateTag().getInt("TargetY");
+        int targetZ = stack.getOrCreateTag().getInt("TargetZ");
+
+        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(targetX, targetY, targetZ));
+
+        double[] angles = new double[2];
+        boolean flag = RangeHelper.canReachTarget(8.0, 0.05, 0.99,
+                new BlockPos((int) this.getX(), (int) this.getEyeY(), (int) this.getZ()),
+                new BlockPos(targetX, targetY, targetZ),
+                angles);
+
+        if (flag) {
+            this.entityData.set(PITCH, (float)angles[1]);
+        }
+    }
+
+
+    private void look(EntityAnchorArgument.Anchor pAnchor, Vec3 pTarget) {
+        Vec3 vec3 = pAnchor.apply(this);
+        double d0 = (pTarget.x - vec3.x) * 0.2;
+        double d2 = (pTarget.z - vec3.z) * 0.2;
+        this.entityData.set(Y_ROT, Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));
     }
 
     @Override

@@ -100,6 +100,10 @@ public class Qbz95ItemRenderer extends GeoItemRenderer<Qbz95Item> {
                 bone.setHidden(GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 0);
             }
 
+            if (name.equals("under_rail")) {
+                bone.setHidden(GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.GRIP) == 0);
+            }
+
 //            if (name.equals("Cross2")) {
 //                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
 //                        || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS

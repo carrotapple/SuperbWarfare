@@ -884,9 +884,9 @@ public class ClientEventHandler {
     public static void shake(double boneRotX, double boneRotY, double boneRotZ) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
-            cameraRot[0] = boneRotX;
-            cameraRot[1] = boneRotY;
-            cameraRot[2] = boneRotZ;
+            cameraRot[0] = -boneRotX;
+            cameraRot[1] = -boneRotY;
+            cameraRot[2] = -boneRotZ;
         }
     }
 

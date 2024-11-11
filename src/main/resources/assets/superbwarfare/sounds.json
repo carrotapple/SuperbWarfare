@@ -1393,10 +1393,26 @@
       }
     ]
   },
+  "qbz_95_fire_1p_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:qbz95/qbz95_fire1p_s",
+        "stream": false
+      }
+    ]
+  },
   "qbz_95_fire_3p": {
     "sounds": [
       {
         "name": "superbwarfare:qbz95/qbz95_fire3p",
+        "stream": false
+      }
+    ]
+  },
+  "qbz_95_fire_3p_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:qbz95/qbz95_fire3p_s",
         "stream": false
       }
     ]
