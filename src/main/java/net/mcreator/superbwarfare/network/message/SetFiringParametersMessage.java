@@ -36,10 +36,7 @@ public class SetFiringParametersMessage {
                 Player player = context.getSender();
 
                 ItemStack stack = player.getOffhandItem();
-
                 boolean lookAtEntity = false;
-
-
                 Entity lookingEntity = TraceTool.findLookingEntity(player, 520);
 
                 Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(512)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());

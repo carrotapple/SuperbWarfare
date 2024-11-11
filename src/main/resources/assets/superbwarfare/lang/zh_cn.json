@@ -148,7 +148,6 @@
   "item.superbwarfare.ap_5_inches": "穿甲弹",
   "item.superbwarfare.javelin_missile": "标枪导弹",
 
-
   "item.superbwarfare.firing_parameters": "射击诸元",
   "item.superbwarfare.ancient_cpu": "古代处理器",
   "item.superbwarfare.target_deployer": "标靶",
@@ -415,5 +414,6 @@
 
   "des.superbwarfare.mortar.yaw": "水平朝向：",
   "des.superbwarfare.mortar.pitch": "俯仰角度：",
-  "des.superbwarfare.target.pos": "目标坐标："
+  "des.superbwarfare.target.pos": "目标坐标：",
+  "des.superbwarfare.target.warn": "迫击炮无法瞄准该位置"
 }

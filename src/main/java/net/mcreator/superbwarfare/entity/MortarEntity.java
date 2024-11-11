@@ -7,10 +7,12 @@ import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModParticleTypes;
 import net.mcreator.superbwarfare.init.ModSounds;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -144,21 +146,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         ItemStack mainHandItem = player.getMainHandItem();
-        if (player.getMainHandItem().getItem() == ModItems.FIRING_PARAMETERS.get()) {
-            setTarget(player.getMainHandItem());
-            player.swing(InteractionHand.MAIN_HAND);
-        }
-        if (player.getOffhandItem().getItem() == ModItems.FIRING_PARAMETERS.get()) {
-            setTarget(player.getOffhandItem());
-            player.swing(InteractionHand.OFF_HAND);
-        }
-        if (player.isShiftKeyDown()) {
-            if (mainHandItem.getItem() == ModItems.CROWBAR.get()) {
-                this.discard();
-                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MORTAR_DEPLOYER.get()));
-            }
-            this.entityData.set(Y_ROT, player.getYRot());
-        }
+
         if (mainHandItem.getItem() == ModItems.MORTAR_SHELLS.get() && !player.isShiftKeyDown() && this.entityData.get(FIRE_TIME) == 0) {
             this.entityData.set(FIRE_TIME, 25);
 
@@ -184,10 +172,38 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
             });
         }
 
+        if (player.getMainHandItem().getItem() == ModItems.FIRING_PARAMETERS.get()) {
+            if (setTarget(player.getMainHandItem())) {
+                player.swing(InteractionHand.MAIN_HAND);
+                return InteractionResult.SUCCESS;
+            } else {
+                player.displayClientMessage(Component.translatable("des.superbwarfare.target.warn").withStyle(ChatFormatting.RED), true);
+                return InteractionResult.FAIL;
+            }
+        }
+        if (player.getOffhandItem().getItem() == ModItems.FIRING_PARAMETERS.get()) {
+            if (setTarget(player.getOffhandItem())) {
+                player.swing(InteractionHand.OFF_HAND);
+                return InteractionResult.SUCCESS;
+            } else {
+                player.displayClientMessage(Component.translatable("des.superbwarfare.target.warn").withStyle(ChatFormatting.RED), true);
+                return InteractionResult.FAIL;
+            }
+        }
+
+        if (player.isShiftKeyDown()) {
+            if (mainHandItem.getItem() == ModItems.CROWBAR.get()) {
+                this.discard();
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MORTAR_DEPLOYER.get()));
+                return InteractionResult.SUCCESS;
+            }
+            this.entityData.set(Y_ROT, player.getYRot());
+        }
+
         return InteractionResult.SUCCESS;
     }
 
-    public void setTarget(ItemStack stack) {
+    public boolean setTarget(ItemStack stack) {
         int targetX = stack.getOrCreateTag().getInt("TargetX");
         int targetY = stack.getOrCreateTag().getInt("TargetY");
         int targetZ = stack.getOrCreateTag().getInt("TargetZ");
@@ -201,10 +217,11 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
                 angles);
 
         if (flag) {
-            this.entityData.set(PITCH, (float)angles[1]);
+            this.entityData.set(PITCH, (float) angles[1]);
         }
-    }
 
+        return flag;
+    }
 
     private void look(EntityAnchorArgument.Anchor pAnchor, Vec3 pTarget) {
         Vec3 vec3 = pAnchor.apply(this);

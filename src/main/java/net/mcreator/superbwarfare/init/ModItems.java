@@ -110,8 +110,6 @@ public class ModItems {
      */
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
 
-    public static final RegistryObject<Item> FIRING_PARAMETERS = ITEMS.register("firing_parameters", FiringParameters::new);
-
     public static final RegistryObject<Item> SENPAI_SPAWN_EGG = ITEMS.register("senpai_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.SENPAI, -11584987, -14014413, new Item.Properties()));
     public static final RegistryObject<Item> ANCIENT_CPU = ITEMS.register("ancient_cpu", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
     public static final RegistryObject<Item> PROPELLER = ITEMS.register("propeller", () -> new Item(new Item.Properties()));
@@ -159,6 +157,7 @@ public class ModItems {
     public static final RegistryObject<Item> DOG_TAG = ITEMS.register("dog_tag", DogTag::new);
     public static final RegistryObject<Item> SHIELD_CELL = ITEMS.register("shield_cell", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
     public static final RegistryObject<Item> TRANSCRIPT = ITEMS.register("transcript", Transcript::new);
+    public static final RegistryObject<Item> FIRING_PARAMETERS = ITEMS.register("firing_parameters", FiringParameters::new);
 
     public static final RegistryObject<Item> TUNGSTEN_ROD = ITEMS.register("tungsten_rod", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> IRON_BARREL = ITEMS.register("iron_barrel", () -> new Item(new Item.Properties()));

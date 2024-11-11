@@ -50,7 +50,6 @@ public class DroneFireMessage {
                             boolean lookAtEntity = false;
 
                             Entity lookingEntity = TraceTool.findLookingEntity(drone, 520);
-
                             Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(drone.getEyePosition(), drone.getEyePosition().add(drone.getLookAngle().scale(512)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
 
                             if (lookingEntity != null) {
