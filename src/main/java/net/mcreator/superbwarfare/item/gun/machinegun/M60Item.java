@@ -77,7 +77,7 @@ public class M60Item extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (stack.getOrCreateTag().getInt("fire_animation") > 0) {
+        if (ClientEventHandler.firePosTimer > 0 && ClientEventHandler.firePosTimer < 0.45) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m60.fire"));
         }
 

@@ -802,9 +802,15 @@ public class ClientEventHandler {
 
         double gripRecoilY = switch (gripType) {
             case 1 -> 0.7;
-            case 2 -> 2.25;
-            default -> 2.5;
+            case 2 -> 1.75;
+            default -> 2.0;
         };
+
+        if (!player.getMainHandItem().is(ModTags.Items.CAN_CUSTOM_GUN)) {
+            recoil = 1.6;
+            gripRecoilX = 0.75;
+            gripRecoilY = 1.25;
+        }
 
         double cusWeight = player.getMainHandItem().getOrCreateTag().getDouble("CustomWeight");
 
