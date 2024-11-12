@@ -76,7 +76,7 @@ public class AK12ItemModel extends GeoModel<AK12Item> {
         float posY = switch (type) {
             case 0 -> 0.781f;
             case 1 -> 0.371f;
-            case 2 -> -0.04f;
+            case 2 -> -0.021f;
             case 3 -> -0.01f;
             default -> 0f;
         };

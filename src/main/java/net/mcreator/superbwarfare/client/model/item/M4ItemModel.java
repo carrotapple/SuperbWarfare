@@ -55,6 +55,9 @@ public class M4ItemModel extends GeoModel<M4Item> {
         CoreGeoBone crossAlt = getAnimationProcessor().getBone("CrossAlt");
         CoreGeoBone sight1fold = getAnimationProcessor().getBone("sight1fold");
         CoreGeoBone sight2fold = getAnimationProcessor().getBone("sight2fold");
+        CoreGeoBone button = getAnimationProcessor().getBone("button");
+        CoreGeoBone button6 = getAnimationProcessor().getBone("button6");
+        CoreGeoBone button7 = getAnimationProcessor().getBone("button7");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -119,6 +122,10 @@ public class M4ItemModel extends GeoModel<M4Item> {
         scope.setScaleZ(1f - (0.4f * (float) zp));
         scope2.setScaleZ(1f - (0.4f * (float) zp));
         scope3.setScaleZ(1f + (0.2f * (float) zp));
+
+        button.setScaleY(1f - (0.85f * (float) zp));
+        button6.setScaleX(1f - (0.5f * (float) zp));
+        button7.setScaleX(1f - (0.5f * (float) zp));
 
         stack.getOrCreateTag().putBoolean("HoloHidden", !(gun.getPosX() > 2.385));
 

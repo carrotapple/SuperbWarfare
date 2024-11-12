@@ -177,7 +177,7 @@ public class Qbz95Item extends GunItem implements GeoItem, AnimatedItem {
 
         double customZoom = switch (scopeType) {
             case 0, 1 -> 0;
-            case 2 -> 1.75;
+            case 2 -> 2.15;
             default -> stack.getOrCreateTag().getDouble("CustomZoom");
         };
 

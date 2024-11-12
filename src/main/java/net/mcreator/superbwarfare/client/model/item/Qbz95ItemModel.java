@@ -41,12 +41,12 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
     public void setCustomAnimations(Qbz95Item animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone bolt = getAnimationProcessor().getBone("bolt2");
-        CoreGeoBone scope = getAnimationProcessor().getBone("Scope1");
-//        CoreGeoBone scope2 = getAnimationProcessor().getBone("Scope2");
-//        CoreGeoBone scope3 = getAnimationProcessor().getBone("Scope3");
+        CoreGeoBone button = getAnimationProcessor().getBone("button");
+        CoreGeoBone button3 = getAnimationProcessor().getBone("button3");
+        CoreGeoBone button6 = getAnimationProcessor().getBone("button6");
         CoreGeoBone cross1 = getAnimationProcessor().getBone("Cross1");
-//        CoreGeoBone cross2 = getAnimationProcessor().getBone("Cross2");
-//        CoreGeoBone cross3 = getAnimationProcessor().getBone("Cross3");
+        CoreGeoBone cross2 = getAnimationProcessor().getBone("Cross2");
+        CoreGeoBone cross3 = getAnimationProcessor().getBone("Cross3");
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
 
@@ -75,33 +75,44 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
 
         int type = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
 
+        float posYAlt = switch (type) {
+            case 2 -> 0.85f;
+            case 3 -> 0.9f;
+            default -> 0f;
+        };
         float posY = switch (type) {
             case 0 -> 0.535f;
             case 1 -> -0.155f;
-            case 2 -> 0.5001f;
-            case 3 -> 0.5002f;
+            case 2 -> -0.975f + posYAlt;
+            case 3 -> -0.64f + posYAlt;
             default -> 0f;
         };
         float posZ = switch (type) {
             case 0 -> 5.9f;
             case 1 -> 5.8f;
-            case 2 -> 13.01f;
-            case 3 -> 13.00f;
+            case 2 -> 14.51f;
+            case 3 -> 17.2f;
             default -> 0f;
         };
         float scaleZ = switch (type) {
             case 0 -> 0.2f;
             case 1 -> 0.21f;
-            case 2 -> 0.692f;
-            case 3 -> 0.691f;
+            case 2 -> 0.792f;
+            case 3 -> 0.891f;
             default -> 0f;
         };
 
         gun.setPosX(3.71f * (float) zp);
-        gun.setPosY(posY * (float) zp - (float) (0.2f * zpz));
+        gun.setPosY(posY * (float) zp - (float) (0.2f * zpz) - posYAlt);
         gun.setPosZ(posZ  * (float) zp + (float) (0.3f * zpz));
         gun.setRotZ((float) (0.05f * zpz));
         gun.setScaleZ(1f - (scaleZ * (float) zp));
+
+        if (main.getRotZ() < 10 * Mth.DEG_TO_RAD) {
+            button.setScaleY(1f - (0.85f * (float) zp));
+            button3.setScaleX(1f - (0.5f * (float) zp));
+            button6.setScaleX(1f - (0.5f * (float) zp));
+        }
 
         stack.getOrCreateTag().putBoolean("HoloHidden", gun.getPosX() < 3.1 || main.getRotZ() > 10 * Mth.DEG_TO_RAD);
 
@@ -138,8 +149,8 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         bolt.setPosZ(5f * (float) fp);
 
         cross1.setPosY(-0.75f * (float) fpz);
-//        cross2.setPosY(-0.7f * (float) fpz);
-//        cross3.setPosY(-0.2f * (float) fpz);
+        cross2.setPosY(-0.7f * (float) fpz);
+        cross3.setPosY(-0.2f * (float) fpz);
 
         CoreGeoBone l = getAnimationProcessor().getBone("l");
         CoreGeoBone r = getAnimationProcessor().getBone("r");
@@ -165,8 +176,19 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotY));
         root.setRotZ((float) (0.2f * movePosX + moveRotZ + Mth.DEG_TO_RAD * 90 * ClientEventHandler.drawTime + 2.7f * mph + Mth.DEG_TO_RAD * turnRotZ));
 
-        float numR = (float) (1 - 0.88 * zt);
-        float numP = (float) (1 - 0.95 * zt);
+        float numR = 1;
+        float numP = 1;
+
+        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+            numR = (float) (1 - 0.72 * zt);
+            numP = (float) (1 - 0.95 * zt);
+        }
+
+        if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
+            numR = (float) (1 - 0.98 * zt);
+            numP = (float) (1 - 0.96 * zt);
+        }
+
 
         AnimationHelper.handleReloadShakeAnimation(stack, main, camera, numR, numP);
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());

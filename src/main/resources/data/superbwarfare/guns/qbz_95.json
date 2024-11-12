@@ -1,6 +1,6 @@
 {
-  "MinZoom": 1.25,
-  "MaxZoom": 6,
+  "MinZoom": 4,
+  "MaxZoom": 8,
   "spread": 3.7,
   "recoil_x": 0.0013,
   "recoil_y": 0.009,
@@ -15,7 +15,7 @@
   "burst": 0,
   "auto": 1,
   "burst_size": 1,
-  "normal_reload_time": 58,
+  "normal_reload_time": 60,
   "EmptyReloadTime": 74,
   "BypassesArmor": 0.28,
   "SoundRadius": 13,

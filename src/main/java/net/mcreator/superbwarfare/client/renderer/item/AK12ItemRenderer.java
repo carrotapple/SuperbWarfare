@@ -104,7 +104,7 @@ public class AK12ItemRenderer extends GeoItemRenderer<AK12Item> {
             }
 
             if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2
-                    && (name.equals("hidden"))) {
+                    && (name.equals("hidden2"))) {
                 bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS);
             }
 
