@@ -22,6 +22,13 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
     public static float fireRotY = 0f;
     public static float fireRotZ = 0f;
     public static float rotXBipod = 0f;
+
+    public static float lHandPosX = 0f;
+    public static float lHandPosY= 0f;
+    public static float lHandPosZ = 0f;
+    public static float lHandRotX = 0f;
+    public static float lHandRotY= 0f;
+    public static float lHandRotZ = 0f;
     @Override
     public ResourceLocation getAnimationResource(Qbz95Item animatable) {
         return ModUtils.loc("animations/qbz95.animation.json");
@@ -88,15 +95,15 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
             default -> 0f;
         };
         float posZ = switch (type) {
-            case 0 -> 5.9f;
-            case 1 -> 5.8f;
+            case 0 -> 10.6f;
+            case 1 -> 8.8f;
             case 2 -> 14.51f;
             case 3 -> 17.2f;
             default -> 0f;
         };
         float scaleZ = switch (type) {
-            case 0 -> 0.2f;
-            case 1 -> 0.21f;
+            case 0 -> 0.5f;
+            case 1 -> 0.51f;
             case 2 -> 0.792f;
             case 3 -> 0.891f;
             default -> 0f;
@@ -108,13 +115,11 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         gun.setRotZ((float) (0.05f * zpz));
         gun.setScaleZ(1f - (scaleZ * (float) zp));
 
-        if (main.getRotZ() < 10 * Mth.DEG_TO_RAD) {
-            button.setScaleY(1f - (0.85f * (float) zp));
-            button3.setScaleX(1f - (0.5f * (float) zp));
-            button6.setScaleX(1f - (0.5f * (float) zp));
-        }
+        button.setScaleY(1f - (0.85f * (float) zp));
+        button3.setScaleX(1f - (0.5f * (float) zp));
+        button6.setScaleX(1f - (0.8f * (float) zp));
 
-        stack.getOrCreateTag().putBoolean("HoloHidden", gun.getPosX() < 3.1 || main.getRotZ() > 10 * Mth.DEG_TO_RAD);
+        stack.getOrCreateTag().putBoolean("HoloHidden", gun.getPosX() < 3.1);
 
         CoreGeoBone shen;
         if (zt < 0.5) {
@@ -176,19 +181,30 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotY));
         root.setRotZ((float) (0.2f * movePosX + moveRotZ + Mth.DEG_TO_RAD * 90 * ClientEventHandler.drawTime + 2.7f * mph + Mth.DEG_TO_RAD * turnRotZ));
 
-        float numR = 1;
-        float numP = 1;
+        float numR = (float) (1 - 0.975 * zt);
+        float numP = (float) (1 - 0.97 * zt);
+
+        CoreGeoBone leftHand = getAnimationProcessor().getBone("Lefthand");
+        CoreGeoBone anim = getAnimationProcessor().getBone("anim");
+
+        boolean isZooming = zt > 0 && anim.getPosZ() == 0 ;
+
+        lHandPosX = Mth.lerp(1.5f * times, lHandPosX, isZooming ? 0 : leftHand.getPosX());
+        lHandPosY = Mth.lerp(1.5f * times, lHandPosY, isZooming ? 0 : leftHand.getPosY());
+        lHandPosZ = Mth.lerp(1.5f * times, lHandPosZ, isZooming ? 0 : leftHand.getPosZ());
+        lHandRotX = Mth.lerp(1.5f * times, lHandRotX, isZooming ? -2.1f : leftHand.getRotX());
+        lHandRotY = Mth.lerp(1.5f * times, lHandRotY, isZooming ? 0.2419f : leftHand.getRotY());
+        lHandRotZ = Mth.lerp(1.5f * times, lHandRotZ, isZooming ? 2.9228f : leftHand.getRotZ());
+
 
         if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-            numR = (float) (1 - 0.72 * zt);
-            numP = (float) (1 - 0.95 * zt);
+            leftHand.setPosX(lHandPosX);
+            leftHand.setPosY(lHandPosY);
+            leftHand.setPosZ(lHandPosZ);
+            leftHand.setRotX(lHandRotX);
+            leftHand.setRotY(lHandRotY);
+            leftHand.setRotZ(lHandRotZ);
         }
-
-        if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-            numR = (float) (1 - 0.98 * zt);
-            numP = (float) (1 - 0.96 * zt);
-        }
-
 
         AnimationHelper.handleReloadShakeAnimation(stack, main, camera, numR, numP);
         ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
