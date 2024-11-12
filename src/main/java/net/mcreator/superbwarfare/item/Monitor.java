@@ -114,7 +114,9 @@ public class Monitor extends Item {
         if (!selected) {
             if (itemstack.getOrCreateTag().getBoolean("Using")) {
                 itemstack.getOrCreateTag().putBoolean("Using", false);
-                Minecraft.getInstance().options.setCameraType(CameraType.FIRST_PERSON);
+                if (entity.level().isClientSide) {
+                    Minecraft.getInstance().options.setCameraType(CameraType.FIRST_PERSON);
+                }
             }
 
             if (drone != null) {
@@ -129,7 +131,9 @@ public class Monitor extends Item {
             if (drone == null) {
                 if (itemstack.getOrCreateTag().getBoolean("Using")) {
                     itemstack.getOrCreateTag().putBoolean("Using", false);
-                    Minecraft.getInstance().options.setCameraType(CameraType.FIRST_PERSON);
+                    if (entity.level().isClientSide) {
+                        Minecraft.getInstance().options.setCameraType(CameraType.FIRST_PERSON);
+                    }
                 }
             }
         }
