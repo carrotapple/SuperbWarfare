@@ -232,7 +232,6 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
 
     @Override
     public void lerpTo(double x, double y, double z, float yaw, float pitch, int interpolationSteps, boolean interpolate) {
-        serverYRot = yaw;
         serverXRot = pitch;
         this.interpolationSteps = 10;
     }
