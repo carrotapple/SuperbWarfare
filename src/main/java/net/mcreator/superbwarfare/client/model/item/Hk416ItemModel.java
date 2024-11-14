@@ -47,6 +47,7 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
         CoreGeoBone cross1 = getAnimationProcessor().getBone("Cross1");
         CoreGeoBone cross2 = getAnimationProcessor().getBone("Cross2");
         CoreGeoBone cross3 = getAnimationProcessor().getBone("Cross3");
+        CoreGeoBone kuaimanji = getAnimationProcessor().getBone("kuaimanji");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -146,6 +147,10 @@ public class Hk416ItemModel extends GeoModel<Hk416Item> {
         rotXBipod = Mth.lerp(1.5f * times, rotXBipod, isProne(player) ? -90 : 0);
         l.setRotX(rotXBipod * Mth.DEG_TO_RAD);
         r.setRotX(rotXBipod * Mth.DEG_TO_RAD);
+
+        int mode = GunsTool.getGunIntTag(stack, "FireMode");
+
+        kuaimanji.setRotX(mode == 2 ? 90 * Mth.DEG_TO_RAD : 0);
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));

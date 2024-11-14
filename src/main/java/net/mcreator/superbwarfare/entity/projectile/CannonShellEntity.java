@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.entity.projectile;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.config.server.ExplosionDestroyConfig;
 import net.mcreator.superbwarfare.entity.AnimatedEntity;
 import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
@@ -23,6 +24,7 @@ import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -104,9 +106,11 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
             }
         }
 
-        if (this.level() instanceof ServerLevel) {
-            causeExplode();
-        }
+//        if (this.level() instanceof ServerLevel) {
+//            causeExplode();
+//        }
+
+        ParticleTool.cannonHitParticles(this.level(), this.position());
 
         Vec3 vec = this.getDeltaMovement();
         double vec_x = vec.x;
@@ -132,16 +136,9 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         int y = blockHitResult.getBlockPos().getY();
         int z = blockHitResult.getBlockPos().getZ();
 
-        if (this.firstHit) {
-            ParticleTool.cannonHitParticles(this.level(), this.position());
-            this.firstHit = false;
-        }
 
         BlockState blockState = this.level().getBlockState(BlockPos.containing(x, y, z));
         if (blockState.is(Blocks.BEDROCK) || blockState.is(Blocks.BARRIER)) {
-            if (!this.level().isClientSide()) {
-                causeExplode();
-            }
             this.discard();
             return;
         }
@@ -149,10 +146,16 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         float hardness = this.level().getBlockState(BlockPos.containing(x, y, z)).getBlock().defaultDestroyTime();
         this.durability -= (int) hardness;
 
-        Vec3 vec = this.getDeltaMovement();
-        this.setDeltaMovement(vec.multiply(0.9, 0.9, 0.9));
+        if (ExplosionDestroyConfig.EXPLOSION_DESTROY.get()) {
+            BlockPos _pos = BlockPos.containing(x, y, z);
+            Block.dropResources(this.level().getBlockState(_pos), this.level(), BlockPos.containing(x, y, z), null);
+            this.level().destroyBlock(_pos, false);
+        }
 
-        if (blockState.is(ModBlocks.BARBED_WIRE.get()) || blockState.is(Blocks.NETHERITE_BLOCK)) {
+        Vec3 vec = this.getDeltaMovement();
+        this.setDeltaMovement(vec.multiply(0.4, 0.4, 0.4));
+
+        if (blockState.is(ModBlocks.SANDBAG.get()) || blockState.is(Blocks.NETHERITE_BLOCK)) {
             this.durability -= 10;
         }
 
@@ -167,14 +170,29 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         if (this.durability <= 0) {
             if (!this.level().isClientSide()) {
                 causeExplode();
+                this.discard();
+            }
+        } else {
+            if (!this.level().isClientSide()) {
+                if (ExplosionDestroyConfig.EXPLOSION_DESTROY.get()) {
+                    BlockPos _pos = BlockPos.containing(x, y, z);
+                    if (this.firstHit) {
+                        ParticleTool.cannonHitParticles(this.level(), this.position());
+                        causeExplode();
+                        this.firstHit = false;
+                        this.setNoGravity(true);
+                    } else {
+                        apExplode(_pos);
+                    }
+                }
             }
         }
 
         if (this.durability > 0) {
-            ModUtils.queueServerWork(1, () -> {
-                this.setDeltaMovement(vec.multiply(0.1, 0.1, 0.1));
+            ModUtils.queueServerWork(2, () -> {
                 if (!this.level().isClientSide()) {
                     causeExplode();
+                    this.discard();
                 }
             });
         }
@@ -191,6 +209,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
             if (this.level() instanceof ServerLevel) {
                 causeExplode();
             }
+            this.discard();
         }
     }
 
@@ -200,8 +219,16 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         }
 
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), explosionDamage,
-                this.getX(), this.getY(), this.getZ(), explosionRadius, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1).setFireTime(fireTime);
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(),
+                        this,
+                        this.getOwner()),
+                explosionDamage,
+                this.getX(),
+                this.getY(),
+                this.getZ(),
+                explosionRadius,
+                ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
+                setDamageMultiplier(1).setFireTime(fireTime);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
@@ -211,7 +238,33 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         } else {
             ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
         }
-        this.discard();
+    }
+
+    private void apExplode(BlockPos pos) {
+        if (Math.random() > fireProbability) {
+            fireTime = 0;
+        }
+
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(),
+                        this,
+                        this.getOwner()),
+                explosionDamage,
+                pos.getX(),
+                pos.getY(),
+                pos.getZ(),
+                explosionRadius,
+                ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
+                setDamageMultiplier(1).setFireTime(fireTime);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+
+        if (explosionRadius > 7) {
+            ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
+        } else {
+            ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+        }
     }
 
     private PlayState movementPredicate(AnimationState<CannonShellEntity> event) {

@@ -1,5 +1,6 @@
 package net.mcreator.superbwarfare.entity;
 
+import net.mcreator.superbwarfare.config.server.ExplosionDestroyConfig;
 import net.mcreator.superbwarfare.entity.projectile.CannonShellEntity;
 import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.item.common.ammo.CannonShellItem;
@@ -251,7 +252,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     private void destroy() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
                 ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this), 130f,
-                this.getX(), this.getY(), this.getZ(), 9.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                this.getX(), this.getY(), this.getZ(), 9.5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
@@ -286,7 +287,8 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
                 explosionRadius = 10;
                 explosionDamage = 220;
                 fireProbability = 0.18F;
-                fireTime = 5;
+                fireTime = 2;
+                durability = 1;
             }
 
             if (stack.is(ModItems.AP_5_INCHES.get())) {
@@ -295,7 +297,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
                 explosionDamage = 100;
                 fireProbability = 0;
                 fireTime = 0;
-                durability = 25;
+                durability = 30;
             }
 
             if (!player.isCreative()) {
@@ -368,7 +370,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
         diffX = diffX * 0.15f;
 
         this.setYRot(this.getYRot() + Mth.clamp(diffY, -1.75f, 1.75f));
-        this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -3f, 3f), -85, 15));
+        this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -3f, 3f), -85, 16.3f));
         this.setRot(this.getYRot(), this.getXRot());
     }
 
@@ -380,7 +382,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
 
         if (!stack.is(ModTags.Items.GUN)) {
             float f = Mth.wrapDegrees(entity.getXRot());
-            float f1 = Mth.clamp(f, -85.0F, 15.0F);
+            float f1 = Mth.clamp(f, -85.0F, 16.3F);
             entity.xRotO += f1 - f;
             entity.setXRot(entity.getXRot() + f1 - f);
         }
@@ -392,7 +394,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     }
 
     private PlayState movementPredicate(AnimationState<Mk42Entity> event) {
-        if (this.entityData.get(COOL_DOWN) > 0) {
+        if (this.entityData.get(COOL_DOWN) > 10) {
             if (this.entityData.get(TYPE) == 1) {
                 return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire"));
             } else {

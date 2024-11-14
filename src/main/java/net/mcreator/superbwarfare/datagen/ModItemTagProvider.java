@@ -120,7 +120,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
         this.tag(ModTags.Items.CAN_APPLY_BARREL).add(ModItems.AK_12.get(), ModItems.AK_47.get(), ModItems.M_4.get(), ModItems.HK_416.get(), ModItems.QBZ_95.get());
 
-        this.tag(ModTags.Items.CAN_APPLY_GRIP).add(ModItems.AK_12.get(), ModItems.M_4.get(), ModItems.HK_416.get(), ModItems.QBZ_95.get());
+        this.tag(ModTags.Items.CAN_APPLY_GRIP).add(ModItems.AK_12.get(), ModItems.M_4.get(), ModItems.HK_416.get(), ModItems.QBZ_95.get(), ModItems.AK_47.get());
 
         this.tag(ModTags.Items.CAN_APPLY_SCOPE).add(ModItems.AK_12.get(), ModItems.AK_47.get(), ModItems.M_4.get(), ModItems.HK_416.get(), ModItems.QBZ_95.get());
 

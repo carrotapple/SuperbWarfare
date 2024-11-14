@@ -87,7 +87,7 @@ public class CustomExplosion extends Explosion {
                         d0 /= d3;
                         d1 /= d3;
                         d2 /= d3;
-                        float f = this.radius * (0.7F + this.level.random.nextFloat() * 0.6F);
+                        float f = this.radius * (0.4F + this.level.random.nextFloat() * 0.3F);
                         double d4 = this.x;
                         double d6 = this.y;
                         double d8 = this.z;
@@ -102,7 +102,7 @@ public class CustomExplosion extends Explosion {
 
                             Optional<Float> optional = this.damageCalculator.getBlockExplosionResistance(this, this.level, blockpos, blockstate, fluidstate);
                             if (optional.isPresent()) {
-                                f -= (optional.get() + 0.3F) * 0.3F;
+                                f -= (optional.get() + 0.5F) * 0.15F;
                             }
 
                             if (f > 0.0F && this.damageCalculator.shouldBlockExplode(this, this.level, blockpos, blockstate, f)) {

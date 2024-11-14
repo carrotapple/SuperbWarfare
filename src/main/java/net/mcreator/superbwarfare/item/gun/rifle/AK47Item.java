@@ -82,15 +82,38 @@ public class AK47Item extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
+        boolean drum = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE) == 2;
+        boolean grip = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 1 || GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 2;
+
         if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_empty"));
+            if (drum) {
+                if (grip) {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_empty_drum_grip"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_empty_drum"));
+                }
+            } else {
+                if (grip) {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_empty_grip"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_empty"));
+                }
+            }
         }
 
         if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-            if (GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE) == 2) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_normal_drum"));
+            if (drum) {
+                if (grip) {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_normal_drum_grip"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_normal_drum"));
+                }
             } else {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_normal"));
+                if (grip) {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_normal_grip"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.reload_normal"));
+                }
             }
         }
 
@@ -98,11 +121,19 @@ public class AK47Item extends GunItem implements GeoItem, AnimatedItem {
             if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ak47.run_fast"));
             } else {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ak47.run"));
+                if (grip) {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ak47.run_grip"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ak47.run"));
+                }
             }
         }
 
-        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ak47.idle"));
+        if (grip) {
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ak47.idle_grip"));
+        } else {
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ak47.idle"));
+        }
     }
 
     private PlayState editPredicate(AnimationState<AK47Item> event) {

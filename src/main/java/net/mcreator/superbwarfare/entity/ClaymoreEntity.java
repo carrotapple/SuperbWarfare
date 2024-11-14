@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.entity;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.config.server.ExplosionDestroyConfig;
 import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
@@ -216,7 +217,7 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
         if (level() instanceof ServerLevel) {
             CustomExplosion explosion = new CustomExplosion(this.level(), null,
                     ModDamageTypes.causeMineDamage(this.level().registryAccess(), this), 15.0f,
-                    this.getX(), this.getY(), this.getZ(), 7.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                    this.getX(), this.getY(), this.getZ(), 7.5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
             explosion.explode();
             net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
             explosion.finalizeExplosion(false);
@@ -228,7 +229,7 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
     private void triggerExplode(Entity target) {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
                 ModDamageTypes.causeMineDamage(this.level().registryAccess(), this.getOwner()), 40f,
-                target.getX(), target.getY(), target.getZ(), 4f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                target.getX(), target.getY(), target.getZ(), 4f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);

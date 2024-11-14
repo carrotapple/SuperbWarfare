@@ -15,10 +15,13 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
+import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
+
 public class AK47ItemModel extends GeoModel<AK47Item> {
 
     public static float fireRotY = 0f;
     public static float fireRotZ = 0f;
+    public static float rotXBipod = 0f;
 
     @Override
     public ResourceLocation getAnimationResource(AK47Item animatable) {
@@ -129,7 +132,7 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
 
         shen.setPosX(-0.4f * (float) (ClientEventHandler.recoilHorizon * (0.5 + 0.4 * ClientEventHandler.fireSpread)));
         shen.setPosY((float) (0.15f * fp + 0.18f * fr));
-        shen.setPosZ((float) (0.475 * fp + 0.64f * fr + 1.25 * fpz));
+        shen.setPosZ((float) (0.375 * fp + 0.44f * fr + 0.75 * fpz));
         shen.setRotX((float) (0.01f * fp + 0.08f * fr + 0.01f * fpz));
         shen.setRotY(fireRotY);
         shen.setRotZ(fireRotZ);
@@ -145,6 +148,12 @@ public class AK47ItemModel extends GeoModel<AK47Item> {
 
         cross3.setRotZ(0.01f * (float) (ClientEventHandler.recoilHorizon * fp));
         cross3.setPosY(-0.23f * (float) (fp + 2.3 * fr));
+
+        CoreGeoBone l = getAnimationProcessor().getBone("l");
+        CoreGeoBone r = getAnimationProcessor().getBone("r");
+        rotXBipod = Mth.lerp(1.5f * times, rotXBipod, isProne(player) ? -90 : 0);
+        l.setRotX(rotXBipod * Mth.DEG_TO_RAD);
+        r.setRotX(rotXBipod * Mth.DEG_TO_RAD);
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
 

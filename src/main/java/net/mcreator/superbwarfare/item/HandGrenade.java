@@ -1,5 +1,6 @@
 package net.mcreator.superbwarfare.item;
 
+import net.mcreator.superbwarfare.config.server.ExplosionDestroyConfig;
 import net.mcreator.superbwarfare.entity.projectile.HandGrenadeEntity;
 import net.mcreator.superbwarfare.init.ModDamageTypes;
 import net.mcreator.superbwarfare.init.ModSounds;
@@ -70,7 +71,7 @@ public class HandGrenade extends Item {
         if (!pLevel.isClientSide) {
             CustomExplosion explosion = new CustomExplosion(pLevel, null,
                     ModDamageTypes.causeProjectileBoomDamage(pLevel.registryAccess(), pLivingEntity, pLivingEntity), 90,
-                    pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), 6.5f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
+                    pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), 6.5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
             explosion.explode();
             net.minecraftforge.event.ForgeEventFactory.onExplosionStart(pLevel, explosion);
             explosion.finalizeExplosion(false);

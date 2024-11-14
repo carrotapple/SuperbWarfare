@@ -105,6 +105,10 @@ public class CannonHudOverlay {
             preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
         }
 
+        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.mortar.pitch")
+                        .append(Component.literal(new DecimalFormat("##.#").format(-cannon.getXRot()) + "°")),
+                w / 2 + 14, h / 2 - 29, -1, false);
+
         if (cannon instanceof Mk42Entity) {
             health = cannon.getEntityData().get(net.mcreator.superbwarfare.entity.Mk42Entity.HEALTH);
             maxHealth = 500;

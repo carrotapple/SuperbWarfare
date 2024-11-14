@@ -453,11 +453,7 @@ public class GunEventHandler {
 
             SoundEvent sound1p;
 
-            if (stack.is(ModItems.AK_47.get()) && GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE) == 2) {
-                sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, name + "_reload_normal_drum"));
-            } else {
-                sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, name + "_reload_normal"));
-            }
+            sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, name + "_reload_normal"));
 
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);

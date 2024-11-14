@@ -415,5 +415,7 @@
   "des.superbwarfare.mortar.yaw": "Yaw：",
   "des.superbwarfare.mortar.pitch": "Pitch：",
   "des.superbwarfare.target.pos": "Target Position：",
-  "des.superbwarfare.target.warn": "迫击炮无法瞄准该位置"
+  "des.superbwarfare.target.warn": "迫击炮无法瞄准该位置",
+  "des.superbwarfare.tips.edit_part": "Press ",
+  "des.superbwarfare.tips.edit_part2": " key to edit this weapon."
 }

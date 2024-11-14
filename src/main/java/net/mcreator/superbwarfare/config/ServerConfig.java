@@ -1,5 +1,6 @@
 package net.mcreator.superbwarfare.config;
 
+import net.mcreator.superbwarfare.config.server.ExplosionDestroyConfig;
 import net.mcreator.superbwarfare.config.server.SpawnConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -9,6 +10,7 @@ public class ServerConfig {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 
         SpawnConfig.init(builder);
+        ExplosionDestroyConfig.init(builder);
 
         return builder.build();
     }

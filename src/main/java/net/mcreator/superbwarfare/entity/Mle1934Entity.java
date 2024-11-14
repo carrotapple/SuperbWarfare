@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.entity;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.config.server.ExplosionDestroyConfig;
 import net.mcreator.superbwarfare.entity.projectile.CannonShellEntity;
 import net.mcreator.superbwarfare.init.*;
 import net.mcreator.superbwarfare.item.common.ammo.CannonShellItem;
@@ -249,7 +250,7 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
     private void destroy() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
                 ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this), 140f,
-                this.getX(), this.getY(), this.getZ(), 10f, Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                this.getX(), this.getY(), this.getZ(), 10f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
@@ -286,6 +287,7 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
                 explosionDamage = 240;
                 fireProbability = 0.24F;
                 fireTime = 5;
+                durability = 1;
                 salvoShoot = stack.getCount() > 1 || player.isCreative();
             }
 
@@ -295,7 +297,7 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
                 explosionDamage = 120;
                 fireProbability = 0;
                 fireTime = 0;
-                durability = 35;
+                durability = 50;
                 salvoShoot = stack.getCount() > 1 || player.isCreative();
             }
 

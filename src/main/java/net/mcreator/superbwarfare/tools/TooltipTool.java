@@ -1,5 +1,6 @@
 package net.mcreator.superbwarfare.tools;
 
+import net.mcreator.superbwarfare.init.ModKeyMappings;
 import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.perk.AmmoPerk;
@@ -60,6 +61,9 @@ public class TooltipTool {
         addLevelTips(tooltip, stack);
         addBypassTips(tooltip, stack);
         addPerkTips(tooltip, stack);
+        if (stack.is(ModTags.Items.CAN_CUSTOM_GUN)) {
+            addEditTips(tooltip);
+        }
     }
 
     public static void addShotgunTips(List<Component> tooltip, ItemStack stack) {
@@ -100,6 +104,14 @@ public class TooltipTool {
         tooltip.add(Component.translatable("des.superbwarfare.tips.rpm").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getDouble(stack, "rpm", 0) + ItemNBTTool.getDouble(stack, "customRpm", 0))).withStyle(ChatFormatting.GREEN)));
+    }
+
+    private static void addEditTips(List<Component> tooltip) {
+        tooltip.add(Component.literal(" ").withStyle(ChatFormatting.GRAY));
+
+        tooltip.add(Component.translatable("des.superbwarfare.tips.edit_part").withStyle(ChatFormatting.LIGHT_PURPLE)
+                .append(Component.literal("[" + ModKeyMappings.EDIT_MODE.getKey().getDisplayName().getString() + "]").withStyle(ChatFormatting.LIGHT_PURPLE))
+                .append(Component.translatable("des.superbwarfare.tips.edit_part2").withStyle(ChatFormatting.LIGHT_PURPLE)));
     }
 
     private static void addLevelTips(List<Component> tooltip, ItemStack stack) {
