@@ -94,14 +94,14 @@ public class MortarShellEntity extends ThrowableItemProjectile {
 
     @Override
     public void onHitEntity(EntityHitResult entityHitResult) {
-        Entity entity = entityHitResult.getEntity();
-
-        entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
-
-        if (this.level() instanceof ServerLevel) {
-            ProjectileTool.causeCustomExplode(this, this.damage, this.radius);
+        if (this.tickCount > 1) {
+            Entity entity = entityHitResult.getEntity();
+            entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
+            if (this.level() instanceof ServerLevel) {
+                ProjectileTool.causeCustomExplode(this, this.damage, this.radius);
+            }
+            this.discard();
         }
-        this.discard();
     }
 
     @Override
