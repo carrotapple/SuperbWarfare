@@ -54,10 +54,14 @@ public class Monitor extends Item {
 
         if (stack.getOrCreateTag().getBoolean("Using")) {
             stack.getOrCreateTag().putBoolean("Using", false);
-            Minecraft.getInstance().options.setCameraType(CameraType.FIRST_PERSON);
+            if (world.isClientSide) {
+                Minecraft.getInstance().options.setCameraType(CameraType.FIRST_PERSON);
+            }
         } else {
             stack.getOrCreateTag().putBoolean("Using", true);
-            Minecraft.getInstance().options.setCameraType(CameraType.THIRD_PERSON_BACK);
+            if (world.isClientSide) {
+                Minecraft.getInstance().options.setCameraType(CameraType.THIRD_PERSON_BACK);
+            }
         }
 
         DroneEntity drone = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
