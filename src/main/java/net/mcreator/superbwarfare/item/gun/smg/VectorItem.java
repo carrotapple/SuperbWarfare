@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.item.gun.smg;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.PoseTool;
 import net.mcreator.superbwarfare.client.renderer.item.VectorItemRenderer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
@@ -8,23 +9,26 @@ import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
 import net.mcreator.superbwarfare.item.gun.GunItem;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
-import net.mcreator.superbwarfare.client.PoseTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -73,14 +77,22 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
-
+        boolean drum = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE) == 2;
 
         if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload_empty"));
+            if (drum) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload_empty_drum"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload_empty"));
+            }
         }
 
         if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload_normal"));
+            if (drum) {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload_normal_drum"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vec.reload_normal"));
+            }
         }
 
         if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
@@ -94,15 +106,61 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.vec.idle"));
     }
 
+    private PlayState editPredicate(AnimationState<VectorItem> event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
+
+        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.vector.edit"));
+        }
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.vec.idle"));
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         AnimationController<VectorItem> idleController = new AnimationController<>(this, "idleController", 2, this::idlePredicate);
         data.add(idleController);
+        var editController = new AnimationController<>(this, "editController", 1, this::editPredicate);
+        data.add(editController);
     }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
+
+        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        int barrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
+        int magType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE);
+        int stockType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK);
+
+        int customMag = switch (magType) {
+            case 1 -> 20;
+            case 2 -> 57;
+            default -> 0;
+        };
+
+        if (scopeType == 3) {
+            CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
+            tag.putInt("Scope", 0);
+        }
+
+        double customZoom = switch (scopeType) {
+            case 0, 1 -> 0;
+            case 2 -> 0.75;
+            default -> stack.getOrCreateTag().getDouble("CustomZoom");
+        };
+
+
+        stack.getOrCreateTag().putDouble("CustomZoom", customZoom);
+        stack.getOrCreateTag().putInt("customMag", customMag);
     }
 
     public static ItemStack getGunInstance() {

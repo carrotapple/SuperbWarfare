@@ -40,6 +40,12 @@ public class PlayerEventHandler {
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using")) {
             stack.getOrCreateTag().putBoolean("Using", false);
         }
+        for (ItemStack pStack : player.getInventory().items) {
+            if (pStack.is(ModTags.Items.GUN)) {
+                pStack.getOrCreateTag().putBoolean("draw", true);
+                pStack.getOrCreateTag().putBoolean("init", false);
+            }
+        }
     }
 
     @SubscribeEvent
@@ -59,6 +65,12 @@ public class PlayerEventHandler {
 
         handleRespawnReload(player);
         handleRespawnAutoArmor(player);
+
+        for (ItemStack pStack : player.getInventory().items) {
+            if (pStack.is(ModTags.Items.GUN)) {
+                pStack.getOrCreateTag().putBoolean("draw", true);
+            }
+        }
     }
 
     @SubscribeEvent
@@ -344,17 +356,17 @@ public class PlayerEventHandler {
             armorLevel = 3;
         }
 
-        if (armorPlate < armorLevel * 30) {
+        if (armorPlate < armorLevel * 15) {
             for (var stack : player.getInventory().items) {
                 if (stack.is(ModItems.ARMOR_PLATE.get())) {
                     if (stack.getTag() != null && stack.getTag().getBoolean("Infinite")) {
-                        armor.getOrCreateTag().putDouble("ArmorPlate", armorLevel * 30);
+                        armor.getOrCreateTag().putDouble("ArmorPlate", armorLevel * 15);
 
                         if (player instanceof ServerPlayer serverPlayer) {
                             serverPlayer.level().playSound(null, serverPlayer.getOnPos(), SoundEvents.ARMOR_EQUIP_IRON, SoundSource.PLAYERS, 0.5f, 1);
                         }
                     } else {
-                        for (int index0 = 0; index0 < Math.ceil(((armorLevel * 30) - armorPlate) / 30); index0++) {
+                        for (int index0 = 0; index0 < Math.ceil(((armorLevel * 15) - armorPlate) / 15); index0++) {
                             stack.finishUsingItem(player.level(), player);
                         }
                     }

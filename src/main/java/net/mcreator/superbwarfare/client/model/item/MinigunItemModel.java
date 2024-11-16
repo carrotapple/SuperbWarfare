@@ -34,7 +34,6 @@ public class MinigunItemModel extends GeoModel<MinigunItem> {
     public void setCustomAnimations(MinigunItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("barrel");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
-        CoreGeoBone heat_barrels = getAnimationProcessor().getBone("heatbarrels");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -56,10 +55,6 @@ public class MinigunItemModel extends GeoModel<MinigunItem> {
         double fpz = ClientEventHandler.firePosZ * 13 * times;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
-
-        float heat = (float) stack.getOrCreateTag().getDouble("heat");
-
-        heat_barrels.setScaleZ(4 * heat);
 
         int rpm = stack.getOrCreateTag().getInt("rpm");
 

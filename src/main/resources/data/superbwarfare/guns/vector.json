@@ -5,7 +5,7 @@
   "damage": 6,
   "headshot": 1.5,
   "velocity": 16,
-  "mag": 33,
+  "mag": 13,
   "projectile_amount": 1,
   "weight": 3,
   "FireMode": 2,
@@ -16,6 +16,6 @@
   "normal_reload_time": 46,
   "EmptyReloadTime": 64,
   "BypassesArmor": 0.15,
-  "SoundRadius": 4,
+  "SoundRadius": 11,
   "rpm": 1200
 }

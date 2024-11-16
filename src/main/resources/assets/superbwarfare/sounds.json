@@ -751,6 +751,30 @@
       }
     ]
   },
+  "vector_fire_1p_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:vector/vector_fire_1p_s",
+        "stream": false
+      }
+    ]
+  },
+  "vector_fire_3p_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:vector/vector_fire_3p_s",
+        "stream": false
+      }
+    ]
+  },
+  "vector_far_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:vector/vector_far_s",
+        "stream": false
+      }
+    ]
+  },
   "vector_reload_normal": {
     "sounds": [
       {
@@ -1718,22 +1742,6 @@
     ]
   },
 
-  "lightsaber": {
-    "sounds": [
-      {
-        "name": "superbwarfare:lightsaber1",
-        "stream": false
-      },
-      {
-        "name": "superbwarfare:lightsaber2",
-        "stream": false
-      },
-      {
-        "name": "superbwarfare:lightsaber3",
-        "stream": false
-      }
-    ]
-  },
   "bullet_supply": {
     "sounds": [
       {

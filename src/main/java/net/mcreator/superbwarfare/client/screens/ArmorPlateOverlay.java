@@ -41,7 +41,7 @@ public class ArmorPlateOverlay {
         if (stack == ItemStack.EMPTY) return;
         if (stack.getTag() == null || !stack.getTag().contains("ArmorPlate")) return;
 
-        double amount = stack.getTag().getDouble("ArmorPlate");
+        double amount = 2 * stack.getTag().getDouble("ArmorPlate");
 
         int armorLevel = 1;
         if (stack.is(ModTags.Items.MILITARY_ARMOR)) {

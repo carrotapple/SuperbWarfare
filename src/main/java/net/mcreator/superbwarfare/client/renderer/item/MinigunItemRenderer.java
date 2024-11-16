@@ -3,6 +3,7 @@ package net.mcreator.superbwarfare.client.renderer.item;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.AnimationHelper;
+import net.mcreator.superbwarfare.client.layer.MinigunHeatLayer;
 import net.mcreator.superbwarfare.client.layer.MinigunLayer;
 import net.mcreator.superbwarfare.client.model.item.MinigunItemModel;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
@@ -30,6 +31,7 @@ public class MinigunItemRenderer extends GeoItemRenderer<MinigunItem> {
     public MinigunItemRenderer() {
         super(new MinigunItemModel());
         this.addRenderLayer(new MinigunLayer(this));
+        this.addRenderLayer(new MinigunHeatLayer(this));
     }
 
     @Override
@@ -89,10 +91,6 @@ public class MinigunItemRenderer extends GeoItemRenderer<MinigunItem> {
                     bone.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
                     bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
                 }
-            }
-
-            if (name.equals("light")) {
-                bone.setHidden((ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5));
             }
         }
 

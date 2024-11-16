@@ -197,7 +197,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
                 ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MORTAR_DEPLOYER.get()));
                 return InteractionResult.SUCCESS;
             }
-            this.entityData.set(Y_ROT, player.getYRot());
+            this.entityData.set(Y_ROT, Mth.clamp(player.getYRot(), -180, 180));
         }
 
         return InteractionResult.SUCCESS;

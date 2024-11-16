@@ -3,10 +3,12 @@ package net.mcreator.superbwarfare.client.renderer.item;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.AnimationHelper;
+import net.mcreator.superbwarfare.client.ItemModelHelper;
 import net.mcreator.superbwarfare.client.layer.VectorLayer;
 import net.mcreator.superbwarfare.client.model.item.VectorItemModel;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.item.gun.smg.VectorItem;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -83,20 +85,35 @@ public class VectorItemRenderer extends GeoItemRenderer<VectorItem> {
         if (player != null) {
             ItemStack itemStack = player.getMainHandItem();
 
-            if (name.equals("holo")) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS);
+            if (name.equals("Cross1")) {
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                        || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
+                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
+            }
+
+            if (name.equals("Cross2")) {
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                        || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
+                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2);
+            }
+
+            if (name.equals("tuoxin")) {
+                bone.setHidden(GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.STOCK) == 0);
             }
 
             if (name.equals("flare")) {
-                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
+                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {
                     bone.setHidden(true);
                 } else {
                     bone.setHidden(false);
-                    bone.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-                    bone.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                    bone.setScaleX((float) (0.55 + 0.5 * (Math.random() - 0.5)));
+                    bone.setScaleY((float) (0.55 + 0.5 * (Math.random() - 0.5)));
                     bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
                 }
             }
+
+            ItemModelHelper.handleGunAttachments(bone, itemStack, name);
+
         }
 
         if (this.transformType.firstPerson() && renderingArms) {
