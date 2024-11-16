@@ -26,7 +26,7 @@ public class AmmoCommand {
                     // 权限不足时，只允许玩家查询自己的弹药数量
                     if (context.getSource().isPlayer() && !context.getSource().hasPermission(2)) {
                         if (!Objects.requireNonNull(context.getSource().getPlayer()).getUUID().equals(player.getUUID())) {
-                            context.getSource().sendFailure(Component.translatable("commands.ammo.nopermission"));
+                            context.getSource().sendFailure(Component.translatable("commands.ammo.no_permission"));
                             return 0;
                         }
                     }

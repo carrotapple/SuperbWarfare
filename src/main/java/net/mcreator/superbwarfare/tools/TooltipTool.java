@@ -109,9 +109,7 @@ public class TooltipTool {
     private static void addEditTips(List<Component> tooltip) {
         tooltip.add(Component.literal(" ").withStyle(ChatFormatting.GRAY));
 
-        tooltip.add(Component.translatable("des.superbwarfare.tips.edit_part").withStyle(ChatFormatting.LIGHT_PURPLE)
-                .append(Component.literal("[" + ModKeyMappings.EDIT_MODE.getKey().getDisplayName().getString() + "]").withStyle(ChatFormatting.LIGHT_PURPLE))
-                .append(Component.translatable("des.superbwarfare.tips.edit_part2").withStyle(ChatFormatting.LIGHT_PURPLE)));
+        tooltip.add(Component.translatable("des.superbwarfare.tips.edit", "[" + ModKeyMappings.EDIT_MODE.getKey().getDisplayName().getString() + "]").withStyle(ChatFormatting.LIGHT_PURPLE));
     }
 
     private static void addLevelTips(List<Component> tooltip, ItemStack stack) {
