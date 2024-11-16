@@ -417,5 +417,6 @@
   "des.superbwarfare.target.pos": "目标坐标：",
   "des.superbwarfare.target.warn": "迫击炮无法瞄准该位置",
   "des.superbwarfare.tips.edit_part": "按下",
-  "des.superbwarfare.tips.edit_part2": "键进行改装"
+  "des.superbwarfare.tips.edit_part2": "键进行改装",
+  "commands.ammo.nopermission": "权限不足"
 }

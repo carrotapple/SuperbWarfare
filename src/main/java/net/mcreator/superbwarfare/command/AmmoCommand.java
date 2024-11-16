@@ -12,14 +12,24 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.server.command.EnumArgument;
 
+import java.util.Objects;
+
 @Mod.EventBusSubscriber
 public class AmmoCommand {
     @SubscribeEvent
     public static void registerCommand(RegisterCommandsEvent event) {
         // mojang你看看你写的是个牛魔Builder😅
-        event.getDispatcher().register(Commands.literal("superbwarfare:ammo").requires(s -> s.hasPermission(4))
+        event.getDispatcher().register(Commands.literal("ammo").requires(s -> s.hasPermission(0))
                 .then(Commands.literal("get").then(Commands.argument("player", EntityArgument.player()).then(Commands.argument("type", EnumArgument.enumArgument(GunInfo.Type.class)).executes(context -> {
                     var player = EntityArgument.getPlayer(context, "player");
+
+                    // 权限不足时，只允许玩家查询自己的弹药数量
+                    if (context.getSource().isPlayer() && !context.getSource().hasPermission(2)) {
+                        if (!Objects.requireNonNull(context.getSource().getPlayer()).getUUID().equals(player.getUUID())) {
+                            context.getSource().sendFailure(Component.translatable("commands.ammo.nopermission"));
+                            return 0;
+                        }
+                    }
 
                     var type = context.getArgument("type", GunInfo.Type.class);
 
@@ -34,7 +44,7 @@ public class AmmoCommand {
                     context.getSource().sendSuccess(() -> Component.translatable("commands.ammo.get", Component.translatable(type.translatableKey), value), true);
                     return 0;
                 }))))
-                .then(Commands.literal("set").then(Commands.argument("players", EntityArgument.players()).then(Commands.argument("type", EnumArgument.enumArgument(GunInfo.Type.class)).then(Commands.argument("value", IntegerArgumentType.integer(0)).executes(context -> {
+                .then(Commands.literal("set").requires(s -> s.hasPermission(2)).then(Commands.argument("players", EntityArgument.players()).then(Commands.argument("type", EnumArgument.enumArgument(GunInfo.Type.class)).then(Commands.argument("value", IntegerArgumentType.integer(0)).executes(context -> {
                     var players = EntityArgument.getPlayers(context, "players");
                     var type = context.getArgument("type", GunInfo.Type.class);
                     var value = IntegerArgumentType.getInteger(context, "value");
@@ -54,7 +64,7 @@ public class AmmoCommand {
                     context.getSource().sendSuccess(() -> Component.translatable("commands.ammo.set", Component.translatable(type.translatableKey), value, players.size()), true);
                     return 0;
                 })))))
-                .then(Commands.literal("add").then(Commands.argument("players", EntityArgument.players()).then(Commands.argument("type", EnumArgument.enumArgument(GunInfo.Type.class)).then(Commands.argument("value", IntegerArgumentType.integer(0)).executes(context -> {
+                .then(Commands.literal("add").requires(s -> s.hasPermission(2)).then(Commands.argument("players", EntityArgument.players()).then(Commands.argument("type", EnumArgument.enumArgument(GunInfo.Type.class)).then(Commands.argument("value", IntegerArgumentType.integer(0)).executes(context -> {
                     var players = EntityArgument.getPlayers(context, "players");
                     var type = context.getArgument("type", GunInfo.Type.class);
                     var value = IntegerArgumentType.getInteger(context, "value");
