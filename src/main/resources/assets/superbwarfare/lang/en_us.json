@@ -247,6 +247,8 @@
   "des.superbwarfare.jhp_bullet": "Increases damage against unarmored targets, but the damage decreases rapidly as the armor value rises",
   "item.superbwarfare.he_bullet": "Explosion Bullet",
   "des.superbwarfare.he_bullet": "The bullet will explode after hitting the target",
+  "item.superbwarfare.incendiary_bullet": "Incendiary Bullet",
+  "des.superbwarfare.incendiary_bullet": "The bullet will ignites the target after hitting the target",
 
   "item.superbwarfare.heal_clip": "Heal Clip",
   "des.superbwarfare.heal_clip": "Reloading after dealing a final blow will heal you and your nearby allies",
@@ -340,6 +342,7 @@
   "key.superbwarfare.edit_grip": "Switch Grip",
 
   "effect.superbwarfare.shock": "Shock",
+  "effect.superbwarfare.burn": "Burn",
   "item.minecraft.potion.effect.superbwarfare_shock": "Potion of Shock",
   "item.minecraft.splash_potion.effect.superbwarfare_shock": "Splash Potion of Shock",
   "item.minecraft.lingering_potion.effect.superbwarfare_shock": "Lingering Potion of Shock",

@@ -100,6 +100,9 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     private int jhpLevel = 0;
     private boolean heBullet = false;
     private int heLevel = 0;
+    private boolean fireBullet = false;
+    private int fireLevel = 0;
+    private boolean dragonBreath = false;
     private Supplier<MobEffectInstance> mobEffect = () -> null;
 
     public ProjectileEntity(EntityType<? extends ProjectileEntity> p_i50159_1_, Level p_i50159_2_) {
@@ -294,8 +297,18 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
         this.setDeltaMovement(vec.x, vec.y - 0.02, vec.z);
 
-        if (this.tickCount > 40) {
+        if (this.tickCount > (fireBullet ? 10 : 40)) {
             this.discard();
+        }
+
+        if (fireBullet && dragonBreath && this.level() instanceof ServerLevel serverLevel) {
+            for (int index0 = 0; index0 < 1; index0++) {
+                double randomPos = 2 * (Math.random() - 0.5);
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.FLAME, this.getX(), this.getY(), this.getZ(),
+                        1, randomPos, randomPos, randomPos, 0.001, true);
+                ParticleTool.sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY(), this.getZ(),
+                        1, randomPos, randomPos, randomPos, 0.001, true);
+            }
         }
     }
 
@@ -338,6 +351,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             this.onHitBlock(hitVec);
             if (heBullet) {
                 explosionBulletBlock(this, this.damage, heLevel, monsterMultiple + 1, hitVec);
+            }
+            if (fireBullet && this.level() instanceof ServerLevel serverLevel) {
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.LAVA, hitVec.x, hitVec.y, hitVec.z,
+                        3, 0, 0, 0, 0.5, true);
             }
         }
 
@@ -500,6 +517,12 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
         if (heBullet) {
             explosionBulletEntity(this, entity, this.damage, heLevel, mMultiple);
+        }
+
+        if (fireBullet) {
+            if (!entity.level().isClientSide() && entity instanceof LivingEntity living) {
+                living.addEffect(new MobEffectInstance(ModMobEffects.BURN.get(), 60 + fireLevel * 20, fireLevel, false , false), this.shooter);
+            }
         }
 
         if (headshot) {
@@ -799,6 +822,13 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     public ProjectileEntity heBullet(boolean heBullet, int heLevel) {
         this.heBullet = true;
         this.heLevel = heLevel;
+        return this;
+    }
+
+    public ProjectileEntity fireBullet(boolean fireBullet, int fireLevel, boolean dragonBreath) {
+        this.fireBullet = true;
+        this.fireLevel = fireLevel;
+        this.dragonBreath = dragonBreath;
         return this;
     }
 

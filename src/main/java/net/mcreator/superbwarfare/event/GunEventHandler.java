@@ -219,6 +219,9 @@ public class GunEventHandler {
             } else if (perk == ModPerks.HE_BULLET.get()) {
                 int level = PerkHelper.getItemPerkLevel(perk, heldItem);
                 projectile.heBullet(true, level);
+            } else if (perk == ModPerks.INCENDIARY_BULLET.get()) {
+                int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+                projectile.fireBullet(true, level, heldItem.is(ModTags.Items.SHOTGUN));
             }
 
             var dmgPerk = PerkHelper.getPerkByType(heldItem, Perk.Type.DAMAGE);
@@ -228,7 +231,7 @@ public class GunEventHandler {
             }
 
             projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
-            projectile.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.001f, player.getLookAngle().z, velocity,
+            projectile.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.001f, player.getLookAngle().z, heldItem.is(ModTags.Items.SHOTGUN) && perk == ModPerks.INCENDIARY_BULLET.get() ? 4.5f : velocity,
                     (float) spared);
             player.level().addFreshEntity(projectile);
         }

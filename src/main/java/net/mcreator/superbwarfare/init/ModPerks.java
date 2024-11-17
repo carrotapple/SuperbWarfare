@@ -31,9 +31,9 @@ public class ModPerks {
     public static final RegistryObject<Perk> AP_BULLET = AMMO_PERKS.register("ap_bullet",
             () -> new AmmoPerk(new AmmoPerk.Builder("ap_bullet", Perk.Type.AMMO).bypassArmorRate(0.4f).damageRate(0.9f).speedRate(1.2f).slug(true).rgb(230, 70, 35)));
     public static final RegistryObject<Perk> JHP_BULLET = AMMO_PERKS.register("jhp_bullet",
-            () -> new AmmoPerk(new AmmoPerk.Builder("jhp_bullet", Perk.Type.AMMO).bypassArmorRate(-0.2f).damageRate(1.1f).speedRate(0.9f).slug(true).rgb(230, 131, 65)));
+            () -> new AmmoPerk(new AmmoPerk.Builder("jhp_bullet", Perk.Type.AMMO).bypassArmorRate(-0.2f).damageRate(1.1f).speedRate(0.95f).slug(true).rgb(230, 131, 65)));
     public static final RegistryObject<Perk> HE_BULLET = AMMO_PERKS.register("he_bullet",
-            () -> new AmmoPerk(new AmmoPerk.Builder("he_bullet", Perk.Type.AMMO).bypassArmorRate(-0.3f).damageRate(0.5f).speedRate(0.6f).slug(true).rgb(240, 20, 10)));
+            () -> new AmmoPerk(new AmmoPerk.Builder("he_bullet", Perk.Type.AMMO).bypassArmorRate(-0.3f).damageRate(0.5f).speedRate(0.85f).slug(true).rgb(240, 20, 10)));
     public static final RegistryObject<Perk> SILVER_BULLET = AMMO_PERKS.register("silver_bullet",
             () -> new AmmoPerk(new AmmoPerk.Builder("silver_bullet", Perk.Type.AMMO).bypassArmorRate(0.05f).damageRate(0.8f).speedRate(1.1f).rgb(87, 166, 219)));
     public static final RegistryObject<Perk> POISONOUS_BULLET = AMMO_PERKS.register("poisonous_bullet",
@@ -42,6 +42,8 @@ public class ModPerks {
     public static final RegistryObject<Perk> BEAST_BULLET = AMMO_PERKS.register("beast_bullet",
             () -> new AmmoPerk(new AmmoPerk.Builder("beast_bullet", Perk.Type.AMMO).bypassArmorRate(0.0f).rgb(134, 65, 14)));
     public static final RegistryObject<Perk> LONGER_WIRE = AMMO_PERKS.register("longer_wire", () -> new Perk("longer_wire", Perk.Type.AMMO));
+    public static final RegistryObject<Perk> INCENDIARY_BULLET = AMMO_PERKS.register("incendiary_bullet",
+            () -> new AmmoPerk(new AmmoPerk.Builder("incendiary_bullet", Perk.Type.AMMO).bypassArmorRate(-0.4f).damageRate(0.7f).speedRate(0.75f).slug(false).rgb(230, 131, 65)));
 
     /**
      * Functional Perks

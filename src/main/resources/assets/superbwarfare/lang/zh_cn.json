@@ -247,6 +247,8 @@
   "des.superbwarfare.jhp_bullet": "增加对无护甲目标的伤害，但伤害会随着护甲值上升而迅速降低",
   "item.superbwarfare.he_bullet": "爆炸子弹",
   "des.superbwarfare.he_bullet": "子弹在命中后会爆炸",
+  "item.superbwarfare.incendiary_bullet": "燃烧弹",
+  "des.superbwarfare.incendiary_bullet": "子弹在命中后点燃目标",
 
   "item.superbwarfare.heal_clip": "治疗弹匣",
   "des.superbwarfare.heal_clip": "最后一击后短时间内填装，可治疗自身和附近队友",
@@ -340,6 +342,7 @@
   "key.superbwarfare.edit_grip": "切换握把",
 
   "effect.superbwarfare.shock": "电击",
+  "effect.superbwarfare.burn": "点燃",
   "item.minecraft.potion.effect.superbwarfare_shock": "电击药水",
   "item.minecraft.splash_potion.effect.superbwarfare_shock": "喷溅型电击药水",
   "item.minecraft.lingering_potion.effect.superbwarfare_shock": "滞留型电击药水",
