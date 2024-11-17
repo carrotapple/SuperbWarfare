@@ -100,6 +100,8 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
         this.tag(ModTags.Items.LAUNCHER).add(ModItems.M_79.get(), ModItems.RPG.get(), ModItems.JAVELIN.get());
 
+        this.tag(ModTags.Items.REVOLVER).add(ModItems.TRACHELIUM.get());
+
         this.tag(ModTags.Items.CANNOT_RELOAD).add(ModItems.MINIGUN.get(), ModItems.BOCEK.get());
 
         this.tag(ModTags.Items.IS_AUTO_WEAPON).add(ModItems.AA_12.get(), ModItems.AK_47.get(), ModItems.AK_12.get(), ModItems.HK_416.get(), ModItems.AA_12.get(), ModItems.M_4.get(),

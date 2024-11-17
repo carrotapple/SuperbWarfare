@@ -26,6 +26,7 @@ public class ModTags {
         public static final TagKey<Item> MACHINE_GUN = tag("machine_gun");
         public static final TagKey<Item> SHOTGUN = tag("shotgun");
         public static final TagKey<Item> LAUNCHER = tag("launcher");
+        public static final TagKey<Item> REVOLVER = tag("revolver");
 
         public static final TagKey<Item> NORMAL_GUN = tag("normal_gun");
         public static final TagKey<Item> OPEN_BOLT = tag("open_bolt");

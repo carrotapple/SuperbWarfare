@@ -123,6 +123,8 @@ public class ClientEventHandler {
 
     public static int miniGunRot = 0;
 
+    public static double revolverPreTime = 0;
+
 
     @SubscribeEvent
     public static void handleWeaponTurn(RenderHandEvent event) {
@@ -149,6 +151,18 @@ public class ClientEventHandler {
         if (mc.screen != null) return true;
         if (!mc.mouseHandler.isMouseGrabbed()) return true;
         return !mc.isWindowActive();
+    }
+
+    private static boolean revolverPre() {
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return false;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.REVOLVER)) {
+            return true;
+        }
+        else {
+            return revolverPreTime > 1;
+        }
     }
 
     private static boolean isMoving() {
@@ -253,6 +267,14 @@ public class ClientEventHandler {
         // cooldown in ms
         int cooldown = (int) (1000 / rps);
 
+        //左轮类
+
+        if (stack.is(ModTags.Items.REVOLVER) && holdFire) {
+            revolverPreTime = revolverPreTime + 0.3 * times;
+        } else {
+            revolverPreTime = Mth.clamp(revolverPreTime - 0.5 * times, 0 , 1.1);
+        }
+
         if ((holdFire || burstFireSize > 0)
                 && (player.getMainHandItem().is(ModTags.Items.NORMAL_GUN)
                 && cantFireTime == 0
@@ -264,7 +286,9 @@ public class ClientEventHandler {
                 && !stack.getOrCreateTag().getBoolean("charging")
                 && stack.getOrCreateTag().getInt("ammo") > 0
                 && !player.getCooldowns().isOnCooldown(stack.getItem())
-                && !stack.getOrCreateTag().getBoolean("need_bolt_action"))
+                && !stack.getOrCreateTag().getBoolean("need_bolt_action")
+                && revolverPre()
+        )
                 || (stack.is(ModItems.MINIGUN.get())
                 && !player.isSprinting()
                 && stack.getOrCreateTag().getDouble("overheat") == 0
@@ -310,6 +334,10 @@ public class ClientEventHandler {
 
         if (stack.getItem() == ModItems.DEVOTION.get() && (stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))) {
             customRpm = 0;
+        }
+
+        if (revolverPreTime > 1) {
+            revolverPreTime = 0;
         }
     }
 

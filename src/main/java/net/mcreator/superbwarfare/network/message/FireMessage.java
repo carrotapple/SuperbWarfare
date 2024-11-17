@@ -140,15 +140,6 @@ public class FireMessage {
             tag.putDouble("force_stop", 1);
         }
 
-        if (handItem.getItem() != ModItems.BOCEK.get()
-                && handItem.getItem() != ModItems.MINIGUN.get()
-                && tag.getInt("ammo") == 0
-                && !tag.getBoolean("reloading")) {
-            if (!player.level().isClientSide()) {
-                SoundTool.playLocalSound(player, ModSounds.TRIGGER_CLICK.get(), 10, 1);
-            }
-        }
-
         if (handItem.getItem() == ModItems.BOCEK.get()) {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.bowPullHold = true;

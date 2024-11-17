@@ -32,6 +32,9 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
+import static net.mcreator.superbwarfare.event.ClientEventHandler.cantFireTime;
+import static net.mcreator.superbwarfare.event.ClientEventHandler.drawTime;
+
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClickHandler {
     private static boolean notInGame() {
@@ -98,6 +101,16 @@ public class ClickHandler {
             }
             if (player.getMainHandItem().is(ModTags.Items.GUN)) {
                 event.setCanceled(true);
+
+                if (stack.is(ModTags.Items.GUN) && (!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+                        && !stack.getOrCreateTag().getBoolean("reloading")
+                        && !stack.getOrCreateTag().getBoolean("charging")
+                        && !stack.getOrCreateTag().getBoolean("need_bolt_action"))
+                        && cantFireTime == 0
+                        && drawTime < 0.01
+                        && !notInGame()) {
+                    player.playSound(ModSounds.TRIGGER_CLICK.get(), 1, 1);
+                }
 
                 if (stack.is(ModTags.Items.GUN) && !stack.is(ModTags.Items.CANNOT_RELOAD) && stack.getOrCreateTag().getInt("ammo") <= 0) {
                     if (ReloadConfig.LEFT_CLICK_RELOAD.get()) {
