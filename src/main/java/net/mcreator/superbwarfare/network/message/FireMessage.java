@@ -288,6 +288,9 @@ public class FireMessage {
         } else if (perk == ModPerks.HE_BULLET.get()) {
             int level = PerkHelper.getItemPerkLevel(perk, heldItem);
             projectile.heBullet(true, level);
+        } else if (perk == ModPerks.INCENDIARY_BULLET.get()) {
+            int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+            projectile.fireBullet(true, level, !zoom);
         }
 
         var dmgPerk = PerkHelper.getPerkByType(heldItem, Perk.Type.DAMAGE);
@@ -298,7 +301,7 @@ public class FireMessage {
 
         projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
 
-        projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, velocity, spread);
+        projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (!zoom && perk == ModPerks.INCENDIARY_BULLET.get() ? 0.2f : 1) * velocity, spread);
 
         projectile.damage((float) damage);
 
