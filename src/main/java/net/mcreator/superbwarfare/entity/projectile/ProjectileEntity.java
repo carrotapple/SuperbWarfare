@@ -303,11 +303,12 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
         if (fireBullet && dragonBreath && this.level() instanceof ServerLevel serverLevel) {
             for (int index0 = 0; index0 < 1; index0++) {
-                double randomPos = 2 * (Math.random() - 0.5);
-                ParticleTool.sendParticle(serverLevel, ParticleTypes.FLAME, this.getX(), this.getY(), this.getZ(),
-                        1, randomPos, randomPos, randomPos, 0.001, true);
-                ParticleTool.sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY(), this.getZ(),
-                        1, randomPos, randomPos, randomPos, 0.001, true);
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.FLAME,
+                        this.getX(), this.getY(), this.getZ(),
+                        0,
+                        this.getDeltaMovement().x, this.getDeltaMovement().y, this.getDeltaMovement().z,
+                        this.getDeltaMovement().length(), true
+                );
             }
         }
     }
@@ -521,7 +522,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
         if (fireBullet) {
             if (!entity.level().isClientSide() && entity instanceof LivingEntity living) {
-                living.addEffect(new MobEffectInstance(ModMobEffects.BURN.get(), 60 + fireLevel * 20, fireLevel, false , false), this.shooter);
+                living.addEffect(new MobEffectInstance(ModMobEffects.BURN.get(), 60 + fireLevel * 20, fireLevel, false, false), this.shooter);
             }
         }
 
