@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.item.gun.machinegun;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.PoseTool;
 import net.mcreator.superbwarfare.client.renderer.item.DevotionItemRenderer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
@@ -12,7 +13,6 @@ import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
-import net.mcreator.superbwarfare.client.PoseTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -132,6 +132,6 @@ public class DevotionItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public boolean canApplyPerk(Perk perk) {
-        return PerkHelper.MACHINE_GUN_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk) || perk == ModPerks.DESPERADO.get();
+        return PerkHelper.MACHINE_GUN_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk) || perk == ModPerks.DESPERADO.get() || perk == ModPerks.TURBO_CHARGER.get();
     }
 }

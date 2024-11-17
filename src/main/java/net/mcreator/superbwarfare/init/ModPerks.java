@@ -55,7 +55,7 @@ public class ModPerks {
     public static final RegistryObject<Perk> SUBSISTENCE = FUNC_PERKS.register("subsistence", () -> new Perk("subsistence", Perk.Type.FUNCTIONAL));
     public static final RegistryObject<Perk> FIELD_DOCTOR = FUNC_PERKS.register("field_doctor", () -> new Perk("field_doctor", Perk.Type.FUNCTIONAL));
     public static final RegistryObject<Perk> SUPER_RECHARGE = FUNC_PERKS.register("super_recharge", () -> new Perk("super_recharge", Perk.Type.FUNCTIONAL));
-//    public static final RegistryObject<Perk> DIMENSION_MAGAZINE = FUNC_PERKS.register("dimension_magazine", () -> new Perk("dimension_magazine", Perk.Type.FUNCTIONAL));
+    public static final RegistryObject<Perk> TURBO_CHARGER = FUNC_PERKS.register("turbo_charger", () -> new Perk("turbo_charger", Perk.Type.FUNCTIONAL));
 
     /**
      * Damage Perks

@@ -260,8 +260,8 @@
   "des.superbwarfare.field_doctor": "腰射时发射的子弹可以治疗队友",
   "item.superbwarfare.super_recharge": "超级快充",
   "des.superbwarfare.super_recharge": "增加泰瑟枪充能的速度",
-  "item.superbwarfare.dimension_magazine": "次元弹匣",
-  "des.superbwarfare.dimension_magazine": "增加弹匣容量",
+  "item.superbwarfare.turbo_charger": "涡轮增压器",
+  "des.superbwarfare.turbo_charger": "装配后减少武器自动射击所需的缓冲时间",
 
   "item.superbwarfare.kill_clip": "杀戮弹匣",
   "des.superbwarfare.kill_clip": "完成击杀后填装可提升武器伤害",

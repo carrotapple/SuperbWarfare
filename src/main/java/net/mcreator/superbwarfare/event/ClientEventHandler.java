@@ -361,7 +361,8 @@ public class ClientEventHandler {
                 }
 
                 if (stack.is(ModItems.DEVOTION.get())) {
-                    customRpm = Math.min(customRpm + 20, 500);
+                    int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.TURBO_CHARGER.get(), stack);
+                    customRpm = Math.min(customRpm + 15 + ((perkLevel > 0 ? 5 : 0) + 3 * perkLevel), 500);
                 }
 
                 if (stack.getItem() == ModItems.SENTINEL.get()) {
