@@ -64,14 +64,10 @@ public class ShootMessage {
             int projectileAmount = (int) stack.getOrCreateTag().getDouble("projectile_amount");
 
             if (stack.getOrCreateTag().getInt("ammo") > 0) {
-
-                /*
-                  空仓挂机
-                 */
+                // 空仓挂机
                 if (stack.getOrCreateTag().getInt("ammo") == 1) {
                     stack.getOrCreateTag().putBoolean("HoldOpen", true);
                 }
-
 
                 if (stack.is(ModTags.Items.REVOLVER)) {
                     stack.getOrCreateTag().putBoolean("canImmediatelyShoot", false);

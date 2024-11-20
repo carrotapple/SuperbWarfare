@@ -133,7 +133,6 @@ public class FireMessage {
                 tag.putBoolean("Seeking", true);
                 tag.putInt("SeekTime", 0);
             }
-
         }
 
         if (tag.getDouble("prepare") == 0 && tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
@@ -190,15 +189,12 @@ public class FireMessage {
         if (stack.getOrCreateTag().getDouble("power") >= 6) {
             stack.getOrCreateTag().putDouble("speed", stack.getOrCreateTag().getDouble("power"));
             if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
-
                 spawnBullet(player);
                 spawnFakeArrow(player);
 
                 SoundTool.playLocalSound(player, ModSounds.BOCEK_ZOOM_FIRE_1P.get(), 10, 1);
                 player.playSound(ModSounds.BOCEK_ZOOM_FIRE_3P.get(), 2, 1);
-
             } else {
-
                 for (int index0 = 0; index0 < (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 1 : 10); index0++) {
                     spawnBullet(player);
                 }
@@ -249,7 +245,6 @@ public class FireMessage {
         double damage;
         boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
 
-
         float spread;
 
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
@@ -264,7 +259,6 @@ public class FireMessage {
                 .shooter(player)
                 .headShot(headshot)
                 .zoom(zoom);
-
 
         if (perk instanceof AmmoPerk ammoPerk) {
             int level = PerkHelper.getItemPerkLevel(perk, heldItem);

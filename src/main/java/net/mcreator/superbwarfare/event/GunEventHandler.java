@@ -156,7 +156,7 @@ public class GunEventHandler {
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 2f, 1f);
 
-                double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip( new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1 , 0).scale(10)),
+                double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1, 0).scale(10)),
                         ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
 
                 if (stack.is(ModTags.Items.REVOLVER)) return;
@@ -167,7 +167,7 @@ public class GunEventHandler {
                     } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
                         SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_50CAL.get(), (float) Math.max(1 - 0.15 * shooterHeight, 0), 1);
                     } else {
-                        SoundTool.playLocalSound(serverPlayer,ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);
+                        SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);
                     }
                 });
             }
@@ -231,7 +231,7 @@ public class GunEventHandler {
 
             var dmgPerk = PerkHelper.getPerkByType(heldItem, Perk.Type.DAMAGE);
             if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
-                int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+                int level = PerkHelper.getItemPerkLevel(dmgPerk, heldItem);
                 projectile.monsterMultiple(0.1f + 0.1f * level);
             }
 
@@ -717,7 +717,7 @@ public class GunEventHandler {
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
 
-                double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip( new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1 , 0).scale(10)),
+                double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1, 0).scale(10)),
                         ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
 
                 ModUtils.queueServerWork((int) (stack.getOrCreateTag().getDouble("prepare_empty") / 2 + 3 + 1.5 * shooterHeight), () -> {
@@ -726,7 +726,7 @@ public class GunEventHandler {
                     } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
                         SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_50CAL.get(), (float) Math.max(1 - 0.15 * shooterHeight, 0), 1);
                     } else {
-                        SoundTool.playLocalSound(serverPlayer,ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);
+                        SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);
                     }
                 });
             }
@@ -747,7 +747,7 @@ public class GunEventHandler {
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
 
-                double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip( new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1 , 0).scale(10)),
+                double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1, 0).scale(10)),
                         ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
 
                 ModUtils.queueServerWork((int) (8 + 1.5 * shooterHeight), () -> {
@@ -756,7 +756,7 @@ public class GunEventHandler {
                     } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
                         SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_50CAL.get(), (float) Math.max(1 - 0.15 * shooterHeight, 0), 1);
                     } else {
-                        SoundTool.playLocalSound(serverPlayer,ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);
+                        SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);
                     }
                 });
             }
@@ -794,12 +794,12 @@ public class GunEventHandler {
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 10f, 1f);
 
-                double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip( new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1 , 0).scale(10)),
+                double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1, 0).scale(10)),
                         ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
 
                 if (stack.is(ModItems.MARLIN.get())) {
                     ModUtils.queueServerWork((int) (5 + 1.5 * shooterHeight), () -> {
-                        SoundTool.playLocalSound(serverPlayer,ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);
+                        SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);
                     });
                 }
             }
