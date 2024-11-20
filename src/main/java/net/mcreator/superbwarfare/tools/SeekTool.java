@@ -3,19 +3,18 @@ package net.mcreator.superbwarfare.tools;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Comparator;
+import java.util.stream.StreamSupport;
 
 public class SeekTool {
 
     public static Entity seekEntity(Entity entity, Level level, double seekRange, double seekAngle) {
-        Vec3 pos = new Vec3(entity.getX(), entity.getY(), entity.getZ());
-        return level.getEntitiesOfClass(Entity.class, new AABB(pos, pos).inflate(seekRange), e -> true).stream()
+        return StreamSupport.stream(EntityFindUtil.getEntities(level).getAll().spliterator(), false)
                 .filter(e -> {
-                    if (calculateAngle(e, entity) < seekAngle && e != entity) {
+                    if (e.distanceTo(entity) <= seekRange && calculateAngle(e, entity) < seekAngle && e != entity) {
                         return level.clip(new ClipContext(entity.getEyePosition(), e.getEyePosition(),
                                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() != HitResult.Type.BLOCK;
                     }

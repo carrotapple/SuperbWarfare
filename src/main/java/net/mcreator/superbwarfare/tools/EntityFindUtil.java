@@ -6,10 +6,25 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.entity.LevelEntityGetter;
 
 import java.util.UUID;
 
 public class EntityFindUtil {
+    /**
+     * 获取世界里的所有实体，对ClientLevel和ServerLevel均有效
+     *
+     * @param level 目标世界
+     * @return 所有实体
+     */
+    public static LevelEntityGetter<Entity> getEntities(Level level) {
+        if (level instanceof ServerLevel serverLevel) {
+            return serverLevel.getEntities();
+        }
+        var clientLevel = (ClientLevel) level;
+        return clientLevel.getEntities();
+    }
+
     /**
      * 查找当前已知实体，对ClientLevel和ServerLevel均有效
      *
