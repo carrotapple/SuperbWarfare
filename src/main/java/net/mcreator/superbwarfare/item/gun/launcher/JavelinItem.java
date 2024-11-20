@@ -140,8 +140,7 @@ public class JavelinItem extends GunItem implements GeoItem, AnimatedItem {
             tag.putInt("max_ammo", getAmmoCount(player));
 
             if (tag.getBoolean("Seeking")) {
-                Entity targetEntity = player.level().getEntitiesOfClass(Entity.class, player.getBoundingBox().inflate(512))
-                        .stream().filter(e -> e.getStringUUID().equals(tag.getString("TargetEntity"))).findFirst().orElse(null);
+                Entity targetEntity = EntityFindUtil.findEntity(player.level(), tag.getString("TargetEntity"));
                 Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 512, 8);
                 if (seekingEntity != null && seekingEntity == targetEntity) {
                     tag.putInt("SeekTime", tag.getInt("SeekTime") + 1);

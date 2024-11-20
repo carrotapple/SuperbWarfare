@@ -1,7 +1,7 @@
 package net.mcreator.superbwarfare.network.message;
 
-import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.tools.EntityFindUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -36,30 +36,29 @@ public class DroneMovementMessage {
                 ItemStack stack = player.getMainHandItem();
 
                 if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
-                    player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
-                            .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst()
-                            .ifPresent(drone -> {
-                                switch (message.direction) {
-                                    case 0:
-                                        drone.getPersistentData().putBoolean("left", message.clicked);
-                                        break;
-                                    case 1:
-                                        drone.getPersistentData().putBoolean("right", message.clicked);
-                                        break;
-                                    case 2:
-                                        drone.getPersistentData().putBoolean("forward", message.clicked);
-                                        break;
-                                    case 3:
-                                        drone.getPersistentData().putBoolean("backward", message.clicked);
-                                        break;
-                                    case 4:
-                                        drone.getPersistentData().putBoolean("up", message.clicked);
-                                        break;
-                                    case 5:
-                                        drone.getPersistentData().putBoolean("down", message.clicked);
-                                        break;
-                                }
-                            });
+                    var drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
+                    if (drone != null) {
+                        switch (message.direction) {
+                            case 0:
+                                drone.getPersistentData().putBoolean("left", message.clicked);
+                                break;
+                            case 1:
+                                drone.getPersistentData().putBoolean("right", message.clicked);
+                                break;
+                            case 2:
+                                drone.getPersistentData().putBoolean("forward", message.clicked);
+                                break;
+                            case 3:
+                                drone.getPersistentData().putBoolean("backward", message.clicked);
+                                break;
+                            case 4:
+                                drone.getPersistentData().putBoolean("up", message.clicked);
+                                break;
+                            case 5:
+                                drone.getPersistentData().putBoolean("down", message.clicked);
+                                break;
+                        }
+                    }
                 }
             }
         });

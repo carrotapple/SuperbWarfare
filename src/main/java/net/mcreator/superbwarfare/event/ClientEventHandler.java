@@ -10,6 +10,7 @@ import net.mcreator.superbwarfare.network.message.ShootMessage;
 import net.mcreator.superbwarfare.perk.AmmoPerk;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
+import net.mcreator.superbwarfare.tools.EntityFindUtil;
 import net.mcreator.superbwarfare.tools.GunsTool;
 import net.mcreator.superbwarfare.tools.MillisTimer;
 import net.mcreator.superbwarfare.tools.SeekTool;
@@ -161,9 +162,9 @@ public class ClientEventHandler {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.REVOLVER)) {
             return true;
-        } else if (stack.is(ModTags.Items.REVOLVER) && (stack.getOrCreateTag().getBoolean("DA") || stack.getOrCreateTag().getBoolean("canImmediatelyShoot"))){
+        } else if (stack.is(ModTags.Items.REVOLVER) && (stack.getOrCreateTag().getBoolean("DA") || stack.getOrCreateTag().getBoolean("canImmediatelyShoot"))) {
             return true;
-        }else {
+        } else {
             return revolverPreTime >= 1;
         }
     }
@@ -273,10 +274,10 @@ public class ClientEventHandler {
         //左轮类
 
         if (clientTimer.getProgress() == 0 && stack.is(ModTags.Items.REVOLVER) && ((holdFire && !stack.getOrCreateTag().getBoolean("DA")) || (stack.getOrCreateTag().getInt("bolt_action_anim") < 7 && stack.getOrCreateTag().getInt("bolt_action_anim") > 2) || stack.getOrCreateTag().getBoolean("canImmediatelyShoot"))) {
-            revolverPreTime = Mth.clamp(revolverPreTime + 0.21 * times, 0 , 1);
-            revolverWheelPreTime = Mth.clamp(revolverWheelPreTime + 0.23 * times, 0 , revolverPreTime > 0.7 ? 1 : 0.55);
+            revolverPreTime = Mth.clamp(revolverPreTime + 0.21 * times, 0, 1);
+            revolverWheelPreTime = Mth.clamp(revolverWheelPreTime + 0.23 * times, 0, revolverPreTime > 0.7 ? 1 : 0.55);
         } else if (!stack.getOrCreateTag().getBoolean("DA") && !stack.getOrCreateTag().getBoolean("canImmediatelyShoot")) {
-            revolverPreTime = Mth.clamp(revolverPreTime - 1.2 * times, 0 ,  1);
+            revolverPreTime = Mth.clamp(revolverPreTime - 1.2 * times, 0, 1);
         }
 
 
@@ -333,7 +334,7 @@ public class ClientEventHandler {
 
         gunPartMove(times);
 
-        if (mode == 0  && clientTimer.getProgress() >= cooldown) {
+        if (mode == 0 && clientTimer.getProgress() >= cooldown) {
             clientTimer.stop();
         }
 
@@ -353,7 +354,7 @@ public class ClientEventHandler {
 
                 if (mode == 1) {
                     if (stack.getOrCreateTag().getInt("ammo") == 1) {
-                         burstFireSize = 1;
+                        burstFireSize = 1;
                     }
                     if (burstFireSize == 1) {
                         cantFireTime = 40;
@@ -395,12 +396,10 @@ public class ClientEventHandler {
                     player.playSound(ModSounds.HENG.get(), 1f, 1f);
                 }
 
-                double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip( new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1 , 0).scale(10)),
+                double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1, 0).scale(10)),
                         ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
 
-                ModUtils.queueClientWork((int) (1 + 1.5 * shooterHeight), () -> {
-                    player.playSound(ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);
-                });
+                ModUtils.queueClientWork((int) (1 + 1.5 * shooterHeight), () -> player.playSound(ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1));
             }
 
             handleClientShoot();
@@ -474,7 +473,7 @@ public class ClientEventHandler {
             player.playSound(sound1p, 1f, 1);
         }
 
-        double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip( new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1 , 0).scale(10)),
+        double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1, 0).scale(10)),
                 ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
 
         ModUtils.queueClientWork((int) (1 + 1.5 * shooterHeight), () -> {
@@ -567,8 +566,7 @@ public class ClientEventHandler {
         double pitch = event.getPitch();
         double roll = event.getRoll();
 
-        DroneEntity drone = entity.level().getEntitiesOfClass(DroneEntity.class, entity.getBoundingBox().inflate(512))
-                .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
+        DroneEntity drone = EntityFindUtil.findDrone(entity.level(), stack.getOrCreateTag().getString("LinkedDrone"));
 
         if (drone != null) {
             droneRotZ = Mth.lerp(0.1 * times, droneRotZ, drone.getEntityData().get(ROT_Z));
@@ -610,8 +608,9 @@ public class ClientEventHandler {
 
         ItemStack stack = player.getMainHandItem();
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
-            player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
-                    .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().ifPresent(drone -> event.setCanceled(true));
+            if (EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone")) != null) {
+                event.setCanceled(true);
+            }
         }
     }
 

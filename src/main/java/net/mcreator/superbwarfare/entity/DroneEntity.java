@@ -8,6 +8,7 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.item.Monitor;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
+import net.mcreator.superbwarfare.tools.EntityFindUtil;
 import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.ChatFormatting;
@@ -190,31 +191,31 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
 
         if (this.getPersistentData().getBoolean("left")) {
             this.entityData.set(MOVE_X, -1.5f);
-            this.entityData.set(ROT_X, Mth.lerp(0.1f ,this.entityData.get(ROT_X) ,0.5f));
+            this.entityData.set(ROT_X, Mth.lerp(0.1f, this.entityData.get(ROT_X), 0.5f));
         }
         if (this.getPersistentData().getBoolean("right")) {
             this.entityData.set(MOVE_X, 1.5f);
-            this.entityData.set(ROT_X, Mth.lerp(0.1f ,this.entityData.get(ROT_X) ,-0.5f));
+            this.entityData.set(ROT_X, Mth.lerp(0.1f, this.entityData.get(ROT_X), -0.5f));
         }
 
-        this.entityData.set(ROT_X, Mth.lerp(0.05f ,this.entityData.get(ROT_X) ,0));
+        this.entityData.set(ROT_X, Mth.lerp(0.05f, this.entityData.get(ROT_X), 0));
 
         if (!this.getPersistentData().getBoolean("left") && !this.getPersistentData().getBoolean("right")) {
-            this.entityData.set(MOVE_X, Mth.lerp(0.1f ,this.entityData.get(MOVE_X) ,0));
+            this.entityData.set(MOVE_X, Mth.lerp(0.1f, this.entityData.get(MOVE_X), 0));
         }
 
         if (this.getPersistentData().getBoolean("forward")) {
             this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) - 0.11f);
-            this.entityData.set(ROT_Z, Mth.lerp(0.1f ,this.entityData.get(ROT_Z) ,-0.5f));
+            this.entityData.set(ROT_Z, Mth.lerp(0.1f, this.entityData.get(ROT_Z), -0.5f));
         }
         if (this.getPersistentData().getBoolean("backward")) {
             this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) + 0.11f);
-            this.entityData.set(ROT_Z, Mth.lerp(0.1f ,this.entityData.get(ROT_Z) ,0.5f));
+            this.entityData.set(ROT_Z, Mth.lerp(0.1f, this.entityData.get(ROT_Z), 0.5f));
         }
 
-        this.entityData.set(ROT_Z, Mth.lerp(0.05f ,this.entityData.get(ROT_Z) ,0));
+        this.entityData.set(ROT_Z, Mth.lerp(0.05f, this.entityData.get(ROT_Z), 0));
 
-        this.entityData.set(MOVE_Z, Mth.lerp(0.1f ,this.entityData.get(MOVE_Z) ,0));
+        this.entityData.set(MOVE_Z, Mth.lerp(0.1f, this.entityData.get(MOVE_Z), 0));
 
         if (this.getPersistentData().getBoolean("up")) {
             this.entityData.set(MOVE_Y, -1.5f);
@@ -223,7 +224,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             this.entityData.set(MOVE_Y, 1.5f);
         }
 
-        this.entityData.set(MOVE_Y, Mth.lerp(0.1f ,this.entityData.get(MOVE_Y) ,0));
+        this.entityData.set(MOVE_Y, Mth.lerp(0.1f, this.entityData.get(MOVE_Y), 0));
 
         this.setDeltaMovement(new Vec3(
                 this.getDeltaMovement().x + -this.entityData.get(MOVE_Z) * 0.1f * this.getLookAngle().x,
@@ -245,28 +246,27 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             }
         }
 
-        LivingEntity control = this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(512))
-                .stream().filter(e -> e.getStringUUID().equals(this.entityData.get(CONTROLLER))).findFirst().orElse(null);
+        Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
 
         if (!this.onGround()) {
             this.level().playSound(null, this.getOnPos(), ModSounds.DRONE_SOUND.get(), SoundSource.AMBIENT, 3, 1);
-            if (control != null) {
-                ItemStack stack = control.getMainHandItem();
-                if (stack.getOrCreateTag().getBoolean("Using") && control instanceof ServerPlayer serverPlayer) {
+            if (controller != null) {
+                ItemStack stack = controller.getMainHandItem();
+                if (stack.getOrCreateTag().getBoolean("Using") && controller instanceof ServerPlayer serverPlayer) {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.DRONE_SOUND.get(), 100, 1);
                 }
             }
         }
 
         if (this.getPersistentData().getBoolean("firing")) {
-            if (control instanceof Player player) {
-                if (this.entityData.get(AMMO) > 0) {
-                    this.entityData.set(AMMO, this.entityData.get(AMMO) - 1);
-                    droneDrop(player);
+            if (this.entityData.get(AMMO) > 0) {
+                this.entityData.set(AMMO, this.entityData.get(AMMO) - 1);
+                if (controller != null) {
+                    droneDrop(controller);
                 }
-                if (this.entityData.get(KAMIKAZE)) {
-                    this.hurt(new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.EXPLOSION), player), 10000);
-                }
+            }
+            if (this.entityData.get(KAMIKAZE)) {
+                this.hurt(new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.EXPLOSION), controller), 10000);
             }
             this.getPersistentData().putBoolean("firing", false);
         }
@@ -371,18 +371,17 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
 
     @Override
     public void travel(Vec3 dir) {
-        LivingEntity control = this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(512))
-                .stream().filter(e -> e.getStringUUID().equals(this.entityData.get(CONTROLLER))).findFirst().orElse(null);
+        Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
 
-        if (control != null) {
-            ItemStack stack = control.getMainHandItem();
+        if (controller != null) {
+            ItemStack stack = controller.getMainHandItem();
             if (stack.getOrCreateTag().getBoolean("Using")) {
-                this.setYRot(control.getYRot());
+                this.setYRot(controller.getYRot());
                 this.yRotO = this.getYRot();
-                this.setXRot(Mth.clamp(control.getXRot(), -25, 90));
+                this.setXRot(Mth.clamp(controller.getXRot(), -25, 90));
                 this.setRot(this.getYRot(), this.getXRot());
-                this.yBodyRot = control.getYRot();
-                this.yHeadRot = control.getYRot();
+                this.yBodyRot = controller.getYRot();
+                this.yHeadRot = controller.getYRot();
                 this.setSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED));
                 float strafe = -this.entityData.get(MOVE_X);
                 super.travel(new Vec3(2 * strafe, -this.entityData.get(MOVE_Y), -this.entityData.get(MOVE_Z)));

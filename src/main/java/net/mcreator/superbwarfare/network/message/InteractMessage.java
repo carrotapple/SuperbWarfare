@@ -3,6 +3,7 @@ package net.mcreator.superbwarfare.network.message;
 import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModTags;
+import net.mcreator.superbwarfare.tools.EntityFindUtil;
 import net.mcreator.superbwarfare.tools.TraceTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -71,8 +72,7 @@ public class InteractMessage {
 
             } else if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked") && !player.getCooldowns().isOnCooldown(stack.getItem())) {
 
-                DroneEntity drone = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
-                        .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
+                DroneEntity drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
 
                 if (drone != null) {
                     Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(drone.getEyePosition(), drone.getEyePosition().add(drone.getLookAngle().scale(2)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());

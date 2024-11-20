@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.network.message;
 
 import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.tools.EntityFindUtil;
 import net.mcreator.superbwarfare.tools.TraceTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
@@ -40,8 +41,7 @@ public class DroneFireMessage {
                 ItemStack stack = player.getMainHandItem();
 
                 if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
-                    DroneEntity drone = player.level().getEntitiesOfClass(DroneEntity.class, player.getBoundingBox().inflate(512))
-                            .stream().filter(e -> e.getStringUUID().equals(stack.getOrCreateTag().getString("LinkedDrone"))).findFirst().orElse(null);
+                    DroneEntity drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
                     if (drone != null) {
                         if (!player.getOffhandItem().is(ModItems.FIRING_PARAMETERS.get())) {
                             drone.getPersistentData().putBoolean("firing", true);

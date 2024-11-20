@@ -7,6 +7,7 @@ import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
+import net.mcreator.superbwarfare.tools.EntityFindUtil;
 import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.mcreator.superbwarfare.tools.ProjectileTool;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
@@ -164,9 +165,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
     @Override
     public void tick() {
         super.tick();
-        Entity entity = this.level().getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(512))
-                .stream().filter(e -> e.getStringUUID().equals(entityData.get(TARGET_UUID))).findFirst().orElse(null);
-
+        Entity entity = EntityFindUtil.findEntity(this.level(), entityData.get(TARGET_UUID));
 
         if (this.tickCount == 4) {
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
