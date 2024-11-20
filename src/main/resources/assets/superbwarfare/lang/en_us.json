@@ -419,5 +419,7 @@
   "des.superbwarfare.target.pos": "Target Position：",
   "des.superbwarfare.target.warn": "迫击炮无法瞄准该位置",
   "des.superbwarfare.tips.edit": "Press %1$s key to edit this weapon",
-  "commands.ammo.no_permission": "Permission denied"
+  "commands.ammo.no_permission": "Permission denied",
+  "des.superbwarfare.revolver.da": "DA",
+  "des.superbwarfare.revolver.sa": "SA"
 }

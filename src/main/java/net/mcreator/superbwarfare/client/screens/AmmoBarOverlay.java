@@ -9,7 +9,9 @@ import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.GunsTool;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -110,18 +112,29 @@ public class AmmoBarOverlay {
                         12,
                         12);
             } else {
-                event.getGuiGraphics().blit(fireMode,
-                        w - 95,
-                        h - 21,
-                        0,
-                        0,
-                        8,
-                        8,
-                        8,
-                        8);
+                if (stack.getItem() != ModItems.TRACHELIUM.get()) {
+                    event.getGuiGraphics().blit(fireMode,
+                            w - 95,
+                            h - 21,
+                            0,
+                            0,
+                            8,
+                            8,
+                            8,
+                            8);
+                } else {
+                    event.getGuiGraphics().drawString(
+                            Minecraft.getInstance().font,
+                            stack.getOrCreateTag().getBoolean("DA") ?  Component.translatable("des.superbwarfare.revolver.sa").withStyle(ChatFormatting.BOLD) : Component.translatable("des.superbwarfare.revolver.da").withStyle(ChatFormatting.BOLD),
+                            w - 96,
+                            h - 20,
+                            0xFFFFFF,
+                            false
+                    );
+                }
             }
 
-            if (stack.getItem() != ModItems.MINIGUN.get()) {
+            if (stack.getItem() != ModItems.MINIGUN.get() && stack.getItem() != ModItems.TRACHELIUM.get()) {
                 event.getGuiGraphics().blit(LINE,
                         w - 95,
                         h - 16,

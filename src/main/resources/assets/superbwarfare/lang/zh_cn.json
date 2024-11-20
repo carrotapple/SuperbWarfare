@@ -419,5 +419,7 @@
   "des.superbwarfare.target.pos": "目标坐标：",
   "des.superbwarfare.target.warn": "迫击炮无法瞄准该位置",
   "des.superbwarfare.tips.edit": "按下 %1$s 键进行改装",
-  "commands.ammo.no_permission": "权限不足"
+  "commands.ammo.no_permission": "权限不足",
+  "des.superbwarfare.revolver.da": "双动",
+  "des.superbwarfare.revolver.sa": "单动"
 }

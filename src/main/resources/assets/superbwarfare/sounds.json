@@ -63,6 +63,14 @@
       }
     ]
   },
+  "trachelium_bolt": {
+    "sounds": [
+      {
+        "name": "superbwarfare:trachelium/trachelium_shift",
+        "stream": false
+      }
+    ]
+  },
   "hunting_rifle_fire_1p": {
     "sounds": [
       {

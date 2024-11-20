@@ -72,10 +72,15 @@ public class ShootMessage {
                     stack.getOrCreateTag().putBoolean("HoldOpen", true);
                 }
 
+
+                if (stack.is(ModTags.Items.REVOLVER)) {
+                    stack.getOrCreateTag().putBoolean("canImmediatelyShoot", false);
+                }
+
                 /*
                   判断是否为栓动武器（bolt_action_time > 0），并在开火后给一个需要上膛的状态
                  */
-                if (stack.getOrCreateTag().getDouble("bolt_action_time") > 0 && stack.getOrCreateTag().getInt("ammo") > 1) {
+                if (stack.getOrCreateTag().getDouble("bolt_action_time") > 0 && stack.getOrCreateTag().getInt("ammo") > (stack.is(ModTags.Items.REVOLVER) ? 0 : 1)) {
                     stack.getOrCreateTag().putBoolean("need_bolt_action", true);
                 }
 

@@ -4,9 +4,11 @@ import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.tools.GunsTool;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -121,6 +123,20 @@ public class FireModeMessage {
                         SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1f, 1f, serverPlayer.level().random.nextLong()));
             }
         }
+
+        if (stack.getItem() == ModItems.TRACHELIUM.get() && !tag.getBoolean("need_bolt_action")) {
+            if (!tag.getBoolean("DA")) {
+                tag.putBoolean("DA", true);
+                player.displayClientMessage(Component.translatable("des.superbwarfare.revolver.sa").withStyle(ChatFormatting.BOLD), true);
+            } else {
+                tag.putBoolean("DA", false);
+                player.displayClientMessage(Component.translatable("des.superbwarfare.revolver.da").withStyle(ChatFormatting.BOLD), true);
+            }
+            if (!tag.getBoolean("canImmediatelyShoot")) {
+                tag.putBoolean("need_bolt_action", true);
+            }
+        }
+
     }
 
     private static void playChangeModeSound(Player player) {

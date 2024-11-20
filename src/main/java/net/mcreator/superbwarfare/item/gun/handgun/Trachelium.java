@@ -24,6 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
@@ -77,11 +78,28 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
+    private PlayState fireAnimPredicate(AnimationState<Trachelium> event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
+
+        if (ClientEventHandler.firePosTimer > 0 && ClientEventHandler.firePosTimer < 1.7) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.fire"));
+        }
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.idle"));
+    }
+
     private PlayState idlePredicate(AnimationState<Trachelium> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
+
+        if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.action"));
+        }
 
         if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.reload"));
@@ -100,6 +118,8 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        var fireAnimController = new AnimationController<>(this, "fireAnimController", 0, this::fireAnimPredicate);
+        data.add(fireAnimController);
         AnimationController<Trachelium> idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
     }
@@ -125,6 +145,13 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = new ItemStack(ModItems.TRACHELIUM.get());
         GunsTool.initCreativeGun(stack, ModItems.TRACHELIUM.getId().getPath());
         return stack;
+    }
+
+    @Override
+    public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(itemStack, world, entity, slot, selected);
+        var tag = itemStack.getOrCreateTag();
+        tag.putInt("bolt_action_time", tag.getBoolean("DA") ? 12 : 0);
     }
 
     @Override

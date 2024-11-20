@@ -125,6 +125,8 @@ public class ClientEventHandler {
 
     public static double revolverPreTime = 0;
 
+    public static double revolverWheelPreTime = 0;
+
 
     @SubscribeEvent
     public static void handleWeaponTurn(RenderHandEvent event) {
@@ -159,9 +161,10 @@ public class ClientEventHandler {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.REVOLVER)) {
             return true;
-        }
-        else {
-            return revolverPreTime > 1;
+        } else if (stack.is(ModTags.Items.REVOLVER) && (stack.getOrCreateTag().getBoolean("DA") || stack.getOrCreateTag().getBoolean("canImmediatelyShoot"))){
+            return true;
+        }else {
+            return revolverPreTime >= 1;
         }
     }
 
@@ -269,11 +272,13 @@ public class ClientEventHandler {
 
         //左轮类
 
-        if (stack.is(ModTags.Items.REVOLVER) && holdFire) {
-            revolverPreTime = revolverPreTime + 0.3 * times;
-        } else {
-            revolverPreTime = Mth.clamp(revolverPreTime - 0.5 * times, 0 , 1.1);
+        if (clientTimer.getProgress() == 0 && stack.is(ModTags.Items.REVOLVER) && ((holdFire && !stack.getOrCreateTag().getBoolean("DA")) || (stack.getOrCreateTag().getInt("bolt_action_anim") < 7 && stack.getOrCreateTag().getInt("bolt_action_anim") > 2) || stack.getOrCreateTag().getBoolean("canImmediatelyShoot"))) {
+            revolverPreTime = Mth.clamp(revolverPreTime + 0.21 * times, 0 , 1);
+            revolverWheelPreTime = Mth.clamp(revolverWheelPreTime + 0.23 * times, 0 , revolverPreTime > 0.7 ? 1 : 0.55);
+        } else if (!stack.getOrCreateTag().getBoolean("DA") && !stack.getOrCreateTag().getBoolean("canImmediatelyShoot")) {
+            revolverPreTime = Mth.clamp(revolverPreTime - 1.2 * times, 0 ,  1);
         }
+
 
         if ((holdFire || burstFireSize > 0)
                 && (player.getMainHandItem().is(ModTags.Items.NORMAL_GUN)
@@ -335,10 +340,6 @@ public class ClientEventHandler {
         if (stack.getItem() == ModItems.DEVOTION.get() && (stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))) {
             customRpm = 0;
         }
-
-        if (revolverPreTime > 1) {
-            revolverPreTime = 0;
-        }
     }
 
     public static void shootClient(Player player) {
@@ -372,6 +373,9 @@ public class ClientEventHandler {
                 if (stack.getItem() == ModItems.NTW_20.get()) {
                     actionMove = 1;
                 }
+
+                revolverPreTime = 0;
+                revolverWheelPreTime = 0;
 
                 playGunClientSounds(player);
                 handleClientShoot();

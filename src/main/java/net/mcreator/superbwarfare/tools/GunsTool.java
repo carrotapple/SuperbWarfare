@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.tools;
 
 import com.google.gson.stream.JsonReader;
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.GunsDataMessage;
 import net.minecraft.nbt.CompoundTag;
@@ -108,8 +109,8 @@ public class GunsTool {
         int ammoToAdd = mag - ammo + (extraOne ? 1 : 0);
 
         // 空仓换弹的栓动武器应该在换单后取消待上膛标记
-        if (ammo == 0 && tag.getDouble("bolt_action_time") > 0) {
-            tag.putDouble("need_bolt_action", 0);
+        if (ammo == 0 && tag.getDouble("bolt_action_time") > 0 && !stack.is(ModTags.Items.REVOLVER)) {
+            tag.putBoolean("need_bolt_action", false);
         }
 
         int playerAmmo = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> switch (type) {

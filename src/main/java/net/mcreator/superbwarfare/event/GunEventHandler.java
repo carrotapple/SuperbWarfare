@@ -68,6 +68,9 @@ public class GunEventHandler {
 
             if (stack.getOrCreateTag().getInt("bolt_action_anim") == 1) {
                 stack.getOrCreateTag().putBoolean("need_bolt_action", false);
+                if (stack.is(ModTags.Items.REVOLVER)) {
+                    stack.getOrCreateTag().putBoolean("canImmediatelyShoot", true);
+                }
             }
         }
     }
@@ -155,6 +158,8 @@ public class GunEventHandler {
 
                 double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip( new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1 , 0).scale(10)),
                         ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
+
+                if (stack.is(ModTags.Items.REVOLVER)) return;
 
                 ModUtils.queueServerWork((int) (stack.getOrCreateTag().getDouble("bolt_action_time") / 2 + 1.5 * shooterHeight), () -> {
                     if (stack.is(ModTags.Items.SHOTGUN)) {

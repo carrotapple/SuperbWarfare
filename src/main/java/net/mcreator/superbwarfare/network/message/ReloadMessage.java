@@ -59,6 +59,7 @@ public class ReloadMessage {
                     && !stack.getOrCreateTag().getBoolean("sentinel_is_charging")
                     && !(player.getCooldowns().isOnCooldown(stack.getItem()))
                     && GunsTool.getGunIntTag(stack, "ReloadTime") == 0
+                    && stack.getOrCreateTag().getInt("bolt_action_anim") == 0
             ) {
                 CompoundTag tag = stack.getOrCreateTag();
 
