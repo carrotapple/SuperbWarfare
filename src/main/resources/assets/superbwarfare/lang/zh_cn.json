@@ -262,6 +262,8 @@
   "des.superbwarfare.super_recharge": "增加泰瑟枪充能的速度",
   "item.superbwarfare.turbo_charger": "涡轮增压器",
   "des.superbwarfare.turbo_charger": "装配后减少武器自动射击所需的缓冲时间",
+  "item.superbwarfare.powerful_attraction": "强力吸引",
+  "des.superbwarfare.powerful_attraction": "击杀目标后掉落的物品和经验会直接转移到自身",
 
   "item.superbwarfare.kill_clip": "杀戮弹匣",
   "des.superbwarfare.kill_clip": "完成击杀后填装可提升武器伤害",

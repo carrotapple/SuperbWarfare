@@ -261,7 +261,9 @@
   "item.superbwarfare.super_recharge": "Super Recharge",
   "des.superbwarfare.super_recharge": "Increases the recharge speed of Taser Gun",
   "item.superbwarfare.turbo_charger": "Turbocharger",
-  "des.superbwarfare.turbo_charger": "Reduces autofire spin-up time for compatible weapons.",
+  "des.superbwarfare.turbo_charger": "Reduces auto fire spin-up time for compatible weapons",
+  "item.superbwarfare.powerful_attraction": "Powerful Attraction",
+  "des.superbwarfare.powerful_attraction": "Transfer items and experience dropped by killed targets to your inventory",
 
   "item.superbwarfare.kill_clip": "Kill Clip",
   "des.superbwarfare.kill_clip": "Increases the damage of weapon after dealing a final blow",

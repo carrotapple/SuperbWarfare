@@ -185,7 +185,7 @@ public class PerkHelper {
                 return true;
             }
             case FUNCTIONAL -> {
-                return perk == ModPerks.SUBSISTENCE.get();
+                return perk == ModPerks.SUBSISTENCE.get() || perk == ModPerks.POWERFUL_ATTRACTION.get();
             }
             case DAMAGE -> {
                 return perk == ModPerks.GUTSHOT_STRAIGHT.get() || perk == ModPerks.MONSTER_HUNTER.get();
@@ -203,7 +203,8 @@ public class PerkHelper {
             }
             case FUNCTIONAL -> {
                 return perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FIELD_DOCTOR.get() ||
-                        perk == ModPerks.FOURTH_TIMES_CHARM.get() || perk == ModPerks.SUBSISTENCE.get();
+                        perk == ModPerks.FOURTH_TIMES_CHARM.get() || perk == ModPerks.SUBSISTENCE.get() ||
+                        perk == ModPerks.POWERFUL_ATTRACTION.get();
             }
             case DAMAGE -> {
                 return perk == ModPerks.KILL_CLIP.get() || perk == ModPerks.GUTSHOT_STRAIGHT.get() ||
@@ -221,7 +222,8 @@ public class PerkHelper {
                 return true;
             }
             case FUNCTIONAL -> {
-                return perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FIELD_DOCTOR.get() || perk == ModPerks.SUBSISTENCE.get();
+                return perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FIELD_DOCTOR.get() ||
+                        perk == ModPerks.SUBSISTENCE.get() || perk == ModPerks.POWERFUL_ATTRACTION.get();
             }
             case DAMAGE -> {
                 return perk == ModPerks.KILL_CLIP.get() || perk == ModPerks.GUTSHOT_STRAIGHT.get() || perk == ModPerks.MONSTER_HUNTER.get();
@@ -238,7 +240,7 @@ public class PerkHelper {
                 return true;
             }
             case FUNCTIONAL -> {
-                return perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FOURTH_TIMES_CHARM.get();
+                return perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FOURTH_TIMES_CHARM.get() || perk == ModPerks.POWERFUL_ATTRACTION.get();
             }
             case DAMAGE -> {
                 return perk == ModPerks.KILL_CLIP.get() || perk == ModPerks.MONSTER_HUNTER.get();
@@ -255,7 +257,8 @@ public class PerkHelper {
                 return true;
             }
             case FUNCTIONAL -> {
-                return perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FOURTH_TIMES_CHARM.get() || perk == ModPerks.SUBSISTENCE.get();
+                return perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FOURTH_TIMES_CHARM.get() ||
+                        perk == ModPerks.SUBSISTENCE.get() || perk == ModPerks.POWERFUL_ATTRACTION.get();
             }
             case DAMAGE -> {
                 return perk == ModPerks.KILL_CLIP.get() || perk == ModPerks.GUTSHOT_STRAIGHT.get() ||
@@ -273,7 +276,7 @@ public class PerkHelper {
                 return true;
             }
             case FUNCTIONAL -> {
-                return perk == ModPerks.FOURTH_TIMES_CHARM.get() || perk == ModPerks.SUBSISTENCE.get();
+                return perk == ModPerks.FOURTH_TIMES_CHARM.get() || perk == ModPerks.SUBSISTENCE.get() || perk == ModPerks.POWERFUL_ATTRACTION.get();
             }
             case DAMAGE -> {
                 return perk == ModPerks.MONSTER_HUNTER.get() || perk == ModPerks.KILLING_TALLY.get();

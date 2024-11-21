@@ -35,9 +35,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
@@ -641,6 +639,43 @@ public class LivingEventHandler {
                     level.addFreshEntity(itemEntity);
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingDrops(LivingDropsEvent event) {
+        DamageSource source = event.getSource();
+        if (source == null) return;
+        Entity sourceEntity = source.getEntity();
+        if (!(sourceEntity instanceof Player player)) return;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return;
+
+        if (PerkHelper.getItemPerkLevel(ModPerks.POWERFUL_ATTRACTION.get(), stack) > 0) {
+            var drops = event.getDrops();
+            drops.forEach(itemEntity -> {
+                ItemStack item = itemEntity.getItem();
+                if (!player.addItem(item)) {
+                    player.drop(item, false);
+                }
+            });
+
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingExperienceDrop(LivingExperienceDropEvent event) {
+        Player player = event.getAttackingPlayer();
+        if (player == null) return;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return;
+
+        int level = PerkHelper.getItemPerkLevel(ModPerks.POWERFUL_ATTRACTION.get(), stack);
+        if (level > 0) {
+            player.giveExperiencePoints((int) (event.getDroppedExperience() * (0.8f + 0.2f * level)));
+
+            event.setCanceled(true);
         }
     }
 }
