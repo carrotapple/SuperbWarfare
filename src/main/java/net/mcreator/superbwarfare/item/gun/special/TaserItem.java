@@ -223,7 +223,7 @@ public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
     public boolean canApplyPerk(Perk perk) {
         return switch (perk.type) {
             case AMMO -> perk == ModPerks.LONGER_WIRE.get();
-            case FUNCTIONAL -> perk == ModPerks.SUPER_RECHARGE.get();
+            case FUNCTIONAL -> perk == ModPerks.SUPER_RECHARGE.get() || perk == ModPerks.POWERFUL_ATTRACTION.get();
             case DAMAGE -> perk == ModPerks.VOLT_OVERLOAD.get();
         };
     }
