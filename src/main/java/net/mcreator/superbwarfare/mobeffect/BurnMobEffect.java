@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.mobeffect;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.init.ModDamageTypes;
 import net.mcreator.superbwarfare.init.ModMobEffects;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
@@ -35,7 +36,7 @@ public class BurnMobEffect extends MobEffect {
             attacker = entity.level().getEntity(entity.getPersistentData().getInt("BurnAttacker"));
         }
 
-        entity.hurt(new DamageSource(entity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.IN_FIRE), attacker), 0.6f + (0.3f * amplifier));
+        entity.hurt(new DamageSource(entity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(ModDamageTypes.BURN), attacker), 0.6f + (0.3f * amplifier));
         entity.invulnerableTime = 0;
 
         if (attacker instanceof ServerPlayer player) {
@@ -100,7 +101,11 @@ public class BurnMobEffect extends MobEffect {
         LivingEntity living = event.getEntity();
 
         if (living.hasEffect(ModMobEffects.BURN.get())) {
-            living.setSecondsOnFire(1);
+            living.setRemainingFireTicks(2);
+        }
+
+        if (living.isInWater()) {
+            living.removeEffect(ModMobEffects.BURN.get());
         }
     }
 }

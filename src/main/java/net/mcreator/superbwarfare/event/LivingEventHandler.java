@@ -68,6 +68,8 @@ public class LivingEventHandler {
         handleGunPerksWhenDeath(event);
         handlePlayerKillEntity(event);
         handlePlayerDeathDropAmmo(event.getEntity());
+        giveKillExpToWeapon(event);
+
     }
 
     /**
@@ -162,8 +164,33 @@ public class LivingEventHandler {
         if (!(sourceEntity instanceof Player player)) return;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
+        if (event.getEntity() instanceof TargetEntity) return;
 
-        double amount = event.getAmount();
+        double amount = Math.min(0.125 * event.getAmount(), event.getEntity().getMaxHealth());
+
+        // 先处理发射器类武器或高爆弹的爆炸伤害
+        if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
+            if (stack.is(ModTags.Items.LAUNCHER) || PerkHelper.getItemPerkLevel(ModPerks.HE_BULLET.get(), stack) > 0) {
+                stack.getOrCreateTag().putDouble("Exp", stack.getOrCreateTag().getDouble("Exp") + amount);
+            }
+        }
+
+        // 再判断是不是枪械能造成的伤害
+        if (!DamageTypeTool.isGunDamage(source)) return;
+
+        stack.getOrCreateTag().putDouble("Exp", stack.getOrCreateTag().getDouble("Exp") + amount);
+    }
+
+    private static void giveKillExpToWeapon(LivingDeathEvent event) {
+        DamageSource source = event.getSource();
+        if (source == null) return;
+        Entity sourceEntity = source.getEntity();
+        if (!(sourceEntity instanceof Player player)) return;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return;
+        if (event.getEntity() instanceof TargetEntity) return;
+
+        double amount = 20 + 2 * event.getEntity().getMaxHealth();
 
         // 先处理发射器类武器或高爆弹的爆炸伤害
         if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
@@ -185,16 +212,17 @@ public class LivingEventHandler {
         if (!(sourceEntity instanceof Player player)) return;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
+        if (event.getEntity() instanceof TargetEntity) return;
 
         var tag = stack.getOrCreateTag();
         int level = stack.getOrCreateTag().getInt("Level");
         double exp = stack.getOrCreateTag().getDouble("Exp");
-        double upgradeExpNeeded = 20 * Math.pow(level, 2) + 140 * level + 20;
+        double upgradeExpNeeded = 20 * Math.pow(level, 2) + 160 * level + 20;
 
         if (exp >= upgradeExpNeeded) {
             tag.putDouble("Exp", exp - upgradeExpNeeded);
             tag.putInt("Level", level + 1);
-            tag.putDouble("UpgradePoint", tag.getDouble("UpgradePoint") + 0.25);
+            tag.putDouble("UpgradePoint", tag.getDouble("UpgradePoint") + 0.5);
         }
     }
 

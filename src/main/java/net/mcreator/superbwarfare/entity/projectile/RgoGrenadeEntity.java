@@ -82,8 +82,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                 if (state.getBlock() instanceof BellBlock bell) {
                     bell.attemptToRing(this.level(), resultPos, blockResult.getDirection());
                 }
-
-                ProjectileTool.causeCustomExplode(this, 75f, 5.75f, 1.25f);
+                ProjectileTool.causeCustomExplode(this, 135f, 6.75f, 1.5f);
                 break;
             case ENTITY:
                 EntityHitResult entityResult = (EntityHitResult) result;
@@ -98,8 +97,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                         ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
                     }
                 }
-
-                ProjectileTool.causeCustomExplode(this, entity, 75f, 5.75f, 1.25f);
+                ProjectileTool.causeCustomExplode(this, 150f, 4.75f, 2f);
                 break;
             default:
                 break;
@@ -114,7 +112,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
         if (this.fuse <= 0) {
             this.discard();
             if (!this.level().isClientSide) {
-                ProjectileTool.causeCustomExplode(this, 75f, 5.75f, 1.25f);
+                ProjectileTool.causeCustomExplode(this, 135f, 6.75f, 1.5f);
             }
         }
 

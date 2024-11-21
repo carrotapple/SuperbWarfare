@@ -41,6 +41,7 @@ public class KillMessageOverlay {
     private static final ResourceLocation BLEEDING = ModUtils.loc("textures/screens/damage_types/bleeding.png");
     private static final ResourceLocation SHOCK = ModUtils.loc("textures/screens/damage_types/shock.png");
     private static final ResourceLocation BLOOD_CRYSTAL = ModUtils.loc("textures/screens/damage_types/blood_crystal.png");
+    private static final ResourceLocation BURN = ModUtils.loc("textures/screens/damage_types/burn.png");
 
     private static final ResourceLocation WORLD_PEACE_STAFF = ModUtils.loc("textures/gun_icon/compat/world_peace_staff.png");
 
@@ -255,7 +256,7 @@ public class KillMessageOverlay {
                 icon = null;
             } else {
                 // 如果是其他伤害，则渲染对应图标
-                if (record.damageType == DamageTypes.EXPLOSION || record.damageType == DamageTypes.PLAYER_EXPLOSION || record.damageType == ModDamageTypes.PROJECTILE_BOOM) {
+                if (record.damageType == DamageTypes.EXPLOSION || record.damageType == DamageTypes.PLAYER_EXPLOSION || record.damageType == ModDamageTypes.PROJECTILE_BOOM || record.damageType == DamageTypes.FIREWORKS) {
                     icon = EXPLOSION;
                 } else if (record.damageType == DamageTypes.PLAYER_ATTACK) {
                     icon = KNIFE;
@@ -269,6 +270,8 @@ public class KillMessageOverlay {
                     icon = BLOOD_CRYSTAL;
                 } else if (record.damageType == ModDamageTypes.SHOCK) {
                     icon = SHOCK;
+                } else if (record.damageType == ModDamageTypes.BURN || record.damageType == DamageTypes.IN_FIRE || record.damageType == DamageTypes.ON_FIRE || record.damageType == DamageTypes.LAVA) {
+                    icon = BURN;
                 } else {
                     icon = GENERIC;
                 }

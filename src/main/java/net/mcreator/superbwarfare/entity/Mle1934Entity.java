@@ -52,7 +52,7 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public static final float MAX_HEALTH = 600.0f;
+    public static final float MAX_HEALTH = 800.0f;
 
     public String animationprocedure = "empty";
 
@@ -282,9 +282,9 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
             boolean salvoShoot = false;
 
             if (stack.is(ModItems.HE_5_INCHES.get())) {
-                hitDamage = 200;
+                hitDamage = 450;
                 explosionRadius = 13;
-                explosionDamage = 240;
+                explosionDamage = 480;
                 fireProbability = 0.24F;
                 fireTime = 5;
                 durability = 1;
@@ -292,12 +292,12 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
             }
 
             if (stack.is(ModItems.AP_5_INCHES.get())) {
-                hitDamage = 400;
+                hitDamage = 900;
                 explosionRadius = 3.8f;
-                explosionDamage = 120;
+                explosionDamage = 220;
                 fireProbability = 0;
                 fireTime = 0;
-                durability = 50;
+                durability = 70;
                 salvoShoot = stack.getCount() > 1 || player.isCreative();
             }
 

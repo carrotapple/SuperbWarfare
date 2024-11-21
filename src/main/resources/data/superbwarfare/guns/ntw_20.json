@@ -3,7 +3,7 @@
   "spread": 8,
   "recoil_x": 0.01,
   "recoil_y": 0.038,
-  "damage": 100,
+  "damage": 140,
   "headshot": 3,
   "velocity": 36,
   "projectile_amount": 1,

@@ -2261,5 +2261,45 @@
         "stream": false
       }
     ]
+  },
+  "huge_explosion_close": {
+    "sounds": [
+      {
+        "name": "superbwarfare:explosion/huge_explosion_close",
+        "stream": false
+      },
+      {
+        "name": "superbwarfare:explosion/huge_explosion_close2",
+        "stream": false
+      }
+    ]
+  },
+  "huge_explosion_far": {
+    "sounds": [
+      {
+        "name": "superbwarfare:explosion/huge_explosion_far",
+        "stream": false
+      },
+      {
+        "name": "superbwarfare:explosion/huge_explosion_far2",
+        "stream": false
+      },
+      {
+        "name": "superbwarfare:explosion/huge_explosion_far3",
+        "stream": false
+      }
+    ]
+  },
+  "huge_explosion_very_far": {
+    "sounds": [
+      {
+        "name": "superbwarfare:explosion/huge_explosion_very_far",
+        "stream": false
+      },
+      {
+        "name": "superbwarfare:explosion/huge_explosion_very_far2",
+        "stream": false
+      }
+    ]
   }
 }

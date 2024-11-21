@@ -49,7 +49,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     public static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public static final float MAX_HEALTH = 500.0f;
+    public static final float MAX_HEALTH = 700.0f;
     protected int interpolationSteps;
     protected double serverYRot;
     protected double serverXRot;
@@ -283,21 +283,21 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
             int durability = 0;
 
             if (stack.is(ModItems.HE_5_INCHES.get())) {
-                hitDamage = 180;
-                explosionRadius = 10;
-                explosionDamage = 220;
+                hitDamage = 400;
+                explosionRadius = 12;
+                explosionDamage = 420;
                 fireProbability = 0.18F;
                 fireTime = 2;
                 durability = 1;
             }
 
             if (stack.is(ModItems.AP_5_INCHES.get())) {
-                hitDamage = 360;
+                hitDamage = 800;
                 explosionRadius = 3;
-                explosionDamage = 100;
+                explosionDamage = 200;
                 fireProbability = 0;
                 fireTime = 0;
-                durability = 30;
+                durability = 60;
             }
 
             if (!player.isCreative()) {

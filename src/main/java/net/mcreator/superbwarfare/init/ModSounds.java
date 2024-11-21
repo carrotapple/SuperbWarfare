@@ -35,6 +35,9 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> EXPLOSION_CLOSE = REGISTRY.register("explosion_close", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "explosion_close")));
     public static final RegistryObject<SoundEvent> EXPLOSION_FAR = REGISTRY.register("explosion_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "explosion_far")));
     public static final RegistryObject<SoundEvent> EXPLOSION_VERY_FAR = REGISTRY.register("explosion_very_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "explosion_very_far")));
+    public static final RegistryObject<SoundEvent> HUGE_EXPLOSION_CLOSE = REGISTRY.register("huge_explosion_close", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "huge_explosion_close")));
+    public static final RegistryObject<SoundEvent> HUGE_EXPLOSION_FAR = REGISTRY.register("huge_explosion_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "huge_explosion_far")));
+    public static final RegistryObject<SoundEvent> HUGE_EXPLOSION_VERY_FAR = REGISTRY.register("huge_explosion_very_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "huge_explosion_very_far")));
     public static final RegistryObject<SoundEvent> EXPLOSION_WATER = REGISTRY.register("explosion_water", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "explosion_water")));
 
     public static final RegistryObject<SoundEvent> HUNTING_RIFLE_FIRE_1P = REGISTRY.register("hunting_rifle_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "hunting_rifle_fire_1p")));

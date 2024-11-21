@@ -26,7 +26,7 @@ import net.minecraftforge.network.PlayMessages;
 
 public class MortarShellEntity extends ThrowableItemProjectile {
 
-    private float damage = 150f;
+    private float damage = 250f;
     private int life = 600;
     private float radius = 12.5f;
 
@@ -61,7 +61,7 @@ public class MortarShellEntity extends ThrowableItemProjectile {
         if (pCompound.contains("Damage")) {
             this.damage = pCompound.getFloat("Damage");
         } else {
-            this.damage = 150f;
+            this.damage = 250f;
         }
 
         if (pCompound.contains("Life")) {

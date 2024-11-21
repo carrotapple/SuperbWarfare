@@ -9,7 +9,8 @@ public class DamageTypeTool {
 
     public static boolean isGunDamage(DamageSource source) {
         return source.is(ModDamageTypes.GUN_FIRE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)
-                || source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT_ABSOLUTE);
+                || source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT_ABSOLUTE)
+                || source.is(ModDamageTypes.SHOCK)|| source.is(ModDamageTypes.BURN);
     }
 
     public static boolean isGunDamage(ResourceKey<DamageType> damageType) {

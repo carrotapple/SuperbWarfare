@@ -302,14 +302,13 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         }
 
         if (fireBullet && dragonBreath && this.level() instanceof ServerLevel serverLevel) {
-            for (int index0 = 0; index0 < 1; index0++) {
-                ParticleTool.sendParticle(serverLevel, ParticleTypes.FLAME,
-                        this.getX(), this.getY(), this.getZ(),
-                        0,
-                        this.getDeltaMovement().x, this.getDeltaMovement().y, this.getDeltaMovement().z,
-                        this.getDeltaMovement().length(), true
-                );
-            }
+            double randomPos = this.tickCount * 0.08 * (Math.random() - 0.5);
+            ParticleTool.sendParticle(serverLevel, ParticleTypes.FLAME,
+                    (this.xo + this.getX()) / 2 + randomPos, (this.yo + this.getY()) / 2 + randomPos, (this.zo + this.getZ()) / 2 + randomPos,
+                    0,
+                    this.getDeltaMovement().x, this.getDeltaMovement().y, this.getDeltaMovement().z,
+                    Math.max(this.getDeltaMovement().length() - 1.1 * this.tickCount, 0.2), true
+            );
         }
     }
 

@@ -295,6 +295,7 @@ public class TooltipTool {
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.#").format(damage)).withStyle(ChatFormatting.GREEN)));
 
+        addLevelTips(tooltip, stack);
         int upgradePoint = Mth.floor(ItemNBTTool.getDouble(stack, "UpgradePoint", 0));
 
         tooltip.add(Component.translatable("des.superbwarfare.tips.upgrade_point").withStyle(ChatFormatting.GRAY)

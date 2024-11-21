@@ -309,6 +309,9 @@
   "death.attack.cannon_fire": "%1$s was cracked by a shell",
   "death.attack.cannon_fire.entity": "%1$s was cracked by %2$s",
   "death.attack.cannon_fire.item": "%1$s was cracked by %2$s using %3$s",
+  "death.attack.burn": "%1$s被烧糊了",
+  "death.attack.burn.entity": "%1$s被%2$s烧成了焦炭",
+  "death.attack.burn.item": "%1$s被%2$s烧成了焦炭",
 
   "gui.superbwarfare.mortar_gui.button_set": "Confirm",
 

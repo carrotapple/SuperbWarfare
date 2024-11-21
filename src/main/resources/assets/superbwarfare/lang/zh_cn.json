@@ -309,6 +309,9 @@
   "death.attack.cannon_fire": "%1$s被炮弹打得四分五裂",
   "death.attack.cannon_fire.entity": "%1$s被%2$s用炮弹打得四分五裂",
   "death.attack.cannon_fire.item": "%1$s被%2$s用%3$s打得四分五裂",
+  "death.attack.burn": "%1$s被烧糊了",
+  "death.attack.burn.entity": "%1$s被%2$s烧成了焦炭",
+  "death.attack.burn.item": "%1$s被%2$s烧成了焦炭",
 
   "gui.superbwarfare.mortar_gui.button_set": "确认",
 

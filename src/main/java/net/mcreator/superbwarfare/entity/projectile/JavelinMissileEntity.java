@@ -55,7 +55,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
 
     public String animationprocedure = "empty";
     private float monsterMultiplier = 0.0f;
-    private float damage = 300.0f;
+    private float damage = 700.0f;
 
     public JavelinMissileEntity(EntityType<? extends JavelinMissileEntity> type, Level world) {
         super(type, world);
@@ -129,7 +129,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        entity, this.damage, 8.0f, this.monsterMultiplier);
+                        entity, this.damage, 6.0f, this.monsterMultiplier);
             }
         }
 
@@ -155,7 +155,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.damage, 8.0f, this.monsterMultiplier);
+                        this, this.damage, 6.0f, this.monsterMultiplier);
             }
         }
 
@@ -185,10 +185,10 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
                     if (Math.sqrt(Math.pow(px - ex, 2) + Math.pow(pz - ez, 2)) > 10) {
                         this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(), entity.getY() + Mth.clamp(4 * this.tickCount, 0, 90), entity.getZ()));
                     } else {
-                        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(), entity.getEyeY() + (entity instanceof EnderDragon ? -3 : 1), entity.getZ()));
+                        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(), entity.getEyeY() + (entity instanceof EnderDragon ? -3 : 0), entity.getZ()));
                     }
                 } else {
-                    this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(), entity.getEyeY() + (entity instanceof EnderDragon ? -3 : 1), entity.getZ()));
+                    this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(), entity.getEyeY() + (entity instanceof EnderDragon ? -3 : 0), entity.getZ()));
                 }
             }
         }

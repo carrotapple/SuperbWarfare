@@ -32,7 +32,7 @@ import net.minecraftforge.network.PlayMessages;
 
 public class GunGrenadeEntity extends ThrowableItemProjectile {
     private float monsterMultiplier = 0.0f;
-    private float damage = 5.0f;
+    private float damage = 80.0f;
 
     public GunGrenadeEntity(EntityType<? extends GunGrenadeEntity> type, Level world) {
         super(type, world);
@@ -83,16 +83,16 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         }
 
         if (entity instanceof Monster monster) {
-            monster.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * damageMultiplier);
+            monster.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), 1.6f * this.damage * damageMultiplier);
         } else {
-            entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
+            entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), 1.6f * this.damage);
         }
 
         if (this.tickCount > 0) {
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        entity, this.damage * 1.8f, 7.5f, this.monsterMultiplier);
+                        entity, this.damage * 1.4f, 7.5f, this.monsterMultiplier);
             }
         }
 
@@ -112,7 +112,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.damage * 1.8f, 7.5f, this.monsterMultiplier);
+                        this, this.damage * 1.4f, 7.5f, this.monsterMultiplier);
             }
         }
 

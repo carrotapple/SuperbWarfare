@@ -1,14 +1,15 @@
 package net.mcreator.superbwarfare.entity.projectile;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.config.server.ExplosionDestroyConfig;
 import net.mcreator.superbwarfare.entity.AnimatedEntity;
 import net.mcreator.superbwarfare.init.ModDamageTypes;
 import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.network.message.ClientIndicatorMessage;
+import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.ParticleTool;
-import net.mcreator.superbwarfare.tools.ProjectileTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
@@ -19,12 +20,14 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,6 +45,8 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.Nullable;
+
 public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(RpgRocketEntity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -49,7 +54,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
     public String animationprocedure = "empty";
 
     private float monsterMultiplier = 0.0f;
-    private float damage = 150f;
+    private float damage = 500f;
 
     public RpgRocketEntity(EntityType<? extends RpgRocketEntity> type, Level world) {
         super(type, world);
@@ -100,14 +105,14 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
         }
 
         if (entity instanceof Monster monster) {
-            monster.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * damageMultiplier);
+            monster.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), 1.4f * this.damage * damageMultiplier);
         } else {
             entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
         }
 
         if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this,
+                causeRpgExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
                         entity, this.damage * 0.67f, 10.0f, this.monsterMultiplier);
             }
@@ -128,7 +133,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
         if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this,
+                causeRpgExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
                         this, this.damage * 0.67f, 10.0f, this.monsterMultiplier);
             }
@@ -157,12 +162,22 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
         if (this.tickCount > 100 || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this,
+                causeRpgExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
                         this, this.damage * 0.67f, 10.0f, this.monsterMultiplier);
             }
             this.discard();
         }
+    }
+
+    public static void causeRpgExplode(ThrowableItemProjectile projectile, @Nullable DamageSource source, Entity target, float damage, float radius, float damageMultiplier) {
+        CustomExplosion explosion = new CustomExplosion(projectile.level(), projectile, source, damage,
+                target.getX(), target.getY(), target.getZ(), radius, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(damageMultiplier);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(projectile.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnHugeExplosionParticles(projectile.level(), projectile.position());
+        projectile.discard();
     }
 
     private PlayState movementPredicate(AnimationState<RpgRocketEntity> event) {

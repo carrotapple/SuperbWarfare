@@ -185,6 +185,8 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             this.entityData.set(ROT_Z, compound.getFloat("rotZ"));
     }
 
+
+
     @Override
     public void baseTick() {
         super.baseTick();
@@ -224,7 +226,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             this.entityData.set(MOVE_Y, 1.5f);
         }
 
-        this.entityData.set(MOVE_Y, Mth.lerp(0.1f, this.entityData.get(MOVE_Y), 0));
+        this.entityData.set(MOVE_Y, Mth.lerp(0.5f, this.entityData.get(MOVE_Y), 0));
 
         this.setDeltaMovement(new Vec3(
                 this.getDeltaMovement().x + -this.entityData.get(MOVE_Z) * 0.1f * this.getLookAngle().x,
@@ -242,7 +244,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
         Vec3 vec = this.getDeltaMovement();
         if (this.getDeltaMovement().horizontalDistanceSqr() < 0.75) {
             if (this.move) {
-                this.setDeltaMovement(vec.multiply(1.04, 1, 1.04));
+                this.setDeltaMovement(vec.multiply(1.04, 0.99, 1.04));
             }
         }
 

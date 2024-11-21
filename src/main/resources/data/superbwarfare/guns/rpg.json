@@ -2,7 +2,7 @@
   "spread": 5,
   "recoil_x": 0.008,
   "recoil_y": 0.018,
-  "damage": 250,
+  "damage": 500,
   "velocity": 4,
   "mag": 1,
   "weight": 7,

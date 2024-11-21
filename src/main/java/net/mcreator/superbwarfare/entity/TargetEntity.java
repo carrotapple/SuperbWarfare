@@ -106,9 +106,9 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
         }
 
         if (!this.level().isClientSide()) {
-            this.level().playSound(null, BlockPos.containing(this.getX(), this.getY(), this.getZ()), ModSounds.HIT.get(), SoundSource.BLOCKS, 3, 1);
+            this.level().playSound(null, BlockPos.containing(this.getX(), this.getY(), this.getZ()), ModSounds.HIT.get(), SoundSource.BLOCKS, 1, 1);
         } else {
-            this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), ModSounds.HIT.get(), SoundSource.BLOCKS, 3, 1, false);
+            this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), ModSounds.HIT.get(), SoundSource.BLOCKS, 1, 1, false);
         }
         return super.hurt(source, amount);
     }
