@@ -79,6 +79,8 @@ public class ModKeyMappings {
     public static final KeyMapping EDIT_GRIP = new KeyMapping("key.superbwarfare.edit_grip", KeyConflictContext.IN_GAME,
             KeyModifier.SHIFT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_DOWN, "key.categories.superbwarfare");
 
+    public static final KeyMapping FIRE = new KeyMapping("key.superbwarfare.fire", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_LEFT, "key.categories.superbwarfare");
+
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(RELOAD);
@@ -94,6 +96,7 @@ public class ModKeyMappings {
         event.register(EDIT_MAGAZINE);
         event.register(EDIT_STOCK);
         event.register(EDIT_GRIP);
+        event.register(FIRE);
     }
 
     @Mod.EventBusSubscriber(value = Dist.CLIENT)

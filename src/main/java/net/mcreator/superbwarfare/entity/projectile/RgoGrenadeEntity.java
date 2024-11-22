@@ -18,7 +18,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
@@ -27,7 +26,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
@@ -82,14 +80,12 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                 if (state.getBlock() instanceof BellBlock bell) {
                     bell.attemptToRing(this.level(), resultPos, blockResult.getDirection());
                 }
-                ProjectileTool.causeCustomExplode(this, 135f, 6.75f, 1.5f);
+                if (this.tickCount > 2) {
+                    ProjectileTool.causeCustomExplode(this, 135f, 6.75f, 1.5f);
+                }
+
                 break;
             case ENTITY:
-                EntityHitResult entityResult = (EntityHitResult) result;
-                Entity entity = entityResult.getEntity();
-
-                if (entity == this.getOwner()) return;
-
                 if (this.getOwner() instanceof LivingEntity living) {
                     if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
                         living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
@@ -97,7 +93,9 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                         ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
                     }
                 }
-                ProjectileTool.causeCustomExplode(this, 150f, 4.75f, 2f);
+                if (this.tickCount > 2) {
+                    ProjectileTool.causeCustomExplode(this, 150f, 4.75f, 2f);
+                }
                 break;
             default:
                 break;

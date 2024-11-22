@@ -28,6 +28,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 public class Monitor extends Item {
+    private static CameraType lastCameraType;
     public static final String LINKED = "Linked";
     public static final String LINKED_DRONE = "LinkedDrone";
 
@@ -67,11 +68,14 @@ public class Monitor extends Item {
         if (stack.getOrCreateTag().getBoolean("Using")) {
             stack.getOrCreateTag().putBoolean("Using", false);
             if (world.isClientSide) {
-                Minecraft.getInstance().options.setCameraType(CameraType.FIRST_PERSON);
+                if (lastCameraType != null) {
+                    Minecraft.getInstance().options.setCameraType(lastCameraType);
+                }
             }
         } else {
             stack.getOrCreateTag().putBoolean("Using", true);
             if (world.isClientSide) {
+                lastCameraType = Minecraft.getInstance().options.getCameraType();
                 Minecraft.getInstance().options.setCameraType(CameraType.THIRD_PERSON_BACK);
             }
         }
@@ -120,7 +124,9 @@ public class Monitor extends Item {
             if (itemstack.getOrCreateTag().getBoolean("Using")) {
                 itemstack.getOrCreateTag().putBoolean("Using", false);
                 if (entity.level().isClientSide) {
-                    Minecraft.getInstance().options.setCameraType(CameraType.FIRST_PERSON);
+                    if (lastCameraType != null) {
+                        Minecraft.getInstance().options.setCameraType(lastCameraType);
+                    }
                 }
             }
             this.resetDroneData(drone);
@@ -128,7 +134,9 @@ public class Monitor extends Item {
             if (itemstack.getOrCreateTag().getBoolean("Using")) {
                 itemstack.getOrCreateTag().putBoolean("Using", false);
                 if (entity.level().isClientSide) {
-                    Minecraft.getInstance().options.setCameraType(CameraType.FIRST_PERSON);
+                    if (lastCameraType != null) {
+                        Minecraft.getInstance().options.setCameraType(lastCameraType);
+                    }
                 }
             }
         }

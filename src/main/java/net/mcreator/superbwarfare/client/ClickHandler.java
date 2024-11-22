@@ -55,10 +55,8 @@ public class ClickHandler {
         if (player == null) return;
 
         int button = event.getButton();
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(1));
-            ClientEventHandler.holdFire = false;
-            ClientEventHandler.customRpm = 0;
+        if (button == ModKeyMappings.FIRE.getKey().getValue()) {
+            handleWeaponFireRelease();
         }
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (player.hasEffect(ModMobEffects.SHOCK.get())) {
@@ -82,48 +80,17 @@ public class ClickHandler {
 
         int button = event.getButton();
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            if (player.hasEffect(ModMobEffects.SHOCK.get())) {
+        if (player.getMainHandItem().is(ModTags.Items.GUN)
+                || stack.is(ModItems.MONITOR.get())
+                || player.hasEffect(ModMobEffects.SHOCK.get())
+                || (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity && player.getMainHandItem().getItem() instanceof CannonShellItem)) {
+            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 event.setCanceled(true);
-                return;
             }
-            if (stack.is(Items.SPYGLASS) && player.isScoping() && player.getOffhandItem().is(ModItems.FIRING_PARAMETERS.get())) {
-                ModUtils.PACKET_HANDLER.sendToServer(new SetFiringParametersMessage(0));
-            }
-            if (stack.is(ModItems.MONITOR.get())) {
-                event.setCanceled(true);
-                ModUtils.PACKET_HANDLER.sendToServer(new DroneFireMessage(0));
-            }
-            if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity && player.getMainHandItem().getItem() instanceof CannonShellItem) {
-                event.setCanceled(true);
-                ModUtils.PACKET_HANDLER.sendToServer(new VehicleFireMessage(0));
-                return;
-            }
-            if (player.getMainHandItem().is(ModTags.Items.GUN)) {
-                event.setCanceled(true);
+        }
 
-                if (stack.is(ModTags.Items.GUN) && (!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                        && !stack.getOrCreateTag().getBoolean("reloading")
-                        && !stack.getOrCreateTag().getBoolean("charging")
-                        && !stack.getOrCreateTag().getBoolean("need_bolt_action"))
-                        && cantFireTime == 0
-                        && drawTime < 0.01
-                        && !notInGame()) {
-                    player.playSound(ModSounds.TRIGGER_CLICK.get(), 1, 1);
-                }
-
-                if (stack.is(ModTags.Items.GUN) && !stack.is(ModTags.Items.CANNOT_RELOAD) && stack.getOrCreateTag().getInt("ammo") <= 0) {
-                    if (ReloadConfig.LEFT_CLICK_RELOAD.get()) {
-                        ModUtils.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
-                    }
-                } else {
-                    ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(0));
-                    ClientEventHandler.holdFire = true;
-                    if (GunsTool.getGunIntTag(stack, "FireMode") == 1 && ClientEventHandler.burstFireSize == 0) {
-                        ClientEventHandler.burstFireSize = (int) stack.getOrCreateTag().getDouble("burst_size");
-                    }
-                }
-            }
+        if (button == ModKeyMappings.FIRE.getKey().getValue()) {
+            handleWeaponFirePress(player, stack);
         }
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
@@ -233,7 +200,65 @@ public class ClickHandler {
             if (key == ModKeyMappings.SENSITIVITY_REDUCE.getKey().getValue()) {
                 ModUtils.PACKET_HANDLER.sendToServer(new SensitivityMessage(false));
             }
+
+            if (key == ModKeyMappings.FIRE.getKey().getValue()) {
+                handleWeaponFirePress(player, stack);
+            }
         }
+
+        if (event.getAction() == GLFW.GLFW_RELEASE) {
+            handleWeaponFireRelease();
+        }
+    }
+
+    public static void handleWeaponFirePress (Player player, ItemStack stack) {
+
+        if (player.hasEffect(ModMobEffects.SHOCK.get())) {
+            return;
+        }
+
+        if (stack.is(Items.SPYGLASS) && player.isScoping() && player.getOffhandItem().is(ModItems.FIRING_PARAMETERS.get())) {
+            ModUtils.PACKET_HANDLER.sendToServer(new SetFiringParametersMessage(0));
+        }
+
+        if (stack.is(ModItems.MONITOR.get())) {
+            ModUtils.PACKET_HANDLER.sendToServer(new DroneFireMessage(0));
+        }
+
+        if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity && player.getMainHandItem().getItem() instanceof CannonShellItem) {
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleFireMessage(0));
+            return;
+        }
+
+        if (player.getMainHandItem().is(ModTags.Items.GUN)) {
+            if (stack.is(ModTags.Items.GUN) && (!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+                    && !stack.getOrCreateTag().getBoolean("reloading")
+                    && !stack.getOrCreateTag().getBoolean("charging")
+                    && !stack.getOrCreateTag().getBoolean("need_bolt_action"))
+                    && cantFireTime == 0
+                    && drawTime < 0.01
+                    && !notInGame()) {
+                player.playSound(ModSounds.TRIGGER_CLICK.get(), 1, 1);
+            }
+
+            if (stack.is(ModTags.Items.GUN) && !stack.is(ModTags.Items.CANNOT_RELOAD) && stack.getOrCreateTag().getInt("ammo") <= 0) {
+                if (ReloadConfig.LEFT_CLICK_RELOAD.get()) {
+                    ModUtils.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
+                }
+            } else {
+                ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(0));
+                ClientEventHandler.holdFire = true;
+                if (GunsTool.getGunIntTag(stack, "FireMode") == 1 && ClientEventHandler.burstFireSize == 0) {
+                    ClientEventHandler.burstFireSize = (int) stack.getOrCreateTag().getDouble("burst_size");
+                }
+            }
+        }
+    }
+
+    public static void handleWeaponFireRelease () {
+        ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(1));
+        ClientEventHandler.holdFire = false;
+        ClientEventHandler.customRpm = 0;
     }
 
     private static void editModelShake() {

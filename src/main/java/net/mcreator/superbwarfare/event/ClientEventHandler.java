@@ -243,7 +243,7 @@ public class ClientEventHandler {
 
         double spread = stack.is(ModTags.Items.SHOTGUN) || stack.is(ModItems.MINIGUN.get()) ? 1.2 * zoomSpread * (basicDev + 0.2 * (walk + sprint + crouching + prone + jump + ride) + fireSpread) : zoomSpread * (0.7 * basicDev + walk + sprint + crouching + prone + jump + ride + 0.8 * fireSpread);
 
-        gunSpread = Mth.lerp(0.07 * times, gunSpread, spread);
+        gunSpread = Mth.lerp(0.14 * times, gunSpread, spread);
 
         // 开火部分
 
