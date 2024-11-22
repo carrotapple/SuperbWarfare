@@ -2,24 +2,21 @@
 package net.mcreator.superbwarfare.command;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.tools.GunInfo;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.server.command.EnumArgument;
 
 import java.util.Objects;
 
-@Mod.EventBusSubscriber
 public class AmmoCommand {
-    @SubscribeEvent
-    public static void registerCommand(RegisterCommandsEvent event) {
+    public static LiteralArgumentBuilder<CommandSourceStack> get() {
         // mojang你看看你写的是个牛魔Builder😅
-        event.getDispatcher().register(Commands.literal("ammo").requires(s -> s.hasPermission(0))
+        return Commands.literal("ammo").requires(s -> s.hasPermission(0))
                 .then(Commands.literal("get").then(Commands.argument("player", EntityArgument.player()).then(Commands.argument("type", EnumArgument.enumArgument(GunInfo.Type.class)).executes(context -> {
                     var player = EntityArgument.getPlayer(context, "player");
 
@@ -89,6 +86,6 @@ public class AmmoCommand {
 
                     context.getSource().sendSuccess(() -> Component.translatable("commands.ammo.add", Component.translatable(type.translatableKey), value, players.size()), true);
                     return 0;
-                }))))));
+                })))));
     }
 }
