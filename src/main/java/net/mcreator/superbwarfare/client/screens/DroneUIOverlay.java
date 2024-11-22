@@ -53,7 +53,7 @@ public class DroneUIOverlay {
                     boolean lookAtEntity = false;
                     double distance = player.distanceTo(entity);
                     double block_range = entity.position().distanceTo((Vec3.atLowerCornerOf(entity.level().clip(
-                            new ClipContext(entity.getEyePosition(), entity.getEyePosition().add(entity.getLookAngle().scale(520)),
+                            new ClipContext(entity.getEyePosition(), entity.getEyePosition().add(entity.getViewVector(event.getPartialTick()).scale(520)),
                                     ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, entity)).getBlockPos())));
 
                     double entity_range = 0;

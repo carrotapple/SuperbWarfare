@@ -1,14 +1,23 @@
 package net.mcreator.superbwarfare.entity.model;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.entity.DroneEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
-import net.minecraft.resources.ResourceLocation;
-import net.mcreator.superbwarfare.entity.DroneEntity;
+
 import static net.mcreator.superbwarfare.entity.DroneEntity.*;
+import static net.mcreator.superbwarfare.event.ClientEventHandler.droneBodyAngle;
 
 public class DroneModel extends GeoModel<DroneEntity> {
+	public static float rotX = 0;
+	public static float rotZ = 0;
+
+	public static float rotation = 0;
+
 
 	@Override
 	public ResourceLocation getAnimationResource(DroneEntity entity) {
@@ -44,8 +53,29 @@ public class DroneModel extends GeoModel<DroneEntity> {
 		ammo1.setHidden(animatable.getEntityData().get(AMMO) <= 0);
         shell.setHidden(!animatable.getEntityData().get(KAMIKAZE));
 
+		float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
 
-		body.setRotZ(animatable.getEntityData().get(ROT_X));
-		body.setRotX(animatable.getEntityData().get(ROT_Z));
+		rotX = Mth.lerp(0.5f * times, rotX, animatable.getEntityData().get(ROT_X));
+		rotZ = Mth.lerp(0.5f * times, rotZ, animatable.getEntityData().get(ROT_Z));
+
+		body.setRotZ(rotX);
+		body.setRotX(rotZ);
+
+		droneBodyAngle(rotX, rotZ);
+
+		//螺旋桨控制
+
+		CoreGeoBone wingFL = getAnimationProcessor().getBone("wingFL");
+		CoreGeoBone wingFR = getAnimationProcessor().getBone("wingFR");
+		CoreGeoBone wingBL = getAnimationProcessor().getBone("wingBL");
+		CoreGeoBone wingBR = getAnimationProcessor().getBone("wingBR");
+
+		rotation = (float) Mth.lerp(times, rotation, animatable.onGround() ? 0 : 0.08 - 0.1 * animatable.getEntityData().get(MOVE_Y));
+
+		wingFL.setRotY(wingFL.getRotY() - rotation);
+		wingFR.setRotY(wingFL.getRotY() - rotation);
+		wingBL.setRotY(wingFL.getRotY() - rotation);
+		wingBR.setRotY(wingFL.getRotY() - rotation);
+
 	}
 }

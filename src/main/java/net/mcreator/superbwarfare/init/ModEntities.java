@@ -47,8 +47,6 @@ public class ModEntities {
             EntityType.Builder.<RpgRocketEntity>of(RpgRocketEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(512).setUpdateInterval(1).setCustomClientFactory(RpgRocketEntity::new).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<MortarShellEntity>> MORTAR_SHELL = register("projectile_mortar_shell",
             EntityType.Builder.<MortarShellEntity>of(MortarShellEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(512).setUpdateInterval(1).setCustomClientFactory(MortarShellEntity::new).sized(0.5f, 0.5f));
-    public static final RegistryObject<EntityType<BocekArrowEntity>> BOCEK_ARROW = register("projectile_bocekarrow",
-            EntityType.Builder.<BocekArrowEntity>of(BocekArrowEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(BocekArrowEntity::new).setTrackingRange(512).setUpdateInterval(1).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<ProjectileEntity>> PROJECTILE = register("projectile",
             EntityType.Builder.<ProjectileEntity>of(ProjectileEntity::new, MobCategory.MISC).setCustomClientFactory(ProjectileEntity::new).setTrackingRange(512).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<CannonShellEntity>> CANNON_SHELL = register("projectile_cannon_shell",

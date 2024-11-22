@@ -56,10 +56,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nonnull;
@@ -68,7 +64,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class DroneEntity extends LivingEntity implements GeoEntity {
-    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Boolean> LINKED = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> CONTROLLER = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.INT);
@@ -83,7 +78,6 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private boolean move = false;
 
-    public String animationprocedure = "empty";
 
     public DroneEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.DRONE.get(), world);
@@ -100,7 +94,6 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(ANIMATION, "undefined");
         this.entityData.define(CONTROLLER, "undefined");
         this.entityData.define(LINKED, false);
         this.entityData.define(AMMO, 0);
@@ -190,29 +183,30 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
     @Override
     public void baseTick() {
         super.baseTick();
+        if (!this.onGround()) {
+            if (this.getPersistentData().getBoolean("left")) {
+                this.entityData.set(MOVE_X, -1.5f);
+                this.entityData.set(ROT_X, Mth.lerp(0.25f, this.entityData.get(ROT_X), 0.5f));
+            }
+            if (this.getPersistentData().getBoolean("right")) {
+                this.entityData.set(MOVE_X, 1.5f);
+                this.entityData.set(ROT_X, Mth.lerp(0.25f, this.entityData.get(ROT_X), -0.5f));
+            }
 
-        if (this.getPersistentData().getBoolean("left")) {
-            this.entityData.set(MOVE_X, -1.5f);
-            this.entityData.set(ROT_X, Mth.lerp(0.1f, this.entityData.get(ROT_X), 0.5f));
-        }
-        if (this.getPersistentData().getBoolean("right")) {
-            this.entityData.set(MOVE_X, 1.5f);
-            this.entityData.set(ROT_X, Mth.lerp(0.1f, this.entityData.get(ROT_X), -0.5f));
+            if (this.getPersistentData().getBoolean("forward")) {
+                this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) - 0.11f);
+                this.entityData.set(ROT_Z, Mth.lerp(0.1f, this.entityData.get(ROT_Z), -0.5f));
+            }
+            if (this.getPersistentData().getBoolean("backward")) {
+                this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) + 0.11f);
+                this.entityData.set(ROT_Z, Mth.lerp(0.1f, this.entityData.get(ROT_Z), 0.5f));
+            }
         }
 
         this.entityData.set(ROT_X, Mth.lerp(0.05f, this.entityData.get(ROT_X), 0));
 
         if (!this.getPersistentData().getBoolean("left") && !this.getPersistentData().getBoolean("right")) {
             this.entityData.set(MOVE_X, Mth.lerp(0.1f, this.entityData.get(MOVE_X), 0));
-        }
-
-        if (this.getPersistentData().getBoolean("forward")) {
-            this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) - 0.11f);
-            this.entityData.set(ROT_Z, Mth.lerp(0.1f, this.entityData.get(ROT_Z), -0.5f));
-        }
-        if (this.getPersistentData().getBoolean("backward")) {
-            this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) + 0.11f);
-            this.entityData.set(ROT_Z, Mth.lerp(0.1f, this.entityData.get(ROT_Z), 0.5f));
         }
 
         this.entityData.set(ROT_Z, Mth.lerp(0.05f, this.entityData.get(ROT_Z), 0));
@@ -230,7 +224,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
 
         this.setDeltaMovement(new Vec3(
                 this.getDeltaMovement().x + -this.entityData.get(MOVE_Z) * 0.1f * this.getLookAngle().x,
-                this.getDeltaMovement().y + -this.entityData.get(MOVE_Y) * 0.05f,
+                this.getDeltaMovement().y + (this.onGround() ? 0.059 : 0) + -this.entityData.get(MOVE_Y) * 0.05f,
                 this.getDeltaMovement().z + -this.entityData.get(MOVE_Z) * 0.1f * this.getLookAngle().z
         ));
 
@@ -257,6 +251,8 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
                 if (stack.getOrCreateTag().getBoolean("Using") && controller instanceof ServerPlayer serverPlayer) {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.DRONE_SOUND.get(), 100, 1);
                 }
+
+                controller.setYRot(controller.getYRot() - 5 * this.entityData.get(ROT_X) * Mth.abs(this.entityData.get(MOVE_Z)));
             }
         }
 
@@ -280,8 +276,8 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
         Level level = player.level();
         if (!level.isClientSide()) {
             RgoGrenadeEntity rgoGrenadeEntity = new RgoGrenadeEntity(player, level, 160);
-            rgoGrenadeEntity.setPos(this.getX(), this.getY(), this.getZ());
-            rgoGrenadeEntity.shoot(0, -1, 0, 0, 0.5f);
+            rgoGrenadeEntity.setPos(this.getX(), this.getEyeY() - 0.09, this.getZ());
+            rgoGrenadeEntity.droneShoot(this);
             level.addFreshEntity(rgoGrenadeEntity);
         }
     }
@@ -384,22 +380,21 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
                 this.setRot(this.getYRot(), this.getXRot());
                 this.yBodyRot = controller.getYRot();
                 this.yHeadRot = controller.getYRot();
-                this.setSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED));
-                float strafe = -this.entityData.get(MOVE_X);
-                super.travel(new Vec3(2 * strafe, -this.entityData.get(MOVE_Y), -this.entityData.get(MOVE_Z)));
-                Vec3 vec3 = this.getDeltaMovement();
-                if (this.onGround()) {
-                    this.setDeltaMovement(vec3.multiply(0.7, 0.98, 0.7));
-                } else {
-                    this.setDeltaMovement(vec3.multiply(1.04, 0.98, 1.04));
-                }
-                if (!this.move) {
-                    this.setDeltaMovement(vec3.multiply(0.9, 0.8, 0.9));
-                }
-                return;
             }
         }
-        super.travel(dir);
+
+        this.setSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED));
+        float strafe = -this.entityData.get(MOVE_X);
+        super.travel(new Vec3(2 * strafe, -this.entityData.get(MOVE_Y), -this.entityData.get(MOVE_Z)));
+        Vec3 vec3 = this.getDeltaMovement();
+        if (this.onGround()) {
+            this.setDeltaMovement(vec3.multiply(0.7, 0.98, 0.7));
+        } else {
+            this.setDeltaMovement(vec3.multiply(1.04, 0.98, 1.04));
+        }
+        if (!this.move) {
+            this.setDeltaMovement(vec3.multiply(0.9, 0.8, 0.9));
+        }
     }
 
     @Override
@@ -457,7 +452,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
 
     @Override
     public boolean isNoGravity() {
-        return true;
+        return !this.onGround();
     }
 
     @Override
@@ -476,41 +471,8 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
         return builder;
     }
 
-    private PlayState movementPredicate(AnimationState<DroneEntity> event) {
-        if (this.animationprocedure.equals("empty")) {
-            if (!this.onGround()) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.drone.fly"));
-            }
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.drone.idle"));
-        }
-        return PlayState.STOP;
-    }
-
-    private PlayState procedurePredicate(AnimationState<DroneEntity> event) {
-        if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
-            if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                this.animationprocedure = "empty";
-                event.getController().forceAnimationReset();
-            }
-        } else if (animationprocedure.equals("empty")) {
-            return PlayState.STOP;
-        }
-        return PlayState.CONTINUE;
-    }
-
-    public String getSyncedAnimation() {
-        return this.entityData.get(ANIMATION);
-    }
-
-    public void setAnimation(String animation) {
-        this.entityData.set(ANIMATION, animation);
-    }
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "movement", 1, this::movementPredicate));
-        data.add(new AnimationController<>(this, "procedure", 1, this::procedurePredicate));
     }
 
     @Override

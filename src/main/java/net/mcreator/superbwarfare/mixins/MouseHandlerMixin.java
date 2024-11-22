@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.mixins;
 
 import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
+import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModMobEffects;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.minecraft.client.CameraType;
@@ -41,6 +42,10 @@ public class MouseHandlerMixin {
             } else {
                 return 0.3;
             }
+        }
+
+        if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+            return 0.32;
         }
 
         if (!stack.is(ModTags.Items.GUN)) {

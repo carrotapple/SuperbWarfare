@@ -18,6 +18,8 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
@@ -27,6 +29,7 @@ import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
@@ -80,7 +83,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                 if (state.getBlock() instanceof BellBlock bell) {
                     bell.attemptToRing(this.level(), resultPos, blockResult.getDirection());
                 }
-                if (this.tickCount > 2) {
+                if (this.tickCount > 4) {
                     ProjectileTool.causeCustomExplode(this, 135f, 6.75f, 1.5f);
                 }
 
@@ -93,7 +96,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                         ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
                     }
                 }
-                if (this.tickCount > 2) {
+                if (this.tickCount > 4) {
                     ProjectileTool.causeCustomExplode(this, 150f, 4.75f, 2f);
                 }
                 break;
@@ -114,9 +117,11 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
             }
         }
 
-        if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
-            ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, this.xo, this.yo, this.zo,
-                    1, 0, 0, 0, 0.01, true);
+        if (this.tickCount > 4) {
+            if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, this.xo, this.yo, this.zo,
+                        1, 0, 0, 0, 0.01, true);
+            }
         }
     }
 
@@ -145,5 +150,15 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    public void droneShoot(Entity drone) {
+        Vec3 vec3 = (new Vec3(0.5 * drone.getDeltaMovement().x, drone.getDeltaMovement().y, 0.5 * drone.getDeltaMovement().z));
+        this.setDeltaMovement(vec3);
+        double d0 = vec3.horizontalDistance();
+        this.setYRot((float) (Mth.atan2(vec3.x, vec3.z) * (double) (180F / (float) Math.PI)));
+        this.setXRot((float) (Mth.atan2(vec3.y, d0) * (double) (180F / (float) Math.PI)));
+        this.yRotO = this.getYRot();
+        this.xRotO = this.getXRot();
     }
 }

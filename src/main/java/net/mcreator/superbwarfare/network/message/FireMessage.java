@@ -26,7 +26,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -190,7 +189,6 @@ public class FireMessage {
             stack.getOrCreateTag().putDouble("speed", stack.getOrCreateTag().getDouble("power"));
             if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
                 spawnBullet(player);
-                spawnFakeArrow(player);
 
                 SoundTool.playLocalSound(player, ModSounds.BOCEK_ZOOM_FIRE_1P.get(), 10, 1);
                 player.playSound(ModSounds.BOCEK_ZOOM_FIRE_3P.get(), 2, 1);
@@ -298,30 +296,11 @@ public class FireMessage {
 
         projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
 
-        projectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (!zoom && perk == ModPerks.INCENDIARY_BULLET.get() ? 0.2f : 1) * velocity, spread);
+        projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (!zoom && perk == ModPerks.INCENDIARY_BULLET.get() ? 0.2f : 1) * velocity, spread);
 
         projectile.damage((float) damage);
 
         player.level().addFreshEntity(projectile);
-    }
-
-    private static void spawnFakeArrow(Player player) {
-
-        ItemStack heldItem = player.getMainHandItem();
-        CompoundTag tag = heldItem.getOrCreateTag();
-
-        float velocity = 2 * (float) tag.getDouble("speed") * (float) perkSpeed(heldItem);
-
-        BocekArrowEntity arrow = new BocekArrowEntity(player, player.level());
-        arrow.setBaseDamage(0);
-        arrow.setKnockback(0);
-        arrow.setSilent(true);
-        arrow.setPierceLevel((byte) 2);
-        arrow.pickup = AbstractArrow.Pickup.DISALLOWED;
-
-        arrow.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
-        arrow.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, velocity, 0);
-        player.level().addFreshEntity(arrow);
     }
 
     private static void handleTaserFire(Player player) {

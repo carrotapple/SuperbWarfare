@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.event;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.ClickHandler;
 import net.mcreator.superbwarfare.config.client.DisplayConfig;
 import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
@@ -49,8 +50,6 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-import static net.mcreator.superbwarfare.entity.DroneEntity.ROT_X;
-import static net.mcreator.superbwarfare.entity.DroneEntity.ROT_Z;
 import static net.mcreator.superbwarfare.event.PlayerEventHandler.isProne;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -85,8 +84,6 @@ public class ClientEventHandler {
     public static double recoilHorizon = 0;
 
     public static double recoilY = 0;
-    public static double droneCameraRotX = 0;
-    public static double droneCameraRotY = 0;
     public static double droneRotX = 0;
     public static double droneRotZ = 0;
     public static double breathTime = 0;
@@ -144,9 +141,6 @@ public class ClientEventHandler {
         turnRot[0] = Mth.clamp(0.05 * xRot, -5, 5) * (1 - 0.75 * zoomTime);
         turnRot[1] = Mth.clamp(0.05 * yRot, -10, 10) * (1 - 0.75 * zoomTime) + 1.5f * (Mth.DEG_TO_RAD * recoilHorizon) * (0.5 + 0.4 * fireSpread);
         turnRot[2] = Mth.clamp(0.1 * yRot, -10, 10) * (1 - zoomTime);
-
-        droneCameraRotX = Mth.clamp(0.25f * xRot, -10, 10);
-        droneCameraRotY = Mth.clamp(0.25f * yRot, -20, 10);
     }
 
     private static boolean notInGame() {
@@ -201,6 +195,10 @@ public class ClientEventHandler {
 
         if (miniGunRot > 0) {
             miniGunRot -= 1;
+        }
+
+        if (notInGame() && !ClickHandler.switchZoom) {
+            zoom = false;
         }
     }
 
@@ -562,21 +560,25 @@ public class ClientEventHandler {
         }
     }
 
+    public static void droneBodyAngle(float RotX, float RotZ) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player != null) {
+            droneRotX = RotX;
+            droneRotZ = RotZ;
+
+        }
+    }
+
     private static void handleDroneCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
         ItemStack stack = entity.getMainHandItem();
-        float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
         double pitch = event.getPitch();
         double roll = event.getRoll();
 
         DroneEntity drone = EntityFindUtil.findDrone(entity.level(), stack.getOrCreateTag().getString("LinkedDrone"));
 
         if (drone != null) {
-            droneRotZ = Mth.lerp(0.1 * times, droneRotZ, drone.getEntityData().get(ROT_Z));
-
-            droneRotX = Mth.lerp(0.1 * times, droneRotX, drone.getEntityData().get(ROT_X));
-
-            event.setPitch((float) (pitch + droneCameraRotX - 0.15f * Mth.RAD_TO_DEG * droneRotZ));
-            event.setRoll((float) (roll + droneCameraRotY - 0.5f * Mth.RAD_TO_DEG * droneRotX));
+            event.setPitch((float) (pitch - Mth.RAD_TO_DEG * droneRotZ));
+            event.setRoll((float) (roll - Mth.RAD_TO_DEG * droneRotX));
         }
 
         if (drone != null && stack.getOrCreateTag().getBoolean("Using")) {
@@ -965,7 +967,7 @@ public class ClientEventHandler {
             angle = Math.atan(Mth.abs((float) cameraLocation) / (lookDistance + 2.9)) * Mth.RAD_TO_DEG;
         }
 
-        if (player.getMainHandItem().is(ModTags.Items.GUN) || (player.getVehicle() != null && (player.getVehicle() instanceof ICannonEntity))) {
+        if (player.getMainHandItem().is(ModTags.Items.GUN)) {
             event.setPitch((float) (pitch + cameraRot[0] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.2 : 0) * turnRot[0] + 3 * velocityY));
             if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK) {
                 event.setYaw((float) (yaw + cameraRot[1] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.8 : 0) * turnRot[1] - (cameraLocation > 0 ? 1 : -1) * angle * zoomPos));

@@ -49,11 +49,9 @@ public abstract class CameraMixin {
                         yRot += 360;
                     }
                     yRot = yRot + 90 % 360;
-
-                    var CameraPos = new Vector3d(0.20375, 0.103125, 0);
+                    var CameraPos = new Vector3d(0.22, 0.075, 0);
                     CameraPos.rotateZ(-drone.getXRot() * Mth.DEG_TO_RAD);
                     CameraPos.rotateY(-yRot * Mth.DEG_TO_RAD);
-
                     setRotation(drone.getViewYRot(partialTicks), drone.getViewXRot(partialTicks));
                     setPosition(Mth.lerp(partialTicks, drone.xo + CameraPos.x, drone.getX() + CameraPos.x), Mth.lerp(partialTicks, drone.yo + CameraPos.y, drone.getY() + CameraPos.y), Mth.lerp(partialTicks, drone.zo + CameraPos.z, drone.getZ() + CameraPos.z));
                     info.cancel();

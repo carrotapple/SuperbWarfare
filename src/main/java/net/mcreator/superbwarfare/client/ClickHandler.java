@@ -119,6 +119,7 @@ public class ClickHandler {
 
         if (button == ModKeyMappings.HOLD_ZOOM.getKey().getValue()) {
             handleWeaponZoomPress();
+            switchZoom = false;
             return;
         }
 

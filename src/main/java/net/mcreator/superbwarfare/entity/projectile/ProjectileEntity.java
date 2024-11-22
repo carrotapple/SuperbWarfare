@@ -582,8 +582,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         return this.damage;
     }
 
-    public void shoot(double p_37266_, double p_37267_, double p_37268_, float p_37269_, float p_37270_) {
-        Vec3 vec3 = (new Vec3(p_37266_, p_37267_, p_37268_)).normalize().add(this.random.triangle(0.0D, 0.0172275D * (double) p_37270_), this.random.triangle(0.0D, 0.0172275D * (double) p_37270_), this.random.triangle(0.0D, 0.0172275D * (double) p_37270_)).scale(p_37269_);
+    public void shoot(Player player, double vecX, double vecY, double vecZ, float velocity, float spread) {
+        Vec3 vec3 = (new Vec3(vecX, vecY, vecZ)).normalize().
+                add(this.random.triangle(0.0D, 0.0172275D * (double) spread), this.random.triangle(0.0D, 0.0172275D * (double) spread), this.random.triangle(0.0D, 0.0172275D * (double) spread)).
+                add(player.getDeltaMovement().x, player.getDeltaMovement().y() + 0.078, player.getDeltaMovement().z).
+                scale(velocity);
         this.setDeltaMovement(vec3);
         double d0 = vec3.horizontalDistance();
         this.setYRot((float) (Mth.atan2(vec3.x, vec3.z) * (double) (180F / (float) Math.PI)));
