@@ -1,10 +1,7 @@
 package net.mcreator.superbwarfare.client;
 
 import net.mcreator.superbwarfare.client.tooltip.*;
-import net.mcreator.superbwarfare.client.tooltip.component.BocekImageComponent;
-import net.mcreator.superbwarfare.client.tooltip.component.GunImageComponent;
-import net.mcreator.superbwarfare.client.tooltip.component.ShotgunImageComponent;
-import net.mcreator.superbwarfare.client.tooltip.component.EnergyImageComponent;
+import net.mcreator.superbwarfare.client.tooltip.component.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,6 +16,7 @@ public class ClientRenderHandler {
         event.register(ShotgunImageComponent.class, ClientShotgunImageTooltip::new);
         event.register(BocekImageComponent.class, ClientBocekImageTooltip::new);
         event.register(EnergyImageComponent.class, ClientEnergyImageTooltip::new);
+        event.register(SentinelImageComponent.class, ClientSentinelImageTooltip::new);
     }
 
 }

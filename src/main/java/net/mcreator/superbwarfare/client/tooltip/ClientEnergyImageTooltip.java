@@ -33,6 +33,7 @@ public class ClientEnergyImageTooltip extends ClientGunImageTooltip {
         if (shouldRenderEnergyTooltip()) {
             yo += 10;
             renderEnergyTooltip(font, guiGraphics, x, y + yo);
+            yo += 10;
         }
 
         if (shouldRenderEditTooltip()) {
