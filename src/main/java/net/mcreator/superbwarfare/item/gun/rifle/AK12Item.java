@@ -215,11 +215,11 @@ public class AK12Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
-//        super.appendHoverText(stack, world, list, flag);
+
     }
 
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
-        return Optional.of(new ImageTooltip(128, 20, pStack));
+        return Optional.of(new ImageTooltip(150, 20, pStack));
     }
 }
