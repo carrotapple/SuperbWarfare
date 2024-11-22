@@ -2,6 +2,7 @@ package net.mcreator.superbwarfare.entity.projectile;
 
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.AnimatedEntity;
+import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.init.ModEntities;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
@@ -83,12 +85,14 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                 if (state.getBlock() instanceof BellBlock bell) {
                     bell.attemptToRing(this.level(), resultPos, blockResult.getDirection());
                 }
-                if (this.tickCount > 4) {
+                if (this.tickCount > 2) {
                     ProjectileTool.causeCustomExplode(this, 135f, 6.75f, 1.5f);
                 }
 
                 break;
             case ENTITY:
+                EntityHitResult entityResult = (EntityHitResult) result;
+                Entity entity = entityResult.getEntity();
                 if (this.getOwner() instanceof LivingEntity living) {
                     if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
                         living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
@@ -96,7 +100,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                         ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
                     }
                 }
-                if (this.tickCount > 4) {
+                if (this.tickCount > 2 && !(entity instanceof DroneEntity)) {
                     ProjectileTool.causeCustomExplode(this, 150f, 4.75f, 2f);
                 }
                 break;
@@ -117,7 +121,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
             }
         }
 
-        if (this.tickCount > 4) {
+        if (this.tickCount > 2) {
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, this.xo, this.yo, this.zo,
                         1, 0, 0, 0, 0.01, true);

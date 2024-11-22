@@ -186,21 +186,24 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
         if (!this.onGround()) {
             if (this.getPersistentData().getBoolean("left")) {
                 this.entityData.set(MOVE_X, -1.5f);
-                this.entityData.set(ROT_X, Mth.lerp(0.25f, this.entityData.get(ROT_X), 0.5f));
+                this.entityData.set(ROT_X, Mth.lerp(0.1f, this.entityData.get(ROT_X), 0.3f));
             }
             if (this.getPersistentData().getBoolean("right")) {
                 this.entityData.set(MOVE_X, 1.5f);
-                this.entityData.set(ROT_X, Mth.lerp(0.25f, this.entityData.get(ROT_X), -0.5f));
+                this.entityData.set(ROT_X, Mth.lerp(0.1f, this.entityData.get(ROT_X), -0.3f));
             }
 
             if (this.getPersistentData().getBoolean("forward")) {
-                this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) - 0.11f);
+                this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) - 0.1f);
                 this.entityData.set(ROT_Z, Mth.lerp(0.1f, this.entityData.get(ROT_Z), -0.5f));
             }
             if (this.getPersistentData().getBoolean("backward")) {
-                this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) + 0.11f);
+                this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) + 0.1f);
                 this.entityData.set(ROT_Z, Mth.lerp(0.1f, this.entityData.get(ROT_Z), 0.5f));
             }
+        } else {
+            this.entityData.set(ROT_X, 0f);
+            this.entityData.set(ROT_Z, 0f);
         }
 
         this.entityData.set(ROT_X, Mth.lerp(0.05f, this.entityData.get(ROT_X), 0));

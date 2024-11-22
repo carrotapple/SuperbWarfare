@@ -53,7 +53,7 @@ public class DroneModel extends GeoModel<DroneEntity> {
 		ammo1.setHidden(animatable.getEntityData().get(AMMO) <= 0);
         shell.setHidden(!animatable.getEntityData().get(KAMIKAZE));
 
-		float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
+		float times = (float) (0.5f * Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8));
 
 		rotX = Mth.lerp(0.5f * times, rotX, animatable.getEntityData().get(ROT_X));
 		rotZ = Mth.lerp(0.5f * times, rotZ, animatable.getEntityData().get(ROT_Z));
