@@ -3,6 +3,7 @@ package net.mcreator.superbwarfare.item.gun;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.tooltip.ImageTooltip;
 import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -23,6 +24,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -32,8 +34,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -115,9 +119,14 @@ public abstract class GunItem extends Item {
         return map;
     }
 
+//    @Override
+//    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
+//        TooltipTool.addGunTips(list, stack);
+//    }
+
     @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
-        TooltipTool.addGunTips(list, stack);
+    public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
+        return Optional.of(new ImageTooltip(pStack));
     }
 
     public Set<SoundEvent> getReloadSound() {

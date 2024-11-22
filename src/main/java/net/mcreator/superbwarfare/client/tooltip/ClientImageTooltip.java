@@ -28,9 +28,9 @@ public class ClientImageTooltip implements ClientTooltipComponent {
     private final ItemStack stack;
 
     public ClientImageTooltip(ImageTooltip tooltip) {
-        this.width = tooltip.width();
-        this.height = tooltip.height();
-        this.stack = tooltip.stack();
+        this.width = tooltip.width;
+        this.height = tooltip.height;
+        this.stack = tooltip.stack;
     }
 
     @Override
@@ -428,7 +428,7 @@ public class ClientImageTooltip implements ClientTooltipComponent {
     public int getWidth(@NotNull Font font) {
         if (Screen.hasShiftDown()) {
             int width = getMaxPerkDesWidth(font);
-            return width == 0 ? this.width : Math.max(width, getDefaultMaxWidth(font));
+            return width == 0 ? Math.max(this.width, getDefaultMaxWidth(font)) : Math.max(width, getDefaultMaxWidth(font));
         } else {
             return getDefaultMaxWidth(font);
         }

@@ -1,8 +1,8 @@
 package net.mcreator.superbwarfare.item.gun.rifle;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.PoseTool;
 import net.mcreator.superbwarfare.client.renderer.item.Mk14ItemRenderer;
-import net.mcreator.superbwarfare.client.tooltip.ImageTooltip;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModSounds;
@@ -12,22 +12,20 @@ import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
-import net.mcreator.superbwarfare.client.PoseTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -37,12 +35,11 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
 public class Mk14Item extends GunItem implements GeoItem, AnimatedItem {
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
 
@@ -125,7 +122,7 @@ public class Mk14Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/mk14ebr_icon.png");
+        return ModUtils.loc("textures/gun_icon/mk14ebr_icon.png");
     }
 
     @Override
@@ -138,13 +135,4 @@ public class Mk14Item extends GunItem implements GeoItem, AnimatedItem {
         return PerkHelper.RIFLE_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk);
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
-
-    }
-
-    @Override
-    public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
-        return Optional.of(new ImageTooltip(150, 20, pStack));
-    }
 }
