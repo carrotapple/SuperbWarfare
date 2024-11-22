@@ -69,7 +69,6 @@ public class LivingEventHandler {
         handlePlayerKillEntity(event);
         handlePlayerDeathDropAmmo(event.getEntity());
         giveKillExpToWeapon(event);
-
     }
 
     /**
@@ -191,18 +190,31 @@ public class LivingEventHandler {
         if (event.getEntity() instanceof TargetEntity) return;
 
         double amount = 20 + 2 * event.getEntity().getMaxHealth();
+        var tag = stack.getOrCreateTag();
 
         // 先处理发射器类武器或高爆弹的爆炸伤害
         if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
             if (stack.is(ModTags.Items.LAUNCHER) || PerkHelper.getItemPerkLevel(ModPerks.HE_BULLET.get(), stack) > 0) {
-                stack.getOrCreateTag().putDouble("Exp", stack.getOrCreateTag().getDouble("Exp") + amount);
+                tag.putDouble("Exp", tag.getDouble("Exp") + amount);
             }
         }
 
         // 再判断是不是枪械能造成的伤害
-        if (!DamageTypeTool.isGunDamage(source)) return;
+        if (DamageTypeTool.isGunDamage(source)) {
+            tag.putDouble("Exp", tag.getDouble("Exp") + amount);
+        }
 
-        stack.getOrCreateTag().putDouble("Exp", stack.getOrCreateTag().getDouble("Exp") + amount);
+        // 提升武器等级
+        int level = tag.getInt("Level");
+        double exp = tag.getDouble("Exp");
+        double upgradeExpNeeded = 20 * Math.pow(level, 2) + 160 * level + 20;
+
+        while (exp >= upgradeExpNeeded) {
+            exp -= upgradeExpNeeded;
+            tag.putDouble("Exp", exp);
+            tag.putInt("Level", tag.getInt("Level") + 1);
+            tag.putDouble("UpgradePoint", tag.getDouble("UpgradePoint") + 0.5);
+        }
     }
 
     private static void handleGunLevels(LivingHurtEvent event) {
@@ -215,13 +227,14 @@ public class LivingEventHandler {
         if (event.getEntity() instanceof TargetEntity) return;
 
         var tag = stack.getOrCreateTag();
-        int level = stack.getOrCreateTag().getInt("Level");
-        double exp = stack.getOrCreateTag().getDouble("Exp");
+        int level = tag.getInt("Level");
+        double exp = tag.getDouble("Exp");
         double upgradeExpNeeded = 20 * Math.pow(level, 2) + 160 * level + 20;
 
-        if (exp >= upgradeExpNeeded) {
-            tag.putDouble("Exp", exp - upgradeExpNeeded);
-            tag.putInt("Level", level + 1);
+        while (exp >= upgradeExpNeeded) {
+            exp -= upgradeExpNeeded;
+            tag.putDouble("Exp", exp);
+            tag.putInt("Level", tag.getInt("Level") + 1);
             tag.putDouble("UpgradePoint", tag.getDouble("UpgradePoint") + 0.5);
         }
     }
