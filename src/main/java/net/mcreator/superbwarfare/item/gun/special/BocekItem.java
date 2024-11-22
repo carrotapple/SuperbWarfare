@@ -10,13 +10,11 @@ import net.mcreator.superbwarfare.item.AnimatedItem;
 import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.tools.GunsTool;
-import net.mcreator.superbwarfare.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
@@ -35,10 +33,10 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
 
@@ -96,11 +94,6 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
         return this.cache;
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
-        TooltipTool.addBocekTips(list, stack);
-    }
-
     public static int getAmmoCount(Player player) {
         int count = 0;
         for (var inv : player.getInventory().items) {
@@ -151,7 +144,7 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/bocek_icon.png");
+        return ModUtils.loc("textures/gun_icon/bocek_icon.png");
     }
 
     @Override
@@ -167,4 +160,5 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
             case DAMAGE -> perk == ModPerks.MONSTER_HUNTER.get() || perk == ModPerks.KILLING_TALLY.get();
         };
     }
+
 }

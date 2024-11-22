@@ -1,5 +1,6 @@
 package net.mcreator.superbwarfare.client.tooltip;
 
+import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.init.ModKeyMappings;
 import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 
+// TODO 等nbt重置后，修改nbt位置
 public class ClientImageTooltip implements ClientTooltipComponent {
 
     private final int width;
@@ -73,8 +75,6 @@ public class ClientImageTooltip implements ClientTooltipComponent {
         return PerkHelper.getPerkByType(stack, Perk.Type.AMMO) != null || PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE) != null || PerkHelper.getPerkByType(stack, Perk.Type.FUNCTIONAL) != null;
     }
 
-    // TODO 等nbt重置后，修改nbt位置
-
     /**
      * 渲染武器伤害和射速
      */
@@ -88,11 +88,64 @@ public class ClientImageTooltip implements ClientTooltipComponent {
      * 获取武器伤害的文本组件
      */
     private Component getDamageComponent() {
+        if (stack.is(ModItems.BOCEK.get())) {
+            return getBocekDamageComponent();
+        }
+        if (stack.is(ModTags.Items.SHOTGUN)) {
+            return getShotgunDamageComponent();
+        }
+
         double damage = ItemNBTTool.getDouble(stack, "damage", 0) * TooltipTool.perkDamage(stack);
         return Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.#").format(damage) + (TooltipTool.heBullet(stack) ? " + "
                         + new DecimalFormat("##.#").format(0.8 * damage * (1 + 0.1 * TooltipTool.heBulletLevel(stack))) : "")).withStyle(ChatFormatting.GREEN));
+    }
+
+    private Component getShotgunDamageComponent() {
+        boolean slug = false;
+
+        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+        if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
+            slug = true;
+        }
+
+        if (slug) {
+            double damage = ItemNBTTool.getDouble(stack, "damage", 0) * ItemNBTTool.getDouble(stack, "projectile_amount", 0) * TooltipTool.perkDamage(stack);
+            return Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                    .append(Component.literal(new DecimalFormat("##.#").format(damage) + (TooltipTool.heBullet(stack) ? " + " + new DecimalFormat("##.#")
+                            .format(0.8 * damage * (1 + 0.1 * TooltipTool.heBulletLevel(stack))) : "")).withStyle(ChatFormatting.GREEN));
+        } else {
+            double damage = ItemNBTTool.getDouble(stack, "damage", 0) * TooltipTool.perkDamage(stack);
+            return Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                    .append(Component.literal(new DecimalFormat("##.#").format(damage) + " * " + new DecimalFormat("##").format(ItemNBTTool.getDouble(stack, "projectile_amount", 0))).withStyle(ChatFormatting.GREEN));
+        }
+    }
+
+    private Component getBocekDamageComponent() {
+        boolean slug = false;
+
+        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+        if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
+            slug = true;
+        }
+
+        double total = ItemNBTTool.getDouble(stack, "damage", 0) * TooltipTool.perkDamage(stack);
+
+        if (slug) {
+            return Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                    .append(Component.literal(new DecimalFormat("##.#").format(total) + (TooltipTool.heBullet(stack) ? " + " + new DecimalFormat("##.#")
+                            .format(0.8 * total * (1 + 0.1 * TooltipTool.heBulletLevel(stack))) : "")).withStyle(ChatFormatting.GREEN));
+        } else {
+            return Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                    .append(Component.literal(new DecimalFormat("##.#").format(total * 0.1) + " * 10").withStyle(ChatFormatting.GREEN))
+                    .append(Component.literal(" / ").withStyle(ChatFormatting.RESET))
+                    .append(Component.literal(new DecimalFormat("##.#").format(total)).withStyle(ChatFormatting.GREEN));
+        }
     }
 
     /**
@@ -152,7 +205,7 @@ public class ClientImageTooltip implements ClientTooltipComponent {
         int upgradePoint = Mth.floor(ItemNBTTool.getDouble(stack, "UpgradePoint", 0));
         return Component.translatable("des.superbwarfare.tips.upgrade_point").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(String.valueOf(upgradePoint)).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.BOLD));
+                .append(Component.literal(String.valueOf(upgradePoint)).withStyle(ChatFormatting.WHITE).withStyle(ChatFormatting.BOLD));
     }
 
     /**
@@ -276,11 +329,11 @@ public class ClientImageTooltip implements ClientTooltipComponent {
 
         guiGraphics.drawString(font, Component.translatable("perk.superbwarfare.tips").withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.UNDERLINE), x, y + 10, 0xFFFFFF);
 
-        int yOffset = -10;
+        int yOffset = -5;
 
         Perk ammoPerk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
         if (ammoPerk != null && PerkHelper.getPerkItem(ammoPerk).isPresent()) {
-            yOffset += 30;
+            yOffset += 25;
             var ammoItem = PerkHelper.getPerkItem(ammoPerk).get().get();
             guiGraphics.renderItem(ammoItem.getDefaultInstance(), x, y + 4 + yOffset);
 
@@ -302,7 +355,7 @@ public class ClientImageTooltip implements ClientTooltipComponent {
 
         Perk funcPerk = PerkHelper.getPerkByType(stack, Perk.Type.FUNCTIONAL);
         if (funcPerk != null && PerkHelper.getPerkItem(funcPerk).isPresent()) {
-            yOffset += 30;
+            yOffset += 25;
             var funcItem = PerkHelper.getPerkItem(funcPerk).get().get();
             guiGraphics.renderItem(funcItem.getDefaultInstance(), x, y + 4 + yOffset);
 
@@ -324,7 +377,7 @@ public class ClientImageTooltip implements ClientTooltipComponent {
 
         Perk damagePerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
         if (damagePerk != null && PerkHelper.getPerkItem(damagePerk).isPresent()) {
-            yOffset += 30;
+            yOffset += 25;
             var damageItem = PerkHelper.getPerkItem(damagePerk).get().get();
             guiGraphics.renderItem(damageItem.getDefaultInstance(), x, y + 4 + yOffset);
 
@@ -410,13 +463,13 @@ public class ClientImageTooltip implements ClientTooltipComponent {
             } else {
                 height += 20;
                 if (PerkHelper.getPerkByType(stack, Perk.Type.AMMO) != null) {
-                    height += 30;
+                    height += 25;
                 }
                 if (PerkHelper.getPerkByType(stack, Perk.Type.FUNCTIONAL) != null) {
-                    height += 30;
+                    height += 25;
                 }
                 if (PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE) != null) {
-                    height += 30;
+                    height += 25;
                 }
             }
         }

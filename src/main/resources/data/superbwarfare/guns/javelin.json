@@ -5,6 +5,5 @@
   "mag": 1,
   "weight": 10,
   "EmptyReloadTime": 78,
-  "damage": 700,
-  "BypassesArmor": 1
+  "damage": 700
 }

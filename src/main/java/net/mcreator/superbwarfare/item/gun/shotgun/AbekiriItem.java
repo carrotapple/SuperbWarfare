@@ -1,6 +1,7 @@
 package net.mcreator.superbwarfare.item.gun.shotgun;
 
 import net.mcreator.superbwarfare.ModUtils;
+import net.mcreator.superbwarfare.client.PoseTool;
 import net.mcreator.superbwarfare.client.renderer.item.AbekiriItemRenderer;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
@@ -11,22 +12,20 @@ import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
-import net.mcreator.superbwarfare.client.PoseTool;
-import net.mcreator.superbwarfare.tools.TooltipTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.*;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -36,11 +35,11 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
 public class AbekiriItem extends GunItem implements GeoItem, AnimatedItem {
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
 
@@ -111,11 +110,6 @@ public class AbekiriItem extends GunItem implements GeoItem, AnimatedItem {
         return this.cache;
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
-        TooltipTool.addShotgunTips(list, stack);
-    }
-
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(ModItems.ABEKIRI.get());
         GunsTool.initCreativeGun(stack, ModItems.ABEKIRI.getId().getPath());
@@ -128,7 +122,7 @@ public class AbekiriItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/abekiri_icon.png");
+        return ModUtils.loc("textures/gun_icon/abekiri_icon.png");
     }
 
     @Override
@@ -140,4 +134,5 @@ public class AbekiriItem extends GunItem implements GeoItem, AnimatedItem {
     public boolean canApplyPerk(Perk perk) {
         return PerkHelper.SHOTGUN_PERKS.test(perk);
     }
+
 }
