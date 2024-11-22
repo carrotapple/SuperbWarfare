@@ -20,7 +20,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
@@ -87,13 +86,13 @@ public class VectorItemRenderer extends GeoItemRenderer<VectorItem> {
 
             if (name.equals("Cross1")) {
                 bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
-                        || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
+                        || !ClientEventHandler.zoom
                         || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
             }
 
             if (name.equals("Cross2")) {
                 bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
-                        || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS
+                        || !ClientEventHandler.zoom
                         || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2);
             }
 

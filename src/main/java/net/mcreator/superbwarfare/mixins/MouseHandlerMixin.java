@@ -9,7 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,7 +36,7 @@ public class MouseHandlerMixin {
         ItemStack stack = mc.player.getMainHandItem();
 
         if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity && !stack.is(ModTags.Items.GUN)) {
-            if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
+            if (ClientEventHandler.zoom) {
                 return 0.15;
             } else {
                 return 0.3;

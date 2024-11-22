@@ -115,6 +115,8 @@ public class ClientEventHandler {
     public static MillisTimer clientTimer = new MillisTimer();
 
     public static boolean holdFire = false;
+
+    public static boolean zoom = false;
     public static int burstFireSize = 0;
 
     public static int customRpm = 0;
@@ -186,7 +188,7 @@ public class ClientEventHandler {
         }
         ItemStack stack = player.getMainHandItem();
         if (stack.getItem() == ModItems.MINIGUN.get()) {
-            if (holdFire || GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
+            if (holdFire || zoom) {
                 miniGunRot = Math.min(miniGunRot + 5, 21);
                 float rpm = 1;
 
@@ -250,7 +252,7 @@ public class ClientEventHandler {
         double weight = stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("CustomWeight");
         double speed = 1 - (0.04 * weight);
 
-        if (player.getPersistentData().getDouble("noRun") == 0 && player.isSprinting() && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS) {
+        if (player.getPersistentData().getDouble("noRun") == 0 && player.isSprinting() && !zoom) {
             cantFireTime = Mth.clamp(cantFireTime + 3 * times, 0, 24);
         } else {
             cantFireTime = Mth.clamp(cantFireTime - 6 * speed * times, 0, 40);
@@ -706,8 +708,7 @@ public class ClientEventHandler {
         double weight = stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("CustomWeight");
         double speed = 1.5 - (0.07 * weight);
 
-        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS
-                && !notInGame()
+        if (zoom && !notInGame()
                 && drawTime < 0.01
                 && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
             if (Minecraft.getInstance().player != null) {
@@ -1030,7 +1031,7 @@ public class ClientEventHandler {
             fov = event.getFOV();
             return;
         }
-        if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity && GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS && !stack.is(ModTags.Items.GUN)) {
+        if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity && zoom && !stack.is(ModTags.Items.GUN)) {
             event.setFOV(event.getFOV() / 5);
         }
     }

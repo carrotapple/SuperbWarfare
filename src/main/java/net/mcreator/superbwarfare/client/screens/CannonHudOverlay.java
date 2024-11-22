@@ -6,6 +6,7 @@ import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.entity.Mk42Entity;
 import net.mcreator.superbwarfare.entity.Mle1934Entity;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.item.gun.GunItem;
 import net.mcreator.superbwarfare.tools.TraceTool;
 import net.minecraft.client.Minecraft;
@@ -24,7 +25,6 @@ import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.lwjgl.glfw.GLFW;
 
 import java.text.DecimalFormat;
 
@@ -72,7 +72,7 @@ public class CannonHudOverlay {
         int j = Mth.floor(f * f1);
         int k = (w - i) / 2;
         int l = (h - j) / 2;
-        if (GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT) == GLFW.GLFW_PRESS) {
+        if (ClientEventHandler.zoom) {
             Entity lookingEntity = TraceTool.findLookingEntity(player, 512);
             boolean lookAtEntity = false;
             double block_range = player.position().distanceTo((Vec3.atLowerCornerOf(player.level().clip(
