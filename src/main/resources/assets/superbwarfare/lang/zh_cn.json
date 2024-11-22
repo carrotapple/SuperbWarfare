@@ -51,7 +51,7 @@
   "des.superbwarfare.tips.damage": "伤害: ",
   "des.superbwarfare.tips.level": "等级: ",
   "des.superbwarfare.tips.bypass": "护甲穿透: ",
-  "des.superbwarfare.tips.distance": "无人机距离你: ",
+  "des.superbwarfare.tips.distance": "无人机距离你: %1$s 米",
   "des.superbwarfare.tips.rpm": "射速: ",
   "des.superbwarfare.tips.headshot": "爆头倍率: ",
 
