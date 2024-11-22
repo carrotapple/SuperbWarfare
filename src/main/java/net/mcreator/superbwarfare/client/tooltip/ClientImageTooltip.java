@@ -74,26 +74,54 @@ public class ClientImageTooltip implements ClientTooltipComponent {
     }
 
     // TODO 等nbt重置后，修改nbt位置
+
+    /**
+     * 渲染武器伤害和射速
+     */
     private void renderDamageAndRpmTooltip(Font font, GuiGraphics guiGraphics, int x, int y) {
+        guiGraphics.drawString(font, getDamageComponent(), x, y, 0xFFFFFF);
+        int xo = font.width(getDamageComponent().getVisualOrderText());
+        guiGraphics.drawString(font, getRpmComponent(), x + xo + 16, y, 0xFFFFFF);
+    }
+
+    /**
+     * 获取武器伤害的文本组件
+     */
+    private Component getDamageComponent() {
         double damage = ItemNBTTool.getDouble(stack, "damage", 0) * TooltipTool.perkDamage(stack);
-        var damageComponent = Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
+        return Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.#").format(damage) + (TooltipTool.heBullet(stack) ? " + "
                         + new DecimalFormat("##.#").format(0.8 * damage * (1 + 0.1 * TooltipTool.heBulletLevel(stack))) : "")).withStyle(ChatFormatting.GREEN));
+    }
 
-        guiGraphics.drawString(font, damageComponent, x, y, 0xFFFFFF);
-
-        if (stack.is(ModTags.Items.IS_AUTO_WEAPON)) {
-            var rpmComponent = Component.translatable("des.superbwarfare.tips.rpm").withStyle(ChatFormatting.GRAY)
+    /**
+     * 获取武器射速的文本组件
+     */
+    private Component getRpmComponent() {
+        if (!stack.is(ModTags.Items.IS_AUTO_WEAPON)) {
+            return Component.literal("");
+        } else {
+            return Component.translatable("des.superbwarfare.tips.rpm").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                    .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getDouble(stack, "rpm", 0) + ItemNBTTool.getDouble(stack, "customRpm", 0))).withStyle(ChatFormatting.GREEN));
-
-            int xo = font.width(damageComponent.getVisualOrderText());
-            guiGraphics.drawString(font, rpmComponent, x + xo + 16, y, 0xFFFFFF);
+                    .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getDouble(stack, "rpm", 0) + ItemNBTTool.getDouble(stack, "customRpm", 0)))
+                            .withStyle(ChatFormatting.GREEN));
         }
     }
 
+    /**
+     * 渲染武器等级和强化点数
+     */
     private void renderLevelAndUpgradePointTooltip(Font font, GuiGraphics guiGraphics, int x, int y) {
+        guiGraphics.drawString(font, getLevelComponent(), x, y, 0xFFFFFF);
+        int xo = font.width(getLevelComponent().getVisualOrderText());
+        guiGraphics.drawString(font, getUpgradePointComponent(), x + xo + 16, y, 0xFFFFFF);
+    }
+
+    /**
+     * 获取武器等级文本组件
+     */
+    private Component getLevelComponent() {
         int level = ItemNBTTool.getInt(stack, "Level", 0);
         double rate = ItemNBTTool.getDouble(stack, "Exp", 0) / (20 * Math.pow(level, 2) + 160 * level + 20);
 
@@ -110,24 +138,36 @@ public class ClientImageTooltip implements ClientTooltipComponent {
             formatting = ChatFormatting.RED;
         }
 
-        var levelComponent = Component.translatable("des.superbwarfare.tips.level").withStyle(ChatFormatting.GRAY)
+        return Component.translatable("des.superbwarfare.tips.level").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(level + "").withStyle(formatting).withStyle(ChatFormatting.BOLD))
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(" (" + new DecimalFormat("#0.00").format(rate * 100) + "%)").withStyle(ChatFormatting.GRAY));
-
-        guiGraphics.drawString(font, levelComponent, x, y, 0xFFFFFF);
-
-        int upgradePoint = Mth.floor(ItemNBTTool.getDouble(stack, "UpgradePoint", 0));
-        var upgradeComponent = Component.translatable("des.superbwarfare.tips.upgrade_point").withStyle(ChatFormatting.GRAY)
-                .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(String.valueOf(upgradePoint)).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.BOLD));
-
-        int xo = font.width(levelComponent.getVisualOrderText());
-        guiGraphics.drawString(font, upgradeComponent, x + xo + 16, y, 0xFFFFFF);
     }
 
+    /**
+     * 获取武器强化点数文本组件
+     */
+    private Component getUpgradePointComponent() {
+        int upgradePoint = Mth.floor(ItemNBTTool.getDouble(stack, "UpgradePoint", 0));
+        return Component.translatable("des.superbwarfare.tips.upgrade_point").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal("").withStyle(ChatFormatting.RESET))
+                .append(Component.literal(String.valueOf(upgradePoint)).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.BOLD));
+    }
+
+    /**
+     * 渲染武器穿甲比例和爆头倍率
+     */
     private void renderBypassAndHeadshotTooltip(Font font, GuiGraphics guiGraphics, int x, int y) {
+        guiGraphics.drawString(font, getBypassComponent(), x, y, 0xFFFFFF);
+        int xo = font.width(getBypassComponent().getVisualOrderText());
+        guiGraphics.drawString(font, getHeadshotComponent(), x + xo + 16, y, 0xFFFFFF);
+    }
+
+    /**
+     * 获取武器穿甲比例文本组件
+     */
+    private Component getBypassComponent() {
         double perkBypassArmorRate = 0;
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
@@ -136,27 +176,40 @@ public class ClientImageTooltip implements ClientTooltipComponent {
             perkBypassArmorRate = ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (level - 1) : 0);
         }
         double bypassRate = Math.max(ItemNBTTool.getDouble(stack, "BypassesArmor", 0) + perkBypassArmorRate, 0);
-        var bypassComponent = Component.translatable("des.superbwarfare.tips.bypass").withStyle(ChatFormatting.GRAY)
+
+        return Component.translatable("des.superbwarfare.tips.bypass").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.##").format(bypassRate * 100) + "%").withStyle(ChatFormatting.GOLD));
+    }
 
-        guiGraphics.drawString(font, bypassComponent, x, y, 0xFFFFFF);
-
+    /**
+     * 获取武器爆头倍率文本组件
+     */
+    private Component getHeadshotComponent() {
         double headshot = ItemNBTTool.getDouble(stack, "headshot", 0);
-        var headshotComponent = Component.translatable("des.superbwarfare.tips.headshot").withStyle(ChatFormatting.GRAY)
+        return Component.translatable("des.superbwarfare.tips.headshot").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.#").format(headshot) + "x").withStyle(ChatFormatting.AQUA));
-
-        int xo = bypassRate > 0 ? font.width(bypassComponent.getVisualOrderText()) : 0;
-        guiGraphics.drawString(font, headshotComponent, x + xo + 16, y, 0xFFFFFF);
     }
 
+    /**
+     * 渲染武器改装信息
+     */
     private void renderWeaponEditTooltip(Font font, GuiGraphics guiGraphics, int x, int y) {
-        var editComponent = Component.translatable("des.superbwarfare.tips.edit",
-                "[" + ModKeyMappings.EDIT_MODE.getKey().getDisplayName().getString() + "]").withStyle(ChatFormatting.LIGHT_PURPLE).withStyle(ChatFormatting.ITALIC);
-        guiGraphics.drawString(font, editComponent, x, y + 10, 0xFFFFFF);
+        guiGraphics.drawString(font, getEditComponent(), x, y + 10, 0xFFFFFF);
     }
 
+    /**
+     * 获取武器改装信息文本组件
+     */
+    private Component getEditComponent() {
+        return Component.translatable("des.superbwarfare.tips.edit", "[" + ModKeyMappings.EDIT_MODE.getKey().getDisplayName().getString() + "]")
+                .withStyle(ChatFormatting.LIGHT_PURPLE).withStyle(ChatFormatting.ITALIC);
+    }
+
+    /**
+     * 渲染武器模组缩略图
+     */
     private void renderPerksShortcut(Font font, GuiGraphics guiGraphics, int x, int y) {
         guiGraphics.pose().pushPose();
 
@@ -215,6 +268,9 @@ public class ClientImageTooltip implements ClientTooltipComponent {
         guiGraphics.pose().popPose();
     }
 
+    /**
+     * 渲染武器模组详细信息
+     */
     private void renderPerks(Font font, GuiGraphics guiGraphics, int x, int y) {
         guiGraphics.pose().pushPose();
 
@@ -291,7 +347,20 @@ public class ClientImageTooltip implements ClientTooltipComponent {
         guiGraphics.pose().popPose();
     }
 
-    private int getMaxDesWidth(Font font) {
+    private int getDefaultMaxWidth(Font font) {
+        int width = font.width(getDamageComponent().getVisualOrderText()) + font.width(getRpmComponent().getVisualOrderText()) + 16;
+        width = Math.max(width, font.width(getLevelComponent().getVisualOrderText()) + font.width(getUpgradePointComponent().getVisualOrderText()) + 16);
+        if (shouldRenderBypassAndHeadshotTooltip()) {
+            width = Math.max(width, font.width(getBypassComponent().getVisualOrderText()) + font.width(getHeadshotComponent().getVisualOrderText()) + 16);
+        }
+        if (shouldRenderEditTooltip()) {
+            width = Math.max(width, font.width(getEditComponent().getVisualOrderText()) + 16);
+        }
+
+        return width + 4;
+    }
+
+    private int getMaxPerkDesWidth(Font font) {
         if (!shouldRenderPerks()) return 0;
 
         int width = 0;
@@ -326,7 +395,7 @@ public class ClientImageTooltip implements ClientTooltipComponent {
             }
         }
 
-        return width + 30;
+        return width + 25;
     }
 
     @Override
@@ -358,9 +427,11 @@ public class ClientImageTooltip implements ClientTooltipComponent {
     @Override
     public int getWidth(@NotNull Font font) {
         if (Screen.hasShiftDown()) {
-            return Math.max(width, getMaxDesWidth(font));
+            int width = getMaxPerkDesWidth(font);
+            return width == 0 ? this.width : Math.max(width, getDefaultMaxWidth(font));
+        } else {
+            return getDefaultMaxWidth(font);
         }
-        return width;
     }
 
 }
