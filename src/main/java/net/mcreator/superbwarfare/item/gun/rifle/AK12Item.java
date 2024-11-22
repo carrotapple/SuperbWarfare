@@ -220,6 +220,6 @@ public class AK12Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
-        return Optional.of(new ImageTooltip(128, 128, pStack));
+        return Optional.of(new ImageTooltip(128, 20, pStack));
     }
 }
