@@ -1,6 +1,6 @@
 package net.mcreator.superbwarfare.client.tooltip;
 
-import net.mcreator.superbwarfare.init.ModItems;
+import net.mcreator.superbwarfare.client.tooltip.component.GunImageComponent;
 import net.mcreator.superbwarfare.init.ModKeyMappings;
 import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
@@ -23,13 +23,13 @@ import org.jetbrains.annotations.NotNull;
 import java.text.DecimalFormat;
 
 // TODO 等nbt重置后，修改nbt位置
-public class ClientImageTooltip implements ClientTooltipComponent {
+public class ClientGunImageTooltip implements ClientTooltipComponent {
 
-    private final int width;
-    private final int height;
-    private final ItemStack stack;
+    protected final int width;
+    protected final int height;
+    protected final ItemStack stack;
 
-    public ClientImageTooltip(ImageTooltip tooltip) {
+    public ClientGunImageTooltip(GunImageComponent tooltip) {
         this.width = tooltip.width;
         this.height = tooltip.height;
         this.stack = tooltip.stack;
@@ -63,22 +63,22 @@ public class ClientImageTooltip implements ClientTooltipComponent {
         guiGraphics.pose().popPose();
     }
 
-    private boolean shouldRenderBypassAndHeadshotTooltip() {
+    protected boolean shouldRenderBypassAndHeadshotTooltip() {
         return ItemNBTTool.getDouble(stack, "BypassesArmor", 0) > 0 || ItemNBTTool.getDouble(stack, "headshot", 0) > 0;
     }
 
-    private boolean shouldRenderEditTooltip() {
+    protected boolean shouldRenderEditTooltip() {
         return stack.is(ModTags.Items.CAN_CUSTOM_GUN);
     }
 
-    private boolean shouldRenderPerks() {
+    protected boolean shouldRenderPerks() {
         return PerkHelper.getPerkByType(stack, Perk.Type.AMMO) != null || PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE) != null || PerkHelper.getPerkByType(stack, Perk.Type.FUNCTIONAL) != null;
     }
 
     /**
      * 渲染武器伤害和射速
      */
-    private void renderDamageAndRpmTooltip(Font font, GuiGraphics guiGraphics, int x, int y) {
+    protected void renderDamageAndRpmTooltip(Font font, GuiGraphics guiGraphics, int x, int y) {
         guiGraphics.drawString(font, getDamageComponent(), x, y, 0xFFFFFF);
         int xo = font.width(getDamageComponent().getVisualOrderText());
         guiGraphics.drawString(font, getRpmComponent(), x + xo + 16, y, 0xFFFFFF);
@@ -87,14 +87,7 @@ public class ClientImageTooltip implements ClientTooltipComponent {
     /**
      * 获取武器伤害的文本组件
      */
-    private Component getDamageComponent() {
-        if (stack.is(ModItems.BOCEK.get())) {
-            return getBocekDamageComponent();
-        }
-        if (stack.is(ModTags.Items.SHOTGUN)) {
-            return getShotgunDamageComponent();
-        }
-
+    protected Component getDamageComponent() {
         double damage = ItemNBTTool.getDouble(stack, "damage", 0) * TooltipTool.perkDamage(stack);
         return Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
@@ -102,56 +95,10 @@ public class ClientImageTooltip implements ClientTooltipComponent {
                         + new DecimalFormat("##.#").format(0.8 * damage * (1 + 0.1 * TooltipTool.heBulletLevel(stack))) : "")).withStyle(ChatFormatting.GREEN));
     }
 
-    private Component getShotgunDamageComponent() {
-        boolean slug = false;
-
-        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
-        if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
-            slug = true;
-        }
-
-        if (slug) {
-            double damage = ItemNBTTool.getDouble(stack, "damage", 0) * ItemNBTTool.getDouble(stack, "projectile_amount", 0) * TooltipTool.perkDamage(stack);
-            return Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                    .append(Component.literal(new DecimalFormat("##.#").format(damage) + (TooltipTool.heBullet(stack) ? " + " + new DecimalFormat("##.#")
-                            .format(0.8 * damage * (1 + 0.1 * TooltipTool.heBulletLevel(stack))) : "")).withStyle(ChatFormatting.GREEN));
-        } else {
-            double damage = ItemNBTTool.getDouble(stack, "damage", 0) * TooltipTool.perkDamage(stack);
-            return Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                    .append(Component.literal(new DecimalFormat("##.#").format(damage) + " * " + new DecimalFormat("##").format(ItemNBTTool.getDouble(stack, "projectile_amount", 0))).withStyle(ChatFormatting.GREEN));
-        }
-    }
-
-    private Component getBocekDamageComponent() {
-        boolean slug = false;
-
-        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
-        if (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug) {
-            slug = true;
-        }
-
-        double total = ItemNBTTool.getDouble(stack, "damage", 0) * TooltipTool.perkDamage(stack);
-
-        if (slug) {
-            return Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                    .append(Component.literal(new DecimalFormat("##.#").format(total) + (TooltipTool.heBullet(stack) ? " + " + new DecimalFormat("##.#")
-                            .format(0.8 * total * (1 + 0.1 * TooltipTool.heBulletLevel(stack))) : "")).withStyle(ChatFormatting.GREEN));
-        } else {
-            return Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
-                    .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                    .append(Component.literal(new DecimalFormat("##.#").format(total * 0.1) + " * 10").withStyle(ChatFormatting.GREEN))
-                    .append(Component.literal(" / ").withStyle(ChatFormatting.RESET))
-                    .append(Component.literal(new DecimalFormat("##.#").format(total)).withStyle(ChatFormatting.GREEN));
-        }
-    }
-
     /**
      * 获取武器射速的文本组件
      */
-    private Component getRpmComponent() {
+    protected Component getRpmComponent() {
         if (!stack.is(ModTags.Items.IS_AUTO_WEAPON)) {
             return Component.literal("");
         } else {
@@ -165,7 +112,7 @@ public class ClientImageTooltip implements ClientTooltipComponent {
     /**
      * 渲染武器等级和强化点数
      */
-    private void renderLevelAndUpgradePointTooltip(Font font, GuiGraphics guiGraphics, int x, int y) {
+    protected void renderLevelAndUpgradePointTooltip(Font font, GuiGraphics guiGraphics, int x, int y) {
         guiGraphics.drawString(font, getLevelComponent(), x, y, 0xFFFFFF);
         int xo = font.width(getLevelComponent().getVisualOrderText());
         guiGraphics.drawString(font, getUpgradePointComponent(), x + xo + 16, y, 0xFFFFFF);
@@ -174,7 +121,7 @@ public class ClientImageTooltip implements ClientTooltipComponent {
     /**
      * 获取武器等级文本组件
      */
-    private Component getLevelComponent() {
+    protected Component getLevelComponent() {
         int level = ItemNBTTool.getInt(stack, "Level", 0);
         double rate = ItemNBTTool.getDouble(stack, "Exp", 0) / (20 * Math.pow(level, 2) + 160 * level + 20);
 
@@ -201,7 +148,7 @@ public class ClientImageTooltip implements ClientTooltipComponent {
     /**
      * 获取武器强化点数文本组件
      */
-    private Component getUpgradePointComponent() {
+    protected Component getUpgradePointComponent() {
         int upgradePoint = Mth.floor(ItemNBTTool.getDouble(stack, "UpgradePoint", 0));
         return Component.translatable("des.superbwarfare.tips.upgrade_point").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
@@ -211,7 +158,7 @@ public class ClientImageTooltip implements ClientTooltipComponent {
     /**
      * 渲染武器穿甲比例和爆头倍率
      */
-    private void renderBypassAndHeadshotTooltip(Font font, GuiGraphics guiGraphics, int x, int y) {
+    protected void renderBypassAndHeadshotTooltip(Font font, GuiGraphics guiGraphics, int x, int y) {
         guiGraphics.drawString(font, getBypassComponent(), x, y, 0xFFFFFF);
         int xo = font.width(getBypassComponent().getVisualOrderText());
         guiGraphics.drawString(font, getHeadshotComponent(), x + xo + 16, y, 0xFFFFFF);
@@ -220,7 +167,7 @@ public class ClientImageTooltip implements ClientTooltipComponent {
     /**
      * 获取武器穿甲比例文本组件
      */
-    private Component getBypassComponent() {
+    protected Component getBypassComponent() {
         double perkBypassArmorRate = 0;
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
@@ -238,7 +185,7 @@ public class ClientImageTooltip implements ClientTooltipComponent {
     /**
      * 获取武器爆头倍率文本组件
      */
-    private Component getHeadshotComponent() {
+    protected Component getHeadshotComponent() {
         double headshot = ItemNBTTool.getDouble(stack, "headshot", 0);
         return Component.translatable("des.superbwarfare.tips.headshot").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
@@ -248,14 +195,14 @@ public class ClientImageTooltip implements ClientTooltipComponent {
     /**
      * 渲染武器改装信息
      */
-    private void renderWeaponEditTooltip(Font font, GuiGraphics guiGraphics, int x, int y) {
+    protected void renderWeaponEditTooltip(Font font, GuiGraphics guiGraphics, int x, int y) {
         guiGraphics.drawString(font, getEditComponent(), x, y + 10, 0xFFFFFF);
     }
 
     /**
      * 获取武器改装信息文本组件
      */
-    private Component getEditComponent() {
+    protected Component getEditComponent() {
         return Component.translatable("des.superbwarfare.tips.edit", "[" + ModKeyMappings.EDIT_MODE.getKey().getDisplayName().getString() + "]")
                 .withStyle(ChatFormatting.LIGHT_PURPLE).withStyle(ChatFormatting.ITALIC);
     }
@@ -263,7 +210,7 @@ public class ClientImageTooltip implements ClientTooltipComponent {
     /**
      * 渲染武器模组缩略图
      */
-    private void renderPerksShortcut(Font font, GuiGraphics guiGraphics, int x, int y) {
+    protected void renderPerksShortcut(Font font, GuiGraphics guiGraphics, int x, int y) {
         guiGraphics.pose().pushPose();
 
         int xOffset = -20;
@@ -324,7 +271,7 @@ public class ClientImageTooltip implements ClientTooltipComponent {
     /**
      * 渲染武器模组详细信息
      */
-    private void renderPerks(Font font, GuiGraphics guiGraphics, int x, int y) {
+    protected void renderPerks(Font font, GuiGraphics guiGraphics, int x, int y) {
         guiGraphics.pose().pushPose();
 
         guiGraphics.drawString(font, Component.translatable("perk.superbwarfare.tips").withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.UNDERLINE), x, y + 10, 0xFFFFFF);
@@ -400,7 +347,7 @@ public class ClientImageTooltip implements ClientTooltipComponent {
         guiGraphics.pose().popPose();
     }
 
-    private int getDefaultMaxWidth(Font font) {
+    protected int getDefaultMaxWidth(Font font) {
         int width = font.width(getDamageComponent().getVisualOrderText()) + font.width(getRpmComponent().getVisualOrderText()) + 16;
         width = Math.max(width, font.width(getLevelComponent().getVisualOrderText()) + font.width(getUpgradePointComponent().getVisualOrderText()) + 16);
         if (shouldRenderBypassAndHeadshotTooltip()) {
@@ -413,7 +360,7 @@ public class ClientImageTooltip implements ClientTooltipComponent {
         return width + 4;
     }
 
-    private int getMaxPerkDesWidth(Font font) {
+    protected int getMaxPerkDesWidth(Font font) {
         if (!shouldRenderPerks()) return 0;
 
         int width = 0;
@@ -459,9 +406,9 @@ public class ClientImageTooltip implements ClientTooltipComponent {
         if (shouldRenderEditTooltip()) height += 20;
         if (shouldRenderPerks()) {
             if (!Screen.hasShiftDown()) {
-                height += 20;
+                height += 16;
             } else {
-                height += 20;
+                height += 16;
                 if (PerkHelper.getPerkByType(stack, Perk.Type.AMMO) != null) {
                     height += 25;
                 }

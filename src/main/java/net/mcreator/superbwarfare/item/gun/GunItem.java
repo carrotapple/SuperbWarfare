@@ -3,7 +3,7 @@ package net.mcreator.superbwarfare.item.gun;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.mcreator.superbwarfare.ModUtils;
-import net.mcreator.superbwarfare.client.tooltip.ImageTooltip;
+import net.mcreator.superbwarfare.client.tooltip.component.GunImageComponent;
 import net.mcreator.superbwarfare.init.ModPerks;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.network.ModVariables;
@@ -117,7 +117,7 @@ public abstract class GunItem extends Item {
 
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
-        return Optional.of(new ImageTooltip(pStack));
+        return Optional.of(new GunImageComponent(pStack));
     }
 
     public Set<SoundEvent> getReloadSound() {
