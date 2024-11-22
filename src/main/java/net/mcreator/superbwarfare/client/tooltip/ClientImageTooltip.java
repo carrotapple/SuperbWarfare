@@ -52,7 +52,7 @@ public class ClientImageTooltip implements ClientTooltipComponent {
 
         if (shouldRenderPerks()) {
             if (!Screen.hasShiftDown()) {
-                renderPerksShortcut(guiGraphics, x, y + yo);
+                renderPerksShortcut(font, guiGraphics, x, y + yo);
             } else {
                 renderPerks(font, guiGraphics, x, y + yo);
             }
@@ -157,7 +157,7 @@ public class ClientImageTooltip implements ClientTooltipComponent {
         guiGraphics.drawString(font, editComponent, x, y + 10, 0xFFFFFF);
     }
 
-    private void renderPerksShortcut(GuiGraphics guiGraphics, int x, int y) {
+    private void renderPerksShortcut(Font font, GuiGraphics guiGraphics, int x, int y) {
         guiGraphics.pose().pushPose();
 
         int xOffset = -20;
@@ -167,7 +167,15 @@ public class ClientImageTooltip implements ClientTooltipComponent {
             xOffset += 20;
 
             var ammoItem = PerkHelper.getPerkItem(ammoPerk).get().get();
-            guiGraphics.renderItem(ammoItem.getDefaultInstance(), x + xOffset, y + 2);
+            ItemStack perkStack = ammoItem.getDefaultInstance();
+
+            CompoundTag ammoTag = PerkHelper.getPerkTag(stack, Perk.Type.AMMO);
+            if (!ammoTag.isEmpty()) {
+                int level = PerkHelper.getItemPerkLevel(ammoPerk, stack);
+                perkStack.setCount(level);
+            }
+            guiGraphics.renderItem(perkStack, x + xOffset, y + 2);
+            guiGraphics.renderItemDecorations(font, perkStack, x + xOffset, y + 2);
         }
 
         Perk funcPerk = PerkHelper.getPerkByType(stack, Perk.Type.FUNCTIONAL);
@@ -175,7 +183,16 @@ public class ClientImageTooltip implements ClientTooltipComponent {
             xOffset += 20;
 
             var funcItem = PerkHelper.getPerkItem(funcPerk).get().get();
-            guiGraphics.renderItem(funcItem.getDefaultInstance(), x + xOffset, y + 2);
+            ItemStack perkStack = funcItem.getDefaultInstance();
+
+            CompoundTag funcTag = PerkHelper.getPerkTag(stack, Perk.Type.FUNCTIONAL);
+            if (!funcTag.isEmpty()) {
+                int level = PerkHelper.getItemPerkLevel(funcPerk, stack);
+                perkStack.setCount(level);
+            }
+
+            guiGraphics.renderItem(perkStack, x + xOffset, y + 2);
+            guiGraphics.renderItemDecorations(font, perkStack, x + xOffset, y + 2);
         }
 
         Perk damagePerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
@@ -183,7 +200,16 @@ public class ClientImageTooltip implements ClientTooltipComponent {
             xOffset += 20;
 
             var damageItem = PerkHelper.getPerkItem(damagePerk).get().get();
-            guiGraphics.renderItem(damageItem.getDefaultInstance(), x + xOffset, y + 2);
+            ItemStack perkStack = damageItem.getDefaultInstance();
+
+            CompoundTag damageTag = PerkHelper.getPerkTag(stack, Perk.Type.DAMAGE);
+            if (!damageTag.isEmpty()) {
+                int level = PerkHelper.getItemPerkLevel(damagePerk, stack);
+                perkStack.setCount(level);
+            }
+
+            guiGraphics.renderItem(perkStack, x + xOffset, y + 2);
+            guiGraphics.renderItemDecorations(font, perkStack, x + xOffset, y + 2);
         }
 
         guiGraphics.pose().popPose();
