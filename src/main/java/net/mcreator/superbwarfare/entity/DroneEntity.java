@@ -195,11 +195,11 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
 
             if (this.getPersistentData().getBoolean("forward")) {
                 this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) - 0.1f);
-                this.entityData.set(ROT_Z, Mth.lerp(0.1f, this.entityData.get(ROT_Z), -0.5f));
+                this.entityData.set(ROT_Z, Mth.lerp(0.05f, this.entityData.get(ROT_Z), -0.2f));
             }
             if (this.getPersistentData().getBoolean("backward")) {
                 this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) + 0.1f);
-                this.entityData.set(ROT_Z, Mth.lerp(0.1f, this.entityData.get(ROT_Z), 0.5f));
+                this.entityData.set(ROT_Z, Mth.lerp(0.05f, this.entityData.get(ROT_Z), 0.2f));
             }
         } else {
             this.entityData.set(ROT_X, 0f);
@@ -214,7 +214,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
 
         this.entityData.set(ROT_Z, Mth.lerp(0.05f, this.entityData.get(ROT_Z), 0));
 
-        this.entityData.set(MOVE_Z, Mth.lerp(0.1f, this.entityData.get(MOVE_Z), 0));
+        this.entityData.set(MOVE_Z, Mth.lerp(0.05f, this.entityData.get(MOVE_Z), 0));
 
         if (this.getPersistentData().getBoolean("up")) {
             this.entityData.set(MOVE_Y, -1.5f);

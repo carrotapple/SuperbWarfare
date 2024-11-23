@@ -4,10 +4,12 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mcreator.superbwarfare.ModUtils;
 import net.mcreator.superbwarfare.entity.DroneEntity;
+import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.init.ModItems;
 import net.mcreator.superbwarfare.tools.EntityFindUtil;
 import net.mcreator.superbwarfare.tools.TraceTool;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -23,6 +25,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.text.DecimalFormat;
 
+import static net.mcreator.superbwarfare.client.RenderHelper.preciseBlit;
 import static net.mcreator.superbwarfare.entity.DroneEntity.AMMO;
 import static net.mcreator.superbwarfare.entity.DroneEntity.KAMIKAZE;
 
@@ -46,6 +49,11 @@ public class DroneUIOverlay {
             RenderSystem.setShaderColor(1, 1, 1, 1);
             if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
                 event.getGuiGraphics().blit(ModUtils.loc("textures/screens/drone.png"), w / 2 - 16, h / 2 - 16, 0, 0, 32, 32, 32, 32);
+                event.getGuiGraphics().blit(ModUtils.loc("textures/screens/drone_fov.png"), w / 2 + 100, h / 2 - 64, 0, 0, 64, 129, 64, 129);
+                GuiGraphics guiGraphics = event.getGuiGraphics();
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/drone_fov_move.png"), (float) w / 2 + 100, (float) (h / 2 - 64 - ((ClientEventHandler.droneFovLerp - 1) * 23.8)), 0, 0, 64, 129, 64, 129);
+                event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##.#").format(ClientEventHandler.droneFovLerp) + "x"),
+                        w / 2 + 144, h / 2 + 56 - (int) ((ClientEventHandler.droneFovLerp - 1) * 23.8), -1, false);
 
                 DroneEntity entity = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
 

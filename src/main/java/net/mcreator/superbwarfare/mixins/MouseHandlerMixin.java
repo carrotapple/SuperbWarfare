@@ -15,6 +15,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+import static net.mcreator.superbwarfare.event.ClientEventHandler.droneFovLerp;
+
 /**
  * Author: MrCrayfish
  */
@@ -45,7 +47,7 @@ public class MouseHandlerMixin {
         }
 
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
-            return 0.32;
+            return 0.33 / (1 + 0.08 * (droneFovLerp - 1));
         }
 
         if (!stack.is(ModTags.Items.GUN)) {

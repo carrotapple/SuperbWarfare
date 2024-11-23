@@ -86,7 +86,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                     bell.attemptToRing(this.level(), resultPos, blockResult.getDirection());
                 }
                 if (this.tickCount > 2) {
-                    ProjectileTool.causeCustomExplode(this, 135f, 6.75f, 1.5f);
+                    ProjectileTool.causeCustomExplode(this, 135f, 6.75f, 1.2f);
                 }
 
                 break;
@@ -101,7 +101,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                     }
                 }
                 if (this.tickCount > 2 && !(entity instanceof DroneEntity)) {
-                    ProjectileTool.causeCustomExplode(this, 150f, 4.75f, 2f);
+                    ProjectileTool.causeCustomExplode(this, 150f, 4.75f, 1.2f);
                 }
                 break;
             default:
@@ -157,7 +157,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
     }
 
     public void droneShoot(Entity drone) {
-        Vec3 vec3 = (new Vec3(0.5 * drone.getDeltaMovement().x, drone.getDeltaMovement().y, 0.5 * drone.getDeltaMovement().z));
+        Vec3 vec3 = (new Vec3(0.2 * drone.getDeltaMovement().x, 0.2 * drone.getDeltaMovement().y, 0.2 * drone.getDeltaMovement().z));
         this.setDeltaMovement(vec3);
         double d0 = vec3.horizontalDistance();
         this.setYRot((float) (Mth.atan2(vec3.x, vec3.z) * (double) (180F / (float) Math.PI)));

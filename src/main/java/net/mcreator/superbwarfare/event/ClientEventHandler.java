@@ -82,14 +82,15 @@ public class ClientEventHandler {
     public static double recoilTime = 0;
 
     public static double recoilHorizon = 0;
-
     public static double recoilY = 0;
+
     public static double droneRotX = 0;
     public static double droneRotZ = 0;
+    public static double droneFov = 1;
+    public static double droneFovLerp = 1;
+
     public static double breathTime = 0;
-
     public static double fov = 0;
-
     public static double pullTimer = 0;
     public static double bowTimer = 0;
     public static double handTimer = 0;
@@ -1033,8 +1034,16 @@ public class ClientEventHandler {
             fov = event.getFOV();
             return;
         }
+
         if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity && zoom && !stack.is(ModTags.Items.GUN)) {
             event.setFOV(event.getFOV() / 5);
+        }
+
+        if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+
+            droneFovLerp = Mth.lerp(0.1 * Minecraft.getInstance().getDeltaFrameTime() , droneFovLerp, droneFov);
+
+            event.setFOV(event.getFOV() / droneFovLerp);
         }
     }
 
