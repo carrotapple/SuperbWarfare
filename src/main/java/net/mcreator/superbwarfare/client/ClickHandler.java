@@ -58,7 +58,6 @@ public class ClickHandler {
         if (player == null) return;
 
         if (player.hasEffect(ModMobEffects.SHOCK.get())) {
-            event.setCanceled(true);
             return;
         }
 
@@ -87,19 +86,20 @@ public class ClickHandler {
 
         ItemStack stack = player.getMainHandItem();
 
-        if (player.hasEffect(ModMobEffects.SHOCK.get())) {
-            event.setCanceled(true);
-            return;
-        }
 
         int button = event.getButton();
 
         if (player.getMainHandItem().is(ModTags.Items.GUN)
                 || stack.is(ModItems.MONITOR.get())
+                || player.hasEffect(ModMobEffects.SHOCK.get())
                 || (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity && player.getMainHandItem().getItem() instanceof CannonShellItem)) {
             if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 event.setCanceled(true);
             }
+        }
+
+        if (player.hasEffect(ModMobEffects.SHOCK.get())) {
+            return;
         }
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
@@ -114,19 +114,21 @@ public class ClickHandler {
             }
         }
 
-        if (button == ModKeyMappings.FIRE.getKey().getValue()) {
-            handleWeaponFirePress(player, stack);
-        }
+        if (player.getMainHandItem().is(ModTags.Items.GUN)) {
+            if (button == ModKeyMappings.FIRE.getKey().getValue()) {
+                handleWeaponFirePress(player, stack);
+            }
 
-        if (button == ModKeyMappings.HOLD_ZOOM.getKey().getValue()) {
-            handleWeaponZoomPress();
-            switchZoom = false;
-            return;
-        }
+            if (button == ModKeyMappings.HOLD_ZOOM.getKey().getValue()) {
+                handleWeaponZoomPress();
+                switchZoom = false;
+                return;
+            }
 
-        if (button == ModKeyMappings.SWITCH_ZOOM.getKey().getValue()) {
-            handleWeaponZoomPress();
-            switchZoom = !switchZoom;
+            if (button == ModKeyMappings.SWITCH_ZOOM.getKey().getValue()) {
+                handleWeaponZoomPress();
+                switchZoom = !switchZoom;
+            }
         }
     }
 
@@ -140,7 +142,6 @@ public class ClickHandler {
         ItemStack stack = player.getMainHandItem();
 
         if (player.hasEffect(ModMobEffects.SHOCK.get())) {
-            event.setCanceled(true);
             return;
         }
 
@@ -180,15 +181,15 @@ public class ClickHandler {
 
         ItemStack stack = player.getMainHandItem();
 
-        if (player.hasEffect(ModMobEffects.SHOCK.get())) {
-            event.setCanceled(true);
-            return;
-        }
-
         setKeyState(event);
 
         int key = event.getKey();
         if (event.getAction() == GLFW.GLFW_PRESS) {
+
+            if (player.hasEffect(ModMobEffects.SHOCK.get())) {
+                return;
+            }
+
             if (key == Minecraft.getInstance().options.keyJump.getKey().getValue()) {
                 handleDoubleJump(player);
             }
@@ -231,27 +232,47 @@ public class ClickHandler {
                 ModUtils.PACKET_HANDLER.sendToServer(new SensitivityMessage(false));
             }
 
-            if (key == ModKeyMappings.FIRE.getKey().getValue()) {
-                handleWeaponFirePress(player, stack);
+            if (player.getMainHandItem().is(ModTags.Items.GUN)) {
+                if (key == ModKeyMappings.FIRE.getKey().getValue()) {
+                    handleWeaponFirePress(player, stack);
+                }
+
+                if (key == ModKeyMappings.HOLD_ZOOM.getKey().getValue()) {
+                    handleWeaponZoomPress();
+                    switchZoom = false;
+                    return;
+                }
+
+                if (key == ModKeyMappings.SWITCH_ZOOM.getKey().getValue()) {
+                    handleWeaponZoomPress();
+                    switchZoom = !switchZoom;
+                }
+            }
+        } else {
+
+            if (player.hasEffect(ModMobEffects.SHOCK.get())) {
+                return;
             }
 
-            if (key == ModKeyMappings.HOLD_ZOOM.getKey().getValue()) {
-                handleWeaponZoomPress();
-            }
-        }
-
-        if (event.getAction() == GLFW.GLFW_RELEASE) {
             if (key == ModKeyMappings.FIRE.getKey().getValue()) {
                 handleWeaponFireRelease();
             }
-
             if (key == ModKeyMappings.HOLD_ZOOM.getKey().getValue()) {
+                handleWeaponZoomRelease();
+                return;
+            }
+
+            if (key == ModKeyMappings.SWITCH_ZOOM.getKey().getValue() && !switchZoom) {
                 handleWeaponZoomRelease();
             }
         }
     }
 
     public static void handleWeaponFirePress (Player player, ItemStack stack) {
+
+        if (player.hasEffect(ModMobEffects.SHOCK.get())) {
+            return;
+        }
 
         if (stack.is(Items.SPYGLASS) && player.isScoping() && player.getOffhandItem().is(ModItems.FIRING_PARAMETERS.get())) {
             ModUtils.PACKET_HANDLER.sendToServer(new SetFiringParametersMessage(0));
