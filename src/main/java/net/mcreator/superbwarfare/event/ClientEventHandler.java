@@ -6,6 +6,7 @@ import net.mcreator.superbwarfare.config.client.DisplayConfig;
 import net.mcreator.superbwarfare.entity.DroneEntity;
 import net.mcreator.superbwarfare.entity.ICannonEntity;
 import net.mcreator.superbwarfare.init.*;
+import net.mcreator.superbwarfare.item.common.ammo.CannonShellItem;
 import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.network.message.ShootMessage;
 import net.mcreator.superbwarfare.perk.AmmoPerk;
@@ -968,7 +969,7 @@ public class ClientEventHandler {
             angle = Math.atan(Mth.abs((float) cameraLocation) / (lookDistance + 2.9)) * Mth.RAD_TO_DEG;
         }
 
-        if (player.getMainHandItem().is(ModTags.Items.GUN)) {
+        if (player.getMainHandItem().is(ModTags.Items.GUN) || (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity && player.getMainHandItem().getItem() instanceof CannonShellItem)) {
             event.setPitch((float) (pitch + cameraRot[0] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.2 : 0) * turnRot[0] + 3 * velocityY));
             if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK) {
                 event.setYaw((float) (yaw + cameraRot[1] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.8 : 0) * turnRot[1] - (cameraLocation > 0 ? 1 : -1) * angle * zoomPos));
@@ -1078,6 +1079,8 @@ public class ClientEventHandler {
             for (int i = 0; i < 5; i++) {
                 shellIndexTime[i] = 0;
             }
+            zoom = false;
+            ClickHandler.switchZoom = false;
         }
     }
 

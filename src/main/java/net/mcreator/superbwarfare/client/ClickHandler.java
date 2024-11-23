@@ -114,7 +114,9 @@ public class ClickHandler {
             }
         }
 
-        if (player.getMainHandItem().is(ModTags.Items.GUN)) {
+        if (player.getMainHandItem().is(ModTags.Items.GUN)
+                || stack.is(ModItems.MONITOR.get())
+                || (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity && player.getMainHandItem().getItem() instanceof CannonShellItem)) {
             if (button == ModKeyMappings.FIRE.getKey().getValue()) {
                 handleWeaponFirePress(player, stack);
             }
@@ -232,7 +234,9 @@ public class ClickHandler {
                 ModUtils.PACKET_HANDLER.sendToServer(new SensitivityMessage(false));
             }
 
-            if (player.getMainHandItem().is(ModTags.Items.GUN)) {
+            if (player.getMainHandItem().is(ModTags.Items.GUN)
+                    || stack.is(ModItems.MONITOR.get())
+                    || (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity && player.getMainHandItem().getItem() instanceof CannonShellItem)) {
                 if (key == ModKeyMappings.FIRE.getKey().getValue()) {
                     handleWeaponFirePress(player, stack);
                 }
