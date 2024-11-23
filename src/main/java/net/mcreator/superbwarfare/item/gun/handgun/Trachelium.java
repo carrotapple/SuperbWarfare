@@ -9,6 +9,7 @@ import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.init.ModTags;
 import net.mcreator.superbwarfare.item.AnimatedItem;
 import net.mcreator.superbwarfare.item.gun.GunItem;
+import net.mcreator.superbwarfare.network.ModVariables;
 import net.mcreator.superbwarfare.perk.Perk;
 import net.mcreator.superbwarfare.perk.PerkHelper;
 import net.mcreator.superbwarfare.tools.GunsTool;
@@ -18,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
@@ -85,11 +87,38 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
+        boolean stock = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK) == 2;
+        boolean grip = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) > 0 || GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE) > 0;
+
         if (ClientEventHandler.firePosTimer > 0 && ClientEventHandler.firePosTimer < 1.7) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.fire"));
+            if (stock) {
+                if (grip) {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.fire_stock_grip"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.fire_stock"));
+                }
+            } else {
+                if (grip) {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.fire_grip"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.fire"));
+                }
+            }
         }
 
-        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.idle"));
+        if (stock) {
+            if (grip) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.idle_stock_grip"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.idle_stock"));
+            }
+        } else {
+            if (grip) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.idle_stock_grip"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.idle"));
+            }
+        }
     }
 
     private PlayState idlePredicate(AnimationState<Trachelium> event) {
@@ -98,20 +127,96 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
+        boolean stock = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK) == 2;
+        boolean grip = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) > 0 || GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE) > 0;
+
         if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.action"));
+            if (stock) {
+                if (grip) {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.action_stock_grip"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.action_stock"));
+                }
+            } else {
+                if (grip) {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.action_grip"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.action"));
+                }
+            }
         }
 
         if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.reload"));
+            if (stock) {
+                if (grip) {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.reload_stock_grip"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.reload_stock"));
+                }
+            } else {
+                if (grip) {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.reload_grip"));
+                } else {
+                    return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.reload"));
+                }
+            }
         }
 
         if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
-            if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.run_fast"));
+            if (stock) {
+                if (grip) {
+                    if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.run_fast_stock"));
+                    } else {
+                        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.run_stock_grip"));
+                    }
+                } else {
+                    if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.run_fast_stock"));
+                    } else {
+                        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.run_stock"));
+                    }
+                }
             } else {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.run"));
+                if (grip) {
+                    if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.run_fast"));
+                    } else {
+                        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.run_grip"));
+                    }
+                } else {
+                    if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
+                        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.run_fast"));
+                    } else {
+                        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.run"));
+                    }
+                }
             }
+        }
+
+        if (stock) {
+            if (grip) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.idle_stock_grip"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.idle_stock"));
+            }
+        } else {
+            if (grip) {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.idle_grip"));
+            } else {
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.idle"));
+            }
+        }
+    }
+
+    private PlayState editPredicate(AnimationState<Trachelium> event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
+
+        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.edit"));
         }
 
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.trachelium.idle"));
@@ -121,8 +226,10 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         var fireAnimController = new AnimationController<>(this, "fireAnimController", 0, this::fireAnimPredicate);
         data.add(fireAnimController);
-        AnimationController<Trachelium> idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
-        data.add(idleController);
+        var idlePredicate = new AnimationController<>(this, "idlePredicate", 3, this::idlePredicate);
+        data.add(idlePredicate);
+        var editController = new AnimationController<>(this, "editController", 1, this::editPredicate);
+        data.add(editController);
     }
 
     @Override
@@ -148,10 +255,46 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemStack, world, entity, slot, selected);
-        var tag = itemStack.getOrCreateTag();
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
+        var tag = stack.getOrCreateTag();
         tag.putInt("bolt_action_time", tag.getBoolean("DA") ? 12 : 0);
+
+        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        int gripType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP);
+        int stockType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK);
+        CompoundTag tags = stack.getOrCreateTag().getCompound("Attachments");
+
+
+        if (stockType == 1) {
+            tags.putInt("Stock", 2);
+        }
+
+        if (scopeType == 3) {
+            tags.putInt("Scope", 0);
+        }
+
+        if (scopeType > 0 || gripType > 0) {
+            tag.putDouble("CustomVelocity", 15);
+            tag.putDouble("BypassesArmor", 0.4);
+            tag.putDouble("damage", 21);
+            tag.putDouble("headshot", 2.5);
+        } else {
+            tag.putDouble("CustomVelocity", 0);
+            tag.putDouble("BypassesArmor", 0.3);
+            tag.putDouble("damage", 19);
+            tag.putDouble("headshot", 2);
+        }
+
+        double customZoom = switch (scopeType) {
+            case 0, 1 -> 0;
+            case 2 -> stack.getOrCreateTag().getBoolean("ScopeAlt") ? 0 : 2.75;
+            default -> 1;
+        };
+
+        stack.getOrCreateTag().putBoolean("CanSwitchScope", scopeType == 2);
+        stack.getOrCreateTag().putDouble("CustomZoom", customZoom);
+
     }
 
     @Override

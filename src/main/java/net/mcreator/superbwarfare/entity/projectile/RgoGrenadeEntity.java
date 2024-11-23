@@ -165,4 +165,14 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
         this.yRotO = this.getYRot();
         this.xRotO = this.getXRot();
     }
+
+    @Override
+    public void shootFromRotation(Entity pShooter, float pX, float pY, float pZ, float pVelocity, float pInaccuracy) {
+        float f = -Mth.sin(pY * 0.017453292F) * Mth.cos(pX * 0.017453292F);
+        float f1 = -Mth.sin((pX + pZ) * 0.017453292F);
+        float f2 = Mth.cos(pY * 0.017453292F) * Mth.cos(pX * 0.017453292F);
+        this.shoot((double)f, (double)f1, (double)f2, pVelocity, pInaccuracy);
+        Vec3 vec3 = pShooter.getDeltaMovement();
+        this.setDeltaMovement(this.getDeltaMovement().add(vec3.x, pShooter.onGround() ? 0.0 : -vec3.y, vec3.z));
+    }
 }

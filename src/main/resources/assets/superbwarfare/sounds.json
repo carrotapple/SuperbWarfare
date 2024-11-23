@@ -55,6 +55,30 @@
       }
     ]
   },
+  "trachelium_fire_1p_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:trachelium/trachelium_fire_1p_s",
+        "stream": false
+      }
+    ]
+  },
+  "trachelium_fire_3p_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:trachelium/trachelium_fire_3p_s",
+        "stream": false
+      }
+    ]
+  },
+  "trachelium_far_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:trachelium/trachelium_far_s",
+        "stream": false
+      }
+    ]
+  },
   "trachelium_reload_empty": {
     "sounds": [
       {

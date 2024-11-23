@@ -137,9 +137,7 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
         super.inventoryTick(stack, world, entity, slot, selected);
 
         int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
-        int barrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
         int magType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE);
-        int stockType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK);
 
         int customMag = switch (magType) {
             case 1 -> 20;

@@ -43,11 +43,7 @@ public class VectorItemModel extends GeoModel<VectorItem> {
     public void setCustomAnimations(VectorItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone scope = getAnimationProcessor().getBone("Scope1");
-//        CoreGeoBone scope2 = getAnimationProcessor().getBone("Scope2");
-//        CoreGeoBone scope3 = getAnimationProcessor().getBone("Scope3");
         CoreGeoBone cross1 = getAnimationProcessor().getBone("Cross1");
-//        CoreGeoBone cross2 = getAnimationProcessor().getBone("Cross2");
-//        CoreGeoBone cross3 = getAnimationProcessor().getBone("Cross3");
         CoreGeoBone kmj = getAnimationProcessor().getBone("kuaimanji");
         CoreGeoBone sight1fold = getAnimationProcessor().getBone("SightFold1");
         CoreGeoBone sight2fold = getAnimationProcessor().getBone("SightFold2");
@@ -110,7 +106,6 @@ public class VectorItemModel extends GeoModel<VectorItem> {
                 case 0 -> getAnimationProcessor().getBone("fireRoot0");
                 case 1 -> getAnimationProcessor().getBone("fireRoot1");
                 case 2 -> getAnimationProcessor().getBone("fireRoot2");
-                case 3 -> getAnimationProcessor().getBone("fireRoot3");
                 default -> getAnimationProcessor().getBone("fireRootNormal");
             };
         }
@@ -133,8 +128,6 @@ public class VectorItemModel extends GeoModel<VectorItem> {
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.4 * zt)));
 
         cross1.setPosY(-0.25f * (float) fpz);
-//        cross2.setPosY(-0.7f * (float) fpz);
-//        cross3.setPosY(-0.2f * (float) fpz);
 
         rotXSight = Mth.lerp(1.5f * times, rotXSight, type == 0 ? 0 : 90);
         sight1fold.setRotX(rotXSight * Mth.DEG_TO_RAD);

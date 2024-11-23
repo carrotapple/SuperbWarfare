@@ -3,10 +3,12 @@ package net.mcreator.superbwarfare.client.renderer.item;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mcreator.superbwarfare.client.AnimationHelper;
+import net.mcreator.superbwarfare.client.ItemModelHelper;
 import net.mcreator.superbwarfare.client.layer.TracheliumLayer;
 import net.mcreator.superbwarfare.client.model.item.TracheliumItemModel;
 import net.mcreator.superbwarfare.event.ClientEventHandler;
 import net.mcreator.superbwarfare.item.gun.handgun.Trachelium;
+import net.mcreator.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -80,14 +82,57 @@ public class TracheliumItemRenderer extends GeoItemRenderer<Trachelium> {
 
         Player player = mc.player;
         if (player != null) {
+            ItemStack itemStack = player.getMainHandItem();
+
+            if (name.equals("humu")) {
+                bone.setHidden(GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 0 && GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.GRIP) == 0);
+            }
+
+            if (name.equals("qianzhunxing1")) {
+                bone.setHidden(GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) > 0 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.GRIP) > 0);
+            }
+
+            if (name.equals("railup")) {
+                bone.setHidden(GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 0);
+            }
+
+            if (name.equals("raildown")) {
+                bone.setHidden(GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.GRIP) == 0);
+            }
+
+            if (name.equals("Cross1")) {
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                        || !ClientEventHandler.zoom
+                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
+            }
+
+            if (name.equals("Cross2")) {
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                        || !ClientEventHandler.zoom
+                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2
+                        || itemStack.getOrCreateTag().getBoolean("ScopeAlt"));
+            }
+
+            if (name.equals("CrossAlt")) {
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                        || !ClientEventHandler.zoom
+                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2
+                        || !(itemStack.getOrCreateTag().getBoolean("ScopeAlt")));
+            }
+
+            if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2 && !itemStack.getOrCreateTag().getBoolean("ScopeAlt") && (name.equals("hidden"))) {
+                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && ClientEventHandler.zoom);
+            }
+
+            ItemModelHelper.handleGunAttachments(bone, itemStack, name);
 
             if (name.equals("flare")) {
-                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
+                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {
                     bone.setHidden(true);
                 } else {
                     bone.setHidden(false);
-                    bone.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-                    bone.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                    bone.setScaleX((float) (0.55 + 0.5 * (Math.random() - 0.5)));
+                    bone.setScaleY((float) (0.55 + 0.5 * (Math.random() - 0.5)));
                     bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
                 }
             }
