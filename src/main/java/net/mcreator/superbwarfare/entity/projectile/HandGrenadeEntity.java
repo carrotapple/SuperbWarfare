@@ -128,7 +128,7 @@ public class HandGrenadeEntity extends ThrowableItemProjectile {
         if (this.fuse <= 0) {
             this.discard();
             if (!this.level().isClientSide) {
-                ProjectileTool.causeCustomExplode(this, 175f, 7.25f, 1.2f);
+                ProjectileTool.causeCustomExplode(this, 125f, 5f, 1.2f);
             }
         }
 

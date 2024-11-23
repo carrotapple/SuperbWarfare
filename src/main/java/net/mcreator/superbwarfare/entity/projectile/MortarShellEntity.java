@@ -26,9 +26,9 @@ import net.minecraftforge.network.PlayMessages;
 
 public class MortarShellEntity extends ThrowableItemProjectile {
 
-    private float damage = 250f;
+    private float damage = 175f;
     private int life = 600;
-    private float radius = 12.5f;
+    private float radius = 8f;
 
     public MortarShellEntity(EntityType<? extends MortarShellEntity> type, Level world) {
         super(type, world);

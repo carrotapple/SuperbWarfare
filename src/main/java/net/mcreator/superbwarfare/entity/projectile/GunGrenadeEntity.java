@@ -78,21 +78,21 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
             }
         }
 
-        if (entity instanceof LivingEntity) {
-            entity.invulnerableTime = 0;
+        if (entity instanceof Monster monster) {
+            monster.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), 1.5f * this.damage * damageMultiplier);
+        } else {
+            entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), 1.5f * this.damage);
         }
 
-        if (entity instanceof Monster monster) {
-            monster.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), 1.6f * this.damage * damageMultiplier);
-        } else {
-            entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), 1.6f * this.damage);
+        if (entity instanceof LivingEntity) {
+            entity.invulnerableTime = 0;
         }
 
         if (this.tickCount > 0) {
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        entity, this.damage * 1.4f, 7.5f, this.monsterMultiplier);
+                        entity, this.damage * 1.2f, 4.5f, this.monsterMultiplier);
             }
         }
 

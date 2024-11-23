@@ -86,7 +86,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                     bell.attemptToRing(this.level(), resultPos, blockResult.getDirection());
                 }
                 if (this.tickCount > 2) {
-                    ProjectileTool.causeCustomExplode(this, 135f, 6.75f, 1.2f);
+                    ProjectileTool.causeCustomExplode(this, 100f, 4f, 1.2f);
                 }
 
                 break;
@@ -101,7 +101,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                     }
                 }
                 if (this.tickCount > 2 && !(entity instanceof DroneEntity)) {
-                    ProjectileTool.causeCustomExplode(this, 150f, 4.75f, 1.2f);
+                    ProjectileTool.causeCustomExplode(this, 100f, 4f, 1.2f);
                 }
                 break;
             default:
@@ -117,7 +117,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
         if (this.fuse <= 0) {
             this.discard();
             if (!this.level().isClientSide) {
-                ProjectileTool.causeCustomExplode(this, 135f, 6.75f, 1.5f);
+                ProjectileTool.causeCustomExplode(this, 100f, 4f, 1.2f);
             }
         }
 

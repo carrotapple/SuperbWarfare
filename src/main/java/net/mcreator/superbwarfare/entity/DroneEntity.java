@@ -9,7 +9,6 @@ import net.mcreator.superbwarfare.init.ModSounds;
 import net.mcreator.superbwarfare.item.Monitor;
 import net.mcreator.superbwarfare.tools.CustomExplosion;
 import net.mcreator.superbwarfare.tools.EntityFindUtil;
-import net.mcreator.superbwarfare.tools.ParticleTool;
 import net.mcreator.superbwarfare.tools.SoundTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -435,13 +434,20 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
     }
 
     private void kamikazeExplosion(Entity source) {
+
+        CustomExplosion explosionCore = new CustomExplosion(this.level(), this,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), source, source), 1000,
+                this.getX(), this.getY(), this.getZ(), 4f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+        explosionCore.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosionCore);
+        explosionCore.finalizeExplosion(false);
+
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
                 ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), source, source), 150,
                 this.getX(), this.getY(), this.getZ(), 12.5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
-        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
     }
 
     @Override

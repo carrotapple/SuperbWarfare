@@ -137,7 +137,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
         if (source.is(DamageTypes.WITHER_SKULL))
             return false;
         if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
-            amount *= 0.25f;
+            amount *= 0.5f;
         }
         if (source.is(ModDamageTypes.CANNON_FIRE)) {
             amount *= 1.4f;

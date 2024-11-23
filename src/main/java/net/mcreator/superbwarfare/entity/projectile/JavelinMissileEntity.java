@@ -115,14 +115,14 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
             }
         }
 
-        if (entity instanceof LivingEntity) {
-            entity.invulnerableTime = 0;
-        }
-
         if (entity instanceof Monster monster) {
             monster.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * damageMultiplier);
         } else {
             entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
+        }
+
+        if (entity instanceof LivingEntity) {
+            entity.invulnerableTime = 0;
         }
 
         if (this.tickCount > 1) {

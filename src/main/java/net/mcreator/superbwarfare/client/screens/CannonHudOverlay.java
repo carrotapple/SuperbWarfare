@@ -111,12 +111,12 @@ public class CannonHudOverlay {
 
         if (cannon instanceof Mk42Entity) {
             health = cannon.getEntityData().get(net.mcreator.superbwarfare.entity.Mk42Entity.HEALTH);
-            maxHealth = 1000;
+            maxHealth = 700;
         }
 
         if (cannon instanceof Mle1934Entity) {
             health = cannon.getEntityData().get(net.mcreator.superbwarfare.entity.Mle1934Entity.HEALTH);
-            maxHealth = 1200;
+            maxHealth = 800;
         }
 
         GuiGraphics guiGraphics = event.getGuiGraphics();

@@ -96,7 +96,10 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
     public void onHitEntity(EntityHitResult entityHitResult) {
         Entity entity = entityHitResult.getEntity();
         entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
-        entity.invulnerableTime = 0;
+
+        if (entity instanceof LivingEntity) {
+            entity.invulnerableTime = 0;
+        }
 
         if (this.getOwner() instanceof LivingEntity living) {
             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
@@ -105,10 +108,6 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
             }
         }
-
-//        if (this.level() instanceof ServerLevel) {
-//            causeExplode();
-//        }
 
         ParticleTool.cannonHitParticles(this.level(), this.position());
 
@@ -140,6 +139,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         BlockState blockState = this.level().getBlockState(BlockPos.containing(x, y, z));
         if (blockState.is(Blocks.BEDROCK) || blockState.is(Blocks.BARRIER)) {
             this.discard();
+            causeExplode();
             return;
         }
 
