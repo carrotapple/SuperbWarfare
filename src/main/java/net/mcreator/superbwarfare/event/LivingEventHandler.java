@@ -211,8 +211,10 @@ public class LivingEventHandler {
 
         while (exp >= upgradeExpNeeded) {
             exp -= upgradeExpNeeded;
+            level = tag.getInt("Level") + 1;
+            upgradeExpNeeded = 20 * Math.pow(level, 2) + 160 * level + 20;
             tag.putDouble("Exp", exp);
-            tag.putInt("Level", tag.getInt("Level") + 1);
+            tag.putInt("Level", level);
             tag.putDouble("UpgradePoint", tag.getDouble("UpgradePoint") + 0.5);
         }
     }
@@ -233,8 +235,10 @@ public class LivingEventHandler {
 
         while (exp >= upgradeExpNeeded) {
             exp -= upgradeExpNeeded;
+            level = tag.getInt("Level") + 1;
+            upgradeExpNeeded = 20 * Math.pow(level, 2) + 160 * level + 20;
             tag.putDouble("Exp", exp);
-            tag.putInt("Level", tag.getInt("Level") + 1);
+            tag.putInt("Level", level);
             tag.putDouble("UpgradePoint", tag.getDouble("UpgradePoint") + 0.5);
         }
     }
