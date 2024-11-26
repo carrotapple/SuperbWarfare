@@ -15,7 +15,7 @@ def getGitCommitHash() {
 }
 
 version = "${mod_version}-SNAPSHOT-${getGitCommitHash()}"
-group = 'com.Atsushio.superbwarfare'
+group = 'com.atsushio.superbwarfare'
 archivesBaseName = 'superbwarfare'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)

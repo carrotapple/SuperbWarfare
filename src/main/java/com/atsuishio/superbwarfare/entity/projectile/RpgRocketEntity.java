@@ -1,0 +1,231 @@
+package com.atsuishio.superbwarfare.entity.projectile;
+
+import com.atsuishio.superbwarfare.init.ModEntities;
+import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
+import com.atsuishio.superbwarfare.tools.ParticleTool;
+import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.entity.AnimatedEntity;
+import com.atsuishio.superbwarfare.init.ModDamageTypes;
+import com.atsuishio.superbwarfare.init.ModItems;
+import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.tools.CustomExplosion;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BellBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.PlayMessages;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
+
+import javax.annotation.Nullable;
+
+public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity {
+    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(RpgRocketEntity.class, EntityDataSerializers.STRING);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+    public String animationprocedure = "empty";
+
+    private float monsterMultiplier = 0.0f;
+    private float damage = 500f;
+
+    public RpgRocketEntity(EntityType<? extends RpgRocketEntity> type, Level world) {
+        super(type, world);
+    }
+
+    public RpgRocketEntity(LivingEntity entity, Level level, float damage) {
+        super(ModEntities.RPG_ROCKET.get(), entity, level);
+        this.damage = damage;
+    }
+
+    public RpgRocketEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
+        this(ModEntities.RPG_ROCKET.get(), level);
+    }
+
+    public void setMonsterMultiplier(float monsterMultiplier) {
+        this.monsterMultiplier = monsterMultiplier;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    protected Item getDefaultItem() {
+        return ModItems.ROCKET.get();
+    }
+
+    @Override
+    public boolean shouldRenderAtSqrDistance(double pDistance) {
+        return true;
+    }
+
+    @Override
+    protected void onHitEntity(EntityHitResult result) {
+        float damageMultiplier = 1 + this.monsterMultiplier;
+        Entity entity = result.getEntity();
+        if (this.getOwner() instanceof LivingEntity living) {
+            if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
+                living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
+
+                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
+            }
+        }
+
+        if (entity instanceof Monster monster) {
+            monster.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), 1.4f * this.damage * damageMultiplier);
+        } else {
+            entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
+        }
+
+        if (entity instanceof LivingEntity) {
+            entity.invulnerableTime = 0;
+        }
+
+        if (this.tickCount > 1) {
+            if (this.level() instanceof ServerLevel) {
+                causeRpgExplode(this,
+                        ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
+                        entity, this.damage * 0.67f, 10.0f, this.monsterMultiplier);
+            }
+        }
+
+        this.discard();
+    }
+
+    @Override
+    public void onHitBlock(BlockHitResult blockHitResult) {
+        super.onHitBlock(blockHitResult);
+        BlockPos resultPos = blockHitResult.getBlockPos();
+        BlockState state = this.level().getBlockState(resultPos);
+
+        if (state.getBlock() instanceof BellBlock bell) {
+            bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
+        }
+
+        if (this.tickCount > 1) {
+            if (this.level() instanceof ServerLevel) {
+                causeRpgExplode(this,
+                        ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
+                        this, this.damage * 0.67f, 10.0f, this.monsterMultiplier);
+            }
+        }
+
+        this.discard();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (this.tickCount == 3) {
+            if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, this.xo, this.yo, this.zo, 15, 0.8, 0.8, 0.8, 0.01, true);
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.xo, this.yo, this.zo, 10, 0.8, 0.8, 0.8, 0.01, true);
+            }
+        }
+        if (this.tickCount > 2) {
+            this.setDeltaMovement(this.getDeltaMovement().multiply(1.03, 1.03, 1.03));
+
+            if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, this.xo, this.yo, this.zo, 1, 0, 0, 0, 0, true);
+            }
+        }
+
+        if (this.tickCount > 100 || this.isInWater()) {
+            if (this.level() instanceof ServerLevel) {
+                causeRpgExplode(this,
+                        ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
+                        this, this.damage * 0.67f, 10.0f, this.monsterMultiplier);
+            }
+            this.discard();
+        }
+    }
+
+    public static void causeRpgExplode(ThrowableItemProjectile projectile, @Nullable DamageSource source, Entity target, float damage, float radius, float damageMultiplier) {
+        CustomExplosion explosion = new CustomExplosion(projectile.level(), projectile, source, damage,
+                target.getX(), target.getY(), target.getZ(), radius, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(damageMultiplier);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(projectile.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnHugeExplosionParticles(projectile.level(), projectile.position());
+        projectile.discard();
+    }
+
+    private PlayState movementPredicate(AnimationState<RpgRocketEntity> event) {
+        if (this.animationprocedure.equals("empty")) {
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.rpg.idle"));
+        }
+        return PlayState.STOP;
+    }
+
+    private PlayState procedurePredicate(AnimationState<RpgRocketEntity> event) {
+        if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
+            if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+                this.animationprocedure = "empty";
+                event.getController().forceAnimationReset();
+            }
+        } else if (animationprocedure.equals("empty")) {
+            return PlayState.STOP;
+        }
+        return PlayState.CONTINUE;
+    }
+
+    @Override
+    protected float getGravity() {
+        return super.getGravity();
+    }
+
+    public String getSyncedAnimation() {
+        return this.entityData.get(ANIMATION);
+    }
+
+    public void setAnimation(String animation) {
+        this.entityData.set(ANIMATION, animation);
+    }
+
+    @Override
+    public void setAnimationProcedure(String procedure) {
+        this.animationprocedure = procedure;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        data.add(new AnimationController<>(this, "movement", 0, this::movementPredicate));
+        data.add(new AnimationController<>(this, "procedure", 0, this::procedurePredicate));
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
+    }
+}
