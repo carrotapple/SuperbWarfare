@@ -1,28 +1,35 @@
 modLoader = "javafml"
-loaderVersion = "[47,)"
-license = "Academic Free License v3.0"
+loaderVersion = "${loader_version_range}"
+license = "${mod_license}"
 
 [[mods]]
 modId = "superbwarfare"
-version = "1.0.0"
+version = "${mod_version}"
 displayName = "Superb Warfare"
-displayURL = "https://mcreator.net"
-credits = "Created using mod maker MCreator - https://mcreator.net/about"
-authors = "Atsuishio, MCreator"
+authors = "${mod_authors}"
+description = "${mod_description}"
+
+[[dependencies.superbwarfare]]
+modId = "forge" #mandatory
+mandatory = true #mandatory
+versionRange = "${forge_version_range}" #mandatory
+ordering = "NONE"
+side = "BOTH"# Here's another dependency
 
 [[dependencies.superbwarfare]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.20.1]"
+versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.superbwarfare]]
-modId = "curios_api"
+modId = "curios"
 mandatory = false
-versionRange = "[0,)"
+versionRange = "[5.4.0,)"
 ordering = "NONE"
 side = "BOTH"
+
 [[dependencies.superbwarfare]]
 modId = "geckolib"
 mandatory = false
