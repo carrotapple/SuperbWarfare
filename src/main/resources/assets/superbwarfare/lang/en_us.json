@@ -314,6 +314,9 @@
   "death.attack.burn": "%1$s被烧糊了",
   "death.attack.burn.entity": "%1$s被%2$s烧成了焦炭",
   "death.attack.burn.item": "%1$s被%2$s烧成了焦炭",
+  "death.attack.drone_hit": "%1$s被无人机叶片切碎了",
+  "death.attack.drone_hit.entity": "%1$s被%2$s用无人机叶片切碎了",
+  "death.attack.drone_hit.item": "%1$s被%2$s用无人机叶片切碎了",
 
   "gui.superbwarfare.mortar_gui.button_set": "Confirm",
 

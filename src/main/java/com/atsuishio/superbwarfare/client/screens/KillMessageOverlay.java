@@ -1,15 +1,15 @@
 package com.atsuishio.superbwarfare.client.screens;
 
-import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
 import com.atsuishio.superbwarfare.event.KillMessageHandler;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.tools.DamageTypeTool;
 import com.atsuishio.superbwarfare.tools.PlayerKillRecord;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.core.registries.Registries;
@@ -42,6 +42,7 @@ public class KillMessageOverlay {
     private static final ResourceLocation SHOCK = ModUtils.loc("textures/screens/damage_types/shock.png");
     private static final ResourceLocation BLOOD_CRYSTAL = ModUtils.loc("textures/screens/damage_types/blood_crystal.png");
     private static final ResourceLocation BURN = ModUtils.loc("textures/screens/damage_types/burn.png");
+    private static final ResourceLocation DRONE = ModUtils.loc("textures/screens/damage_types/drone.png");
 
     private static final ResourceLocation WORLD_PEACE_STAFF = ModUtils.loc("textures/gun_icon/compat/world_peace_staff.png");
 
@@ -272,7 +273,9 @@ public class KillMessageOverlay {
                     icon = SHOCK;
                 } else if (record.damageType == ModDamageTypes.BURN || record.damageType == DamageTypes.IN_FIRE || record.damageType == DamageTypes.ON_FIRE || record.damageType == DamageTypes.LAVA) {
                     icon = BURN;
-                } else {
+                }  else if (record.damageType == ModDamageTypes.DRONE_HIT) {
+                    icon = DRONE;
+                }else {
                     icon = GENERIC;
                 }
             }

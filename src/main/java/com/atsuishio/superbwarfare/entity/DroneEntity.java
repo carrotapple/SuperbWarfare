@@ -9,6 +9,7 @@ import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.Monitor;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
+import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -33,12 +34,16 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
@@ -48,6 +53,7 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -214,9 +220,9 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
         this.entityData.set(MOVE_Y, Mth.lerp(0.5f, this.entityData.get(MOVE_Y), 0));
 
         this.setDeltaMovement(new Vec3(
-                this.getDeltaMovement().x + -this.entityData.get(MOVE_Z) * 0.1f * this.getLookAngle().x,
+                this.getDeltaMovement().x + -this.entityData.get(MOVE_Z) * 0.07f * this.getLookAngle().x,
                 this.getDeltaMovement().y + (this.onGround() ? 0.059 : 0) + -this.entityData.get(MOVE_Y) * 0.05f,
-                this.getDeltaMovement().z + -this.entityData.get(MOVE_Z) * 0.1f * this.getLookAngle().z
+                this.getDeltaMovement().z + -this.entityData.get(MOVE_Z) * 0.07f * this.getLookAngle().z
         ));
 
         this.move = this.getPersistentData().getBoolean("left")
@@ -229,7 +235,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
         Vec3 vec = this.getDeltaMovement();
         if (this.getDeltaMovement().horizontalDistanceSqr() < 0.75) {
             if (this.move) {
-                this.setDeltaMovement(vec.multiply(1.04, 0.99, 1.04));
+                this.setDeltaMovement(vec.multiply(1.035, 0.99, 1.035));
             }
         }
 
@@ -242,8 +248,22 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
                 if (stack.getOrCreateTag().getBoolean("Using") && controller instanceof ServerPlayer serverPlayer) {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.DRONE_SOUND.get(), 100, 1);
                 }
-
                 controller.setYRot(controller.getYRot() - 5 * this.entityData.get(ROT_X) * Mth.abs(this.entityData.get(MOVE_Z)));
+            }
+
+            float f = 0.7f;
+            AABB aabb = AABB.ofSize(this.getEyePosition(), f, 0.3, f);
+            var level = this.level();
+            final Vec3 center = new Vec3(this.getX(), this.getY(), this.getZ());
+            for (Entity target : level.getEntitiesOfClass(Entity.class, aabb, e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
+                if (this != target && target != null) {
+                    target.hurt(ModDamageTypes.causeDroneHitDamage(this.level().registryAccess(), this, controller), 1);
+                    target.invulnerableTime = 0;
+                    if (target instanceof Mob mobEntity) {
+                        mobEntity.setTarget(this);
+                    }
+                    this.hurt(new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.EXPLOSION), Objects.requireNonNullElse(controller, this)), 1);
+                }
             }
         }
 
@@ -387,21 +407,51 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             this.setDeltaMovement(vec3.multiply(0.9, 0.8, 0.9));
         }
 
-
-        double x0 = this.getX() - this.xOld;
-        double y0 = this.getY() - this.yOld;
-        double z0 = this.getZ() - this.zOld;
-
-        lastTickSpeed = Math.sqrt(x0 * x0 + y0 * y0 + z0 * z0);
-
-
-        if (controller != null) {
-            controller.displayClientMessage(Component.literal( new java.text.DecimalFormat("##.####").format(Mth.abs((float) (this.getDeltaMovement().length() - lastTickSpeed)))), false);
+        lastTickSpeed = this.getDeltaMovement().length();
+        crash(controller);
+        float f = 0.7f;
+        AABB aabb = AABB.ofSize(this.getEyePosition(), f, 0.3, f);
+        var level = this.level();
+        final Vec3 center = new Vec3(this.getX(), this.getY(), this.getZ());
+        for (Entity target : level.getEntitiesOfClass(Entity.class, aabb, e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
+            if (this != target && target != null) {
+                hitEntityCrash(controller, target);
+            }
         }
 
-        if (Mth.abs((float) (this.getDeltaMovement().length() - lastTickSpeed)) > 1.0) {
-            this.hurt(new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.EXPLOSION), controller), 10000);
+    }
+
+    public void crash(Player controller) {
+        if (isHit() && lastTickSpeed > 0.3) {
+            this.hurt(new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.EXPLOSION), Objects.requireNonNullElse(controller, this)), (float) ((this.entityData.get(KAMIKAZE) ? 6 : 2) * lastTickSpeed));
         }
+    }
+
+    public void hitEntityCrash(Player controller, Entity target) {
+        if (lastTickSpeed > 0.2) {
+            if (this.entityData.get(KAMIKAZE) && 6 * lastTickSpeed > this.getHealth()) {
+                target.hurt(ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, controller), 600);
+            }
+            target.hurt(ModDamageTypes.causeDroneHitDamage(this.level().registryAccess(), this, controller), (float) (5 * lastTickSpeed));
+            if (target instanceof Mob mobEntity) {
+                mobEntity.setTarget(this);
+            }
+            this.hurt(new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.EXPLOSION), Objects.requireNonNullElse(controller, this)), (float) ((this.entityData.get(KAMIKAZE) ? 6 : 0.5) * lastTickSpeed));
+        }
+    }
+
+    public boolean isHit() {
+        float f = 0.7f;
+        AABB aabb = AABB.ofSize(this.getEyePosition(), f, 0.3, f);
+        return BlockPos.betweenClosedStream(aabb).anyMatch((block) -> {
+            BlockState blockstate = this.level().getBlockState(block);
+            return !blockstate.isAir() && blockstate.isSuffocating(this.level(), block) && Shapes.joinIsNotEmpty(blockstate.getCollisionShape(this.level(), block).move(block.getX(), block.getY(), block.getZ()), Shapes.create(aabb), BooleanOp.AND);
+        });
+    }
+
+    @Override
+    public boolean canBeCollidedWith() {
+        return super.canBeCollidedWith();
     }
 
     @Override
@@ -409,7 +459,6 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
         super.die(source);
 
         String id = this.entityData.get(CONTROLLER);
-
         UUID uuid;
         try {
             uuid = UUID.fromString(id);
@@ -431,28 +480,29 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             kamikazeExplosion(source.getEntity());
         }
 
+        ItemStack stack = new ItemStack(ModItems.RGO_GRENADE.get(),this.entityData.get(AMMO));
+
+        if (this.level() instanceof ServerLevel level) {
+            ItemEntity itemEntity = new ItemEntity(level, this.getX(), this.getY(), this.getZ(), stack);
+            itemEntity.setPickUpDelay(10);
+            level.addFreshEntity(itemEntity);
+        }
+
         if (level() instanceof ServerLevel) {
             level().explode(null, this.getX(), this.getY(), this.getZ(), 0, Level.ExplosionInteraction.NONE);
         }
         this.discard();
-
     }
 
+
     private void kamikazeExplosion(Entity source) {
-
-        CustomExplosion explosionCore = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), source, source), 1000,
-                this.getX(), this.getY(), this.getZ(), 4f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
-        explosionCore.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosionCore);
-        explosionCore.finalizeExplosion(false);
-
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), source, source), 150,
-                this.getX(), this.getY(), this.getZ(), 12.5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), source, source), 125,
+                this.getX(), this.getY(), this.getZ(), 7.5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
+        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
     }
 
     @Override
@@ -480,15 +530,9 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
     }
 
     @Override
-    protected void pushEntities() {
-    }
-
-    @Override
     public HumanoidArm getMainArm() {
         return HumanoidArm.RIGHT;
     }
-
-
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
