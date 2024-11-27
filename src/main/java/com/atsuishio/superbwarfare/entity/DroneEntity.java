@@ -12,7 +12,6 @@ import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -36,19 +35,11 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-import net.minecraftforge.items.wrapper.EntityArmorInvWrapper;
-import net.minecraftforge.items.wrapper.EntityHandsInvWrapper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -57,8 +48,6 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -76,6 +65,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private boolean move = false;
+    public static double lastTickSpeed = 0;
 
 
     public DroneEntity(PlayMessages.SpawnEntity packet, Level world) {
@@ -177,11 +167,10 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             this.entityData.set(ROT_Z, compound.getFloat("rotZ"));
     }
 
-
-
     @Override
     public void baseTick() {
         super.baseTick();
+
         if (!this.onGround()) {
             if (this.getPersistentData().getBoolean("left")) {
                 this.entityData.set(MOVE_X, -1.5f);
@@ -397,6 +386,22 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
         if (!this.move) {
             this.setDeltaMovement(vec3.multiply(0.9, 0.8, 0.9));
         }
+
+
+        double x0 = this.getX() - this.xOld;
+        double y0 = this.getY() - this.yOld;
+        double z0 = this.getZ() - this.zOld;
+
+        lastTickSpeed = Math.sqrt(x0 * x0 + y0 * y0 + z0 * z0);
+
+
+        if (controller != null) {
+            controller.displayClientMessage(Component.literal( new java.text.DecimalFormat("##.####").format(Mth.abs((float) (this.getDeltaMovement().length() - lastTickSpeed)))), false);
+        }
+
+        if (Mth.abs((float) (this.getDeltaMovement().length() - lastTickSpeed)) > 1.0) {
+            this.hurt(new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.EXPLOSION), controller), 10000);
+        }
     }
 
     @Override
@@ -451,22 +456,12 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
     }
 
     @Override
-    public EntityDimensions getDimensions(Pose p_33597_) {
-        return super.getDimensions(p_33597_).scale((float) 1);
-    }
-
-    @Override
     protected void checkFallDamage(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
     }
 
     @Override
     public boolean isNoGravity() {
         return !this.onGround();
-    }
-
-    @Override
-    public HumanoidArm getMainArm() {
-        return HumanoidArm.RIGHT;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -485,33 +480,18 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
     }
 
     @Override
+    protected void pushEntities() {
+    }
+
+    @Override
+    public HumanoidArm getMainArm() {
+        return HumanoidArm.RIGHT;
+    }
+
+
+
+    @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    private final ItemStackHandler inventory = new ItemStackHandler(9) {
-        @Override
-        public int getSlotLimit(int slot) {
-            return super.getSlotLimit(slot);
-        }
-    };
-    private final CombinedInvWrapper combined = new CombinedInvWrapper(inventory, new EntityHandsInvWrapper(this), new EntityArmorInvWrapper(this));
-
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction side) {
-        if (this.isAlive() && capability == ForgeCapabilities.ITEM_HANDLER && side == null)
-            return LazyOptional.of(() -> combined).cast();
-        return super.getCapability(capability, side);
-    }
-
-    @Override
-    protected void dropEquipment() {
-        super.dropEquipment();
-        for (int i = 0; i < inventory.getSlots(); ++i) {
-            ItemStack itemstack = inventory.getStackInSlot(i);
-            if (!itemstack.isEmpty() && !EnchantmentHelper.hasVanishingCurse(itemstack)) {
-                this.spawnAtLocation(itemstack);
-            }
-        }
     }
 }
