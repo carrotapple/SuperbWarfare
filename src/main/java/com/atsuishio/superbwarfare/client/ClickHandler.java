@@ -310,7 +310,9 @@ public class ClickHandler {
                 }
             } else {
                 ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(0));
-                ClientEventHandler.holdFire = true;
+                if (!stack.is(ModItems.BOCEK.get())) {
+                    ClientEventHandler.holdFire = true;
+                }
                 if (GunsTool.getGunIntTag(stack, "FireMode") == 1 && ClientEventHandler.burstFireSize == 0) {
                     ClientEventHandler.burstFireSize = (int) stack.getOrCreateTag().getDouble("burst_size");
                 }

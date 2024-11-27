@@ -1078,6 +1078,7 @@ public class ClientEventHandler {
                 shellIndexTime[i] = 0;
             }
             zoom = false;
+            holdFire = false;
             ClickHandler.switchZoom = false;
         }
     }
