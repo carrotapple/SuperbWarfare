@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class PerkHelper {
+
     private static final String TAG_PERK_ID = "id";
     private static final String TAG_PERK_LEVEL = "level";
     private static final String TAG_PERK = "Perks";
@@ -182,7 +183,7 @@ public class PerkHelper {
     public static final Predicate<Perk> SHOTGUN_PERKS = perk -> {
         switch (perk.type) {
             case AMMO -> {
-                return true;
+                return !perk.descriptionId.equals("butterfly_bullet");
             }
             case FUNCTIONAL -> {
                 return perk == ModPerks.SUBSISTENCE.get() || perk == ModPerks.POWERFUL_ATTRACTION.get() || perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FIELD_DOCTOR.get();
@@ -219,7 +220,7 @@ public class PerkHelper {
     public static final Predicate<Perk> HANDGUN_PERKS = perk -> {
         switch (perk.type) {
             case AMMO -> {
-                return true;
+                return !perk.descriptionId.equals("butterfly_bullet");
             }
             case FUNCTIONAL -> {
                 return perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FIELD_DOCTOR.get() ||
@@ -237,7 +238,7 @@ public class PerkHelper {
     public static final Predicate<Perk> SNIPER_RIFLE_PERKS = perk -> {
         switch (perk.type) {
             case AMMO -> {
-                return true;
+                return !perk.descriptionId.equals("butterfly_bullet");
             }
             case FUNCTIONAL -> {
                 return perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FOURTH_TIMES_CHARM.get() || perk == ModPerks.POWERFUL_ATTRACTION.get();
