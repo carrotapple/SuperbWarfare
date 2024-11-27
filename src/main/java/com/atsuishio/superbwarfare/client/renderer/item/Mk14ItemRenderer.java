@@ -1,12 +1,14 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
+import com.atsuishio.superbwarfare.client.ItemModelHelper;
 import com.atsuishio.superbwarfare.client.layer.Mk14Layer;
 import com.atsuishio.superbwarfare.client.model.item.Mk14ItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.item.gun.rifle.Mk14Item;
+import com.atsuishio.superbwarfare.tools.GunsTool;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -83,16 +85,40 @@ public class Mk14ItemRenderer extends GeoItemRenderer<Mk14Item> {
         if (player != null) {
             ItemStack itemStack = player.getMainHandItem();
 
-            if (name.equals("rex")) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || !ClientEventHandler.zoom);
+            if (name.equals("qiaojia")) {
+                bone.setHidden(GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 0);
             }
 
-            if (name.equals("jing") || name.equals("qiangguan")) {
+            if (name.equals("Cross1")) {
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                        || !ClientEventHandler.zoom
+                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
+            }
+
+            if (name.equals("Cross2")) {
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                        || !ClientEventHandler.zoom
+                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2);
+            }
+
+            if (name.equals("Cross3")) {
+                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                        || !ClientEventHandler.zoom
+                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 3);
+            }
+
+            if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2
+                    && (name.equals("hidden"))) {
+                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && ClientEventHandler.zoom);
+            }
+
+            if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 3
+                    && (name.equals("jing") || name.equals("yugu") || name.equals("qiangguan") || name.equals("Barrel"))) {
                 bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && ClientEventHandler.zoom);
             }
 
             if (name.equals("flare")) {
-                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
+                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {
                     bone.setHidden(true);
                 } else {
                     bone.setHidden(false);
@@ -101,6 +127,9 @@ public class Mk14ItemRenderer extends GeoItemRenderer<Mk14Item> {
                     bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
                 }
             }
+
+            ItemModelHelper.handleGunAttachments(bone, itemStack, name);
+
         }
 
         if (this.transformType.firstPerson() && renderingArms) {

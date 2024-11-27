@@ -2,20 +2,19 @@ package com.atsuishio.superbwarfare.event;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.ClickHandler;
-import com.atsuishio.superbwarfare.entity.ICannonEntity;
-import com.atsuishio.superbwarfare.init.*;
-import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.tools.EntityFindUtil;
-import com.atsuishio.superbwarfare.tools.GunsTool;
-import com.atsuishio.superbwarfare.tools.MillisTimer;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.DroneEntity;
+import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.common.ammo.CannonShellItem;
+import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShootMessage;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
+import com.atsuishio.superbwarfare.tools.EntityFindUtil;
+import com.atsuishio.superbwarfare.tools.GunsTool;
+import com.atsuishio.superbwarfare.tools.MillisTimer;
 import com.atsuishio.superbwarfare.tools.SeekTool;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -275,8 +274,8 @@ public class ClientEventHandler {
         //左轮类
 
         if (clientTimer.getProgress() == 0 && stack.is(ModTags.Items.REVOLVER) && ((holdFire && !stack.getOrCreateTag().getBoolean("DA")) || (stack.getOrCreateTag().getInt("bolt_action_anim") < 7 && stack.getOrCreateTag().getInt("bolt_action_anim") > 2) || stack.getOrCreateTag().getBoolean("canImmediatelyShoot"))) {
-            revolverPreTime = Mth.clamp(revolverPreTime + 0.21 * times, 0, 1);
-            revolverWheelPreTime = Mth.clamp(revolverWheelPreTime + 0.23 * times, 0, revolverPreTime > 0.7 ? 1 : 0.55);
+            revolverPreTime = Mth.clamp(revolverPreTime + 0.3 * times, 0, 1);
+            revolverWheelPreTime = Mth.clamp(revolverWheelPreTime + 0.32 * times, 0, revolverPreTime > 0.7 ? 1 : 0.55);
         } else if (!stack.getOrCreateTag().getBoolean("DA") && !stack.getOrCreateTag().getBoolean("canImmediatelyShoot")) {
             revolverPreTime = Mth.clamp(revolverPreTime - 1.2 * times, 0, 1);
         }

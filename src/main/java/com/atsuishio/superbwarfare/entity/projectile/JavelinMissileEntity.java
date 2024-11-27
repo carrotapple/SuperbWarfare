@@ -1,15 +1,15 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
-import com.atsuishio.superbwarfare.init.ModEntities;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
-import com.atsuishio.superbwarfare.tools.ProjectileTool;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.entity.AnimatedEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
+import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
+import com.atsuishio.superbwarfare.tools.ParticleTool;
+import com.atsuishio.superbwarfare.tools.ProjectileTool;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -48,12 +48,12 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class JavelinMissileEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity {
-    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(JavelinMissileEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<String> TARGET_UUID = SynchedEntityData.defineId(JavelinMissileEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Boolean> TOP = SynchedEntityData.defineId(JavelinMissileEntity.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Float> TARGET_X = SynchedEntityData.defineId(JavelinMissileEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> TARGET_Y = SynchedEntityData.defineId(JavelinMissileEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> TARGET_Z = SynchedEntityData.defineId(JavelinMissileEntity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
-    public String animationprocedure = "empty";
     private float monsterMultiplier = 0.0f;
     private float damage = 700.0f;
 
@@ -88,6 +88,12 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
         this.entityData.set(TARGET_UUID, uuid);
     }
 
+    public void setTargetPosition(Float targetX, Float targetY, Float targetZ) {
+        this.entityData.set(TARGET_X, targetX);
+        this.entityData.set(TARGET_Y, targetY);
+        this.entityData.set(TARGET_Z, targetZ);
+    }
+
     public void setAttackMode(boolean mode) {
         this.entityData.set(TOP, mode);
     }
@@ -96,6 +102,9 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
     protected void defineSynchedData() {
         this.entityData.define(TARGET_UUID, "none");
         this.entityData.define(TOP, false);
+        this.entityData.define(TARGET_X, 0f);
+        this.entityData.define(TARGET_Y, 0f);
+        this.entityData.define(TARGET_Z, 0f);
     }
 
     @Override
@@ -116,9 +125,9 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
         }
 
         if (entity instanceof Monster monster) {
-            monster.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage * damageMultiplier);
+            monster.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), (entityData.get(TOP) ? 1 : 0.7f) * this.damage * damageMultiplier);
         } else {
-            entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
+            entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), (entityData.get(TOP) ? 1 : 0.7f) * this.damage);
         }
 
         if (entity instanceof LivingEntity) {
@@ -129,7 +138,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        entity, this.damage, 6.0f, this.monsterMultiplier);
+                        entity, 0.2f * this.damage, 4.0f, this.monsterMultiplier);
             }
         }
 
@@ -155,7 +164,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.damage, 6.0f, this.monsterMultiplier);
+                        this, 0.2f * this.damage, 4.0f, this.monsterMultiplier);
             }
         }
 
@@ -165,7 +174,14 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
     @Override
     public void tick() {
         super.tick();
+
         Entity entity = EntityFindUtil.findEntity(this.level(), entityData.get(TARGET_UUID));
+
+        if (entity != null && entity.level() instanceof ServerLevel) {
+            this.entityData.set(TARGET_X, (float) entity.getX());
+            this.entityData.set(TARGET_Y, (float) entity.getEyeY());
+            this.entityData.set(TARGET_Z, (float) entity.getZ());
+        }
 
         if (this.tickCount == 4) {
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
@@ -175,21 +191,19 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
         }
 
         if (this.tickCount > 3) {
-            if (entity != null) {
-                if (entityData.get(TOP)) {
-                    double px = this.getX();
-                    double ex = entity.getX();
-                    double pz = this.getZ();
-                    double ez = entity.getZ();
+            if (entityData.get(TOP)) {
+                double px = this.getX();
+                double ex = this.entityData.get(TARGET_X);
+                double pz = this.getZ();
+                double ez = this.entityData.get(TARGET_Z);
 
-                    if (Math.sqrt(Math.pow(px - ex, 2) + Math.pow(pz - ez, 2)) > 10) {
-                        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(), entity.getY() + Mth.clamp(4 * this.tickCount, 0, 90), entity.getZ()));
-                    } else {
-                        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(), entity.getEyeY() + (entity instanceof EnderDragon ? -3 : 0), entity.getZ()));
-                    }
+                if (Math.sqrt(Math.pow(px - ex, 2) + Math.pow(pz - ez, 2)) > 10) {
+                    this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y) + Mth.clamp(4 * this.tickCount, 0, 90), this.entityData.get(TARGET_Z)));
                 } else {
-                    this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(entity.getX(), entity.getEyeY() + (entity instanceof EnderDragon ? -3 : 0), entity.getZ()));
+                    this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y) + (entity instanceof EnderDragon ? -3 : 0), this.entityData.get(TARGET_Z)));
                 }
+            } else {
+                this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y) + (entity instanceof EnderDragon ? -3 : 0), this.entityData.get(TARGET_Z)));
             }
         }
 
@@ -208,7 +222,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.damage, 8.0f, this.monsterMultiplier);
+                        this, 0.2f * this.damage, 4.0f, this.monsterMultiplier);
             }
             this.discard();
         }
@@ -228,23 +242,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
     }
 
     private PlayState movementPredicate(AnimationState<JavelinMissileEntity> event) {
-        if (this.animationprocedure.equals("empty")) {
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.jvm.idle"));
-        }
-        return PlayState.STOP;
-    }
-
-    private PlayState procedurePredicate(AnimationState<JavelinMissileEntity> event) {
-        if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
-            if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                this.animationprocedure = "empty";
-                event.getController().forceAnimationReset();
-            }
-        } else if (animationprocedure.equals("empty")) {
-            return PlayState.STOP;
-        }
-        return PlayState.CONTINUE;
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.jvm.idle"));
     }
 
     @Override
@@ -253,22 +251,19 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
     }
 
     public String getSyncedAnimation() {
-        return this.entityData.get(ANIMATION);
+        return null;
     }
 
     public void setAnimation(String animation) {
-        this.entityData.set(ANIMATION, animation);
     }
 
     @Override
     public void setAnimationProcedure(String procedure) {
-        this.animationprocedure = procedure;
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         data.add(new AnimationController<>(this, "movement", 0, this::movementPredicate));
-        data.add(new AnimationController<>(this, "procedure", 0, this::procedurePredicate));
     }
 
     @Override

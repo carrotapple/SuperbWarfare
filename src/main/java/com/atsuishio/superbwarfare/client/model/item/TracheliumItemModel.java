@@ -1,12 +1,12 @@
 package com.atsuishio.superbwarfare.client.model.item;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.event.PlayerEventHandler;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.event.PlayerEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.handgun.Trachelium;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -52,14 +52,13 @@ public class TracheliumItemModel extends GeoModel<Trachelium> {
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
         CoreGeoBone scope2 = getAnimationProcessor().getBone("Scope2");
-//        CoreGeoBone scope3 = getAnimationProcessor().getBone("Scope3");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        float times = 0.6f * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
+        float times = 0.4f * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
         double zt = ClientEventHandler.zoomTime;
         double zp = ClientEventHandler.zoomPos;
         double zpz = ClientEventHandler.zoomPosZ;
@@ -73,7 +72,7 @@ public class TracheliumItemModel extends GeoModel<Trachelium> {
         double turnRotX = ClientEventHandler.turnRot[0];
         double turnRotY = ClientEventHandler.turnRot[1];
         double turnRotZ = ClientEventHandler.turnRot[2];
-        double fpz = ClientEventHandler.firePosZ * 13 * times;
+        double fpz = ClientEventHandler.firePosZ * 8 * times;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
@@ -131,20 +130,20 @@ public class TracheliumItemModel extends GeoModel<Trachelium> {
             };
         }
 
-        fireRotY = (float) Mth.lerp(0.3f * times, fireRotY, 0.2f * ClientEventHandler.recoilHorizon * fpz);
+        fireRotY = (float) Mth.lerp(0.2f * times, fireRotY, 0.2f * ClientEventHandler.recoilHorizon * fpz);
         fireRotZ = (float) Mth.lerp(2f * times, fireRotZ, (0.4f + 0.5 * fpz) * ClientEventHandler.recoilHorizon);
 
         shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
         shen.setPosY((float) (0.2f * fp + 0.24f * fr));
         shen.setPosZ((float) (1.225 * fp + 0.1f * fr + 0.55 * fpz));
-        shen.setRotX((float) (0.2f * fp + 0.2f * fr + 0.2f * fpz));
+        shen.setRotX((float) (0.14f * fp + 0.14f * fr + 0.14f * fpz));
         shen.setRotY(fireRotY);
         shen.setRotZ(fireRotZ);
 
         shen.setPosX((float) (shen.getPosX() * (1 - 0.4 * zt)));
         shen.setPosY((float) (shen.getPosY() * (1 - 0.5 * zt) * (PlayerEventHandler.isProne(player) ? 0.03 : 1)));
         shen.setPosZ((float) (shen.getPosZ() * (1 - 0.7 * zt) * (PlayerEventHandler.isProne(player) ? 0.4 : 1)));
-        shen.setRotX((float) (shen.getRotX() * (1 - 0.27 * zt) * (barrelType == 1 ? 0.4 : 1) * (stockType == 1 ? 0.6 : 1) * (gripType == 1 ? 0.8 : 1) * (PlayerEventHandler.isProne(player) ? 0.03 : 1)));
+        shen.setRotX((float) (shen.getRotX() * (1 - 0.27 * zt) * (barrelType == 1 ? 0.4 : 1.2) * (stockType == 2 ? 0.6 : 1.2) * (gripType == 1 ? 0.8 : 1.2) * (PlayerEventHandler.isProne(player) && gripType == 3 ? 0.03 : 1.2)));
         shen.setRotY((float) (shen.getRotY() * (1 - 0.7 * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.65 * zt)));
 
@@ -156,6 +155,12 @@ public class TracheliumItemModel extends GeoModel<Trachelium> {
         CoreGeoBone ammohole = getAnimationProcessor().getBone("ammohole");
         ammo.setRotZ(60 * Mth.DEG_TO_RAD * (float) ClientEventHandler.revolverWheelPreTime);
         ammohole.setRotZ(-60 * Mth.DEG_TO_RAD * (float) ClientEventHandler.revolverWheelPreTime);
+
+        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
+            lun.setRotZ(0);
+            ammo.setRotZ(0);
+            ammohole.setRotZ(0);
+        }
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));

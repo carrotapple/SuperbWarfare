@@ -192,6 +192,9 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> MK_14_FIRE_3P = REGISTRY.register("mk_14_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mk_14_fire_3p")));
     public static final RegistryObject<SoundEvent> MK_14_FAR = REGISTRY.register("mk_14_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mk_14_far")));
     public static final RegistryObject<SoundEvent> MK_14_VERYFAR = REGISTRY.register("mk_14_veryfar", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mk_14_veryfar")));
+    public static final RegistryObject<SoundEvent> MK_14_FIRE_1P_S = REGISTRY.register("mk_14_fire_1p_s", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mk_14_fire_1p_s")));
+    public static final RegistryObject<SoundEvent> MK_14_FIRE_3P_S  = REGISTRY.register("mk_14_fire_3p_s", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mk_14_fire_3p_s")));
+    public static final RegistryObject<SoundEvent> MK_14_FAR_S  = REGISTRY.register("mk_14_far_s", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mk_14_far_s")));
     public static final RegistryObject<SoundEvent> MK_14_RELOAD_NORMAL = REGISTRY.register("mk_14_reload_normal", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mk_14_reload_normal")));
     public static final RegistryObject<SoundEvent> MK_14_RELOAD_EMPTY = REGISTRY.register("mk_14_reload_empty", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mk_14_reload_empty")));
 

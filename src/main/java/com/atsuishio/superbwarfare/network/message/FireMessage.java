@@ -1,17 +1,18 @@
 package com.atsuishio.superbwarfare.network.message;
 
-import com.atsuishio.superbwarfare.entity.projectile.*;
-import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.entity.projectile.*;
 import com.atsuishio.superbwarfare.event.GunEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
+import com.atsuishio.superbwarfare.tools.EntityFindUtil;
+import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SeekTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.particles.ParticleTypes;
@@ -490,10 +491,15 @@ public class FireMessage {
                 missileEntity.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
             }
 
+            Entity targetEntity = EntityFindUtil.findEntity(player.level(), tag.getString("TargetEntity"));
+
             missileEntity.setPos(player.getX() + firePos.x, player.getEyeY() + firePos.y, player.getZ() + firePos.z);
             missileEntity.shoot(player.getLookAngle().x, player.getLookAngle().y + 0.3, player.getLookAngle().z, 3f, 1);
             missileEntity.setTargetUuid(tag.getString("TargetEntity"));
             missileEntity.setAttackMode(tag.getBoolean("TopMode"));
+            if (targetEntity != null) {
+                missileEntity.setTargetPosition((float) targetEntity.getX(), (float) targetEntity.getEyeY(), (float) targetEntity.getZ());
+            }
             level.addFreshEntity(missileEntity);
         }
 

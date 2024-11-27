@@ -1,21 +1,17 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
+import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.entity.DroneEntity;
 import com.atsuishio.superbwarfare.init.ModEntities;
+import com.atsuishio.superbwarfare.init.ModItems;
+import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.ProjectileTool;
-import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.entity.AnimatedEntity;
-import com.atsuishio.superbwarfare.entity.DroneEntity;
-import com.atsuishio.superbwarfare.init.ModItems;
-import com.atsuishio.superbwarfare.init.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -40,12 +36,9 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity {
-    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(RgoGrenadeEntity.class, EntityDataSerializers.STRING);
+public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEntity {
     private int fuse = 80;
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public String animationProcedure = "empty";
 
     public RgoGrenadeEntity(EntityType<? extends RgoGrenadeEntity> type, Level world) {
         super(type, world);
@@ -132,19 +125,6 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
     @Override
     protected float getGravity() {
         return 0.07F;
-    }
-
-    public String getSyncedAnimation() {
-        return this.entityData.get(ANIMATION);
-    }
-
-    public void setAnimation(String animation) {
-        this.entityData.set(ANIMATION, animation);
-    }
-
-    @Override
-    public void setAnimationProcedure(String procedure) {
-        this.animationProcedure = procedure;
     }
 
     @Override
