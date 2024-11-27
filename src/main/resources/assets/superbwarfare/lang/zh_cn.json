@@ -250,6 +250,8 @@
   "des.superbwarfare.he_bullet": "子弹在命中后会爆炸",
   "item.superbwarfare.incendiary_bullet": "燃烧弹",
   "des.superbwarfare.incendiary_bullet": "子弹在命中后点燃目标",
+  "item.superbwarfare.butterfly_bullet": "蝴蝶弹",
+  "des.superbwarfare.butterfly_bullet": "将子弹替换成骤雨之蝶",
 
   "item.superbwarfare.heal_clip": "治疗弹匣",
   "des.superbwarfare.heal_clip": "最后一击后短时间内填装，可治疗自身和附近队友",

@@ -250,6 +250,8 @@
   "des.superbwarfare.he_bullet": "The bullet will explode after hitting the target",
   "item.superbwarfare.incendiary_bullet": "Incendiary Bullet",
   "des.superbwarfare.incendiary_bullet": "The bullet will ignites the target after hitting the target",
+  "item.superbwarfare.butterfly_bullet": "Butterfly Bullet",
+  "des.superbwarfare.butterfly_bullet": "Replace the bullet with Rain Shower Butterfly",
 
   "item.superbwarfare.heal_clip": "Heal Clip",
   "des.superbwarfare.heal_clip": "Reloading after dealing a final blow will heal you and your nearby allies",
