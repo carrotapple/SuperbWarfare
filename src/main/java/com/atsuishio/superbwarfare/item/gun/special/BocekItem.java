@@ -2,15 +2,15 @@ package com.atsuishio.superbwarfare.item.gun.special;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.renderer.item.BocekItemRenderer;
-import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.item.gun.GunItem;
-import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.client.tooltip.component.BocekImageComponent;
+import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.AnimatedItem;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.perk.Perk;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -159,7 +159,7 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public boolean canApplyPerk(Perk perk) {
         return switch (perk.type) {
-            case AMMO -> true;
+            case AMMO -> !perk.descriptionId.equals("butterfly_bullet");
             case FUNCTIONAL -> perk == ModPerks.FIELD_DOCTOR.get();
             case DAMAGE -> perk == ModPerks.MONSTER_HUNTER.get() || perk == ModPerks.KILLING_TALLY.get();
         };
