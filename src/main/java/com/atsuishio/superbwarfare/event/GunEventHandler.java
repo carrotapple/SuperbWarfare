@@ -20,6 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -33,6 +34,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Mod.EventBusSubscriber
@@ -205,7 +207,7 @@ public class GunEventHandler {
                 bypassArmorRate += ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (level - 1) : 0);
                 projectile.setRGB(ammoPerk.rgb);
 
-                if (ammoPerk.mobEffect.get() != null) {
+                if (!ammoPerk.mobEffects.get().isEmpty()) {
                     int amplifier;
                     if (perk.descriptionId.equals("blade_bullet")) {
                         amplifier = level / 3;
@@ -213,7 +215,11 @@ public class GunEventHandler {
                         amplifier = level - 1;
                     }
 
-                    projectile.effect(() -> new MobEffectInstance(ammoPerk.mobEffect.get(), 70 + 30 * level, amplifier));
+                    ArrayList<MobEffectInstance> mobEffectInstances = new ArrayList<>();
+                    for (MobEffect effect : ammoPerk.mobEffects.get()) {
+                        mobEffectInstances.add(new MobEffectInstance(effect, 70 + 30 * level, amplifier));
+                    }
+                    projectile.effect(mobEffectInstances);
                 }
             }
 

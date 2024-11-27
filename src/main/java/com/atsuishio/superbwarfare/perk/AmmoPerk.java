@@ -3,15 +3,17 @@ package com.atsuishio.superbwarfare.perk;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 
+import java.util.ArrayList;
 import java.util.function.Supplier;
 
 public class AmmoPerk extends Perk {
+
     public float bypassArmorRate;
     public float damageRate;
     public float speedRate;
     public boolean slug;
     public float[] rgb;
-    public Supplier<MobEffect> mobEffect;
+    public Supplier<ArrayList<MobEffect>> mobEffects;
 
     public AmmoPerk(AmmoPerk.Builder builder) {
         super(builder.descriptionId, builder.type);
@@ -20,10 +22,11 @@ public class AmmoPerk extends Perk {
         this.speedRate = builder.speedRate;
         this.slug = builder.slug;
         this.rgb = builder.rgb;
-        this.mobEffect = builder.mobEffect;
+        this.mobEffects = () -> builder.mobEffects;
     }
 
     public static class Builder {
+
         String descriptionId;
         Type type;
         float bypassArmorRate = 0.0f;
@@ -31,7 +34,7 @@ public class AmmoPerk extends Perk {
         float speedRate = 1.0f;
         boolean slug = false;
         float[] rgb = {1, 222 / 255f, 39 / 255f};
-        public Supplier<MobEffect> mobEffect = () -> null;
+        public ArrayList<MobEffect> mobEffects = new ArrayList<>();
 
         public Builder(String descriptionId, Type type) {
             this.descriptionId = descriptionId;
@@ -66,7 +69,7 @@ public class AmmoPerk extends Perk {
         }
 
         public AmmoPerk.Builder mobEffect(Supplier<MobEffect> mobEffect) {
-            this.mobEffect = mobEffect;
+            this.mobEffects.add(mobEffect.get());
             return this;
         }
     }

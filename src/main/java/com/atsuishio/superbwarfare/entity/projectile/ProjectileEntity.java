@@ -1,16 +1,16 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
-import com.atsuishio.superbwarfare.entity.*;
-import com.atsuishio.superbwarfare.init.*;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.block.BarbedWireBlock;
+import com.atsuishio.superbwarfare.entity.*;
+import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.Transcript;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.network.message.PlayerGunKillMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ExtendedEntityRayTraceResult;
 import com.atsuishio.superbwarfare.tools.HitboxHelper;
+import com.atsuishio.superbwarfare.tools.ParticleTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -64,7 +64,6 @@ import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 @SuppressWarnings({"unused", "UnusedReturnValue", "SuspiciousNameCombination"})
 public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnData, GeoEntity, AnimatedEntity {
@@ -101,7 +100,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     private boolean fireBullet = false;
     private int fireLevel = 0;
     private boolean dragonBreath = false;
-    private Supplier<MobEffectInstance> mobEffect = () -> null;
+    private final ArrayList<MobEffectInstance> mobEffects = new ArrayList<>();
 
     public ProjectileEntity(EntityType<? extends ProjectileEntity> p_i50159_1_, Level p_i50159_2_) {
         super(p_i50159_1_, p_i50159_2_);
@@ -554,8 +553,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
             performDamage(entity, this.damage, false);
         }
 
-        if (this.mobEffect.get() != null && entity instanceof LivingEntity living) {
-            living.addEffect(this.mobEffect.get(), this.shooter);
+        if (!this.mobEffects.isEmpty() && entity instanceof LivingEntity living) {
+            for (MobEffectInstance instance : this.mobEffects) {
+                living.addEffect(instance, this.shooter);
+            }
         }
 
         this.discard();
@@ -847,8 +848,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         return this;
     }
 
-    public ProjectileEntity effect(Supplier<MobEffectInstance> supplier) {
-        this.mobEffect = supplier;
+    public ProjectileEntity effect(ArrayList<MobEffectInstance> mobEffectInstances) {
+        this.mobEffects.addAll(mobEffectInstances);
         return this;
     }
 

@@ -24,6 +24,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -35,6 +36,7 @@ import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 import org.joml.Vector3d;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
@@ -266,8 +268,12 @@ public class FireMessage {
             bypassArmorRate += ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (level - 1) : 0);
             projectile.setRGB(ammoPerk.rgb);
 
-            if (ammoPerk.mobEffect.get() != null) {
-                projectile.effect(() -> new MobEffectInstance(ammoPerk.mobEffect.get(), 70 + 30 * level, level - 1));
+            if (!ammoPerk.mobEffects.get().isEmpty()) {
+                ArrayList<MobEffectInstance> mobEffectInstances = new ArrayList<>();
+                for (MobEffect effect : ammoPerk.mobEffects.get()) {
+                    mobEffectInstances.add(new MobEffectInstance(effect, 70 + 30 * level, level - 1));
+                }
+                projectile.effect(mobEffectInstances);
             }
         }
 
