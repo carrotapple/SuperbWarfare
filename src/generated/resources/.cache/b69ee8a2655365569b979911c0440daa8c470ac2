@@ -1,4 +1,4 @@
-// 1.20.1	2024-11-12T02:27:53.4617476	Item Models: superbwarfare
+// 1.20.1	2024-11-28T22:29:47.24523	Item Models: superbwarfare
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_47_blueprint.json
@@ -6,6 +6,7 @@ c993bddc0db9453ffbefa59f9ac9a74dba909038 assets/superbwarfare/models/item/ancien
 4b8fe8fbe5e64c3449ad539317254e4ed7188411 assets/superbwarfare/models/item/ap_head.json
 984c08ca6f6893a15721a85e30118f9e32c65c7f assets/superbwarfare/models/item/barbed_wire.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/bocek_blueprint.json
+140e04e98d9d1c0ee790ca43cb28ad549900ab44 assets/superbwarfare/models/item/cannon_core.json
 1e5b4637c3787516305dd3d1598f401a5e78a954 assets/superbwarfare/models/item/cemented_carbide_action.json
 b793716e367623d60461fc760de4f012c28fdc53 assets/superbwarfare/models/item/cemented_carbide_barrel.json
 b97ce523ca85cddff78abd9fd735295414ee07fd assets/superbwarfare/models/item/cemented_carbide_ingot.json
@@ -46,6 +47,8 @@ f66c351b4843ad4d4e086ccfb7d4d0221227d196 assets/superbwarfare/models/item/legend
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/minigun_blueprint.json
 c206cd345f459733399e0be4692586849ef0aac2 assets/superbwarfare/models/item/missile_engine.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/mk_14_blueprint.json
+13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/mk_42_blueprint.json
+13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/mle_1934_blueprint.json
 db96dbb75327701d7901c2de48a539bda9fe31c4 assets/superbwarfare/models/item/mortar_barrel.json
 3922427d3921d3de7195614780ee8f57dfc0ee6f assets/superbwarfare/models/item/mortar_base_plate.json
 ac9c6bc308bd741ada7f19d808d0c0722fceb976 assets/superbwarfare/models/item/mortar_bipod.json

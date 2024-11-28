@@ -42,6 +42,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.PRIMER);
         simpleItem(ModItems.AP_HEAD);
         simpleItem(ModItems.HE_HEAD);
+        simpleItem(ModItems.CANNON_CORE);
         simpleItem(ModItems.COPPER_PLATE);
         simpleItem(ModItems.STEEL_INGOT);
         simpleItem(ModItems.LEAD_INGOT);
@@ -126,6 +127,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         blueprintItem(ModItems.K_98_BLUEPRINT);
         blueprintItem(ModItems.MOSIN_NAGANT_BLUEPRINT);
         blueprintItem(ModItems.JAVELIN_BLUEPRINT);
+        blueprintItem(ModItems.MK_42_BLUEPRINT);
+        blueprintItem(ModItems.MLE_1934_BLUEPRINT);
 
         // blocks
         evenSimplerBlockItem(ModBlocks.BARBED_WIRE);

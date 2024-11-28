@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "superbwarfare:mk_42_blueprint"
+  },
+  "base": {
+    "item": "superbwarfare:cannon_core"
+  },
+  "addition": {
+    "tag":"forge:storage_blocks/steel"
+  },
+  "result": {
+    "item": "superbwarfare:container",
+    "nbt": {
+      "EntityType": "superbwarfare:mk_42"
+    }
+  }
+}

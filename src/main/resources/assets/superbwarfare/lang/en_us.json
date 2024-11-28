@@ -102,6 +102,8 @@
   "item.superbwarfare.k_98_blueprint": "KAR-98K Blueprint",
   "item.superbwarfare.mosin_nagant_blueprint": "Mosin Nagant Blueprint",
   "item.superbwarfare.javelin_blueprint": "Javelin Blueprint",
+  "item.superbwarfare.mk_42_blueprint": "5''/54 Mk42 Blueprint",
+  "item.superbwarfare.mle_1934_blueprint": "138.6mm50 Mle1934 R1938 Blueprint",
 
   "item.superbwarfare.common_material_pack": "Common Material Pack",
   "item.superbwarfare.rare_material_pack": "Rare Material Pack",
@@ -172,6 +174,7 @@
   "item.superbwarfare.primer": "Primer",
   "item.superbwarfare.ap_head": "AP Warhead",
   "item.superbwarfare.he_head": "HE Warhead",
+  "item.superbwarfare.cannon_core": "Cannon Core",
   "item.superbwarfare.dog_tag": "Dog Tag",
   "curios.identifier.dog_tag": "Dog Tag",
   "item.superbwarfare.shield_cell": "Cell",

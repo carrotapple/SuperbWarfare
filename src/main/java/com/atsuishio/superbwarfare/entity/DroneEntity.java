@@ -267,6 +267,10 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             }
         }
 
+        if (this.isInWater()) {
+            this.hurt(new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.EXPLOSION), Objects.requireNonNullElse(controller, this)), 0.25f + (float) (2 * lastTickSpeed));
+        }
+
         if (this.getPersistentData().getBoolean("firing")) {
             if (this.entityData.get(AMMO) > 0) {
                 this.entityData.set(AMMO, this.entityData.get(AMMO) - 1);
