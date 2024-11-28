@@ -1,12 +1,12 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
 import com.atsuishio.superbwarfare.entity.Mk42Entity;
+import com.atsuishio.superbwarfare.entity.layer.Mk42DamageLayer;
 import com.atsuishio.superbwarfare.entity.layer.Mk42Layer;
 import com.atsuishio.superbwarfare.entity.model.Mk42Model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.atsuishio.superbwarfare.entity.layer.Mk42DamageLayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -19,7 +19,7 @@ public class Mk42Renderer extends GeoEntityRenderer<Mk42Entity> {
 
     public Mk42Renderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new Mk42Model());
-        this.shadowRadius = 3f;
+        this.shadowRadius = 2f;
         this.addRenderLayer(new Mk42Layer(this));
         this.addRenderLayer(new Mk42DamageLayer(this));
     }

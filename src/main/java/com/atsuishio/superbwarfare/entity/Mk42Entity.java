@@ -108,7 +108,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
 
     @Override
     public double getPassengersRidingOffset() {
-        return super.getPassengersRidingOffset() - 0.25;
+        return super.getPassengersRidingOffset() - 1.25;
     }
 
     @Override

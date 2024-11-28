@@ -616,6 +616,10 @@ public class ClientEventHandler {
                 event.setCanceled(true);
             }
         }
+
+        if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity) {
+            event.setCanceled(true);
+        }
     }
 
     private static void handleWeaponSway(LivingEntity entity) {

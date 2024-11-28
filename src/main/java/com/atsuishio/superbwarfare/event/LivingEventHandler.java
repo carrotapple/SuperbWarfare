@@ -1,21 +1,22 @@
 package com.atsuishio.superbwarfare.event;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.config.common.GameplayConfig;
+import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.*;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
-import com.atsuishio.superbwarfare.network.message.PlayerGunKillMessage;
-import com.atsuishio.superbwarfare.tools.DamageTypeTool;
-import com.atsuishio.superbwarfare.tools.GunsTool;
-import com.atsuishio.superbwarfare.tools.SoundTool;
-import com.atsuishio.superbwarfare.config.common.GameplayConfig;
-import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.message.DrawClientMessage;
+import com.atsuishio.superbwarfare.network.message.PlayerGunKillMessage;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
+import com.atsuishio.superbwarfare.tools.DamageTypeTool;
+import com.atsuishio.superbwarfare.tools.GunsTool;
+import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
@@ -46,9 +47,19 @@ import java.text.DecimalFormat;
 public class LivingEventHandler {
 
     @SubscribeEvent
+    public static void onEntityAttacked(LivingAttackEvent event) {
+        if (event.getEntity().getVehicle() != null && event.getEntity().getVehicle() instanceof ICannonEntity) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
     public static void onEntityHurt(LivingHurtEvent event) {
         if (event == null || event.getEntity() == null) {
             return;
+        }
+        if (event.getEntity().getVehicle() != null && event.getEntity().getVehicle() instanceof ICannonEntity) {
+            event.setCanceled(true);
         }
 
         handleGunPerksWhenHurt(event);

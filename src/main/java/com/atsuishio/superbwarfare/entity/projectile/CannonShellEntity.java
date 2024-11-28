@@ -1,12 +1,12 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
-import com.atsuishio.superbwarfare.init.*;
-import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.entity.AnimatedEntity;
+import com.atsuishio.superbwarfare.init.*;
+import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
+import com.atsuishio.superbwarfare.tools.ParticleTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
@@ -147,7 +147,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         float hardness = this.level().getBlockState(BlockPos.containing(x, y, z)).getBlock().defaultDestroyTime();
         this.durability -= (int) hardness;
 
-        if (ExplosionDestroyConfig.EXPLOSION_DESTROY.get()) {
+        if (ExplosionDestroyConfig.EXPLOSION_DESTROY.get() && hardness != -1 && hardness <= 50) {
             BlockPos _pos = BlockPos.containing(x, y, z);
             Block.dropResources(this.level().getBlockState(_pos), this.level(), BlockPos.containing(x, y, z), null);
             this.level().destroyBlock(_pos, false);

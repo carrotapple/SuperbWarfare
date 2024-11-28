@@ -1,12 +1,12 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
 import com.atsuishio.superbwarfare.entity.Mle1934Entity;
+import com.atsuishio.superbwarfare.entity.layer.Mle1934DamageLayer;
 import com.atsuishio.superbwarfare.entity.layer.Mle1934Layer;
 import com.atsuishio.superbwarfare.entity.model.Mle1934Model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.atsuishio.superbwarfare.entity.layer.Mle1934DamageLayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -18,7 +18,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 public class Mle1934Renderer extends GeoEntityRenderer<Mle1934Entity> {
     public Mle1934Renderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new Mle1934Model());
-        this.shadowRadius = 3f;
+        this.shadowRadius = 2f;
         this.addRenderLayer(new Mle1934Layer(this));
         this.addRenderLayer(new Mle1934DamageLayer(this));
     }

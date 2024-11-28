@@ -112,7 +112,7 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
 
     @Override
     public double getPassengersRidingOffset() {
-        return super.getPassengersRidingOffset() - 0.075;
+        return super.getPassengersRidingOffset() - 1.075;
     }
 
     @Override

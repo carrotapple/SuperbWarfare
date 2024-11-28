@@ -33,6 +33,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -78,6 +79,9 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
             return false;
         if (source.is(DamageTypes.WITHER_SKULL))
             return false;
+        if (source.is(ModDamageTypes.CUSTOM_EXPLOSION) || source.is(ModDamageTypes.MINE) || source.is(ModDamageTypes.PROJECTILE_BOOM)) {
+            amount *= 0.2f;
+        }
 
         if (this.level() instanceof ServerLevel serverLevel) {
             ParticleTool.sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 0.2, this.getZ(), 2, 0.02, 0.02, 0.02, 0.1, false);
@@ -168,7 +172,7 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
                         && target instanceof LivingEntity
                         && !(target instanceof TargetEntity)
                         && !(target instanceof Player player && (player.isCreative() || player.isSpectator()))
-                        && (!this.isAlliedTo(target) || target.getTeam() == null || target.getTeam().getName().equals("TDM"))
+                        && (!Objects.requireNonNull(this.getOwner()).isAlliedTo(target) || target.getTeam() == null || target.getTeam().getName().equals("TDM"))
                         && !target.isShiftKeyDown();
                 if (!condition) continue;
 
@@ -214,8 +218,8 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
     public void destroy() {
         if (level() instanceof ServerLevel) {
             CustomExplosion explosion = new CustomExplosion(this.level(), null,
-                    ModDamageTypes.causeMineDamage(this.level().registryAccess(), this), 15.0f,
-                    this.getX(), this.getY(), this.getZ(), 7.5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                    ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), null, null), 25.0f,
+                    this.getX(), this.getY(), this.getZ(), 5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
             explosion.explode();
             net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
             explosion.finalizeExplosion(false);
@@ -227,7 +231,7 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
     private void triggerExplode(Entity target) {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
                 ModDamageTypes.causeMineDamage(this.level().registryAccess(), this.getOwner()), 140f,
-                target.getX(), target.getY(), target.getZ(), 5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                target.getX(), target.getY(), target.getZ(), 4f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
