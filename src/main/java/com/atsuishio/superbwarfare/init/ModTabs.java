@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.init;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.item.ArmorPlate;
+import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.item.gun.handgun.Glock17Item;
 import com.atsuishio.superbwarfare.item.gun.handgun.Glock18Item;
 import com.atsuishio.superbwarfare.item.gun.handgun.M1911Item;
@@ -105,7 +106,9 @@ public class ModTabs {
                         if (registryObject.get() == ModItems.ARMOR_PLATE.get()) {
                             output.accept(ArmorPlate.getInfiniteInstance());
                         }
-
+                        if (registryObject.get() == ModItems.CONTAINER.get()) {
+                            output.accept(ContainerBlockItem.createMk42Instance());
+                        }
                     }))
                     .build());
 

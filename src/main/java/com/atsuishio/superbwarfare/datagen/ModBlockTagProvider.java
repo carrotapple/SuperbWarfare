@@ -12,6 +12,7 @@ import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 public class ModBlockTagProvider extends BlockTagsProvider {
+
     public ModBlockTagProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
         super(output, lookupProvider, ModUtils.MODID, existingFileHelper);
     }
@@ -29,6 +30,5 @@ public class ModBlockTagProvider extends BlockTagsProvider {
                 ModBlocks.CEMENTED_CARBIDE_BLOCK.get(), ModBlocks.SILVER_ORE.get(), ModBlocks.DEEPSLATE_SILVER_ORE.get(),
                 ModBlocks.SILVER_BLOCK.get(), ModBlocks.JUMP_PAD.get(), ModBlocks.CONTAINER.get());
         this.tag(BlockTags.MINEABLE_WITH_SHOVEL).add(ModBlocks.SANDBAG.get());
-
     }
 }

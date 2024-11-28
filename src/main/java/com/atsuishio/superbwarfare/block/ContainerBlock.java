@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 @SuppressWarnings("deprecation")
-public class ContainerBlock extends BaseEntityBlock implements SimpleWaterloggedBlock, EntityBlock {
+public class ContainerBlock extends BaseEntityBlock {
 
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty OPENED = BooleanProperty.create("opened");
@@ -35,12 +35,15 @@ public class ContainerBlock extends BaseEntityBlock implements SimpleWaterlogged
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @org.jetbrains.annotations.Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
+    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
         CompoundTag compoundtag = BlockItem.getBlockEntityData(pStack);
         if (compoundtag != null) {
-            if (compoundtag.contains("Test")) {
-                pTooltip.add(Component.literal("Test: " + compoundtag.getInt("Test")));
+            if (compoundtag.contains("Entity")) {
+                pTooltip.add(Component.literal("Entity: " + compoundtag.getString("Entity")));
+            }
+            if (compoundtag.contains("EntityType")) {
+                pTooltip.add(Component.literal("EntityType: " + compoundtag.getString("EntityType")));
             }
         }
     }

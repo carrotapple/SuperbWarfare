@@ -4,6 +4,8 @@ import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
@@ -17,7 +19,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class ContainerBlockEntity extends BlockEntity implements GeoBlockEntity {
 
-    public int test = 0;
+    public EntityType<?> entityType;
+    public Entity entity = null;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -42,13 +45,23 @@ public class ContainerBlockEntity extends BlockEntity implements GeoBlockEntity 
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        this.test = compound.getInt("Test");
+        if (compound.contains("Entity")) {
+            entity.deserializeNBT(compound.getCompound("Entity"));
+        }
+        if (compound.contains("EntityType")) {
+            this.entityType = EntityType.byString(compound.getString("EntityType")).orElse(null);
+        }
     }
 
     @Override
     public void saveAdditional(CompoundTag compound) {
         super.saveAdditional(compound);
-        compound.putInt("Test", this.test);
+        if (this.entity != null) {
+            compound.put("Entity", this.entity.serializeNBT());
+        }
+        if (this.entityType != null) {
+            compound.putString("EntityType", EntityType.getKey(this.entityType).toString());
+        }
     }
 
     @Override

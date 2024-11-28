@@ -43,7 +43,8 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
 
         this.add(ModBlocks.CONTAINER.get(), LootTable.lootTable().withPool(this.applyExplosionCondition(ModBlocks.CONTAINER.get(),
                 LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(ModBlocks.CONTAINER.get()))
-                        .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("Test", "BlockEntityTag.Test")))));
+                        .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("Entity", "BlockEntityTag.Entity")
+                                .copy("EntityType", "BlockEntityTag.EntityType")))));
     }
 
     @Override

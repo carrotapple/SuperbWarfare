@@ -1,10 +1,16 @@
 package com.atsuishio.superbwarfare.item;
 
 import com.atsuishio.superbwarfare.client.renderer.block.ContainerBlockItemRenderer;
+import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import com.atsuishio.superbwarfare.init.ModBlocks;
+import com.atsuishio.superbwarfare.init.ModEntities;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -49,5 +55,25 @@ public class ContainerBlockItem extends BlockItem implements GeoItem {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    public static ItemStack createInstance(Entity entity) {
+        ItemStack stack = new ItemStack(ModBlocks.CONTAINER.get());
+        CompoundTag tag = new CompoundTag();
+        tag.put("Entity", entity.serializeNBT());
+        BlockItem.setBlockEntityData(stack, ModBlockEntities.CONTAINER.get(), tag);
+        return stack;
+    }
+
+    public static ItemStack createInstance(EntityType<?> entityType) {
+        ItemStack stack = new ItemStack(ModBlocks.CONTAINER.get());
+        CompoundTag tag = new CompoundTag();
+        tag.putString("EntityType", EntityType.getKey(entityType).toString());
+        BlockItem.setBlockEntityData(stack, ModBlockEntities.CONTAINER.get(), tag);
+        return stack;
+    }
+
+    public static ItemStack createMk42Instance() {
+        return createInstance(ModEntities.MK_42.get());
     }
 }

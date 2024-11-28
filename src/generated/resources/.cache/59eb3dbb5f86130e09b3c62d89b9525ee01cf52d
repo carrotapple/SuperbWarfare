@@ -1,7 +1,7 @@
-// 1.20.1	2024-11-28T19:06:08.9130891	Loot Tables
+// 1.20.1	2024-11-28T19:45:16.1283469	Loot Tables
 98386b2e65b2afb7cf5b0cabf6a7b0f062c1e640 data/superbwarfare/loot_tables/blocks/barbed_wire.json
 811e69929a14e6736015849c220100bb58d914c9 data/superbwarfare/loot_tables/blocks/cemented_carbide_block.json
-92190e844ccc6a9e63e4c063ee3a0932f722156a data/superbwarfare/loot_tables/blocks/container.json
+8ed3f1d518c86fe6ed14f14f3121c2e24e109269 data/superbwarfare/loot_tables/blocks/container.json
 dabbe17417c944567dc6dfcdcba32b8377c24f69 data/superbwarfare/loot_tables/blocks/deepslate_galena_ore.json
 a7c1af3e194d35a64544902468bd964f45f2f9ef data/superbwarfare/loot_tables/blocks/deepslate_scheelite_ore.json
 76fa64ff714374c1655f4d11776fda132287a014 data/superbwarfare/loot_tables/blocks/deepslate_silver_ore.json

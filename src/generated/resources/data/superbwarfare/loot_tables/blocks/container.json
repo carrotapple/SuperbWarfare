@@ -20,8 +20,13 @@
           "ops": [
             {
               "op": "replace",
-              "source": "Test",
-              "target": "BlockEntityTag.Test"
+              "source": "Entity",
+              "target": "BlockEntityTag.Entity"
+            },
+            {
+              "op": "replace",
+              "source": "EntityType",
+              "target": "BlockEntityTag.EntityType"
             }
           ],
           "source": "block_entity"
