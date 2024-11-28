@@ -1,8 +1,11 @@
 package com.atsuishio.superbwarfare.client;
 
+import com.atsuishio.superbwarfare.client.renderer.block.ContainerBlockEntityRenderer;
 import com.atsuishio.superbwarfare.client.tooltip.*;
 import com.atsuishio.superbwarfare.client.tooltip.component.*;
+import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -17,6 +20,11 @@ public class ClientRenderHandler {
         event.register(BocekImageComponent.class, ClientBocekImageTooltip::new);
         event.register(EnergyImageComponent.class, ClientEnergyImageTooltip::new);
         event.register(SentinelImageComponent.class, ClientSentinelImageTooltip::new);
+    }
+
+    @SubscribeEvent
+    public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(ModBlockEntities.CONTAINER.get(), context -> new ContainerBlockEntityRenderer());
     }
 
 }
