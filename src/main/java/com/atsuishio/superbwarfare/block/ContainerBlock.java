@@ -3,6 +3,11 @@ package com.atsuishio.superbwarfare.block;
 import com.atsuishio.superbwarfare.block.entity.ContainerBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
@@ -16,6 +21,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 @SuppressWarnings("deprecation")
 public class ContainerBlock extends BaseEntityBlock implements SimpleWaterloggedBlock, EntityBlock {
@@ -24,8 +30,19 @@ public class ContainerBlock extends BaseEntityBlock implements SimpleWaterlogged
     public static final BooleanProperty OPENED = BooleanProperty.create("opened");
 
     public ContainerBlock() {
-        super(BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(3.0f).noCollission());
+        super(BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(3.0f).noOcclusion().requiresCorrectToolForDrops());
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(OPENED, false));
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @org.jetbrains.annotations.Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
+        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
+        CompoundTag compoundtag = BlockItem.getBlockEntityData(pStack);
+        if (compoundtag != null) {
+            if (compoundtag.contains("Test")) {
+                pTooltip.add(Component.literal("Test: " + compoundtag.getInt("Test")));
+            }
+        }
     }
 
     @Override

@@ -17,6 +17,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class ContainerBlockEntity extends BlockEntity implements GeoBlockEntity {
 
+    public int test = 0;
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public ContainerBlockEntity(BlockPos pos, BlockState state) {
@@ -40,11 +42,13 @@ public class ContainerBlockEntity extends BlockEntity implements GeoBlockEntity 
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
+        this.test = compound.getInt("Test");
     }
 
     @Override
     public void saveAdditional(CompoundTag compound) {
         super.saveAdditional(compound);
+        compound.putInt("Test", this.test);
     }
 
     @Override
