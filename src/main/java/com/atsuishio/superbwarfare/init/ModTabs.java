@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.init;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.item.ArmorPlate;
 import com.atsuishio.superbwarfare.item.gun.handgun.Glock17Item;
 import com.atsuishio.superbwarfare.item.gun.handgun.Glock18Item;
 import com.atsuishio.superbwarfare.item.gun.handgun.M1911Item;
@@ -8,6 +9,7 @@ import com.atsuishio.superbwarfare.item.gun.handgun.Trachelium;
 import com.atsuishio.superbwarfare.item.gun.launcher.JavelinItem;
 import com.atsuishio.superbwarfare.item.gun.launcher.M79Item;
 import com.atsuishio.superbwarfare.item.gun.launcher.RpgItem;
+import com.atsuishio.superbwarfare.item.gun.machinegun.DevotionItem;
 import com.atsuishio.superbwarfare.item.gun.machinegun.M60Item;
 import com.atsuishio.superbwarfare.item.gun.machinegun.MinigunItem;
 import com.atsuishio.superbwarfare.item.gun.machinegun.RpkItem;
@@ -19,8 +21,6 @@ import com.atsuishio.superbwarfare.item.gun.smg.VectorItem;
 import com.atsuishio.superbwarfare.item.gun.sniper.*;
 import com.atsuishio.superbwarfare.item.gun.special.BocekItem;
 import com.atsuishio.superbwarfare.item.gun.special.TaserItem;
-import com.atsuishio.superbwarfare.item.ArmorPlate;
-import com.atsuishio.superbwarfare.item.gun.machinegun.DevotionItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -105,6 +105,7 @@ public class ModTabs {
                         if (registryObject.get() == ModItems.ARMOR_PLATE.get()) {
                             output.accept(ArmorPlate.getInfiniteInstance());
                         }
+
                     }))
                     .build());
 

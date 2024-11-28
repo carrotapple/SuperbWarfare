@@ -6,9 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -38,11 +35,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class SenpaiEntity extends Monster implements GeoEntity, AnimatedEntity {
-
-    public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(SenpaiEntity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
-    public String animationProcedure = "empty";
 
     public SenpaiEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.SENPAI.get(), world);
@@ -57,7 +50,6 @@ public class SenpaiEntity extends Monster implements GeoEntity, AnimatedEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(ANIMATION, "undefined");
     }
 
     @Override
@@ -162,34 +154,16 @@ public class SenpaiEntity extends Monster implements GeoEntity, AnimatedEntity {
     }
 
     private PlayState movementPredicate(AnimationState<SenpaiEntity> event) {
-        if (this.animationProcedure.equals("empty")) {
-            if ((event.isMoving() || !(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F))
-
-                    && !this.isAggressive()) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.senpai.walk"));
-            }
-            if (this.isDeadOrDying()) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.senpai.die"));
-            }
-            if (this.isAggressive() && event.isMoving()) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.senpai.run"));
-            }
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.senpai.idle"));
+        if ((event.isMoving() || !(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) && !this.isAggressive()) {
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.senpai.walk"));
         }
-        return PlayState.STOP;
-    }
-
-    private PlayState procedurePredicate(AnimationState<SenpaiEntity> event) {
-        if (!animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
-            if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                this.animationProcedure = "empty";
-                event.getController().forceAnimationReset();
-            }
-        } else if (animationProcedure.equals("empty")) {
-            return PlayState.STOP;
+        if (this.isDeadOrDying()) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.senpai.die"));
         }
-        return PlayState.CONTINUE;
+        if (this.isAggressive() && event.isMoving()) {
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.senpai.run"));
+        }
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.senpai.idle"));
     }
 
     @Override
@@ -207,22 +181,19 @@ public class SenpaiEntity extends Monster implements GeoEntity, AnimatedEntity {
     }
 
     public String getSyncedAnimation() {
-        return this.entityData.get(ANIMATION);
+        return null;
     }
 
     public void setAnimation(String animation) {
-        this.entityData.set(ANIMATION, animation);
     }
 
     @Override
     public void setAnimationProcedure(String procedure) {
-        this.animationProcedure = procedure;
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         data.add(new AnimationController<>(this, "movement", 4, this::movementPredicate));
-        data.add(new AnimationController<>(this, "procedure", 4, this::procedurePredicate));
     }
 
     @Override

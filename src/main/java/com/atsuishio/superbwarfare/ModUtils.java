@@ -1,11 +1,11 @@
 package com.atsuishio.superbwarfare;
 
 import com.atsuishio.superbwarfare.config.ClientConfig;
+import com.atsuishio.superbwarfare.config.CommonConfig;
+import com.atsuishio.superbwarfare.config.ServerConfig;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.*;
-import com.atsuishio.superbwarfare.config.CommonConfig;
-import com.atsuishio.superbwarfare.config.ServerConfig;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -54,6 +54,7 @@ public class ModUtils {
         ModPerks.register(bus);
         ModSounds.REGISTRY.register(bus);
         ModBlocks.REGISTRY.register(bus);
+        ModBlockEntities.REGISTRY.register(bus);
         ModItems.register(bus);
         ModEntities.REGISTRY.register(bus);
         ModTabs.TABS.register(bus);

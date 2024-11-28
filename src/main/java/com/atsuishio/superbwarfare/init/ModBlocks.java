@@ -27,4 +27,5 @@ public class ModBlocks {
     public static final RegistryObject<Block> TUNGSTEN_BLOCK = REGISTRY.register("tungsten_block", TungstenBlock::new);
     public static final RegistryObject<Block> SILVER_BLOCK = REGISTRY.register("silver_block", SilverBlock::new);
     public static final RegistryObject<Block> CEMENTED_CARBIDE_BLOCK = REGISTRY.register("cemented_carbide_block", CementedCarbideBlock::new);
+    public static final RegistryObject<Block> CONTAINER = REGISTRY.register("container", ContainerBlock::new);
 }

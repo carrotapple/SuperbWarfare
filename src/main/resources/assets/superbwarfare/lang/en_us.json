@@ -149,6 +149,7 @@
   "item.superbwarfare.ap_5_inches": "AP Shell",
   "item.superbwarfare.javelin_missile": "Javelin Missile",
 
+  "block.superbwarfare.container": "Container",
   "item.superbwarfare.firing_parameters": "Firing Parameters",
   "item.superbwarfare.ancient_cpu": "Ancient CPU",
   "item.superbwarfare.target_deployer": "Target",
