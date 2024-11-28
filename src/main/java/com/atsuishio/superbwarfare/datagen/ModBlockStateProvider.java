@@ -13,6 +13,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 @SuppressWarnings({"ConstantConditions", "SameParameterValue"})
 public class ModBlockStateProvider extends BlockStateProvider {
+
     public ModBlockStateProvider(PackOutput output, ExistingFileHelper exFileHelper) {
         super(output, ModUtils.MODID, exFileHelper);
     }
@@ -22,6 +23,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         horizontalBlock(ModBlocks.BARBED_WIRE.get(), new ModelFile.UncheckedModelFile(modLoc("block/barbed_wire")));
         horizontalBlock(ModBlocks.JUMP_PAD.get(), new ModelFile.UncheckedModelFile(modLoc("block/jump_pad")));
         horizontalBlock(ModBlocks.REFORGING_TABLE.get(), new ModelFile.UncheckedModelFile(modLoc("block/reforging_table")));
+        horizontalBlock(ModBlocks.CONTAINER.get(), new ModelFile.UncheckedModelFile(modLoc("block/container")));
 
         blockWithItem(ModBlocks.GALENA_ORE);
         blockWithItem(ModBlocks.DEEPSLATE_GALENA_ORE);
