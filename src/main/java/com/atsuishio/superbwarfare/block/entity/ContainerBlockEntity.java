@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.block.entity;
 
+import com.atsuishio.superbwarfare.block.ContainerBlock;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -29,7 +30,10 @@ public class ContainerBlockEntity extends BlockEntity implements GeoBlockEntity 
     }
 
     private PlayState predicate(AnimationState<ContainerBlockEntity> event) {
-        return event.setAndContinue(RawAnimation.begin().thenPlay("animation.container.open"));
+        if (this.getBlockState().getValue(ContainerBlock.OPENED)) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.container.open"));
+        }
+        return PlayState.STOP;
     }
 
     @Override

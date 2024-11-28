@@ -41,17 +41,15 @@ public class ContainerBlock extends BaseEntityBlock {
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pLevel.isClientSide) {
-            return InteractionResult.PASS;
-        } else {
+        if (!pLevel.isClientSide) {
             if (canOpen(pLevel, pPos)) {
                 pLevel.setBlockAndUpdate(pPos, pState.setValue(OPENED, true));
 
                 return InteractionResult.SUCCESS;
             }
             pPlayer.displayClientMessage(Component.literal("打不开哼哼啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"), true);
-            return InteractionResult.PASS;
         }
+        return InteractionResult.PASS;
     }
 
     public boolean canOpen(Level pLevel, BlockPos pPos) {
@@ -89,7 +87,7 @@ public class ContainerBlock extends BaseEntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return state.getValue(OPENED) ? box(1, 0, 1, 15, 14, 15) : box(0, 0, 0, 16, 16, 16);
+        return state.getValue(OPENED) ? box(1, 0, 1, 15, 14, 15) : box(0, 0, 0, 16, 15, 16);
     }
 
     @Override
