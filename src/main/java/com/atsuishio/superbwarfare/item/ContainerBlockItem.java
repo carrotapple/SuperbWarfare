@@ -6,11 +6,14 @@ import com.atsuishio.superbwarfare.init.ModBlocks;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -27,7 +30,20 @@ public class ContainerBlockItem extends BlockItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public ContainerBlockItem() {
-        super(ModBlocks.CONTAINER.get(), new Item.Properties());
+        super(ModBlocks.CONTAINER.get(), new Item.Properties().stacksTo(1));
+    }
+
+    @Override
+    public InteractionResult place(BlockPlaceContext pContext) {
+        ItemStack stack = pContext.getItemInHand();
+        Player player = pContext.getPlayer();
+        if (player != null) {
+            var tag = BlockItem.getBlockEntityData(stack);
+            if (tag != null && tag.get("Entity") != null) {
+                player.getInventory().removeItem(stack);
+            }
+        }
+        return super.place(pContext);
     }
 
     private PlayState predicate(AnimationState<ContainerBlockItem> event) {

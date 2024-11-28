@@ -1,9 +1,10 @@
 package com.atsuishio.superbwarfare.entity;
 
-import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.entity.projectile.CannonShellEntity;
+import com.atsuishio.superbwarfare.init.*;
+import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.item.common.ammo.CannonShellItem;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
@@ -163,6 +164,11 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (player.isShiftKeyDown()) {
             if (player.getMainHandItem().getItem() == ModItems.CROWBAR.get() && this.getFirstPassenger() == null) {
+                ItemStack stack = ContainerBlockItem.createInstance(this);
+                if (!player.addItem(stack)) {
+                    player.drop(stack, false);
+                }
+
                 this.discard();
                 return InteractionResult.sidedSuccess(this.level().isClientSide());
             }

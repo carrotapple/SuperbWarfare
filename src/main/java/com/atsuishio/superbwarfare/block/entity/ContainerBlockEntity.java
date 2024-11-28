@@ -88,11 +88,14 @@ public class ContainerBlockEntity extends BlockEntity implements GeoBlockEntity 
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
-        if (compound.contains("Entity")) {
-            entity.deserializeNBT(compound.getCompound("Entity"));
-        }
         if (compound.contains("EntityType")) {
             this.entityType = EntityType.byString(compound.getString("EntityType")).orElse(null);
+        }
+        if (compound.contains("Entity") && this.entityType != null && this.level != null) {
+            this.entity = this.entityType.create(this.level);
+            if (entity != null) {
+                entity.load(compound.getCompound("Entity"));
+            }
         }
         this.tick = compound.getInt("Tick");
     }
