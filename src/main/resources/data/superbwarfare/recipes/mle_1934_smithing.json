@@ -7,12 +7,14 @@
     "item": "superbwarfare:cannon_core"
   },
   "addition": {
-    "tag":"forge:storage_blocks/steel"
+    "tag": "forge:storage_blocks/steel"
   },
   "result": {
     "item": "superbwarfare:container",
     "nbt": {
-      "EntityType": "superbwarfare:mle_1934"
+      "BlockEntityTag": {
+        "EntityType": "superbwarfare:mle_1934"
+      }
     }
   }
 }
