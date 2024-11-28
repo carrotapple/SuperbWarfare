@@ -5,11 +5,10 @@ import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.entity.Mk42Entity;
 import com.atsuishio.superbwarfare.entity.Mle1934Entity;
+import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.tools.TraceTool;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.item.gun.GunItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
@@ -72,10 +71,10 @@ public class CannonHudOverlay {
         int k = (w - i) / 2;
         int l = (h - j) / 2;
         if (ClientEventHandler.zoom) {
-            Entity lookingEntity = TraceTool.findLookingEntity(player, 512);
+            Entity lookingEntity = TraceTool.cannonFindLookingEntity(player, 512);
             boolean lookAtEntity = false;
             double block_range = player.position().distanceTo((Vec3.atLowerCornerOf(player.level().clip(
-                    new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(512)),
+                    new ClipContext(new Vec3(player.getX(), player.getEyeY() + 1, player.getZ()), new Vec3(player.getX(), player.getEyeY() + 1, player.getZ()).add(player.getLookAngle().scale(512)),
                             ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
 
             double entity_range = 0;
@@ -135,7 +134,6 @@ public class CannonHudOverlay {
     private static boolean shouldRenderCrossHair(Player player) {
         if (player == null) return false;
         return !player.isSpectator()
-                && !(player.getMainHandItem().getItem() instanceof GunItem)
                 && (player.getVehicle() != null && (player.getVehicle() instanceof ICannonEntity));
     }
 }

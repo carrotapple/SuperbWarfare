@@ -437,32 +437,34 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
 
         if (!(passenger instanceof LivingEntity entity)) return;
 
-        float diffY = entity.getYHeadRot() - this.getYRot();
+        float passengerY = entity.getYHeadRot();
+
+        if (passengerY > 180.0f) {
+            passengerY -= 360.0f;
+        } else if (passengerY < -180.0f) {
+            passengerY += 360.0f;
+        }
+
+        float diffY = passengerY - this.getYRot();
         float diffX = entity.getXRot() - 1.2f - this.getXRot();
         if (diffY > 180.0f) {
             diffY -= 360.0f;
         } else if (diffY < -180.0f) {
             diffY += 360.0f;
         }
-        diffY = diffY * 0.15f;
+        diffY = Mth.clamp(diffY * 0.15f, -1.25f, 1.25f);
         diffX = diffX * 0.15f;
-        this.setYRot(this.getYRot() + Mth.clamp(diffY, -1.25f, 1.25f));
+
+        this.setYRot(this.getYRot() + diffY);
         this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -30, 4));
         this.setRot(this.getYRot(), this.getXRot());
     }
 
     protected void clampRotation(Entity entity) {
-        ItemStack stack = ItemStack.EMPTY;
-        if (entity instanceof Player player) {
-            stack = player.getMainHandItem();
-        }
-
-        if (!stack.is(ModTags.Items.GUN)) {
-            float f = Mth.wrapDegrees(entity.getXRot());
-            float f1 = Mth.clamp(f, -30.0F, 4.0F);
-            entity.xRotO += f1 - f;
-            entity.setXRot(entity.getXRot() + f1 - f);
-        }
+        float f = Mth.wrapDegrees(entity.getXRot());
+        float f1 = Mth.clamp(f, -30.0F, 4.0F);
+        entity.xRotO += f1 - f;
+        entity.setXRot(entity.getXRot() + f1 - f);
     }
 
     @Override

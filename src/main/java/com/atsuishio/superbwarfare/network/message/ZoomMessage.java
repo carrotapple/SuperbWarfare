@@ -1,11 +1,10 @@
 package com.atsuishio.superbwarfare.network.message;
 
-import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
-import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
@@ -53,7 +52,7 @@ public class ZoomMessage {
                         capability.syncPlayerVariables(player);
                     });
 
-                    if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity && !stack.is(ModTags.Items.GUN)) {
+                    if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity) {
                         SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_IN.get(), 2, 1);
                     }
                 }
@@ -65,7 +64,7 @@ public class ZoomMessage {
                         capability.syncPlayerVariables(player);
                     });
 
-                    if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity && !stack.is(ModTags.Items.GUN)) {
+                    if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity) {
                         SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_OUT.get(), 2, 1);
                     }
 

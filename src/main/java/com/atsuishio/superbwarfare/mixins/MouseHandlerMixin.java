@@ -38,7 +38,7 @@ public class MouseHandlerMixin {
 
         ItemStack stack = mc.player.getMainHandItem();
 
-        if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity && !stack.is(ModTags.Items.GUN)) {
+        if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity) {
             if (ClientEventHandler.zoom) {
                 return 0.15;
             } else {

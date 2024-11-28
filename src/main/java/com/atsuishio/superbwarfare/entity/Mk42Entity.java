@@ -10,6 +10,7 @@ import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -45,7 +46,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
 
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = 700.0f;
@@ -64,21 +64,18 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     @Override
     protected void defineSynchedData() {
         this.entityData.define(COOL_DOWN, 0);
-        this.entityData.define(TYPE, 0);
         this.entityData.define(HEALTH, MAX_HEALTH);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         compound.putInt("CoolDown", this.entityData.get(COOL_DOWN));
-        compound.putInt("Type", this.entityData.get(TYPE));
         compound.putFloat("Health", this.entityData.get(HEALTH));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         this.entityData.set(COOL_DOWN, compound.getInt("CoolDown"));
-        this.entityData.set(TYPE, compound.getInt("Type"));
         if (compound.contains("Health")) {
             this.entityData.set(HEALTH, compound.getFloat("Health"));
         } else {
@@ -192,14 +189,6 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
 
         if (this.entityData.get(COOL_DOWN) > 0) {
             this.entityData.set(COOL_DOWN, this.entityData.get(COOL_DOWN) - 1);
-        }
-
-        if (this.entityData.get(COOL_DOWN) > 28) {
-            if (Math.random() < 0.5) {
-                this.entityData.set(TYPE, -1);
-            } else {
-                this.entityData.set(TYPE, 1);
-            }
         }
 
         this.move(MoverType.SELF, this.getDeltaMovement());
@@ -363,33 +352,46 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
 
         if (!(passenger instanceof LivingEntity entity)) return;
 
-        float diffY = entity.getYHeadRot() - this.getYRot();
+        float passengerY = entity.getYHeadRot();
+
+        if (passengerY > 180.0f) {
+            passengerY -= 360.0f;
+        } else if (passengerY < -180.0f) {
+            passengerY += 360.0f;
+        }
+
+        float diffY = passengerY - this.getYRot();
         float diffX = entity.getXRot() - 1.3f - this.getXRot();
         if (diffY > 180.0f) {
             diffY -= 360.0f;
         } else if (diffY < -180.0f) {
             diffY += 360.0f;
         }
-        diffY = diffY * 0.15f;
+        diffY = Mth.clamp(diffY * 0.15f, -1.75f, 1.75f);
         diffX = diffX * 0.15f;
 
-        this.setYRot(this.getYRot() + Mth.clamp(diffY, -1.75f, 1.75f));
+        this.setYRot(this.getYRot() + diffY);
+
+        if (passenger instanceof Player player) {
+            player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(this.getYRot()) + " diffY:" + new java.text.DecimalFormat("##.#").format(diffY)), true);
+        }
         this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -3f, 3f), -85, 16.3f));
         this.setRot(this.getYRot(), this.getXRot());
     }
 
     protected void clampRotation(Entity entity) {
-        ItemStack stack = ItemStack.EMPTY;
-        if (entity instanceof Player player) {
-            stack = player.getMainHandItem();
-        }
 
-        if (!stack.is(ModTags.Items.GUN)) {
-            float f = Mth.wrapDegrees(entity.getXRot());
-            float f1 = Mth.clamp(f, -85.0F, 16.3F);
-            entity.xRotO += f1 - f;
-            entity.setXRot(entity.getXRot() + f1 - f);
-        }
+        float f = Mth.wrapDegrees(entity.getXRot());
+        float f1 = Mth.clamp(f, -85.0F, 16.3F);
+        entity.xRotO += f1 - f;
+        entity.setXRot(entity.getXRot() + f1 - f);
+
+//        entity.setYBodyRot(this.getYRot());
+//        float f2 = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
+//        float f3 = Mth.clamp(f2, -60.0F, 60.0F);
+//        entity.yRotO += f3 - f2;
+//        entity.setYRot(entity.getYRot() + f3 - f2);
+//        entity.setYHeadRot(entity.getYRot());
     }
 
     @Override
@@ -399,11 +401,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
 
     private PlayState movementPredicate(AnimationState<Mk42Entity> event) {
         if (this.entityData.get(COOL_DOWN) > 10) {
-            if (this.entityData.get(TYPE) == 1) {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire"));
-            } else {
-                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire2"));
-            }
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire"));
         }
 
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mk42.idle"));

@@ -495,6 +495,7 @@ public class ClientEventHandler {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         if (!player.getMainHandItem().is(ModTags.Items.GUN)) return;
+        if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity) return;
 
         float pose;
         float times = 2 * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
@@ -1014,6 +1015,11 @@ public class ClientEventHandler {
 
         ItemStack stack = player.getMainHandItem();
 
+        if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity && zoom) {
+            event.setFOV(event.getFOV() / 5);
+            return;
+        }
+
         if (stack.is(ModTags.Items.GUN)) {
             if (!event.usedConfiguredFov()) {
                 return;
@@ -1036,10 +1042,6 @@ public class ClientEventHandler {
                 event.setFOV(event.getFOV() / (1.0 + p * 0.01) * (1 - 0.4 * breathTime));
             fov = event.getFOV();
             return;
-        }
-
-        if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity && zoom && !stack.is(ModTags.Items.GUN)) {
-            event.setFOV(event.getFOV() / 5);
         }
 
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
