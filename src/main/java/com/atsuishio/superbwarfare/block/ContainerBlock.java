@@ -1,6 +1,8 @@
 package com.atsuishio.superbwarfare.block;
 
 import com.atsuishio.superbwarfare.block.entity.ContainerBlockEntity;
+import com.atsuishio.superbwarfare.init.ModBlockEntities;
+import com.atsuishio.superbwarfare.init.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -16,6 +18,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -42,17 +46,21 @@ public class ContainerBlock extends BaseEntityBlock {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide) {
-            if (canOpen(pLevel, pPos)) {
+            ItemStack stack = pPlayer.getItemInHand(pHand);
+            if (stack.is(ModItems.CROWBAR.get()) && canOpen(pLevel, pPos)) {
                 pLevel.setBlockAndUpdate(pPos, pState.setValue(OPENED, true));
-
                 return InteractionResult.SUCCESS;
             }
-            pPlayer.displayClientMessage(Component.literal("打不开哼哼啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"), true);
+            pPlayer.displayClientMessage(Component.literal("打不开哼哼啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"), true);
         }
         return InteractionResult.PASS;
     }
 
     public boolean canOpen(Level pLevel, BlockPos pPos) {
+        BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+        if (!(blockEntity instanceof ContainerBlockEntity containerBlockEntity)) return false;
+        if (containerBlockEntity.entity == null && containerBlockEntity.entityType == null) return false;
+
         boolean flag = true;
 
         for (int i = -4; i < 5; i++) {
@@ -69,6 +77,15 @@ public class ContainerBlock extends BaseEntityBlock {
         }
 
         return flag;
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        if (!pLevel.isClientSide) {
+            return createTickerHelper(pBlockEntityType, ModBlockEntities.CONTAINER.get(), ContainerBlockEntity::serverTick);
+        }
+        return null;
     }
 
     @Override
