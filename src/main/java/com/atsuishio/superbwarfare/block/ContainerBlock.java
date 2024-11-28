@@ -149,5 +149,12 @@ public class ContainerBlock extends BaseEntityBlock {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(OPENED, false);
     }
 
+    @Override
+    public ItemStack getCloneItemStack(BlockGetter pLevel, BlockPos pPos, BlockState pState) {
+        ItemStack itemstack = super.getCloneItemStack(pLevel, pPos, pState);
+        pLevel.getBlockEntity(pPos, ModBlockEntities.CONTAINER.get()).ifPresent((blockEntity) -> blockEntity.saveToItem(itemstack));
+        return itemstack;
+    }
+
 }
 

@@ -12,6 +12,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -117,4 +119,12 @@ public class ContainerBlockEntity extends BlockEntity implements GeoBlockEntity 
         return this.saveWithFullMetadata();
     }
 
+    @Override
+    public void saveToItem(ItemStack pStack) {
+        CompoundTag tag = new CompoundTag();
+        if (this.entityType != null) {
+            tag.putString("EntityType", EntityType.getKey(this.entityType).toString());
+        }
+        BlockItem.setBlockEntityData(pStack, this.getType(), tag);
+    }
 }
