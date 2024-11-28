@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.block;
 import com.atsuishio.superbwarfare.block.entity.ContainerBlockEntity;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -47,20 +48,32 @@ public class ContainerBlock extends BaseEntityBlock {
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide) {
             ItemStack stack = pPlayer.getItemInHand(pHand);
-            if (stack.is(ModItems.CROWBAR.get()) && canOpen(pLevel, pPos)) {
-                pLevel.setBlockAndUpdate(pPos, pState.setValue(OPENED, true));
-                return InteractionResult.SUCCESS;
+            if (stack.is(ModItems.CROWBAR.get())) {
+                if (!hasEntity(pLevel, pPos)) {
+                    pPlayer.displayClientMessage(Component.translatable("des.superbwarfare.container.fail.empty"), true);
+                    return InteractionResult.PASS;
+                }
+
+                if (canOpen(pLevel, pPos)) {
+                    pLevel.setBlockAndUpdate(pPos, pState.setValue(OPENED, true));
+                    return InteractionResult.SUCCESS;
+                } else {
+                    pPlayer.displayClientMessage(Component.translatable("des.superbwarfare.container.fail.open"), true);
+                }
+            } else {
+                pPlayer.displayClientMessage(Component.translatable("des.superbwarfare.container.fail.crowbar"), true);
             }
-            pPlayer.displayClientMessage(Component.literal("打不开哼哼啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊"), true);
         }
         return InteractionResult.PASS;
     }
 
-    public boolean canOpen(Level pLevel, BlockPos pPos) {
+    public boolean hasEntity(Level pLevel, BlockPos pPos) {
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
         if (!(blockEntity instanceof ContainerBlockEntity containerBlockEntity)) return false;
-        if (containerBlockEntity.entity == null && containerBlockEntity.entityType == null) return false;
+        return containerBlockEntity.entity != null || containerBlockEntity.entityType != null;
+    }
 
+    public boolean canOpen(Level pLevel, BlockPos pPos) {
         boolean flag = true;
 
         for (int i = -4; i < 5; i++) {
@@ -93,12 +106,20 @@ public class ContainerBlock extends BaseEntityBlock {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
         CompoundTag compoundtag = BlockItem.getBlockEntityData(pStack);
         if (compoundtag != null) {
-            if (compoundtag.contains("Entity")) {
-                pTooltip.add(Component.literal("Entity: " + compoundtag.getString("Entity")));
-            }
             if (compoundtag.contains("EntityType")) {
-                pTooltip.add(Component.literal("EntityType: " + compoundtag.getString("EntityType")));
+                String s = getTranslationKey(compoundtag.getString("EntityType"));
+                pTooltip.add(Component.translatable(s == null ? "des.superbwarfare.container.empty" : s).withStyle(ChatFormatting.GRAY));
             }
+        }
+    }
+
+    @Nullable
+    public String getTranslationKey(String path) {
+        String[] parts = path.split(":");
+        if (parts.length > 1) {
+            return "entity." + parts[0] + "." + parts[1];
+        } else {
+            return null;
         }
     }
 

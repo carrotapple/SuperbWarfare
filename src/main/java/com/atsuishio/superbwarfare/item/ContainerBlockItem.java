@@ -61,6 +61,7 @@ public class ContainerBlockItem extends BlockItem implements GeoItem {
         ItemStack stack = new ItemStack(ModBlocks.CONTAINER.get());
         CompoundTag tag = new CompoundTag();
         tag.put("Entity", entity.serializeNBT());
+        tag.putString("EntityType", EntityType.getKey(entity.getType()).toString());
         BlockItem.setBlockEntityData(stack, ModBlockEntities.CONTAINER.get(), tag);
         return stack;
     }
@@ -75,5 +76,9 @@ public class ContainerBlockItem extends BlockItem implements GeoItem {
 
     public static ItemStack createMk42Instance() {
         return createInstance(ModEntities.MK_42.get());
+    }
+
+    public static ItemStack createMle1934Instance() {
+        return createInstance(ModEntities.MLE_1934.get());
     }
 }

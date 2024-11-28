@@ -150,6 +150,10 @@
   "item.superbwarfare.javelin_missile": "Javelin Missile",
 
   "block.superbwarfare.container": "Container",
+  "des.superbwarfare.container.empty": "空的",
+  "des.superbwarfare.container.fail.empty": "这个箱子是空的",
+  "des.superbwarfare.container.fail.open": "没有足够的空间",
+  "des.superbwarfare.container.fail.crowbar": "或许应该换个工具试试",
   "item.superbwarfare.firing_parameters": "Firing Parameters",
   "item.superbwarfare.ancient_cpu": "Ancient CPU",
   "item.superbwarfare.target_deployer": "Target",

@@ -150,6 +150,10 @@
   "item.superbwarfare.javelin_missile": "标枪导弹",
 
   "block.superbwarfare.container": "集装箱",
+  "des.superbwarfare.container.empty": "空的",
+  "des.superbwarfare.container.fail.empty": "这个箱子是空的",
+  "des.superbwarfare.container.fail.open": "没有足够的空间",
+  "des.superbwarfare.container.fail.crowbar": "或许应该换个工具试试",
   "item.superbwarfare.firing_parameters": "射击诸元",
   "item.superbwarfare.ancient_cpu": "古代处理器",
   "item.superbwarfare.target_deployer": "标靶",

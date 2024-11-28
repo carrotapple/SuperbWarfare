@@ -102,12 +102,14 @@ public class ModTabs {
                     .icon(() -> new ItemStack(ModItems.TARGET_DEPLOYER.get()))
                     .withTabsBefore(AMMO_TAB.getKey())
                     .displayItems((param, output) -> ModItems.ITEMS.getEntries().forEach(registryObject -> {
-                        output.accept(registryObject.get());
-                        if (registryObject.get() == ModItems.ARMOR_PLATE.get()) {
-                            output.accept(ArmorPlate.getInfiniteInstance());
-                        }
                         if (registryObject.get() == ModItems.CONTAINER.get()) {
                             output.accept(ContainerBlockItem.createMk42Instance());
+                            output.accept(ContainerBlockItem.createMle1934Instance());
+                        } else {
+                            output.accept(registryObject.get());
+                            if (registryObject.get() == ModItems.ARMOR_PLATE.get()) {
+                                output.accept(ArmorPlate.getInfiniteInstance());
+                            }
                         }
                     }))
                     .build());
