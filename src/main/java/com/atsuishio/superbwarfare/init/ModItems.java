@@ -1,7 +1,6 @@
 package com.atsuishio.superbwarfare.init;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.block.display.ContainerDisplayItem;
 import com.atsuishio.superbwarfare.item.*;
 import com.atsuishio.superbwarfare.item.armor.*;
 import com.atsuishio.superbwarfare.item.common.BlueprintItem;
@@ -111,7 +110,7 @@ public class ModItems {
      */
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
 
-    public static final RegistryObject<Item> CONTAINER = ITEMS.register(ModBlocks.CONTAINER.getId().getPath(), () -> new ContainerDisplayItem(ModBlocks.CONTAINER.get(), new Item.Properties()));
+    public static final RegistryObject<Item> CONTAINER = ITEMS.register("container", ContainerBlockItem::new);
     public static final RegistryObject<Item> SENPAI_SPAWN_EGG = ITEMS.register("senpai_spawn_egg", () -> new ForgeSpawnEggItem(ModEntities.SENPAI, -11584987, -14014413, new Item.Properties()));
     public static final RegistryObject<Item> ANCIENT_CPU = ITEMS.register("ancient_cpu", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
     public static final RegistryObject<Item> PROPELLER = ITEMS.register("propeller", () -> new Item(new Item.Properties()));

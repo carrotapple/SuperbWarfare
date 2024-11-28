@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.block.listener;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.block.renderer.ContainerTileRenderer;
+import com.atsuishio.superbwarfare.client.renderer.block.ContainerBlockEntityRenderer;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -14,6 +14,6 @@ public class ClientListener {
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
 	public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-		event.registerBlockEntityRenderer(ModBlockEntities.CONTAINER.get(), context -> new ContainerTileRenderer());
+		event.registerBlockEntityRenderer(ModBlockEntities.CONTAINER.get(), context -> new ContainerBlockEntityRenderer());
 	}
 }
