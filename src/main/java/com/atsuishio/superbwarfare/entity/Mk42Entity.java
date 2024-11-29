@@ -155,7 +155,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (player.isShiftKeyDown()) {
-            if (player.getMainHandItem().is(ModTags.Items.TOOLS) && this.getFirstPassenger() == null) {
+            if (player.getMainHandItem().is(ModItems.CROWBAR.get()) && this.getFirstPassenger() == null) {
                 ItemStack stack = ContainerBlockItem.createInstance(this);
                 if (!player.addItem(stack)){
                     player.drop(stack, false);

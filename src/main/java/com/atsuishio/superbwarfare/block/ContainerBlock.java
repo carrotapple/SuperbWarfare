@@ -4,12 +4,14 @@ import com.atsuishio.superbwarfare.block.entity.ContainerBlockEntity;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import com.atsuishio.superbwarfare.init.ModEntities;
-import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.init.ModItems;
+import com.atsuishio.superbwarfare.init.ModSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -52,7 +54,7 @@ public class ContainerBlock extends BaseEntityBlock {
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide) {
             ItemStack stack = pPlayer.getItemInHand(pHand);
-            if (stack.is(ModTags.Items.TOOLS)) {
+            if (stack.is(ModItems.CROWBAR.get())) {
                 BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
                 if (!(blockEntity instanceof ContainerBlockEntity containerBlockEntity)) return InteractionResult.PASS;
 
@@ -63,6 +65,11 @@ public class ContainerBlock extends BaseEntityBlock {
 
                 if (canOpen(pLevel, pPos, containerBlockEntity.entityType, containerBlockEntity.entity)) {
                     pLevel.setBlockAndUpdate(pPos, pState.setValue(OPENED, true));
+                    if (!pLevel.isClientSide()) {
+                        pLevel.playSound(null, BlockPos.containing(pPos.getX(), pPos.getY(), pPos.getZ()), ModSounds.OPEN.get(), SoundSource.BLOCKS, 1, 1);
+                    } else {
+                        pLevel.playLocalSound(pPos.getX(), pPos.getY(), pPos.getZ(), ModSounds.OPEN.get(), SoundSource.BLOCKS, 1, 1, false);
+                    }
                     return InteractionResult.SUCCESS;
                 } else {
                     pPlayer.displayClientMessage(Component.translatable("des.superbwarfare.container.fail.open"), true);

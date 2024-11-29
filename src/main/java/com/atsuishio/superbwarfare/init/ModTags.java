@@ -44,7 +44,6 @@ public class ModTags {
 
         public static final TagKey<Item> MILITARY_ARMOR = tag("military_armor");
         public static final TagKey<Item> MILITARY_ARMOR_HEAVY = tag("military_armor_heavy");
-        public static final TagKey<Item> TOOLS = tag("tools");
 
         private static TagKey<Item> tag(String name) {
             return ItemTags.create(new ResourceLocation(ModUtils.MODID, name));

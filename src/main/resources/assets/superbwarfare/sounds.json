@@ -2349,5 +2349,13 @@
         "stream": false
       }
     ]
+  },
+  "open": {
+    "sounds": [
+      {
+        "name": "superbwarfare:open",
+        "stream": false
+      }
+    ]
   }
 }

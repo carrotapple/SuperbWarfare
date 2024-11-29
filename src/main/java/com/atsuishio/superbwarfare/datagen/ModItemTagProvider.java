@@ -65,8 +65,6 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
         ModItems.GUNS.getEntries().forEach(registryObject -> this.tag(ModTags.Items.GUN).add(registryObject.get()));
 
-        this.tag(ModTags.Items.TOOLS).add(ModItems.CROWBAR.get());
-
         this.tag(ModTags.Items.SMG).add(ModItems.VECTOR.get());
 
         this.tag(ModTags.Items.HANDGUN).add(ModItems.TRACHELIUM.get(), ModItems.GLOCK_17.get(), ModItems.GLOCK_18.get(), ModItems.M_1911.get());
