@@ -754,6 +754,7 @@ public class ClientEventHandler {
             if (cantFireTime <= 10) {
                 zoomTime = Mth.clamp(zoomTime + 0.03 * speed * times, 0, 1);
             }
+
         } else {
             zoomTime = Mth.clamp(zoomTime - 0.04 * speed * times, 0, 1);
         }
@@ -1064,13 +1065,26 @@ public class ClientEventHandler {
 
             customZoom = Mth.lerp(0.6 * times, customZoom, stack.getOrCreateTag().getDouble("CustomZoom"));
 
-            double zoom = 1.25 + customZoom;
+            double zoomFov = 1.25 + customZoom;
 
             if (mc.options.getCameraType().isFirstPerson()) {
-                event.setFOV(event.getFOV() / (1.0 + p * (zoom - 1)) * (1 - 0.4 * breathTime));
+                event.setFOV(event.getFOV() / (1.0 + p * (zoomFov - 1)) * (1 - 0.4 * breathTime));
             } else if (mc.options.getCameraType() == CameraType.THIRD_PERSON_BACK)
                 event.setFOV(event.getFOV() / (1.0 + p * 0.01) * (1 - 0.4 * breathTime));
             fov = event.getFOV();
+
+            if (zoom && !notInGame()
+                    && drawTime < 0.01
+                    && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
+                int level = PerkHelper.getItemPerkLevel(ModPerks.INTELLIGENT_CHIP.get(), stack);
+                if (level > 0) {
+                    Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 32 + 8 * (level - 1), 25 / zoomFov);
+                    if (seekingEntity != null && seekingEntity.isAlive()) {
+                        player.lookAt(EntityAnchorArgument.Anchor.EYES, seekingEntity.getEyePosition());
+                    }
+                }
+            }
+
             return;
         }
 

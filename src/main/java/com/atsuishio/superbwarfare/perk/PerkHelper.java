@@ -186,7 +186,7 @@ public class PerkHelper {
                 return !perk.descriptionId.equals("butterfly_bullet");
             }
             case FUNCTIONAL -> {
-                return perk == ModPerks.SUBSISTENCE.get() || perk == ModPerks.POWERFUL_ATTRACTION.get() || perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FIELD_DOCTOR.get();
+                return perk == ModPerks.SUBSISTENCE.get() || perk == ModPerks.POWERFUL_ATTRACTION.get() || perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FIELD_DOCTOR.get() || perk == ModPerks.INTELLIGENT_CHIP.get();
             }
             case DAMAGE -> {
                 return perk == ModPerks.GUTSHOT_STRAIGHT.get() || perk == ModPerks.MONSTER_HUNTER.get() || perk == ModPerks.KILL_CLIP.get();
@@ -205,7 +205,7 @@ public class PerkHelper {
             case FUNCTIONAL -> {
                 return perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FIELD_DOCTOR.get() ||
                         perk == ModPerks.FOURTH_TIMES_CHARM.get() || perk == ModPerks.SUBSISTENCE.get() ||
-                        perk == ModPerks.POWERFUL_ATTRACTION.get();
+                        perk == ModPerks.POWERFUL_ATTRACTION.get() || perk == ModPerks.INTELLIGENT_CHIP.get();
             }
             case DAMAGE -> {
                 return perk == ModPerks.KILL_CLIP.get() || perk == ModPerks.GUTSHOT_STRAIGHT.get() ||
@@ -224,7 +224,8 @@ public class PerkHelper {
             }
             case FUNCTIONAL -> {
                 return perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FIELD_DOCTOR.get() ||
-                        perk == ModPerks.SUBSISTENCE.get() || perk == ModPerks.POWERFUL_ATTRACTION.get();
+                        perk == ModPerks.SUBSISTENCE.get() || perk == ModPerks.POWERFUL_ATTRACTION.get()
+                        || perk == ModPerks.INTELLIGENT_CHIP.get();
             }
             case DAMAGE -> {
                 return perk == ModPerks.KILL_CLIP.get() || perk == ModPerks.GUTSHOT_STRAIGHT.get() || perk == ModPerks.MONSTER_HUNTER.get();
@@ -241,7 +242,8 @@ public class PerkHelper {
                 return !perk.descriptionId.equals("butterfly_bullet");
             }
             case FUNCTIONAL -> {
-                return perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FOURTH_TIMES_CHARM.get() || perk == ModPerks.POWERFUL_ATTRACTION.get();
+                return perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FOURTH_TIMES_CHARM.get() || perk == ModPerks.POWERFUL_ATTRACTION.get()
+                        || perk == ModPerks.INTELLIGENT_CHIP.get();
             }
             case DAMAGE -> {
                 return perk == ModPerks.KILL_CLIP.get() || perk == ModPerks.MONSTER_HUNTER.get();
@@ -259,7 +261,8 @@ public class PerkHelper {
             }
             case FUNCTIONAL -> {
                 return perk == ModPerks.HEAL_CLIP.get() || perk == ModPerks.FOURTH_TIMES_CHARM.get() ||
-                        perk == ModPerks.SUBSISTENCE.get() || perk == ModPerks.POWERFUL_ATTRACTION.get();
+                        perk == ModPerks.SUBSISTENCE.get() || perk == ModPerks.POWERFUL_ATTRACTION.get()
+                        || perk == ModPerks.INTELLIGENT_CHIP.get();
             }
             case DAMAGE -> {
                 return perk == ModPerks.KILL_CLIP.get() || perk == ModPerks.GUTSHOT_STRAIGHT.get() ||
@@ -277,7 +280,8 @@ public class PerkHelper {
                 return true;
             }
             case FUNCTIONAL -> {
-                return perk == ModPerks.FOURTH_TIMES_CHARM.get() || perk == ModPerks.SUBSISTENCE.get() || perk == ModPerks.POWERFUL_ATTRACTION.get();
+                return perk == ModPerks.FOURTH_TIMES_CHARM.get() || perk == ModPerks.SUBSISTENCE.get() || perk == ModPerks.POWERFUL_ATTRACTION.get()
+                        || perk == ModPerks.INTELLIGENT_CHIP.get();
             }
             case DAMAGE -> {
                 return perk == ModPerks.MONSTER_HUNTER.get() || perk == ModPerks.KILLING_TALLY.get();
@@ -290,6 +294,6 @@ public class PerkHelper {
 
     public static final Predicate<Perk> MAGAZINE_PERKS = perk -> false;
 
-    public static final Predicate<Perk> LAUNCHER_PERKS = perk -> perk == ModPerks.MONSTER_HUNTER.get() || perk == ModPerks.POWERFUL_ATTRACTION.get();
+    public static final Predicate<Perk> LAUNCHER_PERKS = perk -> perk == ModPerks.MONSTER_HUNTER.get() || perk == ModPerks.POWERFUL_ATTRACTION.get() || perk == ModPerks.INTELLIGENT_CHIP.get();
 
 }
