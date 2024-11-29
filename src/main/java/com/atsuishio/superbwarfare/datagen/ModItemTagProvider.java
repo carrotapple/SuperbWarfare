@@ -60,6 +60,8 @@ public class ModItemTagProvider extends ItemTagsProvider {
         this.tag(Tags.Items.ORES_IN_GROUND_STONE).add(ModItems.GALENA_ORE.get(), ModItems.SCHEELITE_ORE.get(), ModItems.SILVER_ORE.get());
         this.tag(Tags.Items.ORES_IN_GROUND_DEEPSLATE).add(ModItems.DEEPSLATE_GALENA_ORE.get(), ModItems.DEEPSLATE_SCHEELITE_ORE.get(), ModItems.DEEPSLATE_SILVER_ORE.get());
 
+        this.tag(Tags.Items.TOOLS).add(ModItems.CROWBAR.get());
+
         this.tag(forgeTag("plates")).addTags(forgeTag("plates/copper"));
         this.tag(forgeTag("plates/copper")).add(ModItems.COPPER_PLATE.get());
 

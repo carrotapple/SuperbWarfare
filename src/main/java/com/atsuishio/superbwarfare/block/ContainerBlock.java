@@ -1,8 +1,9 @@
 package com.atsuishio.superbwarfare.block;
 
 import com.atsuishio.superbwarfare.block.entity.ContainerBlockEntity;
+import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
-import com.atsuishio.superbwarfare.init.ModItems;
+import com.atsuishio.superbwarfare.init.ModEntities;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -10,6 +11,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -29,6 +32,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -48,13 +52,16 @@ public class ContainerBlock extends BaseEntityBlock {
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide) {
             ItemStack stack = pPlayer.getItemInHand(pHand);
-            if (stack.is(ModItems.CROWBAR.get())) {
+            if (stack.is(Tags.Items.TOOLS)) {
+                BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+                if (!(blockEntity instanceof ContainerBlockEntity containerBlockEntity)) return InteractionResult.PASS;
+
                 if (!hasEntity(pLevel, pPos)) {
                     pPlayer.displayClientMessage(Component.translatable("des.superbwarfare.container.fail.empty"), true);
                     return InteractionResult.PASS;
                 }
 
-                if (canOpen(pLevel, pPos)) {
+                if (canOpen(pLevel, pPos, containerBlockEntity.entityType, containerBlockEntity.entity)) {
                     pLevel.setBlockAndUpdate(pPos, pState.setValue(OPENED, true));
                     return InteractionResult.SUCCESS;
                 } else {
@@ -73,12 +80,27 @@ public class ContainerBlock extends BaseEntityBlock {
         return containerBlockEntity.entity != null || containerBlockEntity.entityType != null;
     }
 
-    public boolean canOpen(Level pLevel, BlockPos pPos) {
+    public boolean canOpen(Level pLevel, BlockPos pPos, EntityType entityType, Entity entity) {
         boolean flag = true;
 
-        for (int i = -4; i < 5; i++) {
-            for (int j = 0; j < 7; j++) {
-                for (int k = -4; k < 5; k++) {
+        int w = 0;
+        int h = 0;
+
+        boolean extra = entityType == ModEntities.MLE_1934.get() || entityType == ModEntities.MK_42.get() || entity instanceof ICannonEntity;
+
+        if (entityType != null) {
+            w = (int) (entityType.getDimensions().width / 2 + (extra ? 2 : 0));
+            h = (int) (entityType.getDimensions().height + (extra ? 2 : 0));
+        }
+
+        if (entity != null) {
+            w = (int) (entity.getType().getDimensions().width / 2 + (extra ? 2 : 0));
+            h = (int) (entity.getType().getDimensions().height + (extra ? 2 : 0));
+        }
+
+        for (int i = -w; i < w + 1; i++) {
+            for (int j = 0; j < h; j++) {
+                for (int k = -w; k < w + 1; k++) {
                     if (i == 0 && j == 0 && k == 0) {
                         continue;
                     }
