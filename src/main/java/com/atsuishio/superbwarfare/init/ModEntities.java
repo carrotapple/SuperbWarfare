@@ -30,6 +30,8 @@ public class ModEntities {
                     .sized(0.6f, 2f));
     public static final RegistryObject<EntityType<ClaymoreEntity>> CLAYMORE = register("claymore",
             EntityType.Builder.<ClaymoreEntity>of(ClaymoreEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(512).setUpdateInterval(1).sized(0.5f, 0.5f));
+    public static final RegistryObject<EntityType<BeamEntity>> BEAM = register("beam",
+            EntityType.Builder.<BeamEntity>of(BeamEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(512).setUpdateInterval(1).sized(0.1f, 0.1f));
     public static final RegistryObject<EntityType<Mk42Entity>> MK_42 = register("mk_42",
             EntityType.Builder.<Mk42Entity>of(Mk42Entity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(5124).setUpdateInterval(3).setCustomClientFactory(Mk42Entity::new).fireImmune().sized(3.4f, 3.5f));
     public static final RegistryObject<EntityType<Mle1934Entity>> MLE_1934 = register("mle_1934",

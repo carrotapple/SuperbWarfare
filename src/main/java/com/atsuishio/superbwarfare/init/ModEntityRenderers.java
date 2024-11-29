@@ -14,6 +14,7 @@ public class ModEntityRenderers {
         event.registerEntityRenderer(ModEntities.MORTAR.get(), MortarRenderer::new);
         event.registerEntityRenderer(ModEntities.SENPAI.get(), SenpaiRenderer::new);
         event.registerEntityRenderer(ModEntities.CLAYMORE.get(), ClaymoreRenderer::new);
+        event.registerEntityRenderer(ModEntities.BEAM.get(), BeamRenderer::new);
         event.registerEntityRenderer(ModEntities.TASER_BULLET_PROJECTILE.get(), TaserBulletProjectileRenderer::new);
         event.registerEntityRenderer(ModEntities.GUN_GRENADE.get(), GunGrenadeRenderer::new);
         event.registerEntityRenderer(ModEntities.TARGET.get(), TargetRenderer::new);

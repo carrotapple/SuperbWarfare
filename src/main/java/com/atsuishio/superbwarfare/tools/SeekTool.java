@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.tools;
 
+import com.atsuishio.superbwarfare.entity.BeamEntity;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -14,7 +15,7 @@ public class SeekTool {
     public static Entity seekEntity(Entity entity, Level level, double seekRange, double seekAngle) {
         return StreamSupport.stream(EntityFindUtil.getEntities(level).getAll().spliterator(), false)
                 .filter(e -> {
-                    if (e.distanceTo(entity) <= seekRange && calculateAngle(e, entity) < seekAngle && e != entity) {
+                    if (e.distanceTo(entity) <= seekRange && calculateAngle(e, entity) < seekAngle && e != entity && !(e instanceof BeamEntity) && e.isAlive()) {
                         return level.clip(new ClipContext(entity.getEyePosition(), e.getEyePosition(),
                                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() != HitResult.Type.BLOCK;
                     }

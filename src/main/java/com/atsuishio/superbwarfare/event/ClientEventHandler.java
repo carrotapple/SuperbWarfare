@@ -3,23 +3,23 @@ package com.atsuishio.superbwarfare.event;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.ClickHandler;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
+import com.atsuishio.superbwarfare.entity.BeamEntity;
 import com.atsuishio.superbwarfare.entity.DroneEntity;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.common.ammo.CannonShellItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.network.message.LaserShootMessage;
 import com.atsuishio.superbwarfare.network.message.ShootMessage;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.EntityFindUtil;
-import com.atsuishio.superbwarfare.tools.GunsTool;
-import com.atsuishio.superbwarfare.tools.MillisTimer;
-import com.atsuishio.superbwarfare.tools.SeekTool;
+import com.atsuishio.superbwarfare.tools.*;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -200,6 +200,8 @@ public class ClientEventHandler {
         if (notInGame() && !ClickHandler.switchZoom) {
             zoom = false;
         }
+
+        beamShoot(player, stack);
     }
 
     @SubscribeEvent
@@ -340,6 +342,34 @@ public class ClientEventHandler {
 
         if (stack.getItem() == ModItems.DEVOTION.get() && (stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))) {
             customRpm = 0;
+        }
+    }
+
+    public static void beamShoot(Player player, ItemStack stack) {
+        if (stack.is(ModItems.BEAM_TEST.get()) && stack.getOrCreateTag().getBoolean("Using")) {
+            Entity lookingEntity = TraceTool.laserfindLookingEntity(player, 512);
+
+            if (player.isCrouching()) {
+                Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 64, 32);
+                if (seekingEntity != null && seekingEntity.isAlive()) {
+                    player.lookAt(EntityAnchorArgument.Anchor.EYES, seekingEntity.getEyePosition());
+                }
+            }
+
+            if (lookingEntity == null) {
+                return;
+            }
+
+            if (lookingEntity instanceof BeamEntity) {
+                return;
+            }
+
+            boolean canAttack = lookingEntity != player && !(lookingEntity instanceof Player player_ && (player_.isCreative() || player_.isSpectator()))
+                    && (!player.isAlliedTo(lookingEntity) || lookingEntity.getTeam() == null || lookingEntity.getTeam().getName().equals("TDM"));
+
+            if (canAttack) {
+                ModUtils.PACKET_HANDLER.sendToServer(new LaserShootMessage(2, lookingEntity.getUUID()));
+            }
         }
     }
 

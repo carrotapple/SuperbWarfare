@@ -10,7 +10,6 @@ import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -371,10 +370,6 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
         diffX = diffX * 0.15f;
 
         this.setYRot(this.getYRot() + diffY);
-
-        if (passenger instanceof Player player) {
-            player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(this.getYRot()) + " diffY:" + new java.text.DecimalFormat("##.#").format(diffY)), true);
-        }
         this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -3f, 3f), -85, 16.3f));
         this.setRot(this.getYRot(), this.getXRot());
     }
