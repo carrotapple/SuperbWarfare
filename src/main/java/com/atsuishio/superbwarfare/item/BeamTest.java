@@ -1,6 +1,5 @@
 package com.atsuishio.superbwarfare.item;
 
-import com.atsuishio.superbwarfare.entity.BeamEntity;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -19,10 +18,6 @@ public class BeamTest extends Item {
         ItemStack stack = player.getItemInHand(hand);
 
         if (!stack.getOrCreateTag().getBoolean("Using")) {
-            if (!level.isClientSide) {
-                BeamEntity entity = getBeamEntity(level, player);
-                level.addFreshEntity(entity);
-            }
             stack.getOrCreateTag().putBoolean("Using", true);
             player.getCooldowns().addCooldown(this, 10);
         } else {
@@ -30,16 +25,6 @@ public class BeamTest extends Item {
         }
 
         return InteractionResultHolder.consume(stack);
-    }
-
-    private static BeamEntity getBeamEntity(Level level, Player player) {
-        BeamEntity entity = new BeamEntity(player, level);
-        entity.moveTo(player.getX() + 0.5 * player.getLookAngle().x,
-                player.getEyeY() - 0.3 + 0.5 * player.getLookAngle().y,
-                player.getZ() + 0.5 * player.getLookAngle().z, player.getYRot(), 0);
-        entity.setYBodyRot(player.getYRot());
-        entity.setYHeadRot(player.getYRot());
-        return entity;
     }
 
     @Override

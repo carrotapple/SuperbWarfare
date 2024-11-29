@@ -256,7 +256,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             var level = this.level();
             final Vec3 center = new Vec3(this.getX(), this.getY(), this.getZ());
             for (Entity target : level.getEntitiesOfClass(Entity.class, aabb, e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
-                if (this != target && target != null) {
+                if (this != target && target instanceof LivingEntity) {
                     target.hurt(ModDamageTypes.causeDroneHitDamage(this.level().registryAccess(), this, controller), 1);
                     target.invulnerableTime = 0;
                     if (target instanceof Mob mobEntity) {
