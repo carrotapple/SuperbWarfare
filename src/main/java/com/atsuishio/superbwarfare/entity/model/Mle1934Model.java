@@ -1,8 +1,7 @@
 package com.atsuishio.superbwarfare.entity.model;
 
-import com.atsuishio.superbwarfare.entity.Mle1934Entity;
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.entity.Mle1934Entity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -48,10 +47,5 @@ public class Mle1934Model extends GeoModel<Mle1934Entity> {
         CoreGeoBone barrle = getAnimationProcessor().getBone("barrel");
         EntityModelData entityData = (EntityModelData) animationState.getData(DataTickets.ENTITY_MODEL_DATA);
         barrle.setRotX((entityData.headPitch()) * Mth.DEG_TO_RAD);
-
-        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
-
-        if (animatable.getFirstPassenger() == null) return;
-        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(),Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }

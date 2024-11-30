@@ -1,10 +1,12 @@
 package com.atsuishio.superbwarfare.entity;
 
+import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.entity.projectile.CannonShellEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.item.common.ammo.CannonShellItem;
+import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
@@ -32,6 +34,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -68,7 +71,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
-        compound.putInt("CoolDown", this.entityData.get(COOL_DOWN));
+        compound.putInt("oolDown", this.entityData.get(COOL_DOWN));
         compound.putFloat("Health", this.entityData.get(HEALTH));
     }
 
@@ -104,7 +107,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
 
     @Override
     public double getPassengersRidingOffset() {
-        return super.getPassengersRidingOffset() - 1.25;
+        return super.getPassengersRidingOffset() - 0.25;
     }
 
     @Override
@@ -324,7 +327,6 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
             double z = this.getZ() + 9 * this.getLookAngle().z;
 
             server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 10, 0.4, 0.4, 0.4, 0.0075);
-
             server.sendParticles(ParticleTypes.CLOUD, x, y, z, 10, 0.4, 0.4, 0.4, 0.0075);
 
             int count = 6;
@@ -335,6 +337,10 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
                         this.getEyeY() + i * this.getLookAngle().y,
                         this.getZ() + i * this.getLookAngle().z,
                         Mth.clamp(count--, 1, 5), 0.15, 0.15, 0.15, 0.0025);
+            }
+
+            if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
+                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(15,15,45, this.getX(), this.getY(), this.getZ()));
             }
         }
     }
@@ -380,13 +386,6 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
         float f1 = Mth.clamp(f, -85.0F, 16.3F);
         entity.xRotO += f1 - f;
         entity.setXRot(entity.getXRot() + f1 - f);
-
-//        entity.setYBodyRot(this.getYRot());
-//        float f2 = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
-//        float f3 = Mth.clamp(f2, -60.0F, 60.0F);
-//        entity.yRotO += f3 - f2;
-//        entity.setYRot(entity.getYRot() + f3 - f2);
-//        entity.setYHeadRot(entity.getYRot());
     }
 
     @Override
@@ -398,7 +397,6 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
         if (this.entityData.get(COOL_DOWN) > 10) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire"));
         }
-
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mk42.idle"));
     }
 

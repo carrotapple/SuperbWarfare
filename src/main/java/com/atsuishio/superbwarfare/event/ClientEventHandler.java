@@ -6,7 +6,6 @@ import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.DroneEntity;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.init.*;
-import com.atsuishio.superbwarfare.item.common.ammo.CannonShellItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.LaserShootMessage;
 import com.atsuishio.superbwarfare.network.message.ShootMessage;
@@ -20,6 +19,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -35,6 +35,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -123,9 +124,13 @@ public class ClientEventHandler {
     public static int miniGunRot = 0;
 
     public static double revolverPreTime = 0;
-
     public static double revolverWheelPreTime = 0;
 
+    public static double shakeTime = 0;
+    public static double shakeRadius = 0;
+    public static double shakeAmplitude = 0;
+    public static double[] shakePos = {0, 0, 0};
+    public static double shakeType = 0;
 
     @SubscribeEvent
     public static void handleWeaponTurn(RenderHandEvent event) {
@@ -201,6 +206,7 @@ public class ClientEventHandler {
         }
 
         beamShoot(player, stack);
+
     }
 
     @SubscribeEvent
@@ -439,7 +445,9 @@ public class ClientEventHandler {
     public static void handleClientShoot() {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
+
         CompoundTag tag = player.getMainHandItem().getOrCreateTag();
+
         if (!player.getMainHandItem().is(ModTags.Items.GUN)) return;
 
         ModUtils.PACKET_HANDLER.sendToServer(new ShootMessage(gunSpread));
@@ -457,6 +465,20 @@ public class ClientEventHandler {
         randomShell[0] = (1 + 0.2 * (Math.random() - 0.5));
         randomShell[1] = (0.2 + (Math.random() - 0.5));
         randomShell[2] = (0.7 + (Math.random() - 0.5));
+    }
+
+    public static void handleShakeClient(double time, double radius, double amplitude, double x, double y,double z, Supplier<NetworkEvent.Context> ctx) {
+        if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+            Player player = Minecraft.getInstance().player;
+            if (player == null) return;
+            shakeTime = time;
+            shakeRadius = radius;
+            shakeAmplitude = amplitude * Mth.DEG_TO_RAD;
+            shakePos[0] = x;
+            shakePos[1] = y;
+            shakePos[2] = z;
+            shakeType = 2 * (Math.random() - 0.5);
+        }
     }
 
     public static void playGunClientSounds(Player player) {
@@ -561,6 +583,7 @@ public class ClientEventHandler {
         ClientLevel level = Minecraft.getInstance().level;
         Entity entity = event.getCamera().getEntity();
         handlePlayerCamera(event);
+
         if (level != null && entity instanceof LivingEntity living
                 && living.getMainHandItem().is(ModItems.MONITOR.get())
                 && living.getMainHandItem().getOrCreateTag().getBoolean("Using")
@@ -572,6 +595,7 @@ public class ClientEventHandler {
                 Minecraft.getInstance().gameRenderer.shutdownEffect();
             }
         }
+
         if (level != null && entity instanceof LivingEntity living && living.getMainHandItem().is(ModTags.Items.GUN)) {
             handleWeaponSway(living);
             handleWeaponMove(living);
@@ -583,6 +607,33 @@ public class ClientEventHandler {
             handleShockCamera(event, living);
             handleBowPullAnimation(living);
             handleWeaponDraw(living);
+        }
+
+        float times = Minecraft.getInstance().getDeltaFrameTime();
+        LocalPlayer player = Minecraft.getInstance().player;
+
+        float yaw = event.getYaw();
+        float pitch = event.getPitch();
+        float roll = event.getRoll();
+        float shakeRadiusAmplitude;
+
+        shakeTime = Mth.lerp(0.25 * times, shakeTime, 0);
+
+        if (player != null && shakeTime > 0) {
+            shakeRadiusAmplitude = (float) (1 - player.position().distanceTo(new Vec3(shakePos[0], shakePos[1], shakePos[2])) / shakeRadius);
+
+            player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.##").format(shakeRadiusAmplitude)), true);
+
+            if (shakeType > 0) {
+                event.setYaw((float) (yaw + (shakeTime * Math.sin(0.5 *Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * 0.75 * shakeType)));
+                event.setPitch((float) (pitch - (shakeTime * Math.sin(0.5 *Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType)));
+                event.setRoll((float) (roll - (shakeTime * Math.sin(0.5 *Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude)));
+            } else {
+                event.setYaw((float) (yaw - (shakeTime * Math.sin(0.5 *Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * 0.75 * shakeType)));
+                event.setPitch((float) (pitch + (shakeTime * Math.sin(0.5 *Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType)));
+                event.setRoll((float) (roll + (shakeTime * Math.sin(0.5 *Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude)));
+            }
+
         }
     }
 
@@ -998,7 +1049,7 @@ public class ClientEventHandler {
             angle = Math.atan(Mth.abs((float) cameraLocation) / (lookDistance + 2.9)) * Mth.RAD_TO_DEG;
         }
 
-        if (player.getMainHandItem().is(ModTags.Items.GUN) || (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity && player.getMainHandItem().getItem() instanceof CannonShellItem)) {
+        if (player.getMainHandItem().is(ModTags.Items.GUN)) {
             event.setPitch((float) (pitch + cameraRot[0] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.2 : 0) * turnRot[0] + 3 * velocityY));
             if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK) {
                 event.setYaw((float) (yaw + cameraRot[1] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.8 : 0) * turnRot[1] - (cameraLocation > 0 ? 1 : -1) * angle * zoomPos));
@@ -1088,6 +1139,15 @@ public class ClientEventHandler {
             droneFovLerp = Mth.lerp(0.1 * Minecraft.getInstance().getDeltaFrameTime(), droneFovLerp, droneFov);
 
             event.setFOV(event.getFOV() / droneFovLerp);
+        }
+    }
+
+    @SubscribeEvent
+    public static void setPlayerInvisible(RenderPlayerEvent.Pre event) {
+        var otherPlayer = event.getEntity();
+
+        if (otherPlayer.getVehicle() instanceof ICannonEntity) {
+            event.setCanceled(true);
         }
     }
 

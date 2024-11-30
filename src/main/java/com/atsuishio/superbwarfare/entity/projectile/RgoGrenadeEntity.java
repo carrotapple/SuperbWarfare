@@ -78,9 +78,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                 if (state.getBlock() instanceof BellBlock bell) {
                     bell.attemptToRing(this.level(), resultPos, blockResult.getDirection());
                 }
-                if (this.tickCount > 2) {
-                    ProjectileTool.causeCustomExplode(this, 100f, 4f, 1.2f);
-                }
+                ProjectileTool.causeCustomExplode(this, 100f, 4f, 1.2f);
 
                 break;
             case ENTITY:
@@ -93,7 +91,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                         ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
                     }
                 }
-                if (this.tickCount > 2 && !(entity instanceof DroneEntity)) {
+                if (entity instanceof DroneEntity) {
                     ProjectileTool.causeCustomExplode(this, 100f, 4f, 1.2f);
                 }
                 break;
@@ -114,11 +112,9 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
             }
         }
 
-        if (this.tickCount > 2) {
-            if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
-                ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, this.xo, this.yo, this.zo,
-                        1, 0, 0, 0, 0.01, true);
-            }
+        if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
+            ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, this.xo, this.yo, this.zo,
+                    1, 0, 0, 0, 0.01, true);
         }
     }
 
@@ -146,13 +142,4 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
         this.xRotO = this.getXRot();
     }
 
-    @Override
-    public void shootFromRotation(Entity pShooter, float pX, float pY, float pZ, float pVelocity, float pInaccuracy) {
-        float f = -Mth.sin(pY * 0.017453292F) * Mth.cos(pX * 0.017453292F);
-        float f1 = -Mth.sin((pX + pZ) * 0.017453292F);
-        float f2 = Mth.cos(pY * 0.017453292F) * Mth.cos(pX * 0.017453292F);
-        this.shoot((double)f, (double)f1, (double)f2, pVelocity, pInaccuracy);
-        Vec3 vec3 = pShooter.getDeltaMovement();
-        this.setDeltaMovement(this.getDeltaMovement().add(vec3.x, pShooter.onGround() ? 0.0 : -vec3.y, vec3.z));
-    }
 }

@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.entity.projectile.CannonShellEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.item.common.ammo.CannonShellItem;
+import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
@@ -33,6 +34,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 import org.joml.Vector3d;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -112,7 +114,7 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
 
     @Override
     public double getPassengersRidingOffset() {
-        return super.getPassengersRidingOffset() - 1.075;
+        return super.getPassengersRidingOffset() - 0.075;
     }
 
     @Override
@@ -422,6 +424,10 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
                     this.getY(),
                     this.getZ() + 5 * this.getLookAngle().z,
                     100, 7, 0.02, 7, 0.005);
+
+            if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
+                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(17,20,50, this.getX(), this.getY(), this.getZ()));
+            }
         }
     }
 
@@ -434,7 +440,6 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
 
     public void travel() {
         Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
-
         if (!(passenger instanceof LivingEntity entity)) return;
 
         float passengerY = entity.getYHeadRot();
@@ -471,6 +476,8 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
     public void onPassengerTurned(Entity entity) {
         this.clampRotation(entity);
     }
+
+
 
     private PlayState movementPredicate(AnimationState<Mle1934Entity> event) {
         if (this.entityData.get(COOL_DOWN) > 64) {

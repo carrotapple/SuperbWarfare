@@ -1,7 +1,10 @@
 package com.atsuishio.superbwarfare.tools;
 
+import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -18,8 +21,10 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -59,6 +64,15 @@ public class CustomExplosion extends Explosion {
 
     public CustomExplosion(Level pLevel, @Nullable Entity pSource, @Nullable DamageSource source, float damage, double pToBlowX, double pToBlowY, double pToBlowZ, float pRadius, Explosion.BlockInteraction pBlockInteraction) {
         this(pLevel, pSource, source, null, damage, pToBlowX, pToBlowY, pToBlowZ, pRadius, pBlockInteraction);
+
+        final Vec3 center = new Vec3(pToBlowX, pToBlowY, pToBlowZ);
+
+        for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4 * radius), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
+
+            if (target instanceof ServerPlayer serverPlayer) {
+                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(20 + 0.02 * damage,3 * pRadius,60 + 0.05 * damage, pToBlowX, pToBlowY, pToBlowZ));
+            }
+        }
     }
 
     public CustomExplosion setFireTime(int fireTime) {

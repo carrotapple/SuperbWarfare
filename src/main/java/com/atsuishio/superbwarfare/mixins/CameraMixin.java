@@ -1,7 +1,6 @@
 package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.entity.DroneEntity;
-import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.entity.Mk42Entity;
 import com.atsuishio.superbwarfare.entity.Mle1934Entity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
@@ -42,11 +41,7 @@ public abstract class CameraMixin {
         if (player != null) {
             ItemStack stack = player.getMainHandItem();
 
-            if (player.getVehicle() != null && mc.player.getVehicle() instanceof ICannonEntity && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
-                setRotation(player.getViewYRot(partialTicks), player.getViewXRot(partialTicks));
-                setPosition(player.getX(), player.getEyeY() + 1, player.getZ());
-                info.cancel();
-            } else if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+            if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
                 DroneEntity drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
 
                 if (drone != null) {
@@ -69,11 +64,11 @@ public abstract class CameraMixin {
     @Inject(method = "setup", at = @At("TAIL"))
     public void ia$setup(BlockGetter area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
         if (thirdPerson && entity.getVehicle() instanceof Mk42Entity) {
-            move(-getMaxZoom(8), 2, 0.0);
+            move(-getMaxZoom(8), 1, 0.0);
             return;
         }
         if (thirdPerson && entity.getVehicle() instanceof Mle1934Entity) {
-            move(-getMaxZoom(10), 2.3, 0.0);
+            move(-getMaxZoom(10), 1.3, 0.0);
             return;
         }
         if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && entity instanceof Player player && player.getMainHandItem().is(ModTags.Items.GUN)) {

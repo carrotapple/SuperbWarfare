@@ -148,6 +148,7 @@ public class ModUtils {
         addNetworkMessage(ShootMessage.class, ShootMessage::encode, ShootMessage::decode, ShootMessage::handler);
         addNetworkMessage(LaserShootMessage.class, LaserShootMessage::encode, LaserShootMessage::decode, LaserShootMessage::handler);
         addNetworkMessage(ShootClientMessage.class, ShootClientMessage::encode, ShootClientMessage::decode, ShootClientMessage::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+        addNetworkMessage(ShakeClientMessage.class, ShakeClientMessage::encode, ShakeClientMessage::decode, ShakeClientMessage::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         addNetworkMessage(DrawClientMessage.class, DrawClientMessage::encode, DrawClientMessage::decode, DrawClientMessage::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
         addNetworkMessage(EditModeMessage.class, EditModeMessage::encode, EditModeMessage::decode, EditModeMessage::handler);
         addNetworkMessage(EditMessage.class, EditMessage::encode, EditMessage::decode, EditMessage::handler);

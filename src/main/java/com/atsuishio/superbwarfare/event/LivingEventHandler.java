@@ -120,36 +120,27 @@ public class LivingEventHandler {
         }
 
         //计算防弹插板减伤
-        if (source.is(ModTags.DamageTypes.PROJECTILE) || source.is(ModTags.DamageTypes.PROJECTILE_ABSOLUTE)
-                || source.is(ModDamageTypes.PROJECTILE_BOOM)
-                || source.is(ModDamageTypes.MINE)
-                || source.is(ModDamageTypes.CANNON_FIRE)
-                || source.is(ModDamageTypes.CUSTOM_EXPLOSION)
-                || source.is(DamageTypes.EXPLOSION)
-                || source.is(DamageTypes.PLAYER_EXPLOSION)
-                || source.is(DamageTypes.MOB_PROJECTILE)) {
-            ItemStack armor = entity.getItemBySlot(EquipmentSlot.CHEST);
+        ItemStack armor = entity.getItemBySlot(EquipmentSlot.CHEST);
 
-            if (armor != ItemStack.EMPTY && armor.getTag() != null && armor.getTag().contains("ArmorPlate")) {
-                double armorValue;
-                armorValue = armor.getOrCreateTag().getDouble("ArmorPlate");
-                armor.getOrCreateTag().putDouble("ArmorPlate", Math.max(armor.getOrCreateTag().getDouble("ArmorPlate") - damage, 0));
-                damage = Math.max(damage - armorValue, 0);
-            }
+        if (armor != ItemStack.EMPTY && armor.getTag() != null && armor.getTag().contains("ArmorPlate")) {
+            double armorValue;
+            armorValue = armor.getOrCreateTag().getDouble("ArmorPlate");
+            armor.getOrCreateTag().putDouble("ArmorPlate", Math.max(armor.getOrCreateTag().getDouble("ArmorPlate") - damage, 0));
+            damage = Math.max(damage - armorValue, 0);
+        }
 
-            //计算防弹护具减伤
-            if (source.is(ModTags.DamageTypes.PROJECTILE) || source.is(DamageTypes.MOB_PROJECTILE)) {
-                damage *= 1 - 0.8 * Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE.get()), 0, 1);
-            }
+        //计算防弹护具减伤
+        if (source.is(ModTags.DamageTypes.PROJECTILE) || source.is(DamageTypes.MOB_PROJECTILE)) {
+            damage *= 1 - 0.8 * Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE.get()), 0, 1);
+        }
 
-            if (source.is(ModTags.DamageTypes.PROJECTILE_ABSOLUTE)) {
-                damage *= 1 - 0.2 * Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE.get()), 0, 1);
-            }
+        if (source.is(ModTags.DamageTypes.PROJECTILE_ABSOLUTE)) {
+            damage *= 1 - 0.2 * Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE.get()), 0, 1);
+        }
 
-            if (source.is(ModDamageTypes.PROJECTILE_BOOM) || source.is(ModDamageTypes.MINE) || source.is(ModDamageTypes.CANNON_FIRE) || source.is(ModDamageTypes.CUSTOM_EXPLOSION)
-                    || source.is(DamageTypes.EXPLOSION) || source.is(DamageTypes.PLAYER_EXPLOSION)) {
-                damage *= 1 - 0.3 * Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE.get()), 0, 1);
-            }
+        if (source.is(ModDamageTypes.PROJECTILE_BOOM) || source.is(ModDamageTypes.MINE) || source.is(ModDamageTypes.CANNON_FIRE) || source.is(ModDamageTypes.CUSTOM_EXPLOSION)
+                || source.is(DamageTypes.EXPLOSION) || source.is(DamageTypes.PLAYER_EXPLOSION)) {
+            damage *= 1 - 0.3 * Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE.get()), 0, 1);
         }
 
         event.setAmount((float) damage);

@@ -1,8 +1,7 @@
 package com.atsuishio.superbwarfare.entity.model;
 
-import com.atsuishio.superbwarfare.entity.Mk42Entity;
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.entity.Mk42Entity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -49,10 +48,5 @@ public class Mk42Model extends GeoModel<Mk42Entity> {
         CoreGeoBone bone = getAnimationProcessor().getBone("maingun");
         EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
         bone.setRotX((entityData.headPitch()) * Mth.DEG_TO_RAD);
-
-        CoreGeoBone camera = getAnimationProcessor().getBone("camera");
-
-        if (animatable.getFirstPassenger() == null) return;
-        ClientEventHandler.shake(Mth.RAD_TO_DEG * camera.getRotX(), Mth.RAD_TO_DEG * camera.getRotY(), Mth.RAD_TO_DEG * camera.getRotZ());
     }
 }
