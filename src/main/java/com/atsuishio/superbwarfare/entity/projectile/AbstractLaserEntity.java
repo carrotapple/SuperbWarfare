@@ -49,7 +49,7 @@ public abstract class AbstractLaserEntity extends Entity implements TraceableEnt
     public AbstractLaserEntity(EntityType<?> type, Level level, int countDown) {
         super(type, level);
         this.setCountDown(countDown);
-        noCulling = true;
+        this.noCulling = true;
     }
 
     @Override
