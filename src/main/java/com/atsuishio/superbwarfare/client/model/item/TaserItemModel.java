@@ -3,21 +3,16 @@ package com.atsuishio.superbwarfare.client.model.item;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.special.TaserItem;
-import com.atsuishio.superbwarfare.perk.PerkHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class TaserItemModel extends GeoModel<TaserItem> {
 
@@ -40,9 +35,6 @@ public class TaserItemModel extends GeoModel<TaserItem> {
     public void setCustomAnimations(TaserItem animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone gun = getAnimationProcessor().getBone("bone");
         CoreGeoBone shen = getAnimationProcessor().getBone("shen");
-        CoreGeoBone bar = getAnimationProcessor().getBone("bar");
-        CoreGeoBone bluecover = getAnimationProcessor().getBone("bluecover");
-        CoreGeoBone redcover = getAnimationProcessor().getBone("redcover");
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
@@ -66,31 +58,6 @@ public class TaserItemModel extends GeoModel<TaserItem> {
         double fpz = ClientEventHandler.firePosZ * 13 * times;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
-
-        AtomicInteger energy = new AtomicInteger(0);
-        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                e -> energy.set(e.getEnergyStored())
-        );
-
-        int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.VOLT_OVERLOAD.get(), stack);
-
-        bar.setScaleX((float) energy.get() / 12000);
-
-        if (energy.get() >= 2000 + 200 * perkLevel) {
-            bluecover.setScaleX(1);
-            bluecover.setScaleY(1);
-            bluecover.setScaleZ(1);
-            redcover.setScaleX(0);
-            redcover.setScaleY(0);
-            redcover.setScaleZ(0);
-        } else {
-            bluecover.setScaleX(0);
-            bluecover.setScaleY(0);
-            bluecover.setScaleZ(0);
-            redcover.setScaleX(1);
-            redcover.setScaleY(1);
-            redcover.setScaleZ(1);
-        }
 
         shen.setPosX((float) (0.75f * ClientEventHandler.recoilHorizon * fpz * fp));
         shen.setPosY((float) (-0.03f * fp - 0.06f * fr));
