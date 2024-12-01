@@ -273,6 +273,8 @@
   "des.superbwarfare.turbo_charger": "Reduces auto fire spin-up time for compatible weapons",
   "item.superbwarfare.powerful_attraction": "Powerful Attraction",
   "des.superbwarfare.powerful_attraction": "Transfer items and experience dropped by killed targets to your inventory",
+  "item.superbwarfare.intelligent_chip": "Intelligent Chip",
+  "des.superbwarfare.intelligent_chip": "自动瞄准敌人（请勿在PVP环境下使用此模组）",
 
   "item.superbwarfare.kill_clip": "Kill Clip",
   "des.superbwarfare.kill_clip": "Increases the damage of weapon after dealing a final blow",

@@ -160,7 +160,7 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
     public boolean canApplyPerk(Perk perk) {
         return switch (perk.type) {
             case AMMO -> !perk.descriptionId.equals("butterfly_bullet");
-            case FUNCTIONAL -> perk == ModPerks.FIELD_DOCTOR.get();
+            case FUNCTIONAL -> perk == ModPerks.FIELD_DOCTOR.get() || perk == ModPerks.INTELLIGENT_CHIP.get();
             case DAMAGE -> perk == ModPerks.MONSTER_HUNTER.get() || perk == ModPerks.KILLING_TALLY.get();
         };
     }

@@ -91,7 +91,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                         ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
                     }
                 }
-                if (entity instanceof DroneEntity) {
+                if (!(entity instanceof DroneEntity)) {
                     ProjectileTool.causeCustomExplode(this, 100f, 4f, 1.2f);
                 }
                 break;

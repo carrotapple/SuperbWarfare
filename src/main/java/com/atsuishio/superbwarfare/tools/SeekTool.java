@@ -1,6 +1,8 @@
 package com.atsuishio.superbwarfare.tools;
 
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
@@ -15,6 +17,22 @@ public class SeekTool {
         return StreamSupport.stream(EntityFindUtil.getEntities(level).getAll().spliterator(), false)
                 .filter(e -> {
                     if (e.distanceTo(entity) <= seekRange && calculateAngle(e, entity) < seekAngle && e != entity && e.isAlive()) {
+                        return level.clip(new ClipContext(entity.getEyePosition(), e.getEyePosition(),
+                                ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() != HitResult.Type.BLOCK;
+                    }
+                    return false;
+                }).min(Comparator.comparingDouble(e -> calculateAngle(e, entity))).orElse(null);
+    }
+
+    public static Entity seekLivingEntity(Entity entity, Level level, double seekRange, double seekAngle) {
+        return StreamSupport.stream(EntityFindUtil.getEntities(level).getAll().spliterator(), false)
+                .filter(e -> {
+                    if (e.distanceTo(entity) <= seekRange && calculateAngle(e, entity) < seekAngle
+                            && e != entity
+                            && e.isAlive()
+                            && e instanceof LivingEntity
+                            && !(e instanceof Player player && (player.isCreative() || player.isSpectator()))
+                            && (!e.isAlliedTo(entity) || e.getTeam() == null || e.getTeam().getName().equals("TDM"))) {
                         return level.clip(new ClipContext(entity.getEyePosition(), e.getEyePosition(),
                                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() != HitResult.Type.BLOCK;
                     }

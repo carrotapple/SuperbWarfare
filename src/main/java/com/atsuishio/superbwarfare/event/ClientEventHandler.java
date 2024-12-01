@@ -354,7 +354,7 @@ public class ClientEventHandler {
             Entity lookingEntity = TraceTool.laserfindLookingEntity(player, 512);
 
             if (player.isCrouching()) {
-                Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 64, 32);
+                Entity seekingEntity = SeekTool.seekLivingEntity(player, player.level(), 64, 32);
                 if (seekingEntity != null && seekingEntity.isAlive()) {
                     player.lookAt(EntityAnchorArgument.Anchor.EYES, seekingEntity.getEyePosition());
                 }
@@ -1123,7 +1123,7 @@ public class ClientEventHandler {
                     && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
                 int level = PerkHelper.getItemPerkLevel(ModPerks.INTELLIGENT_CHIP.get(), stack);
                 if (level > 0) {
-                    Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 32 + 8 * (level - 1), 25 / zoomFov);
+                    Entity seekingEntity = SeekTool.seekLivingEntity(player, player.level(), 32 + 8 * (level - 1), 25 / zoomFov);
                     if (seekingEntity != null && seekingEntity.isAlive()) {
                         player.lookAt(EntityAnchorArgument.Anchor.EYES, seekingEntity.getEyePosition());
                     }
