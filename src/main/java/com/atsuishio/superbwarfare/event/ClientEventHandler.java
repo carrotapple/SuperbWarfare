@@ -619,7 +619,7 @@ public class ClientEventHandler {
         shakeTime = Mth.lerp(0.25 * times, shakeTime, 0);
 
         if (player != null && shakeTime > 0) {
-            shakeRadiusAmplitude = (float) (1 - player.position().distanceTo(new Vec3(shakePos[0], shakePos[1], shakePos[2])) / shakeRadius);
+            shakeRadiusAmplitude = (float) Mth.clamp(1 - player.position().distanceTo(new Vec3(shakePos[0], shakePos[1], shakePos[2])) / shakeRadius, 0 ,1);
 
 //            player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.##").format(shakeRadiusAmplitude)), true);
 

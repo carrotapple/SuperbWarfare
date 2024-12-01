@@ -70,7 +70,7 @@ public class CustomExplosion extends Explosion {
         for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4 * radius), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
 
             if (target instanceof ServerPlayer serverPlayer) {
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(20 + 0.02 * damage,2 * pRadius,50 + 0.05 * damage, pToBlowX, pToBlowY, pToBlowZ));
+                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(20 + 0.02 * damage,3 * pRadius,50 + 0.05 * damage, pToBlowX, pToBlowY, pToBlowZ));
             }
         }
     }
