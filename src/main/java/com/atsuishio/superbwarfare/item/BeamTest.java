@@ -36,13 +36,12 @@ public class BeamTest extends Item {
                 float yHeadRotAngle = (float) Math.toRadians(player.yHeadRot + 90);
                 float xHeadRotAngle = (float) (float) -Math.toRadians(player.getXRot());
                 LaserEntity laserEntity = new LaserEntity(player.level(), player, px, py, pz, yHeadRotAngle, xHeadRotAngle, 6000);
-                capability.init(new LaserHandler(player, laserEntity, 0));
+                capability.init(new LaserHandler(player, laserEntity));
                 capability.start();
 
                 if (!stack.getOrCreateTag().getBoolean("LaserFiring") && !(player.getCooldowns().isOnCooldown(stack.getItem()))) {
                     stack.getOrCreateTag().putBoolean("LaserFiring", true);
                 }
-
             }
         });
 
@@ -56,7 +55,6 @@ public class BeamTest extends Item {
             entity.playSound(ModSounds.MINIGUN_ROT.get(), 2, 1);
             stack.getOrCreateTag().putInt("FireTick", stack.getOrCreateTag().getInt("FireTick") + 1);
         }
-
 
         if (stack.getOrCreateTag().getInt("FireTick") >= 14) {
             if (entity instanceof ServerPlayer serverPlayer) {
@@ -90,5 +88,10 @@ public class BeamTest extends Item {
     @Override
     public int getUseDuration(ItemStack stack) {
         return 15;
+    }
+
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return slotChanged;
     }
 }

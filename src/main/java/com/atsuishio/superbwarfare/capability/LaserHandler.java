@@ -4,19 +4,16 @@ import com.atsuishio.superbwarfare.entity.projectile.AbstractLaserEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 
 public class LaserHandler {
 
-    public final int coolingTick;
     public boolean isUsing;
     public final LivingEntity entity;
     public final AbstractLaserEntity laserEntity;
     private int tick;
 
-    public LaserHandler(LivingEntity entity, AbstractLaserEntity laserEntity, int coolingTick) {
-        this.coolingTick = coolingTick;
+    public LaserHandler(LivingEntity entity, AbstractLaserEntity laserEntity) {
         this.entity = entity;
         this.laserEntity = laserEntity;
     }
@@ -28,7 +25,6 @@ public class LaserHandler {
         if (this.entity.level() instanceof ServerLevel level) {
             level.addFreshEntity(this.laserEntity);
         }
-        this.entity.swing(InteractionHand.MAIN_HAND, true);
     }
 
     public void tick() {
@@ -41,7 +37,23 @@ public class LaserHandler {
         }
     }
 
+    /**
+     * 终止光束，并带有淡出效果
+     */
     public void stop() {
+        if (!this.isUsing) return;
+
+        this.isUsing = false;
+        this.tick = 0;
+        if (this.laserEntity != null) {
+            this.laserEntity.setDuration(3);
+        }
+    }
+
+    /**
+     * 直接终止光束
+     */
+    public void end() {
         if (!this.isUsing) return;
 
         this.isUsing = false;

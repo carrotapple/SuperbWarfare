@@ -26,6 +26,8 @@ public class LaserCapability {
 
         void stop();
 
+        void end();
+
     }
 
     public static class LaserCapabilityImpl implements ILaserCapability {
@@ -50,6 +52,13 @@ public class LaserCapability {
         public void stop() {
             if (this.laserHandler != null) {
                 this.laserHandler.stop();
+            }
+        }
+
+        @Override
+        public void end() {
+            if (this.laserHandler != null) {
+                this.laserHandler.end();
             }
         }
 

@@ -71,7 +71,7 @@ public abstract class AbstractLaserEntity extends Entity implements TraceableEnt
 
         this.beamTick();
 
-        if ((!this.on && this.ticker.isStopped()) || (this.caster != null && !caster.isAlive())) {
+        if ((!this.on && this.ticker.isStopped()) || (this.caster != null && !this.caster.isAlive())) {
             this.discard();
         }
         this.ticker.changeTimer(this.on && this.isAccumulating());
