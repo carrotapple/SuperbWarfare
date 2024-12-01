@@ -40,7 +40,7 @@ public class Mk42Model extends GeoModel<Mk42Entity> {
 
     @Override
     public ResourceLocation getTextureResource(Mk42Entity entity) {
-        return ModUtils.loc("textures/entity/sherman.png");
+        return ModUtils.loc("textures/entity/mk42.png");
     }
 
     @Override
