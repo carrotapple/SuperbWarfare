@@ -1,13 +1,13 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
+import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
+import com.atsuishio.superbwarfare.init.ModItems;
+import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.ProjectileTool;
-import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.init.ModDamageTypes;
-import com.atsuishio.superbwarfare.init.ModItems;
-import com.atsuishio.superbwarfare.init.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
@@ -32,15 +32,19 @@ import net.minecraftforge.network.PlayMessages;
 
 public class GunGrenadeEntity extends ThrowableItemProjectile {
     private float monsterMultiplier = 0.0f;
-    private float damage = 80.0f;
+    private float damage = 40.0f;
+    private float explosion_damage = 80f;
+    private float explosion_radius = 5f;
 
     public GunGrenadeEntity(EntityType<? extends GunGrenadeEntity> type, Level world) {
         super(type, world);
     }
 
-    public GunGrenadeEntity(LivingEntity entity, Level level, float damage) {
+    public GunGrenadeEntity(LivingEntity entity, Level level, float damage, float explosion_damage, float explosion_radius) {
         super(ModEntities.GUN_GRENADE.get(), entity, level);
         this.damage = damage;
+        this.explosion_damage = explosion_damage;
+        this.explosion_radius = explosion_radius;
     }
 
     public GunGrenadeEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
@@ -79,9 +83,9 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
         }
 
         if (entity instanceof Monster monster) {
-            monster.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), 1.5f * this.damage * damageMultiplier);
+            monster.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), 1.2f * this.damage * damageMultiplier);
         } else {
-            entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), 1.5f * this.damage);
+            entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), damage);
         }
 
         if (entity instanceof LivingEntity) {
@@ -92,7 +96,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        entity, this.damage * 1.2f, 4.5f, this.monsterMultiplier);
+                        entity, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
             }
         }
 
@@ -112,7 +116,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.damage * 1.4f, 7.5f, this.monsterMultiplier);
+                        this, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
             }
         }
 
@@ -132,7 +136,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.damage * 1.8f, 7.5f, this.monsterMultiplier);
+                        this, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
             }
             this.discard();
         }

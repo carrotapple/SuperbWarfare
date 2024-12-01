@@ -1,15 +1,15 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
-import com.atsuishio.superbwarfare.init.ModEntities;
-import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.entity.AnimatedEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
+import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
+import com.atsuishio.superbwarfare.tools.ParticleTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
@@ -54,15 +54,19 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
     public String animationprocedure = "empty";
 
     private float monsterMultiplier = 0.0f;
-    private float damage = 500f;
+    private float damage = 250f;
+    private float explosion_damage = 200f;
+    private float explosion_radius = 10f;
 
     public RpgRocketEntity(EntityType<? extends RpgRocketEntity> type, Level world) {
         super(type, world);
     }
 
-    public RpgRocketEntity(LivingEntity entity, Level level, float damage) {
+    public RpgRocketEntity(LivingEntity entity, Level level, float damage, float explosion_damage, float explosion_radius) {
         super(ModEntities.RPG_ROCKET.get(), entity, level);
         this.damage = damage;
+        this.explosion_damage = explosion_damage;
+        this.explosion_radius = explosion_radius;
     }
 
     public RpgRocketEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
@@ -101,7 +105,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
         }
 
         if (entity instanceof Monster monster) {
-            monster.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), 1.4f * this.damage * damageMultiplier);
+            monster.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), 1.2f * this.damage * damageMultiplier);
         } else {
             entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
         }
@@ -114,7 +118,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
             if (this.level() instanceof ServerLevel) {
                 causeRpgExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        entity, this.damage * 0.67f, 10.0f, this.monsterMultiplier);
+                        entity, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
             }
         }
 
@@ -135,7 +139,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
             if (this.level() instanceof ServerLevel) {
                 causeRpgExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.damage * 0.67f, 10.0f, this.monsterMultiplier);
+                        this, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
             }
         }
 
@@ -164,7 +168,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
             if (this.level() instanceof ServerLevel) {
                 causeRpgExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.damage * 0.67f, 10.0f, this.monsterMultiplier);
+                        this, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
             }
             this.discard();
         }
@@ -181,23 +185,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
     }
 
     private PlayState movementPredicate(AnimationState<RpgRocketEntity> event) {
-        if (this.animationprocedure.equals("empty")) {
-            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.rpg.idle"));
-        }
-        return PlayState.STOP;
-    }
-
-    private PlayState procedurePredicate(AnimationState<RpgRocketEntity> event) {
-        if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
-            if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                this.animationprocedure = "empty";
-                event.getController().forceAnimationReset();
-            }
-        } else if (animationprocedure.equals("empty")) {
-            return PlayState.STOP;
-        }
-        return PlayState.CONTINUE;
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.rpg.idle"));
     }
 
     @Override
@@ -221,7 +209,6 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         data.add(new AnimationController<>(this, "movement", 0, this::movementPredicate));
-        data.add(new AnimationController<>(this, "procedure", 0, this::procedurePredicate));
     }
 
     @Override

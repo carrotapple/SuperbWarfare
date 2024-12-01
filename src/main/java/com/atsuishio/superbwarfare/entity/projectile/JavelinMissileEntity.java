@@ -55,15 +55,19 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
     public static final EntityDataAccessor<Float> TARGET_Z = SynchedEntityData.defineId(JavelinMissileEntity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private float monsterMultiplier = 0.0f;
-    private float damage = 700.0f;
+    private float damage = 500.0f;
+    private float explosion_damage = 140f;
+    private float explosion_radius = 6f;
 
     public JavelinMissileEntity(EntityType<? extends JavelinMissileEntity> type, Level world) {
         super(type, world);
     }
 
-    public JavelinMissileEntity(LivingEntity entity, Level level, float damage) {
+    public JavelinMissileEntity(LivingEntity entity, Level level, float damage, float explosion_damage, float explosion_radius) {
         super(ModEntities.JAVELIN_MISSILE.get(), entity, level);
         this.damage = damage;
+        this.explosion_damage = explosion_damage;
+        this.explosion_radius = explosion_radius;
     }
 
     public JavelinMissileEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
@@ -125,9 +129,9 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
         }
 
         if (entity instanceof Monster monster) {
-            monster.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), (entityData.get(TOP) ? 1 : 0.7f) * this.damage * damageMultiplier);
+            monster.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), (entityData.get(TOP) ? 1.3f : 1f) * this.damage * damageMultiplier);
         } else {
-            entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), (entityData.get(TOP) ? 1 : 0.7f) * this.damage);
+            entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), (entityData.get(TOP) ? 1.3f : 1f) * this.damage);
         }
 
         if (entity instanceof LivingEntity) {
@@ -138,7 +142,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        entity, 0.2f * this.damage, 4.0f, this.monsterMultiplier);
+                        entity, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
             }
         }
 
@@ -164,7 +168,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, 0.2f * this.damage, 4.0f, this.monsterMultiplier);
+                        this, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
             }
         }
 
@@ -222,7 +226,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, 0.2f * this.damage, 4.0f, this.monsterMultiplier);
+                        this, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
             }
             this.discard();
         }

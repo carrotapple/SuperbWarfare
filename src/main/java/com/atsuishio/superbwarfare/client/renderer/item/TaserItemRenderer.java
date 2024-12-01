@@ -1,12 +1,10 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.atsuishio.superbwarfare.client.layer.TaserLayer;
-import com.atsuishio.superbwarfare.client.layer.TaserLayer2;
+import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.model.item.TaserItemModel;
 import com.atsuishio.superbwarfare.item.gun.special.TaserItem;
-import com.atsuishio.superbwarfare.client.AnimationHelper;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -28,8 +26,6 @@ import java.util.Set;
 public class TaserItemRenderer extends GeoItemRenderer<TaserItem> {
     public TaserItemRenderer() {
         super(new TaserItemModel());
-        this.addRenderLayer(new TaserLayer(this));
-        this.addRenderLayer(new TaserLayer2(this));
     }
 
     @Override

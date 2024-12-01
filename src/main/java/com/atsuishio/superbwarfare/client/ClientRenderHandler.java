@@ -20,6 +20,7 @@ public class ClientRenderHandler {
         event.register(BocekImageComponent.class, ClientBocekImageTooltip::new);
         event.register(EnergyImageComponent.class, ClientEnergyImageTooltip::new);
         event.register(SentinelImageComponent.class, ClientSentinelImageTooltip::new);
+        event.register(LauncherImageComponent.class, ClientLauncherImageTooltip::new);
     }
 
     @SubscribeEvent
