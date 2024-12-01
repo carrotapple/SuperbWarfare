@@ -350,7 +350,7 @@ public class ClientEventHandler {
     }
 
     public static void beamShoot(Player player, ItemStack stack) {
-        if (stack.is(ModItems.BEAM_TEST.get()) && stack.getOrCreateTag().getBoolean("Using")) {
+        if (stack.is(ModItems.BEAM_TEST.get()) && stack.getOrCreateTag().getBoolean("LaserFiring")) {
             Entity lookingEntity = TraceTool.laserfindLookingEntity(player, 512);
 
             if (player.isCrouching()) {
@@ -466,7 +466,7 @@ public class ClientEventHandler {
         randomShell[2] = (0.7 + (Math.random() - 0.5));
     }
 
-    public static void handleShakeClient(double time, double radius, double amplitude, double x, double y,double z, Supplier<NetworkEvent.Context> ctx) {
+    public static void handleShakeClient(double time, double radius, double amplitude, double x, double y, double z, Supplier<NetworkEvent.Context> ctx) {
         if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
             Player player = Minecraft.getInstance().player;
             if (player == null) return;
@@ -619,18 +619,16 @@ public class ClientEventHandler {
         shakeTime = Mth.lerp(0.25 * times, shakeTime, 0);
 
         if (player != null && shakeTime > 0) {
-            shakeRadiusAmplitude = (float) Mth.clamp(1 - player.position().distanceTo(new Vec3(shakePos[0], shakePos[1], shakePos[2])) / shakeRadius, 0 ,1);
-
-//            player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.##").format(shakeRadiusAmplitude)), true);
+            shakeRadiusAmplitude = (float) Mth.clamp(1 - player.position().distanceTo(new Vec3(shakePos[0], shakePos[1], shakePos[2])) / shakeRadius, 0, 1);
 
             if (shakeType > 0) {
-                event.setYaw((float) (yaw + (shakeTime * Math.sin(0.5 *Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * 0.75 * shakeType)));
-                event.setPitch((float) (pitch - (shakeTime * Math.sin(0.5 *Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType)));
-                event.setRoll((float) (roll - (shakeTime * Math.sin(0.5 *Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude)));
+                event.setYaw((float) (yaw + (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * 0.75 * shakeType)));
+                event.setPitch((float) (pitch - (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType)));
+                event.setRoll((float) (roll - (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude)));
             } else {
-                event.setYaw((float) (yaw - (shakeTime * Math.sin(0.5 *Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * 0.75 * shakeType)));
-                event.setPitch((float) (pitch + (shakeTime * Math.sin(0.5 *Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType)));
-                event.setRoll((float) (roll + (shakeTime * Math.sin(0.5 *Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude)));
+                event.setYaw((float) (yaw - (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * 0.75 * shakeType)));
+                event.setPitch((float) (pitch + (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType)));
+                event.setRoll((float) (roll + (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude)));
             }
 
         }

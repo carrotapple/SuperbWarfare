@@ -26,7 +26,7 @@ public class LaserEntityRenderer extends AbstractLaserEntityRenderer<LaserEntity
     private static final float TEXTURE_WIDTH = 256;
     private static final float TEXTURE_HEIGHT = 32;
 
-    public static final ResourceLocation TEXTURE = ModUtils.loc("textures/entity/laser.png");
+    public static final ResourceLocation TEXTURE = ModUtils.loc("textures/entity/temp_laser.png");
 
     public LaserEntityRenderer(EntityRendererProvider.Context context) {
         super(context, 0.8f, 0.6f);
@@ -41,9 +41,7 @@ public class LaserEntityRenderer extends AbstractLaserEntityRenderer<LaserEntity
     public void render(LaserEntity beam, float entityYaw, float delta, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
         this.playerView = beam.caster instanceof Player && Minecraft.getInstance().player == beam.caster
                 && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
-        if (this.playerView) {
-            return;
-        }
+//        if (this.playerView) return;
         super.render(beam, entityYaw, delta, matrixStackIn, bufferIn, packedLightIn);
     }
 

@@ -16,11 +16,11 @@ public class LaserEntity extends AbstractLaserEntity {
     public static final double RADIUS = 512D;
 
     public LaserEntity(EntityType<? extends LaserEntity> type, Level level) {
-        super(type, level, 0);
+        super(type, level, 1);
     }
 
     public LaserEntity(Level level, LivingEntity caster, double x, double y, double z, float yaw, float pitch, int duration) {
-        super(ModEntities.LASER.get(), level, 0);
+        super(ModEntities.LASER.get(), level, 1);
         this.caster = caster;
         this.setYaw(yaw);
         this.setPitch(pitch);
