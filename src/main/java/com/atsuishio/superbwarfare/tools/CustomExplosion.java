@@ -70,7 +70,20 @@ public class CustomExplosion extends Explosion {
         for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4 * radius), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
 
             if (target instanceof ServerPlayer serverPlayer) {
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(20 + 0.02 * damage,3 * pRadius,60 + 0.05 * damage, pToBlowX, pToBlowY, pToBlowZ));
+                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(20 + 0.02 * damage,2 * pRadius,50 + 0.05 * damage, pToBlowX, pToBlowY, pToBlowZ));
+            }
+        }
+    }
+
+    public CustomExplosion(Level pLevel, @Nullable Entity pSource, @Nullable DamageSource source, float damage, double pToBlowX, double pToBlowY, double pToBlowZ, float pRadius) {
+        this(pLevel, pSource, source, null, damage, pToBlowX, pToBlowY, pToBlowZ, pRadius, BlockInteraction.KEEP);
+
+        final Vec3 center = new Vec3(pToBlowX, pToBlowY, pToBlowZ);
+
+        for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(radius), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
+
+            if (target instanceof ServerPlayer serverPlayer) {
+                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(20 + 0.02 * damage, pRadius,10 + 0.03 * damage, pToBlowX, pToBlowY, pToBlowZ));
             }
         }
     }

@@ -19,7 +19,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -622,7 +621,7 @@ public class ClientEventHandler {
         if (player != null && shakeTime > 0) {
             shakeRadiusAmplitude = (float) (1 - player.position().distanceTo(new Vec3(shakePos[0], shakePos[1], shakePos[2])) / shakeRadius);
 
-            player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.##").format(shakeRadiusAmplitude)), true);
+//            player.displayClientMessage(Component.literal(new java.text.DecimalFormat("##.##").format(shakeRadiusAmplitude)), true);
 
             if (shakeType > 0) {
                 event.setYaw((float) (yaw + (shakeTime * Math.sin(0.5 *Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * 0.75 * shakeType)));

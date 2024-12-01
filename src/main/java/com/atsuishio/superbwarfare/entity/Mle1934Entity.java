@@ -32,6 +32,7 @@ import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
@@ -45,6 +46,8 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
+import java.util.Comparator;
 
 public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
 
@@ -425,8 +428,13 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
                     this.getZ() + 5 * this.getLookAngle().z,
                     100, 7, 0.02, 7, 0.005);
 
-            if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(17,20,50, this.getX(), this.getY(), this.getZ()));
+            final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
+
+            for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(20), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
+
+                if (target instanceof ServerPlayer serverPlayer) {
+                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(15,15,45, this.getX(), this.getEyeY(), this.getZ()));
+                }
             }
         }
     }

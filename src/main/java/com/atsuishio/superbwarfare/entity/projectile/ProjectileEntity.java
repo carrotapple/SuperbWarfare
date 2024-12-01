@@ -40,7 +40,6 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -371,16 +370,6 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         }
     }
 
-    protected void explosionBulletBlock(Entity projectile, float damage, int heLevel, float monsterMultiple, Vec3 hitVec) {
-        CustomExplosion explosion = new CustomExplosion(projectile.level(), projectile,
-                ModDamageTypes.causeProjectileBoomDamage(projectile.level().registryAccess(), projectile, this.getShooter()), (float) ((0.9 * damage) * (1 + 0.1 * heLevel)),
-                hitVec.x, hitVec.y, hitVec.z, (float) ((1.5 + 0.02 * damage) * (1 + 0.05 * heLevel)), Explosion.BlockInteraction.KEEP).setDamageMultiplier(monsterMultiple);
-        explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(projectile.level(), explosion);
-        explosion.finalizeExplosion(false);
-        ParticleTool.spawnSmallExplosionParticles(this.level(), hitVec);
-    }
-
     private static int getRings(@NotNull BlockHitResult blockHitResult, @NotNull Vec3 hitVec) {
         Direction direction = blockHitResult.getDirection();
         double x = Math.abs(Mth.frac(hitVec.x) - 0.5);
@@ -562,10 +551,20 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         this.discard();
     }
 
+    protected void explosionBulletBlock(Entity projectile, float damage, int heLevel, float monsterMultiple, Vec3 hitVec) {
+        CustomExplosion explosion = new CustomExplosion(projectile.level(), projectile,
+                ModDamageTypes.causeProjectileBoomDamage(projectile.level().registryAccess(), projectile, this.getShooter()), (float) ((0.9 * damage) * (1 + 0.1 * heLevel)),
+                hitVec.x, hitVec.y, hitVec.z, (float) ((1.5 + 0.02 * damage) * (1 + 0.05 * heLevel))).setDamageMultiplier(monsterMultiple);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(projectile.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnSmallExplosionParticles(this.level(), hitVec);
+    }
+
     protected void explosionBulletEntity(Entity projectile, Entity target, float damage, int heLevel, float monsterMultiple) {
         CustomExplosion explosion = new CustomExplosion(projectile.level(), projectile,
                 ModDamageTypes.causeProjectileBoomDamage(projectile.level().registryAccess(), projectile, this.getShooter()), (float) ((0.8 * damage) * (1 + 0.1 * heLevel)),
-                target.getX(), target.getY(), target.getZ(), (float) ((1.5 + 0.02 * damage) * (1 + 0.05 * heLevel)), Explosion.BlockInteraction.KEEP).setDamageMultiplier(monsterMultiple);
+                target.getX(), target.getY(), target.getZ(), (float) ((1.5 + 0.02 * damage) * (1 + 0.05 * heLevel))).setDamageMultiplier(monsterMultiple);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(projectile.level(), explosion);
         explosion.finalizeExplosion(false);
