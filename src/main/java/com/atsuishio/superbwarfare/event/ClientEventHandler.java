@@ -368,7 +368,7 @@ public class ClientEventHandler {
                     && (!player.isAlliedTo(lookingEntity) || lookingEntity.getTeam() == null || lookingEntity.getTeam().getName().equals("TDM"));
 
             if (canAttack) {
-                ModUtils.PACKET_HANDLER.sendToServer(new LaserShootMessage(2, lookingEntity.getUUID()));
+                ModUtils.PACKET_HANDLER.sendToServer(new LaserShootMessage(stack.getOrCreateTag().getInt("FireTick") >= 14 ? 45 : 1, lookingEntity.getUUID()));
             }
         }
     }
