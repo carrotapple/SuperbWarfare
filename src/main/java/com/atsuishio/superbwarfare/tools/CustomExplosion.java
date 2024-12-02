@@ -170,7 +170,7 @@ public class CustomExplosion extends Explosion {
                         xDistance /= distance;
                         yDistance /= distance;
                         zDistance /= distance;
-                        double seenPercent = Mth.clamp(getSeenPercent(position, entity), 0.25, Double.POSITIVE_INFINITY);
+                        double seenPercent = Mth.clamp(getSeenPercent(position, entity), 0.125, Double.POSITIVE_INFINITY);
                         double damagePercent = (1.0D - distanceRate) * seenPercent;
 
                         double damageFinal = (damagePercent * damagePercent + damagePercent) / 2.0D * damage;

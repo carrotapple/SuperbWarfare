@@ -43,6 +43,7 @@ public class KillMessageOverlay {
     private static final ResourceLocation BLOOD_CRYSTAL = ModUtils.loc("textures/screens/damage_types/blood_crystal.png");
     private static final ResourceLocation BURN = ModUtils.loc("textures/screens/damage_types/burn.png");
     private static final ResourceLocation DRONE = ModUtils.loc("textures/screens/damage_types/drone.png");
+    private static final ResourceLocation LASER = ModUtils.loc("textures/screens/damage_types/laser.png");
 
     private static final ResourceLocation WORLD_PEACE_STAFF = ModUtils.loc("textures/gun_icon/compat/world_peace_staff.png");
 
@@ -273,9 +274,11 @@ public class KillMessageOverlay {
                     icon = SHOCK;
                 } else if (record.damageType == ModDamageTypes.BURN || record.damageType == DamageTypes.IN_FIRE || record.damageType == DamageTypes.ON_FIRE || record.damageType == DamageTypes.LAVA) {
                     icon = BURN;
-                }  else if (record.damageType == ModDamageTypes.DRONE_HIT) {
+                } else if (record.damageType == ModDamageTypes.DRONE_HIT) {
                     icon = DRONE;
-                }else {
+                } else if (record.damageType == ModDamageTypes.LASER) {
+                    icon = LASER;
+                } else {
                     icon = GENERIC;
                 }
             }

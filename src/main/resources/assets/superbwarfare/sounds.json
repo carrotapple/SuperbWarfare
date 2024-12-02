@@ -2357,5 +2357,21 @@
         "stream": false
       }
     ]
+  },
+  "charge_rifle_fire_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:charge_rifle/charge_rifle_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "charge_rifle_fire_3p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:charge_rifle/charge_rifle_fire_3p",
+        "stream": false
+      }
+    ]
   }
 }

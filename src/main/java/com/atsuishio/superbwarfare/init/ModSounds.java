@@ -331,4 +331,7 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> SHELL_CASING_50CAL = REGISTRY.register("shell_casing_50cal", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "shell_casing_50cal")));
 
     public static final RegistryObject<SoundEvent> OPEN = REGISTRY.register("open", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "open")));
+
+    public static final RegistryObject<SoundEvent> CHARGE_RIFLE_FIRE_1P = REGISTRY.register("charge_rifle_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "charge_rifle_fire_1p")));
+    public static final RegistryObject<SoundEvent> CHARGE_RIFLE_FIRE_3P = REGISTRY.register("charge_rifle_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "charge_rifle_fire_3p")));
 }

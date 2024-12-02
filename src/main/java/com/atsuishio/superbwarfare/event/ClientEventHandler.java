@@ -368,7 +368,7 @@ public class ClientEventHandler {
                     && (!player.isAlliedTo(lookingEntity) || lookingEntity.getTeam() == null || lookingEntity.getTeam().getName().equals("TDM"));
 
             if (canAttack) {
-                ModUtils.PACKET_HANDLER.sendToServer(new LaserShootMessage(stack.getOrCreateTag().getInt("FireTick") >= 14 ? 45 : 1, lookingEntity.getUUID()));
+                ModUtils.PACKET_HANDLER.sendToServer(new LaserShootMessage(stack.getOrCreateTag().getInt("FireTick") >= 10 ? 45 : 1, lookingEntity.getUUID()));
             }
         }
     }
@@ -622,11 +622,11 @@ public class ClientEventHandler {
             shakeRadiusAmplitude = (float) Mth.clamp(1 - player.position().distanceTo(new Vec3(shakePos[0], shakePos[1], shakePos[2])) / shakeRadius, 0, 1);
 
             if (shakeType > 0) {
-                event.setYaw((float) (yaw + (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * 0.75 * shakeType)));
+                event.setYaw((float) (yaw + (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType)));
                 event.setPitch((float) (pitch - (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType)));
                 event.setRoll((float) (roll - (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude)));
             } else {
-                event.setYaw((float) (yaw - (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * 0.75 * shakeType)));
+                event.setYaw((float) (yaw - (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType)));
                 event.setPitch((float) (pitch + (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType)));
                 event.setRoll((float) (roll + (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude)));
             }

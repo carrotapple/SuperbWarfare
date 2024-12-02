@@ -72,8 +72,7 @@ public class LaserEntity extends AbstractLaserEntity {
 
     @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
-        double radius = RADIUS;
-        return distance < (radius * radius) * 2;
+        return true;
     }
 
     private void updateWithPlayer() {

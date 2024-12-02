@@ -51,7 +51,7 @@ public class LaserEntityRenderer extends AbstractLaserEntityRenderer<LaserEntity
         float minV = 0;
         float maxU = minU + 16F / TEXTURE_WIDTH;
         float maxV = minV + 16F / TEXTURE_HEIGHT;
-        float size = 0.8f;
+        float size = 0.25f;
         PoseStack.Pose matrix$stack$entry = matrixStackIn.last();
         Matrix4f matrix4f = matrix$stack$entry.pose();
         Matrix3f matrix3f = matrix$stack$entry.normal();
@@ -77,7 +77,7 @@ public class LaserEntityRenderer extends AbstractLaserEntityRenderer<LaserEntity
         Matrix4f matrix4f = matrix$stack$entry.pose();
         Matrix3f matrix3f = matrix$stack$entry.normal();
         float offset = playerView ? -1 : 0;
-        float size = 0.6f;
+        float size = 0.2f;
         drawVertex(matrix4f, matrix3f, builder, -size, offset, 0, minU, minV, packedLightIn);
         drawVertex(matrix4f, matrix3f, builder, -size, length, 0, minU, maxV, packedLightIn);
         drawVertex(matrix4f, matrix3f, builder, size, length, 0, maxU, maxV, packedLightIn);

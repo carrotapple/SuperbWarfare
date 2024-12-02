@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "superbwarfare:projectile_boom",
-    "superbwarfare:custom_explosion"
+    "superbwarfare:custom_explosion",
+    "superbwarfare:laser"
   ]
 }

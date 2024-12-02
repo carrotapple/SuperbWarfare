@@ -1,11 +1,16 @@
 package com.atsuishio.superbwarfare.item;
 
+import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.capability.LaserCapability;
 import com.atsuishio.superbwarfare.capability.LaserHandler;
 import com.atsuishio.superbwarfare.capability.ModCapabilities;
 import com.atsuishio.superbwarfare.entity.projectile.LaserEntity;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -15,6 +20,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.Set;
 
 public class BeamTest extends Item {
 
@@ -29,6 +38,11 @@ public class BeamTest extends Item {
         player.getCapability(ModCapabilities.LASER_CAPABILITY).ifPresent(capability -> {
             player.startUsingItem(hand);
 
+            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, "charge_rifle_fire_1p"));
+            if (sound1p != null) {
+                player.playSound(sound1p, 1f, 1);
+            }
+
             if (!level.isClientSide) {
                 double px = player.getX();
                 double py = player.getY() + player.getBbHeight() * 0.6F;
@@ -42,6 +56,11 @@ public class BeamTest extends Item {
                 if (!stack.getOrCreateTag().getBoolean("LaserFiring") && !(player.getCooldowns().isOnCooldown(stack.getItem()))) {
                     stack.getOrCreateTag().putBoolean("LaserFiring", true);
                 }
+
+                SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, "charge_rifle_fire_3p"));
+                if (sound3p != null) {
+                    player.playSound(sound3p, 4, 1f);
+                }
             }
         });
 
@@ -52,14 +71,7 @@ public class BeamTest extends Item {
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
         if (stack.getOrCreateTag().getBoolean("LaserFiring")) {
-            entity.playSound(ModSounds.MINIGUN_ROT.get(), 2, 1);
             stack.getOrCreateTag().putInt("FireTick", stack.getOrCreateTag().getInt("FireTick") + 1);
-        }
-
-        if (stack.getOrCreateTag().getInt("FireTick") >= 14) {
-            if (entity instanceof ServerPlayer serverPlayer) {
-                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SENTINEL_CHARGE_FIRE_3P.get(), SoundSource.PLAYERS, 1, 1);
-            }
         }
     }
 
@@ -69,9 +81,25 @@ public class BeamTest extends Item {
             player.getCapability(ModCapabilities.LASER_CAPABILITY).ifPresent(LaserCapability.ILaserCapability::stop);
             stack.getOrCreateTag().putBoolean("LaserFiring", false);
             stack.getOrCreateTag().putInt("FireTick", 0);
-            player.getCooldowns().addCooldown(stack.getItem(), 5);
+            player.getCooldowns().addCooldown(stack.getItem(), 20);
         }
+        if (stack.getOrCreateTag().getInt("FireTick") < 10 && livingEntity instanceof ServerPlayer serverPlayer && stack.getItem() instanceof BeamTest beamTest) {
+            stopGunChargeSound(serverPlayer,beamTest);
+        }
+
+
         super.releaseUsing(stack, level, livingEntity, timeCharged);
+    }
+
+    private static void stopGunChargeSound(ServerPlayer player, BeamTest beamTest) {
+        beamTest.getChargeSound().forEach(sound -> {
+            var clientboundstopsoundpacket = new ClientboundStopSoundPacket(sound.getLocation(), SoundSource.PLAYERS);
+            player.connection.send(clientboundstopsoundpacket);
+        });
+    }
+
+    public Set<SoundEvent> getChargeSound() {
+        return Set.of(ModSounds.CHARGE_RIFLE_FIRE_1P.get(), ModSounds.CHARGE_RIFLE_FIRE_3P.get());
     }
 
     @Override
@@ -80,14 +108,17 @@ public class BeamTest extends Item {
             player.getCapability(ModCapabilities.LASER_CAPABILITY).ifPresent(LaserCapability.ILaserCapability::stop);
             pStack.getOrCreateTag().putBoolean("LaserFiring", false);
             pStack.getOrCreateTag().putInt("FireTick", 0);
-            player.getCooldowns().addCooldown(pStack.getItem(), 5);
+            if (player instanceof ServerPlayer serverPlayer) {
+                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(30,10,20, serverPlayer.getX(), serverPlayer.getEyeY(), serverPlayer.getZ()));
+            }
+            player.getCooldowns().addCooldown(pStack.getItem(), 20);
         }
         return super.finishUsingItem(pStack, pLevel, pLivingEntity);
     }
 
     @Override
     public int getUseDuration(ItemStack stack) {
-        return 15;
+        return 11;
     }
 
     @Override

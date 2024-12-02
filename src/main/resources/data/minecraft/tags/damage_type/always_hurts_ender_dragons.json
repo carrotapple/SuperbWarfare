@@ -3,6 +3,7 @@
   "values": [
     "superbwarfare:projectile_boom",
     "superbwarfare:custom_explosion",
-    "superbwarfare:cannon_fire"
+    "superbwarfare:cannon_fire",
+    "superbwarfare:laser"
   ]
 }

@@ -55,13 +55,12 @@ public class LaserShootMessage {
         Entity entity = EntityFindUtil.findEntity(level, String.valueOf(uuid));
 
         if (entity != null) {
-            entity.hurt(ModDamageTypes.causeGunFireDamage(level.registryAccess(), player, player), (float) damage);
+            entity.hurt(ModDamageTypes.causeLaserDamage(level.registryAccess(), player, player), (float) damage);
             entity.invulnerableTime = 0;
             if (player instanceof ServerPlayer serverPlayer) {
                 player.level().playSound(null, player.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 0.1f, 1);
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientIndicatorMessage(0, 5));
             }
         }
-
     }
 }

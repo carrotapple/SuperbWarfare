@@ -246,24 +246,9 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             if (controller != null) {
                 ItemStack stack = controller.getMainHandItem();
                 if (stack.getOrCreateTag().getBoolean("Using") && controller instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.DRONE_SOUND.get(), 100, 1);
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.DRONE_SOUND.get(), 4, 1);
                 }
                 controller.setYRot(controller.getYRot() - 5 * this.entityData.get(ROT_X) * Mth.abs(this.entityData.get(MOVE_Z)));
-            }
-
-            float f = 0.7f;
-            AABB aabb = AABB.ofSize(this.getEyePosition(), f, 0.3, f);
-            var level = this.level();
-            final Vec3 center = new Vec3(this.getX(), this.getY(), this.getZ());
-            for (Entity target : level.getEntitiesOfClass(Entity.class, aabb, e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
-                if (this != target && target instanceof LivingEntity) {
-                    target.hurt(ModDamageTypes.causeDroneHitDamage(this.level().registryAccess(), this, controller), 1);
-                    target.invulnerableTime = 0;
-                    if (target instanceof Mob mobEntity) {
-                        mobEntity.setTarget(this);
-                    }
-                    this.hurt(new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.EXPLOSION), Objects.requireNonNullElse(controller, this)), 1);
-                }
             }
         }
 
