@@ -1,6 +1,8 @@
 package com.atsuishio.superbwarfare.event;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.capability.LaserCapability;
+import com.atsuishio.superbwarfare.capability.ModCapabilities;
 import com.atsuishio.superbwarfare.config.common.GameplayConfig;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
@@ -80,6 +82,10 @@ public class LivingEventHandler {
         handlePlayerKillEntity(event);
         handlePlayerDeathDropAmmo(event.getEntity());
         giveKillExpToWeapon(event);
+
+        if (event.getEntity() instanceof Player player) {
+            handlePlayerBeamReset(player);
+        }
     }
 
     /**
@@ -724,5 +730,9 @@ public class LivingEventHandler {
 
             event.setCanceled(true);
         }
+    }
+
+    public static void handlePlayerBeamReset(Player player) {
+        player.getCapability(ModCapabilities.LASER_CAPABILITY).ifPresent(LaserCapability.ILaserCapability::end);
     }
 }
