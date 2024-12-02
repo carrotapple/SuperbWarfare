@@ -1,11 +1,11 @@
 package com.atsuishio.superbwarfare.client.model.item;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.handgun.M1911Item;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -59,7 +59,7 @@ public class M1911ItemModel extends GeoModel<M1911Item> {
         double turnRotX = ClientEventHandler.turnRot[0];
         double turnRotY = ClientEventHandler.turnRot[1];
         double turnRotZ = ClientEventHandler.turnRot[2];
-        double fpz = ClientEventHandler.firePosZ * 13 * times;
+        double fpz = ClientEventHandler.firePosZ * 7 * times;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
@@ -72,15 +72,15 @@ public class M1911ItemModel extends GeoModel<M1911Item> {
         gun.setScaleZ(1f - (0.35f * (float) zp));
 
         shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
-        shen.setPosY((float) (0.4f * fp + 0.44f * fr));
-        shen.setPosZ((float) (5.825 * fp + 0.34f * fr + 2.35 * fpz));
+        shen.setPosY((float) (0.25f * fp + 0.28f * fr));
+        shen.setPosZ((float) (2.375 * fp + 0.44f * fr + 0.75 * fpz));
         shen.setRotX((float) (0.15f * fp + 0.3f * fr + 0.3f * fpz));
         shen.setRotY((float) (0.1f * ClientEventHandler.recoilHorizon * fpz));
         shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
 
         shen.setPosX((float) (shen.getPosX() * (1 - 0.4 * zt)));
         shen.setPosY((float) (shen.getPosY() * (1 - 0.5 * zt)));
-        shen.setPosZ((float) (shen.getPosZ() * (1 - 0.7 * zt)));
+        shen.setPosZ((float) (shen.getPosZ() * (1 - 0.3 * zt)));
         shen.setRotX((float) (shen.getRotX() * (1 - 0.27 * zt)));
         shen.setRotY((float) (shen.getRotY() * (1 - 0.7 * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.65 * zt)));

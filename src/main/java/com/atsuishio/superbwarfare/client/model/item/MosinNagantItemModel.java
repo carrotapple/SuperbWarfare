@@ -1,9 +1,9 @@
 package com.atsuishio.superbwarfare.client.model.item;
 
-import com.atsuishio.superbwarfare.item.gun.sniper.MosinNagantItem;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.sniper.MosinNagantItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -60,7 +60,7 @@ public class MosinNagantItemModel extends GeoModel<MosinNagantItem> {
         double turnRotX = ClientEventHandler.turnRot[0];
         double turnRotY = ClientEventHandler.turnRot[1];
         double turnRotZ = ClientEventHandler.turnRot[2];
-        double fpz = ClientEventHandler.firePosZ * 13 * times;
+        double fpz = ClientEventHandler.firePosZ * 7 * times;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
@@ -87,7 +87,7 @@ public class MosinNagantItemModel extends GeoModel<MosinNagantItem> {
 
         shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
         shen.setPosY((float) (0.4f * fp + 0.44f * fr));
-        shen.setPosZ((float) (3.325 * fp + 0.34f * fr + 2.35 * fpz));
+        shen.setPosZ((float) (2.825 * fp + 0.17f * fr + 1.175 * fpz));
         shen.setRotX((float) (0.01f * fp + 0.15f * fr + 0.01f * fpz));
         shen.setRotY((float) (0.1f * ClientEventHandler.recoilHorizon * fpz));
         shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));

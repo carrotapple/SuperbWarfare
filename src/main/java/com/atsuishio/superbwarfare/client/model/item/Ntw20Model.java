@@ -1,11 +1,11 @@
 package com.atsuishio.superbwarfare.client.model.item;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.event.PlayerEventHandler;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.event.PlayerEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.sniper.Ntw20Item;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -61,7 +61,7 @@ public class Ntw20Model extends GeoModel<Ntw20Item> {
         double turnRotX = ClientEventHandler.turnRot[0];
         double turnRotY = ClientEventHandler.turnRot[1];
         double turnRotZ = ClientEventHandler.turnRot[2];
-        double fpz = ClientEventHandler.firePosZ * 13 * times;
+        double fpz = ClientEventHandler.firePosZ * 7 * times;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 

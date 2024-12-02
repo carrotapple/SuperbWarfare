@@ -56,7 +56,7 @@ public class AbekiriItemModel extends GeoModel<AbekiriItem> {
         double turnRotX = ClientEventHandler.turnRot[0];
         double turnRotY = ClientEventHandler.turnRot[1];
         double turnRotZ = ClientEventHandler.turnRot[2];
-        double fpz = ClientEventHandler.firePosZ * 13 * times;
+        double fpz = ClientEventHandler.firePosZ * 7 * times;
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
