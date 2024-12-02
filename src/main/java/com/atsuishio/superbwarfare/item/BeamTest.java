@@ -37,10 +37,14 @@ public class BeamTest extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
 
+        if (player.level().isClientSide) {
+            player.playSound(ModSounds.CHARGE_RIFLE_FIRE_1P.get(), 1, 1);
+        } else {
+            player.playSound(ModSounds.CHARGE_RIFLE_FIRE_3P.get(), 2, 1);
+        }
+
         player.getCapability(ModCapabilities.LASER_CAPABILITY).ifPresent(capability -> {
             player.startUsingItem(hand);
-            player.playSound(ModSounds.CHARGE_RIFLE_FIRE_1P.get(), 1, 1);
-
             if (!level.isClientSide) {
                 double px = player.getX();
                 double py = player.getY() + player.getBbHeight() * 0.6F;
@@ -50,7 +54,6 @@ public class BeamTest extends Item {
                 LaserEntity laserEntity = new LaserEntity(player.level(), player, px, py, pz, yHeadRotAngle, xHeadRotAngle, 6000);
                 capability.init(new LaserHandler(player, laserEntity));
                 capability.start();
-                player.playSound(ModSounds.CHARGE_RIFLE_FIRE_3P.get(), 1, 1);
             }
         });
 
@@ -74,7 +77,7 @@ public class BeamTest extends Item {
         beamTest.getChargeSound().forEach(sound -> {
             var clientboundstopsoundpacket = new ClientboundStopSoundPacket(sound.getLocation(), SoundSource.PLAYERS);
             final Vec3 center = new Vec3(player.getX(), player.getY(), player.getZ());
-            for (ServerPlayer player1 : player.level().getEntitiesOfClass(ServerPlayer.class, new AABB(center, center).inflate(32), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
+            for (ServerPlayer player1 : player.level().getEntitiesOfClass(ServerPlayer.class, new AABB(center, center).inflate(48), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
                 player1.connection.send(clientboundstopsoundpacket);
             }
         });
