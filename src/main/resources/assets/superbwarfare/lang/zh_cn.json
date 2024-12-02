@@ -328,7 +328,7 @@
   "death.attack.drone_hit.item": "%1$s被%2$s用无人机叶片切碎了",
   "death.attack.laser": "%1$s被激光射穿了",
   "death.attack.laser.entity": "%1$s被%2$s用激光射穿了",
-  "death.attack.laser.item": "%1$s被%2$s用激光射穿了",
+  "death.attack.laser.item": "%1$s被%2$s用%3$s激光射穿了",
 
   "gui.superbwarfare.mortar_gui.button_set": "确认",
 

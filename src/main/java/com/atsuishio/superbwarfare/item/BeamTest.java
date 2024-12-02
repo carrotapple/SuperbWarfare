@@ -10,7 +10,6 @@ import com.atsuishio.superbwarfare.network.message.LaserShootMessage;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.TraceTool;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -22,9 +21,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.Comparator;
 import java.util.Set;
 
 public class BeamTest extends Item {
@@ -35,15 +36,10 @@ public class BeamTest extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        ItemStack stack = player.getItemInHand(hand);
 
         player.getCapability(ModCapabilities.LASER_CAPABILITY).ifPresent(capability -> {
             player.startUsingItem(hand);
-
-            SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, "charge_rifle_fire_1p"));
-            if (sound1p != null) {
-                player.playSound(sound1p, 1f, 1);
-            }
+            player.playSound(ModSounds.CHARGE_RIFLE_FIRE_1P.get(), 1, 1);
 
             if (!level.isClientSide) {
                 double px = player.getX();
@@ -54,15 +50,7 @@ public class BeamTest extends Item {
                 LaserEntity laserEntity = new LaserEntity(player.level(), player, px, py, pz, yHeadRotAngle, xHeadRotAngle, 6000);
                 capability.init(new LaserHandler(player, laserEntity));
                 capability.start();
-
-                if (!stack.getOrCreateTag().getBoolean("LaserFiring") && !(player.getCooldowns().isOnCooldown(stack.getItem()))) {
-                    stack.getOrCreateTag().putBoolean("LaserFiring", true);
-                }
-
-                SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, "charge_rifle_fire_3p"));
-                if (sound3p != null) {
-                    player.playSound(sound3p, 4, 1f);
-                }
+                player.playSound(ModSounds.CHARGE_RIFLE_FIRE_3P.get(), 1, 1);
             }
         });
 
@@ -73,7 +61,6 @@ public class BeamTest extends Item {
     public void releaseUsing(ItemStack stack, Level level, LivingEntity livingEntity, int timeCharged) {
         if (livingEntity instanceof Player player) {
             player.getCapability(ModCapabilities.LASER_CAPABILITY).ifPresent(LaserCapability.ILaserCapability::stop);
-            stack.getOrCreateTag().putBoolean("LaserFiring", false);
         }
         if (livingEntity instanceof ServerPlayer serverPlayer && stack.getItem() instanceof BeamTest beamTest) {
             stopGunChargeSound(serverPlayer,beamTest);
@@ -86,7 +73,10 @@ public class BeamTest extends Item {
     private static void stopGunChargeSound(ServerPlayer player, BeamTest beamTest) {
         beamTest.getChargeSound().forEach(sound -> {
             var clientboundstopsoundpacket = new ClientboundStopSoundPacket(sound.getLocation(), SoundSource.PLAYERS);
-            player.connection.send(clientboundstopsoundpacket);
+            final Vec3 center = new Vec3(player.getX(), player.getY(), player.getZ());
+            for (ServerPlayer player1 : player.level().getEntitiesOfClass(ServerPlayer.class, new AABB(center, center).inflate(32), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
+                player1.connection.send(clientboundstopsoundpacket);
+            }
         });
     }
 
@@ -98,14 +88,17 @@ public class BeamTest extends Item {
     public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
         if (pLivingEntity instanceof Player player) {
             player.getCapability(ModCapabilities.LASER_CAPABILITY).ifPresent(LaserCapability.ILaserCapability::stop);
-            pStack.getOrCreateTag().putBoolean("LaserFiring", false);
-            if (player instanceof ServerPlayer serverPlayer) {
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(30,10,20, serverPlayer.getX(), serverPlayer.getEyeY(), serverPlayer.getZ()));
-            }
             player.getCooldowns().addCooldown(pStack.getItem(), 20);
 
             if (player.level().isClientSide()) {
                 beamShoot(player);
+                player.playSound(ModSounds.CHARGE_RIFLE_FIRE_BOOM_1P.get(), 1, 1);
+            }
+            if (!player.level().isClientSide) {
+                player.playSound(ModSounds.CHARGE_RIFLE_FIRE_BOOM_3P.get(), 4, 1);
+            }
+            if (player instanceof ServerPlayer serverPlayer) {
+                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(10,10,30, serverPlayer.getX(), serverPlayer.getEyeY(), serverPlayer.getZ()));
             }
         }
         return super.finishUsingItem(pStack, pLevel, pLivingEntity);
@@ -128,7 +121,7 @@ public class BeamTest extends Item {
 
     @Override
     public int getUseDuration(ItemStack stack) {
-        return 10;
+        return 11;
     }
 
     @Override

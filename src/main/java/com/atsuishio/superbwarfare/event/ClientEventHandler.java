@@ -350,7 +350,7 @@ public class ClientEventHandler {
     }
 
     public static void beamShoot(Player player, ItemStack stack) {
-        if (stack.is(ModItems.BEAM_TEST.get()) && stack.getOrCreateTag().getBoolean("LaserFiring")) {
+        if (stack.is(ModItems.BEAM_TEST.get()) && player.getUseItem() == stack) {
             Entity lookingEntity = TraceTool.laserfindLookingEntity(player, 512);
 
             if (player.isCrouching()) {

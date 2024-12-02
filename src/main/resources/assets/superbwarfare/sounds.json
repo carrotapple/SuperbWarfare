@@ -2373,5 +2373,21 @@
         "stream": false
       }
     ]
+  },
+  "charge_rifle_fire_boom_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:charge_rifle/charge_rifle_fire_boom_1p",
+        "stream": false
+      }
+    ]
+  },
+  "charge_rifle_fire_boom_3p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:charge_rifle/charge_rifle_fire_boom_3p",
+        "stream": false
+      }
+    ]
   }
 }
