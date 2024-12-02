@@ -6,7 +6,9 @@ import com.atsuishio.superbwarfare.capability.LaserHandler;
 import com.atsuishio.superbwarfare.capability.ModCapabilities;
 import com.atsuishio.superbwarfare.entity.projectile.LaserEntity;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.network.message.LaserShootMessage;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
+import com.atsuishio.superbwarfare.tools.TraceTool;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -68,22 +70,12 @@ public class BeamTest extends Item {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(stack, world, entity, slot, selected);
-        if (stack.getOrCreateTag().getBoolean("LaserFiring")) {
-            stack.getOrCreateTag().putInt("FireTick", stack.getOrCreateTag().getInt("FireTick") + 1);
-        }
-    }
-
-    @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity livingEntity, int timeCharged) {
         if (livingEntity instanceof Player player) {
             player.getCapability(ModCapabilities.LASER_CAPABILITY).ifPresent(LaserCapability.ILaserCapability::stop);
             stack.getOrCreateTag().putBoolean("LaserFiring", false);
-            stack.getOrCreateTag().putInt("FireTick", 0);
-            player.getCooldowns().addCooldown(stack.getItem(), 20);
         }
-        if (stack.getOrCreateTag().getInt("FireTick") < 10 && livingEntity instanceof ServerPlayer serverPlayer && stack.getItem() instanceof BeamTest beamTest) {
+        if (livingEntity instanceof ServerPlayer serverPlayer && stack.getItem() instanceof BeamTest beamTest) {
             stopGunChargeSound(serverPlayer,beamTest);
         }
 
@@ -107,18 +99,36 @@ public class BeamTest extends Item {
         if (pLivingEntity instanceof Player player) {
             player.getCapability(ModCapabilities.LASER_CAPABILITY).ifPresent(LaserCapability.ILaserCapability::stop);
             pStack.getOrCreateTag().putBoolean("LaserFiring", false);
-            pStack.getOrCreateTag().putInt("FireTick", 0);
             if (player instanceof ServerPlayer serverPlayer) {
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(30,10,20, serverPlayer.getX(), serverPlayer.getEyeY(), serverPlayer.getZ()));
             }
             player.getCooldowns().addCooldown(pStack.getItem(), 20);
+
+            if (player.level().isClientSide()) {
+                beamShoot(player);
+            }
         }
         return super.finishUsingItem(pStack, pLevel, pLivingEntity);
     }
 
+    public static void beamShoot(Player player) {
+        Entity lookingEntity = TraceTool.laserfindLookingEntity(player, 512);
+
+        if (lookingEntity == null) {
+            return;
+        }
+
+        boolean canAttack = lookingEntity != player && !(lookingEntity instanceof Player player_ && (player_.isCreative() || player_.isSpectator()))
+                && (!player.isAlliedTo(lookingEntity) || lookingEntity.getTeam() == null || lookingEntity.getTeam().getName().equals("TDM"));
+
+        if (canAttack) {
+            ModUtils.PACKET_HANDLER.sendToServer(new LaserShootMessage(45, lookingEntity.getUUID()));
+        }
+    }
+
     @Override
     public int getUseDuration(ItemStack stack) {
-        return 11;
+        return 10;
     }
 
     @Override
