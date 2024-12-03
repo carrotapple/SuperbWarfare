@@ -63,13 +63,13 @@ public class ExplosionConfig {
         builder.push("Drone Kamikaze");
 
         builder.comment("The hit damage of Drone Kamikaze");
-        DRONE_KAMIKAZE_HIT_DAMAGE = builder.defineInRange("Rgo grenade explosion damage", 300, 1, 10000000);
+        DRONE_KAMIKAZE_HIT_DAMAGE = builder.defineInRange("Drone Kamikaze explosion damage", 300, 1, 10000000);
 
         builder.comment("The explosion damage of Drone Kamikaze");
-        DRONE_KAMIKAZE_EXPLOSION_DAMAGE = builder.defineInRange("Rgo grenade explosion damage", 160, 1, 10000000);
+        DRONE_KAMIKAZE_EXPLOSION_DAMAGE = builder.defineInRange("Drone Kamikaze explosion damage", 160, 1, 10000000);
 
         builder.comment("The explosion radius of Drone Kamikaze");
-        DRONE_KAMIKAZE_EXPLOSION_RADIUS = builder.defineInRange("Rgo grenade explosion radius", 9, 1, 50);
+        DRONE_KAMIKAZE_EXPLOSION_RADIUS = builder.defineInRange("Drone Kamikaze explosion radius", 9, 1, 50);
 
         builder.pop();
     }
