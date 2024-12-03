@@ -350,8 +350,8 @@
   "entity.superbwarfare.drone": "Drone",
 
   "key.categories.superbwarfare": "Superb Warfare",
-  "key.superbwarfare.hold_zoom": "Hold to zoom",
-  "key.superbwarfare.switch_zoom": "Switch to zoom",
+  "key.superbwarfare.hold_zoom": "Zoom(Hold)",
+  "key.superbwarfare.switch_zoom": "Zoom(Switch)",
   "key.superbwarfare.fire": "Fire",
   "key.superbwarfare.reload": "Reload",
   "key.superbwarfare.fire_mode": "Fire Mode",

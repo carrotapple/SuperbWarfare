@@ -350,8 +350,8 @@
   "entity.superbwarfare.drone": "无人机",
 
   "key.categories.superbwarfare": "卓越前线",
-  "key.superbwarfare.hold_zoom": "按住瞄准",
-  "key.superbwarfare.switch_zoom": "切换瞄准",
+  "key.superbwarfare.hold_zoom": "瞄准(按住)",
+  "key.superbwarfare.switch_zoom": "瞄准(切换)",
   "key.superbwarfare.fire": "开火",
   "key.superbwarfare.reload": "装填子弹",
   "key.superbwarfare.fire_mode": "开火模式",
