@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
@@ -60,8 +61,8 @@ public class DroneModel extends GeoModel<DroneEntity> {
 
 		float times = (float) (0.5f * Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8));
 
-//		rotX = Mth.lerp(0.5f * times, rotX, animatable.getEntityData().get(ROT_X));
-//		rotZ = Mth.lerp(0.5f * times, rotZ, animatable.getEntityData().get(ROT_Z));
+		rotX = Mth.lerp(0.5f * times, rotX, animatable.getEntityData().get(ROT_X));
+		rotZ = Mth.lerp(0.5f * times, rotZ, animatable.getEntityData().get(ROT_Z));
 
 		main.setRotZ(rotX);
 		main.setRotX(rotZ);
@@ -75,7 +76,7 @@ public class DroneModel extends GeoModel<DroneEntity> {
 		CoreGeoBone wingBL = getAnimationProcessor().getBone("wingBL");
 		CoreGeoBone wingBR = getAnimationProcessor().getBone("wingBR");
 
-//		rotation = (float) Mth.lerp(times, rotation, animatable.onGround() ? 0 : 0.08 - 0.1 * animatable.getEntityData().get(MOVE_Y));
+		rotation = (float) Mth.lerp(times, rotation, animatable.onGround() ? 0 : 0.08 - 0.1 * animatable.getEntityData().get(MOVE_Y));
 
 		wingFL.setRotY(wingFL.getRotY() - rotation);
 		wingFR.setRotY(wingFL.getRotY() - rotation);
