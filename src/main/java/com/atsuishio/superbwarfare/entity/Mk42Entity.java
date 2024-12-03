@@ -54,7 +54,9 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
     public static final float MAX_HEALTH = CannonConfig.MK42_HP.get();
+
     protected int interpolationSteps;
     protected double serverYRot;
     protected double serverXRot;
@@ -164,7 +166,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
         if (player.isShiftKeyDown()) {
             if (player.getMainHandItem().is(ModItems.CROWBAR.get()) && this.getFirstPassenger() == null) {
                 ItemStack stack = ContainerBlockItem.createInstance(this);
-                if (!player.addItem(stack)){
+                if (!player.addItem(stack)) {
                     player.drop(stack, false);
                 }
 
@@ -348,7 +350,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
             for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(20), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
 
                 if (target instanceof ServerPlayer serverPlayer) {
-                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(15,15,45, this.getX(), this.getEyeY(), this.getZ()));
+                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(15, 15, 45, this.getX(), this.getEyeY(), this.getZ()));
                 }
             }
         }

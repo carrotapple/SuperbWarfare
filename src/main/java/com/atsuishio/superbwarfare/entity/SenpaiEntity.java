@@ -35,6 +35,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class SenpaiEntity extends Monster implements GeoEntity, AnimatedEntity {
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public SenpaiEntity(PlayMessages.SpawnEntity packet, Level world) {

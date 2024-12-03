@@ -16,6 +16,7 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class Mle1934Renderer extends GeoEntityRenderer<Mle1934Entity> {
+
     public Mle1934Renderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new Mle1934Model());
         this.shadowRadius = 2f;

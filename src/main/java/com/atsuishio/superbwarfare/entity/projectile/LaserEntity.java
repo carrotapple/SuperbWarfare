@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -49,6 +50,23 @@ public class LaserEntity extends AbstractLaserEntity {
 
         if (this.tickCount >= this.getCountDown()) {
             this.calculateEndPos(RADIUS);
+
+            CustomHitResult result = new CustomHitResult();
+            result.setBlockHit(this.level().clip(new ClipContext(new Vec3(getX(), getY(), getZ()), new Vec3(endPosX, endPosY, endPosZ),
+                    ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)));
+            if (result.getBlockHit() != null) {
+                Vec3 hitVec = result.getBlockHit().getLocation();
+                collidePosX = hitVec.x;
+                collidePosY = hitVec.y;
+                collidePosZ = hitVec.z;
+                blockSide = result.getBlockHit().getDirection();
+            } else {
+                collidePosX = endPosX;
+                collidePosY = endPosY;
+                collidePosZ = endPosZ;
+                blockSide = null;
+            }
+
             if (this.blockSide != null) {
                 this.spawnExplosionParticles();
             }

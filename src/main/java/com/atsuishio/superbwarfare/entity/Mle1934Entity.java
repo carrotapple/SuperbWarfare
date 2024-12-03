@@ -486,8 +486,6 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
         this.clampRotation(entity);
     }
 
-
-
     private PlayState movementPredicate(AnimationState<Mle1934Entity> event) {
         if (this.entityData.get(COOL_DOWN) > 64) {
             if (this.entityData.get(TYPE) == 1) {

@@ -59,6 +59,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class DroneEntity extends LivingEntity implements GeoEntity {
+
     public static final EntityDataAccessor<Boolean> LINKED = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> CONTROLLER = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.INT);
@@ -73,7 +74,6 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private boolean move = false;
     public static double lastTickSpeed = 0;
-
 
     public DroneEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.DRONE.get(), world);
@@ -174,7 +174,6 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             this.entityData.set(ROT_Z, compound.getFloat("rotZ"));
     }
 
-
     public Vector3f getForwardDirection() {
         return new Vector3f(
                 Mth.sin(-getYRot() * ((float) Math.PI / 180)),
@@ -182,7 +181,6 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
                 Mth.cos(getYRot() * ((float) Math.PI / 180))
         ).normalize();
     }
-
 
     public Vector3f getRightDirection() {
         return new Vector3f(
@@ -521,7 +519,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             kamikazeExplosion(source.getEntity());
         }
 
-        ItemStack stack = new ItemStack(ModItems.RGO_GRENADE.get(),this.entityData.get(AMMO));
+        ItemStack stack = new ItemStack(ModItems.RGO_GRENADE.get(), this.entityData.get(AMMO));
 
         if (this.level() instanceof ServerLevel level) {
             ItemEntity itemEntity = new ItemEntity(level, this.getX(), this.getY(), this.getZ(), stack);

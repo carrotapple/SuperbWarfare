@@ -31,8 +31,10 @@ import java.text.DecimalFormat;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class CannonHudOverlay {
+
     public static float health = 0;
     public static float maxHealth = 0;
+
     private static final ResourceLocation ARMOR = ModUtils.loc("textures/screens/armor.png");
     private static final ResourceLocation HEALTH = ModUtils.loc("textures/screens/armor_value.png");
     private static final ResourceLocation HEALTH_FRAME = ModUtils.loc("textures/screens/armor_value_frame.png");
