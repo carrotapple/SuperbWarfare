@@ -28,7 +28,7 @@ public class LivingEntityMixin {
                 || this.target$source.is(ModDamageTypes.GUN_FIRE_HEADSHOT_ABSOLUTE) || this.target$source.is(ModDamageTypes.BURN)) {
             return 0.05 * original;
         }
-        if (this.target$source.is(ModDamageTypes.LASER)) {
+        if (this.target$source.is(ModDamageTypes.LASER) || this.target$source.is(ModDamageTypes.LASER_HEADSHOT)) {
             return -original;
         }
         return original;

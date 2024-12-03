@@ -3,12 +3,15 @@ package com.atsuishio.superbwarfare.tools;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.*;
 
 public class TraceTool {
+
+    public static boolean laserHeadshot = false;
 
     public static Entity findLookingEntity(Entity player, double entityReach) {
         double distance = entityReach * entityReach;
@@ -74,12 +77,17 @@ public class TraceTool {
             } else if (distanceToTarget < distance) {
                 hitResult = entityhitresult;
             }
-        }
-        if (hitResult.getType() == HitResult.Type.ENTITY) {
-            if (((EntityHitResult) hitResult).getEntity().isAlive()) {
+            Vec3 hitVec = entityhitresult.getLocation();
+            if (hitResult.getType() == HitResult.Type.ENTITY && ((EntityHitResult) hitResult).getEntity().isAlive()) {
+                if (((EntityHitResult) hitResult).getEntity() instanceof LivingEntity living) {
+                    laserHeadshot = living.getEyeY() - 0.4 < hitVec.y && hitVec.y < living.getEyeY() + 0.5;
+                } else {
+                    laserHeadshot = false;
+                }
                 return ((EntityHitResult) hitResult).getEntity();
             }
         }
+
         return null;
     }
 
