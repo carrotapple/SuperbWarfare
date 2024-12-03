@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
+import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -40,6 +41,7 @@ import java.util.UUID;
 public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity, OwnableEntity {
 
     protected static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(ClaymoreEntity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -55,6 +57,7 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
     @Override
     protected void defineSynchedData() {
         this.entityData.define(OWNER_UUID, Optional.empty());
+        this.entityData.define(LAST_ATTACKER_UUID, "undefined");
         this.entityData.define(HEALTH, 10f);
     }
 
@@ -83,6 +86,10 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
             amount *= 0.2f;
         }
 
+        if (source.getEntity() != null) {
+            this.entityData.set(LAST_ATTACKER_UUID, source.getEntity().getStringUUID());
+        }
+
         if (this.level() instanceof ServerLevel serverLevel) {
             ParticleTool.sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 0.2, this.getZ(), 2, 0.02, 0.02, 0.02, 0.1, false);
         }
@@ -108,7 +115,7 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         compound.putFloat("Health", this.entityData.get(HEALTH));
-
+        compound.putString("LastAttacker", this.entityData.get(LAST_ATTACKER_UUID));
         if (this.getOwnerUUID() != null) {
             compound.putUUID("Owner", this.getOwnerUUID());
         }
@@ -118,6 +125,10 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
     public void readAdditionalSaveData(CompoundTag compound) {
         if (compound.contains("Health")) {
             this.entityData.set(HEALTH, compound.getFloat("Health"));
+        }
+
+        if (compound.contains("LastAttacker")) {
+            this.entityData.set(LAST_ATTACKER_UUID, compound.getString("LastAttacker"));
         }
 
         UUID uuid;
@@ -217,8 +228,9 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
 
     public void destroy() {
         if (level() instanceof ServerLevel) {
-            CustomExplosion explosion = new CustomExplosion(this.level(), null,
-                    ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), null, null), 25.0f,
+            Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
+            CustomExplosion explosion = new CustomExplosion(this.level(), attacker,
+                    ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), attacker, attacker), 25.0f,
                     this.getX(), this.getY(), this.getZ(), 5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
             explosion.explode();
             net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);

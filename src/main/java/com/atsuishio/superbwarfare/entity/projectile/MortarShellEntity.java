@@ -1,10 +1,11 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
+import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
+import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
+import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.ProjectileTool;
-import com.atsuishio.superbwarfare.init.ModDamageTypes;
-import com.atsuishio.superbwarfare.init.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -26,9 +27,9 @@ import net.minecraftforge.network.PlayMessages;
 
 public class MortarShellEntity extends ThrowableItemProjectile {
 
-    private float damage = 175f;
+    private float damage = ExplosionConfig.MORTAR_SHELL_EXPLOSION_DAMAGE.get();
     private int life = 600;
-    private float radius = 8f;
+    private float radius = ExplosionConfig.MORTAR_SHELL_EXPLOSION_RADIUS.get();
 
     public MortarShellEntity(EntityType<? extends MortarShellEntity> type, Level world) {
         super(type, world);
@@ -61,7 +62,7 @@ public class MortarShellEntity extends ThrowableItemProjectile {
         if (pCompound.contains("Damage")) {
             this.damage = pCompound.getFloat("Damage");
         } else {
-            this.damage = 250f;
+            this.damage = ExplosionConfig.MORTAR_SHELL_EXPLOSION_DAMAGE.get();;
         }
 
         if (pCompound.contains("Life")) {
@@ -73,7 +74,7 @@ public class MortarShellEntity extends ThrowableItemProjectile {
         if (pCompound.contains("Radius")) {
             this.radius = pCompound.getFloat("Radius");
         } else {
-            this.radius = 12.5f;
+            this.radius = ExplosionConfig.MORTAR_SHELL_EXPLOSION_RADIUS.get();
         }
     }
 

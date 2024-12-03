@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
@@ -128,7 +129,7 @@ public class HandGrenadeEntity extends ThrowableItemProjectile {
         if (this.fuse <= 0) {
             this.discard();
             if (!this.level().isClientSide) {
-                ProjectileTool.causeCustomExplode(this, 125f, 5f, 1.2f);
+                ProjectileTool.causeCustomExplode(this, ExplosionConfig.M67_GRENADE_EXPLOSION_DAMAGE.get(), ExplosionConfig.M67_GRENADE_EXPLOSION_RADIUS.get(), 1.2f);
             }
         }
 

@@ -1,13 +1,13 @@
 package com.atsuishio.superbwarfare.entity;
 
-import com.atsuishio.superbwarfare.entity.projectile.MortarShellEntity;
-import com.atsuishio.superbwarfare.init.ModEntities;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.gui.RangeHelper;
+import com.atsuishio.superbwarfare.entity.projectile.MortarShellEntity;
+import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModParticleTypes;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.tools.ParticleTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
@@ -44,8 +44,6 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
-import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Integer> FIRE_TIME = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.INT);
@@ -164,7 +162,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
                 if (level instanceof ServerLevel server) {
                     MortarShellEntity entityToSpawn = new MortarShellEntity(ModEntities.MORTAR_SHELL.get(), player, level);
                     entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
-                    entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 8, (float) 0.9);
+                    entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 8, (float) 0.3);
                     level.addFreshEntity(entityToSpawn);
                     server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, (this.getX() + 3 * this.getLookAngle().x), (this.getY() + 0.1 + 3 * this.getLookAngle().y), (this.getZ() + 3 * this.getLookAngle().z), 8, 0.4, 0.4, 0.4,
                             0.007);

@@ -1,11 +1,15 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
+import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.entity.DroneEntity;
+import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
+import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.ProjectileTool;
 import net.minecraft.core.BlockPos;
@@ -16,11 +20,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -35,6 +41,8 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
+import javax.annotation.Nullable;
 
 public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEntity {
     private int fuse = 80;
@@ -78,7 +86,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                 if (state.getBlock() instanceof BellBlock bell) {
                     bell.attemptToRing(this.level(), resultPos, blockResult.getDirection());
                 }
-                ProjectileTool.causeCustomExplode(this, 100f, 4f, 1.2f);
+                ProjectileTool.causeCustomExplode(this, ExplosionConfig.RGO_GRENADE_EXPLOSION_DAMAGE.get(), ExplosionConfig.RGO_GRENADE_EXPLOSION_RADIUS.get(), 1.2f);
 
                 break;
             case ENTITY:
@@ -92,12 +100,24 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                     }
                 }
                 if (!(entity instanceof DroneEntity)) {
-                    ProjectileTool.causeCustomExplode(this, 100f, 4f, 1.2f);
+                    causeRgoExplode(this,
+                            ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
+                            entity, ExplosionConfig.RGO_GRENADE_EXPLOSION_DAMAGE.get(), ExplosionConfig.RGO_GRENADE_EXPLOSION_RADIUS.get(), 1.2f);
                 }
                 break;
             default:
                 break;
         }
+    }
+
+    public static void causeRgoExplode(ThrowableItemProjectile projectile, @Nullable DamageSource source, Entity entity, float damage, float radius, float damageMultiplier) {
+        CustomExplosion explosion = new CustomExplosion(projectile.level(), projectile, source, damage,
+                entity.getX(), entity.getY(), entity.getZ(), radius, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(damageMultiplier);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(projectile.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnMediumExplosionParticles(projectile.level(), projectile.position());
+        projectile.discard();
     }
 
     @Override
@@ -108,7 +128,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
         if (this.fuse <= 0) {
             this.discard();
             if (!this.level().isClientSide) {
-                ProjectileTool.causeCustomExplode(this, 100f, 4f, 1.2f);
+                ProjectileTool.causeCustomExplode(this, ExplosionConfig.RGO_GRENADE_EXPLOSION_DAMAGE.get(), ExplosionConfig.RGO_GRENADE_EXPLOSION_RADIUS.get(), 1.2f);
             }
         }
 

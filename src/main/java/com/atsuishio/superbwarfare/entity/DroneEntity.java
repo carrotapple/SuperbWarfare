@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity;
 
+import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.entity.projectile.RgoGrenadeEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
@@ -10,7 +11,6 @@ import com.atsuishio.superbwarfare.item.Monitor;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
-import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -48,6 +48,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -173,6 +174,55 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             this.entityData.set(ROT_Z, compound.getFloat("rotZ"));
     }
 
+
+    public Vector3f getForwardDirection() {
+        return new Vector3f(
+                Mth.sin(-getYRot() * ((float) Math.PI / 180)),
+                0.0f,
+                Mth.cos(getYRot() * ((float) Math.PI / 180))
+        ).normalize();
+    }
+
+
+    public Vector3f getRightDirection() {
+        return new Vector3f(
+                Mth.cos(-getYRot() * ((float) Math.PI / 180)),
+                0.0f,
+                Mth.sin(getYRot() * ((float) Math.PI / 180))
+        ).normalize();
+    }
+
+//            if (this.level().isClientSide) {
+//
+//        if (!this.onGround()) {
+//            // left and right
+//            float moveX = 0;
+//            if (Minecraft.getInstance().options.keyLeft.isDown()) {
+//                moveX = -1;
+//            } else if (Minecraft.getInstance().options.keyRight.isDown()) {
+//                moveX = 1;
+//            }
+//
+//            Vector3f direction = getRightDirection().mul(moveX);
+//            setDeltaMovement(getDeltaMovement().add(direction.x, direction.y, direction.z));
+//
+//            // forward and backward
+////            direction = getForwardDirection().mul(thrust * pressingInterpolatedZ.getSmooth());
+////            setDeltaMovement(getDeltaMovement().add(direction.x, direction.y, direction.z));
+//        } else {
+//            // up and down
+//
+//            float moveY = 0;
+//            if (Minecraft.getInstance().options.keyJump.isDown()) {
+//                moveY = -1;
+//            } else if (Minecraft.getInstance().options.keyShift.isDown()) {
+//                moveY = 1;
+//            }
+//
+//            setDeltaMovement(getDeltaMovement().add(0.0f, moveY, 0.0f));
+//        }
+//    }
+
     @Override
     public void baseTick() {
         super.baseTick();
@@ -242,11 +292,13 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
         Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
 
         if (!this.onGround()) {
-            this.level().playSound(null, this.getOnPos(), ModSounds.DRONE_SOUND.get(), SoundSource.AMBIENT, 3, 1);
             if (controller != null) {
                 ItemStack stack = controller.getMainHandItem();
-                if (stack.getOrCreateTag().getBoolean("Using") && controller instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.DRONE_SOUND.get(), 4, 1);
+                if (stack.getOrCreateTag().getBoolean("Using") && controller.level().isClientSide) {
+                    controller.playSound(ModSounds.DRONE_SOUND.get(), 32, 1);
+                }
+                if (!controller.level().isClientSide) {
+                    this.level().playSound(null, this.getOnPos(), ModSounds.DRONE_SOUND.get(), SoundSource.AMBIENT, 3, 1);
                 }
                 controller.setYRot(controller.getYRot() - 5 * this.entityData.get(ROT_X) * Mth.abs(this.entityData.get(MOVE_Z)));
             }
@@ -419,7 +471,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
     public void hitEntityCrash(Player controller, Entity target) {
         if (lastTickSpeed > 0.2) {
             if (this.entityData.get(KAMIKAZE) && 6 * lastTickSpeed > this.getHealth()) {
-                target.hurt(ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, controller), 600);
+                target.hurt(ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, controller), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE.get());
             }
             target.hurt(ModDamageTypes.causeDroneHitDamage(this.level().registryAccess(), this, controller), (float) (5 * lastTickSpeed));
             if (target instanceof Mob mobEntity) {
@@ -486,8 +538,8 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
 
     private void kamikazeExplosion(Entity source) {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), source, source), 125,
-                this.getX(), this.getY(), this.getZ(), 7.5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), source, source), ExplosionConfig.DRONE_KAMIKAZE_EXPLOSION_DAMAGE.get(),
+                this.getX(), this.getY(), this.getZ(), ExplosionConfig.DRONE_KAMIKAZE_EXPLOSION_RADIUS.get(), ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
