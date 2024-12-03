@@ -7,7 +7,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Code based on @BobMowzie's MowziesMobs, @EEEAB's EEEABsMobs and @Mercurows's DreamaticVoyage
@@ -51,26 +56,55 @@ public class LaserEntity extends AbstractLaserEntity {
         if (this.tickCount >= this.getCountDown()) {
             this.calculateEndPos(RADIUS);
 
-            CustomHitResult result = new CustomHitResult();
-            result.setBlockHit(this.level().clip(new ClipContext(new Vec3(getX(), getY(), getZ()), new Vec3(endPosX, endPosY, endPosZ),
-                    ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)));
-            if (result.getBlockHit() != null) {
-                Vec3 hitVec = result.getBlockHit().getLocation();
-                collidePosX = hitVec.x;
-                collidePosY = hitVec.y;
-                collidePosZ = hitVec.z;
-                blockSide = result.getBlockHit().getDirection();
-            } else {
-                collidePosX = endPosX;
-                collidePosY = endPosY;
-                collidePosZ = endPosZ;
-                blockSide = null;
-            }
+            raytraceEntities(this.level(), new Vec3(getX(), getY(), getZ()), new Vec3(endPosX, endPosY, endPosZ));
 
             if (this.blockSide != null) {
                 this.spawnExplosionParticles();
             }
         }
+    }
+
+    @Override
+    public CustomHitResult raytraceEntities(Level world, Vec3 from, Vec3 to) {
+        CustomHitResult result = new CustomHitResult();
+        result.setBlockHit(this.level().clip(new ClipContext(new Vec3(getX(), getY(), getZ()), new Vec3(endPosX, endPosY, endPosZ),
+                ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)));
+        if (result.getBlockHit() != null) {
+            Vec3 hitVec = result.getBlockHit().getLocation();
+            collidePosX = hitVec.x;
+            collidePosY = hitVec.y;
+            collidePosZ = hitVec.z;
+            blockSide = result.getBlockHit().getDirection();
+        }
+
+        List<LivingEntity> entities = world.getEntitiesOfClass(LivingEntity.class, new AABB(Math.min(getX(), collidePosX), Math.min(getY(), collidePosY), Math.min(getZ(), collidePosZ), Math.max(getX(), collidePosX), Math.max(getY(), collidePosY), Math.max(getZ(), collidePosZ)).inflate(1, 1, 1));
+        for (LivingEntity entity : entities) {
+            if (entity == this.caster) {
+                continue;
+            }
+            float pad = entity.getPickRadius() + getBaseScale();
+            AABB aabb = entity.getBoundingBox().inflate(pad, pad, pad);
+            Optional<Vec3> hit = aabb.clip(from, to);
+            if (aabb.contains(from)) {
+                result.addEntityHit(entity);
+            } else if (hit.isPresent()) {
+                result.addEntityHit(entity);
+            }
+        }
+
+        var target = result.getEntities().stream().min(Comparator.comparingDouble(e -> e.distanceToSqr(this.caster)));
+        if (target.isPresent()) {
+            collidePosX = target.get().getX();
+            collidePosY = target.get().getY();
+            collidePosZ = target.get().getZ();
+        } else {
+            collidePosX = endPosX;
+            collidePosY = endPosY;
+            collidePosZ = endPosZ;
+            blockSide = null;
+        }
+
+        return result;
     }
 
     public void spawnExplosionParticles() {
