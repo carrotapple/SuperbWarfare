@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.entity;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.config.server.CannonConfig;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.entity.projectile.CannonShellEntity;
 import com.atsuishio.superbwarfare.init.*;
@@ -53,7 +54,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public static final float MAX_HEALTH = 700.0f;
+    public static final float MAX_HEALTH = CannonConfig.MK42_HP.get();
     protected int interpolationSteps;
     protected double serverYRot;
     protected double serverXRot;
@@ -203,27 +204,27 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
             this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
         }
 
-        if (this.entityData.get(HEALTH) <= 300) {
+        if (this.entityData.get(HEALTH) <= 0.4 * CannonConfig.MK42_HP.get()) {
             if (this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 2, 0.75, 0.5, 0.75, 0.01, false);
             }
         }
 
-        if (this.entityData.get(HEALTH) <= 200) {
+        if (this.entityData.get(HEALTH) <= 0.25 * CannonConfig.MK42_HP.get()) {
             if (this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
             }
         }
 
-        if (this.entityData.get(HEALTH) <= 150) {
+        if (this.entityData.get(HEALTH) <= 0.15 * CannonConfig.MK42_HP.get()) {
             if (this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
             }
         }
 
-        if (this.entityData.get(HEALTH) <= 100) {
+        if (this.entityData.get(HEALTH) <= 0.1 * CannonConfig.MK42_HP.get()) {
             if (this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 2, 0.75, 0.5, 0.75, 0.01, false);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 2, 0.75, 0.5, 0.75, 0.01, false);
@@ -281,18 +282,18 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
             int durability = 0;
 
             if (stack.is(ModItems.HE_5_INCHES.get())) {
-                hitDamage = 400;
-                explosionRadius = 12;
-                explosionDamage = 420;
+                hitDamage = CannonConfig.MK42_HE_DAMAGE.get();
+                explosionRadius = CannonConfig.MK42_HE_EXPLOSION_RADIUS.get();
+                explosionDamage = CannonConfig.MK42_HE_EXPLOSION_DAMAGE.get();
                 fireProbability = 0.18F;
                 fireTime = 2;
                 durability = 1;
             }
 
             if (stack.is(ModItems.AP_5_INCHES.get())) {
-                hitDamage = 800;
-                explosionRadius = 3;
-                explosionDamage = 200;
+                hitDamage = CannonConfig.MK42_AP_DAMAGE.get();
+                explosionRadius = CannonConfig.MK42_AP_EXPLOSION_RADIUS.get();
+                explosionDamage = CannonConfig.MK42_AP_EXPLOSION_DAMAGE.get();
                 fireProbability = 0;
                 fireTime = 0;
                 durability = 60;
