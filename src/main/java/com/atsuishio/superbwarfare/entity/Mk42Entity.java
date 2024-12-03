@@ -77,7 +77,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
-        compound.putInt("oolDown", this.entityData.get(COOL_DOWN));
+        compound.putInt("CoolDown", this.entityData.get(COOL_DOWN));
         compound.putFloat("Health", this.entityData.get(HEALTH));
     }
 
