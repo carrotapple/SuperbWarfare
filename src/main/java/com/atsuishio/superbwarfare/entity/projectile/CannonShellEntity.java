@@ -58,6 +58,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
 
     public CannonShellEntity(EntityType<? extends CannonShellEntity> type, Level world) {
         super(type, world);
+        this.noCulling = true;
     }
 
     public CannonShellEntity(EntityType<? extends CannonShellEntity> type, LivingEntity entity, Level world, float damage, float explosionRadius, float explosionDamage, float fireProbability, int fireTime) {

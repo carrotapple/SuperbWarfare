@@ -47,6 +47,7 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
 
     public ClaymoreEntity(EntityType<ClaymoreEntity> type, Level world) {
         super(type, world);
+        this.noCulling = true;
     }
 
     public ClaymoreEntity(LivingEntity owner, Level level) {

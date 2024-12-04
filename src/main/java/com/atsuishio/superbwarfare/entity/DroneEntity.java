@@ -81,6 +81,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
 
     public DroneEntity(EntityType<DroneEntity> type, Level world) {
         super(type, world);
+        this.noCulling = true;
     }
 
     public DroneEntity(EntityType<? extends DroneEntity> type, Level world, float moveX, float moveY, float moveZ) {

@@ -50,6 +50,7 @@ public class RgoGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
 
     public RgoGrenadeEntity(EntityType<? extends RgoGrenadeEntity> type, Level world) {
         super(type, world);
+        this.noCulling = true;
     }
 
     public RgoGrenadeEntity(LivingEntity entity, Level level, int fuse) {

@@ -60,6 +60,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
     public RpgRocketEntity(EntityType<? extends RpgRocketEntity> type, Level world) {
         super(type, world);
+        this.noCulling = true;
     }
 
     public RpgRocketEntity(LivingEntity entity, Level level, float damage, float explosion_damage, float explosion_radius) {

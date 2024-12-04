@@ -1,9 +1,9 @@
 package com.atsuishio.superbwarfare.entity;
 
 import com.atsuishio.superbwarfare.init.ModEntities;
-import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
@@ -50,6 +50,7 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
 
     public TargetEntity(EntityType<TargetEntity> type, Level world) {
         super(type, world);
+        this.noCulling = true;
     }
 
     @Override

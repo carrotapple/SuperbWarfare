@@ -69,6 +69,7 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
 
     public Mle1934Entity(EntityType<Mle1934Entity> type, Level world) {
         super(type, world);
+        this.noCulling = true;
     }
 
     @Override

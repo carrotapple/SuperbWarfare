@@ -29,15 +29,21 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class GunGrenadeEntity extends ThrowableItemProjectile {
+public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEntity {
     private float monsterMultiplier = 0.0f;
     private float damage = 40.0f;
     private float explosion_damage = 80f;
     private float explosion_radius = 5f;
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public GunGrenadeEntity(EntityType<? extends GunGrenadeEntity> type, Level world) {
         super(type, world);
+        this.noCulling = true;
     }
 
     public GunGrenadeEntity(LivingEntity entity, Level level, float damage, float explosion_damage, float explosion_radius) {
@@ -141,4 +147,14 @@ public class GunGrenadeEntity extends ThrowableItemProjectile {
             this.discard();
         }
     }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
+    }
+
 }

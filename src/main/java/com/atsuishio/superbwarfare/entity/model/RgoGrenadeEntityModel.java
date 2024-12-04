@@ -8,7 +8,7 @@ import software.bernie.geckolib.model.GeoModel;
 public class RgoGrenadeEntityModel extends GeoModel<RgoGrenadeEntity> {
 	@Override
 	public ResourceLocation getAnimationResource(RgoGrenadeEntity entity) {
-		return new ResourceLocation(ModUtils.MODID, "animations/rgo_grenade.animation.json");
+		return null;
 	}
 
 	@Override

@@ -61,6 +61,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
 
     public JavelinMissileEntity(EntityType<? extends JavelinMissileEntity> type, Level world) {
         super(type, world);
+        this.noCulling = true;
     }
 
     public JavelinMissileEntity(LivingEntity entity, Level level, float damage, float explosion_damage, float explosion_radius) {

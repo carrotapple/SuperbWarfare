@@ -31,12 +31,18 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class HandGrenadeEntity extends ThrowableItemProjectile {
+public class HandGrenadeEntity extends ThrowableItemProjectile implements GeoEntity {
     private int fuse = 100;
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public HandGrenadeEntity(EntityType<? extends HandGrenadeEntity> type, Level world) {
         super(type, world);
+        this.noCulling = true;
     }
 
     public HandGrenadeEntity(LivingEntity entity, Level level, int fuse) {
@@ -137,6 +143,15 @@ public class HandGrenadeEntity extends ThrowableItemProjectile {
             ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, this.xo, this.yo, this.zo,
                     1, 0, 0, 0, 0.01, true);
         }
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 
     @Override

@@ -1,8 +1,11 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
-import com.atsuishio.superbwarfare.init.*;
-import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.init.ModDamageTypes;
+import com.atsuishio.superbwarfare.init.ModEntities;
+import com.atsuishio.superbwarfare.init.ModMobEffects;
+import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -19,6 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,18 +34,24 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 @OnlyIn(value = Dist.CLIENT, _interface = ItemSupplier.class)
-public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSupplier {
+public class TaserBulletProjectileEntity extends AbstractArrow implements GeoEntity {
 
     private float damage = 1f;
     private int volt = 0;
     private int wireLength = 0;
     private boolean stop = false;
-    public static final ItemStack PROJECTILE_ITEM = new ItemStack(ModItems.TASER_ELECTRODE.get());
+    public static final ItemStack PROJECTILE_ITEM = new ItemStack(Items.AIR);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public TaserBulletProjectileEntity(PlayMessages.SpawnEntity packet, Level world) {
         super(ModEntities.TASER_BULLET_PROJECTILE.get(), world);
+        this.pickup = AbstractArrow.Pickup.DISALLOWED;
     }
 
     public TaserBulletProjectileEntity(LivingEntity entity, Level level, float damage, int volt, int wireLength) {
@@ -53,6 +63,7 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
 
     public TaserBulletProjectileEntity(EntityType<? extends TaserBulletProjectileEntity> type, Level world) {
         super(type, world);
+        this.noCulling = true;
     }
 
     @Override
@@ -61,20 +72,8 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
     }
 
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public ItemStack getItem() {
-        return PROJECTILE_ITEM;
-    }
-
-    @Override
     protected ItemStack getPickupItem() {
         return PROJECTILE_ITEM;
-    }
-
-    @Override
-    protected void doPostHurtEffects(LivingEntity entity) {
-        super.doPostHurtEffects(entity);
-        entity.setArrowCount(entity.getArrowCount() - 1);
     }
 
     @Override
@@ -126,6 +125,15 @@ public class TaserBulletProjectileEntity extends AbstractArrow implements ItemSu
         if (this.tickCount > 200) {
             this.discard();
         }
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 }
 

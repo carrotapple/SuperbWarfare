@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
+import com.atsuishio.superbwarfare.entity.layer.JavelinMissleLayer;
 import com.atsuishio.superbwarfare.entity.model.JavelinMissileModel;
 import com.atsuishio.superbwarfare.entity.projectile.JavelinMissileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -16,7 +17,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 public class JavelinMissileRenderer extends GeoEntityRenderer<JavelinMissileEntity> {
     public JavelinMissileRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new JavelinMissileModel());
-        this.shadowRadius = 0.1f;
+        this.addRenderLayer(new JavelinMissleLayer(this));
     }
 
     @Override

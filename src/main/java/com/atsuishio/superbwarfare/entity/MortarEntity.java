@@ -60,6 +60,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
 
     public MortarEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.MORTAR.get(), world);
+        this.noCulling = true;
     }
 
     public MortarEntity(EntityType<MortarEntity> type, Level world) {

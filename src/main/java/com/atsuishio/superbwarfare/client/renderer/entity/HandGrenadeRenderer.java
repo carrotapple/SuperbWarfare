@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
-import com.atsuishio.superbwarfare.entity.model.RgoGrenadeEntityModel;
-import com.atsuishio.superbwarfare.entity.projectile.RgoGrenadeEntity;
+import com.atsuishio.superbwarfare.entity.model.HandGrenadeEntityModel;
+import com.atsuishio.superbwarfare.entity.projectile.HandGrenadeEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -13,18 +13,18 @@ import net.minecraft.util.Mth;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class RgoGrenadeRenderer extends GeoEntityRenderer<RgoGrenadeEntity> {
-    public RgoGrenadeRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new RgoGrenadeEntityModel());
+public class HandGrenadeRenderer extends GeoEntityRenderer<HandGrenadeEntity> {
+    public HandGrenadeRenderer(EntityRendererProvider.Context renderManager) {
+        super(renderManager, new HandGrenadeEntityModel());
     }
 
     @Override
-    public RenderType getRenderType(RgoGrenadeEntity animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(HandGrenadeEntity animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
     @Override
-    public void preRender(PoseStack poseStack, RgoGrenadeEntity entity, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green,
+    public void preRender(PoseStack poseStack, HandGrenadeEntity entity, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green,
                           float blue, float alpha) {
         float scale = 1f;
         this.scaleHeight = scale;
@@ -33,7 +33,7 @@ public class RgoGrenadeRenderer extends GeoEntityRenderer<RgoGrenadeEntity> {
     }
 
     @Override
-    public void render(RgoGrenadeEntity entityIn, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn) {
+    public void render(HandGrenadeEntity entityIn, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn) {
         poseStack.pushPose();
         poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entityIn.yRotO, entityIn.getYRot()) - 90));
         poseStack.mulPose(Axis.ZP.rotationDegrees(90 + Mth.lerp(partialTicks, entityIn.xRotO, entityIn.getXRot())));
@@ -42,7 +42,7 @@ public class RgoGrenadeRenderer extends GeoEntityRenderer<RgoGrenadeEntity> {
     }
 
     @Override
-    protected float getDeathMaxRotation(RgoGrenadeEntity entityLivingBaseIn) {
+    protected float getDeathMaxRotation(HandGrenadeEntity entityLivingBaseIn) {
         return 0.0F;
     }
 }

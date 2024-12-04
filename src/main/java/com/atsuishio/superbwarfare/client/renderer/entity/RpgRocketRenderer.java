@@ -1,10 +1,11 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
+import com.atsuishio.superbwarfare.entity.layer.RpgRocketLayer;
 import com.atsuishio.superbwarfare.entity.model.RpgRocketModel;
+import com.atsuishio.superbwarfare.entity.projectile.RpgRocketEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.atsuishio.superbwarfare.entity.projectile.RpgRocketEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -16,7 +17,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 public class RpgRocketRenderer extends GeoEntityRenderer<RpgRocketEntity> {
     public RpgRocketRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new RpgRocketModel());
-        this.shadowRadius = 0.1f;
+        this.addRenderLayer(new RpgRocketLayer(this));
     }
 
     @Override
