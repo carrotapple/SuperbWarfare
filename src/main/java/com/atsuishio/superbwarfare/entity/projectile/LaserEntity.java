@@ -75,32 +75,32 @@ public class LaserEntity extends AbstractLaserEntity {
             collidePosY = hitVec.y;
             collidePosZ = hitVec.z;
             blockSide = result.getBlockHit().getDirection();
-        }
-
-        List<LivingEntity> entities = world.getEntitiesOfClass(LivingEntity.class, new AABB(Math.min(getX(), collidePosX), Math.min(getY(), collidePosY), Math.min(getZ(), collidePosZ), Math.max(getX(), collidePosX), Math.max(getY(), collidePosY), Math.max(getZ(), collidePosZ)).inflate(1, 1, 1));
-        for (LivingEntity entity : entities) {
-            if (entity == this.caster) {
-                continue;
-            }
-            float pad = entity.getPickRadius() + getBaseScale();
-            AABB aabb = entity.getBoundingBox().inflate(pad, pad, pad);
-            Optional<Vec3> hit = aabb.clip(from, to);
-            if (aabb.contains(from)) {
-                result.addEntityHit(entity);
-            } else if (hit.isPresent()) {
-                result.addEntityHit(entity);
-            }
-        }
-
-        var target = result.getEntities().stream().min(Comparator.comparingDouble(e -> e.distanceToSqr(this.caster)));
-        if (target.isPresent()) {
-            collidePosX = target.get().getX();
-            collidePosY = target.get().getY();
-            collidePosZ = target.get().getZ();
         } else {
-            collidePosX = endPosX;
-            collidePosY = endPosY;
-            collidePosZ = endPosZ;
+            List<LivingEntity> entities = world.getEntitiesOfClass(LivingEntity.class, new AABB(Math.min(getX(), collidePosX), Math.min(getY(), collidePosY), Math.min(getZ(), collidePosZ), Math.max(getX(), collidePosX), Math.max(getY(), collidePosY), Math.max(getZ(), collidePosZ)).inflate(1, 1, 1));
+            for (LivingEntity entity : entities) {
+                if (entity == this.caster) {
+                    continue;
+                }
+                float pad = entity.getPickRadius() + getBaseScale();
+                AABB aabb = entity.getBoundingBox().inflate(pad, pad, pad);
+                Optional<Vec3> hit = aabb.clip(from, to);
+                if (aabb.contains(from)) {
+                    result.addEntityHit(entity);
+                } else if (hit.isPresent()) {
+                    result.addEntityHit(entity);
+                }
+            }
+
+            var target = result.getEntities().stream().min(Comparator.comparingDouble(e -> e.distanceToSqr(this.caster)));
+            if (target.isPresent()) {
+                collidePosX = target.get().getX();
+                collidePosY = target.get().getY();
+                collidePosZ = target.get().getZ();
+            } else {
+                collidePosX = endPosX;
+                collidePosY = endPosY;
+                collidePosZ = endPosZ;
+            }
             blockSide = null;
         }
 
