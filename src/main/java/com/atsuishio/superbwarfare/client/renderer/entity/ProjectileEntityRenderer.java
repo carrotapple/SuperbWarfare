@@ -1,8 +1,8 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
-import com.atsuishio.superbwarfare.entity.layer.ProjectileEntityInsideLayer;
-import com.atsuishio.superbwarfare.entity.layer.ProjectileEntityLayer;
-import com.atsuishio.superbwarfare.entity.model.ProjectileEntityModel;
+import com.atsuishio.superbwarfare.client.layer.ProjectileEntityInsideLayer;
+import com.atsuishio.superbwarfare.client.layer.ProjectileEntityLayer;
+import com.atsuishio.superbwarfare.client.model.entity.ProjectileEntityModel;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

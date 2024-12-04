@@ -1,7 +1,7 @@
-package com.atsuishio.superbwarfare.entity.model;
+package com.atsuishio.superbwarfare.client.model.entity;
 
-import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import net.minecraft.client.Minecraft;
@@ -42,6 +42,9 @@ public class ProjectileEntityModel extends GeoModel<ProjectileEntity> {
     @Override
     public void setCustomAnimations(ProjectileEntity animatable, long instanceId, AnimationState animationState) {
         CoreGeoBone bone = getAnimationProcessor().getBone("bone");
-        bone.setHidden(animatable.tickCount <= 1);
+        Player player = Minecraft.getInstance().player;
+        if (player != null) {
+            bone.setHidden(animatable.position().distanceTo(player.position()) < 3);
+        }
     }
 }

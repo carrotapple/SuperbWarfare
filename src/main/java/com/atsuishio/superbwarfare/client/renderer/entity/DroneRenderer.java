@@ -1,10 +1,10 @@
 
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
-import com.atsuishio.superbwarfare.entity.model.DroneModel;
+import com.atsuishio.superbwarfare.client.model.entity.DroneModel;
+import com.atsuishio.superbwarfare.entity.DroneEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.atsuishio.superbwarfare.entity.DroneEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

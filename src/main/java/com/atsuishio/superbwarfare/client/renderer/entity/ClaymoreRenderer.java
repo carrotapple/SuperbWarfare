@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
+import com.atsuishio.superbwarfare.client.model.entity.ClaymoreModel;
 import com.atsuishio.superbwarfare.entity.ClaymoreEntity;
-import com.atsuishio.superbwarfare.entity.model.ClaymoreModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;

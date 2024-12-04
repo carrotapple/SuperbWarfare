@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
-import com.atsuishio.superbwarfare.entity.layer.GunGrenadeLayer;
-import com.atsuishio.superbwarfare.entity.model.GunGrenadeModel;
+import com.atsuishio.superbwarfare.client.layer.GunGrenadeLayer;
+import com.atsuishio.superbwarfare.client.model.entity.GunGrenadeModel;
 import com.atsuishio.superbwarfare.entity.projectile.GunGrenadeEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

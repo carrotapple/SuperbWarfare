@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
-import com.atsuishio.superbwarfare.entity.model.TaserBulletProjectileModel;
+import com.atsuishio.superbwarfare.client.model.entity.TaserBulletProjectileModel;
 import com.atsuishio.superbwarfare.entity.projectile.TaserBulletProjectileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

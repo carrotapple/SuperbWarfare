@@ -1,7 +1,7 @@
-package com.atsuishio.superbwarfare.entity.model;
+package com.atsuishio.superbwarfare.client.model.entity;
 
-import com.atsuishio.superbwarfare.entity.projectile.JavelinMissileEntity;
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.entity.projectile.JavelinMissileEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 

@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.entity.layer;
+package com.atsuishio.superbwarfare.client.layer;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.CannonConfig;

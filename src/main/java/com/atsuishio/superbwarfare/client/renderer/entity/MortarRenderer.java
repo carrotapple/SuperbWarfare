@@ -1,11 +1,11 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
-import com.atsuishio.superbwarfare.entity.layer.MortarLayer;
-import com.atsuishio.superbwarfare.entity.model.MortarModel;
+import com.atsuishio.superbwarfare.client.layer.MortarLayer;
+import com.atsuishio.superbwarfare.client.model.entity.MortarModel;
+import com.atsuishio.superbwarfare.entity.MortarEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.atsuishio.superbwarfare.entity.MortarEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

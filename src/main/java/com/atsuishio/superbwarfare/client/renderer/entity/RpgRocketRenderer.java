@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
-import com.atsuishio.superbwarfare.entity.layer.RpgRocketLayer;
-import com.atsuishio.superbwarfare.entity.model.RpgRocketModel;
+import com.atsuishio.superbwarfare.client.layer.RpgRocketLayer;
+import com.atsuishio.superbwarfare.client.model.entity.RpgRocketModel;
 import com.atsuishio.superbwarfare.entity.projectile.RpgRocketEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

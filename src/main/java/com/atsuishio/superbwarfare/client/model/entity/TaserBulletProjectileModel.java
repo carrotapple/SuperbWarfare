@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.entity.model;
+package com.atsuishio.superbwarfare.client.model.entity;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.entity.projectile.TaserBulletProjectileEntity;

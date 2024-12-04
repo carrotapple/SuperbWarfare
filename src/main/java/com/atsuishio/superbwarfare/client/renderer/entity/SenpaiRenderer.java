@@ -1,9 +1,9 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
-import com.atsuishio.superbwarfare.entity.model.SenpaiModel;
+import com.atsuishio.superbwarfare.client.model.entity.SenpaiModel;
+import com.atsuishio.superbwarfare.entity.SenpaiEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.atsuishio.superbwarfare.entity.SenpaiEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
