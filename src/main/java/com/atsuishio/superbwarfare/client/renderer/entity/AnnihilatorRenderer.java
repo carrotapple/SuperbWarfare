@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
+import com.atsuishio.superbwarfare.client.layer.AnnihilatorGlowLayer;
 import com.atsuishio.superbwarfare.client.layer.AnnihilatorLayer;
 import com.atsuishio.superbwarfare.client.model.entity.AnnihilatorModel;
 import com.atsuishio.superbwarfare.entity.AnnihilatorEntity;
@@ -18,9 +19,9 @@ public class AnnihilatorRenderer extends GeoEntityRenderer<AnnihilatorEntity> {
 
     public AnnihilatorRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new AnnihilatorModel());
-        this.shadowRadius = 2f;
+        this.shadowRadius = 7.5f;
         this.addRenderLayer(new AnnihilatorLayer(this));
-//        this.addRenderLayer(new Mk42DamageLayer(this));
+        this.addRenderLayer(new AnnihilatorGlowLayer(this));
     }
 
     @Override

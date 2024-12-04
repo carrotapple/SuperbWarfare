@@ -31,6 +31,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -51,6 +52,9 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> LASER_LEFT_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> LASER_MIDDLE_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> LASER_RIGHT_LENGTH= SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public static final float MAX_HEALTH = CannonConfig.ANNIHILATOR_HP.get();
@@ -73,6 +77,9 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         this.entityData.define(COOL_DOWN, 0);
         this.entityData.define(TYPE, 0);
         this.entityData.define(HEALTH, MAX_HEALTH);
+        this.entityData.define(LASER_LEFT_LENGTH, 0f);
+        this.entityData.define(LASER_MIDDLE_LENGTH, 0f);
+        this.entityData.define(LASER_RIGHT_LENGTH, 0f);
     }
 
     @Override
@@ -80,6 +87,9 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         compound.putInt("CoolDown", this.entityData.get(COOL_DOWN));
         compound.putInt("Type", this.entityData.get(TYPE));
         compound.putFloat("Health", this.entityData.get(HEALTH));
+        compound.putFloat("LaserLeftLength", this.entityData.get(LASER_LEFT_LENGTH));
+        compound.putFloat("LaserMiddleLength", this.entityData.get(LASER_MIDDLE_LENGTH));
+        compound.putFloat("LaserRightLength", this.entityData.get(LASER_RIGHT_LENGTH));
     }
 
     @Override
@@ -91,6 +101,9 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         } else {
             this.entityData.set(HEALTH, MAX_HEALTH);
         }
+        this.entityData.set(LASER_LEFT_LENGTH, compound.getFloat("LaserLeftLength"));
+        this.entityData.set(LASER_MIDDLE_LENGTH, compound.getFloat("LaserMiddleLength"));
+        this.entityData.set(LASER_RIGHT_LENGTH, compound.getFloat("LaserRightLength"));
     }
 
     @Override
@@ -153,7 +166,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         }
 
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.5f * Math.max(amount - 150, 0));
+        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.5f * Math.max(amount - 40, 0));
 
         return true;
     }
@@ -248,8 +261,47 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
             destroy();
         }
 
+        float yRot = this.getYRot();
+        if (yRot < 0) {
+            yRot += 360;
+        }
+        yRot = yRot + 90 % 360;
+
+        var BarrelRoot = new Vector3d(4.95, 2.25, 0);
+        BarrelRoot.rotateY(-yRot * Mth.DEG_TO_RAD);
+
+        Vec3 BarrelRootPos = new Vec3(this.getX() + BarrelRoot.x, this.getY() + BarrelRoot.y, this.getZ() + BarrelRoot.z);
+
+        var leftPos = new Vector3d(16, 0, -2.703125);
+        leftPos.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
+        leftPos.rotateY(-yRot * Mth.DEG_TO_RAD);
+
+        Vec3 BarrelLeftPos = new Vec3(BarrelRootPos.x + leftPos.x, BarrelRootPos.y + leftPos.y, BarrelRootPos.z + leftPos.z);
+
+        var middlePos = new Vector3d(16, 0, 0);
+        middlePos.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
+        middlePos.rotateY(-yRot * Mth.DEG_TO_RAD);
+
+        Vec3 BarrelMiddlePos = new Vec3(BarrelRootPos.x + middlePos.x, BarrelRootPos.y + middlePos.y, BarrelRootPos.z + middlePos.z);
+
+        var rightPos = new Vector3d(16, 0, 2.703125);
+        rightPos.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
+        rightPos.rotateY(-yRot * Mth.DEG_TO_RAD);
+
+        Vec3 BarrelRightPos = new Vec3(BarrelRootPos.x + rightPos.x, BarrelRootPos.y + rightPos.y, BarrelRootPos.z + rightPos.z);
+
+        this.entityData.set(LASER_LEFT_LENGTH, laserLength(BarrelLeftPos ,this));
+        this.entityData.set(LASER_MIDDLE_LENGTH, laserLength(BarrelMiddlePos ,this));
+        this.entityData.set(LASER_RIGHT_LENGTH, laserLength(BarrelRightPos ,this));
+
         travel();
         this.refreshDimensions();
+    }
+
+    private float laserLength (Vec3 pos, Entity cannon) {
+        return (float) pos.distanceTo((Vec3.atLowerCornerOf(cannon.level().clip(
+                new ClipContext(pos, pos.add(cannon.getViewVector(1).scale(512)),
+                        ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, cannon)).getBlockPos())));
     }
 
     private void destroy() {

@@ -10,6 +10,8 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
+import static com.atsuishio.superbwarfare.entity.AnnihilatorEntity.*;
+
 public class AnnihilatorModel extends GeoModel<AnnihilatorEntity> {
 
     @Override
@@ -50,12 +52,12 @@ public class AnnihilatorModel extends GeoModel<AnnihilatorEntity> {
         EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
         bone.setRotX((entityData.headPitch()) * Mth.DEG_TO_RAD);
 
-        CoreGeoBone laser1 = getAnimationProcessor().getBone("laser1");
-        CoreGeoBone laser2 = getAnimationProcessor().getBone("laser2");
-        CoreGeoBone laser3 = getAnimationProcessor().getBone("laser3");
+        CoreGeoBone laserLeft = getAnimationProcessor().getBone("laser1");
+        CoreGeoBone laserMiddle = getAnimationProcessor().getBone("laser2");
+        CoreGeoBone laserRight = getAnimationProcessor().getBone("laser3");
 
-        laser1.setScaleZ(512);
-        laser2.setScaleZ(512);
-        laser3.setScaleZ(512);
+        laserLeft.setScaleZ(animatable.getEntityData().get(LASER_LEFT_LENGTH) + 0.5f);
+        laserMiddle.setScaleZ(animatable.getEntityData().get(LASER_MIDDLE_LENGTH) + 0.5f);
+        laserRight.setScaleZ(animatable.getEntityData().get(LASER_RIGHT_LENGTH) + 0.5f);
     }
 }

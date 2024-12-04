@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.client.layer;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.client.ModRenderTypes;
 import com.atsuishio.superbwarfare.entity.AnnihilatorEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -12,17 +13,17 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
-public class AnnihilatorLayer extends GeoRenderLayer<AnnihilatorEntity> {
+public class AnnihilatorGlowLayer extends GeoRenderLayer<AnnihilatorEntity> {
 
-    private static final ResourceLocation LAYER = ModUtils.loc("textures/entity/annihilator_e.png");
+    private static final ResourceLocation LAYER = ModUtils.loc("textures/entity/annihilator_glow_e.png");
 
-    public AnnihilatorLayer(GeoRenderer<AnnihilatorEntity> entityRenderer) {
+    public AnnihilatorGlowLayer(GeoRenderer<AnnihilatorEntity> entityRenderer) {
         super(entityRenderer);
     }
 
     @Override
     public void render(PoseStack poseStack, AnnihilatorEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-        RenderType glowRenderType = RenderType.energySwirl(LAYER, 1, 1);
+        RenderType glowRenderType = ModRenderTypes.LASER.apply(LAYER);
         getRenderer().reRender(getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, glowRenderType, bufferSource.getBuffer(glowRenderType), partialTick, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
     }
 }

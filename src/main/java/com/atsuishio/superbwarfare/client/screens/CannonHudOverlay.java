@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.client.screens;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.config.server.CannonConfig;
+import com.atsuishio.superbwarfare.entity.AnnihilatorEntity;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.entity.Mk42Entity;
 import com.atsuishio.superbwarfare.entity.Mle1934Entity;
@@ -118,6 +119,11 @@ public class CannonHudOverlay {
         if (cannon instanceof Mle1934Entity) {
             health = cannon.getEntityData().get(Mle1934Entity.HEALTH);
             maxHealth = CannonConfig.MLE1934_HP.get();
+        }
+
+        if (cannon instanceof AnnihilatorEntity) {
+            health = cannon.getEntityData().get(AnnihilatorEntity.HEALTH);
+            maxHealth = CannonConfig.ANNIHILATOR_HP.get();
         }
 
         GuiGraphics guiGraphics = event.getGuiGraphics();
