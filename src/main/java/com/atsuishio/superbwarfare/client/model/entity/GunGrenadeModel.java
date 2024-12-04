@@ -26,8 +26,8 @@ public class GunGrenadeModel extends GeoModel<GunGrenadeEntity> {
 	@Override
 	public void setCustomAnimations(GunGrenadeEntity animatable, long instanceId, AnimationState animationState) {
 		CoreGeoBone bone = getAnimationProcessor().getBone("bone");
-		bone.setScaleX(0.15f);
-		bone.setScaleY(0.15f);
-		bone.setScaleZ(0.15f);
+		bone.setScaleX(0.2f);
+		bone.setScaleY(0.2f);
+		bone.setScaleZ(0.2f);
 	}
 }

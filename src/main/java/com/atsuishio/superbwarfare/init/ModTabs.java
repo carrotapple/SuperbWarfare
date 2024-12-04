@@ -105,6 +105,7 @@ public class ModTabs {
                         if (registryObject.get() == ModItems.CONTAINER.get()) {
                             output.accept(ContainerBlockItem.createMk42Instance());
                             output.accept(ContainerBlockItem.createMle1934Instance());
+                            output.accept(ContainerBlockItem.createAnnihilatorInstance());
                         } else {
                             output.accept(registryObject.get());
                             if (registryObject.get() == ModItems.ARMOR_PLATE.get()) {

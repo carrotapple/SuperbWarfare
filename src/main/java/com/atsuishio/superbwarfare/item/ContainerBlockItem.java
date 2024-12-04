@@ -97,4 +97,8 @@ public class ContainerBlockItem extends BlockItem implements GeoItem {
     public static ItemStack createMle1934Instance() {
         return createInstance(ModEntities.MLE_1934.get());
     }
+
+    public static ItemStack createAnnihilatorInstance() {
+        return createInstance(ModEntities.ANNIHILATOR.get());
+    }
 }

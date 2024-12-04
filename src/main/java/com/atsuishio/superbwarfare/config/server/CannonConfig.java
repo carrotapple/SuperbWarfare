@@ -20,6 +20,8 @@ public class CannonConfig {
     public static ForgeConfigSpec.IntValue MLE1934_HE_EXPLOSION_DAMAGE;
     public static ForgeConfigSpec.IntValue MLE1934_HE_EXPLOSION_RADIUS;
 
+    public static ForgeConfigSpec.IntValue ANNIHILATOR_HP;
+
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("mk_42");
 
@@ -69,6 +71,12 @@ public class CannonConfig {
         builder.comment("The HE shell explosion radius of MLE-1934");
         MLE1934_HE_EXPLOSION_RADIUS = builder.defineInRange("mle_1934_he_explosion_radius", 12, 1, 50);
 
+        builder.pop();
+
+        builder.push("annihilator");
+
+        builder.comment("The HealthPoint of ANNIHILATOR");
+        ANNIHILATOR_HP = builder.defineInRange("annihilator_hp", 4000, 1, 10000000);
         builder.pop();
     }
 
