@@ -16,7 +16,7 @@ public class AnnihilatorModel extends GeoModel<AnnihilatorEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(AnnihilatorEntity entity) {
-        return null;
+        return ModUtils.loc("animations/annihilator.animation.json");
     }
 
     @Override

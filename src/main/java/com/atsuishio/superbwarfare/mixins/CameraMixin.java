@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.mixins;
 
+import com.atsuishio.superbwarfare.entity.AnnihilatorEntity;
 import com.atsuishio.superbwarfare.entity.DroneEntity;
 import com.atsuishio.superbwarfare.entity.Mk42Entity;
 import com.atsuishio.superbwarfare.entity.Mle1934Entity;
@@ -69,6 +70,10 @@ public abstract class CameraMixin {
         }
         if (thirdPerson && entity.getVehicle() instanceof Mle1934Entity) {
             move(-getMaxZoom(10), 1.3, 0.0);
+            return;
+        }
+        if (thirdPerson && entity.getVehicle() instanceof AnnihilatorEntity) {
+            move(-getMaxZoom(16), 1.3, 0.0);
             return;
         }
         if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && entity instanceof Player player && player.getMainHandItem().is(ModTags.Items.GUN)) {

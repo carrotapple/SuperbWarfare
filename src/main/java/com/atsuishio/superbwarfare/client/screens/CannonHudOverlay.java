@@ -35,6 +35,7 @@ public class CannonHudOverlay {
 
     public static float health = 0;
     public static float maxHealth = 0;
+    public static float indicatorPosH = 0;
 
     private static final ResourceLocation ARMOR = ModUtils.loc("textures/screens/armor.png");
     private static final ResourceLocation HEALTH = ModUtils.loc("textures/screens/armor_value.png");
@@ -58,10 +59,28 @@ public class CannonHudOverlay {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
+        if (cannon instanceof Mk42Entity) {
+            health = cannon.getEntityData().get(Mk42Entity.HEALTH);
+            maxHealth = CannonConfig.MK42_HP.get();
+            indicatorPosH = 1.3f;
+        }
+
+        if (cannon instanceof Mle1934Entity) {
+            health = cannon.getEntityData().get(Mle1934Entity.HEALTH);
+            maxHealth = CannonConfig.MLE1934_HP.get();
+            indicatorPosH = 1.2f;
+        }
+
+        if (cannon instanceof AnnihilatorEntity) {
+            health = cannon.getEntityData().get(AnnihilatorEntity.HEALTH);
+            maxHealth = CannonConfig.ANNIHILATOR_HP.get();
+            indicatorPosH = 0.2f;
+        }
+
         float yRotOffset = Mth.lerp(event.getPartialTick(), player.yRotO, player.getYRot());
         float xRotOffset = Mth.lerp(event.getPartialTick(), player.xRotO, player.getXRot());
         float diffY = cannon.getViewYRot(event.getPartialTick()) - yRotOffset;
-        float diffX = cannon.getViewXRot(event.getPartialTick()) - xRotOffset + 1.3f;
+        float diffX = cannon.getViewXRot(event.getPartialTick()) - xRotOffset + indicatorPosH;
         float fovAdjust = (float) 70 / Minecraft.getInstance().options.fov().get();
         if (diffY > 180.0f) {
             diffY -= 360.0f;
@@ -110,21 +129,6 @@ public class CannonHudOverlay {
         event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.mortar.pitch")
                         .append(Component.literal(new DecimalFormat("##.#").format(-cannon.getXRot()) + "°")),
                 w / 2 + 14, h / 2 - 29, -1, false);
-
-        if (cannon instanceof Mk42Entity) {
-            health = cannon.getEntityData().get(Mk42Entity.HEALTH);
-            maxHealth = CannonConfig.MK42_HP.get();
-        }
-
-        if (cannon instanceof Mle1934Entity) {
-            health = cannon.getEntityData().get(Mle1934Entity.HEALTH);
-            maxHealth = CannonConfig.MLE1934_HP.get();
-        }
-
-        if (cannon instanceof AnnihilatorEntity) {
-            health = cannon.getEntityData().get(AnnihilatorEntity.HEALTH);
-            maxHealth = CannonConfig.ANNIHILATOR_HP.get();
-        }
 
         GuiGraphics guiGraphics = event.getGuiGraphics();
         guiGraphics.pose().pushPose();

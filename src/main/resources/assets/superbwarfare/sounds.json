@@ -2389,5 +2389,13 @@
         "stream": false
       }
     ]
+  },
+  "annihilator_fire_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:annihilator/annihilator_fire_1p",
+        "stream": false
+      }
+    ]
   }
 }

@@ -336,5 +336,7 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> CHARGE_RIFLE_FIRE_3P = REGISTRY.register("charge_rifle_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "charge_rifle_fire_3p")));
     public static final RegistryObject<SoundEvent> CHARGE_RIFLE_FIRE_BOOM_1P = REGISTRY.register("charge_rifle_fire_boom_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "charge_rifle_fire_boom_1p")));
     public static final RegistryObject<SoundEvent> CHARGE_RIFLE_FIRE_BOOM_3P = REGISTRY.register("charge_rifle_fire_boom_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "charge_rifle_fire_boom_3p")));
+
+    public static final RegistryObject<SoundEvent> ANNIHILATOR_FIRE_1P = REGISTRY.register("annihilator_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "annihilator_fire_1p")));
 }
 

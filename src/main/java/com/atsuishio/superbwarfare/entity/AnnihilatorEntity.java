@@ -5,9 +5,10 @@ import com.atsuishio.superbwarfare.config.server.CannonConfig;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
-import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
+import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
+import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -42,12 +43,17 @@ import org.joml.Vector3d;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
+import java.util.Comparator;
 
 public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntity {
 
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> LASER_LEFT_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> LASER_MIDDLE_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
@@ -73,7 +79,6 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     @Override
     protected void defineSynchedData() {
         this.entityData.define(COOL_DOWN, 0);
-        this.entityData.define(TYPE, 0);
         this.entityData.define(HEALTH, MAX_HEALTH);
         this.entityData.define(LASER_LEFT_LENGTH, 0f);
         this.entityData.define(LASER_MIDDLE_LENGTH, 0f);
@@ -83,14 +88,12 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         compound.putInt("CoolDown", this.entityData.get(COOL_DOWN));
-        compound.putInt("Type", this.entityData.get(TYPE));
         compound.putFloat("Health", this.entityData.get(HEALTH));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         this.entityData.set(COOL_DOWN, compound.getInt("CoolDown"));
-        this.entityData.set(TYPE, compound.getInt("Type"));
         if (compound.contains("Health")) {
             this.entityData.set(HEALTH, compound.getFloat("Health"));
         } else {
@@ -277,15 +280,24 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
 
         Vec3 BarrelRightPos = new Vec3(BarrelRootPos.x + rightPos.x, BarrelRootPos.y + rightPos.y, BarrelRootPos.z + rightPos.z);
 
-        this.entityData.set(LASER_LEFT_LENGTH, Math.min(laserLength(BarrelLeftPos ,this), laserLengthEntity(BarrelLeftPos ,this)));
-        this.entityData.set(LASER_MIDDLE_LENGTH, Math.min(laserLength(BarrelMiddlePos ,this), laserLengthEntity(BarrelMiddlePos ,this)));
-        this.entityData.set(LASER_RIGHT_LENGTH, Math.min(laserLength(BarrelRightPos ,this), laserLengthEntity(BarrelRightPos ,this)));
+        if (this.entityData.get(COOL_DOWN) > 88) {
+            this.entityData.set(LASER_LEFT_LENGTH, Math.min(laserLength(BarrelLeftPos ,this), laserLengthEntity(BarrelLeftPos ,this)));
+            this.entityData.set(LASER_MIDDLE_LENGTH, Math.min(laserLength(BarrelMiddlePos ,this), laserLengthEntity(BarrelMiddlePos ,this)));
+            this.entityData.set(LASER_RIGHT_LENGTH, Math.min(laserLength(BarrelRightPos ,this), laserLengthEntity(BarrelRightPos ,this)));
+        }
 
         travel();
         this.refreshDimensions();
     }
 
     private float laserLength (Vec3 pos, Entity cannon) {
+        if (this.entityData.get(COOL_DOWN) > 98) {
+            HitResult result = cannon.level().clip(new ClipContext(pos, pos.add(cannon.getViewVector(1).scale(512)),
+                    ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, cannon));
+            Vec3 hitPos = result.getLocation();
+            laserExplosion(hitPos);
+        }
+
         return (float) pos.distanceTo((Vec3.atLowerCornerOf(cannon.level().clip(
                 new ClipContext(pos, pos.add(cannon.getViewVector(1).scale(512)),
                         ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, cannon)).getBlockPos())));
@@ -315,28 +327,35 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
                     hitResult = entityhitresult;
                 }
                 if (hitResult.getType() == HitResult.Type.ENTITY) {
-
                     Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
                     Entity target = ((EntityHitResult) hitResult).getEntity();
-
-                    target.hurt(ModDamageTypes.causeLaserDamage(this.level().registryAccess(), passenger, passenger), (float) 100);
+                    target.hurt(ModDamageTypes.causeLaserDamage(this.level().registryAccess(), passenger, passenger), (float) 200);
                     target.invulnerableTime = 0;
-                    if (passenger instanceof ServerPlayer serverPlayer) {
-                        serverPlayer.level().playSound(null, serverPlayer.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 0.1f, 1);
-                        ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientIndicatorMessage(0, 5));
+                    if (this.entityData.get(COOL_DOWN) > 98) {
+                        laserExplosion(targetPos);
                     }
-
                     return (float) pos.distanceTo(target.position());
                 }
             }
-
             return 512;
+    }
+
+    private void laserExplosion(Vec3 pos) {
+        Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+
+        CustomExplosion explosion = new CustomExplosion(this.level(), passenger,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), passenger, passenger), 300f,
+                pos.x, pos.y, pos.z, 15f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnHugeExplosionParticles(this.level(), pos);
     }
 
     private void destroy() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this), 140f,
-                this.getX(), this.getY(), this.getZ(), 25f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this), 160f,
+                this.getX(), this.getY(), this.getZ(), 20f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
@@ -347,6 +366,34 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
 
     @Override
     public void cannonShoot(Player player) {
+        if (this.entityData.get(COOL_DOWN) > 0) {
+            return;
+        }
+
+        Level level = player.level();
+        if (level instanceof ServerLevel server) {
+            ItemStack stack = player.getMainHandItem();
+
+
+            if (player instanceof ServerPlayer serverPlayer) {
+                SoundTool.playLocalSound(serverPlayer, ModSounds.ANNIHILATOR_FIRE_1P.get(), 1, 1);
+//                SoundTool.playLocalSound(serverPlayer, ModSounds.MK_42_RELOAD.get(), 2, 1);
+//                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_FIRE_3P.get(), SoundSource.PLAYERS, 6, 1);
+//                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_FAR.get(), SoundSource.PLAYERS, 16, 1);
+//                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_VERYFAR.get(), SoundSource.PLAYERS, 32, 1);
+            }
+
+            this.entityData.set(COOL_DOWN, 100);
+
+            final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
+
+            for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(20), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
+
+                if (target instanceof ServerPlayer serverPlayer) {
+                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(15, 15, 25, this.getX(), this.getEyeY(), this.getZ()));
+                }
+            }
+        }
     }
 
     @Override
@@ -369,7 +416,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         }
 
         float diffY = passengerY - this.getYRot();
-        float diffX = entity.getXRot() - 1.2f - this.getXRot();
+        float diffX = entity.getXRot() - 0.2f - this.getXRot();
         if (diffY > 180.0f) {
             diffY -= 360.0f;
         } else if (diffY < -180.0f) {
@@ -379,13 +426,13 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         diffX = diffX * 0.15f;
 
         this.setYRot(this.getYRot() + diffY);
-        this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -45, 6.2f));
+        this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -45, 5.2f));
         this.setRot(this.getYRot(), this.getXRot());
     }
 
     protected void clampRotation(Entity entity) {
         float f = Mth.wrapDegrees(entity.getXRot());
-        float f1 = Mth.clamp(f, -45.0F, 6.2F);
+        float f1 = Mth.clamp(f, -45.0F, 5.2F);
         entity.xRotO += f1 - f;
         entity.setXRot(entity.getXRot() + f1 - f);
     }
@@ -395,20 +442,16 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         this.clampRotation(entity);
     }
 
-//    private PlayState movementPredicate(AnimationState<AnnihilatorEntity> event) {
-//        if (this.entityData.get(COOL_DOWN) > 64) {
-//            if (this.entityData.get(TYPE) == 1) {
-//                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mle1934.salvo_fire"));
-//            } else {
-//                return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mle1934.fire"));
-//            }
-//        }
-//        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mle1934.idle"));
-//    }
+    private PlayState movementPredicate(AnimationState<AnnihilatorEntity> event) {
+        if (this.entityData.get(COOL_DOWN) > 88) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.annihilator.fire"));
+        }
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.annihilator.idle"));
+    }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-//        data.add(new AnimationController<>(this, "movement", 0, this::movementPredicate));
+        data.add(new AnimationController<>(this, "movement", 0, this::movementPredicate));
     }
 
     @Override
