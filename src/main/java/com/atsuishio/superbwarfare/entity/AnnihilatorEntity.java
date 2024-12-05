@@ -101,6 +101,15 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         }
     }
 
+    // TODO 修改乘客的位置
+    @Override
+    protected void positionRider(Entity pPassenger, MoveFunction pCallback) {
+        if (this.hasPassenger(pPassenger)) {
+            double d0 = this.getY() + this.getPassengersRidingOffset() + pPassenger.getMyRidingOffset();
+            pCallback.accept(pPassenger, this.getX(), d0, this.getZ());
+        }
+    }
+
     @Override
     public boolean canBeCollidedWith() {
         return true;
