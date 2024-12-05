@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -58,11 +59,12 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     public static final EntityDataAccessor<Float> LASER_LEFT_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> LASER_MIDDLE_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> LASER_RIGHT_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public static final float MAX_HEALTH = CannonConfig.ANNIHILATOR_HP.get();
-
+    public static final float SHOOT_COST = CannonConfig.ANNIHILATOR_SHOOT_COST.get().floatValue();
     protected int interpolationSteps;
     protected double serverYRot;
     protected double serverXRot;
@@ -83,17 +85,20 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         this.entityData.define(LASER_LEFT_LENGTH, 0f);
         this.entityData.define(LASER_MIDDLE_LENGTH, 0f);
         this.entityData.define(LASER_RIGHT_LENGTH, 0f);
+        this.entityData.define(ENERGY, 0f);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         compound.putInt("CoolDown", this.entityData.get(COOL_DOWN));
         compound.putFloat("Health", this.entityData.get(HEALTH));
+        compound.putFloat("Energy", this.entityData.get(ENERGY));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         this.entityData.set(COOL_DOWN, compound.getInt("CoolDown"));
+        this.entityData.set(ENERGY, compound.getFloat("Energy"));
         if (compound.contains("Health")) {
             this.entityData.set(HEALTH, compound.getFloat("Health"));
         } else {
@@ -101,12 +106,12 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         }
     }
 
-    // TODO 修改乘客的位置
     @Override
     protected void positionRider(Entity pPassenger, MoveFunction pCallback) {
         if (this.hasPassenger(pPassenger)) {
-            double d0 = this.getY() + this.getPassengersRidingOffset() + pPassenger.getMyRidingOffset();
-            pCallback.accept(pPassenger, this.getX(), d0, this.getZ());
+            float f1 = (float)((this.isRemoved() ? 0.009999999776482582 : this.getPassengersRidingOffset()) + pPassenger.getMyRidingOffset());
+            Vec3 vec3 = (new Vec3(1, 0.0, 0.0)).yRot(-this.getYRot() * 0.017453292F - 1.5707964F);
+            pCallback.accept(pPassenger, this.getX() + vec3.x, this.getY() + (double)f1, this.getZ() + vec3.z);
         }
     }
 
@@ -187,6 +192,11 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
                 this.discard();
                 return InteractionResult.sidedSuccess(this.level().isClientSide());
             }
+            if (player.getMainHandItem().is(ModItems.SHIELD_CELL.get())) {
+                this.entityData.set(ENERGY, (float)Mth.clamp(this.entityData.get(ENERGY) + 1000000 , 0, CannonConfig.ANNIHILATOR_MAX_ENERGY.get()));
+                player.displayClientMessage(Component.literal("Energy:" + new java.text.DecimalFormat("##").format(this.entityData.get(ENERGY))), true);
+                return InteractionResult.sidedSuccess(this.level().isClientSide());
+            }
             return InteractionResult.PASS;
         } else {
             if (this.getFirstPassenger() == null) {
@@ -196,7 +206,6 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
                 return InteractionResult.sidedSuccess(this.level().isClientSide());
             }
         }
-
         return InteractionResult.PASS;
     }
 
@@ -296,6 +305,13 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         }
 
         travel();
+
+        Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+
+        if (passenger instanceof ServerPlayer serverPlayer && this.entityData.get(COOL_DOWN) == 20) {
+            SoundTool.playLocalSound(serverPlayer, ModSounds.ANNIHILATOR_RELOAD.get(), 1, 1);
+        }
+
         this.refreshDimensions();
     }
 
@@ -379,20 +395,24 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
             return;
         }
 
-        Level level = player.level();
-        if (level instanceof ServerLevel server) {
-            ItemStack stack = player.getMainHandItem();
+        if (this.entityData.get(ENERGY) < SHOOT_COST) {
+            player.displayClientMessage(Component.literal("Not Enough Energy!"), true);
+            return;
+        }
 
+        Level level = player.level();
+        if (level instanceof ServerLevel) {
 
             if (player instanceof ServerPlayer serverPlayer) {
                 SoundTool.playLocalSound(serverPlayer, ModSounds.ANNIHILATOR_FIRE_1P.get(), 1, 1);
-//                SoundTool.playLocalSound(serverPlayer, ModSounds.MK_42_RELOAD.get(), 2, 1);
-//                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_FIRE_3P.get(), SoundSource.PLAYERS, 6, 1);
-//                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_FAR.get(), SoundSource.PLAYERS, 16, 1);
-//                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MK_42_VERYFAR.get(), SoundSource.PLAYERS, 32, 1);
+                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.ANNIHILATOR_FIRE_3P.get(), SoundSource.PLAYERS, 6, 1);
+                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.ANNIHILATOR_FAR.get(), SoundSource.PLAYERS, 16, 1);
+                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.ANNIHILATOR_VERYFAR.get(), SoundSource.PLAYERS, 32, 1);
             }
 
             this.entityData.set(COOL_DOWN, 100);
+
+            this.entityData.set(ENERGY, this.entityData.get(ENERGY) - SHOOT_COST);
 
             final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
 
@@ -415,6 +435,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     public void travel() {
         Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
         if (!(passenger instanceof LivingEntity entity)) return;
+        if (this.entityData.get(ENERGY) == 0) return;
 
         float passengerY = entity.getYHeadRot();
 
@@ -452,7 +473,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     }
 
     private PlayState movementPredicate(AnimationState<AnnihilatorEntity> event) {
-        if (this.entityData.get(COOL_DOWN) > 88) {
+        if (this.entityData.get(COOL_DOWN) > 80) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.annihilator.fire"));
         }
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.annihilator.idle"));

@@ -2397,5 +2397,37 @@
         "stream": false
       }
     ]
+  },
+  "annihilator_fire_3p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:annihilator/annihilator_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "annihilator_far": {
+    "sounds": [
+      {
+        "name": "superbwarfare:annihilator/annihilator_far",
+        "stream": false
+      }
+    ]
+  },
+  "annihilator_veryfar": {
+    "sounds": [
+      {
+        "name": "superbwarfare:annihilator/annihilator_veryfar",
+        "stream": false
+      }
+    ]
+  },
+  "annihilator_reload": {
+    "sounds": [
+      {
+        "name": "superbwarfare:annihilator/annihilator_reload",
+        "stream": false
+      }
+    ]
   }
 }

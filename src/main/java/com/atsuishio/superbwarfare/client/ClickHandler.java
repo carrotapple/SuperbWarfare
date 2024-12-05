@@ -8,7 +8,6 @@ import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.entity.MortarEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.*;
-import com.atsuishio.superbwarfare.item.common.ammo.CannonShellItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.*;
 import com.atsuishio.superbwarfare.tools.GunsTool;
@@ -288,7 +287,7 @@ public class ClickHandler {
             ModUtils.PACKET_HANDLER.sendToServer(new DroneFireMessage(0));
         }
 
-        if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity && player.getMainHandItem().getItem() instanceof CannonShellItem) {
+        if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity) {
             ModUtils.PACKET_HANDLER.sendToServer(new VehicleFireMessage(0));
             return;
         }

@@ -21,6 +21,8 @@ public class CannonConfig {
     public static ForgeConfigSpec.IntValue MLE1934_HE_EXPLOSION_RADIUS;
 
     public static ForgeConfigSpec.IntValue ANNIHILATOR_HP;
+    public static ForgeConfigSpec.DoubleValue ANNIHILATOR_SHOOT_COST;
+    public static ForgeConfigSpec.DoubleValue ANNIHILATOR_MAX_ENERGY;
 
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("mk_42");
@@ -75,8 +77,15 @@ public class CannonConfig {
 
         builder.push("annihilator");
 
-        builder.comment("The HealthPoint of ANNIHILATOR");
+        builder.comment("The HealthPoint of Annihilator");
         ANNIHILATOR_HP = builder.defineInRange("annihilator_hp", 4000, 1, 10000000);
+
+        builder.comment("The energy cost of Annihilator per shoot");
+        ANNIHILATOR_SHOOT_COST = builder.defineInRange("annihilator_shoot_cost", 2000000d, 0d, Double.POSITIVE_INFINITY);
+
+        builder.comment("The max energy storage of Annihilator");
+        ANNIHILATOR_MAX_ENERGY = builder.defineInRange("annihilator_max_energy", 20000000d, 0d, Double.POSITIVE_INFINITY);
+
         builder.pop();
     }
 

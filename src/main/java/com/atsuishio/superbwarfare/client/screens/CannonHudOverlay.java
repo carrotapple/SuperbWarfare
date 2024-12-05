@@ -37,7 +37,11 @@ public class CannonHudOverlay {
     public static float maxHealth = 0;
     public static float indicatorPosH = 0;
 
+    public static float energy = 0;
+    public static float maxEnergy = 0;
+
     private static final ResourceLocation ARMOR = ModUtils.loc("textures/screens/armor.png");
+    private static final ResourceLocation ENERGY = ModUtils.loc("textures/screens/energy.png");
     private static final ResourceLocation HEALTH = ModUtils.loc("textures/screens/armor_value.png");
     private static final ResourceLocation HEALTH_FRAME = ModUtils.loc("textures/screens/armor_value_frame.png");
 
@@ -58,6 +62,7 @@ public class CannonHudOverlay {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
+        GuiGraphics guiGraphics = event.getGuiGraphics();
 
         if (cannon instanceof Mk42Entity) {
             health = cannon.getEntityData().get(Mk42Entity.HEALTH);
@@ -74,8 +79,22 @@ public class CannonHudOverlay {
         if (cannon instanceof AnnihilatorEntity) {
             health = cannon.getEntityData().get(AnnihilatorEntity.HEALTH);
             maxHealth = CannonConfig.ANNIHILATOR_HP.get();
+            energy = cannon.getEntityData().get(AnnihilatorEntity.ENERGY);
+            maxEnergy = CannonConfig.ANNIHILATOR_MAX_ENERGY.get().floatValue();
             indicatorPosH = 0.2f;
+
+            guiGraphics.pose().pushPose();
+            guiGraphics.blit(ENERGY, w - 96, h - 28, 0, 0, 12, 12, 12, 12);
+            guiGraphics.blit(HEALTH_FRAME, w - 83, h - 26, 0, 0, 80, 8, 80, 8);
+            guiGraphics.blit(HEALTH, w - 83, h - 26, 0, 0, (int) (80 * energy / maxEnergy), 8, 80, 8);
+            guiGraphics.pose().popPose();
         }
+
+        guiGraphics.pose().pushPose();
+        guiGraphics.blit(ARMOR, w - 96, h - 14, 0, 0, 12, 12, 12, 12);
+        guiGraphics.blit(HEALTH_FRAME, w - 83, h - 12, 0, 0, 80, 8, 80, 8);
+        guiGraphics.blit(HEALTH, w - 83, h - 12, 0, 0, (int) (80 * health / maxHealth), 8, 80, 8);
+        guiGraphics.pose().popPose();
 
         float yRotOffset = Mth.lerp(event.getPartialTick(), player.yRotO, player.getYRot());
         float xRotOffset = Mth.lerp(event.getPartialTick(), player.xRotO, player.getXRot());
@@ -94,7 +113,7 @@ public class CannonHudOverlay {
         int k = (w - i) / 2;
         int l = (h - j) / 2;
         if (ClientEventHandler.zoom) {
-            Entity lookingEntity = TraceTool.cannonFindLookingEntity(player, 512);
+            Entity lookingEntity = TraceTool.findLookingEntity(player, 512);
             boolean lookAtEntity = false;
             double block_range = player.position().distanceTo((Vec3.atLowerCornerOf(player.level().clip(
                     new ClipContext(new Vec3(player.getX(), player.getEyeY() + 1, player.getZ()), new Vec3(player.getX(), player.getEyeY() + 1, player.getZ()).add(player.getLookAngle().scale(512)),
@@ -120,7 +139,11 @@ public class CannonHudOverlay {
                             w / 2 + 14, h / 2 - 20, -1, false);
                 }
             }
-            RenderHelper.preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
+            if (cannon instanceof AnnihilatorEntity) {
+                RenderHelper.preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/laser_cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
+            } else {
+                RenderHelper.preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
+            }
             RenderHelper.preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/indicator.png"), k + (float) Math.tan(Mth.clamp(Mth.DEG_TO_RAD * diffY, -1.5, 1.5)) * 5 * i / 1.4f * (90 - Math.abs(player.getXRot())) / 90, l + (float) Math.tan(Mth.clamp(Mth.DEG_TO_RAD * diffX, -1.5, 1.5)) * 5 * j / 1.4f, 0, 0.0F, i, j, i, j);
         } else {
             RenderHelper.preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
@@ -130,18 +153,7 @@ public class CannonHudOverlay {
                         .append(Component.literal(new DecimalFormat("##.#").format(-cannon.getXRot()) + "°")),
                 w / 2 + 14, h / 2 - 29, -1, false);
 
-        GuiGraphics guiGraphics = event.getGuiGraphics();
-        guiGraphics.pose().pushPose();
-        guiGraphics.blit(ARMOR, w - 96, h - 14, 0, 0, 12, 12, 12, 12);
-        guiGraphics.blit(HEALTH_FRAME, w - 83, h - 12, 0, 0, 80, 8, 80, 8);
-        guiGraphics.blit(HEALTH, w - 83, h - 12, 0, 0, (int) (80 * health / maxHealth), 8, 80, 8);
-        guiGraphics.pose().popPose();
 
-        RenderSystem.depthMask(true);
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableDepthTest();
-        RenderSystem.disableBlend();
-        RenderSystem.setShaderColor(1, 1, 1, 1);
     }
 
     private static boolean shouldRenderCrossHair(Player player) {
