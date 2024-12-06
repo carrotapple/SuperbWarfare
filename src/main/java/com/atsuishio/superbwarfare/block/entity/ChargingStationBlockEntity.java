@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.block.entity;
 
+import com.atsuishio.superbwarfare.block.menu.ChargingStationMenu;
 import com.atsuishio.superbwarfare.entity.IChargeEntity;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -41,7 +43,7 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
     private static final int[] SLOTS_FOR_DOWN = new int[]{0};
 
     public static final int MAX_ENERGY = 4000000;
-    public static final int MAX_DATA_COUNT = 2;
+    public static final int MAX_DATA_COUNT = 3;
     public static final int DEFAULT_FUEL_TIME = 1600;
     public static final int CHARGE_SPEED = 128;
     public static final int CHARGE_RADIUS = 4;
@@ -53,6 +55,36 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
 
     public int fuelTick = 0;
     public int maxFuelTick = DEFAULT_FUEL_TIME;
+    public int energy;
+
+    protected final ContainerData dataAccess = new ContainerData() {
+        public int get(int pIndex) {
+            return switch (pIndex) {
+                case 0 -> ChargingStationBlockEntity.this.fuelTick;
+                case 1 -> ChargingStationBlockEntity.this.maxFuelTick;
+                case 2 -> ChargingStationBlockEntity.this.energy;
+                default -> 0;
+            };
+        }
+
+        public void set(int pIndex, int pValue) {
+            switch (pIndex) {
+                case 0:
+                    ChargingStationBlockEntity.this.fuelTick = pValue;
+                    break;
+                case 1:
+                    ChargingStationBlockEntity.this.maxFuelTick = pValue;
+                    break;
+                case 2:
+                    ChargingStationBlockEntity.this.energy = pValue;
+                    break;
+            }
+        }
+
+        public int getCount() {
+            return MAX_DATA_COUNT;
+        }
+    };
 
     public ChargingStationBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.CHARGING_STATION.get(), pos, state);
@@ -109,6 +141,7 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
 
         blockEntity.energyHandler.ifPresent(handler -> {
             int energy = handler.getEnergyStored();
+            blockEntity.energy = energy;
             if (energy > 0) {
                 List<Entity> entities = pLevel.getEntitiesOfClass(Entity.class, new AABB(pPos).inflate(CHARGE_RADIUS));
                 entities.forEach(entity -> {
@@ -231,7 +264,7 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return null;
+        return new ChargingStationMenu(pContainerId, pPlayerInventory, this, this.dataAccess);
     }
 
     @Override
