@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.energy;
+package com.atsuishio.superbwarfare.capability.energy;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ItemEnergyProvider implements ICapabilityProvider {
+
     private final LazyOptional<IEnergyStorage> capability;
 
     public ItemEnergyProvider(ItemStack stack, int energyCapacity) {

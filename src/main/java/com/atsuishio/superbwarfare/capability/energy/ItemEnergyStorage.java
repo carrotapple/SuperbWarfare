@@ -1,9 +1,10 @@
-package com.atsuishio.superbwarfare.energy;
+package com.atsuishio.superbwarfare.capability.energy;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.energy.EnergyStorage;
 
 public class ItemEnergyStorage extends EnergyStorage {
+
     private static final String NBT_ENERGY = "Energy";
 
     private final ItemStack stack;
