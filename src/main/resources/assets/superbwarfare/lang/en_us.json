@@ -211,6 +211,7 @@
   "block.superbwarfare.silver_block": "Silver Block",
   "block.superbwarfare.cemented_carbide_block": "Cemented Carbide Block",
   "block.superbwarfare.charging_station": "Charging Station",
+  "des.superbwarfare.charging_station.energy": "Energy: %1$s / %2$s FE",
 
   "item.superbwarfare.high_energy_explosives": "High Energy Explosives",
   "item.superbwarfare.grain": "Grain",

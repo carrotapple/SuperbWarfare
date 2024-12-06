@@ -11,6 +11,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @OnlyIn(Dist.CLIENT)
 public class ChargingStationScreen extends AbstractContainerScreen<ChargingStationMenu> {
 
@@ -51,6 +55,21 @@ public class ChargingStationScreen extends AbstractContainerScreen<ChargingStati
         this.renderBackground(pGuiGraphics);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+    }
+
+    @Override
+    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+        super.renderTooltip(pGuiGraphics, pX, pY);
+
+        int i = (this.width - this.imageWidth) / 2;
+        int j = (this.height - this.imageHeight) / 2;
+
+        List<Component> tooltip = new ArrayList<>();
+        tooltip.add(Component.translatable("des.superbwarfare.charging_station.energy", this.menu.getEnergy(), ChargingStationBlockEntity.MAX_ENERGY));
+
+        if ((pX - i) >= 80 && (pX - i) <= 96 && (pY - j) >= 16 && (pY - j) <= 70) {
+            pGuiGraphics.renderTooltip(this.font, tooltip, Optional.empty(), pX, pY);
+        }
     }
 
     @Override

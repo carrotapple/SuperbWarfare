@@ -211,6 +211,7 @@
   "block.superbwarfare.cemented_carbide_block": "硬质合金块",
   "block.superbwarfare.steel_block": "钢块",
   "block.superbwarfare.charging_station": "充电站",
+  "des.superbwarfare.charging_station.energy": "能量：%1$s / %2$s FE",
 
   "item.superbwarfare.high_energy_explosives": "高能炸药",
   "item.superbwarfare.grain": "推进药柱",
