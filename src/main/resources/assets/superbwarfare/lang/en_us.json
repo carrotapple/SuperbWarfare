@@ -335,8 +335,6 @@
   "death.attack.laser_headshot.entity": "%1$s被%2$s用激光射穿了脑袋",
   "death.attack.laser_headshot.item": "%1$s的脑子被%2$s用%3$s发射的激光洞穿了",
 
-  "gui.superbwarfare.mortar_gui.button_set": "Confirm",
-
   "entity.superbwarfare.projectile": "Bullet",
   "entity.superbwarfare.projectile_mortar_shell": "Mortar Shell",
   "entity.superbwarfare.projectile_gun_grenade": "Gun Grenade",
@@ -410,6 +408,7 @@
   "entity.minecraft.villager.superbwarfare.armory": "Armory",
 
   "container.superbwarfare.reforging_table": "Gun Reforge Table",
+  "container.superbwarfare.charging_station": "Charging Station",
 
   "config.superbwarfare.title": "SuperbWarfare：Config",
   "config.superbwarfare.client.reload": "Reload Config",

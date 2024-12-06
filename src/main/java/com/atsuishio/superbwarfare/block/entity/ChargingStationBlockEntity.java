@@ -146,16 +146,38 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
             int energy = handler.getEnergyStored();
             blockEntity.energy = energy;
             if (energy > 0) {
-                List<Entity> entities = pLevel.getEntitiesOfClass(Entity.class, new AABB(pPos).inflate(CHARGE_RADIUS));
-                entities.forEach(entity -> {
-                    if (entity instanceof IChargeEntity chargeEntity) {
-                        if (handler.getEnergyStored() > 0) {
-                            handler.extractEnergy(Math.min(CHARGE_SPEED, handler.getEnergyStored()), false);
-                            chargeEntity.charge(Math.min(CHARGE_SPEED, handler.getEnergyStored()));
-                        }
-                    }
-                });
-                blockEntity.setChanged();
+                blockEntity.chargeEntity(handler);
+            }
+            if (handler.getEnergyStored() > 0) {
+                blockEntity.chargeItemStack(handler);
+            }
+        });
+    }
+
+    private void chargeEntity(EnergyStorage handler) {
+        if (this.level == null) return;
+
+        List<Entity> entities = this.level.getEntitiesOfClass(Entity.class, new AABB(this.getBlockPos()).inflate(CHARGE_RADIUS));
+        entities.forEach(entity -> {
+            if (entity instanceof IChargeEntity chargeEntity) {
+                if (handler.getEnergyStored() > 0) {
+                    handler.extractEnergy(Math.min(CHARGE_SPEED, handler.getEnergyStored()), false);
+                    chargeEntity.charge(Math.min(CHARGE_SPEED, handler.getEnergyStored()));
+                }
+            }
+        });
+        this.setChanged();
+    }
+
+    private void chargeItemStack(EnergyStorage handler) {
+        ItemStack stack = this.getItem(SLOT_CHARGE);
+        if (stack.isEmpty()) return;
+
+        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(consumer -> {
+            if (consumer.getEnergyStored() < consumer.getMaxEnergyStored()) {
+                consumer.receiveEnergy(Math.min(CHARGE_SPEED, handler.getEnergyStored()), false);
+                handler.extractEnergy(Math.min(CHARGE_SPEED, handler.getEnergyStored()), false);
+                this.setChanged();
             }
         });
     }
@@ -287,6 +309,28 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
         if (cap == ForgeCapabilities.ENERGY) {
             return energyHandler.cast();
         }
+        if (!this.remove && side != null && cap == ForgeCapabilities.ITEM_HANDLER) {
+            if (side == Direction.UP) {
+                return itemHandlers[0].cast();
+            } else if (side == Direction.DOWN) {
+                return itemHandlers[1].cast();
+            } else {
+                return itemHandlers[2].cast();
+            }
+        }
         return super.getCapability(cap, side);
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        for (LazyOptional<?> itemHandler : itemHandlers) itemHandler.invalidate();
+        energyHandler.invalidate();
+    }
+
+    @Override
+    public void reviveCaps() {
+        super.reviveCaps();
+        this.itemHandlers = SidedInvWrapper.create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
     }
 }
