@@ -52,7 +52,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
 
-public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntity {
+public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntity, IChargeEntity {
 
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
@@ -492,4 +492,8 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         return this.cache;
     }
 
+    @Override
+    public void charge(int amount) {
+        this.entityData.set(ENERGY, Math.min(this.entityData.get(ENERGY) + amount, CannonConfig.ANNIHILATOR_MAX_ENERGY.get().floatValue()));
+    }
 }

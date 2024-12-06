@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.block.entity;
 
+import com.atsuishio.superbwarfare.entity.IChargeEntity;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,6 +12,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -18,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -25,6 +28,7 @@ import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ChargingStationBlockEntity extends BlockEntity implements WorldlyContainer, MenuProvider {
@@ -40,6 +44,7 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
     public static final int MAX_DATA_COUNT = 2;
     public static final int DEFAULT_FUEL_TIME = 1600;
     public static final int CHARGE_SPEED = 128;
+    public static final int CHARGE_RADIUS = 4;
 
     protected NonNullList<ItemStack> items = NonNullList.withSize(2, ItemStack.EMPTY);
 
@@ -101,6 +106,22 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
                 blockEntity.setChanged();
             }
         }
+
+        blockEntity.energyHandler.ifPresent(handler -> {
+            int energy = handler.getEnergyStored();
+            if (energy > 0) {
+                List<Entity> entities = pLevel.getEntitiesOfClass(Entity.class, new AABB(pPos).inflate(CHARGE_RADIUS));
+                entities.forEach(entity -> {
+                    if (entity instanceof IChargeEntity chargeEntity) {
+                        if (handler.getEnergyStored() > 0) {
+                            handler.extractEnergy(Math.min(CHARGE_SPEED, handler.getEnergyStored()), false);
+                            chargeEntity.charge(Math.min(CHARGE_SPEED, handler.getEnergyStored()));
+                        }
+                    }
+                });
+                blockEntity.setChanged();
+            }
+        });
     }
 
     public NonNullList<ItemStack> getItems() {
