@@ -66,6 +66,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
 
     public static final float MAX_HEALTH = CannonConfig.ANNIHILATOR_HP.get();
     public static final float SHOOT_COST = CannonConfig.ANNIHILATOR_SHOOT_COST.get().floatValue();
+
     protected int interpolationSteps;
     protected double serverYRot;
     protected double serverXRot;
@@ -111,9 +112,9 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     @Override
     protected void positionRider(Entity pPassenger, MoveFunction pCallback) {
         if (this.hasPassenger(pPassenger)) {
-            float f1 = (float)((this.isRemoved() ? 0.009999999776482582 : this.getPassengersRidingOffset()) + pPassenger.getMyRidingOffset());
+            float f1 = (float) ((this.isRemoved() ? 0.009999999776482582 : this.getPassengersRidingOffset()) + pPassenger.getMyRidingOffset());
             Vec3 vec3 = (new Vec3(1, 0.0, 0.0)).yRot(-this.getYRot() * 0.017453292F - 1.5707964F);
-            pCallback.accept(pPassenger, this.getX() + vec3.x, this.getY() + (double)f1, this.getZ() + vec3.z);
+            pCallback.accept(pPassenger, this.getX() + vec3.x, this.getY() + (double) f1, this.getZ() + vec3.z);
         }
     }
 
@@ -195,7 +196,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
                 return InteractionResult.sidedSuccess(this.level().isClientSide());
             }
             if (player.getMainHandItem().is(ModItems.SHIELD_CELL.get())) {
-                this.entityData.set(ENERGY, (float)Mth.clamp(this.entityData.get(ENERGY) + 1000000 , 0, CannonConfig.ANNIHILATOR_MAX_ENERGY.get()));
+                this.entityData.set(ENERGY, (float) Mth.clamp(this.entityData.get(ENERGY) + 1000000, 0, CannonConfig.ANNIHILATOR_MAX_ENERGY.get()));
                 player.displayClientMessage(Component.literal("Energy:" + new java.text.DecimalFormat("##").format(this.entityData.get(ENERGY))), true);
                 return InteractionResult.sidedSuccess(this.level().isClientSide());
             }
@@ -301,9 +302,9 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         Vec3 BarrelRightPos = new Vec3(BarrelRootPos.x + rightPos.x, BarrelRootPos.y + rightPos.y, BarrelRootPos.z + rightPos.z);
 
         if (this.entityData.get(COOL_DOWN) > 88) {
-            this.entityData.set(LASER_LEFT_LENGTH, Math.min(laserLength(BarrelLeftPos ,this), laserLengthEntity(BarrelLeftPos ,this)));
-            this.entityData.set(LASER_MIDDLE_LENGTH, Math.min(laserLength(BarrelMiddlePos ,this), laserLengthEntity(BarrelMiddlePos ,this)));
-            this.entityData.set(LASER_RIGHT_LENGTH, Math.min(laserLength(BarrelRightPos ,this), laserLengthEntity(BarrelRightPos ,this)));
+            this.entityData.set(LASER_LEFT_LENGTH, Math.min(laserLength(BarrelLeftPos, this), laserLengthEntity(BarrelLeftPos, this)));
+            this.entityData.set(LASER_MIDDLE_LENGTH, Math.min(laserLength(BarrelMiddlePos, this), laserLengthEntity(BarrelMiddlePos, this)));
+            this.entityData.set(LASER_RIGHT_LENGTH, Math.min(laserLength(BarrelRightPos, this), laserLengthEntity(BarrelRightPos, this)));
         }
 
         travel();
@@ -317,7 +318,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         this.refreshDimensions();
     }
 
-    private float laserLength (Vec3 pos, Entity cannon) {
+    private float laserLength(Vec3 pos, Entity cannon) {
         if (this.entityData.get(COOL_DOWN) > 98) {
             HitResult result = cannon.level().clip(new ClipContext(pos, pos.add(cannon.getViewVector(1).scale(512)),
                     ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, cannon));
@@ -330,41 +331,41 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
                         ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, cannon)).getBlockPos())));
     }
 
-    private float laserLengthEntity (Vec3 pos, Entity cannon) {
-            double distance = 512 * 512;
-            HitResult hitResult = cannon.pick(512, 1.0f, false);
-            if (hitResult.getType() != HitResult.Type.MISS) {
-                distance = hitResult.getLocation().distanceToSqr(pos);
-                double blockReach = 5;
-                if (distance > blockReach * blockReach) {
-                    Vec3 posB = hitResult.getLocation();
-                    hitResult = BlockHitResult.miss(posB, Direction.getNearest(pos.x, pos.y, pos.z), BlockPos.containing(posB));
-                }
+    private float laserLengthEntity(Vec3 pos, Entity cannon) {
+        double distance = 512 * 512;
+        HitResult hitResult = cannon.pick(512, 1.0f, false);
+        if (hitResult.getType() != HitResult.Type.MISS) {
+            distance = hitResult.getLocation().distanceToSqr(pos);
+            double blockReach = 5;
+            if (distance > blockReach * blockReach) {
+                Vec3 posB = hitResult.getLocation();
+                hitResult = BlockHitResult.miss(posB, Direction.getNearest(pos.x, pos.y, pos.z), BlockPos.containing(posB));
             }
-            Vec3 viewVec = cannon.getViewVector(1.0F);
-            Vec3 toVec = pos.add(viewVec.x * 512, viewVec.y * 512, viewVec.z * 512);
-            AABB aabb = cannon.getBoundingBox().expandTowards(viewVec.scale(512)).inflate(1.0D, 1.0D, 1.0D);
-            EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(cannon, pos, toVec, aabb, p -> !p.isSpectator(), distance);
-            if (entityhitresult != null) {
-                Vec3 targetPos = entityhitresult.getLocation();
-                double distanceToTarget = pos.distanceToSqr(targetPos);
-                if (distanceToTarget > distance || distanceToTarget > 512 * 512) {
-                    hitResult = BlockHitResult.miss(targetPos, Direction.getNearest(viewVec.x, viewVec.y, viewVec.z), BlockPos.containing(targetPos));
-                } else if (distanceToTarget < distance) {
-                    hitResult = entityhitresult;
-                }
-                if (hitResult.getType() == HitResult.Type.ENTITY) {
-                    Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
-                    Entity target = ((EntityHitResult) hitResult).getEntity();
-                    target.hurt(ModDamageTypes.causeLaserDamage(this.level().registryAccess(), passenger, passenger), (float) 200);
-                    target.invulnerableTime = 0;
-                    if (this.entityData.get(COOL_DOWN) > 98) {
-                        laserExplosion(targetPos);
-                    }
-                    return (float) pos.distanceTo(target.position());
-                }
+        }
+        Vec3 viewVec = cannon.getViewVector(1.0F);
+        Vec3 toVec = pos.add(viewVec.x * 512, viewVec.y * 512, viewVec.z * 512);
+        AABB aabb = cannon.getBoundingBox().expandTowards(viewVec.scale(512)).inflate(1.0D, 1.0D, 1.0D);
+        EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(cannon, pos, toVec, aabb, p -> !p.isSpectator(), distance);
+        if (entityhitresult != null) {
+            Vec3 targetPos = entityhitresult.getLocation();
+            double distanceToTarget = pos.distanceToSqr(targetPos);
+            if (distanceToTarget > distance || distanceToTarget > 512 * 512) {
+                hitResult = BlockHitResult.miss(targetPos, Direction.getNearest(viewVec.x, viewVec.y, viewVec.z), BlockPos.containing(targetPos));
+            } else if (distanceToTarget < distance) {
+                hitResult = entityhitresult;
             }
-            return 512;
+            if (hitResult.getType() == HitResult.Type.ENTITY) {
+                Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+                Entity target = ((EntityHitResult) hitResult).getEntity();
+                target.hurt(ModDamageTypes.causeLaserDamage(this.level().registryAccess(), passenger, passenger), (float) 200);
+                target.invulnerableTime = 0;
+                if (this.entityData.get(COOL_DOWN) > 98) {
+                    laserExplosion(targetPos);
+                }
+                return (float) pos.distanceTo(target.position());
+            }
+        }
+        return 512;
     }
 
     private void laserExplosion(Vec3 pos) {
