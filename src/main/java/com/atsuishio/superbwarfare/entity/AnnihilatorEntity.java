@@ -464,10 +464,10 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
 
         double angle = 0;
 
-        double roothorizontalDistance = new Vec3(passenger.getX() - BarrelRootPos.x , passenger.getEyeY() - BarrelRootPos.y, passenger.getZ() -BarrelRootPos.z).horizontalDistance();
+        double rootHorizontalDistance = new Vec3(passenger.getX() - BarrelRootPos.x , passenger.getEyeY() - BarrelRootPos.y, passenger.getZ() -BarrelRootPos.z).horizontalDistance();
 
         if (lookDistance != 0) {
-            angle = Math.atan(Mth.abs((float)(passenger.getEyeY() - BarrelRootPos.y)) / (lookDistance +  roothorizontalDistance)) * Mth.RAD_TO_DEG;
+            angle = Math.atan(Mth.abs((float)(passenger.getEyeY() - BarrelRootPos.y)) / (lookDistance - rootHorizontalDistance)) * Mth.RAD_TO_DEG;
         }
 
         this.entityData.set(OFFSET_ANGLE , (float)angle);
