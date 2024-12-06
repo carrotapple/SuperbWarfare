@@ -19,10 +19,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -114,9 +116,10 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
             if (flag.get()) return;
 
             ItemStack fuel = blockEntity.getItem(SLOT_FUEL);
-            if (fuel.getBurnTime(null) > 0) {
-                blockEntity.fuelTick = fuel.getBurnTime(null);
-                blockEntity.maxFuelTick = fuel.getBurnTime(null);
+            int burnTime = ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING);
+            if (burnTime > 0) {
+                blockEntity.fuelTick = burnTime;
+                blockEntity.maxFuelTick = burnTime;
                 fuel.shrink(1);
                 blockEntity.setChanged();
             } else if (fuel.getItem().isEdible()) {

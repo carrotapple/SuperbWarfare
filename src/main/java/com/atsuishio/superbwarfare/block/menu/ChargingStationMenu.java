@@ -11,6 +11,8 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 public class ChargingStationMenu extends AbstractContainerMenu {
@@ -19,7 +21,7 @@ public class ChargingStationMenu extends AbstractContainerMenu {
     private final ContainerData containerData;
 
     public static final int X_OFFSET = 0;
-    public static final int Y_OFFSET = 11;
+    public static final int Y_OFFSET = 0;
 
     public ChargingStationMenu(int id, Inventory inventory) {
         this(id, inventory, new SimpleContainer(2), new SimpleContainerData(ChargingStationBlockEntity.MAX_DATA_COUNT));
@@ -34,8 +36,8 @@ public class ChargingStationMenu extends AbstractContainerMenu {
         this.container = container;
         this.containerData = containerData;
 
-        this.addSlot(new Slot(container, 0, 51, 43));
-        this.addSlot(new ChargingStationMenu.ChargingSlot(container, 1, 110, 43));
+        this.addSlot(new Slot(container, 0, 44, 54));
+        this.addSlot(new ChargingStationMenu.ChargingSlot(container, 1, 116, 54));
 
         this.addDataSlots(containerData);
 
@@ -66,7 +68,7 @@ public class ChargingStationMenu extends AbstractContainerMenu {
                     if (!this.moveItemStackTo(itemstack1, 1, 2, true)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (itemstack1.getBurnTime(null) > 0 || itemstack1.getFoodProperties(null) != null) {
+                } else if (ForgeHooks.getBurnTime(itemstack1, RecipeType.SMELTING) > 0 || itemstack1.getFoodProperties(null) != null) {
                     if (!this.moveItemStackTo(itemstack1, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }

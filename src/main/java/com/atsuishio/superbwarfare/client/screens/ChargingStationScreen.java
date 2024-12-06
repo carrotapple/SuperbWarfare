@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.client.screens;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.block.entity.ChargingStationBlockEntity;
 import com.atsuishio.superbwarfare.block.menu.ChargingStationMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -27,7 +28,22 @@ public class ChargingStationScreen extends AbstractContainerScreen<ChargingStati
         int j = (this.height - this.imageHeight) / 2;
         pGuiGraphics.blit(TEXTURE, i, j, 0, 0, this.imageWidth, this.imageHeight);
 
+        int fuelTick = ChargingStationScreen.this.menu.getFuelTick();
+        int maxFuelTick = ChargingStationScreen.this.menu.getMaxFuelTick();
+        int energy = ChargingStationScreen.this.menu.getEnergy();
 
+        if (maxFuelTick == 0) {
+            maxFuelTick = ChargingStationBlockEntity.DEFAULT_FUEL_TIME;
+        }
+
+        // Fuel
+        float fuelRate = (float) fuelTick / (float) maxFuelTick;
+        pGuiGraphics.blit(TEXTURE, i + 45, j + 51 - (int) (13 * fuelRate), 177, 14 - (int) (13 * fuelRate), 13, (int) (13 * fuelRate));
+
+        // Energy
+        float energyRate = (float) energy / (float) ChargingStationBlockEntity.MAX_ENERGY;
+        pGuiGraphics.blit(TEXTURE, i + 80, j + 70 - (int) (54 * energyRate),
+                177, 17, 16, (int) (54 * energyRate));
     }
 
     @Override
