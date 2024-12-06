@@ -9,6 +9,7 @@ import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
+import com.atsuishio.superbwarfare.tools.TraceTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -444,10 +445,13 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         }
 
         // 玩家瞄准坐标
-        var lookingAt = Vec3.atLowerCornerOf(entity.level().clip(
+        var lookingBlock = Vec3.atLowerCornerOf(entity.level().clip(
                 new ClipContext(new Vec3(entity.getX(), entity.getEyeY(), entity.getZ()), new Vec3(entity.getX(), entity.getEyeY() + 1, entity.getZ()).add(entity.getLookAngle().scale(512)),
                         ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, entity)).getBlockPos()
         );
+        var lookingEntity = TraceTool.findLookingEntity(entity, 512);
+
+        var lookingAt = lookingEntity != null ? lookingEntity.position() : lookingBlock;
 
         var barrelRoot = new Vector3d(4.95, 2.25, 0);
         barrelRoot.rotateY(-this.getYRot() * Mth.DEG_TO_RAD);

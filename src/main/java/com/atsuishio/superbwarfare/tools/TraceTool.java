@@ -13,10 +13,10 @@ public class TraceTool {
 
     public static boolean laserHeadshot = false;
 
-    public static Entity findLookingEntity(Entity player, double entityReach) {
+    public static Entity findLookingEntity(Entity entity, double entityReach) {
         double distance = entityReach * entityReach;
-        Vec3 eyePos = player.getEyePosition(1.0f);
-        HitResult hitResult = player.pick(entityReach, 1.0f, false);
+        Vec3 eyePos = entity.getEyePosition(1.0f);
+        HitResult hitResult = entity.pick(entityReach, 1.0f, false);
         if (hitResult.getType() != HitResult.Type.MISS) {
             distance = hitResult.getLocation().distanceToSqr(eyePos);
             double blockReach = 5;
@@ -25,10 +25,10 @@ public class TraceTool {
                 hitResult = BlockHitResult.miss(pos, Direction.getNearest(eyePos.x, eyePos.y, eyePos.z), BlockPos.containing(pos));
             }
         }
-        Vec3 viewVec = player.getViewVector(1.0F);
+        Vec3 viewVec = entity.getViewVector(1.0F);
         Vec3 toVec = eyePos.add(viewVec.x * entityReach, viewVec.y * entityReach, viewVec.z * entityReach);
-        AABB aabb = player.getBoundingBox().expandTowards(viewVec.scale(entityReach)).inflate(1.0D, 1.0D, 1.0D);
-        EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(player, eyePos, toVec, aabb, p -> !p.isSpectator(), distance);
+        AABB aabb = entity.getBoundingBox().expandTowards(viewVec.scale(entityReach)).inflate(1.0D, 1.0D, 1.0D);
+        EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(entity, eyePos, toVec, aabb, p -> !p.isSpectator(), distance);
         if (entityhitresult != null) {
             Vec3 targetPos = entityhitresult.getLocation();
             double distanceToTarget = eyePos.distanceToSqr(targetPos);
