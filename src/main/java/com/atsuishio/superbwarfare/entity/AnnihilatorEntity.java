@@ -438,40 +438,6 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         if (!(passenger instanceof LivingEntity entity)) return;
         if (this.entityData.get(ENERGY) <= 0) return;
 
-        float yRot = this.getYRot();
-        if (yRot < 0) {
-            yRot += 360;
-        }
-        yRot = yRot + 90 % 360;
-
-        var BarrelRoot = new Vector3d(4.95, 2.25, 0);
-        BarrelRoot.rotateY(-yRot * Mth.DEG_TO_RAD);
-
-        Vec3 BarrelRootPos = new Vec3(this.getX() + BarrelRoot.x, this.getY() + BarrelRoot.y, this.getZ() + BarrelRoot.z);
-
-        double range;
-        Entity lookingEntity = SeekTool.seekEntity(passenger, passenger.level(), 512, 5);
-
-        if (lookingEntity != null) {
-            range = Math.max(passenger.distanceTo(lookingEntity), 5);
-        } else {
-            range = Math.max(passenger.position().distanceTo((Vec3.atLowerCornerOf(passenger.level().clip(
-                    new ClipContext(passenger.getEyePosition(), passenger.getEyePosition().add(passenger.getLookAngle().scale(512)),
-                            ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, passenger)).getBlockPos()))), 5);
-        }
-
-        lookDistance = Mth.lerp(0.1, lookDistance, range);
-
-        double angle = 0;
-
-        double rootHorizontalDistance = new Vec3(passenger.getX() - BarrelRootPos.x , passenger.getEyeY() - BarrelRootPos.y, passenger.getZ() -BarrelRootPos.z).horizontalDistance();
-
-        if (lookDistance != 0) {
-            angle = Math.atan(Mth.abs((float)(passenger.getEyeY() - BarrelRootPos.y)) / (lookDistance - rootHorizontalDistance)) * Mth.RAD_TO_DEG;
-        }
-
-        this.entityData.set(OFFSET_ANGLE , (float)angle);
-
         float passengerY = entity.getYHeadRot();
 
         if (passengerY > 180.0f) {
@@ -479,6 +445,27 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         } else if (passengerY < -180.0f) {
             passengerY += 360.0f;
         }
+
+        // 玩家瞄准坐标
+        var lookingBlock = Vec3.atLowerCornerOf(entity.level().clip(
+                new ClipContext(new Vec3(entity.getX(), entity.getEyeY(), entity.getZ()), new Vec3(entity.getX(), entity.getEyeY() + 1, entity.getZ()).add(entity.getLookAngle().scale(512)),
+                        ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, entity)).getBlockPos()
+        );
+        var lookingEntity = SeekTool.seekEntity(entity, entity.level(), 520, 5);
+
+        var lookingAt = lookingEntity != null ? lookingEntity.position() : lookingBlock;
+
+        var barrelRoot = new Vector3d(4.95, 2.25, 0);
+        barrelRoot.rotateY(-this.getYRot() * Mth.DEG_TO_RAD);
+        // 中间炮管transform origin（？）世界坐标
+        var barrelRootPos = new Vec3(this.getX() + barrelRoot.x, this.getY() + barrelRoot.y, this.getZ() + barrelRoot.z);
+
+        // 看向的目标相对炮管原点的位置
+        var diffVec = lookingAt.subtract(barrelRootPos).add(0, 1, 0);
+        // 修正后的目标垂直方向角度差距
+        var targetXDegree = Math.atan(diffVec.y / diffVec.horizontalDistance()) * Mth.RAD_TO_DEG;
+
+        this.entityData.set(OFFSET_ANGLE, (float)targetXDegree);
 
         float diffY = passengerY - this.getYRot();
         float diffX = entity.getXRot() - this.entityData.get(OFFSET_ANGLE) - this.getXRot();
