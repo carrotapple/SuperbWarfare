@@ -89,7 +89,6 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.LEGENDARY_MATERIAL_PACK);
 
         // armor
-
         simpleItem(ModItems.RU_HELMET_6B47);
         simpleItem(ModItems.RU_CHEST_6B43);
         simpleItem(ModItems.US_HELMET_PASTG);
@@ -135,6 +134,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         evenSimplerBlockItem(ModBlocks.BARBED_WIRE);
         evenSimplerBlockItem(ModBlocks.JUMP_PAD);
         evenSimplerBlockItem(ModBlocks.REFORGING_TABLE);
+        evenSimplerBlockItem(ModBlocks.CHARGING_STATION);
     }
 
     private ItemModelBuilder simpleItem(RegistryObject<Item> item) {

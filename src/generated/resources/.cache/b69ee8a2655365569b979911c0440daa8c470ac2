@@ -1,4 +1,4 @@
-// 1.20.1	2024-12-02T20:47:31.4312883	Item Models: superbwarfare
+// 1.20.1	2024-12-06T23:44:15.5221819	Item Models: superbwarfare
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_47_blueprint.json
@@ -13,6 +13,7 @@ b793716e367623d60461fc760de4f012c28fdc53 assets/superbwarfare/models/item/cement
 b97ce523ca85cddff78abd9fd735295414ee07fd assets/superbwarfare/models/item/cemented_carbide_ingot.json
 93010fbed0bd569659abeba111426f8c5b11d173 assets/superbwarfare/models/item/cemented_carbide_spring.json
 7ab968b2348594022646fbd90a8e6ecebb16ea46 assets/superbwarfare/models/item/cemented_carbide_trigger.json
+010681616771bb8e8327af52ead01a632774426c assets/superbwarfare/models/item/charging_station.json
 42e097f04239673810c7dc5fcf77d1dbc0ec1938 assets/superbwarfare/models/item/coal_iron_powder.json
 a52a7f9dc18d5af69903c2249239c15cb6d38c8e assets/superbwarfare/models/item/coal_powder.json
 5ccef04175adcc9fa0797caca6bf04526f702d5c assets/superbwarfare/models/item/common_material_pack.json
