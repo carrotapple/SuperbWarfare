@@ -48,7 +48,8 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
     public static final int MAX_DATA_COUNT = 3;
     public static final int DEFAULT_FUEL_TIME = 1600;
     public static final int CHARGE_SPEED = 128;
-    public static final int CHARGE_RADIUS = 4;
+    public static final int CHARGE_OTHER_SPEED = 100000;
+    public static final int CHARGE_RADIUS = 8;
 
     protected NonNullList<ItemStack> items = NonNullList.withSize(2, ItemStack.EMPTY);
 
@@ -161,8 +162,8 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
         entities.forEach(entity -> {
             if (entity instanceof IChargeEntity chargeEntity) {
                 if (handler.getEnergyStored() > 0) {
-                    handler.extractEnergy(Math.min(CHARGE_SPEED, handler.getEnergyStored()), false);
-                    chargeEntity.charge(Math.min(CHARGE_SPEED, handler.getEnergyStored()));
+                    handler.extractEnergy(Math.min(CHARGE_OTHER_SPEED, handler.getEnergyStored()), false);
+                    chargeEntity.charge(Math.min(CHARGE_OTHER_SPEED, handler.getEnergyStored()));
                 }
             }
         });
@@ -175,8 +176,8 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
 
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(consumer -> {
             if (consumer.getEnergyStored() < consumer.getMaxEnergyStored()) {
-                consumer.receiveEnergy(Math.min(CHARGE_SPEED, handler.getEnergyStored()), false);
-                handler.extractEnergy(Math.min(CHARGE_SPEED, handler.getEnergyStored()), false);
+                consumer.receiveEnergy(Math.min(CHARGE_OTHER_SPEED, handler.getEnergyStored()), false);
+                handler.extractEnergy(Math.min(CHARGE_OTHER_SPEED, handler.getEnergyStored()), false);
                 this.setChanged();
             }
         });
