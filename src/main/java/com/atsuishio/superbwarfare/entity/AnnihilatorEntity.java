@@ -232,39 +232,33 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
             this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
         }
 
-        if (this.entityData.get(HEALTH) <= 0.4 * CannonConfig.ANNIHILATOR_HP.get()) {
-            if (this.level() instanceof ServerLevel serverLevel) {
+        if (this.level() instanceof ServerLevel serverLevel) {
+            if (this.entityData.get(HEALTH) <= 0.4 * CannonConfig.ANNIHILATOR_HP.get()) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 2, 0.75, 0.5, 0.75, 0.01, false);
             }
-        }
 
-        if (this.entityData.get(HEALTH) <= 0.25 * CannonConfig.ANNIHILATOR_HP.get()) {
-            if (this.level() instanceof ServerLevel serverLevel) {
+            if (this.entityData.get(HEALTH) <= 0.25 * CannonConfig.ANNIHILATOR_HP.get()) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
             }
-        }
 
-        if (this.entityData.get(HEALTH) <= 0.15 * CannonConfig.ANNIHILATOR_HP.get()) {
-            if (this.level() instanceof ServerLevel serverLevel) {
+            if (this.entityData.get(HEALTH) <= 0.15 * CannonConfig.ANNIHILATOR_HP.get()) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
             }
-        }
 
-        if (this.entityData.get(HEALTH) <= 0.1 * CannonConfig.ANNIHILATOR_HP.get()) {
-            if (this.level() instanceof ServerLevel serverLevel) {
+            if (this.entityData.get(HEALTH) <= 0.1 * CannonConfig.ANNIHILATOR_HP.get()) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 2, 0.75, 0.5, 0.75, 0.01, false);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 2, 0.75, 0.5, 0.75, 0.01, false);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.FLAME, this.getX(), this.getY() + 3.2, this.getZ(), 4, 0.6, 0.1, 0.6, 0.05, false);
                 ParticleTool.sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 3, this.getZ(), 4, 0.1, 0.1, 0.1, 0.4, false);
+                if (this.tickCount % 15 == 0) {
+                    this.level().playSound(null, this.getOnPos(), SoundEvents.FIRE_AMBIENT, SoundSource.PLAYERS, 1, 1);
+                }
+                this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.1f);
+            } else {
+                this.entityData.set(HEALTH, Math.min(this.entityData.get(HEALTH) + 0.05f, MAX_HEALTH));
             }
-            if (this.tickCount % 15 == 0) {
-                this.level().playSound(null, this.getOnPos(), SoundEvents.FIRE_AMBIENT, SoundSource.PLAYERS, 1, 1);
-            }
-            this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.1f);
-        } else {
-            this.entityData.set(HEALTH, Math.min(this.entityData.get(HEALTH) + 0.05f, MAX_HEALTH));
         }
 
         if (this.entityData.get(HEALTH) <= 0) {
@@ -281,6 +275,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         var BarrelRoot = new Vector3d(4.95, 2.25, 0);
         BarrelRoot.rotateY(-yRot * Mth.DEG_TO_RAD);
 
+        // 中间炮管transform origin（？）世界坐标
         Vec3 BarrelRootPos = new Vec3(this.getX() + BarrelRoot.x, this.getY() + BarrelRoot.y, this.getZ() + BarrelRoot.z);
 
         var leftPos = new Vector3d(16, 0, -2.703125);
@@ -448,8 +443,24 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
             passengerY += 360.0f;
         }
 
+        // 玩家瞄准坐标
+        var lookingAt = Vec3.atLowerCornerOf(entity.level().clip(
+                new ClipContext(new Vec3(entity.getX(), entity.getEyeY(), entity.getZ()), new Vec3(entity.getX(), entity.getEyeY() + 1, entity.getZ()).add(entity.getLookAngle().scale(512)),
+                        ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, entity)).getBlockPos()
+        );
+
+        var barrelRoot = new Vector3d(4.95, 2.25, 0);
+        barrelRoot.rotateY(-this.getYRot() * Mth.DEG_TO_RAD);
+        // 中间炮管transform origin（？）世界坐标
+        var barrelRootPos = new Vec3(this.getX() + barrelRoot.x, this.getY() + barrelRoot.y, this.getZ() + barrelRoot.z);
+
+        // 看向的目标相对炮管原点的位置
+        var diffVec = lookingAt.subtract(barrelRootPos).add(0, 1, 0);
+        // 修正后的目标垂直方向角度差距
+        var targetXDegree = Math.atan(-diffVec.y / diffVec.horizontalDistance()) * Mth.RAD_TO_DEG;
+
         float diffY = passengerY - this.getYRot();
-        float diffX = entity.getXRot() - this.entityData.get(OFFSET_ANGLE) - this.getXRot();
+        float diffX = (float) (targetXDegree - this.getXRot() - this.entityData.get(OFFSET_ANGLE));
         if (diffY > 180.0f) {
             diffY -= 360.0f;
         } else if (diffY < -180.0f) {
