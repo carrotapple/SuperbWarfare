@@ -81,7 +81,7 @@ public class CannonHudOverlay {
             maxHealth = CannonConfig.ANNIHILATOR_HP.get();
             energy = cannon.getEntityData().get(AnnihilatorEntity.ENERGY);
             maxEnergy = CannonConfig.ANNIHILATOR_MAX_ENERGY.get().floatValue();
-            indicatorPosH = 0.2f;
+            indicatorPosH = cannon.getEntityData().get(AnnihilatorEntity.OFFSET_ANGLE);
 
             guiGraphics.pose().pushPose();
             guiGraphics.blit(ENERGY, w - 96, h - 28, 0, 0, 12, 12, 12, 12);

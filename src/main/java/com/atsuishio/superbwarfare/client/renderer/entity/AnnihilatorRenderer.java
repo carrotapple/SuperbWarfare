@@ -1,7 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
-import com.atsuishio.superbwarfare.client.layer.AnnihilatorGlowLayer;
-import com.atsuishio.superbwarfare.client.layer.AnnihilatorLayer;
+import com.atsuishio.superbwarfare.client.layer.*;
 import com.atsuishio.superbwarfare.client.model.entity.AnnihilatorModel;
 import com.atsuishio.superbwarfare.entity.AnnihilatorEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -19,9 +18,12 @@ public class AnnihilatorRenderer extends GeoEntityRenderer<AnnihilatorEntity> {
 
     public AnnihilatorRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new AnnihilatorModel());
-        this.shadowRadius = 7.5f;
         this.addRenderLayer(new AnnihilatorLayer(this));
         this.addRenderLayer(new AnnihilatorGlowLayer(this));
+        this.addRenderLayer(new AnnihilatorPowerLayer(this));
+        this.addRenderLayer(new AnnihilatorPowerLightLayer(this));
+        this.addRenderLayer(new AnnihilatorLedLayer(this));
+        this.addRenderLayer(new AnnihilatorLedLightLayer(this));
     }
 
     @Override

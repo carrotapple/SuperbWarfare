@@ -60,6 +60,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     public static final EntityDataAccessor<Float> LASER_MIDDLE_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> LASER_RIGHT_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> OFFSET_ANGLE = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
@@ -86,6 +87,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         this.entityData.define(LASER_MIDDLE_LENGTH, 0f);
         this.entityData.define(LASER_RIGHT_LENGTH, 0f);
         this.entityData.define(ENERGY, 0f);
+        this.entityData.define(OFFSET_ANGLE, 0.2f);
     }
 
     @Override
@@ -435,7 +437,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     public void travel() {
         Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
         if (!(passenger instanceof LivingEntity entity)) return;
-        if (this.entityData.get(ENERGY) == 0) return;
+        if (this.entityData.get(ENERGY) <= 0) return;
 
         float passengerY = entity.getYHeadRot();
 
@@ -446,7 +448,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         }
 
         float diffY = passengerY - this.getYRot();
-        float diffX = entity.getXRot() - 0.2f - this.getXRot();
+        float diffX = entity.getXRot() - this.entityData.get(OFFSET_ANGLE) - this.getXRot();
         if (diffY > 180.0f) {
             diffY -= 360.0f;
         } else if (diffY < -180.0f) {
@@ -456,13 +458,13 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         diffX = diffX * 0.15f;
 
         this.setYRot(this.getYRot() + diffY);
-        this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -45, 5.2f));
+        this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -45, 5f + this.entityData.get(OFFSET_ANGLE)));
         this.setRot(this.getYRot(), this.getXRot());
     }
 
     protected void clampRotation(Entity entity) {
         float f = Mth.wrapDegrees(entity.getXRot());
-        float f1 = Mth.clamp(f, -45.0F, 5.2F);
+        float f1 = Mth.clamp(f, -45.0F, 5f + this.entityData.get(OFFSET_ANGLE));
         entity.xRotO += f1 - f;
         entity.setXRot(entity.getXRot() + f1 - f);
     }
