@@ -207,7 +207,7 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
 
     @Override
     public int[] getSlotsForFace(Direction pSide) {
-        return new int[0];
+        return new int[]{SLOT_FUEL};
     }
 
     @Override
@@ -289,7 +289,6 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
     public CompoundTag getUpdateTag() {
         CompoundTag compoundtag = new CompoundTag();
         ContainerHelper.saveAllItems(compoundtag, this.items, true);
-        getCapability(ForgeCapabilities.ENERGY).ifPresent(handler -> compoundtag.put("Energy", ((EnergyStorage) handler).serializeNBT()));
         return compoundtag;
     }
 

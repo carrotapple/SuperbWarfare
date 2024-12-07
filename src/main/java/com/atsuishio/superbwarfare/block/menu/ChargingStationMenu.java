@@ -37,7 +37,7 @@ public class ChargingStationMenu extends AbstractContainerMenu {
         this.containerData = containerData;
 
         this.addSlot(new Slot(container, 0, 44, 54));
-        this.addSlot(new ChargingStationMenu.ChargingSlot(container, 1, 116, 54));
+        this.addSlot(new ChargingSlot(container, 1, 116, 54));
 
         this.addDataSlots(containerData);
 
@@ -116,7 +116,7 @@ public class ChargingStationMenu extends AbstractContainerMenu {
         return this.containerData.get(2);
     }
 
-    class ChargingSlot extends Slot {
+    static class ChargingSlot extends Slot {
 
         public ChargingSlot(Container pContainer, int pSlot, int pX, int pY) {
             super(pContainer, pSlot, pX, pY);
