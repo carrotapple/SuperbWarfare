@@ -161,10 +161,8 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
         List<Entity> entities = this.level.getEntitiesOfClass(Entity.class, new AABB(this.getBlockPos()).inflate(CHARGE_RADIUS));
         entities.forEach(entity -> {
             if (entity instanceof IChargeEntity chargeEntity) {
-                if (handler.getEnergyStored() > 0) {
-                    handler.extractEnergy(Math.min(CHARGE_OTHER_SPEED, handler.getEnergyStored()), false);
-                    chargeEntity.charge(Math.min(CHARGE_OTHER_SPEED, handler.getEnergyStored()));
-                }
+                chargeEntity.charge(Math.min(CHARGE_OTHER_SPEED, handler.getEnergyStored()));
+                handler.extractEnergy(Math.min(CHARGE_OTHER_SPEED, handler.getEnergyStored()), false);
             }
         });
         this.setChanged();
