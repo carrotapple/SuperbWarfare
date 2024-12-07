@@ -30,10 +30,8 @@ public class Mle1934Model extends GeoModel<Mle1934Entity> {
 
         if (distance < 32) {
             return new ResourceLocation(ModUtils.MODID, "geo/mle1934.geo.json");
-        } else if (distance < 64){
+        } else{
             return new ResourceLocation(ModUtils.MODID, "geo/mle1934_lod1.geo.json");
-        } else {
-            return new ResourceLocation(ModUtils.MODID, "geo/mle1934_lod2.geo.json");
         }
     }
 

@@ -67,7 +67,6 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
 
     public Mk42Entity(EntityType<Mk42Entity> type, Level world) {
         super(type, world);
-        this.noCulling = true;
     }
 
     @Override

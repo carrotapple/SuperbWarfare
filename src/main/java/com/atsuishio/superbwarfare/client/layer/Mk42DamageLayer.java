@@ -25,7 +25,7 @@ public class Mk42DamageLayer extends GeoRenderLayer<Mk42Entity> {
     @Override
     public void render(PoseStack poseStack, Mk42Entity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         RenderType glowRenderType = RenderType.entityTranslucent(LAYER);
-        float heal = Mth.clamp((0.3f * CannonConfig.MK42_HP.get() - animatable.getEntityData().get(Mk42Entity.HEALTH)) * 0.000007f * CannonConfig.MK42_HP.get(), 0.1f, 1);
+        float heal = Mth.clamp((0.3f * CannonConfig.MK42_HP.get() - animatable.getEntityData().get(Mk42Entity.HEALTH)) * 0.00001f * CannonConfig.MK42_HP.get(), 0f, 1);
         getRenderer().reRender(getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, glowRenderType, bufferSource.getBuffer(glowRenderType), partialTick, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, heal);
     }
 }

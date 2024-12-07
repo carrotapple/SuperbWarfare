@@ -69,7 +69,6 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
 
     public Mle1934Entity(EntityType<Mle1934Entity> type, Level world) {
         super(type, world);
-        this.noCulling = true;
     }
 
     @Override
@@ -115,6 +114,15 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    protected void positionRider(Entity pPassenger, MoveFunction pCallback) {
+        if (this.hasPassenger(pPassenger)) {
+            float f1 = (float) ((this.isRemoved() ? 0.009999999776482582 : this.getPassengersRidingOffset()) + pPassenger.getMyRidingOffset());
+            Vec3 vec3 = (new Vec3(1, 0.0, 0.0)).yRot(-this.getYRot() * 0.017453292F - 1.5707964F);
+            pCallback.accept(pPassenger, this.getX() + vec3.x, this.getY() + (double) f1, this.getZ() + vec3.z);
+        }
     }
 
     @Override
@@ -334,7 +342,7 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
             entityToSpawnLeft.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 15, 0.05f);
             level.addFreshEntity(entityToSpawnLeft);
 
-            var leftPosP1 = new Vector3d(7, 0, -0.45);
+            var leftPosP1 = new Vector3d(8, 0, -0.45);
             leftPosP1.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
             leftPosP1.rotateY(-yRot * Mth.DEG_TO_RAD);
 
@@ -379,7 +387,7 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
                 entityToSpawnRight.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 15, 0.05f);
                 level.addFreshEntity(entityToSpawnRight);
 
-                var rightPosP1 = new Vector3d(7, 0, 0.45);
+                var rightPosP1 = new Vector3d(8, 0, 0.45);
                 rightPosP1.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
                 rightPosP1.rotateY(-yRot * Mth.DEG_TO_RAD);
 
