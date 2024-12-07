@@ -97,6 +97,19 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
 
     public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, ChargingStationBlockEntity blockEntity) {
         blockEntity.setChanged();
+        blockEntity.energyHandler.ifPresent(handler -> blockEntity.energy = handler.getEnergyStored());
+
+        blockEntity.energyHandler.ifPresent(handler -> {
+            int energy = handler.getEnergyStored();
+            blockEntity.energy = energy;
+            if (energy > 0) {
+                blockEntity.chargeEntity(handler);
+            }
+            if (handler.getEnergyStored() > 0) {
+                blockEntity.chargeItemStack(handler);
+            }
+        });
+
         if (blockEntity.fuelTick > 0) {
             blockEntity.fuelTick--;
             blockEntity.energyHandler.ifPresent(handler -> {
@@ -140,17 +153,6 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
                 blockEntity.maxFuelTick = tick;
             }
         }
-
-        blockEntity.energyHandler.ifPresent(handler -> {
-            int energy = handler.getEnergyStored();
-            blockEntity.energy = energy;
-            if (energy > 0) {
-                blockEntity.chargeEntity(handler);
-            }
-            if (handler.getEnergyStored() > 0) {
-                blockEntity.chargeItemStack(handler);
-            }
-        });
     }
 
     private void chargeEntity(EnergyStorage handler) {
