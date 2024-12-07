@@ -96,13 +96,13 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
     }
 
     public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, ChargingStationBlockEntity blockEntity) {
+        blockEntity.setChanged();
         if (blockEntity.fuelTick > 0) {
             blockEntity.fuelTick--;
             blockEntity.energyHandler.ifPresent(handler -> {
                 int energy = handler.getEnergyStored();
                 if (energy < handler.getMaxEnergyStored()) {
                     handler.receiveEnergy(CHARGE_SPEED, false);
-                    blockEntity.setChanged();
                 }
             });
         } else {
@@ -122,7 +122,6 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
                 blockEntity.fuelTick = burnTime;
                 blockEntity.maxFuelTick = burnTime;
                 fuel.shrink(1);
-                blockEntity.setChanged();
             } else if (fuel.getItem().isEdible()) {
                 var properties = fuel.getFoodProperties(null);
                 if (properties == null) return;
@@ -139,7 +138,6 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
 
                 blockEntity.fuelTick = tick;
                 blockEntity.maxFuelTick = tick;
-                blockEntity.setChanged();
             }
         }
 
@@ -160,12 +158,11 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
 
         List<Entity> entities = this.level.getEntitiesOfClass(Entity.class, new AABB(this.getBlockPos()).inflate(CHARGE_RADIUS));
         entities.forEach(entity -> {
-            if (entity instanceof IChargeEntity chargeEntity) {
+            if (entity instanceof IChargeEntity chargeEntity && handler.getEnergyStored() > 0) {
                 chargeEntity.charge(Math.min(CHARGE_OTHER_SPEED, handler.getEnergyStored()));
                 handler.extractEnergy(Math.min(CHARGE_OTHER_SPEED, handler.getEnergyStored()), false);
             }
         });
-        this.setChanged();
     }
 
     private void chargeItemStack(EnergyStorage handler) {
@@ -176,7 +173,6 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
             if (consumer.getEnergyStored() < consumer.getMaxEnergyStored()) {
                 consumer.receiveEnergy(Math.min(CHARGE_OTHER_SPEED, handler.getEnergyStored()), false);
                 handler.extractEnergy(Math.min(CHARGE_OTHER_SPEED, handler.getEnergyStored()), false);
-                this.setChanged();
             }
         });
     }
@@ -258,15 +254,9 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
 
     @Override
     public void setItem(int pSlot, ItemStack pStack) {
-        ItemStack itemstack = this.items.get(pSlot);
-        boolean flag = !pStack.isEmpty() && ItemStack.isSameItemSameTags(itemstack, pStack);
         this.items.set(pSlot, pStack);
         if (pStack.getCount() > this.getMaxStackSize()) {
             pStack.setCount(this.getMaxStackSize());
-        }
-
-        if (pSlot == 0 && !flag) {
-            this.setChanged();
         }
     }
 
