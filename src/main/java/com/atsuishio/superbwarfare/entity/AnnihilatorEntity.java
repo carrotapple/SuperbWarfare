@@ -509,7 +509,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     }
 
     private PlayState movementPredicate(AnimationState<AnnihilatorEntity> event) {
-        if (this.entityData.get(COOL_DOWN) > 80) {
+        if (this.entityData.get(COOL_DOWN) > 85) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.annihilator.fire"));
         }
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.annihilator.idle"));
