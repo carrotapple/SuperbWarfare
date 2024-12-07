@@ -71,6 +71,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     protected int interpolationSteps;
     protected double serverYRot;
     protected double serverXRot;
+    public Vec3 barrelLookAt;
 
     public AnnihilatorEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.ANNIHILATOR.get(), world);
@@ -89,7 +90,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         this.entityData.define(LASER_MIDDLE_LENGTH, 0f);
         this.entityData.define(LASER_RIGHT_LENGTH, 0f);
         this.entityData.define(ENERGY, 0f);
-        this.entityData.define(OFFSET_ANGLE, 0.2f);
+        this.entityData.define(OFFSET_ANGLE, 0f);
     }
 
     @Override
@@ -445,33 +446,22 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         var BarrelRoot = new Vector3d(4.95, 2.25, 0);
         BarrelRoot.rotateY(-yRot * Mth.DEG_TO_RAD);
 
-        Vec3 BarrelRootPos = new Vec3(this.getX() + BarrelRoot.x, this.getY() + BarrelRoot.y, this.getZ() + BarrelRoot.z);
+        Vec3 barrelRootPos = new Vec3(this.getX() + BarrelRoot.x, this.getY() + BarrelRoot.y, this.getZ() + BarrelRoot.z);
 
-        double range;
-        Entity lookingEntity = TraceTool.findLookingEntity(entity,512);
+        Vec3 passengersEyePos = new Vec3(entity.getX(), entity.getEyeY(), entity.getZ());
 
-        if (lookingEntity != null) {
-            range = Math.max(eyeDistanceTo(entity ,lookingEntity), 5);
+        Entity lookingAt = TraceTool.findLookingEntity(entity, 512);
+
+        if (lookingAt == null) {
+            HitResult result = entity.level().clip(new ClipContext(passengersEyePos, passengersEyePos.add(entity.getViewVector(1).scale(512)),
+                    ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, entity));
+            Vec3 blockHitPos = result.getLocation();
+            barrelLookAt = new Vec3(blockHitPos.x - barrelRootPos.x, blockHitPos.y - barrelRootPos.y, blockHitPos.z - barrelRootPos.z);
         } else {
-            range = Math.max(new Vec3(entity.getX(),entity.getEyeY(), entity.getZ()).distanceTo((Vec3.atLowerCornerOf(passenger.level().clip(
-                    new ClipContext(passenger.getEyePosition(), passenger.getEyePosition().add(passenger.getLookAngle().scale(512)),
-                            ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, passenger)).getBlockPos()))), 5);
+            barrelLookAt = new Vec3(lookingAt.getX() - barrelRootPos.x, lookingAt.getEyeY() - barrelRootPos.y, lookingAt.getZ() - barrelRootPos.z);
         }
 
-        double l1 = new Vec3(passenger.getX() - BarrelRootPos.x , passenger.getEyeY() - BarrelRootPos.y, passenger.getZ() - BarrelRootPos.z).length();
-        double l4 = new Vec3(passenger.getX() - BarrelRootPos.x , passenger.getEyeY() - BarrelRootPos.y, passenger.getZ() - BarrelRootPos.z).horizontalDistance();
-        double l5 = Mth.abs((float) (passenger.getEyeY() - this.getY() + 2.25));
-
-        double a1 = -entity.getXRot();
-        double a2 = (Math.atan(l5 / l4)) * Mth.RAD_TO_DEG;
-        double a0 = a1 + a2;
-
-        double l2 = (l1 * Math.cos(a0));
-        double l3 = (l1 * Math.sin(a0));
-
-        double angle = Math.atan(Mth.abs((float) l3) / (range + l2)) * Mth.RAD_TO_DEG;
-
-        this.entityData.set(OFFSET_ANGLE , (float)(angle - (0.3f * (1 - 0.02 * a1))));
+        this.entityData.set(OFFSET_ANGLE, (float)calculateAngle(entity.getViewVector(1),barrelLookAt));
 
         float passengerY = entity.getYHeadRot();
 
@@ -496,11 +486,14 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         this.setRot(this.getYRot(), this.getXRot());
     }
 
-    public float eyeDistanceTo(Entity entity ,Entity target) {
-        float f = (float)(entity.getX() - target.getX());
-        float f1 = (float)(entity.getEyeY() - target.getY());
-        float f2 = (float)(entity.getZ() - target.getZ());
-        return Mth.sqrt(f * f + f1 * f1 + f2 * f2);
+    public static double calculateAngle(Vec3 passenger, Vec3 barrel) {
+        double startLength = passenger.length();
+        double endLength = barrel.length();
+        if (startLength > 0.0D && endLength > 0.0D) {
+            return Math.toDegrees(Math.acos(passenger.dot(barrel) / (startLength * endLength)));
+        } else {
+            return 0.0D;
+        }
     }
 
     protected void clampRotation(Entity entity) {
