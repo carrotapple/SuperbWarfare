@@ -53,8 +53,8 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
 
     protected NonNullList<ItemStack> items = NonNullList.withSize(2, ItemStack.EMPTY);
 
-    private final LazyOptional<EnergyStorage> energyHandler;
-    private LazyOptional<?>[] itemHandlers = SidedInvWrapper.create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
+    private LazyOptional<EnergyStorage> energyHandler;
+    private LazyOptional<?>[] itemHandlers = SidedInvWrapper.create(this, Direction.NORTH);
 
     public int fuelTick = 0;
     public int maxFuelTick = DEFAULT_FUEL_TIME;
@@ -300,6 +300,7 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
     public CompoundTag getUpdateTag() {
         CompoundTag compoundtag = new CompoundTag();
         ContainerHelper.saveAllItems(compoundtag, this.items, true);
+        getCapability(ForgeCapabilities.ENERGY).ifPresent(handler -> compoundtag.put("Energy", ((EnergyStorage) handler).serializeNBT()));
         return compoundtag;
     }
 
@@ -309,13 +310,7 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
             return energyHandler.cast();
         }
         if (!this.remove && side != null && cap == ForgeCapabilities.ITEM_HANDLER) {
-            if (side == Direction.UP) {
-                return itemHandlers[0].cast();
-            } else if (side == Direction.DOWN) {
-                return itemHandlers[1].cast();
-            } else {
-                return itemHandlers[2].cast();
-            }
+            return itemHandlers[0].cast();
         }
         return super.getCapability(cap, side);
     }
@@ -330,6 +325,7 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
     @Override
     public void reviveCaps() {
         super.reviveCaps();
-        this.itemHandlers = SidedInvWrapper.create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
+        this.itemHandlers = SidedInvWrapper.create(this, Direction.NORTH);
+        this.energyHandler = LazyOptional.of(() -> new EnergyStorage(MAX_ENERGY));
     }
 }
