@@ -1,13 +1,16 @@
 package com.atsuishio.superbwarfare.network;
 
-import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
-import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
-import com.atsuishio.superbwarfare.network.message.GunsDataMessage;
-import com.atsuishio.superbwarfare.tools.GunsTool;
+import com.atsuishio.superbwarfare.block.menu.ChargingStationMenu;
 import com.atsuishio.superbwarfare.client.screens.CrossHairOverlay;
 import com.atsuishio.superbwarfare.client.screens.DroneUIOverlay;
+import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
 import com.atsuishio.superbwarfare.event.KillMessageHandler;
+import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
+import com.atsuishio.superbwarfare.network.message.ContainerDataMessage;
+import com.atsuishio.superbwarfare.network.message.GunsDataMessage;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.PlayerKillRecord;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
@@ -15,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkEvent;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public class ClientPacketHandler {
@@ -47,6 +51,15 @@ public class ClientPacketHandler {
     public static void handleSimulationDistanceMessage(int distance, Supplier<NetworkEvent.Context> ctx) {
         if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
             DroneUIOverlay.MAX_DISTANCE = distance * 16;
+        }
+    }
+
+    public static void handleContainerDataMessage(int containerId, List<ContainerDataMessage.Pair> data, Supplier<NetworkEvent.Context> ctx) {
+        if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.player != null && mc.player.containerMenu.containerId == containerId) {
+                data.forEach(p -> ((ChargingStationMenu) mc.player.containerMenu).setData(p.id, p.data));
+            }
         }
     }
 }

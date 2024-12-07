@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.block.entity;
 import com.atsuishio.superbwarfare.block.menu.ChargingStationMenu;
 import com.atsuishio.superbwarfare.entity.IChargeEntity;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
+import com.atsuishio.superbwarfare.network.dataslot.ContainerEnergyData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -17,7 +18,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -34,7 +34,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Energy Data Slot Code based on @GoryMoon's Chargers
+ */
 public class ChargingStationBlockEntity extends BlockEntity implements WorldlyContainer, MenuProvider {
 
     protected static final int SLOT_FUEL = 0;
@@ -58,28 +62,31 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
 
     public int fuelTick = 0;
     public int maxFuelTick = DEFAULT_FUEL_TIME;
-    public int energy;
 
-    protected final ContainerData dataAccess = new ContainerData() {
-        public int get(int pIndex) {
+    protected final ContainerEnergyData dataAccess = new ContainerEnergyData() {
+        public long get(int pIndex) {
             return switch (pIndex) {
                 case 0 -> ChargingStationBlockEntity.this.fuelTick;
                 case 1 -> ChargingStationBlockEntity.this.maxFuelTick;
-                case 2 -> ChargingStationBlockEntity.this.energy;
+                case 2 -> {
+                    AtomicInteger energy = new AtomicInteger();
+                    ChargingStationBlockEntity.this.getCapability(ForgeCapabilities.ENERGY).ifPresent(consumer -> energy.set(consumer.getEnergyStored()));
+                    yield energy.get();
+                }
                 default -> 0;
             };
         }
 
-        public void set(int pIndex, int pValue) {
+        public void set(int pIndex, long pValue) {
             switch (pIndex) {
                 case 0:
-                    ChargingStationBlockEntity.this.fuelTick = pValue;
+                    ChargingStationBlockEntity.this.fuelTick = (int) pValue;
                     break;
                 case 1:
-                    ChargingStationBlockEntity.this.maxFuelTick = pValue;
+                    ChargingStationBlockEntity.this.maxFuelTick = (int) pValue;
                     break;
                 case 2:
-                    ChargingStationBlockEntity.this.energy = pValue;
+                    ChargingStationBlockEntity.this.getCapability(ForgeCapabilities.ENERGY).ifPresent(consumer -> consumer.receiveEnergy((int) pValue, false));
                     break;
             }
         }
@@ -98,7 +105,6 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
     public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, ChargingStationBlockEntity blockEntity) {
         blockEntity.energyHandler.ifPresent(handler -> {
             int energy = handler.getEnergyStored();
-            blockEntity.energy = energy;
             if (energy > 0) {
                 blockEntity.chargeEntity(handler);
             }
@@ -253,9 +259,15 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
 
     @Override
     public void setItem(int pSlot, ItemStack pStack) {
+        ItemStack itemstack = this.items.get(pSlot);
+        boolean flag = !pStack.isEmpty() && ItemStack.isSameItemSameTags(itemstack, pStack);
         this.items.set(pSlot, pStack);
         if (pStack.getCount() > this.getMaxStackSize()) {
             pStack.setCount(this.getMaxStackSize());
+        }
+
+        if (pSlot == 0 && !flag) {
+            this.setChanged();
         }
     }
 

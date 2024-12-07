@@ -32,9 +32,9 @@ public class ChargingStationScreen extends AbstractContainerScreen<ChargingStati
         int j = (this.height - this.imageHeight) / 2;
         pGuiGraphics.blit(TEXTURE, i, j, 0, 0, this.imageWidth, this.imageHeight);
 
-        int fuelTick = ChargingStationScreen.this.menu.getFuelTick();
-        int maxFuelTick = ChargingStationScreen.this.menu.getMaxFuelTick();
-        int energy = ChargingStationScreen.this.menu.getEnergy();
+        long fuelTick = ChargingStationScreen.this.menu.getFuelTick();
+        long maxFuelTick = ChargingStationScreen.this.menu.getMaxFuelTick();
+        long energy = ChargingStationScreen.this.menu.getEnergy();
 
         if (maxFuelTick == 0) {
             maxFuelTick = ChargingStationBlockEntity.DEFAULT_FUEL_TIME;
