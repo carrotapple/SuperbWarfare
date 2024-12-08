@@ -197,11 +197,6 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
                 this.discard();
                 return InteractionResult.sidedSuccess(this.level().isClientSide());
             }
-            if (player.getMainHandItem().is(ModItems.SHIELD_CELL.get())) {
-                this.entityData.set(ENERGY, (float) Mth.clamp(this.entityData.get(ENERGY) + 1000000, 0, CannonConfig.ANNIHILATOR_MAX_ENERGY.get()));
-                player.displayClientMessage(Component.literal("Energy:" + new java.text.DecimalFormat("##").format(this.entityData.get(ENERGY))), true);
-                return InteractionResult.sidedSuccess(this.level().isClientSide());
-            }
             return InteractionResult.PASS;
         } else {
             if (this.getFirstPassenger() == null) {

@@ -302,6 +302,8 @@ public class LivingEventHandler {
             ItemStack oldStack = event.getFrom();
             ItemStack newStack = event.getTo();
 
+            player.getCapability(ModCapabilities.LASER_CAPABILITY).ifPresent(LaserCapability.ILaserCapability::stop);
+
             if (player instanceof ServerPlayer serverPlayer) {
                 if (newStack.getItem() != oldStack.getItem()
                         || newStack.getTag() == null || oldStack.getTag() == null

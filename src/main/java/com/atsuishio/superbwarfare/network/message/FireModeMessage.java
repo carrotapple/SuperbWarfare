@@ -1,9 +1,9 @@
 package com.atsuishio.superbwarfare.network.message;
 
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
@@ -14,8 +14,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.network.NetworkEvent;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 public class FireModeMessage {
@@ -104,15 +106,18 @@ public class FireModeMessage {
                 && GunsTool.getGunIntTag(stack, "ReloadTime") == 0
                 && !stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
 
-            int count = 0;
-            for (var inv : player.getInventory().items) {
-                if (inv.is(ModItems.SHIELD_CELL.get())) {
-                    count++;
-                }
-            }
+            for (var cell : player.getInventory().items) {
+                if (cell.is(ModItems.CELL.get())) {
+                    AtomicBoolean flag = new AtomicBoolean(false);
+                    cell.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                            iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() >= 0)
+                    );
 
-            if (count > 0) {
-                tag.putBoolean("start_sentinel_charge", true);
+                    if (flag.get()) {
+                        tag.putBoolean("start_sentinel_charge", true);
+                    }
+
+                }
             }
         }
 

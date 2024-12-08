@@ -319,7 +319,7 @@ public class FireMessage {
             int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.VOLT_OVERLOAD.get(), stack);
             AtomicBoolean flag = new AtomicBoolean(false);
             stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                    iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() > 2000 + 200 * perkLevel)
+                    iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() >= 400 + 100 * perkLevel)
             );
 
             if (!player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getInt("ammo") > 0
@@ -351,7 +351,7 @@ public class FireMessage {
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
 
                 stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                        energy -> energy.extractEnergy(2000 + 200 * perkLevel, false)
+                        energy -> energy.extractEnergy(400 + 100 * perkLevel, false)
                 );
 
                 stack.getOrCreateTag().putBoolean("shoot", true);

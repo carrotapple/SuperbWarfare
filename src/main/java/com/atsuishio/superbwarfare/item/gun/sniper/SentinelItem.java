@@ -60,7 +60,7 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
     public SentinelItem() {
         super(new Item.Properties().stacksTo(1).rarity(RarityTool.LEGENDARY));
 
-        this.energyCapacity = () -> 240000;
+        this.energyCapacity = () -> 24000;
     }
 
     @Override
@@ -83,7 +83,7 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
                 e -> energy.set(e.getEnergyStored())
         );
 
-        return Math.round((float) energy.get() * 13.0F / 240000F);
+        return Math.round((float) energy.get() * 13.0F / 24000F);
     }
 
     @Override
@@ -185,7 +185,7 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
                 energy -> {
                     int energyStored = energy.getEnergyStored();
                     if (energyStored > 0) {
-                        energy.extractEnergy(5, false);
+                        energy.extractEnergy(1, false);
                         tag.putDouble("sentinelChargeDamage", 0.2857142857142857 * tag.getDouble("damage"));
                     } else {
                         tag.putDouble("sentinelChargeDamage", 0);

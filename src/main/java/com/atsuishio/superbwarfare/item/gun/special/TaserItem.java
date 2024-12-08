@@ -54,7 +54,7 @@ import java.util.function.Supplier;
 
 public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
 
-    public static final int MAX_ENERGY = 12000;
+    public static final int MAX_ENERGY = 6000;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
@@ -186,10 +186,36 @@ public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
             stack.getOrCreateTag().putInt("max_ammo", getAmmoCount(player));
         }
 
-        int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.SUPER_RECHARGE.get(), stack);
+        int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.REGENERATION.get(), stack);
         stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                energy -> energy.receiveEnergy(10 + 10 * perkLevel, false)
+                energy -> energy.receiveEnergy(perkLevel, false)
         );
+
+        if (entity instanceof Player player) {
+            for (var cell : player.getInventory().items) {
+                if (cell.is(ModItems.CELL.get())) {
+                    assert stack.getCapability(ForgeCapabilities.ENERGY).resolve().isPresent();
+                    var stackStorage = stack.getCapability(ForgeCapabilities.ENERGY).resolve().get();
+                    int stackMaxEnergy = stackStorage.getMaxEnergyStored();
+                    int stackEnergy = stackStorage.getEnergyStored();
+
+                    assert cell.getCapability(ForgeCapabilities.ENERGY).resolve().isPresent();
+                    var cellStorage = cell.getCapability(ForgeCapabilities.ENERGY).resolve().get();
+                    int cellEnergy = cellStorage.getEnergyStored();
+
+                    int stackEnergyNeed = Math.min(cellEnergy, stackMaxEnergy - stackEnergy);
+
+                    if (cellEnergy > 0) {
+                        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                                iEnergyStorage -> iEnergyStorage.receiveEnergy(stackEnergyNeed, false)
+                        );
+                    }
+                    cell.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                            cEnergy -> cEnergy.extractEnergy(stackEnergyNeed, false)
+                    );
+                }
+            }
+        }
     }
 
     protected static boolean check(ItemStack stack) {
@@ -223,7 +249,7 @@ public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
     public boolean canApplyPerk(Perk perk) {
         return switch (perk.type) {
             case AMMO -> perk == ModPerks.LONGER_WIRE.get();
-            case FUNCTIONAL -> perk == ModPerks.SUPER_RECHARGE.get() || perk == ModPerks.POWERFUL_ATTRACTION.get() || perk == ModPerks.INTELLIGENT_CHIP.get();
+            case FUNCTIONAL -> perk == ModPerks.REGENERATION.get() || perk == ModPerks.POWERFUL_ATTRACTION.get() || perk == ModPerks.INTELLIGENT_CHIP.get();
             case DAMAGE -> perk == ModPerks.VOLT_OVERLOAD.get();
         };
     }

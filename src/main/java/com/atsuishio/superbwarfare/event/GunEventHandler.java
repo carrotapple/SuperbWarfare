@@ -875,11 +875,30 @@ public class GunEventHandler {
         }
 
         if (tag.getInt("sentinel_charge_time") == 17) {
-            stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                    iEnergyStorage -> iEnergyStorage.receiveEnergy(24000, false)
-            );
 
-            player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.SHIELD_CELL.get(), 1, player.inventoryMenu.getCraftSlots());
+            for (var cell : player.getInventory().items) {
+                if (cell.is(ModItems.CELL.get())) {
+                    assert stack.getCapability(ForgeCapabilities.ENERGY).resolve().isPresent();
+                    var stackStorage = stack.getCapability(ForgeCapabilities.ENERGY).resolve().get();
+                    int stackMaxEnergy = stackStorage.getMaxEnergyStored();
+                    int stackEnergy = stackStorage.getEnergyStored();
+
+                    assert cell.getCapability(ForgeCapabilities.ENERGY).resolve().isPresent();
+                    var cellStorage = cell.getCapability(ForgeCapabilities.ENERGY).resolve().get();
+                    int cellEnergy = cellStorage.getEnergyStored();
+
+                    int stackEnergyNeed = Math.min(cellEnergy, stackMaxEnergy - stackEnergy);
+
+                    if (cellEnergy > 0) {
+                        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                                iEnergyStorage -> iEnergyStorage.receiveEnergy(stackEnergyNeed, false)
+                        );
+                    }
+                    cell.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                            cEnergy -> cEnergy.extractEnergy(stackEnergyNeed, false)
+                    );
+                }
+            }
         }
 
         if (tag.getInt("sentinel_charge_time") == 1) {

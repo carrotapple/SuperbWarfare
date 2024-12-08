@@ -54,7 +54,7 @@ public class ModPerks {
     public static final RegistryObject<Perk> FOURTH_TIMES_CHARM = FUNC_PERKS.register("fourth_times_charm", () -> new Perk("fourth_times_charm", Perk.Type.FUNCTIONAL));
     public static final RegistryObject<Perk> SUBSISTENCE = FUNC_PERKS.register("subsistence", () -> new Perk("subsistence", Perk.Type.FUNCTIONAL));
     public static final RegistryObject<Perk> FIELD_DOCTOR = FUNC_PERKS.register("field_doctor", () -> new Perk("field_doctor", Perk.Type.FUNCTIONAL));
-    public static final RegistryObject<Perk> SUPER_RECHARGE = FUNC_PERKS.register("super_recharge", () -> new Perk("super_recharge", Perk.Type.FUNCTIONAL));
+    public static final RegistryObject<Perk> REGENERATION = FUNC_PERKS.register("regeneration", () -> new Perk("regeneration", Perk.Type.FUNCTIONAL));
     public static final RegistryObject<Perk> TURBO_CHARGER = FUNC_PERKS.register("turbo_charger", () -> new Perk("turbo_charger", Perk.Type.FUNCTIONAL));
     public static final RegistryObject<Perk> POWERFUL_ATTRACTION = FUNC_PERKS.register("powerful_attraction", () -> new Perk("powerful_attraction", Perk.Type.FUNCTIONAL));
     public static final RegistryObject<Perk> INTELLIGENT_CHIP = FUNC_PERKS.register("intelligent_chip", () -> new Perk("intelligent_chip", Perk.Type.FUNCTIONAL));
