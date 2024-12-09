@@ -237,7 +237,6 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
                 if (!controller.level().isClientSide) {
                     this.level().playSound(null, this.getOnPos(), ModSounds.DRONE_SOUND.get(), SoundSource.AMBIENT, 3, 1);
                 }
-//                controller.setYRot((float) (controller.getYRot() - 50 * moveX));
             }
         }
 
