@@ -61,8 +61,8 @@ public class DroneModel extends GeoModel<DroneEntity> {
 
 		float times = (float) (0.5f * Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8));
 
-		rotX = Mth.lerp(0.5f * times, rotX, animatable.getEntityData().get(ROT_X));
-		rotZ = Mth.lerp(0.5f * times, rotZ, animatable.getEntityData().get(ROT_Z));
+		rotX = Mth.lerp(0.2f * times, rotX, animatable.getEntityData().get(MOVE_X) * Mth.DEG_TO_RAD);
+		rotZ = Mth.lerp(0.2f * times, rotZ, animatable.getEntityData().get(MOVE_Z) * Mth.DEG_TO_RAD);
 
 		main.setRotZ(rotX);
 		main.setRotX(rotZ);
@@ -76,7 +76,7 @@ public class DroneModel extends GeoModel<DroneEntity> {
 		CoreGeoBone wingBL = getAnimationProcessor().getBone("wingBL");
 		CoreGeoBone wingBR = getAnimationProcessor().getBone("wingBR");
 
-		rotation = (float) Mth.lerp(times, rotation, animatable.onGround() ? 0 : 0.08 - 0.1 * animatable.getEntityData().get(MOVE_Y));
+		rotation = (float) Mth.lerp(times, rotation, animatable.onGround() ? 0 : 0.2);
 
 		wingFL.setRotY(wingFL.getRotY() - rotation);
 		wingFR.setRotY(wingFL.getRotY() - rotation);

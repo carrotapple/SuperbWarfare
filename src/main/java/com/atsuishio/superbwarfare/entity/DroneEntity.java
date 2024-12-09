@@ -44,6 +44,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
@@ -66,13 +67,9 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
     public static final EntityDataAccessor<Boolean> KAMIKAZE = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
 
     public static final EntityDataAccessor<Float> MOVE_X = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> MOVE_Y = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> MOVE_Z = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> ROT_X = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> ROT_Z = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private boolean move = false;
     public static double lastTickSpeed = 0;
 
     public DroneEntity(PlayMessages.SpawnEntity packet, Level world) {
@@ -96,10 +93,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
         this.entityData.define(AMMO, 0);
         this.entityData.define(KAMIKAZE, false);
         this.entityData.define(MOVE_X, 0f);
-        this.entityData.define(MOVE_Y, 0f);
         this.entityData.define(MOVE_Z, 0f);
-        this.entityData.define(ROT_X, 0f);
-        this.entityData.define(ROT_Z, 0f);
     }
 
     @Override
@@ -144,11 +138,6 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
         compound.putString("Controller", this.entityData.get(CONTROLLER));
         compound.putInt("ammo", this.entityData.get(AMMO));
         compound.putBoolean("Kamikaze", this.entityData.get(KAMIKAZE));
-        compound.putFloat("moveX", this.entityData.get(MOVE_X));
-        compound.putFloat("moveY", this.entityData.get(MOVE_Y));
-        compound.putFloat("moveZ", this.entityData.get(MOVE_Z));
-        compound.putFloat("rotX", this.entityData.get(ROT_X));
-        compound.putFloat("rotZ", this.entityData.get(ROT_Z));
     }
 
     @Override
@@ -163,16 +152,6 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             this.entityData.set(AMMO, compound.getInt("ammo"));
         if (compound.contains("Kamikaze"))
             this.entityData.set(KAMIKAZE, compound.getBoolean("Kamikaze"));
-        if (compound.contains("moveX"))
-            this.entityData.set(MOVE_X, compound.getFloat("moveX"));
-        if (compound.contains("moveY"))
-            this.entityData.set(MOVE_Y, compound.getFloat("moveY"));
-        if (compound.contains("moveZ"))
-            this.entityData.set(MOVE_Z, compound.getFloat("moveZ"));
-        if (compound.contains("rotX"))
-            this.entityData.set(ROT_X, compound.getFloat("rotX"));
-        if (compound.contains("rotZ"))
-            this.entityData.set(ROT_Z, compound.getFloat("rotZ"));
     }
 
     public Vector3f getForwardDirection() {
@@ -191,102 +170,61 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
         ).normalize();
     }
 
-//            if (this.level().isClientSide) {
-//
-//        if (!this.onGround()) {
-//            // left and right
-//            float moveX = 0;
-//            if (Minecraft.getInstance().options.keyLeft.isDown()) {
-//                moveX = -1;
-//            } else if (Minecraft.getInstance().options.keyRight.isDown()) {
-//                moveX = 1;
-//            }
-//
-//            Vector3f direction = getRightDirection().mul(moveX);
-//            setDeltaMovement(getDeltaMovement().add(direction.x, direction.y, direction.z));
-//
-//            // forward and backward
-////            direction = getForwardDirection().mul(thrust * pressingInterpolatedZ.getSmooth());
-////            setDeltaMovement(getDeltaMovement().add(direction.x, direction.y, direction.z));
-//        } else {
-//            // up and down
-//
-//            float moveY = 0;
-//            if (Minecraft.getInstance().options.keyJump.isDown()) {
-//                moveY = -1;
-//            } else if (Minecraft.getInstance().options.keyShift.isDown()) {
-//                moveY = 1;
-//            }
-//
-//            setDeltaMovement(getDeltaMovement().add(0.0f, moveY, 0.0f));
-//        }
-//    }
+
 
     @Override
     public void baseTick() {
         super.baseTick();
 
+        double moveX;
+        double moveZ;
         if (!this.onGround()) {
+            // left and right
+            moveX = 0;
             if (this.getPersistentData().getBoolean("left")) {
-                this.entityData.set(MOVE_X, -1.5f);
-                this.entityData.set(ROT_X, Mth.lerp(0.1f, this.entityData.get(ROT_X), 0.3f));
-            }
-            if (this.getPersistentData().getBoolean("right")) {
-                this.entityData.set(MOVE_X, 1.5f);
-                this.entityData.set(ROT_X, Mth.lerp(0.1f, this.entityData.get(ROT_X), -0.3f));
+                moveX = Mth.clamp(moveX + 0.1f, 0, 1);
+            } else if (this.getPersistentData().getBoolean("right")) {
+                moveX = Mth.clamp(moveX - 0.1f, -1, 0);
+            } else {
+                moveX = Mth.lerp(0.9 * moveX, moveX, 0);
             }
 
+
+            // forward and backward
+            moveZ = 0;
             if (this.getPersistentData().getBoolean("forward")) {
-                this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) - 0.1f);
-                this.entityData.set(ROT_Z, Mth.lerp(0.05f, this.entityData.get(ROT_Z), -0.2f));
+                moveZ = Mth.clamp(moveZ + 0.1f, 0, 1);
+            } else if (this.getPersistentData().getBoolean("backward")) {
+                moveZ= Mth.clamp(moveZ - 0.1f, -1, 0);
+            } else {
+                moveZ = Mth.lerp(0.9 * moveZ, moveZ, 0);
             }
-            if (this.getPersistentData().getBoolean("backward")) {
-                this.entityData.set(MOVE_Z, this.entityData.get(MOVE_Z) + 0.1f);
-                this.entityData.set(ROT_Z, Mth.lerp(0.05f, this.entityData.get(ROT_Z), 0.2f));
-            }
+
         } else {
-            this.entityData.set(ROT_X, 0f);
-            this.entityData.set(ROT_Z, 0f);
+            moveX = 0;
+            moveZ = 0;
         }
 
-        this.entityData.set(ROT_X, Mth.lerp(0.05f, this.entityData.get(ROT_X), 0));
-
-        if (!this.getPersistentData().getBoolean("left") && !this.getPersistentData().getBoolean("right")) {
-            this.entityData.set(MOVE_X, Mth.lerp(0.1f, this.entityData.get(MOVE_X), 0));
-        }
-
-        this.entityData.set(ROT_Z, Mth.lerp(0.05f, this.entityData.get(ROT_Z), 0));
-
-        this.entityData.set(MOVE_Z, Mth.lerp(0.05f, this.entityData.get(MOVE_Z), 0));
-
+        // up and down
+        double moveY = 0;
         if (this.getPersistentData().getBoolean("up")) {
-            this.entityData.set(MOVE_Y, -1.5f);
+            moveY = Mth.clamp(moveY + 0.05f, 0, 1);
+        } else if (this.getPersistentData().getBoolean("down")) {
+            moveY = Mth.clamp(moveY - 0.05f, -1, 0);
+        } else {
+            moveY = Mth.lerp(0.99 * moveY, moveY, 0);
         }
-        if (this.getPersistentData().getBoolean("down")) {
-            this.entityData.set(MOVE_Y, 1.5f);
-        }
 
-        this.entityData.set(MOVE_Y, Mth.lerp(0.5f, this.entityData.get(MOVE_Y), 0));
+        setDeltaMovement(getDeltaMovement().add(0.0f, (this.onGround() ? 0.059 : 0) + moveY, 0.0f));
 
-        this.setDeltaMovement(new Vec3(
-                this.getDeltaMovement().x + -this.entityData.get(MOVE_Z) * 0.07f * this.getLookAngle().x,
-                this.getDeltaMovement().y + (this.onGround() ? 0.059 : 0) + -this.entityData.get(MOVE_Y) * 0.05f,
-                this.getDeltaMovement().z + -this.entityData.get(MOVE_Z) * 0.07f * this.getLookAngle().z
-        ));
+        Vector3f direction = getRightDirection().mul((float) moveX);
+        setDeltaMovement(getDeltaMovement().add(new Vec3(direction.x, direction.y, direction.z).scale(0.8)));
 
-        this.move = this.getPersistentData().getBoolean("left")
-                || this.getPersistentData().getBoolean("right")
-                || this.getPersistentData().getBoolean("forward")
-                || this.getPersistentData().getBoolean("backward")
-                || this.getPersistentData().getBoolean("up")
-                || this.getPersistentData().getBoolean("down");
+        Vector3f directionZ = getForwardDirection().mul((float) moveZ);
+        setDeltaMovement(getDeltaMovement().add(new Vec3(directionZ.x, directionZ.y, directionZ.z).scale(0.8)));
 
         Vec3 vec = this.getDeltaMovement();
-        if (this.getDeltaMovement().horizontalDistanceSqr() < 0.75) {
-            if (this.move) {
-                this.setDeltaMovement(vec.multiply(1.035, 0.99, 1.035));
-            }
-        }
+        this.setDeltaMovement(vec.multiply(1.055, 0.9, 1.055));
 
         Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
 
@@ -299,7 +237,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
                 if (!controller.level().isClientSide) {
                     this.level().playSound(null, this.getOnPos(), ModSounds.DRONE_SOUND.get(), SoundSource.AMBIENT, 3, 1);
                 }
-                controller.setYRot(controller.getYRot() - 5 * this.entityData.get(ROT_X) * Mth.abs(this.entityData.get(MOVE_Z)));
+//                controller.setYRot((float) (controller.getYRot() - 50 * moveX));
             }
         }
 
@@ -434,18 +372,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             }
         }
 
-        this.setSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED));
-        float strafe = -this.entityData.get(MOVE_X);
-        super.travel(new Vec3(2 * strafe, -this.entityData.get(MOVE_Y), -this.entityData.get(MOVE_Z)));
-        Vec3 vec3 = this.getDeltaMovement();
-        if (this.onGround()) {
-            this.setDeltaMovement(vec3.multiply(0.7, 0.98, 0.7));
-        } else {
-            this.setDeltaMovement(vec3.multiply(1.04, 0.98, 1.04));
-        }
-        if (!this.move) {
-            this.setDeltaMovement(vec3.multiply(0.9, 0.8, 0.9));
-        }
+        super.travel(dir);
 
         lastTickSpeed = this.getDeltaMovement().length();
         crash(controller);
@@ -540,7 +467,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
                 ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), source, source), ExplosionConfig.DRONE_KAMIKAZE_EXPLOSION_DAMAGE.get(),
                 this.getX(), this.getY(), this.getZ(), ExplosionConfig.DRONE_KAMIKAZE_EXPLOSION_RADIUS.get(), ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
         ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
     }
