@@ -106,6 +106,7 @@ public class ModTabs {
                             output.accept(ContainerBlockItem.createMk42Instance());
                             output.accept(ContainerBlockItem.createMle1934Instance());
                             output.accept(ContainerBlockItem.createAnnihilatorInstance());
+                            output.accept(ContainerBlockItem.createSpeedboatInstance());
                         } else {
                             output.accept(registryObject.get());
                             if (registryObject.get() == ModItems.ARMOR_PLATE.get()) {

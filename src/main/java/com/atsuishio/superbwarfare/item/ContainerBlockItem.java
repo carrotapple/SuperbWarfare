@@ -101,4 +101,7 @@ public class ContainerBlockItem extends BlockItem implements GeoItem {
     public static ItemStack createAnnihilatorInstance() {
         return createInstance(ModEntities.ANNIHILATOR.get());
     }
+    public static ItemStack createSpeedboatInstance() {
+        return createInstance(ModEntities.SPEEDBOAT.get());
+    }
 }
