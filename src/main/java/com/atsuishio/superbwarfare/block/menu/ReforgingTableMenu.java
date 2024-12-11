@@ -21,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nullable;
 
 public class ReforgingTableMenu extends AbstractContainerMenu {
+
     protected final Container container;
     protected final ContainerLevelAccess access;
 
@@ -282,6 +283,7 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
             int level = PerkHelper.getItemPerkLevel(perkItem.getPerk(), gun);
 
             if (level <= 0) {
+                this.upgradePoint.set((int) gun.getOrCreateTag().getDouble("UpgradePoint"));
                 return;
             }
 
