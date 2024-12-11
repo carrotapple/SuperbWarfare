@@ -39,14 +39,17 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity, IVehicleEntity{
+public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity, IVehicleEntity {
+
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ROT_Y = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
     public static final float MAX_HEALTH = CannonConfig.MK42_HP.get();
+
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private boolean inputLeft;
     private boolean inputRight;
     private boolean inputUp;
@@ -90,6 +93,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             this.entityData.set(HEALTH, MAX_HEALTH);
         }
     }
+
     @Override
     public boolean canCollideWith(Entity pEntity) {
         return canVehicleCollide(this, pEntity);
@@ -100,10 +104,12 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public static boolean canVehicleCollide(Entity pVehicle, Entity pEntity) {
         return (pEntity.canBeCollidedWith() || pEntity.isPushable()) && !pVehicle.isPassengerOfSameVehicle(pEntity);
     }
+
     @Override
     public boolean canBeCollidedWith() {
         return true;
     }
+
     @Override
     public boolean isPushable() {
         return false;
@@ -209,7 +215,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
         if (this.isInWater()) {
             fluidFloat = -0.025 + 0.05 * getSubmergedHeight(this);
-            float f = 0.85f + 0.09f * Mth.abs(90 - (float)calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
+            float f = 0.85f + 0.09f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
             this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.04 * this.getDeltaMovement().length())));
             this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.85, f));
         } else if (this.onGround()) {
@@ -218,12 +224,11 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.99, 0.85, 0.99));
         }
 
-        float f = 0.85f + 0.09f * Mth.abs(90 - (float)calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
+        float f = 0.85f + 0.09f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
         this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.04 * this.getDeltaMovement().length())));
         this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.85, f));
 
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, fluidFloat, 0.0));
-
 
         if (this.level() instanceof ServerLevel) {
             this.entityData.set(ROT_Y, this.getYRot());
@@ -247,7 +252,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             float diffY = 0;
 
             diffY = (float) Mth.lerp(0.1 * diffY, diffY, 0);
-
 
             if (this.inputUp) {
                 this.entityData.set(POWER, this.entityData.get(POWER) + 0.05f);
@@ -279,7 +283,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             this.entityData.set(POWER, this.entityData.get(POWER) * 0.3f);
 
             this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.8f);
-
 
             if (this.isInWater() || this.isUnderWater()) {
                 this.setYRot(this.entityData.get(ROT_Y) + this.entityData.get(DELTA_ROT));
@@ -335,7 +338,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         double startLength = move.length();
         double endLength = view.length();
         if (startLength > 0.0D && endLength > 0.0D) {
-            return Math.toDegrees(Math.acos(move.dot(view) / (startLength * endLength)));
+            return Math.toDegrees(Math.acos(Mth.clamp(move.dot(view) / (startLength * endLength), -1, 1)));
         } else {
             return 0.0D;
         }
@@ -348,17 +351,16 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         }
 
         if (this.lerpSteps > 0) {
-            double d0 = this.getX() + (this.lerpX - this.getX()) / (double)this.lerpSteps;
-            double d1 = this.getY() + (this.lerpY - this.getY()) / (double)this.lerpSteps;
-            double d2 = this.getZ() + (this.lerpZ - this.getZ()) / (double)this.lerpSteps;
-            double d3 = Mth.wrapDegrees(this.lerpYRot - (double)this.getYRot());
-            this.setYRot(this.getYRot() + (float)d3 / (float)this.lerpSteps);
-            this.setXRot(this.getXRot() + (float)(this.lerpXRot - (double)this.getXRot()) / (float)this.lerpSteps);
+            double d0 = this.getX() + (this.lerpX - this.getX()) / (double) this.lerpSteps;
+            double d1 = this.getY() + (this.lerpY - this.getY()) / (double) this.lerpSteps;
+            double d2 = this.getZ() + (this.lerpZ - this.getZ()) / (double) this.lerpSteps;
+            double d3 = Mth.wrapDegrees(this.lerpYRot - (double) this.getYRot());
+            this.setYRot(this.getYRot() + (float) d3 / (float) this.lerpSteps);
+            this.setXRot(this.getXRot() + (float) (this.lerpXRot - (double) this.getXRot()) / (float) this.lerpSteps);
             --this.lerpSteps;
             this.setPos(d0, d1, d2);
             this.setRot(this.getYRot(), this.getXRot());
         }
-
     }
 
     @Override
