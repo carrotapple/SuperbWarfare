@@ -13,6 +13,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -28,6 +29,7 @@ import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
@@ -40,9 +42,21 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity, IVehicleEntity{
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> ROT_Y = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = CannonConfig.MK42_HP.get();
-
+    private boolean inputLeft;
+    private boolean inputRight;
+    private boolean inputUp;
+    private boolean inputDown;
+    private int lerpSteps;
+    private double lerpX;
+    private double lerpY;
+    private double lerpZ;
+    private double lerpYRot;
+    private double lerpXRot;
 
     public SpeedboatEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.SPEEDBOAT.get(), world);
@@ -56,6 +70,9 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     protected void defineSynchedData() {
         this.entityData.define(HEALTH, MAX_HEALTH);
         this.entityData.define(ENERGY, 0f);
+        this.entityData.define(ROT_Y, 0f);
+        this.entityData.define(DELTA_ROT, 0f);
+        this.entityData.define(POWER, 0f);
     }
 
     @Override
@@ -73,15 +90,23 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             this.entityData.set(HEALTH, MAX_HEALTH);
         }
     }
+    @Override
+    public boolean canCollideWith(Entity pEntity) {
+        return canVehicleCollide(this, pEntity);
+    }
 
+    //TODO 创飞碰到的碰撞箱小于该船的实体，且本体速度不会减少太多
+
+    public static boolean canVehicleCollide(Entity pVehicle, Entity pEntity) {
+        return (pEntity.canBeCollidedWith() || pEntity.isPushable()) && !pVehicle.isPassengerOfSameVehicle(pEntity);
+    }
     @Override
     public boolean canBeCollidedWith() {
         return true;
     }
-
     @Override
-    public boolean canCollideWith(Entity pEntity) {
-        return (pEntity.canBeCollidedWith() || pEntity.isPushable()) && !this.isPassengerOfSameVehicle(pEntity);
+    public boolean isPushable() {
+        return false;
     }
 
     @Override
@@ -157,11 +182,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         }
     }
 
-//    @Override
-//    public Vec3 getDeltaMovement() {
-//        return new Vec3(0, Math.min(super.getDeltaMovement().y, 0), 0);
-//    }
-
     public double getSubmergedHeight(Entity entity) {
         for (FluidType fluidType : ForgeRegistries.FLUID_TYPES.get().getValues()) {
             if (entity.level().getFluidState(entity.blockPosition()).getFluidType() == fluidType)
@@ -174,13 +194,18 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public void baseTick() {
         super.baseTick();
 
-
 //        if (this.getFirstPassenger() instanceof Player player) {
-//            player.displayClientMessage(Component.literal("SubmergedHeight" + new java.text.DecimalFormat("##.##").format(getSubmergedHeight(this))), true);
+//            player.displayClientMessage(Component.literal("Angle" + new java.text.DecimalFormat("##.##").format(Mth.abs(90 - (float)calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90)), true);
 //        }
 
-        this.move(MoverType.SELF, this.getDeltaMovement());
+        this.inputLeft = this.getPersistentData().getBoolean("left");
+        this.inputRight = this.getPersistentData().getBoolean("right");
+        this.inputUp = this.getPersistentData().getBoolean("forward");
+        this.inputDown = this.getPersistentData().getBoolean("backward");
+
         double fluidFloat;
+
+        this.move(MoverType.SELF, this.getDeltaMovement());
 
         if (this.isInWater()) {
             fluidFloat = -0.025 + 0.05 * getSubmergedHeight(this);
@@ -188,14 +213,155 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             fluidFloat = -0.04;
         }
 
+        float f = 0.85f + 0.09f * Mth.abs(90 - (float)calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
+
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, fluidFloat, 0.0));
-        this.setDeltaMovement(this.getDeltaMovement().multiply(1, 0.85, 1));
-        
+        this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.04 * this.getDeltaMovement().length())));
+        this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.85, f));
+
+        if (this.level() instanceof ServerLevel) {
+            this.entityData.set(ROT_Y, this.getYRot());
+        }
+
+        handleClientSync();
+        this.tickLerp();
+        this.controlBoat();
+
         if (this.entityData.get(HEALTH) <= 0) {
             this.ejectPassengers();
             destroy();
         }
         this.refreshDimensions();
+    }
+
+    private void controlBoat() {
+        if (this.isVehicle()) {
+            Entity passenger0 = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+
+            float diffY = 0;
+
+            diffY = (float) Mth.lerp(0.1 * diffY, diffY, 0);
+
+
+            if (this.inputUp) {
+                this.entityData.set(POWER, this.entityData.get(POWER) + 0.05f);
+            }
+
+            if (this.inputDown) {
+                this.entityData.set(POWER, this.entityData.get(POWER) - 0.05f);
+                if (this.inputLeft) {
+                    diffY = Mth.clamp(diffY + 1f, 0, 5);
+                    handleSetDiffY(diffY);
+                } else if (this.inputRight) {
+                    diffY = Mth.clamp(diffY - 1f, -5, 0);
+                    handleSetDiffY(diffY);
+                }
+            } else {
+                if (this.inputLeft) {
+                    diffY = Mth.clamp(diffY - 1f, -5, 0);
+                    handleSetDiffY(diffY);
+                } else if (this.inputRight) {
+                    diffY = Mth.clamp(diffY + 1f, 0, 5);
+                    handleSetDiffY(diffY);
+                }
+            }
+
+            if (level().isClientSide) {
+                level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.inputUp || this.inputDown ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 0.7f), false);
+            }
+
+            this.entityData.set(POWER, this.entityData.get(POWER) * 0.3f);
+
+            this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.8f);
+
+
+            this.setYRot(this.entityData.get(ROT_Y) + this.entityData.get(DELTA_ROT));
+
+            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.entityData.get(ROT_Y) * 0.017453292F) * this.entityData.get(POWER), 0.0, Mth.cos(this.entityData.get(ROT_Y) * 0.017453292F) * this.entityData.get(POWER)));
+
+//            if (this.getFirstPassenger() instanceof Player player) {
+//                player.displayClientMessage(Component.literal("Angle" + new java.text.DecimalFormat("##.##").format(this.entityData.get(DELTA_ROT))), false);
+//            }
+
+        }
+    }
+
+    private void handleSetDiffY(float diffY) {
+        this.entityData.set(DELTA_ROT, (float) (diffY * 1.3 * Math.max(3 * this.getDeltaMovement().length(), 0.3)));
+    }
+
+    private void handleClientSync() {
+        if (isControlledByLocalInstance()) {
+            lerpSteps = 0;
+            syncPacketPositionCodec(getX(), getY(), getZ());
+        }
+        if (lerpSteps <= 0) {
+            return;
+        }
+        double interpolatedX = getX() + (lerpX - getX()) / (double) lerpSteps;
+        double interpolatedY = getY() + (lerpY - getY()) / (double) lerpSteps;
+        double interpolatedZ = getZ() + (lerpZ - getZ()) / (double) lerpSteps;
+        double interpolatedYaw = Mth.wrapDegrees(lerpYRot - (double) getYRot());
+        setYRot(getYRot() + (float) interpolatedYaw / (float) lerpSteps);
+        setXRot(getXRot() + (float) (lerpXRot - (double) getXRot()) / (float) lerpSteps);
+
+        setPos(interpolatedX, interpolatedY, interpolatedZ);
+        setRot(getYRot(), getXRot());
+
+        --lerpSteps;
+    }
+
+    protected SoundEvent getEngineSound() {
+        return ModSounds.BOAT_ENGINE.get();
+    }
+
+    @Override
+    protected void positionRider(Entity pPassenger, MoveFunction pCallback) {
+        super.positionRider(pPassenger, pCallback);
+        if (this.hasPassenger(pPassenger)) {
+            pPassenger.setYRot(pPassenger.getYRot() + 1.27f * this.entityData.get(DELTA_ROT));
+            pPassenger.setYHeadRot(pPassenger.getYHeadRot() + 1.27f * this.entityData.get(DELTA_ROT));
+        }
+    }
+
+    public static double calculateAngle(Vec3 move, Vec3 view) {
+        double startLength = move.length();
+        double endLength = view.length();
+        if (startLength > 0.0D && endLength > 0.0D) {
+            return Math.toDegrees(Math.acos(move.dot(view) / (startLength * endLength)));
+        } else {
+            return 0.0D;
+        }
+    }
+
+    private void tickLerp() {
+        if (this.isControlledByLocalInstance()) {
+            this.lerpSteps = 0;
+            this.syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
+        }
+
+        if (this.lerpSteps > 0) {
+            double d0 = this.getX() + (this.lerpX - this.getX()) / (double)this.lerpSteps;
+            double d1 = this.getY() + (this.lerpY - this.getY()) / (double)this.lerpSteps;
+            double d2 = this.getZ() + (this.lerpZ - this.getZ()) / (double)this.lerpSteps;
+            double d3 = Mth.wrapDegrees(this.lerpYRot - (double)this.getYRot());
+            this.setYRot(this.getYRot() + (float)d3 / (float)this.lerpSteps);
+            this.setXRot(this.getXRot() + (float)(this.lerpXRot - (double)this.getXRot()) / (float)this.lerpSteps);
+            --this.lerpSteps;
+            this.setPos(d0, d1, d2);
+            this.setRot(this.getYRot(), this.getXRot());
+        }
+
+    }
+
+    @Override
+    public void lerpTo(double pX, double pY, double pZ, float pYaw, float pPitch, int pPosRotationIncrements, boolean pTeleport) {
+        this.lerpX = pX;
+        this.lerpY = pY;
+        this.lerpZ = pZ;
+        this.lerpYRot = pYaw;
+        this.lerpXRot = pPitch;
+        this.lerpSteps = 10;
     }
 
     private void destroy() {

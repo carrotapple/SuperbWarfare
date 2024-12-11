@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.compat.CompatHolder;
 import com.atsuishio.superbwarfare.compat.clothconfig.ClothConfigHelper;
 import com.atsuishio.superbwarfare.config.client.ReloadConfig;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
+import com.atsuishio.superbwarfare.entity.IVehicleEntity;
 import com.atsuishio.superbwarfare.entity.MortarEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.*;
@@ -355,6 +356,7 @@ public class ClickHandler {
         if (player == null) return;
 
         handleDroneMove(key, state, player);
+        handleVehicleMove(key, state, player);
     }
 
     private static void handleDroneMove(int key, int state, Player player) {
@@ -377,6 +379,23 @@ public class ClickHandler {
             ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(4, state == 1));
         } else if (key == options.keyShift.getKey().getValue()) {
             ModUtils.PACKET_HANDLER.sendToServer(new DroneMovementMessage(5, state == 1));
+        }
+    }
+
+    private static void handleVehicleMove(int key, int state, Player player) {
+        if (player.getVehicle() != null && player.getVehicle() instanceof IVehicleEntity && player.getVehicle().getFirstPassenger() == player) {
+
+            var options = Minecraft.getInstance().options;
+
+            if (key == options.keyLeft.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(0, state == 1));
+            } else if (key == options.keyRight.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(1, state == 1));
+            } else if (key == options.keyUp.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(2, state == 1));
+            } else if (key == options.keyDown.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(3, state == 1));
+            }
         }
     }
 

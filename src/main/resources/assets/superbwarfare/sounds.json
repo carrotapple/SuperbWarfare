@@ -2429,5 +2429,13 @@
         "stream": false
       }
     ]
+  },
+  "boat_engine": {
+    "sounds": [
+      {
+        "name": "superbwarfare:speedboat/engine",
+        "stream": false
+      }
+    ]
   }
 }
