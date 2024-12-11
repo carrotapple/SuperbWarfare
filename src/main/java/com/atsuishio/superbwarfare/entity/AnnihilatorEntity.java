@@ -456,7 +456,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
             barrelLookAt = new Vec3(lookingAt.getX() - barrelRootPos.x, lookingAt.getEyeY() - barrelRootPos.y, lookingAt.getZ() - barrelRootPos.z);
         }
 
-        this.entityData.set(OFFSET_ANGLE, (float)calculateAngle(entity.getViewVector(1),barrelLookAt));
+        this.entityData.set(OFFSET_ANGLE, (float) calculateAngle(entity.getViewVector(1), barrelLookAt));
 
         float passengerY = entity.getYHeadRot();
 
@@ -485,7 +485,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         double startLength = passenger.length();
         double endLength = barrel.length();
         if (startLength > 0.0D && endLength > 0.0D) {
-            return Math.toDegrees(Math.acos(passenger.dot(barrel) / (startLength * endLength)));
+            return Math.toDegrees(Math.acos(Mth.clamp(passenger.dot(barrel) / (startLength * endLength), -1, 1)));
         } else {
             return 0.0D;
         }

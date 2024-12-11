@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.tools;
 
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -50,7 +51,7 @@ public class SeekTool {
         double startLength = start.length();
         double endLength = end.length();
         if (startLength > 0.0D && endLength > 0.0D) {
-            return Math.toDegrees(Math.acos(start.dot(end) / (startLength * endLength)));
+            return Math.toDegrees(Math.acos(Mth.clamp(start.dot(end) / (startLength * endLength), -1, 1)));
         } else {
             return 0.0D;
         }
