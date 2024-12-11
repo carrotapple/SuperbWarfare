@@ -74,7 +74,7 @@ public abstract class CameraMixin {
             return;
         }
         if (thirdPerson && entity.getVehicle() instanceof SpeedboatEntity) {
-            move(-getMaxZoom(6), 1.3, 0.0);
+            move(-getMaxZoom(3), 1, 0.0);
             return;
         }
         if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && entity instanceof Player player && player.getMainHandItem().is(ModTags.Items.GUN)) {

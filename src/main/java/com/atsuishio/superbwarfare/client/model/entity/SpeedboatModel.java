@@ -45,6 +45,6 @@ public class SpeedboatModel extends GeoModel<SpeedboatEntity> {
 
         lerpRotY = Mth.lerp(0.5f * times, lerpRotY, animatable.getEntityData().get(DELTA_ROT));
 
-        duo.setRotY(0.5f * lerpRotY);
+        duo.setRotY((animatable.getEntityData().get(POWER) > 0 ? 0.5f : -0.5f) * lerpRotY);
     }
 }

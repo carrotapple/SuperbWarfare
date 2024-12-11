@@ -151,7 +151,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         if (ExplosionDestroyConfig.EXPLOSION_DESTROY.get() && hardness != -1 && hardness <= 50) {
             BlockPos _pos = BlockPos.containing(x, y, z);
             Block.dropResources(this.level().getBlockState(_pos), this.level(), BlockPos.containing(x, y, z), null);
-            this.level().destroyBlock(_pos, false);
+            this.level().destroyBlock(_pos, true);
         }
 
         Vec3 vec = this.getDeltaMovement();

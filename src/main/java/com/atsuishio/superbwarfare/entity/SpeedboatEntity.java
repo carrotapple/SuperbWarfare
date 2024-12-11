@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -29,6 +30,10 @@ import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.NetworkHooks;
@@ -96,7 +101,11 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     @Override
     public boolean canCollideWith(Entity pEntity) {
-        return canVehicleCollide(this, pEntity);
+        if (this.getDeltaMovement().length() > 0.2) {
+            return false;
+        } else {
+            return canVehicleCollide(this, pEntity);
+        }
     }
 
     //TODO 创飞碰到的碰撞箱小于该船的实体，且本体速度不会减少太多
@@ -107,12 +116,12 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     @Override
     public boolean canBeCollidedWith() {
-        return true;
+        return false;
     }
 
     @Override
     public boolean isPushable() {
-        return false;
+        return true;
     }
 
     @Override
@@ -242,7 +251,42 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             this.ejectPassengers();
             destroy();
         }
+
+        if (this.isVehicle() && this.getDeltaMovement().length() > 0.05) {
+            crushEntities(this.getDeltaMovement());
+        }
+
+        collBlock();
+
         this.refreshDimensions();
+    }
+
+    public void crushEntities(Vec3 velocity) {
+        var frontBox = getBoundingBox().move(velocity.scale(0.5));
+        var velAdd = velocity.add(0, 0, 0).scale(1.5);
+        for (var entity : level().getEntities(EntityTypeTest.forClass(Entity.class), frontBox, entity -> entity != this && entity != getFirstPassenger() && entity.getVehicle() == null)) {
+
+            double entitySize = entity.getBbWidth() * entity.getBbHeight();
+            double thisSize = this.getBbWidth() * this.getBbHeight();
+            double f =  Math.min(entitySize / thisSize, 2);
+            double f1 =  thisSize / entitySize;
+
+            entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
+            this.push(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
+
+        }
+    }
+
+    public void collBlock() {
+        AABB aabb = AABB.ofSize(new Vec3(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ()), 5, 2.6, 5);
+        BlockPos.betweenClosedStream(aabb).forEach((block) -> {
+            BlockState blockstate = this.level().getBlockState(block);
+            if (blockstate.is(Blocks.LILY_PAD)) {
+                BlockPos blockPos = BlockPos.containing(new Vec3(block.getX(), block.getY(), block.getY()));
+                this.level().destroyBlock(blockPos, true);
+            }
+
+        });
     }
 
     private void controlBoat() {
@@ -254,11 +298,11 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             diffY = (float) Mth.lerp(0.1 * diffY, diffY, 0);
 
             if (this.inputUp) {
-                this.entityData.set(POWER, this.entityData.get(POWER) + 0.05f);
+                this.entityData.set(POWER, this.entityData.get(POWER) + 0.08f);
             }
 
             if (this.inputDown) {
-                this.entityData.set(POWER, this.entityData.get(POWER) - 0.05f);
+                this.entityData.set(POWER, this.entityData.get(POWER) - 0.12f);
                 if (this.inputLeft) {
                     diffY = Mth.clamp(diffY + 1f, 0, 5);
                     handleSetDiffY(diffY);
@@ -286,18 +330,13 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
             if (this.isInWater() || this.isUnderWater()) {
                 this.setYRot(this.entityData.get(ROT_Y) + this.entityData.get(DELTA_ROT));
-                this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.entityData.get(ROT_Y) * 0.017453292F) * this.entityData.get(POWER), 0.0, Mth.cos(this.entityData.get(ROT_Y) * 0.017453292F) * this.entityData.get(POWER)));
+                this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).scale(this.entityData.get(POWER))));
             }
-
-//            if (this.getFirstPassenger() instanceof Player player) {
-//                player.displayClientMessage(Component.literal("Angle" + new java.text.DecimalFormat("##.##").format(this.entityData.get(DELTA_ROT))), false);
-//            }
-
         }
     }
 
     private void handleSetDiffY(float diffY) {
-        this.entityData.set(DELTA_ROT, (float) (diffY * 1.3 * Math.max(3 * this.getDeltaMovement().length(), 0.3)));
+        this.entityData.set(DELTA_ROT, (float) Mth.clamp(diffY * 1.3 * Math.max(4 * this.getDeltaMovement().length(), 0.5), -2 ,2));
     }
 
     private void handleClientSync() {
