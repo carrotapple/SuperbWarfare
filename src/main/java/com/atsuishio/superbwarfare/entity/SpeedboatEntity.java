@@ -203,21 +203,27 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         this.inputUp = this.getPersistentData().getBoolean("forward");
         this.inputDown = this.getPersistentData().getBoolean("backward");
 
-        double fluidFloat;
+        double fluidFloat = -0.04;
 
         this.move(MoverType.SELF, this.getDeltaMovement());
 
         if (this.isInWater()) {
             fluidFloat = -0.025 + 0.05 * getSubmergedHeight(this);
+            float f = 0.85f + 0.09f * Mth.abs(90 - (float)calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
+            this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.04 * this.getDeltaMovement().length())));
+            this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.85, f));
+        } else if (this.onGround()) {
+            this.setDeltaMovement(this.getDeltaMovement().multiply(0.2, 0.85, 0.2));
         } else {
-            fluidFloat = -0.04;
+            this.setDeltaMovement(this.getDeltaMovement().multiply(0.99, 0.85, 0.99));
         }
 
         float f = 0.85f + 0.09f * Mth.abs(90 - (float)calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
-
-        this.setDeltaMovement(this.getDeltaMovement().add(0.0, fluidFloat, 0.0));
         this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.04 * this.getDeltaMovement().length())));
         this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.85, f));
+
+        this.setDeltaMovement(this.getDeltaMovement().add(0.0, fluidFloat, 0.0));
+
 
         if (this.level() instanceof ServerLevel) {
             this.entityData.set(ROT_Y, this.getYRot());
@@ -275,9 +281,10 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.8f);
 
 
-            this.setYRot(this.entityData.get(ROT_Y) + this.entityData.get(DELTA_ROT));
-
-            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.entityData.get(ROT_Y) * 0.017453292F) * this.entityData.get(POWER), 0.0, Mth.cos(this.entityData.get(ROT_Y) * 0.017453292F) * this.entityData.get(POWER)));
+            if (this.isInWater() || this.isUnderWater()) {
+                this.setYRot(this.entityData.get(ROT_Y) + this.entityData.get(DELTA_ROT));
+                this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.entityData.get(ROT_Y) * 0.017453292F) * this.entityData.get(POWER), 0.0, Mth.cos(this.entityData.get(ROT_Y) * 0.017453292F) * this.entityData.get(POWER)));
+            }
 
 //            if (this.getFirstPassenger() instanceof Player player) {
 //                player.displayClientMessage(Component.literal("Angle" + new java.text.DecimalFormat("##.##").format(this.entityData.get(DELTA_ROT))), false);
@@ -318,7 +325,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     @Override
     protected void positionRider(Entity pPassenger, MoveFunction pCallback) {
         super.positionRider(pPassenger, pCallback);
-        if (this.hasPassenger(pPassenger)) {
+        if (this.hasPassenger(pPassenger) && (this.isInWater() || this.isUnderWater())) {
             pPassenger.setYRot(pPassenger.getYRot() + 1.27f * this.entityData.get(DELTA_ROT));
             pPassenger.setYHeadRot(pPassenger.getYHeadRot() + 1.27f * this.entityData.get(DELTA_ROT));
         }
