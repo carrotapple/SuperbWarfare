@@ -57,10 +57,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public static final float MAX_HEALTH = CannonConfig.MK42_HP.get();
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private boolean inputLeft;
-    private boolean inputRight;
-    private boolean inputUp;
-    private boolean inputDown;
     private int lerpSteps;
     private double lerpX;
     private double lerpY;
@@ -90,16 +86,10 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public void addAdditionalSaveData(CompoundTag compound) {
         compound.putFloat("Health", this.entityData.get(HEALTH));
         compound.putFloat("Energy", this.entityData.get(ENERGY));
-        compound.putFloat("Power", this.entityData.get(POWER));
-        compound.putFloat("DeltaRot", this.entityData.get(DELTA_ROT));
-        compound.putFloat("Rotor", this.entityData.get(ROTOR));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
-        this.entityData.set(ENERGY, compound.getFloat("Energy"));
-        this.entityData.set(POWER, compound.getFloat("Power"));
-        this.entityData.set(DELTA_ROT, compound.getFloat("DeltaRot"));
         this.entityData.set(ROTOR, compound.getFloat("Rotor"));
         if (compound.contains("Health")) {
             this.entityData.set(HEALTH, compound.getFloat("Health"));
@@ -298,9 +288,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         Entity passenger0 = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
 
         float diffY = 0;
-
-        diffY = (float) Mth.lerp(0.1 * diffY, diffY, 0);
-
         if (this.getPersistentData().getBoolean("forward")) {
             this.entityData.set(POWER, this.entityData.get(POWER) + 0.02f);
         }
@@ -325,7 +312,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         }
 
         if (level().isClientSide) {
-            level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.inputUp || this.inputDown ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 1f), false);
+            level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.getPersistentData().getBoolean("forward") || this.getPersistentData().getBoolean("backward") ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 1f), false);
         }
 
         this.entityData.set(POWER, this.entityData.get(POWER) * 0.9f);

@@ -2,9 +2,7 @@ package com.atsuishio.superbwarfare.client.model.entity;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
@@ -12,8 +10,6 @@ import software.bernie.geckolib.model.GeoModel;
 import static com.atsuishio.superbwarfare.entity.SpeedboatEntity.*;
 
 public class SpeedboatModel extends GeoModel<SpeedboatEntity> {
-    public static float lerpRotY = 0f;
-    public float rotorSpeed = 0f;
 
     @Override
     public ResourceLocation getAnimationResource(SpeedboatEntity entity) {
@@ -33,15 +29,11 @@ public class SpeedboatModel extends GeoModel<SpeedboatEntity> {
 
     @Override
     public void setCustomAnimations(SpeedboatEntity animatable, long instanceId, AnimationState<SpeedboatEntity> animationState) {
-        float times = Minecraft.getInstance().getDeltaFrameTime();
 
         CoreGeoBone rotor = getAnimationProcessor().getBone("Rotor");
         CoreGeoBone duo = getAnimationProcessor().getBone("duo");
 
         rotor.setRotZ(5 * animatable.getEntityData().get(ROTOR));
-
-        lerpRotY = Mth.lerp(0.5f * times, lerpRotY, animatable.getEntityData().get(POWER) > 0 ? animatable.getEntityData().get(DELTA_ROT) : -animatable.getEntityData().get(DELTA_ROT));
-
-        duo.setRotY(0.5f * lerpRotY);
+        duo.setRotY((animatable.getEntityData().get(POWER) > 0 ? 0.5f : -0.5f) * animatable.getEntityData().get(DELTA_ROT));
     }
 }
