@@ -2,11 +2,16 @@
 	"format_version": "1.8.0",
 	"animations": {
 		"animation.speedboat.idle": {
-			"loop": true
+			"loop": true,
+			"animation_length": 1,
+			"blend_weight": "10",
+			"start_delay": "10"
 		},
 		"animation.speedboat.forward": {
 			"loop": true,
 			"animation_length": 0.5,
+			"blend_weight": "10",
+			"start_delay": "10",
 			"bones": {
 				"Rotor": {
 					"rotation": {
@@ -19,6 +24,8 @@
 		"animation.speedboat.backward": {
 			"loop": true,
 			"animation_length": 0.5,
+			"blend_weight": "10",
+			"start_delay": "10",
 			"bones": {
 				"Rotor": {
 					"rotation": {

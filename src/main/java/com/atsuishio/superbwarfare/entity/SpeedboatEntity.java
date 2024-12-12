@@ -52,6 +52,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public static final EntityDataAccessor<Float> ROT_Y = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> ROTOR = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
 
     public static final float MAX_HEALTH = CannonConfig.MK42_HP.get();
 
@@ -82,6 +83,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         this.entityData.define(ROT_Y, 0f);
         this.entityData.define(DELTA_ROT, 0f);
         this.entityData.define(POWER, 0f);
+        this.entityData.define(ROTOR, 0f);
     }
 
     @Override
@@ -90,6 +92,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         compound.putFloat("Energy", this.entityData.get(ENERGY));
         compound.putFloat("Power", this.entityData.get(POWER));
         compound.putFloat("DeltaRot", this.entityData.get(DELTA_ROT));
+        compound.putFloat("Rotor", this.entityData.get(ROTOR));
     }
 
     @Override
@@ -97,6 +100,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         this.entityData.set(ENERGY, compound.getFloat("Energy"));
         this.entityData.set(POWER, compound.getFloat("Power"));
         this.entityData.set(DELTA_ROT, compound.getFloat("DeltaRot"));
+        this.entityData.set(ROTOR, compound.getFloat("Rotor"));
         if (compound.contains("Health")) {
             this.entityData.set(HEALTH, compound.getFloat("Health"));
         } else {
@@ -217,7 +221,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
         if (this.isInWater()) {
             fluidFloat = -0.025 + 0.05 * getSubmergedHeight(this);
-            float f = 0.87f + 0.09f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
+            float f = 0.7f + 0.09f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
             this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.04 * this.getDeltaMovement().length())));
             this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.85, f));
         } else if (this.onGround()) {
@@ -298,11 +302,11 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         diffY = (float) Mth.lerp(0.1 * diffY, diffY, 0);
 
         if (this.getPersistentData().getBoolean("forward")) {
-            this.entityData.set(POWER, this.entityData.get(POWER) + 0.08f);
+            this.entityData.set(POWER, this.entityData.get(POWER) + 0.02f);
         }
 
         if (this.getPersistentData().getBoolean("backward")) {
-            this.entityData.set(POWER, this.entityData.get(POWER) - 0.12f);
+            this.entityData.set(POWER, this.entityData.get(POWER) - 0.02f);
             if (this.getPersistentData().getBoolean("left")) {
                 diffY = Mth.clamp(diffY + 1f, 0, 5);
                 handleSetDiffY(diffY);
@@ -324,10 +328,8 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.inputUp || this.inputDown ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 1f), false);
         }
 
-        this.entityData.set(POWER, this.entityData.get(POWER) * 0.3f);
-
-        this.flyDist = this.entityData.get(POWER);
-
+        this.entityData.set(POWER, this.entityData.get(POWER) * 0.9f);
+        this.entityData.set(ROTOR, this.entityData.get(ROTOR) + this.entityData.get(POWER));
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.8f);
 
         if (this.isInWater() || this.isUnderWater()) {
