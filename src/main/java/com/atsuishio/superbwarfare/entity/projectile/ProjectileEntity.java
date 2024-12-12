@@ -583,7 +583,6 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     public void shoot(Player player, double vecX, double vecY, double vecZ, float velocity, float spread) {
         Vec3 vec3 = (new Vec3(vecX, vecY, vecZ)).normalize().
                 add(this.random.triangle(0.0D, 0.0172275D * (double) spread), this.random.triangle(0.0D, 0.0172275D * (double) spread), this.random.triangle(0.0D, 0.0172275D * (double) spread)).
-                add(player.getDeltaMovement().x, player.onGround() ? 0.0 : 0.05 * player.getDeltaMovement().y, player.getDeltaMovement().z).
                 scale(velocity);
         this.setDeltaMovement(vec3);
         double d0 = vec3.horizontalDistance();

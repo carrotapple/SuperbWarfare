@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.entity;
 
 import com.atsuishio.superbwarfare.config.server.CannonConfig;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
@@ -27,6 +28,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
@@ -53,6 +55,8 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ROTOR = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> GUN_YAW = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> GUN_PITCH = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
 
     public static final float MAX_HEALTH = CannonConfig.MK42_HP.get();
 
@@ -80,6 +84,8 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         this.entityData.define(DELTA_ROT, 0f);
         this.entityData.define(POWER, 0f);
         this.entityData.define(ROTOR, 0f);
+        this.entityData.define(GUN_YAW, 0f);
+        this.entityData.define(GUN_PITCH, 0f);
     }
 
     @Override
@@ -205,26 +211,20 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     @Override
     public void baseTick() {
         super.baseTick();
-        double fluidFloat = -0.04;
+
+        double fluidFloat;
+        fluidFloat = -0.05 + 0.1 * getSubmergedHeight(this);
+        this.setDeltaMovement(this.getDeltaMovement().add(0.0, fluidFloat, 0.0));
 
         this.move(MoverType.SELF, this.getDeltaMovement());
 
-        if (this.isInWater()) {
-            fluidFloat = -0.025 + 0.05 * getSubmergedHeight(this);
-            float f = 0.7f + 0.09f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
+        if (this.onGround()) {
+            this.setDeltaMovement(this.getDeltaMovement().multiply(0.2, 0.85, 0.2));
+        } else if (this.isInWater()) {
+            float f = 0.73f + 0.09f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
             this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.04 * this.getDeltaMovement().length())));
             this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.85, f));
-        } else if (this.onGround()) {
-            this.setDeltaMovement(this.getDeltaMovement().multiply(0.2, 0.85, 0.2));
-        } else {
-            this.setDeltaMovement(this.getDeltaMovement().multiply(0.99, 0.85, 0.99));
         }
-
-        float f = 0.85f + 0.09f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
-        this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.04 * this.getDeltaMovement().length())));
-        this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.85, f));
-
-        this.setDeltaMovement(this.getDeltaMovement().add(0.0, fluidFloat, 0.0));
 
         if (this.level() instanceof ServerLevel) {
             this.entityData.set(ROT_Y, this.getYRot());
@@ -244,6 +244,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         }
 
         collideBlock();
+        gunnerAngle();
 
         this.refreshDimensions();
     }
@@ -258,18 +259,16 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             double f = Math.min(entitySize / thisSize, 2);
             double f1 = Math.min(thisSize / entitySize, 4);
 
-            entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
             if (!(entity instanceof TargetEntity)) {
                 this.push(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
             }
 
-            if (velocity.length() > 0.2 && entity.isAlive()) {
+            if (velocity.length() > 0.2 && entity.isAlive() && !(entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ProjectileEntity)) {
                 if (!this.level().isClientSide) {
                     this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
                 }
-                if (!(entity instanceof ItemEntity)) {
-                    entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger() ), (float) (25 * velocity.length()));
-                }
+                entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
+                entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger() ), (float) (25 * velocity.length()));
             }
         }
     }
@@ -294,19 +293,19 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
         if (this.getPersistentData().getBoolean("backward")) {
             this.entityData.set(POWER, this.entityData.get(POWER) - 0.02f);
-            if (this.getPersistentData().getBoolean("left")) {
-                diffY = Mth.clamp(diffY + 1f, 0, 5);
+            if (this.getPersistentData().getBoolean("right")) {
+                diffY = Mth.clamp(diffY + 1f, 0, 10);
                 handleSetDiffY(diffY);
-            } else if (this.getPersistentData().getBoolean("right")) {
-                diffY = Mth.clamp(diffY - 1f, -5, 0);
+            } else if (this.getPersistentData().getBoolean("left")) {
+                diffY = Mth.clamp(diffY - 1f, -10, 0);
                 handleSetDiffY(diffY);
             }
         } else {
-            if (this.getPersistentData().getBoolean("left")) {
-                diffY = Mth.clamp(diffY - 1f, -5, 0);
+            if (this.getPersistentData().getBoolean("right")) {
+                diffY = Mth.clamp(diffY - 1f, -10, 0);
                 handleSetDiffY(diffY);
-            } else if (this.getPersistentData().getBoolean("right")) {
-                diffY = Mth.clamp(diffY + 1f, 0, 5);
+            } else if (this.getPersistentData().getBoolean("left")) {
+                diffY = Mth.clamp(diffY + 1f, 0, 10);
                 handleSetDiffY(diffY);
             }
         }
@@ -319,14 +318,29 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         this.entityData.set(ROTOR, this.entityData.get(ROTOR) + this.entityData.get(POWER));
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.8f);
 
+        double movementZ = Math.cos(calculateAngle(new Vec3(this.getDeltaMovement().x, 0, this.getDeltaMovement().z), new Vec3(this.getLookAngle().x, 0,this.getLookAngle().z))) * this.getDeltaMovement().horizontalDistance();
+
+        this.setXRot((float) Mth.lerp(0.1, this.getXRot(),-4f * movementZ));
+
         if (this.isInWater() || this.isUnderWater()) {
-            this.setYRot(this.entityData.get(ROT_Y) + this.entityData.get(DELTA_ROT));
+            this.setYRot(this.entityData.get(ROT_Y) - this.entityData.get(DELTA_ROT));
             this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).scale(this.entityData.get(POWER))));
         }
     }
 
+    private void gunnerAngle() {
+        Entity gunner = this.getFirstPassenger();
+        if (gunner != null) {
+
+            float diffX = gunner.getXRot() - this.getXRot();
+
+            this.entityData.set(GUN_YAW, (float) Mth.lerp(0.05, this.entityData.get(GUN_YAW), calculateAngle(new Vec3(gunner.getLookAngle().x, 0,gunner.getLookAngle().z), new Vec3(this.getLookAngle().x, 0,this.getLookAngle().z))));
+            this.entityData.set(GUN_PITCH, (float) Mth.lerp(0.1, this.entityData.get(GUN_PITCH), diffX));
+        }
+    }
+
     private void handleSetDiffY(float diffY) {
-        this.entityData.set(DELTA_ROT, (float) Mth.clamp(diffY * 1.3 * Math.max(4 * this.getDeltaMovement().length(), 0.5), -2 ,2));
+        this.entityData.set(DELTA_ROT, (float) Mth.clamp(diffY * 1.3 * Math.max(8 * this.getDeltaMovement().length(), 0.5), -2 ,2));
     }
 
     private void handleClientSync() {
@@ -358,8 +372,8 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     protected void positionRider(Entity pPassenger, MoveFunction pCallback) {
         super.positionRider(pPassenger, pCallback);
         if (this.hasPassenger(pPassenger) && (this.isInWater() || this.isUnderWater())) {
-            pPassenger.setYRot(pPassenger.getYRot() + 1.27f * this.entityData.get(DELTA_ROT));
-            pPassenger.setYHeadRot(pPassenger.getYHeadRot() + 1.27f * this.entityData.get(DELTA_ROT));
+            pPassenger.setYRot(pPassenger.getYRot() - 1.27f * this.entityData.get(DELTA_ROT));
+            pPassenger.setYHeadRot(pPassenger.getYHeadRot() - 1.27f * this.entityData.get(DELTA_ROT));
         }
     }
 
