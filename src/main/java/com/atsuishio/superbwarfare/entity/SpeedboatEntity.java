@@ -25,6 +25,7 @@ import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
@@ -257,7 +258,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             crushEntities(this.getDeltaMovement());
         }
 
-        collBlock();
+        collideBlock();
 
         this.refreshDimensions();
     }
@@ -269,8 +270,8 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
             double entitySize = entity.getBbWidth() * entity.getBbHeight();
             double thisSize = this.getBbWidth() * this.getBbHeight();
-            double f =  Math.min(entitySize / thisSize, 2);
-            double f1 =  Math.min(thisSize / entitySize, 4);
+            double f = Math.min(entitySize / thisSize, 2);
+            double f1 = Math.min(thisSize / entitySize, 4);
 
             entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
             if (!(entity instanceof TargetEntity)) {
@@ -281,23 +282,20 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
                 if (!this.level().isClientSide) {
                     this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
                 }
-                entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger() ), (float) (25 * velocity.length()));
-                entity.invulnerableTime = 10;
+                if (!(entity instanceof ItemEntity)) {
+                    entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger() ), (float) (25 * velocity.length()));
+                }
             }
-
-
         }
     }
 
-    public void collBlock() {
-        AABB aabb = AABB.ofSize(new Vec3(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ()), 5, 2.6, 5);
-        BlockPos.betweenClosedStream(aabb).forEach((block) -> {
-            BlockState blockstate = this.level().getBlockState(block);
+    public void collideBlock() {
+        AABB aabb = AABB.ofSize(new Vec3(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ()), 3.6, 2.6, 3.6);
+        BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
+            BlockState blockstate = this.level().getBlockState(pos);
             if (blockstate.is(Blocks.LILY_PAD)) {
-                BlockPos blockPos = BlockPos.containing(new Vec3(block.getX(), block.getY(), block.getY()));
-                this.level().destroyBlock(blockPos, true);
+                this.level().destroyBlock(pos, true);
             }
-
         });
     }
 
