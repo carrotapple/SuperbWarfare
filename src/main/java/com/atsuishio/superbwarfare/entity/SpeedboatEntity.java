@@ -109,14 +109,13 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     }
 
     //TODO 创飞碰到的碰撞箱小于该船的实体，且本体速度不会减少太多
-
     public static boolean canVehicleCollide(Entity pVehicle, Entity pEntity) {
         return (pEntity.canBeCollidedWith() || pEntity.isPushable()) && !pVehicle.isPassengerOfSameVehicle(pEntity);
     }
 
     @Override
     public boolean canBeCollidedWith() {
-        return false;
+        return super.canBeCollidedWith();
     }
 
     @Override
@@ -256,7 +255,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             crushEntities(this.getDeltaMovement());
         }
 
-        collBlock();
+        collideBlock();
 
         this.refreshDimensions();
     }
@@ -268,8 +267,8 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
             double entitySize = entity.getBbWidth() * entity.getBbHeight();
             double thisSize = this.getBbWidth() * this.getBbHeight();
-            double f =  Math.min(entitySize / thisSize, 2);
-            double f1 =  thisSize / entitySize;
+            double f = Math.min(entitySize / thisSize, 2);
+            double f1 = thisSize / entitySize;
 
             entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
             this.push(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
@@ -277,15 +276,13 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         }
     }
 
-    public void collBlock() {
+    public void collideBlock() {
         AABB aabb = AABB.ofSize(new Vec3(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ()), 5, 2.6, 5);
-        BlockPos.betweenClosedStream(aabb).forEach((block) -> {
-            BlockState blockstate = this.level().getBlockState(block);
+        BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
+            BlockState blockstate = this.level().getBlockState(pos);
             if (blockstate.is(Blocks.LILY_PAD)) {
-                BlockPos blockPos = BlockPos.containing(new Vec3(block.getX(), block.getY(), block.getY()));
-                this.level().destroyBlock(blockPos, true);
+                this.level().destroyBlock(pos, true);
             }
-
         });
     }
 
@@ -336,7 +333,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     }
 
     private void handleSetDiffY(float diffY) {
-        this.entityData.set(DELTA_ROT, (float) Mth.clamp(diffY * 1.3 * Math.max(4 * this.getDeltaMovement().length(), 0.5), -2 ,2));
+        this.entityData.set(DELTA_ROT, (float) Mth.clamp(diffY * 1.3 * Math.max(4 * this.getDeltaMovement().length(), 0.5), -2, 2));
     }
 
     private void handleClientSync() {
@@ -442,7 +439,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public void onPassengerTurned(Entity entity) {
         this.clampRotation(entity);
     }
-
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
