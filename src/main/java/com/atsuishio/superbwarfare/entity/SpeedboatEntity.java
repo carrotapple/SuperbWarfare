@@ -113,8 +113,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         }
     }
 
-    //TODO 创飞碰到的碰撞箱小于该船的实体，且本体速度不会减少太多
-
     public static boolean canVehicleCollide(Entity pVehicle, Entity pEntity) {
         return (pEntity.canBeCollidedWith() || pEntity.isPushable()) && !pVehicle.isPassengerOfSameVehicle(pEntity);
     }
@@ -213,13 +211,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     @Override
     public void baseTick() {
         super.baseTick();
-
-//        if (this.getFirstPassenger() instanceof Player player) {
-//            player.displayClientMessage(Component.literal("Angle" + new java.text.DecimalFormat("##.##").format(Mth.abs(90 - (float)calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90)), true);
-//        }
-
-
-
         double fluidFloat = -0.04;
 
         this.move(MoverType.SELF, this.getDeltaMovement());
