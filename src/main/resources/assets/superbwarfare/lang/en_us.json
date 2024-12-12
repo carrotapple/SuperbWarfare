@@ -335,6 +335,9 @@
   "death.attack.laser_headshot": "%1$s的脑子被激光洞穿了",
   "death.attack.laser_headshot.entity": "%1$s被%2$s用激光射穿了脑袋",
   "death.attack.laser_headshot.item": "%1$s的脑子被%2$s用%3$s发射的激光洞穿了",
+  "death.attack.vehicle_strike": "%1$s被创死了",
+  "death.attack.vehicle_strike.entity": "%1$s被%2$s创死了",
+  "death.attack.vehicle_strike.item": "%1$s的被%2$s用%3$s创死了",
 
   "entity.superbwarfare.projectile": "Bullet",
   "entity.superbwarfare.projectile_mortar_shell": "Mortar Shell",

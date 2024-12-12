@@ -2437,5 +2437,13 @@
         "stream": false
       }
     ]
+  },
+  "vehicle_strike": {
+    "sounds": [
+      {
+        "name": "superbwarfare:vehicle_strike",
+        "stream": false
+      }
+    ]
   }
 }

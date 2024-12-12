@@ -15,8 +15,6 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class SpeedboatRenderer extends GeoEntityRenderer<SpeedboatEntity> {
 
-    public static float lerpRotY = 0f;
-
     public SpeedboatRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new SpeedboatModel());
     }

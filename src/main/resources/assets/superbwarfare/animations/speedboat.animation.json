@@ -1,0 +1,32 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.speedboat.idle": {
+			"loop": true
+		},
+		"animation.speedboat.forward": {
+			"loop": true,
+			"animation_length": 0.5,
+			"bones": {
+				"Rotor": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.5": [0, 0, 720]
+					}
+				}
+			}
+		},
+		"animation.speedboat.backward": {
+			"loop": true,
+			"animation_length": 0.5,
+			"bones": {
+				"Rotor": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.5": [0, 0, -720]
+					}
+				}
+			}
+		}
+	}
+}

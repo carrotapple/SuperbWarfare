@@ -344,5 +344,6 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> ANNIHILATOR_RELOAD = REGISTRY.register("annihilator_reload", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "annihilator_reload")));
 
     public static final RegistryObject<SoundEvent> BOAT_ENGINE = REGISTRY.register("boat_engine", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "boat_engine")));
+    public static final RegistryObject<SoundEvent> VEHICLE_STRIKE = REGISTRY.register("vehicle_strike", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "vehicle_strike")));
 }
 

@@ -24,7 +24,7 @@ public class SpeedboatModel extends GeoModel<SpeedboatEntity> {
 
     @Override
     public ResourceLocation getModelResource(SpeedboatEntity entity) {
-        return ModUtils.loc("geo/speedboat.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/speedboat.geo.json");
     }
 
     @Override
@@ -42,9 +42,8 @@ public class SpeedboatModel extends GeoModel<SpeedboatEntity> {
         rotorSpeed = Mth.lerp(0.1f * times, rotorSpeed, 10 * animatable.getEntityData().get(POWER));
         rotor.setRotZ(rotor.getRotZ() + rotorSpeed);
 
+        lerpRotY = Mth.lerp(0.5f * times, lerpRotY, animatable.getEntityData().get(POWER) > 0 ? animatable.getEntityData().get(DELTA_ROT) : -animatable.getEntityData().get(DELTA_ROT));
 
-        lerpRotY = Mth.lerp(0.5f * times, lerpRotY, animatable.getEntityData().get(DELTA_ROT));
-
-        duo.setRotY((animatable.getEntityData().get(POWER) > 0 ? 0.5f : -0.5f) * lerpRotY);
+        duo.setRotY(0.5f * lerpRotY);
     }
 }

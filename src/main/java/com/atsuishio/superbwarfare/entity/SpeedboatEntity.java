@@ -87,11 +87,15 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public void addAdditionalSaveData(CompoundTag compound) {
         compound.putFloat("Health", this.entityData.get(HEALTH));
         compound.putFloat("Energy", this.entityData.get(ENERGY));
+        compound.putFloat("Power", this.entityData.get(POWER));
+        compound.putFloat("DeltaRot", this.entityData.get(DELTA_ROT));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         this.entityData.set(ENERGY, compound.getFloat("Energy"));
+        this.entityData.set(POWER, compound.getFloat("Power"));
+        this.entityData.set(DELTA_ROT, compound.getFloat("DeltaRot"));
         if (compound.contains("Health")) {
             this.entityData.set(HEALTH, compound.getFloat("Health"));
         } else {
@@ -109,13 +113,14 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     }
 
     //TODO 创飞碰到的碰撞箱小于该船的实体，且本体速度不会减少太多
+
     public static boolean canVehicleCollide(Entity pVehicle, Entity pEntity) {
         return (pEntity.canBeCollidedWith() || pEntity.isPushable()) && !pVehicle.isPassengerOfSameVehicle(pEntity);
     }
 
     @Override
     public boolean canBeCollidedWith() {
-        return super.canBeCollidedWith();
+        return false;
     }
 
     @Override
@@ -212,10 +217,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 //            player.displayClientMessage(Component.literal("Angle" + new java.text.DecimalFormat("##.##").format(Mth.abs(90 - (float)calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90)), true);
 //        }
 
-        this.inputLeft = this.getPersistentData().getBoolean("left");
-        this.inputRight = this.getPersistentData().getBoolean("right");
-        this.inputUp = this.getPersistentData().getBoolean("forward");
-        this.inputDown = this.getPersistentData().getBoolean("backward");
+
 
         double fluidFloat = -0.04;
 
@@ -223,7 +225,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
         if (this.isInWater()) {
             fluidFloat = -0.025 + 0.05 * getSubmergedHeight(this);
-            float f = 0.85f + 0.09f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
+            float f = 0.87f + 0.09f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
             this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.04 * this.getDeltaMovement().length())));
             this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.85, f));
         } else if (this.onGround()) {
@@ -255,7 +257,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             crushEntities(this.getDeltaMovement());
         }
 
-        collideBlock();
+        collBlock();
 
         this.refreshDimensions();
     }
@@ -267,73 +269,86 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
             double entitySize = entity.getBbWidth() * entity.getBbHeight();
             double thisSize = this.getBbWidth() * this.getBbHeight();
-            double f = Math.min(entitySize / thisSize, 2);
-            double f1 = thisSize / entitySize;
+            double f =  Math.min(entitySize / thisSize, 2);
+            double f1 =  Math.min(thisSize / entitySize, 4);
 
             entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
-            this.push(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
+            if (!(entity instanceof TargetEntity)) {
+                this.push(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
+            }
+
+            if (velocity.length() > 0.2 && entity.isAlive()) {
+                if (!this.level().isClientSide) {
+                    this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
+                }
+                entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger() ), (float) (25 * velocity.length()));
+                entity.invulnerableTime = 10;
+            }
+
 
         }
     }
 
-    public void collideBlock() {
+    public void collBlock() {
         AABB aabb = AABB.ofSize(new Vec3(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ()), 5, 2.6, 5);
-        BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
-            BlockState blockstate = this.level().getBlockState(pos);
+        BlockPos.betweenClosedStream(aabb).forEach((block) -> {
+            BlockState blockstate = this.level().getBlockState(block);
             if (blockstate.is(Blocks.LILY_PAD)) {
-                this.level().destroyBlock(pos, true);
+                BlockPos blockPos = BlockPos.containing(new Vec3(block.getX(), block.getY(), block.getY()));
+                this.level().destroyBlock(blockPos, true);
             }
+
         });
     }
 
     private void controlBoat() {
-        if (this.isVehicle()) {
-            Entity passenger0 = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+        Entity passenger0 = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
 
-            float diffY = 0;
+        float diffY = 0;
 
-            diffY = (float) Mth.lerp(0.1 * diffY, diffY, 0);
+        diffY = (float) Mth.lerp(0.1 * diffY, diffY, 0);
 
-            if (this.inputUp) {
-                this.entityData.set(POWER, this.entityData.get(POWER) + 0.08f);
+        if (this.getPersistentData().getBoolean("forward")) {
+            this.entityData.set(POWER, this.entityData.get(POWER) + 0.08f);
+        }
+
+        if (this.getPersistentData().getBoolean("backward")) {
+            this.entityData.set(POWER, this.entityData.get(POWER) - 0.12f);
+            if (this.getPersistentData().getBoolean("left")) {
+                diffY = Mth.clamp(diffY + 1f, 0, 5);
+                handleSetDiffY(diffY);
+            } else if (this.getPersistentData().getBoolean("right")) {
+                diffY = Mth.clamp(diffY - 1f, -5, 0);
+                handleSetDiffY(diffY);
             }
-
-            if (this.inputDown) {
-                this.entityData.set(POWER, this.entityData.get(POWER) - 0.12f);
-                if (this.inputLeft) {
-                    diffY = Mth.clamp(diffY + 1f, 0, 5);
-                    handleSetDiffY(diffY);
-                } else if (this.inputRight) {
-                    diffY = Mth.clamp(diffY - 1f, -5, 0);
-                    handleSetDiffY(diffY);
-                }
-            } else {
-                if (this.inputLeft) {
-                    diffY = Mth.clamp(diffY - 1f, -5, 0);
-                    handleSetDiffY(diffY);
-                } else if (this.inputRight) {
-                    diffY = Mth.clamp(diffY + 1f, 0, 5);
-                    handleSetDiffY(diffY);
-                }
+        } else {
+            if (this.getPersistentData().getBoolean("left")) {
+                diffY = Mth.clamp(diffY - 1f, -5, 0);
+                handleSetDiffY(diffY);
+            } else if (this.getPersistentData().getBoolean("right")) {
+                diffY = Mth.clamp(diffY + 1f, 0, 5);
+                handleSetDiffY(diffY);
             }
+        }
 
-            if (level().isClientSide) {
-                level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.inputUp || this.inputDown ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 0.7f), false);
-            }
+        if (level().isClientSide) {
+            level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.inputUp || this.inputDown ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 1f), false);
+        }
 
-            this.entityData.set(POWER, this.entityData.get(POWER) * 0.3f);
+        this.entityData.set(POWER, this.entityData.get(POWER) * 0.3f);
 
-            this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.8f);
+        this.flyDist = this.entityData.get(POWER);
 
-            if (this.isInWater() || this.isUnderWater()) {
-                this.setYRot(this.entityData.get(ROT_Y) + this.entityData.get(DELTA_ROT));
-                this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).scale(this.entityData.get(POWER))));
-            }
+        this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.8f);
+
+        if (this.isInWater() || this.isUnderWater()) {
+            this.setYRot(this.entityData.get(ROT_Y) + this.entityData.get(DELTA_ROT));
+            this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).scale(this.entityData.get(POWER))));
         }
     }
 
     private void handleSetDiffY(float diffY) {
-        this.entityData.set(DELTA_ROT, (float) Mth.clamp(diffY * 1.3 * Math.max(4 * this.getDeltaMovement().length(), 0.5), -2, 2));
+        this.entityData.set(DELTA_ROT, (float) Mth.clamp(diffY * 1.3 * Math.max(4 * this.getDeltaMovement().length(), 0.5), -2 ,2));
     }
 
     private void handleClientSync() {
@@ -439,6 +454,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public void onPassengerTurned(Entity entity) {
         this.clampRotation(entity);
     }
+
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
