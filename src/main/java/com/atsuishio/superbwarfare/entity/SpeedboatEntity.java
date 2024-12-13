@@ -7,8 +7,10 @@ import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -42,6 +44,7 @@ import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.joml.Vector3d;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -328,15 +331,40 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         }
     }
 
+
     private void gunnerAngle() {
         Entity gunner = this.getFirstPassenger();
+
+        float yRot = this.getYRot();
+        if (yRot < 0) {
+            yRot += 360;
+        }
+        yRot = yRot + 90 % 360;
+
+        var BoatRoot = new Vector3d(0, 0, -10);
+        BoatRoot.rotateY(-yRot * Mth.DEG_TO_RAD);
+        Vec3 LeftPos = new Vec3(this.getX() + BoatRoot.x, this.getY() + BoatRoot.y, this.getZ() + BoatRoot.z);
+
         if (gunner != null) {
 
-            float diffX = gunner.getXRot() - this.getXRot();
+            double lookAngle = calculateAngle(new Vec3(gunner.getLookAngle().x, 0,gunner.getLookAngle().z), new Vec3(LeftPos.x, 0, LeftPos.z));
 
-            this.entityData.set(GUN_YAW, (float) Mth.lerp(0.05, this.entityData.get(GUN_YAW), calculateAngle(new Vec3(gunner.getLookAngle().x, 0,gunner.getLookAngle().z), new Vec3(this.getLookAngle().x, 0,this.getLookAngle().z))));
+            if (gunner instanceof Player player) {
+                player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(gunner.getYHeadRot())), true);
+            }
+
+            this.entityData.set(GUN_YAW, (float) Mth.lerp(0.1, this.entityData.get(GUN_YAW), (lookAngle < 90 ? -1 : 1) * calculateAngle(new Vec3(gunner.getLookAngle().x, 0,gunner.getLookAngle().z), new Vec3(this.getLookAngle().x, 0,this.getLookAngle().z))));
+
+            float diffX = gunner.getXRot() - this.getXRot();
             this.entityData.set(GUN_PITCH, (float) Mth.lerp(0.1, this.entityData.get(GUN_PITCH), diffX));
         }
+    }
+
+    public double getRotY(EntityAnchorArgument.Anchor pAnchor, Vec3 pTarget) {
+        Vec3 vec3 = pAnchor.apply(this);
+        double d0 = (pTarget.x - vec3.x) * 0.2;
+        double d2 = (pTarget.z - vec3.z) * 0.2;
+        return Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F);
     }
 
     private void handleSetDiffY(float diffY) {
