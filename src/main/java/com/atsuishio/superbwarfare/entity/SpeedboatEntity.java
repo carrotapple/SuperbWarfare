@@ -10,7 +10,6 @@ import com.atsuishio.superbwarfare.tools.ParticleTool;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -44,7 +43,6 @@ import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.joml.Vector3d;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -122,7 +120,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     @Override
     public boolean canBeCollidedWith() {
-        return false;
+        return super.canBeCollidedWith();
     }
 
     @Override
@@ -271,7 +269,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
                     this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
                 }
                 entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
-                entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger() ), (float) (25 * velocity.length()));
+                entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (25 * velocity.length()));
             }
         }
     }
@@ -321,9 +319,9 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         this.entityData.set(ROTOR, this.entityData.get(ROTOR) + this.entityData.get(POWER));
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.8f);
 
-        double movementZ = Math.cos(calculateAngle(new Vec3(this.getDeltaMovement().x, 0, this.getDeltaMovement().z), new Vec3(this.getLookAngle().x, 0,this.getLookAngle().z))) * this.getDeltaMovement().horizontalDistance();
+        double movementZ = Math.cos(calculateAngle(new Vec3(this.getDeltaMovement().x, 0, this.getDeltaMovement().z), new Vec3(this.getLookAngle().x, 0, this.getLookAngle().z))) * this.getDeltaMovement().horizontalDistance();
 
-        this.setXRot((float) Mth.lerp(0.1, this.getXRot(),-4f * movementZ));
+        this.setXRot((float) Mth.lerp(0.1, this.getXRot(), -4f * movementZ));
 
         if (this.isInWater() || this.isUnderWater()) {
             this.setYRot(this.entityData.get(ROT_Y) - this.entityData.get(DELTA_ROT));
@@ -331,33 +329,32 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         }
     }
 
-
     private void gunnerAngle() {
-        Entity gunner = this.getFirstPassenger();
+        Entity driver = this.getFirstPassenger();
+        if (driver == null) return;
 
-        float yRot = this.getYRot();
-        if (yRot < 0) {
-            yRot += 360;
+        var boatAngle = this.getLookAngle();
+        Vec3 rightVec = boatAngle.yRot(90 * Mth.DEG_TO_RAD).normalize();
+        Vec3 driverAngleVec = driver.getLookAngle().normalize();
+        double lookAngle = calculateAngle(driverAngleVec, rightVec);
+
+        double gunAngle;
+        if (lookAngle < 90) {
+            gunAngle = calculateAngle(driver.getLookAngle(), this.getLookAngle());
+        } else {
+            gunAngle = -calculateAngle(driver.getLookAngle(), this.getLookAngle());
         }
-        yRot = yRot + 90 % 360;
 
-        var BoatRoot = new Vector3d(0, 0, -10);
-        BoatRoot.rotateY(-yRot * Mth.DEG_TO_RAD);
-        Vec3 LeftPos = new Vec3(this.getX() + BoatRoot.x, this.getY() + BoatRoot.y, this.getZ() + BoatRoot.z);
-
-        if (gunner != null) {
-
-            double lookAngle = calculateAngle(new Vec3(gunner.getLookAngle().x, 0,gunner.getLookAngle().z), new Vec3(LeftPos.x, 0, LeftPos.z));
-
-            if (gunner instanceof Player player) {
-                player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(gunner.getYHeadRot())), true);
-            }
-
-            this.entityData.set(GUN_YAW, (float) Mth.lerp(0.1, this.entityData.get(GUN_YAW), (lookAngle < 90 ? -1 : 1) * calculateAngle(new Vec3(gunner.getLookAngle().x, 0,gunner.getLookAngle().z), new Vec3(this.getLookAngle().x, 0,this.getLookAngle().z))));
-
-            float diffX = gunner.getXRot() - this.getXRot();
-            this.entityData.set(GUN_PITCH, (float) Mth.lerp(0.1, this.entityData.get(GUN_PITCH), diffX));
+        if (gunAngle > 180) {
+            gunAngle -= 360;
+        } else if (gunAngle < -180) {
+            gunAngle += 360;
         }
+
+        this.entityData.set(GUN_YAW, (float) Mth.lerp(0.1, this.entityData.get(GUN_YAW), gunAngle));
+
+        float diffX = driver.getXRot() - this.getXRot();
+        this.entityData.set(GUN_PITCH, (float) Mth.lerp(0.1, this.entityData.get(GUN_PITCH), diffX));
     }
 
     public double getRotY(EntityAnchorArgument.Anchor pAnchor, Vec3 pTarget) {
@@ -368,7 +365,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     }
 
     private void handleSetDiffY(float diffY) {
-        this.entityData.set(DELTA_ROT, (float) Mth.clamp(diffY * 1.3 * Math.max(8 * this.getDeltaMovement().length(), 0.5), -2 ,2));
+        this.entityData.set(DELTA_ROT, (float) Mth.clamp(diffY * 1.3 * Math.max(8 * this.getDeltaMovement().length(), 0.5), -2, 2));
     }
 
     private void handleClientSync() {
@@ -406,6 +403,9 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     }
 
     public static double calculateAngle(Vec3 move, Vec3 view) {
+        move = move.multiply(1, 0, 1).normalize();
+        view = view.multiply(1, 0, 1).normalize();
+
         double startLength = move.length();
         double endLength = view.length();
         if (startLength > 0.0D && endLength > 0.0D) {
