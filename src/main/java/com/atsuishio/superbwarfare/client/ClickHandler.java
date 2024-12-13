@@ -92,7 +92,7 @@ public class ClickHandler {
         if (player.getMainHandItem().is(ModTags.Items.GUN)
                 || stack.is(ModItems.MONITOR.get())
                 || player.hasEffect(ModMobEffects.SHOCK.get())
-                || (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity)) {
+                || (player.getVehicle() != null && (player.getVehicle() instanceof ICannonEntity || player.getVehicle() instanceof IVehicleEntity))) {
             if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 event.setCanceled(true);
             }

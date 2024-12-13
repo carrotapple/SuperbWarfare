@@ -43,6 +43,7 @@ import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.joml.Math;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -319,13 +320,9 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         this.entityData.set(ROTOR, this.entityData.get(ROTOR) + this.entityData.get(POWER));
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.8f);
 
-        double movementZ = Math.cos(calculateAngle(new Vec3(this.getDeltaMovement().x, 0, this.getDeltaMovement().z), new Vec3(this.getLookAngle().x, 0, this.getLookAngle().z))) * this.getDeltaMovement().horizontalDistance();
-
-        this.setXRot((float) Mth.lerp(0.1, this.getXRot(), -4f * movementZ));
-
         if (this.isInWater() || this.isUnderWater()) {
             this.setYRot(this.entityData.get(ROT_Y) - this.entityData.get(DELTA_ROT));
-            this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).scale(this.entityData.get(POWER))));
+            this.setDeltaMovement(this.getDeltaMovement().add(new Vec3(this.getLookAngle().x, 0, this.getLookAngle().z).scale(this.entityData.get(POWER))));
         }
     }
 
@@ -333,25 +330,25 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         Entity driver = this.getFirstPassenger();
         if (driver == null) return;
 
-        var boatAngle = this.getLookAngle();
-        Vec3 rightVec = boatAngle.yRot(90 * Mth.DEG_TO_RAD).normalize();
-        Vec3 driverAngleVec = driver.getLookAngle().normalize();
-        double lookAngle = calculateAngle(driverAngleVec, rightVec);
+//        var boatAngle = this.getLookAngle();
+//        Vec3 rightVec = boatAngle.yRot(90 * Mth.DEG_TO_RAD).normalize();
+//        Vec3 driverAngleVec = driver.getLookAngle().normalize();
+//        double lookAngle = calculateAngle(driverAngleVec, rightVec);
 
-        double gunAngle;
-        if (lookAngle < 90) {
-            gunAngle = calculateAngle(driver.getLookAngle(), this.getLookAngle());
-        } else {
-            gunAngle = -calculateAngle(driver.getLookAngle(), this.getLookAngle());
-        }
+        double gunAngle = -Math.clamp(-105f, 105f, Mth.wrapDegrees(driver.getYHeadRot() - this.getYRot()));
+//        if (lookAngle < 90) {
+//            gunAngle = calculateAngle(driver.getLookAngle(), this.getLookAngle());
+//        } else {
+//            gunAngle = -calculateAngle(driver.getLookAngle(), this.getLookAngle());
+//        }
+//
+//        if (gunAngle > 180) {
+//            gunAngle -= 360;
+//        } else if (gunAngle < -180) {
+//            gunAngle += 360;
+//        }
 
-        if (gunAngle > 180) {
-            gunAngle -= 360;
-        } else if (gunAngle < -180) {
-            gunAngle += 360;
-        }
-
-        this.entityData.set(GUN_YAW, (float) Mth.lerp(0.1, this.entityData.get(GUN_YAW), gunAngle));
+        this.entityData.set(GUN_YAW, (float) Mth.lerp(0.2, this.entityData.get(GUN_YAW), gunAngle));
 
         float diffX = driver.getXRot() - this.getXRot();
         this.entityData.set(GUN_PITCH, (float) Mth.lerp(0.1, this.entityData.get(GUN_PITCH), diffX));
