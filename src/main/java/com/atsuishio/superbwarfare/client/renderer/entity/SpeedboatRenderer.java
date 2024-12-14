@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
+import com.atsuishio.superbwarfare.client.layer.SpeedBoatLayer;
 import com.atsuishio.superbwarfare.client.model.entity.SpeedboatModel;
 import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -18,6 +19,7 @@ public class SpeedboatRenderer extends GeoEntityRenderer<SpeedboatEntity> {
 
     public SpeedboatRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new SpeedboatModel());
+        this.addRenderLayer(new SpeedBoatLayer(this));
     }
 
     @Override
@@ -50,6 +52,9 @@ public class SpeedboatRenderer extends GeoEntityRenderer<SpeedboatEntity> {
         }
         if (name.equals("gun")) {
             bone.setRotX(-Mth.lerp(partialTick, animatable.turretXRotO, animatable.getTurretXRot()) * Mth.DEG_TO_RAD);
+        }
+        if (name.equals("flare")) {
+            bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
         }
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }

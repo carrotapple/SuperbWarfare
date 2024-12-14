@@ -2,35 +2,25 @@
 	"format_version": "1.8.0",
 	"animations": {
 		"animation.speedboat.idle": {
-			"loop": true,
-			"animation_length": 1,
-			"blend_weight": "10",
-			"start_delay": "10"
-		},
-		"animation.speedboat.forward": {
-			"loop": true,
-			"animation_length": 0.5,
-			"blend_weight": "10",
-			"start_delay": "10",
+			"animation_length": 0.1,
 			"bones": {
-				"Rotor": {
-					"rotation": {
-						"0.0": [0, 0, 0],
-						"0.5": [0, 0, 720]
-					}
+				"flare": {
+					"scale": 0
 				}
 			}
 		},
-		"animation.speedboat.backward": {
-			"loop": true,
-			"animation_length": 0.5,
-			"blend_weight": "10",
-			"start_delay": "10",
+		"animation.speedboat.fire": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.15,
 			"bones": {
-				"Rotor": {
-					"rotation": {
+				"flare": {
+					"scale": {
 						"0.0": [0, 0, 0],
-						"0.5": [0, 0, -720]
+						"0.0083": [8, 8, 8],
+						"0.05": [8, 8, 8],
+						"0.075": [1, 1, 1],
+						"0.0917": [0, 0, 0],
+						"0.15": [0, 0, 0]
 					}
 				}
 			}

@@ -13,8 +13,7 @@ public class SpeedboatModel extends GeoModel<SpeedboatEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(SpeedboatEntity entity) {
-        return null;
-//        return ModUtils.loc("animations/mk_42.animation.json");
+        return ModUtils.loc("animations/speedboat.animation.json");
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -34,7 +35,7 @@ public abstract class CameraMixin {
             cancellable = true)
     private void onSetup(BlockGetter level, Entity entity, boolean detached, boolean mirrored, float partialTicks, CallbackInfo info) {
         Minecraft mc = Minecraft.getInstance();
-        Player player = mc.player;
+        LocalPlayer player = mc.player;
 
         if (player != null) {
             ItemStack stack = player.getMainHandItem();
@@ -45,10 +46,11 @@ public abstract class CameraMixin {
                     yRot += 360;
                 }
                 yRot = yRot + 90 % 360;
-                var CameraPos = new Vector3d(-0.6, 3.3, 0);
+                var CameraPos = new Vector3d(-0.57, 3.3, 0);
                 CameraPos.rotateZ(-boat.getXRot() * Mth.DEG_TO_RAD);
                 CameraPos.rotateY(-yRot * Mth.DEG_TO_RAD);
-                setRotation(player.getViewYRot(partialTicks), player.getViewXRot(partialTicks));
+
+                setRotation(Mth.lerp(partialTicks, player.yBobO, player.yBob), Mth.lerp(partialTicks, player.xBobO, player.xBob));
                 setPosition(Mth.lerp(partialTicks, boat.xo + CameraPos.x, boat.getX() + CameraPos.x), Mth.lerp(partialTicks, boat.yo + CameraPos.y, boat.getY() + CameraPos.y), Mth.lerp(partialTicks, boat.zo + CameraPos.z, boat.getZ() + CameraPos.z));
                 info.cancel();
 

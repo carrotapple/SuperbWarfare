@@ -5,8 +5,10 @@ import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
+import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
+import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -15,6 +17,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -46,6 +49,10 @@ import org.joml.Math;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity, IVehicleEntity {
@@ -56,6 +63,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ROTOR = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
 
     public static final float MAX_HEALTH = CannonConfig.MK42_HP.get();
 
@@ -88,6 +96,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         this.entityData.define(DELTA_ROT, 0f);
         this.entityData.define(POWER, 0f);
         this.entityData.define(ROTOR, 0f);
+        this.entityData.define(COOL_DOWN, 0);
     }
 
     @Override
@@ -214,6 +223,10 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public void baseTick() {
         super.baseTick();
 
+        if (this.entityData.get(COOL_DOWN) > 0) {
+            this.entityData.set(COOL_DOWN, this.entityData.get(COOL_DOWN) - 1);
+        }
+
         double fluidFloat;
         fluidFloat = -0.05 + 0.1 * getSubmergedHeight(this);
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, fluidFloat, 0.0));
@@ -247,9 +260,39 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
         collideBlock();
         gunnerAngle();
-//        gunnerFire();
+        gunnerFire();
 
         this.refreshDimensions();
+    }
+
+    private void gunnerFire() {
+        if (this.entityData.get(COOL_DOWN) != 0) return;
+
+        Entity driver = this.getFirstPassenger();
+        if (driver == null) return;
+        if (driver instanceof Player player) {
+            if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).holdFire) {
+                ProjectileEntity projectile = new ProjectileEntity(driver.level())
+                        .shooter(player)
+                        .damage(39)
+                        .headShot(2.5f)
+                        .zoom(false);
+
+                projectile.setPos(this.xo - this.getViewVector(1).scale(0.57).x - this.getDeltaMovement().x, this.yo + 3.0, this.zo - this.getViewVector(1).scale(0.57).z - this.getDeltaMovement().z);
+                projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y + 0.001f, player.getLookAngle().z, 25,
+                        (float) 0.3);
+                this.level().addFreshEntity(projectile);
+
+                if (player instanceof ServerPlayer serverPlayer) {
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_FIRE_1P.get(), 2, 1);
+                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MINIGUN_FIRE_3P.get(), SoundSource.PLAYERS, 6, 1);
+                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MINIGUN_FAR.get(), SoundSource.PLAYERS, 16, 1);
+                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MINIGUN_VERYFAR.get(), SoundSource.PLAYERS, 32, 1);
+                }
+
+                this.entityData.set(COOL_DOWN, 3);
+            }
+        }
     }
 
     public void crushEntities(Vec3 velocity) {
@@ -494,9 +537,16 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     }
 
 
+    private PlayState firePredicate(AnimationState<SpeedboatEntity> event) {
+        if (this.entityData.get(COOL_DOWN) > 1) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.speedboat.fire"));
+        }
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.speedboat.idle"));
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-
+        data.add(new AnimationController<>(this, "movement", 0, this::firePredicate));
     }
 
     @Override

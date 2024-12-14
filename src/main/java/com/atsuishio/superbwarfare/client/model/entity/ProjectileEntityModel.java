@@ -44,7 +44,7 @@ public class ProjectileEntityModel extends GeoModel<ProjectileEntity> {
         CoreGeoBone bone = getAnimationProcessor().getBone("bone");
         Player player = Minecraft.getInstance().player;
         if (player != null) {
-            bone.setHidden(animatable.position().distanceTo(player.position()) < 3);
+            bone.setHidden(animatable.position().distanceTo(player.position()) < 3 || animatable.tickCount < 1);
         }
     }
 }
