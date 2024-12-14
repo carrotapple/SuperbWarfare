@@ -41,6 +41,7 @@ import static com.atsuishio.superbwarfare.event.ClientEventHandler.drawTime;
 public class ClickHandler {
 
     public static boolean switchZoom = false;
+
     private static boolean notInGame() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return true;
@@ -93,7 +94,7 @@ public class ClickHandler {
         if (player.getMainHandItem().is(ModTags.Items.GUN)
                 || stack.is(ModItems.MONITOR.get())
                 || player.hasEffect(ModMobEffects.SHOCK.get())
-                || (player.getVehicle() != null && (player.getVehicle() instanceof ICannonEntity || player.getVehicle() instanceof IVehicleEntity))) {
+                || (player.getVehicle() != null && player.getVehicle() instanceof IVehicleEntity)) {
             if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 event.setCanceled(true);
             }
@@ -158,8 +159,7 @@ public class ClickHandler {
             var tag = stack.getOrCreateTag();
             if (tag.getBoolean("CanSwitchScope")) {
                 ModUtils.PACKET_HANDLER.sendToServer(new SwitchScopeMessage(scroll));
-            }
-            else if (tag.getBoolean("CanAdjustZoomFov") || stack.is(ModItems.MINIGUN.get())) {
+            } else if (tag.getBoolean("CanAdjustZoomFov") || stack.is(ModItems.MINIGUN.get())) {
                 ModUtils.PACKET_HANDLER.sendToServer(new AdjustZoomFovMessage(scroll));
             }
             event.setCanceled(true);
@@ -279,7 +279,7 @@ public class ClickHandler {
         }
     }
 
-    public static void handleWeaponFirePress (Player player, ItemStack stack) {
+    public static void handleWeaponFirePress(Player player, ItemStack stack) {
 
         if (player.hasEffect(ModMobEffects.SHOCK.get())) {
             return;
@@ -329,18 +329,18 @@ public class ClickHandler {
         }
     }
 
-    public static void handleWeaponFireRelease () {
+    public static void handleWeaponFireRelease() {
         ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(1));
         ClientEventHandler.holdFire = false;
         ClientEventHandler.customRpm = 0;
     }
 
-    public static void handleWeaponZoomPress () {
+    public static void handleWeaponZoomPress() {
         ModUtils.PACKET_HANDLER.sendToServer(new ZoomMessage(0));
         ClientEventHandler.zoom = true;
     }
 
-    public static void handleWeaponZoomRelease () {
+    public static void handleWeaponZoomRelease() {
         ModUtils.PACKET_HANDLER.sendToServer(new ZoomMessage(1));
         ClientEventHandler.zoom = false;
     }
