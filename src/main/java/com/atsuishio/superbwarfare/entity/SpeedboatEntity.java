@@ -7,7 +7,6 @@ import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -57,8 +56,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ROTOR = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> GUN_YAW = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> GUN_PITCH = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
 
     public static final float MAX_HEALTH = CannonConfig.MK42_HP.get();
 
@@ -69,6 +66,14 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     private double lerpZ;
     private double lerpYRot;
     private double lerpXRot;
+
+    public float turretYRot;
+    public float turretXRot;
+    public float turretYRotO;
+    public float turretXRotO;
+
+    public float rudderYRot;
+    public float rudderYRot0;
 
     public SpeedboatEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.SPEEDBOAT.get(), world);
@@ -86,8 +91,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         this.entityData.define(DELTA_ROT, 0f);
         this.entityData.define(POWER, 0f);
         this.entityData.define(ROTOR, 0f);
-        this.entityData.define(GUN_YAW, 0f);
-        this.entityData.define(GUN_PITCH, 0f);
     }
 
     @Override
@@ -335,7 +338,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 //        Vec3 driverAngleVec = driver.getLookAngle().normalize();
 //        double lookAngle = calculateAngle(driverAngleVec, rightVec);
 
-        double gunAngle = -Math.clamp(-105f, 105f, Mth.wrapDegrees(driver.getYHeadRot() - this.getYRot()));
+        float gunAngle = -Math.clamp(-105f, 105f, Mth.wrapDegrees(driver.getYHeadRot() - this.getYRot()));
 //        if (lookAngle < 90) {
 //            gunAngle = calculateAngle(driver.getLookAngle(), this.getLookAngle());
 //        } else {
@@ -348,17 +351,30 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 //            gunAngle += 360;
 //        }
 
-        this.entityData.set(GUN_YAW, (float) Mth.lerp(0.2, this.entityData.get(GUN_YAW), gunAngle));
+//        this.entityData.set(GUN_YAW, gunAngle);
+//        this.entityData.set(GUN_YAW_O, this.entityData.get(GUN_YAW));
 
-        float diffX = driver.getXRot() - this.getXRot();
-        this.entityData.set(GUN_PITCH, (float) Mth.lerp(0.1, this.entityData.get(GUN_PITCH), diffX));
+        turretYRotO = this.getTurretYRot();
+        turretXRotO = this.getTurretXRot();
+
+        this.setTurretYRot(gunAngle);
+        this.setTurretXRot(driver.getXRot() - this.getXRot());
     }
 
-    public double getRotY(EntityAnchorArgument.Anchor pAnchor, Vec3 pTarget) {
-        Vec3 vec3 = pAnchor.apply(this);
-        double d0 = (pTarget.x - vec3.x) * 0.2;
-        double d2 = (pTarget.z - vec3.z) * 0.2;
-        return Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F);
+    public float getTurretYRot() {
+        return this.turretYRot;
+    }
+
+    public void setTurretYRot(float pTurretYRot) {
+        this.turretYRot = pTurretYRot;
+    }
+
+    public float getTurretXRot() {
+        return this.turretXRot;
+    }
+
+    public void setTurretXRot(float pTurretXRot) {
+        this.turretXRot = pTurretXRot;
     }
 
     private void handleSetDiffY(float diffY) {
@@ -455,7 +471,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     protected void clampRotation(Entity entity) {
         float f = Mth.wrapDegrees(entity.getXRot());
-        float f1 = Mth.clamp(f, -85.0F, 16.3F);
+        float f1 = Mth.clamp(f, -35.0F, 20F);
         entity.xRotO += f1 - f;
         entity.setXRot(entity.getXRot() + f1 - f);
 

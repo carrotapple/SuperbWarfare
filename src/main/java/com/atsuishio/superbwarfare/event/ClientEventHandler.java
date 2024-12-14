@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.client.ClickHandler;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.DroneEntity;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
+import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.LaserShootMessage;
@@ -692,6 +693,10 @@ public class ClientEventHandler {
         }
 
         if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity) {
+            event.setCanceled(true);
+        }
+
+        if ((player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player) && ClientEventHandler.zoom && stack.is(ItemStack.EMPTY.getItem())) {
             event.setCanceled(true);
         }
     }

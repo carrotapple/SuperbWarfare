@@ -39,6 +39,22 @@ public abstract class CameraMixin {
         if (player != null) {
             ItemStack stack = player.getMainHandItem();
 
+            if ((player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player) && ClientEventHandler.zoom && stack.is(ItemStack.EMPTY.getItem())) {
+                float yRot = boat.getYRot();
+                if (yRot < 0) {
+                    yRot += 360;
+                }
+                yRot = yRot + 90 % 360;
+                var CameraPos = new Vector3d(-0.6, 3.3, 0);
+                CameraPos.rotateZ(-boat.getXRot() * Mth.DEG_TO_RAD);
+                CameraPos.rotateY(-yRot * Mth.DEG_TO_RAD);
+                setRotation(player.getViewYRot(partialTicks), player.getViewXRot(partialTicks));
+                setPosition(Mth.lerp(partialTicks, boat.xo + CameraPos.x, boat.getX() + CameraPos.x), Mth.lerp(partialTicks, boat.yo + CameraPos.y, boat.getY() + CameraPos.y), Mth.lerp(partialTicks, boat.zo + CameraPos.z, boat.getZ() + CameraPos.z));
+                info.cancel();
+
+                return;
+            }
+
             if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
                 DroneEntity drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
 
@@ -73,7 +89,7 @@ public abstract class CameraMixin {
             move(-getMaxZoom(16), 1.3, 0.0);
             return;
         }
-        if (thirdPerson && entity.getVehicle() instanceof SpeedboatEntity) {
+        if (thirdPerson && entity.getVehicle() instanceof SpeedboatEntity && !ClientEventHandler.zoom) {
             move(-getMaxZoom(3), 1, 0.0);
             return;
         }

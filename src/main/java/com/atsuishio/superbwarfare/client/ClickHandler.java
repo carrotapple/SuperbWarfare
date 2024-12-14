@@ -7,6 +7,7 @@ import com.atsuishio.superbwarfare.config.client.ReloadConfig;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.entity.IVehicleEntity;
 import com.atsuishio.superbwarfare.entity.MortarEntity;
+import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -103,7 +104,9 @@ public class ClickHandler {
         }
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            if (player.getMainHandItem().is(ModTags.Items.GUN) || (player.isPassenger() && player.getVehicle() instanceof ICannonEntity)) {
+            if (stack.is(ModTags.Items.GUN)
+                    || (player.isPassenger() && player.getVehicle() instanceof ICannonEntity)
+                    || (player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player && stack.is(ItemStack.EMPTY.getItem()))) {
                 event.setCanceled(true);
             }
         }
@@ -117,6 +120,7 @@ public class ClickHandler {
         if ((player.getMainHandItem().is(ModTags.Items.GUN) && !(player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity))
                 || stack.is(ModItems.MONITOR.get())
                 || (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity)
+                || (player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player)
                 || (stack.is(Items.SPYGLASS) && player.isScoping() && player.getOffhandItem().is(ModItems.FIRING_PARAMETERS.get()))) {
             if (button == ModKeyMappings.FIRE.getKey().getValue()) {
                 handleWeaponFirePress(player, stack);
@@ -238,6 +242,7 @@ public class ClickHandler {
             if ((player.getMainHandItem().is(ModTags.Items.GUN) && !(player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity))
                     || stack.is(ModItems.MONITOR.get())
                     || (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity)
+                    || (player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player)
                     || (stack.is(Items.SPYGLASS) && player.isScoping() && player.getOffhandItem().is(ModItems.FIRING_PARAMETERS.get()))) {
                 if (key == ModKeyMappings.FIRE.getKey().getValue()) {
                     handleWeaponFirePress(player, stack);

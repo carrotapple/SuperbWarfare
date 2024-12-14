@@ -3,7 +3,6 @@ package com.atsuishio.superbwarfare.client.model.entity;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
@@ -35,10 +34,5 @@ public class SpeedboatModel extends GeoModel<SpeedboatEntity> {
 
         rotor.setRotZ(5 * animatable.getEntityData().get(ROTOR));
         duo.setRotY((animatable.getEntityData().get(POWER) > 0 ? -0.5f : 0.5f) * animatable.getEntityData().get(DELTA_ROT));
-
-        CoreGeoBone turret = getAnimationProcessor().getBone("paota");
-        CoreGeoBone gun = getAnimationProcessor().getBone("gun");
-        turret.setRotY(animatable.getEntityData().get(GUN_YAW) * Mth.DEG_TO_RAD);
-        gun.setRotX(-animatable.getEntityData().get(GUN_PITCH) * Mth.DEG_TO_RAD);
     }
 }
