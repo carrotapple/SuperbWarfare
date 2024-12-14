@@ -310,6 +310,11 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> JAVELIN_LOCK = REGISTRY.register("javelin_lock", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "javelin_lock")));
     public static final RegistryObject<SoundEvent> JAVELIN_LOCKON = REGISTRY.register("javelin_lockon", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "javelin_lockon")));
 
+    public static final RegistryObject<SoundEvent> M_2_FIRE_1P = REGISTRY.register("m2_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "m2_fire_1p")));
+    public static final RegistryObject<SoundEvent> M_2_FIRE_3P = REGISTRY.register("m2_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "m2_fire_3p")));
+    public static final RegistryObject<SoundEvent> M_2_FAR = REGISTRY.register("m2_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "m2_far")));
+    public static final RegistryObject<SoundEvent> M_2_VERYFAR = REGISTRY.register("m2_veryfar", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "m2_veryfar")));
+
     public static final RegistryObject<SoundEvent> MK_42_FIRE_1P = REGISTRY.register("mk_42_fire_1p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mk_42_fire_1p")));
     public static final RegistryObject<SoundEvent> MK_42_FIRE_3P = REGISTRY.register("mk_42_fire_3p", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mk_42_fire_3p")));
     public static final RegistryObject<SoundEvent> MK_42_FAR = REGISTRY.register("mk_42_far", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(ModUtils.MODID, "mk_42_far")));

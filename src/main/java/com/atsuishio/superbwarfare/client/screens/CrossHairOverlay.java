@@ -61,7 +61,7 @@ public class CrossHairOverlay {
         float moveY = 0;
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
-        if (DisplayConfig.FLOAT_CROSS_HAIR.get()) {
+        if (DisplayConfig.FLOAT_CROSS_HAIR.get() && player.getVehicle() == null) {
             moveX = (float) (-6 * ClientEventHandler.turnRot[1] - (player.isSprinting() ? 10 : 6) * ClientEventHandler.movePosX);
             moveY = (float) (-6 * ClientEventHandler.turnRot[0] + 6 * (float) ClientEventHandler.velocityY - (player.isSprinting() ? 10 : 6) * ClientEventHandler.movePosY - 0.25 * ClientEventHandler.firePos);
         }

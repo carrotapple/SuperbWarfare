@@ -9,6 +9,7 @@ import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
+import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.BlockPos;
@@ -61,7 +62,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.Comparator;
 
 public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity, IVehicleEntity {
-
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ROT_Y = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
@@ -69,8 +69,10 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ROTOR = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.STRING);
 
-    public static final float MAX_HEALTH = CannonConfig.MK42_HP.get();
+    public static final float MAX_HEALTH = CannonConfig.SPEEDBOAT_HP.get();
+    public static final float MAX_ENERGY = CannonConfig.SPEEDBOAT_MAX_ENERGY.get().floatValue();
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private int lerpSteps;
@@ -105,21 +107,26 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         this.entityData.define(POWER, 0f);
         this.entityData.define(ROTOR, 0f);
         this.entityData.define(COOL_DOWN, 0);
+        this.entityData.define(LAST_ATTACKER_UUID, "undefined");
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         compound.putFloat("Health", this.entityData.get(HEALTH));
         compound.putFloat("Energy", this.entityData.get(ENERGY));
+        compound.putString("LastAttacker", this.entityData.get(LAST_ATTACKER_UUID));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
-        this.entityData.set(ROTOR, compound.getFloat("Rotor"));
+        this.entityData.set(ENERGY, compound.getFloat("Energy"));
         if (compound.contains("Health")) {
             this.entityData.set(HEALTH, compound.getFloat("Health"));
         } else {
             this.entityData.set(HEALTH, MAX_HEALTH);
+        }
+        if (compound.contains("LastAttacker")) {
+            this.entityData.set(LAST_ATTACKER_UUID, compound.getString("LastAttacker"));
         }
     }
 
@@ -181,17 +188,21 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         if (source.is(DamageTypes.WITHER_SKULL))
             return false;
         if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
-            amount *= 0.5f;
+            amount *= 2f;
         }
         if (source.is(ModDamageTypes.CANNON_FIRE)) {
-            amount *= 1.4f;
+            amount *= 3f;
         }
         if (source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE)) {
-            amount *= 1.6f;
+            amount *= 1.2f;
+        }
+
+        if (source.getEntity() != null) {
+            this.entityData.set(LAST_ATTACKER_UUID, source.getEntity().getStringUUID());
         }
 
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.5f * amount);
+        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.5f * java.lang.Math.max(amount - 3, 0));
 
         return true;
     }
@@ -243,6 +254,16 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             cannotFire = false;
         }
 
+        Entity driver = this.getFirstPassenger();
+        if (driver instanceof Player player) {
+            if (heat > 100) {
+                cannotFire = true;
+                if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_OVERHEAT.get(), 1f, 1f);
+                }
+            }
+        }
+
         double fluidFloat;
         fluidFloat = -0.05 + 0.1 * getSubmergedHeight(this);
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, fluidFloat, 0.0));
@@ -281,55 +302,53 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         this.refreshDimensions();
     }
 
+    public boolean zooming() {
+        Entity driver = this.getFirstPassenger();
+        if (driver == null) return false;
+        if (driver instanceof Player player) {
+            return player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
+        }
+        return false;
+    }
+
     private void gunnerFire() {
-
         if (this.entityData.get(COOL_DOWN) != 0 || cannotFire) return;
-
         Entity driver = this.getFirstPassenger();
         if (driver == null) return;
-        if (driver instanceof Player player) {
-            if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).holdFire) {
+
+        if (driver instanceof Player player && !(player.getMainHandItem().is(ModTags.Items.GUN))) {
+            Level level = player.level();
+            if (level instanceof ServerLevel && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).holdFire) {
                 ProjectileEntity projectile = new ProjectileEntity(driver.level())
                         .shooter(player)
-                        .damage(30)
+                        .damage(CannonConfig.SPEEDBOAT_GUN_DAMAGE.get())
                         .headShot(2f)
                         .zoom(false);
 
+                projectile.bypassArmorRate(0.9f);
                 projectile.setPos(this.xo - this.getViewVector(1).scale(0.54).x - this.getDeltaMovement().x, this.yo + 3.0, this.zo - this.getViewVector(1).scale(0.54).z - this.getDeltaMovement().z);
-                projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y + 0.001f, player.getLookAngle().z, 25,
+                projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y + (zooming() ? 0.002f : -0.009f), player.getLookAngle().z, 25,
                         (float) 0.6);
                 this.level().addFreshEntity(projectile);
 
                 float pitch = heat <= 60 ? 1 : (float) (1 - 0.015 * java.lang.Math.abs(60 - heat));
 
                 if (player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_FIRE_1P.get(), 2, 1);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MINIGUN_FIRE_3P.get(), SoundSource.PLAYERS, 3, pitch);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MINIGUN_FAR.get(), SoundSource.PLAYERS, 8, pitch);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MINIGUN_VERYFAR.get(), SoundSource.PLAYERS, 16, pitch);
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.M_2_FIRE_1P.get(), 2, 1);
+                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_2_FIRE_3P.get(), SoundSource.PLAYERS, 4, pitch);
+                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_2_FAR.get(), SoundSource.PLAYERS, 12, pitch);
+                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_2_VERYFAR.get(), SoundSource.PLAYERS, 24, pitch);
                 }
 
                 final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
 
-                Level level = player.level();
-                if (level instanceof ServerLevel) {
-                    for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
-                        if (target instanceof ServerPlayer serverPlayer) {
-                            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(4, 4, 10, this.getX(), this.getEyeY(), this.getZ()));
-                        }
+                for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
+                    if (target instanceof ServerPlayer serverPlayer) {
+                        ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 7, this.getX(), this.getEyeY(), this.getZ()));
                     }
                 }
-
                 this.entityData.set(COOL_DOWN, 3);
-
                 heat += 4;
-
-                if (heat > 100) {
-                    cannotFire = true;
-                    if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
-                        SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_OVERHEAT.get(), 1f, 1f);
-                    }
-                }
             }
         }
     }
@@ -371,6 +390,8 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     private void controlBoat() {
         Entity passenger0 = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
 
+        if (this.entityData.get(ENERGY) <= 0) return;
+
         if (passenger0 == null) {
             this.getPersistentData().putBoolean("left", false);
             this.getPersistentData().putBoolean("right", false);
@@ -400,6 +421,10 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
                 diffY = Mth.clamp(diffY + 1f, 0, 10);
                 handleSetDiffY(diffY);
             }
+        }
+
+        if (this.getPersistentData().getBoolean("forward") || this.getPersistentData().getBoolean("backward")) {
+            this.entityData.set(ENERGY, Math.max(this.entityData.get(ENERGY) - CannonConfig.SPEEDBOAT_ENERGY_COST.get().floatValue(), 0));
         }
 
         if (level().isClientSide) {
@@ -477,7 +502,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     @Override
     protected void positionRider(Entity pPassenger, MoveFunction pCallback) {
         super.positionRider(pPassenger, pCallback);
-        if (this.hasPassenger(pPassenger) && (this.isInWater() || this.isUnderWater())) {
+        if (this.hasPassenger(pPassenger) && !zooming()) {
             pPassenger.setYRot(pPassenger.getYRot() - 1.27f * this.entityData.get(DELTA_ROT));
             pPassenger.setYHeadRot(pPassenger.getYHeadRot() - 1.27f * this.entityData.get(DELTA_ROT));
         }
@@ -526,14 +551,14 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     }
 
     private void destroy() {
-        CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this), 20f,
-                this.getX(), this.getY(), this.getZ(), 4.5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+        Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
+        CustomExplosion explosion = new CustomExplosion(this.level(), attacker,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), 45f,
+                this.getX(), this.getY(), this.getZ(), 3f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
-        ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
-
+        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
         this.discard();
     }
 
@@ -576,6 +601,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     @Override
     public void charge(int amount) {
-        this.entityData.set(ENERGY, Math.min(this.entityData.get(ENERGY) + amount, CannonConfig.ANNIHILATOR_MAX_ENERGY.get().floatValue()));
+        this.entityData.set(ENERGY, Math.min(this.entityData.get(ENERGY) + amount, MAX_ENERGY));
     }
 }

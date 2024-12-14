@@ -2445,5 +2445,37 @@
         "stream": false
       }
     ]
+  },
+  "m2_fire_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:m2/m2_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "m2_fire_3p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:m2/m2_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "m2_far": {
+    "sounds": [
+      {
+        "name": "superbwarfare:m2/m2_far",
+        "stream": false
+      }
+    ]
+  },
+  "m2_veryfar": {
+    "sounds": [
+      {
+        "name": "superbwarfare:m2/m2_veryfar",
+        "stream": false
+      }
+    ]
   }
 }
