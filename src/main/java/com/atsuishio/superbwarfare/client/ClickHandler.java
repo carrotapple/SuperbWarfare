@@ -298,6 +298,10 @@ public class ClickHandler {
             return;
         }
 
+        if ((player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player)) {
+            ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(0));
+        }
+
         if (stack.is(ModTags.Items.GUN) && !(player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity)) {
             if ((!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
                     && !stack.getOrCreateTag().getBoolean("reloading")

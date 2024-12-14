@@ -72,9 +72,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public float turretYRotO;
     public float turretXRotO;
 
-    public float rudderYRot;
-    public float rudderYRot0;
-
     public SpeedboatEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.SPEEDBOAT.get(), world);
     }
@@ -225,7 +222,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
         if (this.onGround()) {
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.2, 0.85, 0.2));
-        } else if (this.isInWater()) {
+        } else {
             float f = 0.73f + 0.09f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
             this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.04 * this.getDeltaMovement().length())));
             this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.85, f));
@@ -250,6 +247,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
         collideBlock();
         gunnerAngle();
+//        gunnerFire();
 
         this.refreshDimensions();
     }
@@ -290,6 +288,13 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     private void controlBoat() {
         Entity passenger0 = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+
+        if (passenger0 == null) {
+            this.getPersistentData().putBoolean("left", false);
+            this.getPersistentData().putBoolean("right", false);
+            this.getPersistentData().putBoolean("forward", false);
+            this.getPersistentData().putBoolean("backward", false);
+        }
 
         float diffY = 0;
         if (this.getPersistentData().getBoolean("forward")) {
