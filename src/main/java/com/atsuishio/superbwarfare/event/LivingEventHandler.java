@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.capability.LaserCapability;
 import com.atsuishio.superbwarfare.capability.ModCapabilities;
 import com.atsuishio.superbwarfare.config.common.GameplayConfig;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
+import com.atsuishio.superbwarfare.entity.IVehicleEntity;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.*;
@@ -60,6 +61,11 @@ public class LivingEventHandler {
         if (event == null || event.getEntity() == null) {
             return;
         }
+
+        if (event.getEntity().getVehicle() != null && event.getEntity().getVehicle() instanceof IVehicleEntity) {
+            event.setAmount(0.3f * event.getAmount());
+        }
+
         if (event.getEntity().getVehicle() != null && event.getEntity().getVehicle() instanceof ICannonEntity) {
             event.setCanceled(true);
         }

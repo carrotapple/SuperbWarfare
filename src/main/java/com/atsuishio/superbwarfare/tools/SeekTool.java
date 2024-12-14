@@ -1,9 +1,11 @@
 package com.atsuishio.superbwarfare.tools;
 
+import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
@@ -17,7 +19,12 @@ public class SeekTool {
     public static Entity seekEntity(Entity entity, Level level, double seekRange, double seekAngle) {
         return StreamSupport.stream(EntityFindUtil.getEntities(level).getAll().spliterator(), false)
                 .filter(e -> {
-                    if (e.distanceTo(entity) <= seekRange && calculateAngle(e, entity) < seekAngle && e != entity && e.isAlive()) {
+                    if (e.distanceTo(entity) <= seekRange && calculateAngle(e, entity) < seekAngle
+                            && e != entity
+                            && e.isAlive()
+                            && e.getVehicle() == null
+                            && !(e instanceof ProjectileEntity)
+                            && !(e instanceof Projectile)) {
                         return level.clip(new ClipContext(entity.getEyePosition(), e.getEyePosition(),
                                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() != HitResult.Type.BLOCK;
                     }

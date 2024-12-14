@@ -1,11 +1,13 @@
 package com.atsuishio.superbwarfare.entity;
 
+import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.CannonConfig;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
@@ -43,6 +45,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Math;
@@ -54,6 +57,8 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
+import java.util.Comparator;
 
 public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity, IVehicleEntity {
 
@@ -79,6 +84,9 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public float turretXRot;
     public float turretYRotO;
     public float turretXRotO;
+
+    public float heat;
+    public boolean cannotFire;
 
     public SpeedboatEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.SPEEDBOAT.get(), world);
@@ -183,7 +191,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         }
 
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.75f * amount);
+        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.5f * amount);
 
         return true;
     }
@@ -227,6 +235,14 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             this.entityData.set(COOL_DOWN, this.entityData.get(COOL_DOWN) - 1);
         }
 
+        if (heat > 0) {
+            heat--;
+        }
+
+        if (heat < 40) {
+            cannotFire = false;
+        }
+
         double fluidFloat;
         fluidFloat = -0.05 + 0.1 * getSubmergedHeight(this);
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, fluidFloat, 0.0));
@@ -266,7 +282,8 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     }
 
     private void gunnerFire() {
-        if (this.entityData.get(COOL_DOWN) != 0) return;
+
+        if (this.entityData.get(COOL_DOWN) != 0 || cannotFire) return;
 
         Entity driver = this.getFirstPassenger();
         if (driver == null) return;
@@ -274,23 +291,45 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).holdFire) {
                 ProjectileEntity projectile = new ProjectileEntity(driver.level())
                         .shooter(player)
-                        .damage(39)
-                        .headShot(2.5f)
+                        .damage(30)
+                        .headShot(2f)
                         .zoom(false);
 
-                projectile.setPos(this.xo - this.getViewVector(1).scale(0.57).x - this.getDeltaMovement().x, this.yo + 3.0, this.zo - this.getViewVector(1).scale(0.57).z - this.getDeltaMovement().z);
+                projectile.setPos(this.xo - this.getViewVector(1).scale(0.54).x - this.getDeltaMovement().x, this.yo + 3.0, this.zo - this.getViewVector(1).scale(0.54).z - this.getDeltaMovement().z);
                 projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y + 0.001f, player.getLookAngle().z, 25,
-                        (float) 0.3);
+                        (float) 0.6);
                 this.level().addFreshEntity(projectile);
+
+                float pitch = heat <= 60 ? 1 : (float) (1 - 0.015 * java.lang.Math.abs(60 - heat));
 
                 if (player instanceof ServerPlayer serverPlayer) {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_FIRE_1P.get(), 2, 1);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MINIGUN_FIRE_3P.get(), SoundSource.PLAYERS, 6, 1);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MINIGUN_FAR.get(), SoundSource.PLAYERS, 16, 1);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MINIGUN_VERYFAR.get(), SoundSource.PLAYERS, 32, 1);
+                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MINIGUN_FIRE_3P.get(), SoundSource.PLAYERS, 3, pitch);
+                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MINIGUN_FAR.get(), SoundSource.PLAYERS, 8, pitch);
+                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.MINIGUN_VERYFAR.get(), SoundSource.PLAYERS, 16, pitch);
+                }
+
+                final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
+
+                Level level = player.level();
+                if (level instanceof ServerLevel) {
+                    for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
+                        if (target instanceof ServerPlayer serverPlayer) {
+                            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(4, 4, 10, this.getX(), this.getEyeY(), this.getZ()));
+                        }
+                    }
                 }
 
                 this.entityData.set(COOL_DOWN, 3);
+
+                heat += 4;
+
+                if (heat > 100) {
+                    cannotFire = true;
+                    if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
+                        SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_OVERHEAT.get(), 1f, 1f);
+                    }
+                }
             }
         }
     }
@@ -381,26 +420,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         Entity driver = this.getFirstPassenger();
         if (driver == null) return;
 
-//        var boatAngle = this.getLookAngle();
-//        Vec3 rightVec = boatAngle.yRot(90 * Mth.DEG_TO_RAD).normalize();
-//        Vec3 driverAngleVec = driver.getLookAngle().normalize();
-//        double lookAngle = calculateAngle(driverAngleVec, rightVec);
-
-        float gunAngle = -Math.clamp(-105f, 105f, Mth.wrapDegrees(driver.getYHeadRot() - this.getYRot()));
-//        if (lookAngle < 90) {
-//            gunAngle = calculateAngle(driver.getLookAngle(), this.getLookAngle());
-//        } else {
-//            gunAngle = -calculateAngle(driver.getLookAngle(), this.getLookAngle());
-//        }
-//
-//        if (gunAngle > 180) {
-//            gunAngle -= 360;
-//        } else if (gunAngle < -180) {
-//            gunAngle += 360;
-//        }
-
-//        this.entityData.set(GUN_YAW, gunAngle);
-//        this.entityData.set(GUN_YAW_O, this.entityData.get(GUN_YAW));
+        float gunAngle = -Math.clamp(-140f, 140f, Mth.wrapDegrees(driver.getYHeadRot() - this.getYRot()));
 
         turretYRotO = this.getTurretYRot();
         turretXRotO = this.getTurretXRot();
@@ -519,13 +539,13 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     protected void clampRotation(Entity entity) {
         float f = Mth.wrapDegrees(entity.getXRot());
-        float f1 = Mth.clamp(f, -35.0F, 20F);
+        float f1 = Mth.clamp(f, -40.0F, 20F);
         entity.xRotO += f1 - f;
         entity.setXRot(entity.getXRot() + f1 - f);
 
         entity.setYBodyRot(this.getYRot());
         float f2 = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
-        float f3 = Mth.clamp(f2, -105.0F, 105.0F);
+        float f3 = Mth.clamp(f2, -140.0F, 140.0F);
         entity.yRotO += f3 - f2;
         entity.setYRot(entity.getYRot() + f3 - f2);
         entity.setYHeadRot(entity.getYRot());
@@ -538,7 +558,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
 
     private PlayState firePredicate(AnimationState<SpeedboatEntity> event) {
-        if (this.entityData.get(COOL_DOWN) > 1) {
+        if (this.entityData.get(COOL_DOWN) > 1 && !cannotFire) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.speedboat.fire"));
         }
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.speedboat.idle"));
