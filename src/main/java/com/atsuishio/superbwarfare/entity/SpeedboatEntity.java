@@ -244,6 +244,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
+        if (player.getVehicle() == this) return InteractionResult.PASS;
         if (player.isShiftKeyDown()) {
             if (player.getMainHandItem().is(ModItems.CROWBAR.get()) && this.getFirstPassenger() == null) {
                 ItemStack stack = ContainerBlockItem.createInstance(this);
@@ -350,7 +351,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
      * 机枪塔开火
      */
     private void gunnerFire() {
-        if (this.entityData.get(COOL_DOWN) != 0 || cannotFire) return;
+        if (this.entityData.get(COOL_DOWN) != 0 || cannotFire || !this.getItemStacks().contains(ModItems.HEAVY_AMMO.get())) return;
         Entity driver = this.getFirstPassenger();
         if (driver == null) return;
 
@@ -553,7 +554,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         if (this.hasPassenger(pPassenger)) {
             double posY = this.getY() + this.getPassengersRidingOffset() + pPassenger.getMyRidingOffset();
 
-            if (!zooming()) {
+            if (!zooming() && (this.isInWater() || this.isUnderWater())) {
                 pPassenger.setYRot(pPassenger.getYRot() - 1.27f * this.entityData.get(DELTA_ROT));
                 pPassenger.setYHeadRot(pPassenger.getYHeadRot() - 1.27f * this.entityData.get(DELTA_ROT));
             }

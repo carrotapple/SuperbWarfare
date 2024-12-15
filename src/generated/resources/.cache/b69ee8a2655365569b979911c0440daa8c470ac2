@@ -1,8 +1,9 @@
-// 1.20.1	2024-12-06T23:44:15.5221819	Item Models: superbwarfare
+// 1.20.1	2024-12-15T19:19:44.8184797	Item Models: superbwarfare
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_47_blueprint.json
 c993bddc0db9453ffbefa59f9ac9a74dba909038 assets/superbwarfare/models/item/ancient_cpu.json
+13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/annihilator_blueprint.json
 4b8fe8fbe5e64c3449ad539317254e4ed7188411 assets/superbwarfare/models/item/ap_head.json
 984c08ca6f6893a15721a85e30118f9e32c65c7f assets/superbwarfare/models/item/barbed_wire.json
 e8f16946c6f9429989d05e9ec250a72ffc64f9e1 assets/superbwarfare/models/item/beam_test.json
@@ -31,6 +32,7 @@ c102839d5f7d4bdc1c6cbfbf4c2c907b70f22052 assets/superbwarfare/models/item/fusee.
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/glock_17_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/glock_18_blueprint.json
 8752c2b2b648ff23d6b93eedcc6c0500c695afd7 assets/superbwarfare/models/item/grain.json
+afbfd24461fb7e6b43a8e029f0a894b84d8b6638 assets/superbwarfare/models/item/heavy_ammo.json
 e7a6de100f377835831211168d98c8d19434af24 assets/superbwarfare/models/item/he_head.json
 d23520b099cb796401635fe75b5b852fc957d4ea assets/superbwarfare/models/item/high_energy_explosives.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/hk_416_blueprint.json
