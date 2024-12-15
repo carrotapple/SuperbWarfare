@@ -35,6 +35,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -72,6 +73,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
+import java.util.List;
 
 public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity, IVehicleEntity, HasCustomInventoryScreen, ContainerEntity {
 
@@ -330,6 +332,8 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         gunnerAngle();
         gunnerFire();
 
+        testRiding();
+
         this.refreshDimensions();
     }
 
@@ -342,6 +346,9 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         return false;
     }
 
+    /**
+     * 机枪塔开火
+     */
     private void gunnerFire() {
         if (this.entityData.get(COOL_DOWN) != 0 || cannotFire) return;
         Entity driver = this.getFirstPassenger();
@@ -384,6 +391,10 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         }
     }
 
+    /**
+     * 撞击实体并造成伤害
+     * @param velocity 动量
+     */
     public void crushEntities(Vec3 velocity) {
         var frontBox = getBoundingBox().move(velocity.scale(0.5));
         var velAdd = velocity.add(0, 0, 0).scale(1.5);
@@ -408,6 +419,9 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         }
     }
 
+    /**
+     * 撞掉莲叶
+     */
     public void collideBlock() {
         AABB aabb = AABB.ofSize(new Vec3(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ()), 3.6, 2.6, 3.6);
         BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
@@ -532,10 +546,50 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     @Override
     protected void positionRider(Entity pPassenger, MoveFunction pCallback) {
-        super.positionRider(pPassenger, pCallback);
-        if (this.hasPassenger(pPassenger) && !zooming()) {
-            pPassenger.setYRot(pPassenger.getYRot() - 1.27f * this.entityData.get(DELTA_ROT));
-            pPassenger.setYHeadRot(pPassenger.getYHeadRot() - 1.27f * this.entityData.get(DELTA_ROT));
+        if (this.hasPassenger(pPassenger)) {
+            double posY = this.getY() + this.getPassengersRidingOffset() + pPassenger.getMyRidingOffset();
+
+            if (!zooming()) {
+                pPassenger.setYRot(pPassenger.getYRot() - 1.27f * this.entityData.get(DELTA_ROT));
+                pPassenger.setYHeadRot(pPassenger.getYHeadRot() - 1.27f * this.entityData.get(DELTA_ROT));
+            }
+
+            if (this.getPassengers().size() > 1) {
+                int i = this.getPassengers().indexOf(pPassenger);
+                if (i == 0) {
+                    pCallback.accept(pPassenger, this.getX(), posY, this.getZ());
+                    return;
+                }
+
+                double zOffset = -0.8;
+                if (i % 2 == 0) {
+                    zOffset = 0.8;
+                }
+
+                double xOffset = (int) -((i - 1) / 2.0 + 1) * 0.95;
+                Vec3 vec3 = (new Vec3(xOffset, 0.0D, zOffset)).yRot(-this.getYRot() * ((float) java.lang.Math.PI / 180F) - ((float) java.lang.Math.PI / 2F));
+                pCallback.accept(pPassenger, this.getX() + vec3.x, posY, this.getZ() + vec3.z);
+            } else {
+                pCallback.accept(pPassenger, this.getX(), posY, this.getZ());
+            }
+        }
+    }
+
+    // TODO 移除此方法
+    public void testRiding() {
+        List<Entity> list = this.level().getEntities(this, this.getBoundingBox().inflate((double) 0.2F, (double) -0.01F, (double) 0.2F), EntitySelector.pushableBy(this));
+        if (!list.isEmpty()) {
+            boolean flag = !this.level().isClientSide && !(this.getControllingPassenger() instanceof Player);
+
+            for (Entity entity : list) {
+                if (!entity.hasPassenger(this)) {
+                    if (flag && this.getPassengers().size() < this.getMaxPassengers() && !entity.isPassenger() && entity instanceof LivingEntity && !(entity instanceof WaterAnimal) && !(entity instanceof Player)) {
+                        entity.startRiding(this);
+                    } else {
+                        this.push(entity);
+                    }
+                }
+            }
         }
     }
 
@@ -633,6 +687,15 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     @Override
     public void charge(int amount) {
         this.entityData.set(ENERGY, Math.min(this.entityData.get(ENERGY) + amount, MAX_ENERGY));
+    }
+
+    @Override
+    protected boolean canAddPassenger(Entity pPassenger) {
+        return this.getPassengers().size() < this.getMaxPassengers();
+    }
+
+    public int getMaxPassengers() {
+        return 5;
     }
 
     @Override
