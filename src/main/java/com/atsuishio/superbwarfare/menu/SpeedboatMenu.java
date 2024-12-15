@@ -33,7 +33,7 @@ public class SpeedboatMenu extends AbstractContainerMenu {
 
         for (int j = 0; j < this.containerRows; ++j) {
             for (int k = 0; k < 17; ++k) {
-                this.addSlot(new Slot(pContainer, k + j * 9, 8 + k * 18, 18 + j * 18));
+                this.addSlot(new Slot(pContainer, k + j * 17, 8 + k * 18, 18 + j * 18));
             }
         }
 

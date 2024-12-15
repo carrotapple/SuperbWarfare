@@ -184,7 +184,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     @Override
     public void remove(Entity.RemovalReason pReason) {
-        if (!this.level().isClientSide && pReason.shouldDestroy()) {
+        if (!this.level().isClientSide && pReason != RemovalReason.DISCARDED) {
             Containers.dropContents(this.level(), this, this);
         }
 
@@ -248,6 +248,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
                 if (!player.addItem(stack)) {
                     player.drop(stack, false);
                 }
+                this.remove(RemovalReason.DISCARDED);
                 this.discard();
                 return InteractionResult.sidedSuccess(this.level().isClientSide());
             } else {
