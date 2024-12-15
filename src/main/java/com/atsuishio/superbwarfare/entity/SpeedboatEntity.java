@@ -332,7 +332,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         gunnerAngle();
         gunnerFire();
 
-        testRiding();
+        attractEntity();
 
         this.refreshDimensions();
     }
@@ -575,15 +575,18 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         }
     }
 
-    // TODO 移除此方法
-    public void testRiding() {
-        List<Entity> list = this.level().getEntities(this, this.getBoundingBox().inflate((double) 0.2F, (double) -0.01F, (double) 0.2F), EntitySelector.pushableBy(this));
+    public boolean hasEnoughSpaceFor(Entity pEntity) {
+        return pEntity.getBbWidth() < this.getBbWidth();
+    }
+
+    public void attractEntity() {
+        List<Entity> list = this.level().getEntities(this, this.getBoundingBox().inflate(0.2F, -0.01F, 0.2F), EntitySelector.pushableBy(this));
         if (!list.isEmpty()) {
             boolean flag = !this.level().isClientSide && !(this.getControllingPassenger() instanceof Player);
 
             for (Entity entity : list) {
                 if (!entity.hasPassenger(this)) {
-                    if (flag && this.getPassengers().size() < this.getMaxPassengers() && !entity.isPassenger() && entity instanceof LivingEntity && !(entity instanceof WaterAnimal) && !(entity instanceof Player)) {
+                    if (flag && this.getPassengers().size() < this.getMaxPassengers() && !entity.isPassenger() && this.hasEnoughSpaceFor(entity) && entity instanceof LivingEntity && !(entity instanceof WaterAnimal) && !(entity instanceof Player)) {
                         entity.startRiding(this);
                     } else {
                         this.push(entity);
