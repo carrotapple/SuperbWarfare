@@ -181,7 +181,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     @Override
     public double getPassengersRidingOffset() {
-        return super.getPassengersRidingOffset() - 1.3;
+        return super.getPassengersRidingOffset() - 0.8;
     }
 
     @Override
@@ -355,8 +355,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         if (driver == null) return;
 
         if (driver instanceof Player player && !(player.getMainHandItem().is(ModTags.Items.GUN))) {
-            Level level = player.level();
-            if (level instanceof ServerLevel && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).holdFire) {
+            if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).holdFire) {
                 ProjectileEntity projectile = new ProjectileEntity(driver.level())
                         .shooter(player)
                         .damage(CannonConfig.SPEEDBOAT_GUN_DAMAGE.get())
@@ -365,8 +364,8 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
                 projectile.bypassArmorRate(0.9f);
                 projectile.setPos(this.xo - this.getViewVector(1).scale(0.54).x - this.getDeltaMovement().x, this.yo + 3.0, this.zo - this.getViewVector(1).scale(0.54).z - this.getDeltaMovement().z);
-                projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y + (zooming() ? 0.002f : -0.009f), player.getLookAngle().z, 25,
-                        (float) 0.6);
+                projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y + (zooming() ? 0.002f : -0.009f), player.getLookAngle().z, 20,
+                        (float) 0.4);
                 this.level().addFreshEntity(projectile);
 
                 float pitch = heat <= 60 ? 1 : (float) (1 - 0.015 * java.lang.Math.abs(60 - heat));
@@ -378,6 +377,8 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
                     serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_2_VERYFAR.get(), SoundSource.PLAYERS, 24, pitch);
                 }
 
+                Level level = player.level();
+
                 final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
 
                 for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
@@ -385,8 +386,11 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
                         ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 7, this.getX(), this.getEyeY(), this.getZ()));
                     }
                 }
-                this.entityData.set(COOL_DOWN, 3);
-                heat += 4;
+
+                if (level instanceof ServerLevel) {
+                    this.entityData.set(COOL_DOWN, 3);
+                    heat += 4;
+                }
             }
         }
     }
