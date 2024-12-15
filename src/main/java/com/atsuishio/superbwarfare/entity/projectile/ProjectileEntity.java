@@ -223,11 +223,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         float eyeHeight = entity.getEyeHeight();
         float BodyHeight = entity.getBbHeight();
         if ((eyeHeight - 0.35) < hitBoxPos.y && hitBoxPos.y < (eyeHeight + 0.4) &&
-                !(entity instanceof ClaymoreEntity || entity instanceof MortarEntity || entity instanceof ICannonEntity || entity instanceof DroneEntity)) {
+                !(entity instanceof ClaymoreEntity || entity instanceof MortarEntity || entity instanceof IVehicleEntity || entity instanceof DroneEntity)) {
             headshot = true;
         }
         if (hitBoxPos.y < (0.33 * BodyHeight) && !(entity instanceof ClaymoreEntity || entity instanceof MortarEntity ||
-                entity instanceof ICannonEntity || entity instanceof DroneEntity)) {
+                entity instanceof IVehicleEntity || entity instanceof DroneEntity)) {
             legShot = true;
         }
 
