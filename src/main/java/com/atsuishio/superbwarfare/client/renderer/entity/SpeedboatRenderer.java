@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
 import com.atsuishio.superbwarfare.client.layer.SpeedBoatLayer;
+import com.atsuishio.superbwarfare.client.layer.SpeedBoatPowerLayer;
 import com.atsuishio.superbwarfare.client.model.entity.SpeedboatModel;
 import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -20,6 +21,7 @@ public class SpeedboatRenderer extends GeoEntityRenderer<SpeedboatEntity> {
     public SpeedboatRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new SpeedboatModel());
         this.addRenderLayer(new SpeedBoatLayer(this));
+        this.addRenderLayer(new SpeedBoatPowerLayer(this));
     }
 
     @Override
