@@ -1,0 +1,46 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "abc",
+    "def",
+    "ghi"
+  ],
+  "key": {
+    "a": {
+      "item": "superbwarfare:m2hb_blueprint"
+    },
+    "b": {
+      "item": "superbwarfare:epic_material_pack"
+    },
+    "c": {
+      "tag":"forge:ingots/steel"
+    },
+    "d": {
+      "item": "minecraft:comparator"
+    },
+    "e": {
+      "tag": "minecraft:boats"
+    },
+    "f": {
+      "item": "minecraft:chest"
+    },
+    "g": {
+      "item": "superbwarfare:cell"
+    },
+    "h": {
+      "item": "superbwarfare:motor"
+    },
+    "i": {
+      "tag":"forge:ingots/copper"
+    }
+  },
+  "result": {
+    "item": "superbwarfare:container",
+    "nbt": {
+      "BlockEntityTag": {
+        "EntityType": "superbwarfare:speedboat"
+      }
+    }
+  }
+}

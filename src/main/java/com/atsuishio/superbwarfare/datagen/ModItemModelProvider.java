@@ -131,6 +131,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         blueprintItem(ModItems.MK_42_BLUEPRINT);
         blueprintItem(ModItems.MLE_1934_BLUEPRINT);
         blueprintItem(ModItems.ANNIHILATOR_BLUEPRINT);
+        blueprintItem(ModItems.M_2_HB_BLUEPRINT);
 
         // blocks
         evenSimplerBlockItem(ModBlocks.BARBED_WIRE);
