@@ -351,7 +351,9 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
      * 机枪塔开火
      */
     private void gunnerFire() {
-        if (this.entityData.get(COOL_DOWN) != 0 || cannotFire || !this.getItemStacks().contains(ModItems.HEAVY_AMMO.get())) return;
+        if (this.entityData.get(COOL_DOWN) != 0 || this.cannotFire) return;
+        if (this.getItemStacks().stream().noneMatch(stack -> stack.is(ModItems.HEAVY_AMMO.get()))) return;
+
         Entity driver = this.getFirstPassenger();
         if (driver == null) return;
 
@@ -392,6 +394,8 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
                     this.entityData.set(COOL_DOWN, 3);
                     heat += 4;
                 }
+
+                this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
             }
         }
     }
