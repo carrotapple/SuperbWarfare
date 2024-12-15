@@ -26,6 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
@@ -35,7 +36,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -44,6 +44,7 @@ import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.entity.vehicle.ContainerEntity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -73,7 +74,6 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
-import java.util.List;
 
 public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity, IVehicleEntity, HasCustomInventoryScreen, ContainerEntity {
 
@@ -259,6 +259,18 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
                 return !player.level().isClientSide ? InteractionResult.CONSUME : InteractionResult.SUCCESS;
             }
         } else {
+            if (player.getMainHandItem().is(Items.IRON_INGOT)) {
+                if (this.entityData.get(HEALTH) < MAX_HEALTH) {
+                    this.entityData.set(HEALTH, Math.min(this.entityData.get(HEALTH) + 0.1f * MAX_HEALTH, MAX_HEALTH));
+                    player.getMainHandItem().shrink(1);
+                    if (!this.level().isClientSide) {
+                        this.level().playSound(null, this, SoundEvents.IRON_GOLEM_REPAIR, this.getSoundSource(), 1, 1);
+                    }
+                } else {
+                    player.startRiding(this);
+                }
+                return InteractionResult.sidedSuccess(this.level().isClientSide());
+            }
             player.startRiding(this);
             return InteractionResult.sidedSuccess(this.level().isClientSide());
         }
@@ -333,7 +345,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         gunnerAngle();
         gunnerFire();
 
-        attractEntity();
+//        attractEntity();
 
         this.refreshDimensions();
     }
@@ -584,26 +596,26 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         }
     }
 
-    public boolean hasEnoughSpaceFor(Entity pEntity) {
-        return pEntity.getBbWidth() < this.getBbWidth();
-    }
-
-    public void attractEntity() {
-        List<Entity> list = this.level().getEntities(this, this.getBoundingBox().inflate(0.2F, -0.01F, 0.2F), EntitySelector.pushableBy(this));
-        if (!list.isEmpty()) {
-            boolean flag = !this.level().isClientSide && !(this.getControllingPassenger() instanceof Player);
-
-            for (Entity entity : list) {
-                if (!entity.hasPassenger(this)) {
-                    if (flag && this.getPassengers().size() < this.getMaxPassengers() && !entity.isPassenger() && this.hasEnoughSpaceFor(entity) && entity instanceof LivingEntity && !(entity instanceof WaterAnimal) && !(entity instanceof Player)) {
-                        entity.startRiding(this);
-                    } else {
-                        this.push(entity);
-                    }
-                }
-            }
-        }
-    }
+//    public boolean hasEnoughSpaceFor(Entity pEntity) {
+//        return pEntity.getBbWidth() < this.getBbWidth();
+//    }
+//
+//    public void attractEntity() {
+//        List<Entity> list = this.level().getEntities(this, this.getBoundingBox().inflate(0.2F, -0.01F, 0.2F), EntitySelector.pushableBy(this));
+//        if (!list.isEmpty()) {
+//            boolean flag = !this.level().isClientSide && !(this.getControllingPassenger() instanceof Player);
+//
+//            for (Entity entity : list) {
+//                if (!entity.hasPassenger(this)) {
+//                    if (flag && this.getPassengers().size() < this.getMaxPassengers() && !entity.isPassenger() && this.hasEnoughSpaceFor(entity) && entity instanceof LivingEntity && !(entity instanceof WaterAnimal) && !(entity instanceof Player)) {
+//                        entity.startRiding(this);
+//                    } else {
+//                        this.push(entity);
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     public static double calculateAngle(Vec3 move, Vec3 view) {
         move = move.multiply(1, 0, 1).normalize();
