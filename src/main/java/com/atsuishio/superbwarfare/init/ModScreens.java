@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.init;
 
 import com.atsuishio.superbwarfare.client.screens.ChargingStationScreen;
 import com.atsuishio.superbwarfare.client.screens.ReforgingTableScreen;
+import com.atsuishio.superbwarfare.client.screens.SpeedboatScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,6 +17,7 @@ public class ModScreens {
         event.enqueueWork(() -> {
             MenuScreens.register(ModMenuTypes.REFORGING_TABLE_MENU.get(), ReforgingTableScreen::new);
             MenuScreens.register(ModMenuTypes.CHARGING_STATION_MENU.get(), ChargingStationScreen::new);
+            MenuScreens.register(ModMenuTypes.SPEEDBOAT_MENU.get(), SpeedboatScreen::new);
         });
     }
 }

@@ -1,8 +1,8 @@
 package com.atsuishio.superbwarfare.block.entity;
 
-import com.atsuishio.superbwarfare.block.menu.ChargingStationMenu;
 import com.atsuishio.superbwarfare.entity.IChargeEntity;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
+import com.atsuishio.superbwarfare.menu.ChargingStationMenu;
 import com.atsuishio.superbwarfare.network.dataslot.ContainerEnergyData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -1,11 +1,11 @@
 package com.atsuishio.superbwarfare.client.screens;
 
+import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.menu.ReforgingTableMenu;
 import com.atsuishio.superbwarfare.network.message.GunReforgeMessage;
 import com.atsuishio.superbwarfare.network.message.SetPerkLevelMessage;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.block.menu.ReforgingTableMenu;
 import com.atsuishio.superbwarfare.perk.Perk;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;

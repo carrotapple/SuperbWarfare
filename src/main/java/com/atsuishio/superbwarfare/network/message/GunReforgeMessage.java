@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.network.message;
 
-import com.atsuishio.superbwarfare.block.menu.ReforgingTableMenu;
+import com.atsuishio.superbwarfare.menu.ReforgingTableMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;

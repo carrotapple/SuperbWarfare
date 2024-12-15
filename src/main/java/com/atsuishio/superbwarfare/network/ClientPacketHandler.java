@@ -1,10 +1,10 @@
 package com.atsuishio.superbwarfare.network;
 
-import com.atsuishio.superbwarfare.block.menu.ChargingStationMenu;
 import com.atsuishio.superbwarfare.client.screens.CrossHairOverlay;
 import com.atsuishio.superbwarfare.client.screens.DroneUIOverlay;
 import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
 import com.atsuishio.superbwarfare.event.KillMessageHandler;
+import com.atsuishio.superbwarfare.menu.ChargingStationMenu;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.network.message.ContainerDataMessage;
 import com.atsuishio.superbwarfare.network.message.GunsDataMessage;

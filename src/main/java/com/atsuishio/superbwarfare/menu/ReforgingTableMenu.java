@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.block.menu;
+package com.atsuishio.superbwarfare.menu;
 
 import com.atsuishio.superbwarfare.init.ModBlocks;
 import com.atsuishio.superbwarfare.init.ModMenuTypes;

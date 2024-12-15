@@ -1,0 +1,80 @@
+package com.atsuishio.superbwarfare.menu;
+
+import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
+import com.atsuishio.superbwarfare.init.ModMenuTypes;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+
+public class SpeedboatMenu extends AbstractContainerMenu {
+
+    private final Container container;
+    private final int containerRows;
+
+    public static final int X_OFFSET = 72;
+    public static final int Y_OFFSET = 20;
+
+    public SpeedboatMenu(int pContainerId, Inventory pPlayerInventory) {
+        this(pContainerId, pPlayerInventory, new SimpleContainer(SpeedboatEntity.CONTAINER_SIZE));
+    }
+
+    public SpeedboatMenu(int pContainerId, Inventory pPlayerInventory, Container pContainer) {
+        super(ModMenuTypes.SPEEDBOAT_MENU.get(), pContainerId);
+
+        checkContainerSize(pContainer, SpeedboatEntity.CONTAINER_SIZE);
+        this.container = pContainer;
+        this.containerRows = 6;
+        pContainer.startOpen(pPlayerInventory.player);
+        int i = (this.containerRows - 4) * 18;
+
+        for (int j = 0; j < this.containerRows; ++j) {
+            for (int k = 0; k < 17; ++k) {
+                this.addSlot(new Slot(pContainer, k + j * 9, 8 + k * 18, 18 + j * 18));
+            }
+        }
+
+        for (int l = 0; l < 3; ++l) {
+            for (int j = 0; j < 9; ++j) {
+                this.addSlot(new Slot(pPlayerInventory, j + l * 9 + 9, 8 + j * 18 + X_OFFSET, 84 + l * 18 + Y_OFFSET + i));
+            }
+        }
+
+        for (int k = 0; k < 9; ++k) {
+            this.addSlot(new Slot(pPlayerInventory, k, 8 + k * 18 + X_OFFSET, 142 + Y_OFFSET + i));
+        }
+    }
+
+    @Override
+    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.slots.get(pIndex);
+        if (slot.hasItem()) {
+            ItemStack itemstack1 = slot.getItem();
+            itemstack = itemstack1.copy();
+            if (pIndex < this.containerRows * 17) {
+                if (!this.moveItemStackTo(itemstack1, this.containerRows * 17, this.slots.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.moveItemStackTo(itemstack1, 0, this.containerRows * 17, false)) {
+                return ItemStack.EMPTY;
+            }
+
+            if (itemstack1.isEmpty()) {
+                slot.setByPlayer(ItemStack.EMPTY);
+            } else {
+                slot.setChanged();
+            }
+        }
+
+        return itemstack;
+    }
+
+    @Override
+    public boolean stillValid(Player pPlayer) {
+        return this.container.stillValid(pPlayer);
+    }
+}

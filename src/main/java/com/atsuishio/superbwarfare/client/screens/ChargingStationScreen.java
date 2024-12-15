@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.client.screens;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.block.entity.ChargingStationBlockEntity;
-import com.atsuishio.superbwarfare.block.menu.ChargingStationMenu;
+import com.atsuishio.superbwarfare.menu.ChargingStationMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;

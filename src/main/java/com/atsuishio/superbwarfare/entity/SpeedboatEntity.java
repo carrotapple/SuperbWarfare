@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
+import com.atsuishio.superbwarfare.menu.SpeedboatMenu;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
@@ -13,42 +14,53 @@ import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.entity.AreaEffectCloud;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.entity.vehicle.ContainerEntity;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -61,7 +73,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
 
-public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity, IVehicleEntity {
+public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity, IVehicleEntity, HasCustomInventoryScreen, ContainerEntity {
+
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ROT_Y = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
@@ -73,6 +86,10 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     public static final float MAX_HEALTH = CannonConfig.SPEEDBOAT_HP.get();
     public static final float MAX_ENERGY = CannonConfig.SPEEDBOAT_MAX_ENERGY.get().floatValue();
+    public static final int CONTAINER_SIZE = 102;
+
+    private NonNullList<ItemStack> items = NonNullList.withSize(CONTAINER_SIZE, ItemStack.EMPTY);
+    private LazyOptional<?> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private int lerpSteps;
@@ -115,6 +132,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         compound.putFloat("Health", this.entityData.get(HEALTH));
         compound.putFloat("Energy", this.entityData.get(ENERGY));
         compound.putString("LastAttacker", this.entityData.get(LAST_ATTACKER_UUID));
+        ContainerHelper.saveAllItems(compound, this.getItemStacks());
     }
 
     @Override
@@ -128,6 +146,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         if (compound.contains("LastAttacker")) {
             this.entityData.set(LAST_ATTACKER_UUID, compound.getString("LastAttacker"));
         }
+        ContainerHelper.loadAllItems(compound, this.getItemStacks());
     }
 
     @Override
@@ -161,6 +180,15 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     @Override
     public double getPassengersRidingOffset() {
         return super.getPassengersRidingOffset() - 1.3;
+    }
+
+    @Override
+    public void remove(Entity.RemovalReason pReason) {
+        if (!this.level().isClientSide && pReason.shouldDestroy()) {
+            Containers.dropContents(this.level(), this, this);
+        }
+
+        super.remove(pReason);
     }
 
     @Override
@@ -222,8 +250,10 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
                 }
                 this.discard();
                 return InteractionResult.sidedSuccess(this.level().isClientSide());
+            } else {
+                player.openMenu(this);
+                return !player.level().isClientSide ? InteractionResult.CONSUME : InteractionResult.SUCCESS;
             }
-            return InteractionResult.PASS;
         } else {
             player.startRiding(this);
             return InteractionResult.sidedSuccess(this.level().isClientSide());
@@ -602,5 +632,125 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     @Override
     public void charge(int amount) {
         this.entityData.set(ENERGY, Math.min(this.entityData.get(ENERGY) + amount, MAX_ENERGY));
+    }
+
+    @Override
+    public void openCustomInventoryScreen(Player pPlayer) {
+        pPlayer.openMenu(this);
+        if (!pPlayer.level().isClientSide) {
+            this.gameEvent(GameEvent.CONTAINER_OPEN, pPlayer);
+        }
+    }
+
+    @Nullable
+    @Override
+    public ResourceLocation getLootTable() {
+        return null;
+    }
+
+    @Override
+    public void setLootTable(@Nullable ResourceLocation pLootTable) {
+    }
+
+    @Override
+    public long getLootTableSeed() {
+        return 0;
+    }
+
+    @Override
+    public void setLootTableSeed(long pLootTableSeed) {
+    }
+
+    @Override
+    public NonNullList<ItemStack> getItemStacks() {
+        return this.items;
+    }
+
+    @Override
+    public void clearItemStacks() {
+        this.items.clear();
+    }
+
+    @Override
+    public int getContainerSize() {
+        return CONTAINER_SIZE;
+    }
+
+    @Override
+    public ItemStack getItem(int pSlot) {
+        return this.items.get(pSlot);
+    }
+
+    @Override
+    public ItemStack removeItem(int pSlot, int pAmount) {
+        return ContainerHelper.removeItem(this.items, pSlot, pAmount);
+    }
+
+    @Override
+    public ItemStack removeItemNoUpdate(int pSlot) {
+        ItemStack itemstack = this.getItemStacks().get(pSlot);
+        if (itemstack.isEmpty()) {
+            return ItemStack.EMPTY;
+        } else {
+            this.getItemStacks().set(pSlot, ItemStack.EMPTY);
+            return itemstack;
+        }
+    }
+
+    @Override
+    public void setItem(int pSlot, ItemStack pStack) {
+        this.getItemStacks().set(pSlot, pStack);
+        if (!pStack.isEmpty() && pStack.getCount() > this.getMaxStackSize()) {
+            pStack.setCount(this.getMaxStackSize());
+        }
+    }
+
+    @Override
+    public void setChanged() {
+    }
+
+    @Override
+    public boolean stillValid(Player pPlayer) {
+        return !this.isRemoved() && this.position().closerThan(pPlayer.position(), 8.0D);
+    }
+
+    @Override
+    public void clearContent() {
+        this.getItemStacks().clear();
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+        if (pPlayer.isSpectator()) {
+            return null;
+        } else {
+            return new SpeedboatMenu(pContainerId, pPlayerInventory, this);
+        }
+    }
+
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
+        if (this.isAlive() && capability == ForgeCapabilities.ITEM_HANDLER) {
+            return itemHandler.cast();
+        }
+        return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        itemHandler.invalidate();
+    }
+
+    @Override
+    public void reviveCaps() {
+        super.reviveCaps();
+        itemHandler = LazyOptional.of(() -> new InvWrapper(this));
+    }
+
+    @Override
+    public void stopOpen(Player pPlayer) {
+        this.level().gameEvent(GameEvent.CONTAINER_CLOSE, this.position(), GameEvent.Context.of(pPlayer));
     }
 }

@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.block.menu;
+package com.atsuishio.superbwarfare.menu;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.block.entity.ChargingStationBlockEntity;
