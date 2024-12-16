@@ -524,4 +524,9 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     public void charge(int amount) {
         this.entityData.set(ENERGY, Math.min(this.entityData.get(ENERGY) + amount, CannonConfig.ANNIHILATOR_MAX_ENERGY.get().floatValue()));
     }
+
+    @Override
+    public boolean canCharge() {
+        return this.entityData.get(ENERGY) < CannonConfig.ANNIHILATOR_MAX_ENERGY.get().floatValue();
+    }
 }

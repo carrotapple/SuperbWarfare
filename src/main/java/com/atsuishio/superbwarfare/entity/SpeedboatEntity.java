@@ -714,6 +714,11 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     }
 
     @Override
+    public boolean canCharge() {
+        return this.entityData.get(ENERGY) < MAX_ENERGY;
+    }
+
+    @Override
     protected boolean canAddPassenger(Entity pPassenger) {
         return this.getPassengers().size() < this.getMaxPassengers();
     }
