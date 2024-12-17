@@ -1,10 +1,8 @@
 package com.atsuishio.superbwarfare.client.screens;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.config.server.CannonConfig;
-import com.atsuishio.superbwarfare.entity.ICannonEntity;
+import com.atsuishio.superbwarfare.entity.IChargeEntity;
 import com.atsuishio.superbwarfare.entity.IVehicleEntity;
-import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -52,20 +50,22 @@ public class VehicleHudOverlay {
         RenderSystem.setShaderColor(1, 1, 1, 1);
         GuiGraphics guiGraphics = event.getGuiGraphics();
 
-        if (vehicle instanceof SpeedboatEntity) {
-            health = vehicle.getEntityData().get(SpeedboatEntity.HEALTH);
-            maxHealth = CannonConfig.SPEEDBOAT_HP.get();
-            energy = vehicle.getEntityData().get(SpeedboatEntity.ENERGY);
-            maxEnergy = CannonConfig.SPEEDBOAT_MAX_ENERGY.get().floatValue();
+        guiGraphics.pose().pushPose();
+        if (vehicle instanceof IChargeEntity iCharge) {
+            energy = iCharge.getEnergy();
+            maxEnergy = iCharge.getMaxEnergy();
+            guiGraphics.blit(ENERGY, w - 96, h - 28, 0, 0, 12, 12, 12, 12);
+            guiGraphics.blit(HEALTH_FRAME, w - 83, h - 26, 0, 0, 80, 8, 80, 8);
+            guiGraphics.blit(HEALTH, w - 83, h - 26, 0, 0, (int) (80 * energy / maxEnergy), 8, 80, 8);
         }
 
-        guiGraphics.pose().pushPose();
-        guiGraphics.blit(ENERGY, w - 96, h - 28, 0, 0, 12, 12, 12, 12);
-        guiGraphics.blit(HEALTH_FRAME, w - 83, h - 26, 0, 0, 80, 8, 80, 8);
-        guiGraphics.blit(HEALTH, w - 83, h - 26, 0, 0, (int) (80 * energy / maxEnergy), 8, 80, 8);
-        guiGraphics.blit(ARMOR, w - 96, h - 14, 0, 0, 12, 12, 12, 12);
-        guiGraphics.blit(HEALTH_FRAME, w - 83, h - 12, 0, 0, 80, 8, 80, 8);
-        guiGraphics.blit(HEALTH, w - 83, h - 12, 0, 0, (int) (80 * health / maxHealth), 8, 80, 8);
+        if (vehicle instanceof IVehicleEntity iVehicle) {
+            health = iVehicle.getHealth();
+            maxHealth = iVehicle.getMaxHealth();
+            guiGraphics.blit(ARMOR, w - 96, h - 14, 0, 0, 12, 12, 12, 12);
+            guiGraphics.blit(HEALTH_FRAME, w - 83, h - 12, 0, 0, 80, 8, 80, 8);
+            guiGraphics.blit(HEALTH, w - 83, h - 12, 0, 0, (int) (80 * health / maxHealth), 8, 80, 8);
+        }
         guiGraphics.pose().popPose();
 
     }
@@ -73,6 +73,6 @@ public class VehicleHudOverlay {
     private static boolean shouldRenderCrossHair(Player player) {
         if (player == null) return false;
         return !player.isSpectator()
-                && (player.getVehicle() != null && player.getVehicle() instanceof IVehicleEntity && !(player.getVehicle() instanceof ICannonEntity));
+                && (player.getVehicle() != null && player.getVehicle() instanceof IVehicleEntity);
     }
 }

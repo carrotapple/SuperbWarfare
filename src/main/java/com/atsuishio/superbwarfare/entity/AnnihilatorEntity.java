@@ -66,6 +66,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public static final float MAX_HEALTH = CannonConfig.ANNIHILATOR_HP.get();
+    public static final float MAX_ENERGY = CannonConfig.ANNIHILATOR_MAX_ENERGY.get().floatValue();
     public static final float SHOOT_COST = CannonConfig.ANNIHILATOR_SHOOT_COST.get().floatValue();
 
     protected int interpolationSteps;
@@ -527,6 +528,26 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
 
     @Override
     public boolean canCharge() {
-        return this.entityData.get(ENERGY) < CannonConfig.ANNIHILATOR_MAX_ENERGY.get().floatValue();
+        return this.entityData.get(ENERGY) < MAX_ENERGY;
+    }
+
+    @Override
+    public int getEnergy() {
+        return this.entityData.get(ENERGY).intValue();
+    }
+
+    @Override
+    public int getMaxEnergy() {
+        return (int)MAX_ENERGY;
+    }
+
+    @Override
+    public float getHealth() {
+        return this.entityData.get(HEALTH).intValue();
+    }
+
+    @Override
+    public float getMaxHealth() {
+        return (int)MAX_HEALTH;
     }
 }

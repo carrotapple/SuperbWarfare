@@ -2,7 +2,6 @@ package com.atsuishio.superbwarfare.client.screens;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.RenderHelper;
-import com.atsuishio.superbwarfare.config.server.CannonConfig;
 import com.atsuishio.superbwarfare.entity.AnnihilatorEntity;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.entity.Mk42Entity;
@@ -12,10 +11,8 @@ import com.atsuishio.superbwarfare.tools.TraceTool;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -32,18 +29,7 @@ import java.text.DecimalFormat;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class CannonHudOverlay {
-
-    public static float health = 0;
-    public static float maxHealth = 0;
     public static float indicatorPosH = 0;
-
-    public static float energy = 0;
-    public static float maxEnergy = 0;
-
-    private static final ResourceLocation ARMOR = ModUtils.loc("textures/screens/armor.png");
-    private static final ResourceLocation ENERGY = ModUtils.loc("textures/screens/energy.png");
-    private static final ResourceLocation HEALTH = ModUtils.loc("textures/screens/armor_value.png");
-    private static final ResourceLocation HEALTH_FRAME = ModUtils.loc("textures/screens/armor_value_frame.png");
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
@@ -62,39 +48,18 @@ public class CannonHudOverlay {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        GuiGraphics guiGraphics = event.getGuiGraphics();
 
         if (cannon instanceof Mk42Entity) {
-            health = cannon.getEntityData().get(Mk42Entity.HEALTH);
-            maxHealth = CannonConfig.MK42_HP.get();
             indicatorPosH = 1.3f;
         }
 
         if (cannon instanceof Mle1934Entity) {
-            health = cannon.getEntityData().get(Mle1934Entity.HEALTH);
-            maxHealth = CannonConfig.MLE1934_HP.get();
             indicatorPosH = 1.2f;
         }
 
         if (cannon instanceof AnnihilatorEntity) {
-            health = cannon.getEntityData().get(AnnihilatorEntity.HEALTH);
-            maxHealth = CannonConfig.ANNIHILATOR_HP.get();
-            energy = cannon.getEntityData().get(AnnihilatorEntity.ENERGY);
-            maxEnergy = CannonConfig.ANNIHILATOR_MAX_ENERGY.get().floatValue();
             indicatorPosH = cannon.getEntityData().get(AnnihilatorEntity.OFFSET_ANGLE);
-
-            guiGraphics.pose().pushPose();
-            guiGraphics.blit(ENERGY, w - 96, h - 28, 0, 0, 12, 12, 12, 12);
-            guiGraphics.blit(HEALTH_FRAME, w - 83, h - 26, 0, 0, 80, 8, 80, 8);
-            guiGraphics.blit(HEALTH, w - 83, h - 26, 0, 0, (int) (80 * energy / maxEnergy), 8, 80, 8);
-            guiGraphics.pose().popPose();
         }
-
-        guiGraphics.pose().pushPose();
-        guiGraphics.blit(ARMOR, w - 96, h - 14, 0, 0, 12, 12, 12, 12);
-        guiGraphics.blit(HEALTH_FRAME, w - 83, h - 12, 0, 0, 80, 8, 80, 8);
-        guiGraphics.blit(HEALTH, w - 83, h - 12, 0, 0, (int) (80 * health / maxHealth), 8, 80, 8);
-        guiGraphics.pose().popPose();
 
         float yRotOffset = Mth.lerp(event.getPartialTick(), player.yRotO, player.getYRot());
         float xRotOffset = Mth.lerp(event.getPartialTick(), player.xRotO, player.getXRot());

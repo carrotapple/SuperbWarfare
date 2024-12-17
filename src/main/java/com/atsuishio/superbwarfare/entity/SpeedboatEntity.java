@@ -300,6 +300,9 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             cannotFire = false;
         }
 
+        turretYRotO = this.getTurretYRot();
+        turretXRotO = this.getTurretXRot();
+
         Entity driver = this.getFirstPassenger();
         if (driver instanceof Player player) {
             if (heat > 100) {
@@ -364,12 +367,11 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
      */
     private void gunnerFire() {
         if (this.entityData.get(COOL_DOWN) != 0 || this.cannotFire) return;
-        if (this.getItemStacks().stream().noneMatch(stack -> stack.is(ModItems.HEAVY_AMMO.get()))) return;
-
         Entity driver = this.getFirstPassenger();
         if (driver == null) return;
 
         if (driver instanceof Player player && !(player.getMainHandItem().is(ModTags.Items.GUN))) {
+            if (this.getItemStacks().stream().noneMatch(stack -> stack.is(ModItems.HEAVY_AMMO.get())) && !player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) return;
             if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).holdFire) {
                 ProjectileEntity projectile = new ProjectileEntity(driver.level())
                         .shooter(player)
@@ -393,7 +395,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
                 }
 
                 Level level = player.level();
-
                 final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
 
                 for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
@@ -401,12 +402,10 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
                         ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 7, this.getX(), this.getEyeY(), this.getZ()));
                     }
                 }
-
                 if (level instanceof ServerLevel) {
                     this.entityData.set(COOL_DOWN, 3);
                     heat += 4;
                 }
-
                 this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
             }
         }
@@ -512,9 +511,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         if (driver == null) return;
 
         float gunAngle = -Math.clamp(-140f, 140f, Mth.wrapDegrees(driver.getYHeadRot() - this.getYRot()));
-
-        turretYRotO = this.getTurretYRot();
-        turretXRotO = this.getTurretXRot();
 
         this.setTurretYRot(gunAngle);
         this.setTurretXRot(driver.getXRot() - this.getXRot());
@@ -845,5 +841,25 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     @Override
     public void stopOpen(Player pPlayer) {
         this.level().gameEvent(GameEvent.CONTAINER_CLOSE, this.position(), GameEvent.Context.of(pPlayer));
+    }
+
+    @Override
+    public int getEnergy() {
+        return this.entityData.get(ENERGY).intValue();
+    }
+
+    @Override
+    public int getMaxEnergy() {
+        return (int)MAX_ENERGY;
+    }
+
+    @Override
+    public float getHealth() {
+        return this.entityData.get(HEALTH).intValue();
+    }
+
+    @Override
+    public float getMaxHealth() {
+        return (int)MAX_HEALTH;
     }
 }

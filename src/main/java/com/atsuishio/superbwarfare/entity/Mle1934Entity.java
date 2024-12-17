@@ -516,4 +516,14 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
         return this.cache;
     }
 
+    @Override
+    public float getHealth() {
+        return this.entityData.get(HEALTH).intValue();
+    }
+
+    @Override
+    public float getMaxHealth() {
+        return (int)MAX_HEALTH;
+    }
+
 }
