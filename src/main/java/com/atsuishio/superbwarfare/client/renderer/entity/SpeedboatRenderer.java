@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
+import com.atsuishio.superbwarfare.client.layer.SpeedBoatHeatLayer;
 import com.atsuishio.superbwarfare.client.layer.SpeedBoatLayer;
 import com.atsuishio.superbwarfare.client.layer.SpeedBoatPowerLayer;
 import com.atsuishio.superbwarfare.client.model.entity.SpeedboatModel;
@@ -22,6 +23,7 @@ public class SpeedboatRenderer extends GeoEntityRenderer<SpeedboatEntity> {
         super(renderManager, new SpeedboatModel());
         this.addRenderLayer(new SpeedBoatLayer(this));
         this.addRenderLayer(new SpeedBoatPowerLayer(this));
+        this.addRenderLayer(new SpeedBoatHeatLayer(this));
     }
 
     @Override

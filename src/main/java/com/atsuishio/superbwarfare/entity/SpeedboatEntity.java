@@ -84,6 +84,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ROTOR = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
     protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.STRING);
 
     public static final float MAX_HEALTH = CannonConfig.SPEEDBOAT_HP.get();
@@ -106,7 +107,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public float turretYRotO;
     public float turretXRotO;
 
-    public float heat;
     public boolean cannotFire;
 
     public SpeedboatEntity(PlayMessages.SpawnEntity packet, Level world) {
@@ -126,6 +126,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         this.entityData.define(POWER, 0f);
         this.entityData.define(ROTOR, 0f);
         this.entityData.define(COOL_DOWN, 0);
+        this.entityData.define(HEAT, 0);
         this.entityData.define(LAST_ATTACKER_UUID, "undefined");
     }
 
@@ -292,11 +293,11 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             this.entityData.set(COOL_DOWN, this.entityData.get(COOL_DOWN) - 1);
         }
 
-        if (heat > 0) {
-            heat--;
+        if (this.entityData.get(HEAT) > 0) {
+            this.entityData.set(HEAT, this.entityData.get(HEAT) - 1);
         }
 
-        if (heat < 40) {
+        if (this.entityData.get(HEAT) < 40) {
             cannotFire = false;
         }
 
@@ -305,7 +306,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
         Entity driver = this.getFirstPassenger();
         if (driver instanceof Player player) {
-            if (heat > 100) {
+            if (this.entityData.get(HEAT) > 100) {
                 cannotFire = true;
                 if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_OVERHEAT.get(), 1f, 1f);
@@ -385,7 +386,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
                         (float) 0.4);
                 this.level().addFreshEntity(projectile);
 
-                float pitch = heat <= 60 ? 1 : (float) (1 - 0.015 * java.lang.Math.abs(60 - heat));
+                float pitch = this.entityData.get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - this.entityData.get(HEAT)));
 
                 if (player instanceof ServerPlayer serverPlayer) {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.M_2_FIRE_1P.get(), 2, 1);
@@ -399,12 +400,12 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
                 for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
                     if (target instanceof ServerPlayer serverPlayer) {
-                        ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 7, this.getX(), this.getEyeY(), this.getZ()));
+                        ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 5, this.getX(), this.getEyeY(), this.getZ()));
                     }
                 }
                 if (level instanceof ServerLevel) {
                     this.entityData.set(COOL_DOWN, 3);
-                    heat += 4;
+                    this.entityData.set(HEAT, this.entityData.get(HEAT) + 4);
                 }
                 this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
             }
