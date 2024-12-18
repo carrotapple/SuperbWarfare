@@ -3,7 +3,7 @@ package com.atsuishio.superbwarfare.init;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.menu.ChargingStationMenu;
 import com.atsuishio.superbwarfare.menu.ReforgingTableMenu;
-import com.atsuishio.superbwarfare.menu.SpeedboatMenu;
+import com.atsuishio.superbwarfare.menu.VehicleMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -20,7 +20,7 @@ public class ModMenuTypes {
     public static final RegistryObject<MenuType<ChargingStationMenu>> CHARGING_STATION_MENU =
             REGISTRY.register("charging_station_menu",
                     () -> IForgeMenuType.create((windowId, inv, data) -> new ChargingStationMenu(windowId, inv)));
-    public static final RegistryObject<MenuType<SpeedboatMenu>> SPEEDBOAT_MENU =
-            REGISTRY.register("speedboat_menu",
-                    () -> IForgeMenuType.create((windowId, inv, data) -> new SpeedboatMenu(windowId, inv)));
+    public static final RegistryObject<MenuType<VehicleMenu>> VEHICLE_MENU =
+            REGISTRY.register("vehicle_menu",
+                    () -> IForgeMenuType.create((windowId, inv, data) -> new VehicleMenu(windowId, inv)));
 }

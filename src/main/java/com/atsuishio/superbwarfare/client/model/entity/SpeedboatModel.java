@@ -23,7 +23,7 @@ public class SpeedboatModel extends GeoModel<SpeedboatEntity> {
 
     @Override
     public ResourceLocation getTextureResource(SpeedboatEntity entity) {
-        return ModUtils.loc("textures/entity/speedboat.png");
+        return ModUtils.loc("textures/entity/vehicle.png");
     }
 
     @Override

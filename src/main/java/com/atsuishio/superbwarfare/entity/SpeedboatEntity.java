@@ -6,7 +6,7 @@ import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
-import com.atsuishio.superbwarfare.menu.SpeedboatMenu;
+import com.atsuishio.superbwarfare.menu.VehicleMenu;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
@@ -89,7 +89,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     public static final float MAX_HEALTH = CannonConfig.SPEEDBOAT_HP.get();
     public static final float MAX_ENERGY = CannonConfig.SPEEDBOAT_MAX_ENERGY.get().floatValue();
-    public static final int CONTAINER_SIZE = 102;
+    public static final int CONTAINER_SIZE = 105;
 
     private NonNullList<ItemStack> items = NonNullList.withSize(CONTAINER_SIZE, ItemStack.EMPTY);
     private LazyOptional<?> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
@@ -815,7 +815,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         if (pPlayer.isSpectator()) {
             return null;
         } else {
-            return new SpeedboatMenu(pContainerId, pPlayerInventory, this);
+            return new VehicleMenu(pContainerId, pPlayerInventory, this);
         }
     }
 

@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.screens;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.menu.SpeedboatMenu;
+import com.atsuishio.superbwarfare.menu.VehicleMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -11,13 +11,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class SpeedboatScreen extends AbstractContainerScreen<SpeedboatMenu> {
+public class VehicleScreen extends AbstractContainerScreen<VehicleMenu> {
 
-    private static final ResourceLocation TEXTURE = ModUtils.loc("textures/gui/speedboat.png");
+    private static final ResourceLocation TEXTURE = ModUtils.loc("textures/gui/vehicle.png");
 
-    public SpeedboatScreen(SpeedboatMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public VehicleScreen(VehicleMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
-        imageWidth = 320;
+        imageWidth = 345;
         imageHeight = 222;
     }
 
@@ -25,7 +25,7 @@ public class SpeedboatScreen extends AbstractContainerScreen<SpeedboatMenu> {
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        pGuiGraphics.blit(TEXTURE, i, j, 0, 0, this.imageWidth, this.imageHeight, 328, 328);
+        pGuiGraphics.blit(TEXTURE, i, j, 0, 0, this.imageWidth, this.imageHeight, 358, 328);
     }
 
     @Override
@@ -38,9 +38,9 @@ public class SpeedboatScreen extends AbstractContainerScreen<SpeedboatMenu> {
     @Override
     protected void init() {
         super.init();
-        this.titleLabelX = 8;
+        this.titleLabelX = 33;
         this.titleLabelY = 5;
-        this.inventoryLabelX = 80;
+        this.inventoryLabelX = 105;
         this.inventoryLabelY = 128;
     }
 }
