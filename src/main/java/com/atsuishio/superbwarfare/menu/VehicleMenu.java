@@ -1,6 +1,5 @@
 package com.atsuishio.superbwarfare.menu;
 
-import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
 import com.atsuishio.superbwarfare.init.ModMenuTypes;
 import com.atsuishio.superbwarfare.item.PerkItem;
 import com.atsuishio.superbwarfare.perk.Perk;
@@ -17,17 +16,19 @@ public class VehicleMenu extends AbstractContainerMenu {
     private final Container container;
     private final int containerRows;
 
+    public static final int DEFAULT_SIZE = 105;
+
     public static final int X_OFFSET = 97;
     public static final int Y_OFFSET = 20;
 
     public VehicleMenu(int pContainerId, Inventory pPlayerInventory) {
-        this(pContainerId, pPlayerInventory, new SimpleContainer(SpeedboatEntity.CONTAINER_SIZE));
+        this(pContainerId, pPlayerInventory, new SimpleContainer(DEFAULT_SIZE));
     }
 
     public VehicleMenu(int pContainerId, Inventory pPlayerInventory, Container pContainer) {
         super(ModMenuTypes.VEHICLE_MENU.get(), pContainerId);
 
-        checkContainerSize(pContainer, SpeedboatEntity.CONTAINER_SIZE);
+        checkContainerSize(pContainer, DEFAULT_SIZE);
         this.container = pContainer;
         this.containerRows = 6;
         pContainer.startOpen(pPlayerInventory.player);
