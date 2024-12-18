@@ -17,6 +17,9 @@ public class VehicleMenu extends AbstractContainerMenu {
     private final int containerRows;
 
     public static final int DEFAULT_SIZE = 105;
+    public static final int DEFAULT_AMMO_PERK_SLOT = 102;
+    public static final int DEFAULT_FUNC_PERK_SLOT = 103;
+    public static final int DEFAULT_DAMAGE_PERK_SLOT = 104;
 
     public static final int X_OFFSET = 97;
     public static final int Y_OFFSET = 20;
