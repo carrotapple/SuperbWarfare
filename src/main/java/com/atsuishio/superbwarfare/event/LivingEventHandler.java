@@ -740,21 +740,14 @@ public class LivingEventHandler {
     public static void onLivingExperienceDrop(LivingExperienceDropEvent event) {
         Player player = event.getAttackingPlayer();
         if (player == null) return;
-        DamageSource source = event.getAttackingPlayer().getLastDamageSource();
-        if (source == null) return;
-
-        if (player.getVehicle() instanceof IVehicleEntity && source.is(ModDamageTypes.VEHICLE_STRIKE)) {
-            player.giveExperiencePoints(event.getDroppedExperience());
-            event.setCanceled(true);
-        }
-
         ItemStack stack = player.getMainHandItem();
-        if (stack.is(ModTags.Items.GUN)) {
-            int level = PerkHelper.getItemPerkLevel(ModPerks.POWERFUL_ATTRACTION.get(), stack);
-            if (level > 0) {
-                player.giveExperiencePoints((int) (event.getDroppedExperience() * (0.8f + 0.2f * level)));
-                event.setCanceled(true);
-            }
+        if (!stack.is(ModTags.Items.GUN)) return;
+
+        int level = PerkHelper.getItemPerkLevel(ModPerks.POWERFUL_ATTRACTION.get(), stack);
+        if (level > 0) {
+            player.giveExperiencePoints((int) (event.getDroppedExperience() * (0.8f + 0.2f * level)));
+
+            event.setCanceled(true);
         }
     }
 
