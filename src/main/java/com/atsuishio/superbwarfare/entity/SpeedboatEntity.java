@@ -6,9 +6,11 @@ import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
+import com.atsuishio.superbwarfare.item.PerkItem;
 import com.atsuishio.superbwarfare.menu.VehicleMenu;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
+import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
@@ -48,6 +50,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -74,6 +77,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
+import java.util.List;
 
 public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity, IVehicleEntity, HasCustomInventoryScreen, ContainerEntity {
 
@@ -593,21 +597,15 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         }
     }
 
-
     public void pickUpItem() {
-//        List<Entity> list = this.level().getEntities(this, this.getBoundingBox().inflate(0.2F, 0.1, 0.2F));
-//        if (!list.isEmpty()) {
-//
-//            for (Entity entity : list) {
-//                if (!this.level().isClientSide && entity instanceof ItemEntity itemEntity) {
-//                    ItemStack itemStack = itemEntity.getItem();
-//                    boolean flag = !this.level().isClientSide;
-//
-//                    this.getItemStacks().add(itemStack);
-//                    itemEntity.discard();
-//                }
-//            }
-//        }
+        List<ItemEntity> list = this.level().getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(0.2F, 0.1, 0.2F));
+        if (!list.isEmpty()) {
+            for (ItemEntity entity : list) {
+                if (!this.level().isClientSide) {
+                    HopperBlockEntity.addItem(this, entity);
+                }
+            }
+        }
     }
 
     public static double calculateAngle(Vec3 move, Vec3 view) {
@@ -769,6 +767,19 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     @Override
     public ItemStack removeItem(int pSlot, int pAmount) {
         return ContainerHelper.removeItem(this.items, pSlot, pAmount);
+    }
+
+    @Override
+    public boolean canPlaceItem(int pIndex, ItemStack pStack) {
+        return switch (pIndex) {
+            case VehicleMenu.DEFAULT_AMMO_PERK_SLOT ->
+                    pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == Perk.Type.AMMO;
+            case VehicleMenu.DEFAULT_FUNC_PERK_SLOT ->
+                    pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == Perk.Type.FUNCTIONAL;
+            case VehicleMenu.DEFAULT_DAMAGE_PERK_SLOT ->
+                    pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == Perk.Type.DAMAGE;
+            default -> true;
+        };
     }
 
     @Override
