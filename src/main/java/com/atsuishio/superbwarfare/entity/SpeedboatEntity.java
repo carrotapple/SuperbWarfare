@@ -441,13 +441,13 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     }
 
     /**
-     * 撞掉莲叶
+     * 撞掉莲叶和冰块
      */
     public void collideBlock() {
         AABB aabb = AABB.ofSize(new Vec3(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ()), 3.6, 2.6, 3.6);
         BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
             BlockState blockstate = this.level().getBlockState(pos);
-            if (blockstate.is(Blocks.LILY_PAD)) {
+            if (blockstate.is(Blocks.LILY_PAD) || blockstate.is(Blocks.ICE)) {
                 this.level().destroyBlock(pos, true);
             }
         });
