@@ -57,7 +57,7 @@ public class ModVillagers {
             trades.get(1).add(new BasicItemListing(new ItemStack(Items.EMERALD, 1),
                     new ItemStack(ModItems.SHOTGUN_AMMO.get(), 2), 16, 1, 0.05f));
             trades.get(1).add(new BasicItemListing(new ItemStack(Items.EMERALD, 1),
-                    new ItemStack(ModItems.HEAVY_AMMO.get(), 2), 16, 1, 0.05f));
+                    new ItemStack(ModItems.HEAVY_AMMO.get(), 2), 32, 1, 0.05f));
 
             trades.get(1).add(new BasicItemListing(new ItemStack(ModItems.HANDGUN_AMMO.get(), 8),
                     new ItemStack(Items.EMERALD, 1), 32, 2, 0.05f));
@@ -68,7 +68,7 @@ public class ModVillagers {
             trades.get(1).add(new BasicItemListing(new ItemStack(ModItems.SHOTGUN_AMMO.get(), 4),
                     new ItemStack(Items.EMERALD, 1), 32, 2, 0.05f));
             trades.get(1).add(new BasicItemListing(new ItemStack(ModItems.HEAVY_AMMO.get(), 4),
-                    new ItemStack(Items.EMERALD, 1), 32, 2, 0.05f));
+                    new ItemStack(Items.EMERALD, 1), 64, 2, 0.05f));
 
             // 等级 2 交易
             trades.get(2).add(new BasicItemListing(new ItemStack(Items.EMERALD, 10),

@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.menu;
 
 import com.atsuishio.superbwarfare.init.ModMenuTypes;
+import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.item.PerkItem;
 import com.atsuishio.superbwarfare.perk.Perk;
 import net.minecraft.world.Container;
@@ -106,7 +107,7 @@ public class VehicleMenu extends AbstractContainerMenu {
 
         @Override
         public boolean mayPlace(ItemStack pStack) {
-            return pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == type;
+            return pStack.getItem() instanceof PerkItem perkItem && (perkItem.getPerk().type == Perk.Type.AMMO || perkItem.getPerk() == ModPerks.POWERFUL_ATTRACTION.get() || perkItem.getPerk() == ModPerks.MONSTER_HUNTER.get());
         }
 
         @Override

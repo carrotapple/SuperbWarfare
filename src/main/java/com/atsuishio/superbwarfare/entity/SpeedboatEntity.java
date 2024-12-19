@@ -10,6 +10,7 @@ import com.atsuishio.superbwarfare.item.PerkItem;
 import com.atsuishio.superbwarfare.menu.VehicleMenu;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
+import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
@@ -37,6 +38,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -76,6 +79,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -378,6 +382,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             if (this.getItemStacks().stream().noneMatch(stack -> stack.is(ModItems.HEAVY_AMMO.get())) && !player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())))
                 return;
             if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).holdFire) {
+
                 ProjectileEntity projectile = new ProjectileEntity(driver.level())
                         .shooter(player)
                         .damage(CannonConfig.SPEEDBOAT_GUN_DAMAGE.get())
@@ -389,6 +394,43 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
                 projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y + (zooming() ? 0.002f : -0.009f), player.getLookAngle().z, 20,
                         (float) 0.4);
                 this.level().addFreshEntity(projectile);
+
+                if (this.getItemStacks().size() > 102) {
+                    ItemStack perkItem = this.getItemStacks().get(102);
+                    if (perkItem.getItem() instanceof PerkItem perk) {
+                        if (perk.getPerk() == ModPerks.SILVER_BULLET.get()) {
+                            projectile.undeadMultiple(2.5f);
+                        } else if (perk.getPerk() == ModPerks.BEAST_BULLET.get()) {
+                            projectile.beast();
+                        } else if (perk.getPerk() == ModPerks.JHP_BULLET.get()) {
+                            projectile.jhpBullet(true, 3);
+                        } else if (perk.getPerk() == ModPerks.HE_BULLET.get()) {
+                            projectile.heBullet(true, 3);
+                        } else if (perk.getPerk() == ModPerks.INCENDIARY_BULLET.get()) {
+                            projectile.fireBullet(true, 3, false);
+                        }
+
+                        if (perk.getPerk() instanceof AmmoPerk ammoPerk) {
+                            projectile.setRGB(ammoPerk.rgb);
+                            if (!ammoPerk.mobEffects.get().isEmpty()) {
+                                ArrayList<MobEffectInstance> mobEffectInstances = new ArrayList<>();
+                                for (MobEffect effect : ammoPerk.mobEffects.get()) {
+                                    mobEffectInstances.add(new MobEffectInstance(effect, 160, 2));
+                                }
+                                projectile.effect(mobEffectInstances);
+                            }
+                        }
+                    }
+                }
+
+                if (this.getItemStacks().size() > 104) {
+                    ItemStack perkItem = this.getItemStacks().get(104);
+                    if (perkItem.getItem() instanceof PerkItem perk) {
+                        if (perk.getPerk() == ModPerks.MONSTER_HUNTER.get()) {
+                            projectile.monsterMultiple(0.5f);
+                        }
+                    }
+                }
 
                 float pitch = this.entityData.get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - this.entityData.get(HEAT)));
 
@@ -775,9 +817,9 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             case VehicleMenu.DEFAULT_AMMO_PERK_SLOT ->
                     pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == Perk.Type.AMMO;
             case VehicleMenu.DEFAULT_FUNC_PERK_SLOT ->
-                    pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == Perk.Type.FUNCTIONAL;
+                    pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == Perk.Type.FUNCTIONAL && perkItem.getPerk() == ModPerks.POWERFUL_ATTRACTION.get();
             case VehicleMenu.DEFAULT_DAMAGE_PERK_SLOT ->
-                    pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == Perk.Type.DAMAGE;
+                    pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == Perk.Type.DAMAGE && perkItem.getPerk() == ModPerks.MONSTER_HUNTER.get();
             default -> true;
         };
     }
