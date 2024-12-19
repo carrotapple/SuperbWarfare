@@ -710,9 +710,10 @@ public class LivingEventHandler {
         Entity sourceEntity = source.getEntity();
         if (!(sourceEntity instanceof Player player)) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(ModTags.Items.GUN)) return;
 
-        if (PerkHelper.getItemPerkLevel(ModPerks.POWERFUL_ATTRACTION.get(), stack) > 0) {
+        //TODO 将撞击致死产生掉落物添加到载具储存空间而不是直接加到玩家身上
+
+        if (sourceEntity.getVehicle() instanceof IVehicleEntity && source.is(ModDamageTypes.VEHICLE_STRIKE)) {
             var drops = event.getDrops();
             drops.forEach(itemEntity -> {
                 ItemStack item = itemEntity.getItem();
@@ -720,7 +721,17 @@ public class LivingEventHandler {
                     player.drop(item, false);
                 }
             });
+            event.setCanceled(true);
+        }
 
+        if (stack.is(ModTags.Items.GUN) && PerkHelper.getItemPerkLevel(ModPerks.POWERFUL_ATTRACTION.get(), stack) > 0) {
+            var drops = event.getDrops();
+            drops.forEach(itemEntity -> {
+                ItemStack item = itemEntity.getItem();
+                if (!player.addItem(item)) {
+                    player.drop(item, false);
+                }
+            });
             event.setCanceled(true);
         }
     }
@@ -729,14 +740,21 @@ public class LivingEventHandler {
     public static void onLivingExperienceDrop(LivingExperienceDropEvent event) {
         Player player = event.getAttackingPlayer();
         if (player == null) return;
-        ItemStack stack = player.getMainHandItem();
-        if (!stack.is(ModTags.Items.GUN)) return;
+        DamageSource source = event.getAttackingPlayer().getLastDamageSource();
+        if (source == null) return;
 
-        int level = PerkHelper.getItemPerkLevel(ModPerks.POWERFUL_ATTRACTION.get(), stack);
-        if (level > 0) {
-            player.giveExperiencePoints((int) (event.getDroppedExperience() * (0.8f + 0.2f * level)));
-
+        if (player.getVehicle() instanceof IVehicleEntity && source.is(ModDamageTypes.VEHICLE_STRIKE)) {
+            player.giveExperiencePoints(event.getDroppedExperience());
             event.setCanceled(true);
+        }
+
+        ItemStack stack = player.getMainHandItem();
+        if (stack.is(ModTags.Items.GUN)) {
+            int level = PerkHelper.getItemPerkLevel(ModPerks.POWERFUL_ATTRACTION.get(), stack);
+            if (level > 0) {
+                player.giveExperiencePoints((int) (event.getDroppedExperience() * (0.8f + 0.2f * level)));
+                event.setCanceled(true);
+            }
         }
     }
 

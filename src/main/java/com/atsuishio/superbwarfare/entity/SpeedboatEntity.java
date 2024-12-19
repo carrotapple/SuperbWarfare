@@ -348,8 +348,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         collideBlock();
         gunnerAngle();
         gunnerFire();
-
-//        attractEntity();
+        pickUpItem();
 
         this.refreshDimensions();
     }
@@ -593,26 +592,22 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         }
     }
 
-//    public boolean hasEnoughSpaceFor(Entity pEntity) {
-//        return pEntity.getBbWidth() < this.getBbWidth();
-//    }
-//
-//    public void attractEntity() {
-//        List<Entity> list = this.level().getEntities(this, this.getBoundingBox().inflate(0.2F, -0.01F, 0.2F), EntitySelector.pushableBy(this));
+
+    public void pickUpItem() {
+//        List<Entity> list = this.level().getEntities(this, this.getBoundingBox().inflate(0.2F, 0.1, 0.2F));
 //        if (!list.isEmpty()) {
-//            boolean flag = !this.level().isClientSide && !(this.getControllingPassenger() instanceof Player);
 //
 //            for (Entity entity : list) {
-//                if (!entity.hasPassenger(this)) {
-//                    if (flag && this.getPassengers().size() < this.getMaxPassengers() && !entity.isPassenger() && this.hasEnoughSpaceFor(entity) && entity instanceof LivingEntity && !(entity instanceof WaterAnimal) && !(entity instanceof Player)) {
-//                        entity.startRiding(this);
-//                    } else {
-//                        this.push(entity);
-//                    }
+//                if (!this.level().isClientSide && entity instanceof ItemEntity itemEntity) {
+//                    ItemStack itemStack = itemEntity.getItem();
+//                    boolean flag = !this.level().isClientSide;
+//
+//                    this.getItemStacks().add(itemStack);
+//                    itemEntity.discard();
 //                }
 //            }
 //        }
-//    }
+    }
 
     public static double calculateAngle(Vec3 move, Vec3 view) {
         move = move.multiply(1, 0, 1).normalize();

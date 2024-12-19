@@ -1,8 +1,8 @@
 package com.atsuishio.superbwarfare.init;
 
+import com.atsuishio.superbwarfare.ModUtils;
 import com.google.common.collect.ImmutableSet;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import com.atsuishio.superbwarfare.ModUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
@@ -56,6 +56,8 @@ public class ModVillagers {
                     new ItemStack(ModItems.SNIPER_AMMO.get(), 2), 16, 1, 0.05f));
             trades.get(1).add(new BasicItemListing(new ItemStack(Items.EMERALD, 1),
                     new ItemStack(ModItems.SHOTGUN_AMMO.get(), 2), 16, 1, 0.05f));
+            trades.get(1).add(new BasicItemListing(new ItemStack(Items.EMERALD, 1),
+                    new ItemStack(ModItems.HEAVY_AMMO.get(), 2), 16, 1, 0.05f));
 
             trades.get(1).add(new BasicItemListing(new ItemStack(ModItems.HANDGUN_AMMO.get(), 8),
                     new ItemStack(Items.EMERALD, 1), 32, 2, 0.05f));
@@ -64,6 +66,8 @@ public class ModVillagers {
             trades.get(1).add(new BasicItemListing(new ItemStack(ModItems.SNIPER_AMMO.get(), 4),
                     new ItemStack(Items.EMERALD, 1), 32, 2, 0.05f));
             trades.get(1).add(new BasicItemListing(new ItemStack(ModItems.SHOTGUN_AMMO.get(), 4),
+                    new ItemStack(Items.EMERALD, 1), 32, 2, 0.05f));
+            trades.get(1).add(new BasicItemListing(new ItemStack(ModItems.HEAVY_AMMO.get(), 4),
                     new ItemStack(Items.EMERALD, 1), 32, 2, 0.05f));
 
             // 等级 2 交易
@@ -204,6 +208,8 @@ public class ModVillagers {
                     new ItemStack(ModItems.DEVOTION_BLUEPRINT.get()), 10, 30, 0.05f));
             trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
                     new ItemStack(ModItems.QBZ_95_BLUEPRINT.get()), 10, 30, 0.05f));
+            trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 64),
+                    new ItemStack(ModItems.AK_12_BLUEPRINT.get()), 10, 30, 0.05f));
 
             trades.get(5).add(new BasicItemListing(new ItemStack(Items.EMERALD, 16),
                     new ItemStack(ModItems.HE_5_INCHES.get(), 1), 8, 10, 0.05f));
