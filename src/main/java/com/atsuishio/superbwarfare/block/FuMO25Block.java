@@ -9,9 +9,9 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class FuMo25Block extends Block implements EntityBlock {
+public class FuMO25Block extends Block implements EntityBlock {
 
-    public FuMo25Block() {
+    public FuMO25Block() {
         super(BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(3.0f).requiresCorrectToolForDrops());
     }
 
