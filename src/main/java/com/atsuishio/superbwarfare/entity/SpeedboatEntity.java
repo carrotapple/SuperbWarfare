@@ -447,7 +447,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         AABB aabb = AABB.ofSize(new Vec3(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ()), 3.6, 2.6, 3.6);
         BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
             BlockState blockstate = this.level().getBlockState(pos);
-            if (blockstate.is(Blocks.LILY_PAD) || blockstate.is(Blocks.ICE)) {
+            if (blockstate.is(Blocks.LILY_PAD) || blockstate.is(Blocks.ICE) || blockstate.is(Blocks.FROSTED_ICE)) {
                 this.level().destroyBlock(pos, true);
             }
         });
