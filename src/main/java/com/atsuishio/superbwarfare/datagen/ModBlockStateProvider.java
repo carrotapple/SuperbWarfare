@@ -37,6 +37,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockWithItem(ModBlocks.SILVER_ORE);
         blockWithItem(ModBlocks.DEEPSLATE_SILVER_ORE);
         blockWithItem(ModBlocks.SILVER_BLOCK);
+
+        simpleBlock(ModBlocks.FUMO_25.get(), new ModelFile.UncheckedModelFile(modLoc("block/fumo_25")));
     }
 
     private String name(Block block) {
