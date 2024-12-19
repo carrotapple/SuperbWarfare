@@ -37,8 +37,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.vehicle.ContainerEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -711,17 +713,18 @@ public class LivingEventHandler {
         if (!(sourceEntity instanceof Player player)) return;
         ItemStack stack = player.getMainHandItem();
 
-        //TODO 将撞击致死产生掉落物添加到载具储存空间而不是直接加到玩家身上
-
-        if (sourceEntity.getVehicle() instanceof IVehicleEntity && source.is(ModDamageTypes.VEHICLE_STRIKE)) {
+        if (sourceEntity.getVehicle() instanceof IVehicleEntity vehicle && source.is(ModDamageTypes.VEHICLE_STRIKE)) {
             var drops = event.getDrops();
-            drops.forEach(itemEntity -> {
-                ItemStack item = itemEntity.getItem();
-                if (!player.addItem(item)) {
-                    player.drop(item, false);
-                }
-            });
-            event.setCanceled(true);
+            if (vehicle instanceof ContainerEntity containerEntity) {
+                drops.forEach(itemEntity -> {
+                    ItemStack item = itemEntity.getItem();
+                    if (!HopperBlockEntity.addItem(containerEntity, itemEntity)) {
+                        player.drop(item, false);
+                    }
+                });
+                event.setCanceled(true);
+                return;
+            }
         }
 
         if (stack.is(ModTags.Items.GUN) && PerkHelper.getItemPerkLevel(ModPerks.POWERFUL_ATTRACTION.get(), stack) > 0) {

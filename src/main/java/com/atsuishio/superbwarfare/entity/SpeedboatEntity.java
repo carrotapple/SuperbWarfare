@@ -371,7 +371,8 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         if (driver == null) return;
 
         if (driver instanceof Player player && !(player.getMainHandItem().is(ModTags.Items.GUN))) {
-            if (this.getItemStacks().stream().noneMatch(stack -> stack.is(ModItems.HEAVY_AMMO.get())) && !player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) return;
+            if (this.getItemStacks().stream().noneMatch(stack -> stack.is(ModItems.HEAVY_AMMO.get())) && !player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())))
+                return;
             if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).holdFire) {
                 ProjectileEntity projectile = new ProjectileEntity(driver.level())
                         .shooter(player)
@@ -682,7 +683,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         this.clampRotation(entity);
     }
 
-
     private PlayState firePredicate(AnimationState<SpeedboatEntity> event) {
         if (this.entityData.get(COOL_DOWN) > 1 && !cannotFire) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.speedboat.fire"));
@@ -846,7 +846,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     @Override
     public int getMaxEnergy() {
-        return (int)MAX_ENERGY;
+        return (int) MAX_ENERGY;
     }
 
     @Override
@@ -856,6 +856,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     @Override
     public float getMaxHealth() {
-        return (int)MAX_HEALTH;
+        return (int) MAX_HEALTH;
     }
 }
