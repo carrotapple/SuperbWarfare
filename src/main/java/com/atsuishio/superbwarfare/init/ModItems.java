@@ -244,6 +244,7 @@ public class ModItems {
     public static final RegistryObject<Item> TUNGSTEN_BLOCK = block(ModBlocks.TUNGSTEN_BLOCK);
     public static final RegistryObject<Item> SILVER_BLOCK = block(ModBlocks.SILVER_BLOCK);
     public static final RegistryObject<Item> CEMENTED_CARBIDE_BLOCK = block(ModBlocks.CEMENTED_CARBIDE_BLOCK);
+    public static final RegistryObject<Item> FUMO_25 = block(ModBlocks.FUMO_25);
 
     private static RegistryObject<Item> block(RegistryObject<Block> block) {
         return BLOCKS.register(block.getId().getPath(), () -> new BlockItem(block.get(), new Item.Properties()));

@@ -28,7 +28,8 @@ public class ModBlockTagProvider extends BlockTagsProvider {
                 ModBlocks.DEEPSLATE_GALENA_ORE.get(), ModBlocks.DEEPSLATE_SCHEELITE_ORE.get(), ModBlocks.DRAGON_TEETH.get(),
                 ModBlocks.REFORGING_TABLE.get(), ModBlocks.LEAD_BLOCK.get(), ModBlocks.STEEL_BLOCK.get(), ModBlocks.TUNGSTEN_BLOCK.get(),
                 ModBlocks.CEMENTED_CARBIDE_BLOCK.get(), ModBlocks.SILVER_ORE.get(), ModBlocks.DEEPSLATE_SILVER_ORE.get(),
-                ModBlocks.SILVER_BLOCK.get(), ModBlocks.JUMP_PAD.get(), ModBlocks.CONTAINER.get(), ModBlocks.CHARGING_STATION.get());
+                ModBlocks.SILVER_BLOCK.get(), ModBlocks.JUMP_PAD.get(), ModBlocks.CONTAINER.get(), ModBlocks.CHARGING_STATION.get(),
+                ModBlocks.FUMO_25.get());
         this.tag(BlockTags.MINEABLE_WITH_SHOVEL).add(ModBlocks.SANDBAG.get());
     }
 }
