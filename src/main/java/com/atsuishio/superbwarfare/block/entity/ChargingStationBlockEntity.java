@@ -44,10 +44,6 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
     protected static final int SLOT_FUEL = 0;
     protected static final int SLOT_CHARGE = 1;
 
-    private static final int[] SLOTS_FOR_UP = new int[]{0};
-    private static final int[] SLOTS_FOR_SIDES = new int[]{0};
-    private static final int[] SLOTS_FOR_DOWN = new int[]{0};
-
     public static final int MAX_ENERGY = 4000000;
     public static final int MAX_DATA_COUNT = 3;
     public static final int DEFAULT_FUEL_TIME = 1600;
@@ -110,6 +106,9 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
             }
             if (handler.getEnergyStored() > 0) {
                 blockEntity.chargeItemStack(handler);
+            }
+            if (handler.getEnergyStored() > 0) {
+                blockEntity.chargeBlock(handler);
             }
         });
 
@@ -182,6 +181,27 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
             }
         });
         this.setChanged();
+    }
+
+    private void chargeBlock(EnergyStorage handler) {
+        if (this.level == null) return;
+
+        for (Direction direction : Direction.values()) {
+            var blockEntity = this.level.getBlockEntity(this.getBlockPos().relative(direction));
+            if (blockEntity == null || !blockEntity.getCapability(ForgeCapabilities.ENERGY).isPresent() || blockEntity instanceof ChargingStationBlockEntity) {
+                continue;
+            }
+
+            blockEntity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
+                if (energy.canReceive() && energy.getEnergyStored() < energy.getMaxEnergyStored()) {
+                    int receiveEnergy = energy.receiveEnergy(Math.min(handler.getEnergyStored(), CHARGE_OTHER_SPEED), false);
+                    handler.extractEnergy(receiveEnergy, false);
+
+                    blockEntity.setChanged();
+                    this.setChanged();
+                }
+            });
+        }
     }
 
     public NonNullList<ItemStack> getItems() {
