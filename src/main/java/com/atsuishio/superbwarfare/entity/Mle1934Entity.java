@@ -277,7 +277,7 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
     }
 
     @Override
-    public void cannonShoot(Player player) {
+    public void vehicleShoot(Player player) {
         if (this.entityData.get(COOL_DOWN) > 0) {
             return;
         }
@@ -443,7 +443,7 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
             for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(20), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
 
                 if (target instanceof ServerPlayer serverPlayer) {
-                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(15,15,45, this.getX(), this.getEyeY(), this.getZ()));
+                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(15, 15, 45, this.getX(), this.getEyeY(), this.getZ()));
                 }
             }
         }
@@ -517,18 +517,13 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
     }
 
     @Override
-    public void vehicleShoot(Player player) {
-
-    }
-
-    @Override
     public float getHealth() {
         return this.entityData.get(HEALTH).intValue();
     }
 
     @Override
     public float getMaxHealth() {
-        return (int)MAX_HEALTH;
+        return (int) MAX_HEALTH;
     }
 
     @Override

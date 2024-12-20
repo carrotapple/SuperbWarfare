@@ -386,7 +386,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     }
 
     @Override
-    public void cannonShoot(Player player) {
+    public void vehicleShoot(Player player) {
         if (this.entityData.get(COOL_DOWN) > 0) {
             return;
         }
@@ -538,12 +538,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
 
     @Override
     public int getMaxEnergy() {
-        return (int)MAX_ENERGY;
-    }
-
-    @Override
-    public void vehicleShoot(Player player) {
-
+        return (int) MAX_ENERGY;
     }
 
     @Override
@@ -553,7 +548,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
 
     @Override
     public float getMaxHealth() {
-        return (int)MAX_HEALTH;
+        return (int) MAX_HEALTH;
     }
 
     @Override

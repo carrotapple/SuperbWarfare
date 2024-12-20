@@ -63,7 +63,6 @@ public class MouseHandlerMixin {
         double zoom = 1.25 + stack.getOrCreateTag().getDouble("CustomZoom");
         float customSens = (float) stack.getOrCreateTag().getInt("sensitivity");
 
-
         if (!player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
             return original / Math.max((1 + (0.2 * (zoom - (0.3 * customSens)) * ClientEventHandler.zoomTime)), 0.1);
         }

@@ -263,7 +263,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     }
 
     @Override
-    public void cannonShoot(Player player) {
+    public void vehicleShoot(Player player) {
         if (this.entityData.get(COOL_DOWN) > 0) {
             return;
         }
@@ -422,18 +422,13 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     }
 
     @Override
-    public void vehicleShoot(Player player) {
-
-    }
-
-    @Override
     public float getHealth() {
         return this.entityData.get(HEALTH).intValue();
     }
 
     @Override
     public float getMaxHealth() {
-        return (int)MAX_HEALTH;
+        return (int) MAX_HEALTH;
     }
 
     @Override

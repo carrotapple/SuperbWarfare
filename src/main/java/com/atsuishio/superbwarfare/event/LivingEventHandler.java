@@ -64,14 +64,7 @@ public class LivingEventHandler {
             return;
         }
 
-        if (event.getEntity().getVehicle() != null && event.getEntity().getVehicle() instanceof IVehicleEntity) {
-            event.setAmount(0.3f * event.getAmount());
-        }
-
-        if (event.getEntity().getVehicle() != null && event.getEntity().getVehicle() instanceof ICannonEntity) {
-            event.setCanceled(true);
-        }
-
+        handleVehicleHurt(event);
         handleGunPerksWhenHurt(event);
         renderDamageIndicator(event);
         reduceBulletDamage(event);
@@ -93,6 +86,17 @@ public class LivingEventHandler {
 
         if (event.getEntity() instanceof Player player) {
             handlePlayerBeamReset(player);
+        }
+    }
+
+    private static void handleVehicleHurt(LivingHurtEvent event) {
+        var vehicle = event.getEntity().getVehicle();
+        if (vehicle != null) {
+            if (vehicle instanceof ICannonEntity) {
+                event.setCanceled(true);
+            } else if (vehicle instanceof IVehicleEntity) {
+                event.setAmount(0.3f * event.getAmount());
+            }
         }
     }
 

@@ -84,6 +84,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity, IVehicleEntity, HasCustomInventoryScreen, ContainerEntity {
+
     public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
@@ -310,9 +311,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             cannotFire = false;
         }
 
-        // TODO 获取弹药数量
-
-        this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).count());
+        this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum());
 
         turretYRotO = this.getTurretYRot();
         turretXRotO = this.getTurretXRot();
