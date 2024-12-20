@@ -66,12 +66,12 @@ public class VehicleMenu extends AbstractContainerMenu {
         if (slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-            if (pIndex < this.containerRows * 17 + 2) {
-                if (!this.moveItemStackTo(itemstack1, this.containerRows * 17 + 2, this.slots.size(), true)) {
+            if (pIndex < this.containerRows * 17 + 3) {
+                if (!this.moveItemStackTo(itemstack1, this.containerRows * 17 + 3, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
             } else if (itemstack1.getItem() instanceof PerkItem) {
-                if (!this.moveItemStackTo(itemstack1, this.containerRows * 17, this.containerRows * 17 + 2, false)) {
+                if (!this.moveItemStackTo(itemstack1, this.containerRows * 17, this.containerRows * 17 + 3, false)) {
                     if (!this.moveItemStackTo(itemstack1, 0, this.containerRows * 17, false)) {
                         return ItemStack.EMPTY;
                     }
@@ -107,7 +107,14 @@ public class VehicleMenu extends AbstractContainerMenu {
 
         @Override
         public boolean mayPlace(ItemStack pStack) {
-            return pStack.getItem() instanceof PerkItem perkItem && (perkItem.getPerk().type == Perk.Type.AMMO || perkItem.getPerk() == ModPerks.POWERFUL_ATTRACTION.get() || perkItem.getPerk() == ModPerks.MONSTER_HUNTER.get());
+            return pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == this.type && switch (this.type) {
+                case AMMO:
+                    yield true;
+                case FUNCTIONAL:
+                    yield perkItem.getPerk() == ModPerks.POWERFUL_ATTRACTION.get();
+                case DAMAGE:
+                    yield perkItem.getPerk() == ModPerks.MONSTER_HUNTER.get();
+            };
         }
 
         @Override
