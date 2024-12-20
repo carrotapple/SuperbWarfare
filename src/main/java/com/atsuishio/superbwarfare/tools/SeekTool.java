@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.tools;
 
+import com.atsuishio.superbwarfare.entity.IVehicleEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -38,7 +39,7 @@ public class SeekTool {
                     if (e.distanceTo(entity) <= seekRange && calculateAngle(e, entity) < seekAngle
                             && e != entity
                             && e.isAlive()
-                            && e instanceof LivingEntity
+                            && (e instanceof LivingEntity || e instanceof IVehicleEntity)
                             && !(e instanceof Player player && (player.isCreative() || player.isSpectator()))
                             && (!e.isAlliedTo(entity) || e.getTeam() == null || e.getTeam().getName().equals("TDM"))) {
                         return level.clip(new ClipContext(entity.getEyePosition(), e.getEyePosition(),

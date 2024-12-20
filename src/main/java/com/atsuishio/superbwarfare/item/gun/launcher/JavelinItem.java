@@ -21,7 +21,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -155,9 +154,9 @@ public class JavelinItem extends GunItem implements GeoItem, AnimatedItem {
                 }
 
                 if (seekingEntity != null && tag.getInt("SeekTime") > 20) {
-                    if (seekingEntity instanceof LivingEntity living) {
-                        living.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0));
-                    }
+//                    if (seekingEntity instanceof LivingEntity living) {
+//                        living.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0));
+//                    }
 
                     if (player instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, ModSounds.JAVELIN_LOCKON.get(), 2, 1);
