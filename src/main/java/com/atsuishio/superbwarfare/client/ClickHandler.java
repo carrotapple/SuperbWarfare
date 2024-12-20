@@ -155,13 +155,18 @@ public class ClickHandler {
 
         double scroll = event.getScrollDelta();
 
-        if (stack.is(ModTags.Items.GUN) && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom) {
+        if (stack.is(ModTags.Items.GUN) && ClientEventHandler.zoom) {
             var tag = stack.getOrCreateTag();
             if (tag.getBoolean("CanSwitchScope")) {
                 ModUtils.PACKET_HANDLER.sendToServer(new SwitchScopeMessage(scroll));
             } else if (tag.getBoolean("CanAdjustZoomFov") || stack.is(ModItems.MINIGUN.get())) {
                 ModUtils.PACKET_HANDLER.sendToServer(new AdjustZoomFovMessage(scroll));
             }
+            event.setCanceled(true);
+        }
+
+        if (player.getVehicle() instanceof IVehicleEntity iVehicle && iVehicle.isDriver(player) && ClientEventHandler.zoom) {
+            ClientEventHandler.vehicleFov = Mth.clamp(ClientEventHandler.vehicleFov + 0.4 * scroll, 1, 6);
             event.setCanceled(true);
         }
 
@@ -293,13 +298,13 @@ public class ClickHandler {
             ModUtils.PACKET_HANDLER.sendToServer(new DroneFireMessage(0));
         }
 
-        if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity) {
+        if (player.getVehicle() instanceof ICannonEntity) {
             ModUtils.PACKET_HANDLER.sendToServer(new VehicleFireMessage(0));
             return;
         }
 
-        if ((player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player)) {
-            ModUtils.PACKET_HANDLER.sendToServer(new FireMessage(0));
+        if (player.getVehicle() instanceof IVehicleEntity iVehicle && iVehicle.isDriver(player)) {
+            ClientEventHandler.holdFire = true;
         }
 
         if (stack.is(ModTags.Items.GUN) && !(player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity)) {

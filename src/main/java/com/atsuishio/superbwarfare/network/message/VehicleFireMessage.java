@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.network.message;
 
-import com.atsuishio.superbwarfare.entity.ICannonEntity;
+import com.atsuishio.superbwarfare.entity.IVehicleEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
@@ -34,7 +34,7 @@ public class VehicleFireMessage {
                     return;
                 }
 
-                if (player.getVehicle() instanceof ICannonEntity entity) {
+                if (player.getVehicle() instanceof IVehicleEntity entity) {
                     entity.cannonShoot(player);
                 }
             }

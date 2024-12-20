@@ -85,13 +85,13 @@ import java.util.List;
 
 public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity, IVehicleEntity, HasCustomInventoryScreen, ContainerEntity {
 
+    public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ROT_Y = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ROTOR = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
     protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.STRING);
 
@@ -127,13 +127,13 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     @Override
     protected void defineSynchedData() {
+        this.entityData.define(FIRE_ANIM, 0);
         this.entityData.define(HEALTH, MAX_HEALTH);
         this.entityData.define(ENERGY, 0f);
         this.entityData.define(ROT_Y, 0f);
         this.entityData.define(DELTA_ROT, 0f);
         this.entityData.define(POWER, 0f);
         this.entityData.define(ROTOR, 0f);
-        this.entityData.define(COOL_DOWN, 0);
         this.entityData.define(HEAT, 0);
         this.entityData.define(LAST_ATTACKER_UUID, "undefined");
     }
@@ -297,12 +297,12 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public void baseTick() {
         super.baseTick();
 
-        if (this.entityData.get(COOL_DOWN) > 0) {
-            this.entityData.set(COOL_DOWN, this.entityData.get(COOL_DOWN) - 1);
-        }
-
         if (this.entityData.get(HEAT) > 0) {
             this.entityData.set(HEAT, this.entityData.get(HEAT) - 1);
+        }
+
+        if (this.entityData.get(FIRE_ANIM) > 0) {
+            this.entityData.set(FIRE_ANIM, this.entityData.get(FIRE_ANIM) - 1);
         }
 
         if (this.entityData.get(HEAT) < 40) {
@@ -355,7 +355,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
         collideBlock();
         gunnerAngle();
-        gunnerFire();
         pickUpItem();
 
         this.refreshDimensions();
@@ -373,89 +372,82 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     /**
      * 机枪塔开火
      */
-    private void gunnerFire() {
-        if (this.entityData.get(COOL_DOWN) != 0 || this.cannotFire) return;
-        Entity driver = this.getFirstPassenger();
-        if (driver == null) return;
+    @Override
+    public void cannonShoot(Player player) {
+        if (this.cannotFire) return;
 
-        if (driver instanceof Player player && !(player.getMainHandItem().is(ModTags.Items.GUN))) {
-            if (this.getItemStacks().stream().noneMatch(stack -> stack.is(ModItems.HEAVY_AMMO.get())) && !player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())))
-                return;
-            if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).holdFire) {
+        ProjectileEntity projectile = new ProjectileEntity(player.level())
+                .shooter(player)
+                .damage(CannonConfig.SPEEDBOAT_GUN_DAMAGE.get())
+                .headShot(2f)
+                .zoom(false);
 
-                ProjectileEntity projectile = new ProjectileEntity(driver.level())
-                        .shooter(player)
-                        .damage(CannonConfig.SPEEDBOAT_GUN_DAMAGE.get())
-                        .headShot(2f)
-                        .zoom(false);
+        if (this.getItemStacks().size() > 102) {
+            ItemStack perkItem = this.getItemStacks().get(102);
+            if (perkItem.getItem() instanceof PerkItem perk) {
+                if (perk.getPerk() == ModPerks.SILVER_BULLET.get()) {
+                    projectile.undeadMultiple(2.5f);
+                } else if (perk.getPerk() == ModPerks.BEAST_BULLET.get()) {
+                    projectile.beast();
+                } else if (perk.getPerk() == ModPerks.JHP_BULLET.get()) {
+                    projectile.jhpBullet(true, 3);
+                } else if (perk.getPerk() == ModPerks.HE_BULLET.get()) {
+                    projectile.heBullet(true, 3);
+                } else if (perk.getPerk() == ModPerks.INCENDIARY_BULLET.get()) {
+                    projectile.fireBullet(true, 3, false);
+                }
 
-                projectile.bypassArmorRate(0.9f);
-                projectile.setPos(this.xo - this.getViewVector(1).scale(0.54).x - this.getDeltaMovement().x, this.yo + 3.0, this.zo - this.getViewVector(1).scale(0.54).z - this.getDeltaMovement().z);
-                projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y + (zooming() ? 0.002f : -0.009f), player.getLookAngle().z, 20,
-                        (float) 0.4);
-                this.level().addFreshEntity(projectile);
-
-                if (this.getItemStacks().size() > 102) {
-                    ItemStack perkItem = this.getItemStacks().get(102);
-                    if (perkItem.getItem() instanceof PerkItem perk) {
-                        if (perk.getPerk() == ModPerks.SILVER_BULLET.get()) {
-                            projectile.undeadMultiple(2.5f);
-                        } else if (perk.getPerk() == ModPerks.BEAST_BULLET.get()) {
-                            projectile.beast();
-                        } else if (perk.getPerk() == ModPerks.JHP_BULLET.get()) {
-                            projectile.jhpBullet(true, 3);
-                        } else if (perk.getPerk() == ModPerks.HE_BULLET.get()) {
-                            projectile.heBullet(true, 3);
-                        } else if (perk.getPerk() == ModPerks.INCENDIARY_BULLET.get()) {
-                            projectile.fireBullet(true, 3, false);
+                if (perk.getPerk() instanceof AmmoPerk ammoPerk) {
+                    projectile.setRGB(ammoPerk.rgb);
+                    if (!ammoPerk.mobEffects.get().isEmpty()) {
+                        ArrayList<MobEffectInstance> mobEffectInstances = new ArrayList<>();
+                        for (MobEffect effect : ammoPerk.mobEffects.get()) {
+                            mobEffectInstances.add(new MobEffectInstance(effect, 160, 2));
                         }
-
-                        if (perk.getPerk() instanceof AmmoPerk ammoPerk) {
-                            projectile.setRGB(ammoPerk.rgb);
-                            if (!ammoPerk.mobEffects.get().isEmpty()) {
-                                ArrayList<MobEffectInstance> mobEffectInstances = new ArrayList<>();
-                                for (MobEffect effect : ammoPerk.mobEffects.get()) {
-                                    mobEffectInstances.add(new MobEffectInstance(effect, 160, 2));
-                                }
-                                projectile.effect(mobEffectInstances);
-                            }
-                        }
+                        projectile.effect(mobEffectInstances);
                     }
                 }
-
-                if (this.getItemStacks().size() > 104) {
-                    ItemStack perkItem = this.getItemStacks().get(104);
-                    if (perkItem.getItem() instanceof PerkItem perk) {
-                        if (perk.getPerk() == ModPerks.MONSTER_HUNTER.get()) {
-                            projectile.monsterMultiple(0.5f);
-                        }
-                    }
-                }
-
-                float pitch = this.entityData.get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - this.entityData.get(HEAT)));
-
-                if (player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.M_2_FIRE_1P.get(), 2, 1);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_2_FIRE_3P.get(), SoundSource.PLAYERS, 4, pitch);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_2_FAR.get(), SoundSource.PLAYERS, 12, pitch);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_2_VERYFAR.get(), SoundSource.PLAYERS, 24, pitch);
-                }
-
-                Level level = player.level();
-                final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
-
-                for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
-                    if (target instanceof ServerPlayer serverPlayer) {
-                        ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 5, this.getX(), this.getEyeY(), this.getZ()));
-                    }
-                }
-                if (level instanceof ServerLevel) {
-                    this.entityData.set(COOL_DOWN, 3);
-                    this.entityData.set(HEAT, this.entityData.get(HEAT) + 4);
-                }
-                this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
             }
         }
+
+        if (this.getItemStacks().size() > 104) {
+            ItemStack perkItem = this.getItemStacks().get(104);
+            if (perkItem.getItem() instanceof PerkItem perk) {
+                if (perk.getPerk() == ModPerks.MONSTER_HUNTER.get()) {
+                    projectile.monsterMultiple(0.5f);
+                }
+            }
+        }
+
+        projectile.bypassArmorRate(0.9f);
+        projectile.setPos(this.xo - this.getViewVector(1).scale(0.54).x - this.getDeltaMovement().x, this.yo + 3.0, this.zo - this.getViewVector(1).scale(0.54).z - this.getDeltaMovement().z);
+        projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y + (zooming() ? 0.002f : -0.009f), player.getLookAngle().z, 20,
+                (float) 0.4);
+        this.level().addFreshEntity(projectile);
+
+        float pitch = this.entityData.get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - this.entityData.get(HEAT)));
+
+        if (!player.level().isClientSide) {
+            if (player instanceof ServerPlayer serverPlayer) {
+                serverPlayer.playSound(ModSounds.M_2_FIRE_3P.get(), 4, pitch);
+                serverPlayer.playSound(ModSounds.M_2_FAR.get(), 12, pitch);
+                serverPlayer.playSound(ModSounds.M_2_VERYFAR.get(), 24, pitch);
+            }
+        }
+
+
+        Level level = player.level();
+        final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
+
+        for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
+            if (target instanceof ServerPlayer serverPlayer) {
+                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 5, this.getX(), this.getEyeY(), this.getZ()));
+            }
+        }
+
+        this.entityData.set(HEAT, this.entityData.get(HEAT) + 3);
+        this.entityData.set(FIRE_ANIM, 3);
+        this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
     }
 
     /**
@@ -543,7 +535,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.getPersistentData().getBoolean("forward") || this.getPersistentData().getBoolean("backward") ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 1f), false);
         }
 
-        this.entityData.set(POWER, this.entityData.get(POWER) * 0.9f);
+        this.entityData.set(POWER, this.entityData.get(POWER) * 0.87f);
         this.entityData.set(ROTOR, this.entityData.get(ROTOR) + this.entityData.get(POWER));
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.8f);
 
@@ -724,9 +716,10 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     }
 
     private PlayState firePredicate(AnimationState<SpeedboatEntity> event) {
-        if (this.entityData.get(COOL_DOWN) > 1 && !cannotFire) {
+        if (this.entityData.get(FIRE_ANIM) > 1) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.speedboat.fire"));
         }
+
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.speedboat.idle"));
     }
 
@@ -910,5 +903,22 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     @Override
     public float getMaxHealth() {
         return (int) MAX_HEALTH;
+    }
+
+    @Override
+    public boolean isDriver(Player player) {
+        return player == this.getFirstPassenger();
+    }
+
+    @Override
+    public int mainGunRpm() {
+        return 500;
+    }
+
+    @Override
+    public boolean canShoot(Player player) {
+        return (this.getItemStacks().stream().anyMatch(stack -> stack.is(ModItems.HEAVY_AMMO.get())) || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())))
+                && !player.getMainHandItem().is(ModTags.Items.GUN)
+                && !cannotFire;
     }
 }

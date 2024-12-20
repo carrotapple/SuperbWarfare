@@ -431,4 +431,18 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
         return (int)MAX_HEALTH;
     }
 
+    @Override
+    public boolean isDriver(Player player) {
+        return false;
+    }
+
+    @Override
+    public int mainGunRpm() {
+        return 0;
+    }
+
+    @Override
+    public boolean canShoot(Player player) {
+        return true;
+    }
 }

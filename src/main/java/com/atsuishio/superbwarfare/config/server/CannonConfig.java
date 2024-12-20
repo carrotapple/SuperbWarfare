@@ -105,7 +105,7 @@ public class CannonConfig {
         SPEEDBOAT_MAX_ENERGY = builder.defineInRange("speedboat_max_energy", 100000d, 0d, Double.POSITIVE_INFINITY);
 
         builder.comment("The gun damage of Speedboat");
-        SPEEDBOAT_GUN_DAMAGE = builder.defineInRange("speedboat_gun_damage", 25, 1, 10000000);
+        SPEEDBOAT_GUN_DAMAGE = builder.defineInRange("speedboat_gun_damage", 45, 1, 10000000);
 
         builder.pop();
     }

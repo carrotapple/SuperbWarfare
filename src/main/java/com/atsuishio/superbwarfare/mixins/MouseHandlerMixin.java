@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
+import com.atsuishio.superbwarfare.entity.IVehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModMobEffects;
@@ -16,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import static com.atsuishio.superbwarfare.event.ClientEventHandler.droneFovLerp;
+import static com.atsuishio.superbwarfare.event.ClientEventHandler.vehicleFovLerp;
 
 /**
  * Author: MrCrayfish
@@ -48,6 +50,10 @@ public class MouseHandlerMixin {
 
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
             return 0.33 / (1 + 0.08 * (droneFovLerp - 1));
+        }
+
+        if (player.getVehicle() instanceof IVehicleEntity iVehicle && iVehicle.isDriver(player) && ClientEventHandler.zoom) {
+            return 0.33 / (1 + 0.08 * (vehicleFovLerp - 1));
         }
 
         if (!stack.is(ModTags.Items.GUN)) {

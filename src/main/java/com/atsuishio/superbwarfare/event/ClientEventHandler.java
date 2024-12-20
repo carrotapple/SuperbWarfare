@@ -5,11 +5,13 @@ import com.atsuishio.superbwarfare.client.ClickHandler;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.DroneEntity;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
+import com.atsuishio.superbwarfare.entity.IVehicleEntity;
 import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.LaserShootMessage;
 import com.atsuishio.superbwarfare.network.message.ShootMessage;
+import com.atsuishio.superbwarfare.network.message.VehicleFireMessage;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -50,6 +52,8 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
+
+import static com.atsuishio.superbwarfare.entity.SpeedboatEntity.HEAT;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
@@ -110,6 +114,7 @@ public class ClientEventHandler {
 
     public static double customZoom = 0;
     public static MillisTimer clientTimer = new MillisTimer();
+    public static MillisTimer clientTimerVehicle = new MillisTimer();
 
     public static boolean holdFire = false;
 
@@ -131,6 +136,8 @@ public class ClientEventHandler {
     public static double shakeAmplitude = 0;
     public static double[] shakePos = {0, 0, 0};
     public static double shakeType = 0;
+    public static double vehicleFov = 1;
+    public static double vehicleFovLerp = 1;
 
     @SubscribeEvent
     public static void handleWeaponTurn(RenderHandEvent event) {
@@ -535,6 +542,59 @@ public class ClientEventHandler {
 
             }
         });
+    }
+
+    @SubscribeEvent
+    public static void handleVehicleFire(TickEvent.RenderTickEvent event) {
+        ClientLevel level = Minecraft.getInstance().level;
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+        if (level == null) return;
+
+        if (player.getVehicle() instanceof IVehicleEntity iVehicle && iVehicle.isDriver(player) && iVehicle.canShoot(player)) {
+            int rpm = iVehicle.mainGunRpm();
+            if (rpm == 0) {
+                rpm = 240;
+            }
+
+//            player.displayClientMessage(Component.literal("114 : " + clientTimerVehicle.getProgress()), true);
+
+            double rps = (double) rpm / 60;
+
+            // cooldown in ms
+            int cooldown = (int) (1000 / rps);
+
+            if ((holdFire)) {
+                if (!clientTimerVehicle.started()) {
+                    clientTimerVehicle.start();
+                    // 首发瞬间发射
+                    clientTimerVehicle.setProgress((cooldown + 1));
+                }
+                if (clientTimerVehicle.getProgress() >= cooldown) {
+                    ModUtils.PACKET_HANDLER.sendToServer(new VehicleFireMessage(0));
+                    playVehicleClientSounds(player, iVehicle);
+                    clientTimerVehicle.setProgress((clientTimerVehicle.getProgress() - cooldown));
+                }
+
+                if (notInGame()) {
+                    clientTimerVehicle.stop();
+                }
+
+            } else {
+                clientTimerVehicle.stop();
+            }
+
+        } else {
+            clientTimerVehicle.stop();
+        }
+    }
+
+    public static void playVehicleClientSounds(Player player, IVehicleEntity iVehicle) {
+        if (iVehicle instanceof SpeedboatEntity speedboat) {
+            float pitch = speedboat.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - speedboat.getEntityData().get(HEAT)));
+            player.playSound(ModSounds.M_2_FIRE_1P.get(), 1f, pitch);
+            player.playSound(ModSounds.SHELL_CASING_50CAL.get(),0.3f, 1);
+        }
     }
 
     @SubscribeEvent
@@ -1142,6 +1202,13 @@ public class ClientEventHandler {
 
             event.setFOV(event.getFOV() / droneFovLerp);
         }
+
+        if (player.getVehicle() instanceof IVehicleEntity && !(player.getVehicle() instanceof ICannonEntity) && zoom) {
+
+            vehicleFovLerp = Mth.lerp(0.1 * Minecraft.getInstance().getDeltaFrameTime(), vehicleFovLerp, vehicleFov);
+
+            event.setFOV(event.getFOV() / vehicleFovLerp);
+        }
     }
 
     @SubscribeEvent
@@ -1166,6 +1233,10 @@ public class ClientEventHandler {
 
         if (!mc.options.getCameraType().isFirstPerson()) {
             return;
+        }
+
+        if (mc.player.getVehicle() instanceof SpeedboatEntity && zoom) {
+            event.setCanceled(true);
         }
 
         if (mc.player.getMainHandItem().is(ModTags.Items.GUN) || (mc.player.getVehicle() != null && mc.player.getVehicle() instanceof ICannonEntity)) {
