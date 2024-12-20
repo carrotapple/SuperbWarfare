@@ -31,10 +31,10 @@ import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class JavelinHudOverlay {
+
     private static final ResourceLocation FRAME = ModUtils.loc("textures/screens/javelin/frame.png");
     private static final ResourceLocation FRAME_LOCK = ModUtils.loc("textures/screens/javelin/frame_lock.png");
     private static float scopeScale = 1;
-
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void eventHandler(RenderGuiEvent.Pre event) {
@@ -49,7 +49,8 @@ public class JavelinHudOverlay {
         if (player != null) {
             ItemStack stack = player.getMainHandItem();
 
-            if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) return;
+            if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit)
+                return;
 
             if ((stack.getItem() == ModItems.JAVELIN.get() && !stack.getOrCreateTag().getBoolean("HoloHidden")) && Minecraft.getInstance().options.getCameraType().isFirstPerson() && ClientEventHandler.zoom) {
                 RenderSystem.disableDepthTest();
@@ -90,19 +91,21 @@ public class JavelinHudOverlay {
 
                 if (seekingEntity == null) return;
 
-                Vec3 p = RenderHelper.worldToScreen(new Vec3(seekingEntity.getX(), seekingEntity.getEyeY(),seekingEntity.getZ()), cameraPos);
+                double zoom = 3;
+                Vec3 pos = new Vec3(seekingEntity.getX(), seekingEntity.getEyeY(), seekingEntity.getZ());
+                Vec3 lookAngle = player.getLookAngle().normalize().scale(pos.distanceTo(cameraPos) * (1 - 1.0 / zoom));
 
+                cameraPos = cameraPos.add(lookAngle);
+                Vec3 p = RenderHelper.worldToScreen(pos, cameraPos);
                 if (p == null) return;
 
                 boolean lockOn = stack.getOrCreateTag().getInt("SeekTime") > 20 && seekingEntity == targetEntity;
 
                 poseStack.pushPose();
-
                 int x = (int) p.x;
                 int y = (int) p.y;
 
-                HudUtil.blit(poseStack, lockOn ? FRAME_LOCK : FRAME, x-8, y-8, 0, 0, 16, 16, 16, 16, 1f);
-
+                HudUtil.blit(poseStack, lockOn ? FRAME_LOCK : FRAME, x - 8, y - 8, 0, 0, 16, 16, 16, 16, 1f);
                 poseStack.popPose();
             } else {
                 scopeScale = 1;
