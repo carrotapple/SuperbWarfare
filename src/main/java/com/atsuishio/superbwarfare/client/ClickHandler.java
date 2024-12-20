@@ -118,10 +118,10 @@ public class ClickHandler {
             }
         }
 
-        if ((player.getMainHandItem().is(ModTags.Items.GUN) && !(player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity))
+        if ((player.getMainHandItem().is(ModTags.Items.GUN) && !(player.getVehicle() instanceof ICannonEntity))
                 || stack.is(ModItems.MONITOR.get())
-                || (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity)
-                || (player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player && stack.is(ItemStack.EMPTY.getItem()))
+                || (player.getVehicle() instanceof ICannonEntity)
+                || (player.getVehicle() instanceof IVehicleEntity iVehicle && iVehicle.isDriver(player) && stack.is(ItemStack.EMPTY.getItem()))
                 || (stack.is(Items.SPYGLASS) && player.isScoping() && player.getOffhandItem().is(ModItems.FIRING_PARAMETERS.get()))) {
             if (button == ModKeyMappings.FIRE.getKey().getValue()) {
                 handleWeaponFirePress(player, stack);
@@ -244,10 +244,10 @@ public class ClickHandler {
                 ModUtils.PACKET_HANDLER.sendToServer(new SensitivityMessage(false));
             }
 
-            if ((player.getMainHandItem().is(ModTags.Items.GUN) && !(player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity))
+            if ((player.getMainHandItem().is(ModTags.Items.GUN) && !(player.getVehicle() instanceof ICannonEntity))
                     || stack.is(ModItems.MONITOR.get())
-                    || (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity)
-                    || (player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player && stack.is(ItemStack.EMPTY.getItem()))
+                    || (player.getVehicle() instanceof ICannonEntity)
+                    || (player.getVehicle() instanceof IVehicleEntity iVehicle && iVehicle.isDriver(player) && stack.is(ItemStack.EMPTY.getItem()))
                     || (stack.is(Items.SPYGLASS) && player.isScoping() && player.getOffhandItem().is(ModItems.FIRING_PARAMETERS.get()))) {
                 if (key == ModKeyMappings.FIRE.getKey().getValue()) {
                     handleWeaponFirePress(player, stack);

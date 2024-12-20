@@ -553,7 +553,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
 
     @Override
     public boolean isDriver(Player player) {
-        return false;
+        return player == this.getFirstPassenger();
     }
 
     @Override

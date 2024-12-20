@@ -22,6 +22,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -550,6 +551,10 @@ public class ClientEventHandler {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         if (level == null) return;
+
+        if (player.getVehicle() instanceof IVehicleEntity iVehicle && iVehicle.isDriver(player)) {
+            player.displayClientMessage(Component.literal("canShoot: " + iVehicle.canShoot(player)), true);
+        }
 
         if (player.getVehicle() instanceof IVehicleEntity iVehicle && iVehicle.isDriver(player) && iVehicle.canShoot(player)) {
             int rpm = iVehicle.mainGunRpm();

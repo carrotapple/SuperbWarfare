@@ -433,7 +433,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
 
     @Override
     public boolean isDriver(Player player) {
-        return false;
+        return player == this.getFirstPassenger();
     }
 
     @Override

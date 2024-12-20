@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.init.ModTags;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -67,6 +68,6 @@ public class VehicleMgHudOverlay {
     private static boolean shouldRenderCrossHair(Player player) {
         if (player == null) return false;
         return !player.isSpectator()
-                && player.getVehicle() instanceof SpeedboatEntity && ClientEventHandler.zoom;
+                && player.getVehicle() instanceof SpeedboatEntity && ClientEventHandler.zoom && !player.getMainHandItem().is(ModTags.Items.GUN);
     }
 }
