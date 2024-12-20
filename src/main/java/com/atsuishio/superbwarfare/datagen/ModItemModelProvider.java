@@ -138,6 +138,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         evenSimplerBlockItem(ModBlocks.JUMP_PAD);
         evenSimplerBlockItem(ModBlocks.REFORGING_TABLE);
         evenSimplerBlockItem(ModBlocks.CHARGING_STATION);
+
+        simpleItem(ModItems.FUMO_25);
     }
 
     private ItemModelBuilder simpleItem(RegistryObject<Item> item) {

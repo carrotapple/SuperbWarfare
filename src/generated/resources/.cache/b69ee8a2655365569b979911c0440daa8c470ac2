@@ -1,4 +1,4 @@
-// 1.20.1	2024-12-15T19:44:08.2693772	Item Models: superbwarfare
+// 1.20.1	2024-12-21T01:11:41.7343972	Item Models: superbwarfare
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_47_blueprint.json
@@ -26,6 +26,7 @@ dd455cf29eed0ef5eb5e90ef3d7140cb8de61efe assets/superbwarfare/models/item/drone.
 831ce33c5a4c90b71a42515f42f16d4c1a946c50 assets/superbwarfare/models/item/empty_perk.json
 2419503d8b597c92684d1921895a12fca33fec69 assets/superbwarfare/models/item/epic_material_pack.json
 b6f96946b54f44fdd2d8b809945b8d1ae5e776e2 assets/superbwarfare/models/item/firing_parameters.json
+5cac903f67f5fdb82d75cc67f06885db814c38fb assets/superbwarfare/models/item/fumo_25.json
 c102839d5f7d4bdc1c6cbfbf4c2c907b70f22052 assets/superbwarfare/models/item/fusee.json
 5326409e01ffd1f0a6330299799994e267db2b6b assets/superbwarfare/models/item/galena.json
 4bf506de247afbbec816f6637030f637e68ce0d4 assets/superbwarfare/models/item/ge_helmet_m_35.json
