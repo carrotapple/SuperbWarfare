@@ -91,7 +91,7 @@ public class JavelinHudOverlay {
 
                 if (seekingEntity == null) return;
 
-                double zoom = 3;
+                double zoom = 3.6;
                 Vec3 pos = new Vec3(seekingEntity.getX(), seekingEntity.getEyeY(), seekingEntity.getZ());
                 Vec3 lookAngle = player.getLookAngle().normalize().scale(pos.distanceTo(cameraPos) * (1 - 1.0 / zoom));
 
@@ -105,7 +105,7 @@ public class JavelinHudOverlay {
                 int x = (int) p.x;
                 int y = (int) p.y;
 
-                HudUtil.blit(poseStack, lockOn ? FRAME_LOCK : FRAME, x - 8, y - 8, 0, 0, 16, 16, 16, 16, 1f);
+                HudUtil.blit(poseStack, lockOn ? FRAME_LOCK : FRAME, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
                 poseStack.popPose();
             } else {
                 scopeScale = 1;
