@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.client;
 
 import com.atsuishio.superbwarfare.client.renderer.block.ContainerBlockEntityRenderer;
+import com.atsuishio.superbwarfare.client.renderer.block.FuMO25BlockEntityRenderer;
 import com.atsuishio.superbwarfare.client.tooltip.*;
 import com.atsuishio.superbwarfare.client.tooltip.component.*;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
@@ -27,6 +28,7 @@ public class ClientRenderHandler {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModBlockEntities.CONTAINER.get(), context -> new ContainerBlockEntityRenderer());
+        event.registerBlockEntityRenderer(ModBlockEntities.FUMO_25.get(), FuMO25BlockEntityRenderer::new);
     }
 
 }
