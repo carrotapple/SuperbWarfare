@@ -553,6 +553,7 @@ public class ClientEventHandler {
 
         if (notInGame()) {
             clientTimerVehicle.stop();
+            holdFire = false;
         }
 
         if (player.getVehicle() instanceof IVehicleEntity iVehicle && iVehicle.isDriver(player) && iVehicle.canShoot(player)) {
