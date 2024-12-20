@@ -16,5 +16,5 @@ public interface IVehicleEntity {
 
     boolean canShoot(Player player);
 
-    int getAmmoCount();
+    int getAmmoCount(Player player);
 }

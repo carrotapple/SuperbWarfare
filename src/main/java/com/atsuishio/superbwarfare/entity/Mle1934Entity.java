@@ -542,7 +542,11 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
     }
 
     @Override
-    public int getAmmoCount() {
-        return 0;
+    public int getAmmoCount(Player player) {
+        if (player.getMainHandItem().getItem() instanceof CannonShellItem) {
+            return player.getMainHandItem().getCount();
+        } else {
+            return -1;
+        }
     }
 }

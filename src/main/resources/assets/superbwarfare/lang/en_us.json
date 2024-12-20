@@ -460,5 +460,8 @@
   "des.superbwarfare.tips.edit": "Press %1$s key to edit this weapon",
   "commands.ammo.no_permission": "Permission denied",
   "des.superbwarfare.revolver.da": "DA",
-  "des.superbwarfare.revolver.sa": "SA"
+  "des.superbwarfare.revolver.sa": "SA",
+  "ammotype.superbwarfare.ap": "AP SHELL",
+  "ammotype.superbwarfare.he": "HE SHELL",
+  "ammotype.superbwarfare.cal50": ".50 BMG"
 }

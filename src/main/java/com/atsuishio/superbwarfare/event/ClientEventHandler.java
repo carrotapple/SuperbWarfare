@@ -22,7 +22,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -552,8 +551,8 @@ public class ClientEventHandler {
         if (player == null) return;
         if (level == null) return;
 
-        if (player.getVehicle() instanceof IVehicleEntity iVehicle && iVehicle.isDriver(player)) {
-            player.displayClientMessage(Component.literal("canShoot: " + iVehicle.canShoot(player)), true);
+        if (notInGame()) {
+            clientTimerVehicle.stop();
         }
 
         if (player.getVehicle() instanceof IVehicleEntity iVehicle && iVehicle.isDriver(player) && iVehicle.canShoot(player)) {
@@ -580,15 +579,9 @@ public class ClientEventHandler {
                     playVehicleClientSounds(player, iVehicle);
                     clientTimerVehicle.setProgress((clientTimerVehicle.getProgress() - cooldown));
                 }
-
-                if (notInGame()) {
-                    clientTimerVehicle.stop();
-                }
-
             } else {
                 clientTimerVehicle.stop();
             }
-
         } else {
             clientTimerVehicle.stop();
         }

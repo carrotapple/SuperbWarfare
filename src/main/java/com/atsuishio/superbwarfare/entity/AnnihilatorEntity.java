@@ -567,7 +567,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     }
 
     @Override
-    public int getAmmoCount() {
-        return 0;
+    public int getAmmoCount(Player player) {
+        return -1;
     }
 }

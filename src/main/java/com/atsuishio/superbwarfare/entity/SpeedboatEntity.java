@@ -311,7 +311,9 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             cannotFire = false;
         }
 
-        this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum());
+        if (this.level() instanceof ServerLevel) {
+            this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum());
+        }
 
         turretYRotO = this.getTurretYRot();
         turretXRotO = this.getTurretXRot();
@@ -344,9 +346,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             this.entityData.set(ROT_Y, this.getYRot());
         }
 
-        handleClientSync();
-        this.tickLerp();
-        this.controlBoat();
+        this.entityData.set(HEALTH, java.lang.Math.min(this.entityData.get(HEALTH) + 0.05f, MAX_HEALTH));
 
         if (this.entityData.get(HEALTH) <= 0) {
             this.ejectPassengers();
@@ -357,6 +357,9 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             crushEntities(this.getDeltaMovement());
         }
 
+        handleClientSync();
+        tickLerp();
+        controlBoat();
         collideBlock();
         gunnerAngle();
         pickUpItem();
@@ -921,13 +924,13 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     @Override
     public boolean canShoot(Player player) {
-        return (this.getItemStacks().stream().anyMatch(stack -> stack.is(ModItems.HEAVY_AMMO.get())) || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())))
+        return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())))
                 && !player.getMainHandItem().is(ModTags.Items.GUN)
                 && !cannotFire;
     }
 
     @Override
-    public int getAmmoCount() {
-        return 0;
+    public int getAmmoCount(Player player) {
+        return this.entityData.get(AMMO);
     }
 }
