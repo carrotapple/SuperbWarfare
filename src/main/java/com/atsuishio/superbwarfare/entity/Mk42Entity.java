@@ -422,6 +422,11 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     }
 
     @Override
+    public void vehicleShoot(Player player) {
+
+    }
+
+    @Override
     public float getHealth() {
         return this.entityData.get(HEALTH).intValue();
     }
@@ -444,5 +449,10 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     @Override
     public boolean canShoot(Player player) {
         return true;
+    }
+
+    @Override
+    public int getAmmoCount() {
+        return 0;
     }
 }

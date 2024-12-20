@@ -542,6 +542,11 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     }
 
     @Override
+    public void vehicleShoot(Player player) {
+
+    }
+
+    @Override
     public float getHealth() {
         return this.entityData.get(HEALTH).intValue();
     }
@@ -564,5 +569,10 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     @Override
     public boolean canShoot(Player player) {
         return true;
+    }
+
+    @Override
+    public int getAmmoCount() {
+        return 0;
     }
 }

@@ -84,7 +84,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity, IVehicleEntity, HasCustomInventoryScreen, ContainerEntity {
-
     public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
@@ -94,6 +93,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     public static final EntityDataAccessor<Float> ROTOR = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
     protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
 
     public static final float MAX_HEALTH = CannonConfig.SPEEDBOAT_HP.get();
     public static final float MAX_ENERGY = CannonConfig.SPEEDBOAT_MAX_ENERGY.get().floatValue();
@@ -127,6 +127,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     @Override
     protected void defineSynchedData() {
+        this.entityData.define(AMMO, 0);
         this.entityData.define(FIRE_ANIM, 0);
         this.entityData.define(HEALTH, MAX_HEALTH);
         this.entityData.define(ENERGY, 0f);
@@ -309,6 +310,10 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             cannotFire = false;
         }
 
+        // TODO 获取弹药数量
+
+        this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).count());
+
         turretYRotO = this.getTurretYRot();
         turretXRotO = this.getTurretXRot();
 
@@ -373,7 +378,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
      * 机枪塔开火
      */
     @Override
-    public void cannonShoot(Player player) {
+    public void vehicleShoot(Player player) {
         if (this.cannotFire) return;
 
         ProjectileEntity projectile = new ProjectileEntity(player.level())
@@ -920,5 +925,10 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         return (this.getItemStacks().stream().anyMatch(stack -> stack.is(ModItems.HEAVY_AMMO.get())) || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())))
                 && !player.getMainHandItem().is(ModTags.Items.GUN)
                 && !cannotFire;
+    }
+
+    @Override
+    public int getAmmoCount() {
+        return 0;
     }
 }
