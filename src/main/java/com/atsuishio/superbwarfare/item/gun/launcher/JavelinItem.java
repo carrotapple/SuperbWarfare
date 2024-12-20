@@ -154,10 +154,6 @@ public class JavelinItem extends GunItem implements GeoItem, AnimatedItem {
                 }
 
                 if (seekingEntity != null && tag.getInt("SeekTime") > 20) {
-//                    if (seekingEntity instanceof LivingEntity living) {
-//                        living.addEffect(new MobEffectInstance(MobEffects.GLOWING, 40, 0));
-//                    }
-
                     if (player instanceof ServerPlayer serverPlayer) {
                         SoundTool.playLocalSound(serverPlayer, ModSounds.JAVELIN_LOCKON.get(), 2, 1);
                     }

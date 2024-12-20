@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.tools;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
+import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
@@ -65,15 +66,13 @@ public class CustomExplosion extends Explosion {
 
     public CustomExplosion(Level pLevel, @Nullable Entity pSource, @Nullable DamageSource source, float damage, double pToBlowX, double pToBlowY, double pToBlowZ, float pRadius, Explosion.BlockInteraction pBlockInteraction) {
         this(pLevel, pSource, source, null, damage, pToBlowX, pToBlowY, pToBlowZ, pRadius, pBlockInteraction);
-
         final Vec3 center = new Vec3(pToBlowX, pToBlowY, pToBlowZ);
-
         for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4 * radius), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
-
             if (target instanceof ServerPlayer serverPlayer) {
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(20 + 0.02 * damage,3 * pRadius,50 + 0.05 * damage, pToBlowX, pToBlowY, pToBlowZ));
             }
         }
+        pLevel.explode(source == null ? null : source.getEntity(), pToBlowX, pToBlowY, pToBlowZ, pRadius / 2, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
     }
 
     public CustomExplosion(Level pLevel, @Nullable Entity pSource, @Nullable DamageSource source, float damage, double pToBlowX, double pToBlowY, double pToBlowZ, float pRadius) {
