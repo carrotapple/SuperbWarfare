@@ -461,7 +461,7 @@
   "commands.ammo.no_permission": "Permission denied",
   "des.superbwarfare.revolver.da": "DA",
   "des.superbwarfare.revolver.sa": "SA",
-  "ammotype.superbwarfare.ap": "AP SHELL",
-  "ammotype.superbwarfare.he": "HE SHELL",
-  "ammotype.superbwarfare.cal50": ".50 BMG"
+  "des.superbwarfare.tips.ammo_type.ap": "AP SHELL",
+  "des.superbwarfare.tips.ammo_type.he": "HE SHELL",
+  "des.superbwarfare.tips.ammo_type.cal50": ".50 BMG"
 }

@@ -129,13 +129,13 @@ public class VehicleHudOverlay {
 
     private static String getVehicleAmmoType(ItemStack stack, IVehicleEntity iVehicle) {
         if (stack.getItem() == ModItems.AP_5_INCHES.get() && iVehicle instanceof ICannonEntity) {
-            return Component.translatable("ammotype.superbwarfare.ap").getString();
+            return Component.translatable("des.superbwarfare.tips.ammo_type.ap").getString();
         }
         if (stack.getItem() == ModItems.HE_5_INCHES.get() && iVehicle instanceof ICannonEntity) {
-            return Component.translatable("ammotype.superbwarfare.he").getString();
+            return Component.translatable("des.superbwarfare.tips.ammo_type.he").getString();
         }
         if (iVehicle instanceof SpeedboatEntity) {
-            return Component.translatable("ammotype.superbwarfare.cal50").getString();
+            return Component.translatable("des.superbwarfare.tips.ammo_type.cal50").getString();
         }
         return "";
     }

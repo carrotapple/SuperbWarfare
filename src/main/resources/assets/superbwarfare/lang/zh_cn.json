@@ -460,5 +460,8 @@
   "des.superbwarfare.tips.edit": "按下 %1$s 键进行改装",
   "commands.ammo.no_permission": "权限不足",
   "des.superbwarfare.revolver.da": "双动",
-  "des.superbwarfare.revolver.sa": "单动"
+  "des.superbwarfare.revolver.sa": "单动",
+  "des.superbwarfare.tips.ammo_type.ap": "AP SHELL",
+  "des.superbwarfare.tips.ammo_type.he": "HE SHELL",
+  "des.superbwarfare.tips.ammo_type.cal50": ".50 BMG"
 }

@@ -627,7 +627,7 @@ public class FuMO25Model<T extends Entity> extends EntityModel<T> {
     @Override
     public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         poseStack.pushPose();
-        poseStack.scale(0.15f, 0.15f, 0.15f);
+        poseStack.scale(0.3f, 0.3f, 0.3f);
         poseStack.mulPose(Axis.XN.rotation(180.0f * Mth.DEG_TO_RAD));
         yundongjian.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
         poseStack.popPose();

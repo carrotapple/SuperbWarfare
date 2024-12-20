@@ -196,27 +196,16 @@ public class GunsTool {
     }
 
     public static void setGunIntTag(ItemStack stack, String name, int num) {
-        if (stack == null) return;
-
-        var tag = stack.getTag();
-        if (tag != null && tag.contains("GunData")) {
-            tag.getCompound("GunData").putInt(name, num);
-            stack.addTagElement("GunData", tag);
-        } else {
-            CompoundTag newTag = new CompoundTag();
-            newTag.putInt(name, num);
-            stack.addTagElement("GunData", newTag);
-        }
+        CompoundTag tag = stack.getOrCreateTag();
+        var data = tag.getCompound("GunData");
+        data.putInt(name, num);
+        stack.addTagElement("GunData", data);
     }
 
     public static int getGunIntTag(ItemStack stack, String name) {
-        if (stack == null) return 0;
-
-        var tag = stack.getTag();
-        if (tag != null && tag.contains("GunData")) {
-            return tag.getCompound("GunData").getInt(name);
-        }
-        return 0;
+        CompoundTag tag = stack.getOrCreateTag();
+        var data = tag.getCompound("GunData");
+        return data.getInt(name);
     }
 
 }

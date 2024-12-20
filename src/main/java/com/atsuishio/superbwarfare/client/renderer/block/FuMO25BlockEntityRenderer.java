@@ -29,7 +29,7 @@ public class FuMO25BlockEntityRenderer implements BlockEntityRenderer<FuMO25Bloc
     public void render(FuMO25BlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         pPoseStack.pushPose();
 
-        pPoseStack.translate(0.5f, 1.8f, 0.5f);
+        pPoseStack.translate(0.5f, 2.7f, 0.5f);
 
         VertexConsumer vertexconsumer = ItemRenderer.getFoilBufferDirect(pBuffer, this.model.renderType(TEXTURE), false, false);
         this.model.render(pPoseStack, vertexconsumer, 0xffffff, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F, true);
