@@ -184,11 +184,11 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
 
         switch (type) {
             case AMMO ->
-                    this.ammoPerkLevel.set(upgrade ? Math.min(10, this.ammoPerkLevel.get() + 1) : Math.max(1, this.ammoPerkLevel.get() - 1));
+                    this.ammoPerkLevel.set(upgrade ? Math.min(50, this.ammoPerkLevel.get() + 1) : Math.max(1, this.ammoPerkLevel.get() - 1));
             case FUNCTIONAL ->
-                    this.funcPerkLevel.set(upgrade ? Math.min(10, this.funcPerkLevel.get() + 1) : Math.max(1, this.funcPerkLevel.get() - 1));
+                    this.funcPerkLevel.set(upgrade ? Math.min(50, this.funcPerkLevel.get() + 1) : Math.max(1, this.funcPerkLevel.get() - 1));
             case DAMAGE ->
-                    this.damagePerkLevel.set(upgrade ? Math.min(10, this.damagePerkLevel.get() + 1) : Math.max(1, this.damagePerkLevel.get() - 1));
+                    this.damagePerkLevel.set(upgrade ? Math.min(50, this.damagePerkLevel.get() + 1) : Math.max(1, this.damagePerkLevel.get() - 1));
         }
 
         if (!isCreative) {
