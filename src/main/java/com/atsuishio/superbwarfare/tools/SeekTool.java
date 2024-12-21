@@ -13,6 +13,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.StreamSupport;
 
 public class SeekTool {
@@ -47,6 +48,22 @@ public class SeekTool {
                     }
                     return false;
                 }).min(Comparator.comparingDouble(e -> calculateAngle(e, entity))).orElse(null);
+    }
+
+    public static List<Entity> seekLivingEntities(Entity entity, Level level, double seekRange, double seekAngle) {
+        return StreamSupport.stream(EntityFindUtil.getEntities(level).getAll().spliterator(), false)
+                .filter(e -> {
+                    if (e.distanceTo(entity) <= seekRange && calculateAngle(e, entity) < seekAngle
+                            && e != entity
+                            && e.isAlive()
+                            && (e instanceof LivingEntity || e instanceof IVehicleEntity)
+                            && !(e instanceof Player player && (player.isCreative() || player.isSpectator()))
+                            && (!e.isAlliedTo(entity) || e.getTeam() == null || e.getTeam().getName().equals("TDM"))) {
+                        return level.clip(new ClipContext(entity.getEyePosition(), e.getEyePosition(),
+                                ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() != HitResult.Type.BLOCK;
+                    }
+                    return false;
+                }).toList();
     }
 
     private static double calculateAngle(Entity entityA, Entity entityB) {

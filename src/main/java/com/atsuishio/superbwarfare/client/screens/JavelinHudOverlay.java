@@ -27,6 +27,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.List;
+
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
@@ -87,26 +89,27 @@ public class JavelinHudOverlay {
                 RenderSystem.setShaderColor(1, 1, 1, 1);
 
                 Entity targetEntity = EntityFindUtil.findEntity(player.level(), stack.getOrCreateTag().getString("TargetEntity"));
-                Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 512, 8);
-
-                if (seekingEntity == null) return;
+                List<Entity> entities = SeekTool.seekLivingEntities(player, player.level(), 512, 10);
 
                 double zoom = 3.6;
-                Vec3 pos = new Vec3(seekingEntity.getX(), seekingEntity.getEyeY(), seekingEntity.getZ());
-                Vec3 lookAngle = player.getLookAngle().normalize().scale(pos.distanceTo(cameraPos) * (1 - 1.0 / zoom));
 
-                cameraPos = cameraPos.add(lookAngle);
-                Vec3 p = RenderHelper.worldToScreen(pos, cameraPos);
-                if (p == null) return;
+                for (var e : entities) {
+                    Vec3 pos = new Vec3(e.getX(), e.getEyeY(), e.getZ());
+                    Vec3 lookAngle = player.getLookAngle().normalize().scale(pos.distanceTo(cameraPos) * (1 - 1.0 / zoom));
 
-                boolean lockOn = stack.getOrCreateTag().getInt("SeekTime") > 20 && seekingEntity == targetEntity;
+                    var cPos = cameraPos.add(lookAngle);
+                    Vec3 p = RenderHelper.worldToScreen(pos, cPos);
+                    if (p == null) return;
 
-                poseStack.pushPose();
-                int x = (int) p.x;
-                int y = (int) p.y;
+                    boolean lockOn = stack.getOrCreateTag().getInt("SeekTime") > 20 && e == targetEntity;
 
-                HudUtil.blit(poseStack, lockOn ? FRAME_LOCK : FRAME, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
-                poseStack.popPose();
+                    poseStack.pushPose();
+                    int x = (int) p.x;
+                    int y = (int) p.y;
+
+                    HudUtil.blit(poseStack, lockOn ? FRAME_LOCK : FRAME, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
+                    poseStack.popPose();
+                }
             } else {
                 scopeScale = 1;
             }
