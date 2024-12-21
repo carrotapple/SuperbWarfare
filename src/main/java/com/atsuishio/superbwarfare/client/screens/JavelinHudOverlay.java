@@ -35,6 +35,7 @@ import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 public class JavelinHudOverlay {
 
     private static final ResourceLocation FRAME = ModUtils.loc("textures/screens/javelin/frame.png");
+    private static final ResourceLocation FRAME_TARGET = ModUtils.loc("textures/screens/javelin/frame_target.png");
     private static final ResourceLocation FRAME_LOCK = ModUtils.loc("textures/screens/javelin/frame_lock.png");
     private static float scopeScale = 1;
 
@@ -90,8 +91,9 @@ public class JavelinHudOverlay {
 
                 Entity targetEntity = EntityFindUtil.findEntity(player.level(), stack.getOrCreateTag().getString("TargetEntity"));
                 List<Entity> entities = SeekTool.seekLivingEntities(player, player.level(), 512, 10);
+                Entity naerestEntity = SeekTool.seekLivingEntity(player, player.level(), 512, 10);
 
-                double zoom = 3.6;
+                double zoom = 3;
 
                 for (var e : entities) {
                     Vec3 pos = new Vec3(e.getX(), e.getEyeY(), e.getZ());
@@ -102,12 +104,13 @@ public class JavelinHudOverlay {
                     if (p == null) return;
 
                     boolean lockOn = stack.getOrCreateTag().getInt("SeekTime") > 20 && e == targetEntity;
+                    boolean nearest = e == naerestEntity;
 
                     poseStack.pushPose();
                     int x = (int) p.x;
                     int y = (int) p.y;
 
-                    HudUtil.blit(poseStack, lockOn ? FRAME_LOCK : FRAME, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
+                    HudUtil.blit(poseStack, lockOn ? FRAME_LOCK : nearest ? FRAME_TARGET : FRAME, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
                     poseStack.popPose();
                 }
             } else {

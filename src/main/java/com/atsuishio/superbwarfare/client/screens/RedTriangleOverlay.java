@@ -43,7 +43,9 @@ public class RedTriangleOverlay {
 
             if (idf == null) return;
 
-            Vec3 p = RenderHelper.worldToScreen(new Vec3(idf.getX(), idf.getEyeY() + 2,idf.getZ()), cameraPos);
+            double distance = idf.position().distanceTo(cameraPos);
+
+            Vec3 p = RenderHelper.worldToScreen(new Vec3(idf.getX(), idf.getEyeY() + 0.5 + 0.07 * distance, idf.getZ()), cameraPos);
 
             if (p == null) return;
 
