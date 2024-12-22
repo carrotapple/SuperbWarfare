@@ -297,6 +297,8 @@
   "des.superbwarfare.volt_overload": "增加泰瑟枪电击的伤害",
   "item.superbwarfare.desperado": "亡命之徒",
   "des.superbwarfare.desperado": "精准击杀后进行换弹，可暂时提升射速",
+  "item.superbwarfare.vorpal_weapon": "斩首武器",
+  "des.superbwarfare.vorpal_weapon": "提升对强大敌人造成的伤害",
 
   "item.superbwarfare.empty_perk": "空白模组",
   "item.superbwarfare.shortcut_pack": "捷径包",
@@ -391,26 +393,22 @@
   "item.minecraft.splash_potion.effect.superbwarfare_long_shock": "喷溅型电击药水",
   "item.minecraft.lingering_potion.effect.superbwarfare_long_shock": "滞留型电击药水",
 
-  "des.superbwarfare.sensitivity": "当前枪械的灵敏度为：%1$s",
-  "des.superbwarfare.need_bolt_action": "【需要拉栓】",
-
   "commands.ammo.get": "当前%s弹药数量: %s",
   "commands.ammo.set": "为%3$s位玩家的%1$s弹药数量设置为%2$s",
   "commands.ammo.add": "为%3$s位玩家添加了%2$s发%1$s弹药",
 
+  "des.superbwarfare.sensitivity": "当前枪械的灵敏度为：%1$s",
   "des.superbwarfare.monitor.linked": "连接成功！",
   "des.superbwarfare.monitor.monitor_already_linked": "这个遥控器已连接到一个设备！",
   "des.superbwarfare.monitor.already_linked": "这个设备已被连接！",
   "des.superbwarfare.monitor.unlinked": "断开连接！",
   "des.superbwarfare.no_cloth_config": "您尚未安装 Cloth Config API，无法打开配置界面",
-
   "des.superbwarfare.drone.distance": "飞手距离:",
   "des.superbwarfare.drone.health": "耐久值:",
   "des.superbwarfare.drone.ammo": "弹药:",
   "des.superbwarfare.drone.range": "测距:",
   "des.superbwarfare.drone.kamikaze": "自爆模式",
   "des.superbwarfare.drone.warning": "警告!",
-
   "des.superbwarfare.shoot.rings": "环 ",
 
   "entity.minecraft.villager.superbwarfare.armory": "军械师",

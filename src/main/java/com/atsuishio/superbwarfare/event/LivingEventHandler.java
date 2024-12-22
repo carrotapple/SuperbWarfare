@@ -116,7 +116,7 @@ public class LivingEventHandler {
         ItemStack stack = sourceEntity instanceof LivingEntity living ? living.getMainHandItem() : ItemStack.EMPTY;
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
-        //距离衰减
+        // 距离衰减
         if (DamageTypeTool.isGunDamage(source)) {
             double distance = entity.position().distanceTo(sourceEntity.position());
 
@@ -137,7 +137,7 @@ public class LivingEventHandler {
             }
         }
 
-        //计算防弹插板减伤
+        // 计算防弹插板减伤
         ItemStack armor = entity.getItemBySlot(EquipmentSlot.CHEST);
 
         if (armor != ItemStack.EMPTY && armor.getTag() != null && armor.getTag().contains("ArmorPlate")) {
@@ -466,6 +466,7 @@ public class LivingEventHandler {
 
         if (DamageTypeTool.isGunDamage(source) || source.is(ModDamageTypes.PROJECTILE_BOOM)) {
             handleKillClipDamage(stack, event);
+            handleVorpalWeaponDamage(stack, event);
         }
 
         if (DamageTypeTool.isGunFireDamage(source) && source.getDirectEntity() instanceof ProjectileEntity projectile && projectile.isZoom()) {
@@ -774,5 +775,14 @@ public class LivingEventHandler {
 
     public static void handlePlayerBeamReset(Player player) {
         player.getCapability(ModCapabilities.LASER_CAPABILITY).ifPresent(LaserCapability.ILaserCapability::end);
+    }
+
+    private static void handleVorpalWeaponDamage(ItemStack stack, LivingHurtEvent event) {
+        var entity = event.getEntity();
+        int level = PerkHelper.getItemPerkLevel(ModPerks.VORPAL_WEAPON.get(), stack);
+        if (level <= 0) return;
+        if (entity.getMaxHealth() < 100.0f) return;
+
+        event.setAmount(event.getAmount() * (1.15f + 0.05f * level));
     }
 }

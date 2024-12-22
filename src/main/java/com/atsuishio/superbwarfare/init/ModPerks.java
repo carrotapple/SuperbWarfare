@@ -71,6 +71,7 @@ public class ModPerks {
     public static final RegistryObject<Perk> MONSTER_HUNTER = DAMAGE_PERKS.register("monster_hunter", () -> new Perk("monster_hunter", Perk.Type.DAMAGE));
     public static final RegistryObject<Perk> VOLT_OVERLOAD = DAMAGE_PERKS.register("volt_overload", () -> new Perk("volt_overload", Perk.Type.DAMAGE));
     public static final RegistryObject<Perk> DESPERADO = DAMAGE_PERKS.register("desperado", () -> new Perk("desperado", Perk.Type.DAMAGE));
+    public static final RegistryObject<Perk> VORPAL_WEAPON = DAMAGE_PERKS.register("vorpal_weapon", () -> new Perk("vorpal_weapon", Perk.Type.DAMAGE));
 
     public static void registerCompatPerks() {
         if (ModList.get().isLoaded(CompatHolder.DMV)) {

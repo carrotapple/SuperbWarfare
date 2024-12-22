@@ -243,7 +243,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         }
 
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.5f * java.lang.Math.max(amount - 3, 0));
+        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.5f * Math.max(amount - 3, 0));
 
         return true;
     }

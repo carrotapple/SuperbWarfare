@@ -292,11 +292,13 @@
   "item.superbwarfare.head_seeker": "Head Seeker",
   "des.superbwarfare.head_seeker": "Body shots landed with this weapon increase precision damage for a short time",
   "item.superbwarfare.monster_hunter": "Monster Hunter",
-  "des.superbwarfare.monster_hunter": "Increases the damage of weapon against monsters",
+  "des.superbwarfare.monster_hunter": "Increases damage of weapon against monsters",
   "item.superbwarfare.volt_overload": "Volt Overload",
-  "des.superbwarfare.volt_overload": "Increases the shock damage of Taser Gun",
+  "des.superbwarfare.volt_overload": "Increases shock damage of Taser Gun",
   "item.superbwarfare.desperado": "Desperado",
-  "des.superbwarfare.desperado": "精准击杀后进行换弹，可暂时提升射速",
+  "des.superbwarfare.desperado": "Reload after a precision final blow increases your rate of fire",
+  "item.superbwarfare.vorpal_weapon": "Vorpal Weapon",
+  "des.superbwarfare.vorpal_weapon": "Increases damage against bosses",
 
   "item.superbwarfare.empty_perk": "Empty Perk",
   "item.superbwarfare.shortcut_pack": "Shortcut Pack",
@@ -391,26 +393,22 @@
   "item.minecraft.splash_potion.effect.superbwarfare_long_shock": "Splash Potion of Shock",
   "item.minecraft.lingering_potion.effect.superbwarfare_long_shock": "Lingering Potion of Shock",
 
-  "des.superbwarfare.sensitivity": "Current Sensitivity of This Gun: %1$s",
-  "des.superbwarfare.need_bolt_action": "[ Need Bolt Action ]",
-
   "commands.ammo.get": "Current %s ammo: %s",
   "commands.ammo.set": "Set %s ammo to %s for %s players",
   "commands.ammo.add": "Added %s ammo of amount %s for %s players",
 
+  "des.superbwarfare.sensitivity": "Current Sensitivity of This Gun: %1$s",
   "des.superbwarfare.monitor.linked": "Connect！",
   "des.superbwarfare.monitor.monitor_already_linked": "This monitor has been connected！",
   "des.superbwarfare.monitor.already_linked": "This device has been connected！",
   "des.superbwarfare.monitor.unlinked": "Disconnect！",
   "des.superbwarfare.no_cloth_config": "您尚未安装 Cloth Config API，无法打开配置界面",
-
   "des.superbwarfare.drone.distance": "DISTANCE:",
   "des.superbwarfare.drone.health": "HEALTH:",
   "des.superbwarfare.drone.ammo": "AMMO:",
   "des.superbwarfare.drone.range": "RANGE:",
   "des.superbwarfare.drone.kamikaze": "KAMIKAZE",
   "des.superbwarfare.drone.warning": "WARNING!",
-
   "des.superbwarfare.shoot.rings": "Rings ",
 
   "entity.minecraft.villager.superbwarfare.armory": "Armory",
