@@ -277,7 +277,7 @@ public class ClientEventHandler {
 
         if (GunsTool.getPerkIntTag(stack, "DesperadoTimePost") > 0) {
             int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.DESPERADO.get(), stack);
-            rpm *= (int) (1.25 + 0.05 * perkLevel);
+            rpm *= (int) (1.285 + 0.015 * perkLevel);
         }
 
         double rps = (double) rpm / 60;
@@ -286,14 +286,12 @@ public class ClientEventHandler {
         int cooldown = (int) (1000 / rps);
 
         //左轮类
-
         if (clientTimer.getProgress() == 0 && stack.is(ModTags.Items.REVOLVER) && ((holdFire && !stack.getOrCreateTag().getBoolean("DA")) || (stack.getOrCreateTag().getInt("bolt_action_anim") < 7 && stack.getOrCreateTag().getInt("bolt_action_anim") > 2) || stack.getOrCreateTag().getBoolean("canImmediatelyShoot"))) {
             revolverPreTime = Mth.clamp(revolverPreTime + 0.3 * times, 0, 1);
             revolverWheelPreTime = Mth.clamp(revolverWheelPreTime + 0.32 * times, 0, revolverPreTime > 0.7 ? 1 : 0.55);
         } else if (!stack.getOrCreateTag().getBoolean("DA") && !stack.getOrCreateTag().getBoolean("canImmediatelyShoot")) {
             revolverPreTime = Mth.clamp(revolverPreTime - 1.2 * times, 0, 1);
         }
-
 
         if ((holdFire || burstFireSize > 0)
                 && (player.getMainHandItem().is(ModTags.Items.NORMAL_GUN)
