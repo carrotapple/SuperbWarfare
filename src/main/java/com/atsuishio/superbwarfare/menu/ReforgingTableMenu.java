@@ -31,6 +31,9 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
     public static final int DAMAGE_PERK_SLOT = 3;
     public static final int RESULT_SLOT = 4;
 
+    public static final int MAX_PERK_LEVEL = 50;
+    public static final int MAX_UPGRADE_POINT = 100;
+
     public final DataSlot ammoPerkLevel = DataSlot.standalone();
     public final DataSlot funcPerkLevel = DataSlot.standalone();
     public final DataSlot damagePerkLevel = DataSlot.standalone();
@@ -178,21 +181,21 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
             return;
         }
 
-        if (!upgrade && this.upgradePoint.get() >= 100 && !isCreative) {
+        if (!upgrade && this.upgradePoint.get() >= MAX_UPGRADE_POINT && !isCreative) {
             return;
         }
 
         switch (type) {
             case AMMO ->
-                    this.ammoPerkLevel.set(upgrade ? Math.min(50, this.ammoPerkLevel.get() + 1) : Math.max(1, this.ammoPerkLevel.get() - 1));
+                    this.ammoPerkLevel.set(upgrade ? Math.min(MAX_PERK_LEVEL, this.ammoPerkLevel.get() + 1) : Math.max(1, this.ammoPerkLevel.get() - 1));
             case FUNCTIONAL ->
-                    this.funcPerkLevel.set(upgrade ? Math.min(50, this.funcPerkLevel.get() + 1) : Math.max(1, this.funcPerkLevel.get() - 1));
+                    this.funcPerkLevel.set(upgrade ? Math.min(MAX_PERK_LEVEL, this.funcPerkLevel.get() + 1) : Math.max(1, this.funcPerkLevel.get() - 1));
             case DAMAGE ->
-                    this.damagePerkLevel.set(upgrade ? Math.min(50, this.damagePerkLevel.get() + 1) : Math.max(1, this.damagePerkLevel.get() - 1));
+                    this.damagePerkLevel.set(upgrade ? Math.min(MAX_PERK_LEVEL, this.damagePerkLevel.get() + 1) : Math.max(1, this.damagePerkLevel.get() - 1));
         }
 
         if (!isCreative) {
-            this.upgradePoint.set(Mth.clamp(this.upgradePoint.get() + (upgrade ? -1 : 1), 0, 100));
+            this.upgradePoint.set(Mth.clamp(this.upgradePoint.get() + (upgrade ? -1 : 1), 0, MAX_UPGRADE_POINT));
         }
     }
 
@@ -289,7 +292,7 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
 
             ItemStack output = gun.copy();
             PerkHelper.removePerkByType(output, perkItem.getPerk().type);
-            output.getOrCreateTag().putDouble("UpgradePoint", Math.min(100, level - 1 + output.getOrCreateTag().getDouble("UpgradePoint")));
+            output.getOrCreateTag().putDouble("UpgradePoint", Math.min(MAX_UPGRADE_POINT, level - 1 + output.getOrCreateTag().getDouble("UpgradePoint")));
             this.upgradePoint.set((int) output.getOrCreateTag().getDouble("UpgradePoint"));
 
             this.container.setItem(INPUT_SLOT, output);
@@ -325,7 +328,7 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
         }
 
         int point = (int) pStack.getOrCreateTag().getDouble("UpgradePoint");
-        this.upgradePoint.set(Mth.clamp(point, 0, 100));
+        this.upgradePoint.set(Mth.clamp(point, 0, MAX_UPGRADE_POINT));
 
         var ammoPerk = PerkHelper.getPerkByType(pStack, Perk.Type.AMMO);
         if (ammoPerk != null) {

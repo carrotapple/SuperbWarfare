@@ -19,6 +19,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTableMenu> {
+
     private static final ResourceLocation TEXTURE = ModUtils.loc("textures/gui/reforging_table.png");
 
     public ReforgingTableScreen(ReforgingTableMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
@@ -46,24 +47,28 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         var damagePerkLevel = ReforgingTableScreen.this.menu.damagePerkLevel.get();
 
         if (ammoPerkLevel > 0) {
-            pGuiGraphics.blit(TEXTURE, this.leftPos + 140, this.topPos + 31, 5 * ammoPerkLevel - 5, 178, 5, 5, 200, 200);
+            renderNumber(pGuiGraphics, this.leftPos + 136, this.topPos + 31, 1, 178, ammoPerkLevel);
         }
 
         if (funcPerkLevel > 0) {
-            pGuiGraphics.blit(TEXTURE, this.leftPos + 148, this.topPos + 31, 5 * funcPerkLevel - 5, 184, 5, 5, 200, 200);
+            renderNumber(pGuiGraphics, this.leftPos + 146, this.topPos + 31, 1, 184, funcPerkLevel);
         }
 
         if (damagePerkLevel > 0) {
-            pGuiGraphics.blit(TEXTURE, this.leftPos + 156, this.topPos + 31, 5 * damagePerkLevel - 5, 190, 5, 5, 200, 200);
+            renderNumber(pGuiGraphics, this.leftPos + 156, this.topPos + 31, 1, 190, damagePerkLevel);
         }
 
         var upgradePoint = ReforgingTableScreen.this.menu.upgradePoint.get();
-        int pointG = upgradePoint / 10;
-        int pointS = upgradePoint % 10;
-        pGuiGraphics.blit(TEXTURE, this.leftPos + 43, this.topPos + 20, 51 + 5 * pointG, 178, 5, 5, 200, 200);
-        pGuiGraphics.blit(TEXTURE, this.leftPos + 47, this.topPos + 20, 51 + 5 * pointS, 178, 5, 5, 200, 200);
+        renderNumber(pGuiGraphics, this.leftPos + 43, this.topPos + 20, 51, 178, upgradePoint);
 
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+    }
+
+    private void renderNumber(GuiGraphics guiGraphics, int x, int y, int u, int v, int number) {
+        int g = number / 10;
+        int s = number % 10;
+        guiGraphics.blit(TEXTURE, x, y, u + 5 * g, v, 5, 5, 200, 200);
+        guiGraphics.blit(TEXTURE, x + 4, y, u + 5 * s, v, 5, 5, 200, 200);
     }
 
     @Override
@@ -103,7 +108,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         }
 
         public ReforgeButton(int pX, int pY) {
-            super(pX, pY, 40, 16, Component.translatable("button.superbwarfare.reforge"));
+            super(pX, pY, 40, 16, Component.literal(""));
         }
 
         @Override
@@ -127,7 +132,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         public Perk.Type type;
 
         public UpgradeButton(int pX, int pY, Perk.Type type) {
-            super(pX, pY, 9, 9, Component.translatable("button.superbwarfare.upgrade"));
+            super(pX, pY, 9, 9, Component.literal(""));
             this.type = type;
         }
 
@@ -143,17 +148,17 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
             }
             switch (type) {
                 case AMMO -> {
-                    if (ReforgingTableScreen.this.menu.ammoPerkLevel.get() >= 50) {
+                    if (ReforgingTableScreen.this.menu.ammoPerkLevel.get() >= ReforgingTableMenu.MAX_PERK_LEVEL) {
                         return;
                     }
                 }
                 case FUNCTIONAL -> {
-                    if (ReforgingTableScreen.this.menu.funcPerkLevel.get() >= 50) {
+                    if (ReforgingTableScreen.this.menu.funcPerkLevel.get() >= ReforgingTableMenu.MAX_PERK_LEVEL) {
                         return;
                     }
                 }
                 case DAMAGE -> {
-                    if (ReforgingTableScreen.this.menu.damagePerkLevel.get() >= 50) {
+                    if (ReforgingTableScreen.this.menu.damagePerkLevel.get() >= ReforgingTableMenu.MAX_PERK_LEVEL) {
                         return;
                     }
                 }
@@ -178,7 +183,7 @@ public class ReforgingTableScreen extends AbstractContainerScreen<ReforgingTable
         }
 
         public DowngradeButton(int pX, int pY, Perk.Type type) {
-            super(pX, pY, 12, 12, Component.translatable("button.superbwarfare.downgrade"));
+            super(pX, pY, 12, 12, Component.literal(""));
             this.type = type;
         }
 
