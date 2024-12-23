@@ -69,7 +69,8 @@ public abstract class CameraMixin {
                     var CameraPos = new Vector3d(0.22, 0.075, 0);
                     CameraPos.rotateZ(-drone.getXRot() * Mth.DEG_TO_RAD);
                     CameraPos.rotateY(-yRot * Mth.DEG_TO_RAD);
-                    setRotation(drone.getViewYRot(partialTicks), drone.getViewXRot(partialTicks));
+
+                    setRotation(Mth.lerp(partialTicks, player.yBobO, player.yBob), drone.getViewXRot(partialTicks));
                     setPosition(Mth.lerp(partialTicks, drone.xo + CameraPos.x, drone.getX() + CameraPos.x), Mth.lerp(partialTicks, drone.yo + 0.075, drone.getEyeY()), Mth.lerp(partialTicks, drone.zo + CameraPos.z, drone.getZ() + CameraPos.z));
                     info.cancel();
                 }

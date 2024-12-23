@@ -9,9 +9,6 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-import static com.atsuishio.superbwarfare.entity.DroneEntity.MOVE_X;
-import static com.atsuishio.superbwarfare.entity.DroneEntity.MOVE_Z;
-
 public class DroneMovementMessage {
     private final int direction;
     private final boolean clicked;
@@ -44,19 +41,15 @@ public class DroneMovementMessage {
                         switch (message.direction) {
                             case 0:
                                 drone.getPersistentData().putBoolean("left", message.clicked);
-                                drone.getEntityData().set(MOVE_X, message.clicked ? 10f : 0);
                                 break;
                             case 1:
                                 drone.getPersistentData().putBoolean("right", message.clicked);
-                                drone.getEntityData().set(MOVE_X, message.clicked ? -10f : 0);
                                 break;
                             case 2:
                                 drone.getPersistentData().putBoolean("forward", message.clicked);
-                                drone.getEntityData().set(MOVE_Z, message.clicked ? -10f : 0);
                                 break;
                             case 3:
                                 drone.getPersistentData().putBoolean("backward", message.clicked);
-                                drone.getEntityData().set(MOVE_Z, message.clicked ? 10f : 0);
                                 break;
                             case 4:
                                 drone.getPersistentData().putBoolean("up", message.clicked);

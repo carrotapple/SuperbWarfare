@@ -59,13 +59,26 @@ public class DroneModel extends GeoModel<DroneEntity> {
 		ammo1.setHidden(animatable.getEntityData().get(AMMO) <= 0);
         shell.setHidden(!animatable.getEntityData().get(KAMIKAZE));
 
-		float times = (float) (0.5f * Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8));
+		float times = Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1);
 
-		rotX = Mth.lerp(0.2f * times, rotX, animatable.getEntityData().get(MOVE_X) * Mth.DEG_TO_RAD);
-		rotZ = Mth.lerp(0.2f * times, rotZ, animatable.getEntityData().get(MOVE_Z) * Mth.DEG_TO_RAD);
+		if (Minecraft.getInstance().options.keyUp.isDown()) {
+			rotX = Mth.lerp(0.025f * times, rotX, -0.25f);
+		} else if (Minecraft.getInstance().options.keyDown.isDown()) {
+			rotX = Mth.lerp(0.025f * times, rotX, 0.25f);
+		} else {
+			rotX = Mth.lerp(0.04f * times, rotX, 0);
+		}
 
-		main.setRotZ(rotX);
-		main.setRotX(rotZ);
+		if (Minecraft.getInstance().options.keyRight.isDown()) {
+			rotZ = Mth.lerp(0.025f * times, rotZ, -0.25f);
+		} else if (Minecraft.getInstance().options.keyLeft.isDown()) {
+			rotZ = Mth.lerp(0.025f * times, rotZ, 0.25f);
+		} else {
+			rotZ = Mth.lerp(0.04f * times, rotZ, 0);
+		}
+
+		main.setRotX(rotX);
+		main.setRotZ(rotZ);
 
 		droneBodyAngle(rotX, rotZ);
 

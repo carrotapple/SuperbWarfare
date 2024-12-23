@@ -1,9 +1,9 @@
 package com.atsuishio.superbwarfare.block;
 
-import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.network.ModVariables;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
@@ -100,8 +100,6 @@ public class JumpPadBlock extends Block {
         // 禁止套娃
         if (entity instanceof TargetEntity || entity instanceof ICannonEntity) return;
 
-        boolean zooming = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> c.zoom).orElse(false);
-
         if (entity.isShiftKeyDown()) {
             if (entity.onGround()) {
                 entity.setDeltaMovement(new Vec3(5 * entity.getLookAngle().x, 1.5, 5 * entity.getLookAngle().z));
@@ -110,10 +108,6 @@ public class JumpPadBlock extends Block {
             }
         } else {
             entity.setDeltaMovement(new Vec3(0.7 * entity.getDeltaMovement().x(), 1.7, 0.7 * entity.getDeltaMovement().z()));
-        }
-
-        if (!zooming) {
-            entity.getPersistentData().putDouble("vy", 0.8);
         }
 
         if (!level.isClientSide()) {

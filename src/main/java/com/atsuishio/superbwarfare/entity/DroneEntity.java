@@ -66,11 +66,12 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Boolean> KAMIKAZE = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
 
-    public static final EntityDataAccessor<Float> MOVE_X = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> MOVE_Z = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static double lastTickSpeed = 0;
+
+    public double moveX = 0;
+    public double moveY = 0;
+    public double moveZ = 0;
 
     public DroneEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.DRONE.get(), world);
@@ -92,8 +93,6 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
         this.entityData.define(LINKED, false);
         this.entityData.define(AMMO, 0);
         this.entityData.define(KAMIKAZE, false);
-        this.entityData.define(MOVE_X, 0f);
-        this.entityData.define(MOVE_Z, 0f);
     }
 
     @Override
@@ -176,29 +175,23 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
     public void baseTick() {
         super.baseTick();
 
-        double moveX;
-        double moveZ;
         if (!this.onGround()) {
             // left and right
-            moveX = 0;
             if (this.getPersistentData().getBoolean("left")) {
-                moveX = Mth.clamp(moveX + 0.1f, 0, 1);
+                moveX = Mth.clamp(moveX + 0.3f, 0, 3);
             } else if (this.getPersistentData().getBoolean("right")) {
-                moveX = Mth.clamp(moveX - 0.1f, -1, 0);
-            } else {
-                moveX = Mth.lerp(0.9 * moveX, moveX, 0);
+                moveX = Mth.clamp(moveX - 0.3f, -3, 0);
             }
-
 
             // forward and backward
-            moveZ = 0;
             if (this.getPersistentData().getBoolean("forward")) {
-                moveZ = Mth.clamp(moveZ + 0.1f, 0, 1);
+                moveZ = Mth.clamp(moveZ + 0.3f, 0, 3);
             } else if (this.getPersistentData().getBoolean("backward")) {
-                moveZ= Mth.clamp(moveZ - 0.1f, -1, 0);
-            } else {
-                moveZ = Mth.lerp(0.9 * moveZ, moveZ, 0);
+                moveZ= Mth.clamp(moveZ - 0.3f, -3, 0);
             }
+
+            moveX *= 0.25;
+            moveZ *= 0.25;
 
         } else {
             moveX = 0;
@@ -206,14 +199,13 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
         }
 
         // up and down
-        double moveY = 0;
         if (this.getPersistentData().getBoolean("up")) {
-            moveY = Mth.clamp(moveY + 0.05f, 0, 1);
+            moveY = Mth.clamp(moveY + 0.3f, 0, 3);
         } else if (this.getPersistentData().getBoolean("down")) {
-            moveY = Mth.clamp(moveY - 0.05f, -1, 0);
-        } else {
-            moveY = Mth.lerp(0.99 * moveY, moveY, 0);
+            moveY = Mth.clamp(moveY - 0.15f, -2, 0);
         }
+
+        moveY *= 0.3;
 
         setDeltaMovement(getDeltaMovement().add(0.0f, (this.onGround() ? 0.059 : 0) + moveY, 0.0f));
 

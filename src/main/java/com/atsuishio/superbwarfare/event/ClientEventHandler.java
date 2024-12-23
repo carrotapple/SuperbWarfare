@@ -709,8 +709,8 @@ public class ClientEventHandler {
         DroneEntity drone = EntityFindUtil.findDrone(entity.level(), stack.getOrCreateTag().getString("LinkedDrone"));
 
         if (drone != null) {
-            event.setPitch((float) (pitch - Mth.RAD_TO_DEG * droneRotZ));
-            event.setRoll((float) (roll - Mth.RAD_TO_DEG * droneRotX));
+            event.setPitch((float) (pitch - Mth.RAD_TO_DEG * droneRotX));
+            event.setRoll((float) (roll - Mth.RAD_TO_DEG * droneRotZ));
         }
 
         if (drone != null && stack.getOrCreateTag().getBoolean("Using")) {
@@ -836,9 +836,7 @@ public class ClientEventHandler {
 
             double velocity = entity.getDeltaMovement().y() + 0.078;
 
-            if (-0.8 < velocity && velocity < 0.8) {
-                velocityY = Mth.lerp(0.5f * times, velocityY, velocity) * (1 - 0.8 * zoomTime);
-            }
+            velocityY = Mth.clamp(Mth.lerp(0.23f * times, velocityY, velocity) * (1 - 0.8 * zoomTime), -0.8, 0.8);
         }
     }
 
@@ -885,7 +883,7 @@ public class ClientEventHandler {
         }
 
         fireSpread = Mth.clamp(fireSpread - 0.1 * (Math.pow(fireSpread, 2) * times), 0, 2);
-        firePosZ = Mth.clamp(firePosZ - 1.2 * (Math.pow(firePosZ, 2) * times), 0, 1.5);
+        firePosZ = Mth.clamp(firePosZ - 1.2 * (Math.pow(firePosZ, 2) * times), 0, 1.5) * 0.98;
 
         if (0 < firePosTimer) {
             firePosTimer += 0.35 * (1.1 - firePosTimer) * times;
