@@ -1,6 +1,9 @@
 package com.atsuishio.superbwarfare.item.gun;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.client.tooltip.component.GunImageComponent;
+import com.atsuishio.superbwarfare.init.ModPerks;
+import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -8,9 +11,6 @@ import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.ItemNBTTool;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.atsuishio.superbwarfare.client.tooltip.component.GunImageComponent;
-import com.atsuishio.superbwarfare.init.ModPerks;
-import com.atsuishio.superbwarfare.init.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -109,7 +109,7 @@ public abstract class GunItem extends Item {
             map = HashMultimap.create(map);
             map.put(Attributes.MOVEMENT_SPEED,
                     new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER,
-                            -0.01f - 0.005f * (stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("CustomWeight")),
+                            -0.01f - 0.005f * (GunsTool.getGunDoubleTag(stack, "Weight") + GunsTool.getGunDoubleTag(stack, "CustomWeight")),
                             AttributeModifier.Operation.MULTIPLY_BASE));
         }
         return map;
@@ -207,7 +207,7 @@ public abstract class GunItem extends Item {
 
         double soundRadius = tag.getInt("Barrel") == 2 ? 0.6 : 1;
 
-        stack.getOrCreateTag().putDouble("CustomWeight", scopeWeight + barrelWeight + magazineWeight + stockWeight + gripWeight);
+        GunsTool.setGunDoubleTag(stack, "CustomWeight", scopeWeight + barrelWeight + magazineWeight + stockWeight + gripWeight);
         stack.getOrCreateTag().putDouble("CustomSoundRadius", soundRadius);
     }
 

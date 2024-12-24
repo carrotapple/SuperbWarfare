@@ -55,8 +55,9 @@ public class GunsTool {
     public static void initGun(Level level, ItemStack stack, String location) {
         if (level.getServer() == null) return;
         gunsData.get(location).forEach((k, v) -> {
-            if (k.equals("EmptyReloadTime") || k.equals("FireMode")) {
-                CompoundTag data = stack.getOrCreateTag().getCompound("GunData");
+            if (k.equals("EmptyReloadTime") || k.equals("FireMode") || k.equals("Weight")) {
+                CompoundTag tag = stack.getOrCreateTag();
+                CompoundTag data = tag.getCompound("GunData");
                 data.putDouble(k, v);
                 stack.addTagElement("GunData", data);
             } else {
@@ -68,8 +69,9 @@ public class GunsTool {
     public static void initCreativeGun(ItemStack stack, String location) {
         if (gunsData != null && gunsData.get(location) != null) {
             gunsData.get(location).forEach((k, v) -> {
-                if (k.equals("EmptyReloadTime") || k.equals("FireMode")) {
-                    CompoundTag data = stack.getOrCreateTag().getCompound("GunData");
+                if (k.equals("EmptyReloadTime") || k.equals("FireMode") || k.equals("Weight")) {
+                    CompoundTag tag = stack.getOrCreateTag();
+                    CompoundTag data = tag.getCompound("GunData");
                     data.putDouble(k, v);
                     stack.addTagElement("GunData", data);
                 } else {
@@ -208,4 +210,16 @@ public class GunsTool {
         return data.getInt(name);
     }
 
+    public static void setGunDoubleTag(ItemStack stack, String name, double num) {
+        CompoundTag tag = stack.getOrCreateTag();
+        var data = tag.getCompound("GunData");
+        data.putDouble(name, num);
+        stack.addTagElement("GunData", data);
+    }
+
+    public static double getGunDoubleTag(ItemStack stack, String name) {
+        CompoundTag tag = stack.getOrCreateTag();
+        var data = tag.getCompound("GunData");
+        return data.getDouble(name);
+    }
 }

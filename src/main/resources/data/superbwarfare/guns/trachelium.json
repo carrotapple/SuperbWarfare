@@ -7,7 +7,7 @@
   "velocity": 24,
   "mag": 6,
   "projectile_amount": 1,
-  "weight": 2,
+  "Weight": 2,
   "FireMode": 0,
   "semi": 1,
   "burst": 0,

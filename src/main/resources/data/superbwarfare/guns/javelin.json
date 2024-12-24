@@ -3,7 +3,7 @@
   "spread": 5,
   "zoomSpread": 5,
   "mag": 1,
-  "weight": 10,
+  "Weight": 10,
   "EmptyReloadTime": 78,
   "damage": 300,
   "ExplosionDamage": 100,

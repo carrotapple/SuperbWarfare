@@ -8,7 +8,7 @@
   "mag": 8,
   "force_stop_reloading": 1,
   "projectile_amount": 1,
-  "weight": 3,
+  "Weight": 3,
   "FireMode": 0,
   "semi": 1,
   "burst": 0,

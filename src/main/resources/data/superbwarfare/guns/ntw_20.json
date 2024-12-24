@@ -9,7 +9,7 @@
   "projectile_amount": 1,
   "mag": 3,
   "bolt_action_time": 37,
-  "weight": 10,
+  "Weight": 10,
   "FireMode": 0,
   "semi": 1,
   "burst": 0,

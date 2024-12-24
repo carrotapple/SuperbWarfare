@@ -260,8 +260,7 @@ public class ClientEventHandler {
         gunSpread = Mth.lerp(0.14 * times, gunSpread, spread);
 
         // 开火部分
-
-        double weight = stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("CustomWeight");
+        double weight = GunsTool.getGunDoubleTag(stack, "Weight") + GunsTool.getGunDoubleTag(stack, "CustomWeight");
         double speed = 1 - (0.04 * weight);
 
         if (player.getPersistentData().getDouble("noRun") == 0 && player.isSprinting() && !zoom) {
@@ -590,7 +589,7 @@ public class ClientEventHandler {
         if (iVehicle instanceof SpeedboatEntity speedboat) {
             float pitch = speedboat.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - speedboat.getEntityData().get(HEAT)));
             player.playSound(ModSounds.M_2_FIRE_1P.get(), 1f, pitch);
-            player.playSound(ModSounds.SHELL_CASING_50CAL.get(),0.3f, 1);
+            player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
         }
     }
 
@@ -598,7 +597,8 @@ public class ClientEventHandler {
     public static void handleWeaponBreathSway(TickEvent.RenderTickEvent event) {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
-        if (!player.getMainHandItem().is(ModTags.Items.GUN)) return;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return;
         if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity) return;
 
         float pose;
@@ -607,12 +607,12 @@ public class ClientEventHandler {
         if (player.isCrouching() && player.getBbHeight() >= 1 && !PlayerEventHandler.isProne(player)) {
             pose = 0.85f;
         } else if (PlayerEventHandler.isProne(player)) {
-            pose = GunsTool.getAttachmentType(player.getMainHandItem(), GunsTool.AttachmentType.GRIP) == 3 ? 0 : 0.25f;
+            pose = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 3 ? 0 : 0.25f;
         } else {
             pose = 1;
         }
 
-        int stockType = GunsTool.getAttachmentType(player.getMainHandItem(), GunsTool.AttachmentType.STOCK);
+        int stockType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK);
 
         double sway = switch (stockType) {
             case 1 -> 1;
@@ -620,16 +620,15 @@ public class ClientEventHandler {
             default -> 0.8;
         };
 
-        double cusWeight = player.getMainHandItem().getOrCreateTag().getDouble("CustomWeight");
-
+        double customWeight = GunsTool.getGunDoubleTag(stack, "CustomWeight");
 
         if (!player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).breath &&
                 player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom) {
-            float newPitch = (float) (player.getXRot() - 0.01f * Mth.sin((float) (0.03 * player.tickCount)) * pose * Mth.nextDouble(RandomSource.create(), 0.1, 1) * times * sway * (1 - 0.03 * cusWeight));
+            float newPitch = (float) (player.getXRot() - 0.01f * Mth.sin((float) (0.03 * player.tickCount)) * pose * Mth.nextDouble(RandomSource.create(), 0.1, 1) * times * sway * (1 - 0.03 * customWeight));
             player.setXRot(newPitch);
             player.xRotO = player.getXRot();
 
-            float newYaw = (float) (player.getYRot() - 0.005f * Mth.cos((float) (0.025 * (player.tickCount + 2 * Math.PI))) * pose * Mth.nextDouble(RandomSource.create(), 0.05, 1.25) * times * sway * (1 - 0.03 * cusWeight));
+            float newYaw = (float) (player.getYRot() - 0.005f * Mth.cos((float) (0.025 * (player.tickCount + 2 * Math.PI))) * pose * Mth.nextDouble(RandomSource.create(), 0.05, 1.25) * times * sway * (1 - 0.03 * customWeight));
             player.setYRot(newYaw);
             player.yRotO = player.getYRot();
         }
@@ -955,12 +954,13 @@ public class ClientEventHandler {
     private static void handleGunRecoil() {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
-        if (!player.getMainHandItem().is(ModTags.Items.GUN)) return;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return;
 
-        CompoundTag tag = player.getMainHandItem().getOrCreateTag();
+        CompoundTag tag = stack.getOrCreateTag();
         float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
-        int barrelType = GunsTool.getAttachmentType(player.getMainHandItem(), GunsTool.AttachmentType.BARREL);
-        int gripType = GunsTool.getAttachmentType(player.getMainHandItem(), GunsTool.AttachmentType.GRIP);
+        int barrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
+        int gripType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP);
 
         double recoil = switch (barrelType) {
             case 1 -> 1.5;
@@ -980,24 +980,23 @@ public class ClientEventHandler {
             default -> 2.0;
         };
 
-        if (!player.getMainHandItem().is(ModTags.Items.CAN_CUSTOM_GUN)) {
+        if (!stack.is(ModTags.Items.CAN_CUSTOM_GUN)) {
             recoil = 1.6;
             gripRecoilX = 0.75;
             gripRecoilY = 1.25;
         }
 
-        double cusWeight = player.getMainHandItem().getOrCreateTag().getDouble("CustomWeight");
+        double customWeight = GunsTool.getGunDoubleTag(stack, "CustomWeight");
 
         double rpm = 1;
 
-        if (player.getMainHandItem().is(ModItems.MINIGUN.get())) {
-            rpm = (double) player.getMainHandItem().getOrCreateTag().getInt("rpm") / 1800;
+        if (stack.is(ModItems.MINIGUN.get())) {
+            rpm = (double) stack.getOrCreateTag().getInt("rpm") / 1800;
         }
 
         float gunRecoilX = (float) tag.getDouble("recoil_x") * 60;
 
         recoilHorizon = Mth.lerp(0.2 * times, recoilHorizon, 0) + recoilY;
-
         recoilY = 0;
 
         // 计算后坐力
@@ -1005,7 +1004,7 @@ public class ClientEventHandler {
         if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && !PlayerEventHandler.isProne(player)) {
             pose = 0.7f;
         } else if (PlayerEventHandler.isProne(player)) {
-            if (GunsTool.getAttachmentType(player.getMainHandItem(), GunsTool.AttachmentType.GRIP) == 3) {
+            if (GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 3) {
                 pose = 0.1f;
             } else {
                 pose = 0.5f;
@@ -1013,8 +1012,7 @@ public class ClientEventHandler {
         }
 
         // 水平后座
-
-        float newYaw = player.getYRot() - (float) (0.6 * recoilHorizon * pose * times * (0.5 + fireSpread) * recoil * (1 - 0.06 * cusWeight) * gripRecoilX * rpm);
+        float newYaw = player.getYRot() - (float) (0.6 * recoilHorizon * pose * times * (0.5 + fireSpread) * recoil * (1 - 0.06 * customWeight) * gripRecoilX * rpm);
         player.setYRot(newYaw);
         player.yRotO = player.getYRot();
 
@@ -1022,7 +1020,7 @@ public class ClientEventHandler {
 
         // 竖直后座
         if (0 < recoilTime && recoilTime < 0.5) {
-            float newPitch = (float) (player.getXRot() - 0.02f * gunRecoilX * times * recoil * (1 - 0.06 * cusWeight) * gripRecoilY * rpm);
+            float newPitch = (float) (player.getXRot() - 0.02f * gunRecoilX * times * recoil * (1 - 0.06 * customWeight) * gripRecoilY * rpm);
             player.setXRot(newPitch);
             player.xRotO = player.getXRot();
         }
@@ -1038,7 +1036,7 @@ public class ClientEventHandler {
         }
 
         if (0 < recoilTime && recoilTime < 2.5) {
-            float newPitch = player.getXRot() - (float) (1.5 * pose * gunRecoilX * (sinRes + Mth.clamp(0.5 - recoilTime, 0, 0.5)) * times * (0.5 + fireSpread) * recoil * (1 - 0.06 * cusWeight) * gripRecoilY * rpm);
+            float newPitch = player.getXRot() - (float) (1.5 * pose * gunRecoilX * (sinRes + Mth.clamp(0.5 - recoilTime, 0, 0.5)) * times * (0.5 + fireSpread) * recoil * (1 - 0.06 * customWeight) * gripRecoilY * rpm);
             player.setXRot(newPitch);
             player.xRotO = player.getXRot();
         }
@@ -1259,7 +1257,7 @@ public class ClientEventHandler {
     private static void handleWeaponDraw(LivingEntity entity) {
         float times = Minecraft.getInstance().getDeltaFrameTime();
         ItemStack stack = entity.getMainHandItem();
-        double weight = stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("CustomWeight");
+        double weight = GunsTool.getGunDoubleTag(stack, "Weight") + GunsTool.getGunDoubleTag(stack, "CustomWeight");
         double speed = 3.2 - (0.13 * weight);
         drawTime = Math.max(drawTime - Math.max(0.2 * speed * times * drawTime, 0.0008), 0);
     }
