@@ -152,7 +152,7 @@ public class FireMessage {
                 && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
                 && !stack.getOrCreateTag().getBoolean("reloading")
                 && !stack.getOrCreateTag().getBoolean("charging")) {
-            if (!player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getBoolean("need_bolt_action")) {
+            if (!player.getCooldowns().isOnCooldown(stack.getItem()) && GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false)) {
                 stack.getOrCreateTag().putInt("bolt_action_anim", GunsTool.getGunIntTag(stack, "BoltActionTime", 0) + 1);
                 GunEventHandler.playGunBoltSounds(player);
             }

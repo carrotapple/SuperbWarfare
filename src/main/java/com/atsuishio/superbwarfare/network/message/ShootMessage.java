@@ -74,7 +74,7 @@ public class ShootMessage {
 
                 // 判断是否为栓动武器（BoltActionTime > 0），并在开火后给一个需要上膛的状态
                 if (GunsTool.getGunIntTag(stack, "BoltActionTime", 0) > 0 && stack.getOrCreateTag().getInt("ammo") > (stack.is(ModTags.Items.REVOLVER) ? 0 : 1)) {
-                    stack.getOrCreateTag().putBoolean("need_bolt_action", true);
+                    GunsTool.setGunBooleanTag(stack, "NeedBoltAction", true);
                 }
 
                 stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));

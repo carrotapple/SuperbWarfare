@@ -299,7 +299,7 @@ public class ClientEventHandler {
                 && !stack.getOrCreateTag().getBoolean("charging")
                 && stack.getOrCreateTag().getInt("ammo") > 0
                 && !player.getCooldowns().isOnCooldown(stack.getItem())
-                && !stack.getOrCreateTag().getBoolean("need_bolt_action")
+                && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false)
                 && revolverPre()
         )
                 || (stack.is(ModItems.MINIGUN.get())

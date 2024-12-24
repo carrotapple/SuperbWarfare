@@ -72,7 +72,7 @@ public class GunEventHandler {
             }
 
             if (stack.getOrCreateTag().getInt("bolt_action_anim") == 1) {
-                stack.getOrCreateTag().putBoolean("need_bolt_action", false);
+                GunsTool.setGunBooleanTag(stack, "NeedBoltAction", false);
                 if (stack.is(ModTags.Items.REVOLVER)) {
                     stack.getOrCreateTag().putBoolean("canImmediatelyShoot", true);
                 }
@@ -693,7 +693,7 @@ public class GunEventHandler {
         if (tag.getInt("finish") == 1) {
             tag.putInt("reload_stage", 0);
             if (GunsTool.getGunIntTag(stack, "BoltActionTime", 0) > 0) {
-                stack.getOrCreateTag().putBoolean("need_bolt_action", false);
+                GunsTool.setGunBooleanTag(stack, "NeedBoltAction", false);
             }
             tag.putBoolean("reloading", false);
 

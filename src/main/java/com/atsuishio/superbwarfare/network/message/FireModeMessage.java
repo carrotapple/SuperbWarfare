@@ -128,7 +128,7 @@ public class FireModeMessage {
             }
         }
 
-        if (stack.getItem() == ModItems.TRACHELIUM.get() && !tag.getBoolean("need_bolt_action")) {
+        if (stack.getItem() == ModItems.TRACHELIUM.get() && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false)) {
             if (!tag.getBoolean("DA")) {
                 tag.putBoolean("DA", true);
                 player.displayClientMessage(Component.translatable("des.superbwarfare.revolver.sa").withStyle(ChatFormatting.BOLD), true);
@@ -137,7 +137,7 @@ public class FireModeMessage {
                 player.displayClientMessage(Component.translatable("des.superbwarfare.revolver.da").withStyle(ChatFormatting.BOLD), true);
             }
             if (!tag.getBoolean("canImmediatelyShoot")) {
-                tag.putBoolean("need_bolt_action", true);
+                GunsTool.setGunBooleanTag(stack, "NeedBoltAction", true);
             }
         }
 

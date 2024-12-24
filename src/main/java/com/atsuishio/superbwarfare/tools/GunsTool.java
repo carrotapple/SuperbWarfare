@@ -105,9 +105,9 @@ public class GunsTool {
         int ammo = tag.getInt("ammo");
         int ammoToAdd = mag - ammo + (extraOne ? 1 : 0);
 
-        // 空仓换弹的栓动武器应该在换单后取消待上膛标记
+        // 空仓换弹的栓动武器应该在换弹后取消待上膛标记
         if (ammo == 0 && GunsTool.getGunIntTag(stack, "BoltActionTime", 0) > 0 && !stack.is(ModTags.Items.REVOLVER)) {
-            tag.putBoolean("need_bolt_action", false);
+            GunsTool.setGunBooleanTag(stack, "NeedBoltAction", false);
         }
 
         int playerAmmo = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).map(c -> switch (type) {

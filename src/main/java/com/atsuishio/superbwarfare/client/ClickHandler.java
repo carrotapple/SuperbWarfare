@@ -311,7 +311,7 @@ public class ClickHandler {
             if ((!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
                     && !stack.getOrCreateTag().getBoolean("reloading")
                     && !stack.getOrCreateTag().getBoolean("charging")
-                    && !stack.getOrCreateTag().getBoolean("need_bolt_action"))
+                    && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false))
                     && cantFireTime == 0
                     && drawTime < 0.01
                     && !notInGame()) {

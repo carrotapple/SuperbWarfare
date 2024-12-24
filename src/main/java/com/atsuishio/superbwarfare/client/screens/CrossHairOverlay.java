@@ -122,16 +122,6 @@ public class CrossHairOverlay {
         RenderSystem.enableDepthTest();
         RenderSystem.disableBlend();
         RenderSystem.setShaderColor(1, 1, 1, 1);
-
-//        if (!stack.is(ModTags.Items.GUN)) return;
-
-//        if (stack.getOrCreateTag().getBoolean("need_bolt_action")) {
-//            Font font = Minecraft.getInstance().font;
-//            Component component = Component.translatable("des.superbwarfare.need_bolt_action");
-//
-//            guiGraphics.drawString(font, component, w / 2 - font.width(component) / 2, h / 2 + 50, 0xFF6969);
-//        }
-
     }
 
     private static void normalCrossHair(GuiGraphics guiGraphics, int w, int h, double spread, float moveX, float moveY) {
