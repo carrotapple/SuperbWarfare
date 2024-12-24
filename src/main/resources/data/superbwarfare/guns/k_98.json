@@ -12,7 +12,7 @@
   "Semi": 1,
   "EmptyReloadTime": 59,
   "ClipLoad": 1,
-  "prepare_time": 29,
+  "PrepareTime": 29,
   "iterative_time": 11,
   "finish_time": 18,
   "BypassesArmor": 0.5,

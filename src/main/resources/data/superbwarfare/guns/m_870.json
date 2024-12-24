@@ -11,7 +11,7 @@
   "Weight": 4,
   "FireMode": 0,
   "Semi": 1,
-  "prepare_time": 7,
+  "PrepareTime": 7,
   "prepare_load_time": 36,
   "iterative_time": 16,
   "finish_time": 12,

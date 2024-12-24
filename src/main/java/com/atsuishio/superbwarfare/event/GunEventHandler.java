@@ -554,8 +554,9 @@ public class GunEventHandler {
                 player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("prepare_empty"));
             } else {
                 playGunPrepareReloadSounds(player);
-                tag.putInt("prepare", (int) tag.getDouble("prepare_time") + 1);
-                player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("prepare_time"));
+                int prepareTime = GunsTool.getGunIntTag(stack, "PrepareTime", 0);
+                tag.putInt("prepare", prepareTime + 1);
+                player.getCooldowns().addCooldown(stack.getItem(), prepareTime);
             }
 
             tag.putBoolean("force_stop", false);
