@@ -319,8 +319,8 @@ public class LivingEventHandler {
             if (player instanceof ServerPlayer serverPlayer) {
                 if (newStack.getItem() != oldStack.getItem()
                         || newStack.getTag() == null || oldStack.getTag() == null
-                        || !newStack.getTag().hasUUID("gun_uuid") || !oldStack.getTag().hasUUID("gun_uuid")
-                        || !newStack.getTag().getUUID("gun_uuid").equals(oldStack.getTag().getUUID("gun_uuid"))
+                        || !GunsTool.getGunData(newStack).hasUUID("UUID") || !GunsTool.getGunData(oldStack).hasUUID("UUID")
+                        || !GunsTool.getGunData(newStack).getUUID("UUID").equals(GunsTool.getGunData(oldStack).getUUID("UUID"))
                 ) {
                     if (oldStack.getItem() instanceof GunItem oldGun) {
                         stopGunReloadSound(serverPlayer, oldGun);

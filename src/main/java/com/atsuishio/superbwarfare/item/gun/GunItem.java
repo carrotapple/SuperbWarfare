@@ -57,7 +57,7 @@ public abstract class GunItem extends Item {
 
             if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
                 GunsTool.initGun(level, itemstack, this.getDescriptionId().substring(this.getDescriptionId().lastIndexOf('.') + 1));
-                GunsTool.genUUID(itemstack);
+                GunsTool.generateAndSetUUID(itemstack);
                 ItemNBTTool.setBoolean(itemstack, "init", true);
             }
 

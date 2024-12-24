@@ -87,9 +87,12 @@ public class GunsTool {
         }
     }
 
-    public static void genUUID(ItemStack stack) {
+    public static void generateAndSetUUID(ItemStack stack) {
         UUID uuid = UUID.randomUUID();
-        stack.getOrCreateTag().putUUID("gun_uuid", uuid);
+        CompoundTag tag = stack.getOrCreateTag();
+        var data = tag.getCompound("GunData");
+        data.putUUID("UUID", uuid);
+        stack.addTagElement("GunData", data);
     }
 
     @SubscribeEvent
@@ -205,6 +208,11 @@ public class GunsTool {
     }
 
     /* GunData */
+    public static CompoundTag getGunData(ItemStack stack) {
+        CompoundTag tag = stack.getOrCreateTag();
+        return tag.getCompound("GunData");
+    }
+
     public static void setGunIntTag(ItemStack stack, String name, int num) {
         CompoundTag tag = stack.getOrCreateTag();
         var data = tag.getCompound("GunData");
