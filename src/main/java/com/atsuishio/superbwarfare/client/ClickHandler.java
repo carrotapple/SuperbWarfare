@@ -157,7 +157,7 @@ public class ClickHandler {
 
         if (stack.is(ModTags.Items.GUN) && ClientEventHandler.zoom) {
             var tag = stack.getOrCreateTag();
-            if (tag.getBoolean("CanSwitchScope")) {
+            if (GunsTool.getGunBooleanTag(stack, "CanSwitchScope", false)) {
                 ModUtils.PACKET_HANDLER.sendToServer(new SwitchScopeMessage(scroll));
             } else if (tag.getBoolean("CanAdjustZoomFov") || stack.is(ModItems.MINIGUN.get())) {
                 ModUtils.PACKET_HANDLER.sendToServer(new AdjustZoomFovMessage(scroll));

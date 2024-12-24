@@ -194,7 +194,7 @@ public class M4Item extends GunItem implements GeoItem, AnimatedItem {
             default -> GunsTool.getGunDoubleTag(stack, "CustomZoom", 0);
         };
 
-        stack.getOrCreateTag().putBoolean("CanSwitchScope", scopeType == 2);
+        GunsTool.setGunBooleanTag(stack, "CanSwitchScope", scopeType == 2);
         stack.getOrCreateTag().putBoolean("CanAdjustZoomFov", scopeType == 3);
         GunsTool.setGunDoubleTag(stack, "CustomZoom", customZoom);
         stack.getOrCreateTag().putInt("customMag", customMag);

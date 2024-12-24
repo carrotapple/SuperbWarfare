@@ -265,7 +265,6 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
         int stockType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK);
         CompoundTag tags = stack.getOrCreateTag().getCompound("Attachments");
 
-
         if (stockType == 1) {
             tags.putInt("Stock", 2);
         }
@@ -292,8 +291,7 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
             default -> 1;
         };
 
-        stack.getOrCreateTag().putBoolean("CanSwitchScope", scopeType == 2);
-
+        GunsTool.setGunBooleanTag(stack, "CanSwitchScope", scopeType == 2);
         GunsTool.setGunDoubleTag(stack, "CustomZoom", customZoom);
     }
 
