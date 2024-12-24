@@ -341,7 +341,7 @@ public class LivingEventHandler {
                         oldTags.putBoolean("is_normal_reloading", false);
                         oldTags.putBoolean("is_empty_reloading", false);
 
-                        if (oldTags.getDouble("iterative_time") != 0) {
+                        if (GunsTool.getGunIntTag(oldStack, "IterativeTime", 0) != 0) {
                             oldTags.putBoolean("force_stop", false);
                             oldTags.putBoolean("stop", false);
                             oldTags.putInt("reload_stage", 0);
@@ -376,7 +376,7 @@ public class LivingEventHandler {
                         data.putInt("ReloadTime", 0);
                         newStack.addTagElement("GunData", data);
 
-                        if (newStack.getOrCreateTag().getDouble("iterative_time") != 0) {
+                        if (GunsTool.getGunIntTag(newStack, "IterativeTime", 0) != 0) {
                             newStack.getOrCreateTag().putBoolean("force_stop", false);
                             newStack.getOrCreateTag().putBoolean("stop", false);
                             newStack.getOrCreateTag().putInt("reload_stage", 0);

@@ -13,7 +13,7 @@
   "EmptyReloadTime": 59,
   "ClipLoad": 1,
   "PrepareTime": 29,
-  "iterative_time": 11,
+  "IterativeTime": 11,
   "finish_time": 18,
   "BypassesArmor": 0.5,
   "SoundRadius": 18

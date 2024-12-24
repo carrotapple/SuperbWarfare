@@ -614,8 +614,9 @@ public class GunEventHandler {
                 && tag.getInt("ammo") < GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag")) {
 
             playGunLoopReloadSounds(player);
-            tag.putDouble("iterative", (int) tag.getDouble("iterative_time"));
-            player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("iterative_time"));
+            int iterativeTime = GunsTool.getGunIntTag(stack, "IterativeTime", 0);
+            tag.putDouble("iterative", iterativeTime);
+            player.getCooldowns().addCooldown(stack.getItem(), iterativeTime);
             // 动画播放nbt
             if (tag.getDouble("load_index") == 1) {
                 tag.putDouble("load_index", 0);
