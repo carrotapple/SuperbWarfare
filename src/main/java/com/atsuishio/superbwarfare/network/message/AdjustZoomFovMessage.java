@@ -65,10 +65,10 @@ public class AdjustZoomFovMessage {
                     SoundTool.playLocalSound(player, ModSounds.ADJUST_FOV.get(), 1f, 0.7f);
                 }
             } else {
-                double min_zoom = tag.getDouble("MinZoom") - 1.25;
-                double max_zoom = tag.getDouble("MaxZoom") - 1.25;
-                tag.putDouble("CustomZoom", Mth.clamp(tag.getDouble("CustomZoom") + 0.5 * message.scroll, min_zoom, max_zoom));
-                if (tag.getDouble("CustomZoom") > min_zoom && tag.getDouble("CustomZoom") < max_zoom) {
+                double minZoom = GunsTool.getGunDoubleTag(stack, "MinZoom", 0) - 1.25;
+                double maxZoom = GunsTool.getGunDoubleTag(stack, "MaxZoom", 0) - 1.25;
+                tag.putDouble("CustomZoom", Mth.clamp(tag.getDouble("CustomZoom") + 0.5 * message.scroll, minZoom, maxZoom));
+                if (tag.getDouble("CustomZoom") > minZoom && tag.getDouble("CustomZoom") < maxZoom) {
                     SoundTool.playLocalSound(player, ModSounds.ADJUST_FOV.get(), 1f, 0.7f);
                 }
             }
