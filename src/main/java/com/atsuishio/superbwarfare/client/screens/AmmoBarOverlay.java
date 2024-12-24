@@ -1,14 +1,14 @@
 package com.atsuishio.superbwarfare.client.screens;
 
-import com.atsuishio.superbwarfare.init.ModKeyMappings;
-import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.tools.GunsTool;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.init.ModItems;
+import com.atsuishio.superbwarfare.init.ModKeyMappings;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.tools.GunsTool;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -95,7 +95,7 @@ public class AmmoBarOverlay {
                 // 渲染加特林射速
                 event.getGuiGraphics().drawString(
                         Minecraft.getInstance().font,
-                        stack.getOrCreateTag().getInt("rpm") + " RPM",
+                        GunsTool.getGunIntTag(stack, "RPM", 0) + " RPM",
                         w - 111f,
                         h - 20,
                         0xFFFFFF,
@@ -125,7 +125,7 @@ public class AmmoBarOverlay {
                 } else {
                     event.getGuiGraphics().drawString(
                             Minecraft.getInstance().font,
-                            stack.getOrCreateTag().getBoolean("DA") ?  Component.translatable("des.superbwarfare.revolver.sa").withStyle(ChatFormatting.BOLD) : Component.translatable("des.superbwarfare.revolver.da").withStyle(ChatFormatting.BOLD),
+                            stack.getOrCreateTag().getBoolean("DA") ? Component.translatable("des.superbwarfare.revolver.sa").withStyle(ChatFormatting.BOLD) : Component.translatable("des.superbwarfare.revolver.da").withStyle(ChatFormatting.BOLD),
                             w - 96,
                             h - 20,
                             0xFFFFFF,

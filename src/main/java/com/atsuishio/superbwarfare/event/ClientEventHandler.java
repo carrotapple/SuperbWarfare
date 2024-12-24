@@ -192,14 +192,10 @@ public class ClientEventHandler {
             return;
         }
         ItemStack stack = player.getMainHandItem();
-        if (stack.getItem() == ModItems.MINIGUN.get()) {
+        if (stack.is(ModItems.MINIGUN.get())) {
             if (holdFire || zoom) {
                 miniGunRot = Math.min(miniGunRot + 5, 21);
-                float rpm = 1;
-
-                if (player.getMainHandItem().is(ModItems.MINIGUN.get())) {
-                    rpm = (float) player.getMainHandItem().getOrCreateTag().getInt("rpm") / 3600;
-                }
+                float rpm = (float) GunsTool.getGunIntTag(stack, "RPM", 0) / 3600;
                 player.playSound(ModSounds.MINIGUN_ROT.get(), 1, 0.7f + rpm);
             }
         }
@@ -269,7 +265,7 @@ public class ClientEventHandler {
             cantFireTime = Mth.clamp(cantFireTime - 6 * speed * times, 0, 40);
         }
 
-        int rpm = (int) (stack.getOrCreateTag().getDouble("rpm") + customRpm);
+        int rpm = GunsTool.getGunIntTag(stack, "RPM", 0) + customRpm;
         if (rpm == 0) {
             rpm = 600;
         }
@@ -900,8 +896,8 @@ public class ClientEventHandler {
 
         double rpm = 1;
 
-        if (entity.getMainHandItem().is(ModItems.MINIGUN.get())) {
-            rpm = (double) entity.getMainHandItem().getOrCreateTag().getInt("rpm") / 1800;
+        if (stack.is(ModItems.MINIGUN.get())) {
+            rpm = (double) GunsTool.getGunIntTag(stack, "RPM", 0) / 1800;
         }
 
         float[] shake = {0, 0};
@@ -991,7 +987,7 @@ public class ClientEventHandler {
         double rpm = 1;
 
         if (stack.is(ModItems.MINIGUN.get())) {
-            rpm = (double) stack.getOrCreateTag().getInt("rpm") / 1800;
+            rpm = (double) GunsTool.getGunIntTag(stack, "RPM", 0) / 1800;
         }
 
         float gunRecoilX = (float) GunsTool.getGunDoubleTag(stack, "RecoilX", 0) * 60;

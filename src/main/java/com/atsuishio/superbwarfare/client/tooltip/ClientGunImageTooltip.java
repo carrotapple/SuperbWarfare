@@ -105,7 +105,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
         } else {
             return Component.translatable("des.superbwarfare.tips.rpm").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                    .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getDouble(stack, "rpm", 0) + ItemNBTTool.getDouble(stack, "customRpm", 0)))
+                    .append(Component.literal(new DecimalFormat("##").format(GunsTool.getGunIntTag(stack, "RPM", 0) + ItemNBTTool.getDouble(stack, "customRpm", 0)))
                             .withStyle(ChatFormatting.GREEN));
         }
     }
