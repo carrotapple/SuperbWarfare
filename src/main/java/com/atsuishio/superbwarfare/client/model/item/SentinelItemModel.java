@@ -100,8 +100,8 @@ public class SentinelItemModel extends GeoModel<SentinelItem> {
         root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotY));
         root.setRotZ((float) (0.2f * movePosX + moveRotZ + Mth.DEG_TO_RAD * 90 * ClientEventHandler.drawTime + 2.7f * mph + Mth.DEG_TO_RAD * turnRotZ));
 
-        if ((stack.getOrCreateTag().getDouble("ammo") <= 5)) {
-            ammo.setScaleX((float) (stack.getOrCreateTag().getDouble("ammo") / 5));
+        if (GunsTool.getGunIntTag(stack, "Ammo", 0) <= 5) {
+            ammo.setScaleX((float) GunsTool.getGunIntTag(stack, "Ammo", 0) / 5);
         }
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");

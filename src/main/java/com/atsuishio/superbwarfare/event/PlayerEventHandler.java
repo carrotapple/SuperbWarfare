@@ -235,10 +235,7 @@ public class PlayerEventHandler {
     private static void handleSpecialWeaponAmmo(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        if (stack.getItem() == ModItems.RPG.get() && stack.getOrCreateTag().getInt("ammo") == 1) {
-            stack.getOrCreateTag().putDouble("empty", 0);
-        }
-        if (stack.getItem() == ModItems.BOCEK.get() && stack.getOrCreateTag().getInt("ammo") == 1) {
+        if ((stack.is(ModItems.RPG.get()) || stack.is(ModItems.BOCEK.get())) && GunsTool.getGunIntTag(stack, "Ammo", 0) == 1) {
             stack.getOrCreateTag().putDouble("empty", 0);
         }
     }

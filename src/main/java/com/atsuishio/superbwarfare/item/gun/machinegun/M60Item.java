@@ -1,18 +1,18 @@
 package com.atsuishio.superbwarfare.item.gun.machinegun;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.M60ItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.item.gun.GunItem;
-import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.GunsTool;
-import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.AnimatedItem;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.perk.Perk;
+import com.atsuishio.superbwarfare.perk.PerkHelper;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -138,7 +138,7 @@ public class M60Item extends GunItem implements GeoItem, AnimatedItem {
         if (itemstack.getOrCreateTag().getBoolean("draw")) {
             itemstack.getOrCreateTag().putBoolean("draw", false);
 
-            if (itemstack.getOrCreateTag().getInt("ammo") <= 5) {
+            if (GunsTool.getGunIntTag(itemstack, "Ammo", 0) <= 5) {
                 itemstack.getOrCreateTag().putBoolean("HideBulletChain", true);
             }
         }

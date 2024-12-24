@@ -70,7 +70,8 @@ public class GunsTool {
                 data.putDouble(k, v);
                 stack.addTagElement("GunData", data);
             });
-            stack.getOrCreateTag().putInt("ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag"));
+            GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0)
+                    + stack.getOrCreateTag().getInt("customMag"));
         }
     }
 
@@ -102,7 +103,7 @@ public class GunsTool {
         CompoundTag tag = stack.getOrCreateTag();
 
         int mag = GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag");
-        int ammo = tag.getInt("ammo");
+        int ammo = GunsTool.getGunIntTag(stack, "Ammo", 0);
         int ammoToAdd = mag - ammo + (extraOne ? 1 : 0);
 
         // 空仓换弹的栓动武器应该在换弹后取消待上膛标记
@@ -131,7 +132,7 @@ public class GunsTool {
 
         int needToAdd = ammo + Math.min(ammoToAdd, playerAmmo);
 
-        tag.putInt("ammo", needToAdd);
+        GunsTool.setGunIntTag(stack, "Ammo", needToAdd);
         tag.putBoolean("is_normal_reloading", false);
         tag.putBoolean("is_empty_reloading", false);
     }

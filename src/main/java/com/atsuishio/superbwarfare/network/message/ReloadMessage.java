@@ -66,7 +66,7 @@ public class ReloadMessage {
                 boolean canSingleReload = GunsTool.getGunIntTag(stack, "IterativeTime", 0) != 0;
                 boolean canReload = (GunsTool.getGunIntTag(stack, "NormalReloadTime") != 0 || GunsTool.getGunIntTag(stack, "EmptyReloadTime") != 0)
                         && GunsTool.getGunIntTag(stack, "ClipLoad", 0) != 1;
-                boolean clipLoad = tag.getInt("ammo") == 0 && GunsTool.getGunIntTag(stack, "ClipLoad", 0) == 1;
+                boolean clipLoad = GunsTool.getGunIntTag(stack, "Ammo", 0) == 0 && GunsTool.getGunIntTag(stack, "ClipLoad", 0) == 1;
 
                 // 检查备弹
                 int count = 0;
@@ -101,22 +101,22 @@ public class ReloadMessage {
 
                     if (stack.is(ModTags.Items.OPEN_BOLT)) {
                         if (stack.is(ModTags.Items.EXTRA_ONE_AMMO)) {
-                            if (tag.getInt("ammo") < magazine + tag.getInt("customMag") + 1) {
+                            if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + tag.getInt("customMag") + 1) {
                                 tag.putBoolean("start_reload", true);
                             }
                         } else {
-                            if (tag.getInt("ammo") < magazine + tag.getInt("customMag")) {
+                            if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + tag.getInt("customMag")) {
                                 tag.putBoolean("start_reload", true);
                             }
                         }
-                    } else if (tag.getInt("ammo") < magazine + tag.getInt("customMag")) {
+                    } else if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + tag.getInt("customMag")) {
                         tag.putBoolean("start_reload", true);
                     }
                     return;
                 }
 
                 if (canSingleReload) {
-                    if (tag.getInt("ammo") < GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag")) {
+                    if (GunsTool.getGunIntTag(stack, "Ammo", 0) < GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag")) {
                         tag.putBoolean("start_single_reload", true);
                     }
                 }

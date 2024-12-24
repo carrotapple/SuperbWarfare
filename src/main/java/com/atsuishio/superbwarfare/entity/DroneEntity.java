@@ -135,7 +135,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
 
         compound.putBoolean("Linked", this.entityData.get(LINKED));
         compound.putString("Controller", this.entityData.get(CONTROLLER));
-        compound.putInt("ammo", this.entityData.get(AMMO));
+        compound.putInt("Ammo", this.entityData.get(AMMO));
         compound.putBoolean("Kamikaze", this.entityData.get(KAMIKAZE));
     }
 
@@ -147,8 +147,8 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             this.entityData.set(LINKED, compound.getBoolean("Linked"));
         if (compound.contains("Controller"))
             this.entityData.set(CONTROLLER, compound.getString("Controller"));
-        if (compound.contains("ammo"))
-            this.entityData.set(AMMO, compound.getInt("ammo"));
+        if (compound.contains("Ammo"))
+            this.entityData.set(AMMO, compound.getInt("Ammo"));
         if (compound.contains("Kamikaze"))
             this.entityData.set(KAMIKAZE, compound.getBoolean("Kamikaze"));
     }
@@ -170,7 +170,6 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
     }
 
 
-
     @Override
     public void baseTick() {
         super.baseTick();
@@ -187,7 +186,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             if (this.getPersistentData().getBoolean("forward")) {
                 moveZ = Mth.clamp(moveZ + 0.3f, 0, 3);
             } else if (this.getPersistentData().getBoolean("backward")) {
-                moveZ= Mth.clamp(moveZ - 0.3f, -3, 0);
+                moveZ = Mth.clamp(moveZ - 0.3f, -3, 0);
             }
 
             moveX *= 0.25;

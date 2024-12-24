@@ -297,7 +297,7 @@ public class ClientEventHandler {
                 && (!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
                 && !stack.getOrCreateTag().getBoolean("reloading")
                 && !stack.getOrCreateTag().getBoolean("charging")
-                && stack.getOrCreateTag().getInt("ammo") > 0
+                && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0
                 && !player.getCooldowns().isOnCooldown(stack.getItem())
                 && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false)
                 && revolverPre()
@@ -377,14 +377,14 @@ public class ClientEventHandler {
     public static void shootClient(Player player) {
         ItemStack stack = player.getMainHandItem();
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
-            if (stack.getOrCreateTag().getInt("ammo") > 0) {
+            if (GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
                 int mode = GunsTool.getGunIntTag(stack, "FireMode");
                 if (mode != 2) {
                     holdFire = false;
                 }
 
                 if (mode == 1) {
-                    if (stack.getOrCreateTag().getInt("ammo") == 1) {
+                    if (GunsTool.getGunIntTag(stack, "Ammo", 0) == 1) {
                         burstFireSize = 1;
                     }
                     if (burstFireSize == 1) {

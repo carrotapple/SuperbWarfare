@@ -616,18 +616,18 @@ public class LivingEventHandler {
 
         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                     int mag = GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag");
-                    int ammo = stack.getOrCreateTag().getInt("ammo");
+                    int ammo = GunsTool.getGunIntTag(stack, "Ammo", 0);
                     int ammoReload = (int) Math.min(mag, mag * rate);
                     int ammoNeed = Math.min(mag - ammo, ammoReload);
 
                     if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
                         int ammoFinal = Math.min(capability.rifleAmmo, ammoNeed);
                         capability.rifleAmmo -= ammoFinal;
-                        stack.getOrCreateTag().putInt("ammo", Math.min(mag, ammo + ammoFinal));
+                        GunsTool.setGunIntTag(stack, "Ammo", Math.min(mag, ammo + ammoFinal));
                     } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
                         int ammoFinal = Math.min(capability.handgunAmmo, ammoNeed);
                         capability.handgunAmmo -= ammoFinal;
-                        stack.getOrCreateTag().putInt("ammo", Math.min(mag, ammo + ammoFinal));
+                        GunsTool.setGunIntTag(stack, "Ammo", Math.min(mag, ammo + ammoFinal));
                     }
                     capability.syncPlayerVariables(player);
                 }

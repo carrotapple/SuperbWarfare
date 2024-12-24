@@ -46,7 +46,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
-    
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
 
@@ -81,7 +81,7 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
-        
+
         if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.rpg.reload"));
         }
@@ -139,7 +139,7 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
         if (itemStack.getOrCreateTag().getBoolean("draw")) {
             itemStack.getOrCreateTag().putBoolean("draw", false);
 
-            if (itemStack.getOrCreateTag().getInt("ammo") == 0) {
+            if (GunsTool.getGunIntTag(itemStack, "Ammo", 0) == 0) {
                 itemStack.getOrCreateTag().putDouble("empty", 1);
             }
         }

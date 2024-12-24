@@ -228,7 +228,7 @@ public class AmmoBarOverlay {
             return stack.getOrCreateTag().getInt("max_ammo");
         }
 
-        return stack.getOrCreateTag().getInt("ammo");
+        return GunsTool.getGunIntTag(stack, "Ammo", 0);
     }
 
     private static String getPlayerAmmoCount(Player player) {

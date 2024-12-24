@@ -1,6 +1,5 @@
 package com.atsuishio.superbwarfare.item.gun.sniper;
 
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.MosinNagantItemRenderer;
@@ -12,6 +11,7 @@ import com.atsuishio.superbwarfare.item.AnimatedItem;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -77,11 +77,11 @@ public class MosinNagantItem extends GunItem implements GeoItem, AnimatedItem {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mosin.shift"));
         }
 
-        if (stack.getOrCreateTag().getInt("reload_stage") == 1 && stack.getOrCreateTag().getInt("ammo") == 0) {
+        if (stack.getOrCreateTag().getInt("reload_stage") == 1 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mosin.prepare_empty"));
         }
 
-        if (stack.getOrCreateTag().getInt("reload_stage") == 1 && stack.getOrCreateTag().getInt("ammo") > 0) {
+        if (stack.getOrCreateTag().getInt("reload_stage") == 1 && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mosin.prepare"));
         }
 

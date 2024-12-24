@@ -106,27 +106,28 @@ public class FireMessage {
     }
 
     private static void handlePlayerShoot(Player player) {
-        var handItem = player.getMainHandItem();
+        var stack = player.getMainHandItem();
 
-        if (!handItem.is(ModTags.Items.GUN)) {
+        if (!stack.is(ModTags.Items.GUN)) {
             return;
         }
 
-        var tag = handItem.getOrCreateTag();
+        var tag = stack.getOrCreateTag();
 
-        if (handItem.getItem() == ModItems.TASER.get()) {
+        if (stack.getItem() == ModItems.TASER.get()) {
             handleTaserFire(player);
         }
 
-        if (handItem.getItem() == ModItems.M_79.get()) {
+        if (stack.getItem() == ModItems.M_79.get()) {
             handleM79Fire(player);
         }
 
-        if (handItem.getItem() == ModItems.RPG.get()) {
+        if (stack.getItem() == ModItems.RPG.get()) {
             handleRpgFire(player);
         }
 
-        if (handItem.getItem() == ModItems.JAVELIN.get() && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom && tag.getInt("ammo") > 0) {
+        if (stack.getItem() == ModItems.JAVELIN.get() && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null)
+                .orElse(new ModVariables.PlayerVariables()).zoom && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
             Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 512, 8);
             if (seekingEntity != null) {
                 tag.putString("TargetEntity", seekingEntity.getStringUUID());
@@ -135,11 +136,11 @@ public class FireMessage {
             }
         }
 
-        if (tag.getDouble("prepare") == 0 && tag.getBoolean("reloading") && tag.getInt("ammo") > 0) {
+        if (tag.getDouble("prepare") == 0 && tag.getBoolean("reloading") && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
             tag.putDouble("force_stop", 1);
         }
 
-        if (handItem.getItem() == ModItems.BOCEK.get()) {
+        if (stack.getItem() == ModItems.BOCEK.get()) {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.bowPullHold = true;
                 capability.syncPlayerVariables(player);
@@ -148,7 +149,8 @@ public class FireMessage {
     }
 
     private static void handleGunBolt(Player player, ItemStack stack) {
-        if (GunsTool.getGunIntTag(stack, "BoltActionTime", 0) > 0 && stack.getOrCreateTag().getInt("ammo") > (stack.is(ModTags.Items.REVOLVER) ? -1 : 0) && stack.getOrCreateTag().getInt("bolt_action_anim") == 0
+        if (GunsTool.getGunIntTag(stack, "BoltActionTime", 0) > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) > (stack.is(ModTags.Items.REVOLVER) ? -1 : 0)
+                && stack.getOrCreateTag().getInt("bolt_action_anim") == 0
                 && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
                 && !stack.getOrCreateTag().getBoolean("reloading")
                 && !stack.getOrCreateTag().getBoolean("charging")) {
@@ -318,9 +320,7 @@ public class FireMessage {
                     iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() >= 400 + 100 * perkLevel)
             );
 
-            if (!player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getInt("ammo") > 0
-                    && flag.get()) {
-
+            if (!player.getCooldowns().isOnCooldown(stack.getItem()) && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0 && flag.get()) {
                 player.getCooldowns().addCooldown(stack.getItem(), 5);
 
                 if (player instanceof ServerPlayer serverPlayer) {
@@ -345,7 +345,7 @@ public class FireMessage {
                     level.addFreshEntity(taserBulletProjectile);
                 }
 
-                stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
+                GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) - 1);
 
                 stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                         energy -> energy.extractEnergy(400 + 100 * perkLevel, false)
@@ -364,7 +364,7 @@ public class FireMessage {
 
         ItemStack stack = player.getMainHandItem();
         if (!stack.getOrCreateTag().getBoolean("reloading")) {
-            if (!player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getInt("ammo") > 0) {
+            if (!player.getCooldowns().isOnCooldown(stack.getItem()) && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
                 boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
                 double spread = GunsTool.getGunDoubleTag(stack, "Spread");
 
@@ -402,7 +402,7 @@ public class FireMessage {
                     serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.M_79_VERYFAR.get(), SoundSource.PLAYERS, 10, 1);
                 }
 
-                stack.getOrCreateTag().putInt("ammo", (stack.getOrCreateTag().getInt("ammo") - 1));
+                GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) - 1);
 
                 if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
                     ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
@@ -418,7 +418,7 @@ public class FireMessage {
         ItemStack stack = player.getMainHandItem();
         CompoundTag tag = stack.getOrCreateTag();
 
-        if (!tag.getBoolean("reloading") && !player.getCooldowns().isOnCooldown(stack.getItem()) && tag.getInt("ammo") > 0) {
+        if (!tag.getBoolean("reloading") && !player.getCooldowns().isOnCooldown(stack.getItem()) && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
             boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
             double spread = GunsTool.getGunDoubleTag(stack, "Spread");
 
@@ -447,7 +447,7 @@ public class FireMessage {
                         30, 0.4, 0.4, 0.4, 0.005, true);
             }
 
-            if (tag.getInt("ammo") == 1) {
+            if (GunsTool.getGunIntTag(stack, "Ammo", 0) == 1) {
                 tag.putBoolean("empty", true);
                 tag.putBoolean("close_hammer", true);
             }
@@ -461,7 +461,7 @@ public class FireMessage {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.RPG_VERYFAR.get(), SoundSource.PLAYERS, 10, 1);
             }
 
-            tag.putInt("ammo", tag.getInt("ammo") - 1);
+            GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) - 1);
 
             if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
@@ -527,7 +527,7 @@ public class FireMessage {
             serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.JAVELIN_FAR.get(), SoundSource.PLAYERS, 10, 1);
         }
 
-        tag.putInt("ammo", tag.getInt("ammo") - 1);
+        GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) - 1);
 
         if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
             ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));

@@ -318,7 +318,7 @@ public class ClickHandler {
                 player.playSound(ModSounds.TRIGGER_CLICK.get(), 1, 1);
             }
 
-            if (!stack.is(ModTags.Items.CANNOT_RELOAD) && stack.getOrCreateTag().getInt("ammo") <= 0) {
+            if (!stack.is(ModTags.Items.CANNOT_RELOAD) && GunsTool.getGunIntTag(stack, "Ammo", 0) <= 0) {
                 if (ReloadConfig.LEFT_CLICK_RELOAD.get()) {
                     ModUtils.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
                 }
