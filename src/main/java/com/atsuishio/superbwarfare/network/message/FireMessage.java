@@ -248,10 +248,11 @@ public class FireMessage {
 
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
             spread = 0.01f;
-            damage = 0.08333333 * tag.getDouble("damage") * tag.getDouble("speed") * perkDamage(heldItem);
+            damage = 0.08333333 * GunsTool.getGunDoubleTag(heldItem, "Damage", 0) * tag.getDouble("speed") * perkDamage(heldItem);
         } else {
             spread = perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.5f : 2.5f;
-            damage = (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.08333333 : 0.008333333) * tag.getDouble("damage") * tag.getDouble("speed") * perkDamage(heldItem);
+            damage = (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.08333333 : 0.008333333) *
+                    GunsTool.getGunDoubleTag(heldItem, "Damage", 0) * tag.getDouble("speed") * perkDamage(heldItem);
         }
 
         ProjectileEntity projectile = new ProjectileEntity(player.level())
@@ -337,7 +338,8 @@ public class FireMessage {
 
                 Level level = player.level();
                 if (!level.isClientSide()) {
-                    TaserBulletProjectileEntity taserBulletProjectile = new TaserBulletProjectileEntity(player, level, (float) stack.getOrCreateTag().getDouble("damage"), volt, wireLength);
+                    TaserBulletProjectileEntity taserBulletProjectile = new TaserBulletProjectileEntity(player, level,
+                            (float) GunsTool.getGunDoubleTag(stack, "Damage", 0), volt, wireLength);
 
                     taserBulletProjectile.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
                     taserBulletProjectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0),
@@ -371,7 +373,7 @@ public class FireMessage {
                 Level level = player.level();
                 if (!level.isClientSide()) {
                     GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, level,
-                            (float) stack.getOrCreateTag().getDouble("damage"), (float) stack.getOrCreateTag().getDouble("ExplosionDamage"), (float) stack.getOrCreateTag().getDouble("ExplosionRadius"));
+                            (float) GunsTool.getGunDoubleTag(stack, "Damage", 0), (float) stack.getOrCreateTag().getDouble("ExplosionDamage"), (float) stack.getOrCreateTag().getDouble("ExplosionRadius"));
 
                     var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
                     if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
@@ -422,7 +424,7 @@ public class FireMessage {
 
             if (!level.isClientSide()) {
                 RpgRocketEntity rocketEntity = new RpgRocketEntity(player, level,
-                        (float) tag.getDouble("damage"), (float) tag.getDouble("ExplosionDamage"), (float) tag.getDouble("ExplosionRadius"));
+                        (float) GunsTool.getGunDoubleTag(stack, "Damage", 0), (float) tag.getDouble("ExplosionDamage"), (float) tag.getDouble("ExplosionRadius"));
 
                 var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
                 if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
@@ -486,7 +488,7 @@ public class FireMessage {
 
         if (!level.isClientSide()) {
             JavelinMissileEntity missileEntity = new JavelinMissileEntity(player, level,
-                    (float) tag.getDouble("damage"), (float) tag.getDouble("ExplosionDamage"), (float) tag.getDouble("ExplosionRadius"));
+                    (float) GunsTool.getGunDoubleTag(stack, "Damage", 0), (float) tag.getDouble("ExplosionDamage"), (float) tag.getDouble("ExplosionRadius"));
 
             var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
             if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {

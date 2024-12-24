@@ -2,7 +2,7 @@
   "Spread": 5,
   "RecoilX": 0.008,
   "RecoilY": 0.018,
-  "damage": 200,
+  "Damage": 200,
   "ExplosionDamage": 150,
   "ExplosionRadius": 10,
   "Velocity": 4,

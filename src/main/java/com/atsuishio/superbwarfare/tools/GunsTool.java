@@ -55,7 +55,7 @@ public class GunsTool {
 
     // TODO 临时使用，移植完毕后删除
     private static final Set<String> STRING_SET = Set.of("EmptyReloadTime", "FireMode", "Weight", "SoundRadius", "BurstSize", "ProjectileAmount",
-            "Spread", "NormalReloadTime", "Headshot", "Semi", "Burst", "Auto", "RecoilX", "RecoilY", "Velocity");
+            "Spread", "NormalReloadTime", "Headshot", "Semi", "Burst", "Auto", "RecoilX", "RecoilY", "Velocity", "Damage");
 
     public static void initGun(Level level, ItemStack stack, String location) {
         if (level.getServer() == null) return;
