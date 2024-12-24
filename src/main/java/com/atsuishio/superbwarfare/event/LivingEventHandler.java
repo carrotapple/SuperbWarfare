@@ -782,9 +782,9 @@ public class LivingEventHandler {
         var entity = event.getEntity();
         int level = PerkHelper.getItemPerkLevel(ModPerks.VORPAL_WEAPON.get(), stack);
         if (level <= 0) return;
-        if (entity.getMaxHealth() < 100.0f) return;
+        if (entity.getHealth() < 100.0f) return;
 
-        event.setAmount(event.getAmount() * (1.15f + 0.05f * level));
+        event.setAmount((float) (event.getAmount() + entity.getHealth() * 0.00002f * Math.pow(level,2)));
     }
 
     @SubscribeEvent
