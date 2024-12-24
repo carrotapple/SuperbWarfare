@@ -21,7 +21,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -445,15 +444,13 @@ public class ClientEventHandler {
     public static void handleClientShoot() {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
-
-        CompoundTag tag = player.getMainHandItem().getOrCreateTag();
-
         if (!player.getMainHandItem().is(ModTags.Items.GUN)) return;
 
         ModUtils.PACKET_HANDLER.sendToServer(new ShootMessage(gunSpread));
         fireRecoilTime = 10;
 
-        float gunRecoilY = (float) tag.getDouble("recoil_y") * 10;
+        float gunRecoilY = (float) GunsTool.getGunDoubleTag(player.getMainHandItem(), "RecoilY", 0) * 10;
+
         recoilY = (float) (2 * Math.random() - 1) * gunRecoilY;
 
         if (shellIndex < 5) {
@@ -840,7 +837,7 @@ public class ClientEventHandler {
         ItemStack stack = player.getMainHandItem();
         float times = 5 * Minecraft.getInstance().getDeltaFrameTime();
 
-        double weight = stack.getOrCreateTag().getDouble("weight") + stack.getOrCreateTag().getDouble("CustomWeight");
+        double weight = GunsTool.getGunDoubleTag(stack, "Weight") + GunsTool.getGunDoubleTag(stack, "CustomWeight");
         double speed = 1.5 - (0.07 * weight);
 
         if (zoom && !notInGame()
@@ -953,7 +950,6 @@ public class ClientEventHandler {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        CompoundTag tag = stack.getOrCreateTag();
         float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
         int barrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
         int gripType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP);
