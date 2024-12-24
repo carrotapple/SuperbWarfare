@@ -101,19 +101,21 @@ public class GunEventHandler {
                 );
 
                 if (charged.get()) {
+                    float soundRadius = (float) GunsTool.getGunDoubleTag(stack, "SoundRadius");
+
                     SoundEvent sound3p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, "sentinel_charge_fire_3p"));
                     if (sound3p != null) {
-                        player.playSound(sound3p, (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.4f, 1f);
+                        player.playSound(sound3p, soundRadius * 0.4f, 1f);
                     }
 
                     SoundEvent soundFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, "sentinel_charge_far"));
                     if (soundFar != null) {
-                        player.playSound(soundFar, (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.7f, 1f);
+                        player.playSound(soundFar, soundRadius * 0.7f, 1f);
                     }
 
                     SoundEvent soundVeryFar = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, "sentinel_charge_veryfar"));
                     if (soundVeryFar != null) {
-                        player.playSound(soundVeryFar, (float) stack.getOrCreateTag().getDouble("SoundRadius"), 1f);
+                        player.playSound(soundVeryFar, soundRadius, 1f);
                     }
 
                     return;

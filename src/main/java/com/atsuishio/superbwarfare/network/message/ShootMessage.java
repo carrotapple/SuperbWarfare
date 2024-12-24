@@ -9,6 +9,7 @@ import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.particles.ParticleTypes;
@@ -127,9 +128,11 @@ public class ShootMessage {
                 float pitch = tag.getDouble("heat") <= 40 ? 1 : (float) (1 - 0.025 * Math.abs(40 - tag.getDouble("heat")));
 
                 if (!player.level().isClientSide() && player instanceof ServerPlayer) {
-                    player.playSound(ModSounds.MINIGUN_FIRE_3P.get(), (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.2f, pitch);
-                    player.playSound(ModSounds.MINIGUN_FAR.get(), (float) stack.getOrCreateTag().getDouble("SoundRadius") * 0.5f, pitch);
-                    player.playSound(ModSounds.MINIGUN_VERYFAR.get(), (float) stack.getOrCreateTag().getDouble("SoundRadius"), pitch);
+                    float soundRadius = (float) GunsTool.getGunDoubleTag(stack, "SoundRadius");
+
+                    player.playSound(ModSounds.MINIGUN_FIRE_3P.get(), soundRadius * 0.2f, pitch);
+                    player.playSound(ModSounds.MINIGUN_FAR.get(), soundRadius * 0.5f, pitch);
+                    player.playSound(ModSounds.MINIGUN_VERYFAR.get(), soundRadius, pitch);
 
                     if (perk == ModPerks.BEAST_BULLET.get()) {
                         player.playSound(ModSounds.HENG.get(), 4f, pitch);
