@@ -60,7 +60,7 @@ public class ShootMessage {
 
         ItemStack stack = player.getMainHandItem();
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
-            int projectileAmount = (int) stack.getOrCreateTag().getDouble("projectile_amount");
+            int projectileAmount = GunsTool.getGunIntTag(stack, "ProjectileAmount", 1);
 
             if (stack.getOrCreateTag().getInt("ammo") > 0) {
                 // 空仓挂机
@@ -72,9 +72,7 @@ public class ShootMessage {
                     stack.getOrCreateTag().putBoolean("canImmediatelyShoot", false);
                 }
 
-                /*
-                  判断是否为栓动武器（bolt_action_time > 0），并在开火后给一个需要上膛的状态
-                 */
+                // 判断是否为栓动武器（bolt_action_time > 0），并在开火后给一个需要上膛的状态
                 if (stack.getOrCreateTag().getDouble("bolt_action_time") > 0 && stack.getOrCreateTag().getInt("ammo") > (stack.is(ModTags.Items.REVOLVER) ? 0 : 1)) {
                     stack.getOrCreateTag().putBoolean("need_bolt_action", true);
                 }
@@ -112,8 +110,6 @@ public class ShootMessage {
         } else if (stack.is(ModItems.MINIGUN.get())) {
             var tag = stack.getOrCreateTag();
 
-            int projectileAmount = (int) tag.getDouble("projectile_amount");
-
             if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0
                     || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
                 tag.putDouble("heat", (tag.getDouble("heat") + 0.1));
@@ -139,10 +135,7 @@ public class ShootMessage {
                     }
                 }
 
-                for (int index0 = 0; index0 < (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 1 : projectileAmount); index0++) {
-                    GunEventHandler.gunShoot(player, spared);
-                }
-
+                GunEventHandler.gunShoot(player, spared);
                 if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
                     player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                         capability.rifleAmmo = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).rifleAmmo - 1;

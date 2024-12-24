@@ -8,7 +8,6 @@
   "headshot": 2.5,
   "velocity": 42.5,
   "mag": 20,
-  "projectile_amount": 1,
   "Weight": 5,
   "FireMode": 0,
   "semi": 1,

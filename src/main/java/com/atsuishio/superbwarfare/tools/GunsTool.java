@@ -55,7 +55,8 @@ public class GunsTool {
     public static void initGun(Level level, ItemStack stack, String location) {
         if (level.getServer() == null) return;
         gunsData.get(location).forEach((k, v) -> {
-            if (k.equals("EmptyReloadTime") || k.equals("FireMode") || k.equals("Weight") || k.equals("SoundRadius") || k.equals("BurstSize")) {
+            if (k.equals("EmptyReloadTime") || k.equals("FireMode") || k.equals("Weight") || k.equals("SoundRadius") || k.equals("BurstSize")
+                    || k.equals("ProjectileAmount")) {
                 CompoundTag tag = stack.getOrCreateTag();
                 CompoundTag data = tag.getCompound("GunData");
                 data.putDouble(k, v);
@@ -69,7 +70,8 @@ public class GunsTool {
     public static void initCreativeGun(ItemStack stack, String location) {
         if (gunsData != null && gunsData.get(location) != null) {
             gunsData.get(location).forEach((k, v) -> {
-                if (k.equals("EmptyReloadTime") || k.equals("FireMode") || k.equals("Weight") || k.equals("SoundRadius") || k.equals("BurstSize")) {
+                if (k.equals("EmptyReloadTime") || k.equals("FireMode") || k.equals("Weight") || k.equals("SoundRadius") || k.equals("BurstSize")
+                        || k.equals("ProjectileAmount")) {
                     CompoundTag tag = stack.getOrCreateTag();
                     CompoundTag data = tag.getCompound("GunData");
                     data.putDouble(k, v);

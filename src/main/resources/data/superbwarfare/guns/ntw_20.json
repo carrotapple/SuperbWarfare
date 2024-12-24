@@ -6,7 +6,6 @@
   "damage": 140,
   "headshot": 3,
   "velocity": 36,
-  "projectile_amount": 1,
   "mag": 3,
   "bolt_action_time": 37,
   "Weight": 10,

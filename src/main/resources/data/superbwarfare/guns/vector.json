@@ -6,7 +6,6 @@
   "headshot": 1.5,
   "velocity": 16,
   "mag": 13,
-  "projectile_amount": 1,
   "Weight": 3,
   "FireMode": 2,
   "semi": 1,

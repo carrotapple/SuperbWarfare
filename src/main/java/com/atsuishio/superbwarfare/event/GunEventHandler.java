@@ -188,7 +188,7 @@ public class GunEventHandler {
             float headshot = (float) heldItem.getOrCreateTag().getDouble("headshot");
             float damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("sentinelChargeDamage")) * (float) perkDamage(heldItem);
             float velocity = (float) ((heldItem.getOrCreateTag().getDouble("velocity") + heldItem.getOrCreateTag().getDouble("CustomVelocity")) * perkSpeed(heldItem));
-            int projectileAmount = (int) heldItem.getOrCreateTag().getDouble("projectile_amount");
+            int projectileAmount = GunsTool.getGunIntTag(heldItem, "ProjectileAmount", 1);
             float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
             boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
             var perk = PerkHelper.getPerkByType(heldItem, Perk.Type.AMMO);

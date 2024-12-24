@@ -1,11 +1,12 @@
 package com.atsuishio.superbwarfare.client.tooltip;
 
+import com.atsuishio.superbwarfare.client.tooltip.component.GunImageComponent;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.ItemNBTTool;
 import com.atsuishio.superbwarfare.tools.TooltipTool;
-import com.atsuishio.superbwarfare.client.tooltip.component.GunImageComponent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
@@ -27,7 +28,7 @@ public class ClientShotgunImageTooltip extends ClientGunImageTooltip {
         }
 
         if (slug) {
-            double damage = ItemNBTTool.getDouble(stack, "damage", 0) * ItemNBTTool.getDouble(stack, "projectile_amount", 0) * TooltipTool.perkDamage(stack);
+            double damage = ItemNBTTool.getDouble(stack, "damage", 0) * GunsTool.getGunIntTag(stack, "ProjectileAmount", 1) * TooltipTool.perkDamage(stack);
             return Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.literal(new DecimalFormat("##.#").format(damage) + (TooltipTool.heBullet(stack) ? " + " + new DecimalFormat("##.#")
@@ -36,7 +37,7 @@ public class ClientShotgunImageTooltip extends ClientGunImageTooltip {
             double damage = ItemNBTTool.getDouble(stack, "damage", 0) * TooltipTool.perkDamage(stack);
             return Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                    .append(Component.literal(new DecimalFormat("##.#").format(damage) + " * " + new DecimalFormat("##").format(ItemNBTTool.getDouble(stack, "projectile_amount", 0))).withStyle(ChatFormatting.GREEN));
+                    .append(Component.literal(new DecimalFormat("##.#").format(damage) + " * " + new DecimalFormat("##").format(GunsTool.getGunIntTag(stack, "ProjectileAmount", 1))).withStyle(ChatFormatting.GREEN));
         }
     }
 }

@@ -7,7 +7,7 @@
   "velocity": 17,
   "mag": 8,
   "force_stop_reloading": 1,
-  "projectile_amount": 12,
+  "ProjectileAmount": 12,
   "Weight": 4,
   "FireMode": 0,
   "semi": 1,

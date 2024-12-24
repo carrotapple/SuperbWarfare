@@ -7,7 +7,6 @@
   "velocity": 46,
   "Weight": 10,
   "FireMode": 2,
-  "projectile_amount": 1,
   "BypassesArmor": 0.3,
   "SoundRadius": 14,
   "rpm": 1200
