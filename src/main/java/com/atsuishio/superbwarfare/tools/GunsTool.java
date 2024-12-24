@@ -57,7 +57,7 @@ public class GunsTool {
     private static final Set<String> STRING_SET = Set.of("EmptyReloadTime", "FireMode", "Weight", "SoundRadius", "BurstSize", "ProjectileAmount",
             "Spread", "NormalReloadTime", "Headshot", "Semi", "Burst", "Auto", "RecoilX", "RecoilY", "Velocity", "Damage", "BypassesArmor",
             "RPM", "Magazine", "MinZoom", "MaxZoom", "CustomZoom", "ExplosionDamage", "ExplosionRadius", "BoltActionTime", "ClipLoad",
-            "PrepareTime", "IterativeTime");
+            "PrepareTime", "IterativeTime", "PrepareLoadTime");
 
     public static void initGun(Level level, ItemStack stack, String location) {
         if (level.getServer() == null) return;

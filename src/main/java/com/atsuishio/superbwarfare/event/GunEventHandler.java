@@ -543,10 +543,11 @@ public class GunEventHandler {
             MinecraftForge.EVENT_BUS.post(new ReloadEvent.Pre(player, stack));
 
             // 此处判断空仓换弹的时候，是否在准备阶段就需要装填一发，如M870
-            if (tag.getDouble("prepare_load_time") != 0 && tag.getInt("ammo") == 0) {
+            if (GunsTool.getGunIntTag(stack, "PrepareLoadTime", 0) != 0 && tag.getInt("ammo") == 0) {
                 playGunPrepareLoadReloadSounds(player);
-                tag.putInt("prepare_load", (int) tag.getDouble("prepare_load_time") + 1);
-                player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("prepare_load_time"));
+                int prepareLoadTime = GunsTool.getGunIntTag(stack, "PrepareLoadTime", 0);
+                tag.putInt("prepare_load", prepareLoadTime + 1);
+                player.getCooldowns().addCooldown(stack.getItem(), prepareLoadTime);
             } else if (tag.getDouble("prepare_empty") != 0 && tag.getInt("ammo") == 0) {
                 // 此处判断空仓换弹，如莫辛纳甘
                 playGunEmptyPrepareSounds(player);
