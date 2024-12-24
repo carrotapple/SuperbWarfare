@@ -314,24 +314,25 @@ public class PlayerEventHandler {
                     if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && cap.rifleAmmo > 0) {
                         GunsTool.reload(player, stack, GunInfo.Type.RIFLE);
                     }
-                    if (stack.getItem() == ModItems.TASER.get() && stack.getOrCreateTag().getInt("max_ammo") > 0 && stack.getOrCreateTag().getInt("ammo") == 0) {
-                        stack.getOrCreateTag().putInt("ammo", 1);
+
+                    if (stack.getItem() == ModItems.TASER.get() && stack.getOrCreateTag().getInt("max_ammo") > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
+                        GunsTool.setGunIntTag(stack, "Ammo", 1);
                         player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.TASER_ELECTRODE.get(), 1, player.inventoryMenu.getCraftSlots());
                     }
-                    if (stack.getItem() == ModItems.M_79.get() && stack.getOrCreateTag().getInt("max_ammo") > 0 && stack.getOrCreateTag().getInt("ammo") == 0) {
-                        stack.getOrCreateTag().putInt("ammo", 1);
+                    if (stack.getItem() == ModItems.M_79.get() && stack.getOrCreateTag().getInt("max_ammo") > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
+                        GunsTool.setGunIntTag(stack, "Ammo", 1);
                         player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.GRENADE_40MM.get(), 1, player.inventoryMenu.getCraftSlots());
                     }
-                    if (stack.getItem() == ModItems.RPG.get() && stack.getOrCreateTag().getInt("max_ammo") > 0 && stack.getOrCreateTag().getInt("ammo") == 0) {
-                        stack.getOrCreateTag().putInt("ammo", 1);
+                    if (stack.getItem() == ModItems.RPG.get() && stack.getOrCreateTag().getInt("max_ammo") > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
+                        GunsTool.setGunIntTag(stack, "Ammo", 1);
                         player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.ROCKET.get(), 1, player.inventoryMenu.getCraftSlots());
                     }
-                    if (stack.getItem() == ModItems.JAVELIN.get() && stack.getOrCreateTag().getInt("max_ammo") > 0 && stack.getOrCreateTag().getInt("ammo") == 0) {
-                        stack.getOrCreateTag().putInt("ammo", 1);
+                    if (stack.getItem() == ModItems.JAVELIN.get() && stack.getOrCreateTag().getInt("max_ammo") > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
+                        GunsTool.setGunIntTag(stack, "Ammo", 1);
                         player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.JAVELIN_MISSILE.get(), 1, player.inventoryMenu.getCraftSlots());
                     }
                 } else {
-                    stack.getOrCreateTag().putInt("ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag"));
+                    GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag"));
                 }
                 stack.getOrCreateTag().putBoolean("HoldOpen", false);
             }

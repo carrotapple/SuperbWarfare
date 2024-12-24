@@ -317,7 +317,7 @@ public class GunEventHandler {
         if (tag.getBoolean("start_reload")) {
             MinecraftForge.EVENT_BUS.post(new ReloadEvent.Pre(player, stack));
             if (stack.is(ModTags.Items.OPEN_BOLT)) {
-                if (tag.getInt("ammo") == 0) {
+                if (GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
                     data.putInt("ReloadTime", data.getInt("EmptyReloadTime") + 1);
                     stack.getOrCreateTag().putBoolean("is_empty_reloading", true);
                     playGunEmptyReloadSounds(player);
@@ -379,7 +379,7 @@ public class GunEventHandler {
 
         if (data.getInt("ReloadTime") == 1) {
             if (stack.is(ModTags.Items.OPEN_BOLT)) {
-                if (tag.getInt("ammo") == 0) {
+                if (GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
                     playGunEmptyReload(player);
                 } else {
                     playGunNormalReload(player);
@@ -395,43 +395,20 @@ public class GunEventHandler {
     public static void playGunNormalReload(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        int count = 0;
-        for (var inv : player.getInventory().items) {
-            if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
-                count++;
-            }
-        }
-
-        if (count == 0) {
+        if (player.getInventory().hasAnyMatching(item -> item.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+            GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag")
+                    + (stack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0));
+        } else {
             if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-                if (stack.is(ModTags.Items.EXTRA_ONE_AMMO)) {
-                    GunsTool.reload(player, stack, GunInfo.Type.SHOTGUN, true);
-                } else {
-                    GunsTool.reload(player, stack, GunInfo.Type.SHOTGUN);
-                }
+                GunsTool.reload(player, stack, GunInfo.Type.SHOTGUN, stack.is(ModTags.Items.EXTRA_ONE_AMMO));
             } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
                 GunsTool.reload(player, stack, GunInfo.Type.SNIPER, true);
             } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
                 GunsTool.reload(player, stack, GunInfo.Type.HANDGUN, true);
             } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-                if (stack.is(ModTags.Items.EXTRA_ONE_AMMO)) {
-                    GunsTool.reload(player, stack, GunInfo.Type.RIFLE, true);
-                } else {
-                    GunsTool.reload(player, stack, GunInfo.Type.RIFLE);
-                }
-            }
-        } else {
-            if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-                stack.getOrCreateTag().putInt("ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag") + (stack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0));
-            } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
-                stack.getOrCreateTag().putInt("ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag") + (stack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0));
-            } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
-                stack.getOrCreateTag().putInt("ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag") + (stack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0));
-            } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-                stack.getOrCreateTag().putInt("ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag") + (stack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0));
+                GunsTool.reload(player, stack, GunInfo.Type.RIFLE, stack.is(ModTags.Items.EXTRA_ONE_AMMO));
             }
         }
-
         stack.getOrCreateTag().putBoolean("is_normal_reloading", false);
         stack.getOrCreateTag().putBoolean("is_empty_reloading", false);
 
@@ -441,14 +418,9 @@ public class GunEventHandler {
     public static void playGunEmptyReload(Player player) {
         ItemStack stack = player.getMainHandItem();
 
-        int count = 0;
-        for (var inv : player.getInventory().items) {
-            if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
-                count++;
-            }
-        }
-
-        if (count == 0) {
+        if (player.getInventory().hasAnyMatching(item -> item.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+            GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag"));
+        } else {
             if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
                 GunsTool.reload(player, stack, GunInfo.Type.SHOTGUN);
             } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
@@ -458,20 +430,18 @@ public class GunEventHandler {
             } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
                 GunsTool.reload(player, stack, GunInfo.Type.RIFLE);
             } else if (stack.getItem() == ModItems.TASER.get()) {
-                stack.getOrCreateTag().putInt("ammo", 1);
+                GunsTool.setGunIntTag(stack, "Ammo", 1);
                 player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.TASER_ELECTRODE.get(), 1, player.inventoryMenu.getCraftSlots());
             } else if (stack.getItem() == ModItems.M_79.get()) {
-                stack.getOrCreateTag().putInt("ammo", 1);
+                GunsTool.setGunIntTag(stack, "Ammo", 1);
                 player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.GRENADE_40MM.get(), 1, player.inventoryMenu.getCraftSlots());
             } else if (stack.getItem() == ModItems.RPG.get()) {
-                stack.getOrCreateTag().putInt("ammo", 1);
+                GunsTool.setGunIntTag(stack, "Ammo", 1);
                 player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.ROCKET.get(), 1, player.inventoryMenu.getCraftSlots());
             } else if (stack.getItem() == ModItems.JAVELIN.get()) {
-                stack.getOrCreateTag().putInt("ammo", 1);
+                GunsTool.setGunIntTag(stack, "Ammo", 1);
                 player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.JAVELIN_MISSILE.get(), 1, player.inventoryMenu.getCraftSlots());
             }
-        } else {
-            stack.getOrCreateTag().putInt("ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag"));
         }
 
         stack.getOrCreateTag().putBoolean("is_normal_reloading", false);
@@ -543,12 +513,12 @@ public class GunEventHandler {
             MinecraftForge.EVENT_BUS.post(new ReloadEvent.Pre(player, stack));
 
             // 此处判断空仓换弹的时候，是否在准备阶段就需要装填一发，如M870
-            if (GunsTool.getGunIntTag(stack, "PrepareLoadTime", 0) != 0 && tag.getInt("ammo") == 0) {
+            if (GunsTool.getGunIntTag(stack, "PrepareLoadTime", 0) != 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
                 playGunPrepareLoadReloadSounds(player);
                 int prepareLoadTime = GunsTool.getGunIntTag(stack, "PrepareLoadTime", 0);
                 tag.putInt("prepare_load", prepareLoadTime + 1);
                 player.getCooldowns().addCooldown(stack.getItem(), prepareLoadTime);
-            } else if (GunsTool.getGunIntTag(stack, "PrepareEmptyTime", 0) != 0 && tag.getInt("ammo") == 0) {
+            } else if (GunsTool.getGunIntTag(stack, "PrepareEmptyTime", 0) != 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
                 // 此处判断空仓换弹，如莫辛纳甘
                 playGunEmptyPrepareSounds(player);
                 int prepareEmptyTime = GunsTool.getGunIntTag(stack, "PrepareEmptyTime", 0);
@@ -576,14 +546,7 @@ public class GunEventHandler {
 
         // 一阶段结束，检查备弹，如果有则二阶段启动，无则直接跳到三阶段
         if ((tag.getDouble("prepare") == 1 || tag.getDouble("prepare_load") == 1)) {
-            int count = 0;
-            for (var inv : player.getInventory().items) {
-                if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
-                    count++;
-                }
-            }
-
-            if (count == 0) {
+            if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
                 var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
                 if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
                     tag.putBoolean("force_stage3_start", true);
@@ -604,7 +567,7 @@ public class GunEventHandler {
         }
 
         // 强制停止换弹，进入三阶段
-        if (tag.getBoolean("force_stop") && tag.getInt("ammo") > 1) {
+        if (tag.getBoolean("force_stop") && GunsTool.getGunIntTag(stack, "Ammo", 0) > 1) {
             tag.putBoolean("stop", true);
         }
 
@@ -613,7 +576,7 @@ public class GunEventHandler {
                 && tag.getInt("reload_stage") == 2
                 && tag.getInt("iterative") == 0
                 && !tag.getBoolean("stop")
-                && tag.getInt("ammo") < GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag")) {
+                && GunsTool.getGunIntTag(stack, "Ammo", 0) < GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag")) {
 
             playGunLoopReloadSounds(player);
             int iterativeTime = GunsTool.getGunIntTag(stack, "IterativeTime", 0);
@@ -643,19 +606,12 @@ public class GunEventHandler {
         // 二阶段结束
         if (tag.getInt("iterative") == 1) {
             // 装满结束
-            if (tag.getInt("ammo") >= GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag")) {
+            if (GunsTool.getGunIntTag(stack, "Ammo", 0) >= GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag")) {
                 tag.putInt("reload_stage", 3);
             }
 
             // 备弹耗尽结束
-            int count = 0;
-            for (var inv : player.getInventory().items) {
-                if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
-                    count++;
-                }
-            }
-
-            if (count == 0) {
+            if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
                 var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
                 if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
                     tag.putInt("reload_stage", 3);
@@ -703,18 +659,10 @@ public class GunEventHandler {
 
     public static void singleLoad(Player player) {
         ItemStack stack = player.getMainHandItem();
-        CompoundTag tag = stack.getOrCreateTag();
 
-        tag.putInt("ammo", tag.getInt("ammo") + 1);
+        GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) + 1);
 
-        int count = 0;
-        for (var inv : player.getInventory().items) {
-            if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
-                count++;
-            }
-        }
-
-        if (count == 0) {
+        if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
             if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
                 player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                     capability.shotgunAmmo -= 1;
