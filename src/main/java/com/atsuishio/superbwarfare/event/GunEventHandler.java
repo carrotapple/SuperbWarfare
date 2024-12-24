@@ -182,19 +182,19 @@ public class GunEventHandler {
     }
 
     public static void gunShoot(Player player, double spared) {
-        ItemStack heldItem = player.getMainHandItem();
+        ItemStack stack = player.getMainHandItem();
 
         if (!player.level().isClientSide()) {
-            float headshot = (float) GunsTool.getGunDoubleTag(heldItem, "Headshot", 0);
-            float damage = (float) (GunsTool.getGunDoubleTag(heldItem, "Damage", 0) + heldItem.getOrCreateTag().getDouble("sentinelChargeDamage")) * (float) perkDamage(heldItem);
-            float velocity = (float) ((GunsTool.getGunDoubleTag(heldItem, "Velocity", 0) + heldItem.getOrCreateTag().getDouble("CustomVelocity")) * perkSpeed(heldItem));
-            int projectileAmount = GunsTool.getGunIntTag(heldItem, "ProjectileAmount", 1);
-            float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
+            float headshot = (float) GunsTool.getGunDoubleTag(stack, "Headshot", 0);
+            float damage = (float) (GunsTool.getGunDoubleTag(stack, "Damage", 0) + stack.getOrCreateTag().getDouble("sentinelChargeDamage")) * (float) perkDamage(stack);
+            float velocity = (float) ((GunsTool.getGunDoubleTag(stack, "Velocity", 0) + stack.getOrCreateTag().getDouble("CustomVelocity")) * perkSpeed(stack));
+            int projectileAmount = GunsTool.getGunIntTag(stack, "ProjectileAmount", 1);
+            float bypassArmorRate = (float) GunsTool.getGunDoubleTag(stack, "BypassesArmor", 0);
             boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
-            var perk = PerkHelper.getPerkByType(heldItem, Perk.Type.AMMO);
+            var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
 
             if (perk != null && perk.descriptionId.equals("butterfly_bullet")) {
-                if (handleButterflyBullet(perk, heldItem, player)) return;
+                if (handleButterflyBullet(perk, stack, player)) return;
             }
 
             ProjectileEntity projectile = new ProjectileEntity(player.level())
@@ -204,7 +204,7 @@ public class GunEventHandler {
                     .zoom(zoom);
 
             if (perk instanceof AmmoPerk ammoPerk) {
-                int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+                int level = PerkHelper.getItemPerkLevel(perk, stack);
 
                 bypassArmorRate += ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (level - 1) : 0);
                 projectile.setRGB(ammoPerk.rgb);
@@ -229,29 +229,29 @@ public class GunEventHandler {
             projectile.bypassArmorRate(bypassArmorRate);
 
             if (perk == ModPerks.SILVER_BULLET.get()) {
-                int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+                int level = PerkHelper.getItemPerkLevel(perk, stack);
                 projectile.undeadMultiple(1.0f + 0.5f * level);
             } else if (perk == ModPerks.BEAST_BULLET.get()) {
                 projectile.beast();
             } else if (perk == ModPerks.JHP_BULLET.get()) {
-                int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+                int level = PerkHelper.getItemPerkLevel(perk, stack);
                 projectile.jhpBullet(true, level);
             } else if (perk == ModPerks.HE_BULLET.get()) {
-                int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+                int level = PerkHelper.getItemPerkLevel(perk, stack);
                 projectile.heBullet(true, level);
             } else if (perk == ModPerks.INCENDIARY_BULLET.get()) {
-                int level = PerkHelper.getItemPerkLevel(perk, heldItem);
-                projectile.fireBullet(true, level, heldItem.is(ModTags.Items.SHOTGUN));
+                int level = PerkHelper.getItemPerkLevel(perk, stack);
+                projectile.fireBullet(true, level, stack.is(ModTags.Items.SHOTGUN));
             }
 
-            var dmgPerk = PerkHelper.getPerkByType(heldItem, Perk.Type.DAMAGE);
+            var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
             if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
-                int level = PerkHelper.getItemPerkLevel(dmgPerk, heldItem);
+                int level = PerkHelper.getItemPerkLevel(dmgPerk, stack);
                 projectile.monsterMultiple(0.1f + 0.1f * level);
             }
 
             projectile.setPos(player.getX() - 0.1 * player.getLookAngle().x, player.getEyeY() - 0.1 - 0.1 * player.getLookAngle().y, player.getZ() + -0.1 * player.getLookAngle().z);
-            projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y + 0.001f, player.getLookAngle().z, heldItem.is(ModTags.Items.SHOTGUN) && perk == ModPerks.INCENDIARY_BULLET.get() ? 4.5f : velocity,
+            projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y + 0.001f, player.getLookAngle().z, stack.is(ModTags.Items.SHOTGUN) && perk == ModPerks.INCENDIARY_BULLET.get() ? 4.5f : velocity,
                     (float) spared);
             player.level().addFreshEntity(projectile);
         }

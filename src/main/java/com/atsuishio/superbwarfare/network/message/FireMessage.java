@@ -232,27 +232,25 @@ public class FireMessage {
     }
 
     private static void spawnBullet(Player player) {
-        ItemStack heldItem = player.getMainHandItem();
-
+        ItemStack stack = player.getMainHandItem();
         if (player.level().isClientSide()) return;
 
-        CompoundTag tag = heldItem.getOrCreateTag();
-        var perk = PerkHelper.getPerkByType(heldItem, Perk.Type.AMMO);
-        float headshot = (float) GunsTool.getGunDoubleTag(heldItem, "Headshot", 0);
-        float velocity = 2 * (float) tag.getDouble("speed") * (float) perkSpeed(heldItem);
-        float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
+        CompoundTag tag = stack.getOrCreateTag();
+        var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
+        float headshot = (float) GunsTool.getGunDoubleTag(stack, "Headshot", 0);
+        float velocity = 2 * (float) tag.getDouble("speed") * (float) perkSpeed(stack);
+        float bypassArmorRate = (float) GunsTool.getGunDoubleTag(stack, "BypassesArmor", 0);
         double damage;
         boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
 
         float spread;
-
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
             spread = 0.01f;
-            damage = 0.08333333 * GunsTool.getGunDoubleTag(heldItem, "Damage", 0) * tag.getDouble("speed") * perkDamage(heldItem);
+            damage = 0.08333333 * GunsTool.getGunDoubleTag(stack, "Damage", 0) * tag.getDouble("speed") * perkDamage(stack);
         } else {
             spread = perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.5f : 2.5f;
             damage = (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.08333333 : 0.008333333) *
-                    GunsTool.getGunDoubleTag(heldItem, "Damage", 0) * tag.getDouble("speed") * perkDamage(heldItem);
+                    GunsTool.getGunDoubleTag(stack, "Damage", 0) * tag.getDouble("speed") * perkDamage(stack);
         }
 
         ProjectileEntity projectile = new ProjectileEntity(player.level())
@@ -261,7 +259,7 @@ public class FireMessage {
                 .zoom(zoom);
 
         if (perk instanceof AmmoPerk ammoPerk) {
-            int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+            int level = PerkHelper.getItemPerkLevel(perk, stack);
 
             bypassArmorRate += ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (level - 1) : 0);
             projectile.setRGB(ammoPerk.rgb);
@@ -279,24 +277,24 @@ public class FireMessage {
         projectile.bypassArmorRate(bypassArmorRate);
 
         if (perk == ModPerks.SILVER_BULLET.get()) {
-            int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+            int level = PerkHelper.getItemPerkLevel(perk, stack);
             projectile.undeadMultiple(1.0f + 0.5f * level);
         } else if (perk == ModPerks.BEAST_BULLET.get()) {
             projectile.beast();
         } else if (perk == ModPerks.JHP_BULLET.get()) {
-            int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+            int level = PerkHelper.getItemPerkLevel(perk, stack);
             projectile.jhpBullet(true, level);
         } else if (perk == ModPerks.HE_BULLET.get()) {
-            int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+            int level = PerkHelper.getItemPerkLevel(perk, stack);
             projectile.heBullet(true, level);
         } else if (perk == ModPerks.INCENDIARY_BULLET.get()) {
-            int level = PerkHelper.getItemPerkLevel(perk, heldItem);
+            int level = PerkHelper.getItemPerkLevel(perk, stack);
             projectile.fireBullet(true, level, !zoom);
         }
 
-        var dmgPerk = PerkHelper.getPerkByType(heldItem, Perk.Type.DAMAGE);
+        var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
         if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
-            int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, heldItem);
+            int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, stack);
             projectile.monsterMultiple(0.1f + 0.1f * perkLevel);
         }
 

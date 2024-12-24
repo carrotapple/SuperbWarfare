@@ -65,7 +65,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
     }
 
     protected boolean shouldRenderBypassAndHeadshotTooltip() {
-        return ItemNBTTool.getDouble(stack, "BypassesArmor", 0) > 0 || GunsTool.getGunDoubleTag(stack, "Headshot", 0) > 0;
+        return GunsTool.getGunDoubleTag(stack, "BypassesArmor", 0) > 0 || GunsTool.getGunDoubleTag(stack, "Headshot", 0) > 0;
     }
 
     protected boolean shouldRenderEditTooltip() {
@@ -176,7 +176,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
             int level = PerkHelper.getItemPerkLevel(perk, stack);
             perkBypassArmorRate = ammoPerk.bypassArmorRate + (perk == ModPerks.AP_BULLET.get() ? 0.05f * (level - 1) : 0);
         }
-        double bypassRate = Math.max(ItemNBTTool.getDouble(stack, "BypassesArmor", 0) + perkBypassArmorRate, 0);
+        double bypassRate = Math.max(GunsTool.getGunDoubleTag(stack, "BypassesArmor", 0) + perkBypassArmorRate, 0);
 
         return Component.translatable("des.superbwarfare.tips.bypass").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
