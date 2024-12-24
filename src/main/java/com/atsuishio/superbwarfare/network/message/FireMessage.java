@@ -340,7 +340,7 @@ public class FireMessage {
                     TaserBulletProjectileEntity taserBulletProjectile = new TaserBulletProjectileEntity(player, level, (float) stack.getOrCreateTag().getDouble("damage"), volt, wireLength);
 
                     taserBulletProjectile.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
-                    taserBulletProjectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) stack.getOrCreateTag().getDouble("velocity"),
+                    taserBulletProjectile.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0),
                             (float) (zoom ? 0.1 : spread));
                     level.addFreshEntity(taserBulletProjectile);
                 }
@@ -380,7 +380,7 @@ public class FireMessage {
                     }
 
                     gunGrenadeEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
-                    gunGrenadeEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) stack.getOrCreateTag().getDouble("velocity"),
+                    gunGrenadeEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0),
                             (float) (zoom ? 0.1 : spread));
                     level.addFreshEntity(gunGrenadeEntity);
                 }
@@ -431,7 +431,7 @@ public class FireMessage {
                 }
 
                 rocketEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
-                rocketEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) tag.getDouble("velocity"),
+                rocketEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0),
                         (float) (zoom ? 0.1 : spread));
                 level.addFreshEntity(rocketEntity);
             }

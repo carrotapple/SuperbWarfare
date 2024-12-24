@@ -6,7 +6,7 @@
   "RecoilY": 0.01,
   "damage": 7.7,
   "Headshot": 2,
-  "velocity": 44.5,
+  "Velocity": 44.5,
   "mag": 30,
   "Weight": 4,
   "FireMode": 2,

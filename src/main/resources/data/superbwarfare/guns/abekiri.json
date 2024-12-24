@@ -4,7 +4,7 @@
   "RecoilY": 0.026,
   "damage": 5,
   "Headshot": 1.5,
-  "velocity": 15,
+  "Velocity": 15,
   "mag": 2,
   "ProjectileAmount": 12,
   "Weight": 1,
