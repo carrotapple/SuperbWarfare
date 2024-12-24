@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.model.item;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
+import com.atsuishio.superbwarfare.client.screens.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.machinegun.RpkItem;
@@ -87,6 +88,8 @@ public class RpkItemModel extends GeoModel<RpkItem> {
         shen.setRotX((float) (shen.getRotX() * (1 - 0.9 * zt)));
         shen.setRotY((float) (shen.getRotY() * (1 - 0.9 * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.9 * zt)));
+
+        CrossHairOverlay.gunRot = shen.getRotZ();
 
         shuan.setPosZ(2.4f * (float) fp);
 

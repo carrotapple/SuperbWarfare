@@ -12,6 +12,8 @@ import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -38,6 +40,7 @@ public class CrossHairOverlay {
     public static int HEAD_INDICATOR = 0;
     public static int KILL_INDICATOR = 0;
     private static float scopeScale = 1f;
+    public static float gunRot;
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
@@ -125,10 +128,15 @@ public class CrossHairOverlay {
     }
 
     private static void normalCrossHair(GuiGraphics guiGraphics, int w, int h, double spread, float moveX, float moveY) {
+        PoseStack poseStack = guiGraphics.pose();
+
+        poseStack.pushPose();
+        poseStack.rotateAround(Axis.ZP.rotationDegrees(-gunRot * Mth.RAD_TO_DEG),w / 2f + moveX, h / 2f + moveY, 0);
         preciseBlit(guiGraphics, REX_HORIZONTAL, (float) (w / 2f - 13.5f - 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
         preciseBlit(guiGraphics, REX_HORIZONTAL, (float) (w / 2f - 2.5f + 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
         preciseBlit(guiGraphics, REX_VERTICAL, w / 2f - 7.5f + moveX, (float) (h / 2f - 2.5f + 2.8f * spread) + moveY, 0, 0, 16, 16, 16, 16);
         preciseBlit(guiGraphics, REX_VERTICAL, w / 2f - 7.5f + moveX, (float) (h / 2f - 13.5f - 2.8f * spread) + moveY, 0, 0, 16, 16, 16, 16);
+        poseStack.popPose();
     }
 
     private static void shotgunCrossHair(GuiGraphics guiGraphics, float finPosX, float finPosY, float finLength) {

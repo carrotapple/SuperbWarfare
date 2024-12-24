@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.model.item;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
+import com.atsuishio.superbwarfare.client.screens.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.event.PlayerEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
@@ -131,6 +132,8 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
         shen.setRotX((float) (shen.getRotX() * (1 - 0.8 * zt) * (barrelType == 1 ? 0.4 : 1.0) * (stockType == 2 ? 0.6 : 1.0) * (gripType == 1 ? 0.7 : 1.0) * (PlayerEventHandler.isProne(player) && gripType == 3 ? 0.1 : 1.0)));
         shen.setRotY((float) (shen.getRotY() * (1 - 0.85 * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.4 * zt)));
+
+        CrossHairOverlay.gunRot = shen.getRotZ();
 
         action.setPosZ(2.5f * (float) fp);
 

@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.client.model.item;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.client.screens.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.sniper.MosinNagantItem;
@@ -98,6 +99,8 @@ public class MosinNagantItemModel extends GeoModel<MosinNagantItem> {
         shen.setRotX((float) (shen.getRotX() * (1 - 0.87 * zt)));
         shen.setRotY((float) (shen.getRotY() * (1 - 0.7 * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.65 * zt)));
+
+        CrossHairOverlay.gunRot = shen.getRotZ();
 
         rex.setPosY(0.05f + 0.1f * (float) fp);
         rex.setRotZ((float) (-0.08f * fp * ClientEventHandler.recoilHorizon * fp));

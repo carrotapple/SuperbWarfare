@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.model.item;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
+import com.atsuishio.superbwarfare.client.screens.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.event.PlayerEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
@@ -146,6 +147,8 @@ public class TracheliumItemModel extends GeoModel<Trachelium> {
         shen.setRotX((float) (shen.getRotX() * (1 - 0.27 * zt) * (barrelType == 1 ? 0.4 : 1.2) * (stockType == 2 ? 0.6 : 1.2) * (gripType == 1 ? 0.8 : 1.2) * (PlayerEventHandler.isProne(player) && gripType == 3 ? 0.03 : 1.2)));
         shen.setRotY((float) (shen.getRotY() * (1 - 0.7 * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.65 * zt)));
+
+        CrossHairOverlay.gunRot = shen.getRotZ();
 
         stack.getOrCreateTag().putBoolean("HoloHidden", (gun.getPosX() <= 3 || Mth.abs(shen.getRotX()) > (scopeType == 2 ? 3 : 1) * Mth.DEG_TO_RAD || Mth.abs(main.getRotX()) > (scopeType == 2 ? 5.7 : 1) * Mth.DEG_TO_RAD || Mth.abs(main.getRotY()) > 3 * Mth.DEG_TO_RAD));
 

@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.client.model.item;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.client.screens.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.special.BocekItem;
@@ -111,6 +112,8 @@ public class BocekItemModel extends GeoModel<BocekItem> {
         fire.setRotX((float) (0.001f * fp + 0.001f * fr + 0.001f * fpz));
         fire.setRotY((float) (0.01f * ClientEventHandler.recoilHorizon * fpz));
         fire.setRotZ((float) ((0.02f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
+
+        CrossHairOverlay.gunRot = fire.getRotZ();
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));

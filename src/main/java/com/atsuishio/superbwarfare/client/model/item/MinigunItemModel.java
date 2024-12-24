@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.client.model.item;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.client.screens.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.machinegun.MinigunItem;
@@ -67,6 +68,8 @@ public class MinigunItemModel extends GeoModel<MinigunItem> {
         shen.setRotX((float) (0.02f * fp + 0.02f * fr + 0.02f * fpz));
         shen.setRotY((float) (0.02f * ClientEventHandler.recoilHorizon * fpz));
         shen.setRotZ((float) ((0.02f + 0.02 * fr) * ClientEventHandler.recoilHorizon));
+
+        CrossHairOverlay.gunRot = shen.getRotZ();
 
         CoreGeoBone root = getAnimationProcessor().getBone("root");
         root.setPosX((float) (movePosX + 20 * ClientEventHandler.drawTime + 9.3f * mph));

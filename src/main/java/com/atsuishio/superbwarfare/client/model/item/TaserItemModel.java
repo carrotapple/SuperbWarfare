@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.model.item;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
+import com.atsuishio.superbwarfare.client.screens.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.special.TaserItem;
@@ -72,6 +73,8 @@ public class TaserItemModel extends GeoModel<TaserItem> {
         shen.setRotX((float) (shen.getRotX() * (1 - 0.9 * zt)));
         shen.setRotY((float) (shen.getRotY() * (1 - 0.9 * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.9 * zt)));
+
+        CrossHairOverlay.gunRot = shen.getRotZ();
 
         gun.setPosX(1.82f * (float) zp);
         gun.setPosY(1.3f * (float) zp - (float) (0.3f * zpz));
