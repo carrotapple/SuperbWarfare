@@ -371,7 +371,9 @@ public class FireMessage {
                 Level level = player.level();
                 if (!level.isClientSide()) {
                     GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, level,
-                            (float) GunsTool.getGunDoubleTag(stack, "Damage", 0), (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0), (float) stack.getOrCreateTag().getDouble("ExplosionRadius"));
+                            (float) GunsTool.getGunDoubleTag(stack, "Damage", 0),
+                            (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0),
+                            (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0));
 
                     var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
                     if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
@@ -422,7 +424,9 @@ public class FireMessage {
 
             if (!level.isClientSide()) {
                 RpgRocketEntity rocketEntity = new RpgRocketEntity(player, level,
-                        (float) GunsTool.getGunDoubleTag(stack, "Damage", 0), (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0), (float) tag.getDouble("ExplosionRadius"));
+                        (float) GunsTool.getGunDoubleTag(stack, "Damage", 0),
+                        (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0),
+                        (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0));
 
                 var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
                 if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
@@ -486,7 +490,9 @@ public class FireMessage {
 
         if (!level.isClientSide()) {
             JavelinMissileEntity missileEntity = new JavelinMissileEntity(player, level,
-                    (float) GunsTool.getGunDoubleTag(stack, "Damage", 0), (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0), (float) tag.getDouble("ExplosionRadius"));
+                    (float) GunsTool.getGunDoubleTag(stack, "Damage", 0),
+                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0),
+                    (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0));
 
             var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
             if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
