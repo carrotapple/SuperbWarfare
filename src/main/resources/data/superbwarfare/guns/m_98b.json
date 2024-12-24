@@ -8,7 +8,7 @@
   "Damage": 38,
   "Headshot": 3,
   "Velocity": 47.2,
-  "mag": 5,
+  "Magazine": 5,
   "bolt_action_time": 18,
   "Weight": 7,
   "FireMode": 0,

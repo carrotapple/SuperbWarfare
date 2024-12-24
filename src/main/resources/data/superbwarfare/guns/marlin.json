@@ -5,7 +5,7 @@
   "Damage": 16,
   "Headshot": 2.5,
   "Velocity": 38,
-  "mag": 8,
+  "Magazine": 8,
   "force_stop_reloading": 1,
   "Weight": 3,
   "FireMode": 0,

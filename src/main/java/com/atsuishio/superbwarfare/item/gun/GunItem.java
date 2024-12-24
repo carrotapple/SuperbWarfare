@@ -49,44 +49,44 @@ public abstract class GunItem extends Item {
     }
 
     @Override
-    public void inventoryTick(ItemStack itemstack, Level level, Entity entity, int slot, boolean selected) {
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
         if (entity instanceof LivingEntity) {
-            if (!itemstack.is(ModTags.Items.GUN)) {
+            if (!stack.is(ModTags.Items.GUN)) {
                 return;
             }
 
-            if (!ItemNBTTool.getBoolean(itemstack, "init", false)) {
-                GunsTool.initGun(level, itemstack, this.getDescriptionId().substring(this.getDescriptionId().lastIndexOf('.') + 1));
-                GunsTool.generateAndSetUUID(itemstack);
-                ItemNBTTool.setBoolean(itemstack, "init", true);
+            if (!ItemNBTTool.getBoolean(stack, "init", false)) {
+                GunsTool.initGun(level, stack, this.getDescriptionId().substring(this.getDescriptionId().lastIndexOf('.') + 1));
+                GunsTool.generateAndSetUUID(stack);
+                ItemNBTTool.setBoolean(stack, "init", true);
             }
 
-            if (itemstack.getOrCreateTag().getBoolean("draw")) {
-                itemstack.getOrCreateTag().putBoolean("draw", false);
+            if (stack.getOrCreateTag().getBoolean("draw")) {
+                stack.getOrCreateTag().putBoolean("draw", false);
             }
 
-            handleGunPerks(itemstack);
-            handleGunAttachment(itemstack);
+            handleGunPerks(stack);
+            handleGunAttachment(stack);
 
-            if ((itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) && itemstack.getOrCreateTag().getInt("ammo") > itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag") + 1)
-                    || (!itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) && itemstack.getOrCreateTag().getInt("ammo") > itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag"))
+            if ((stack.is(ModTags.Items.EXTRA_ONE_AMMO) && stack.getOrCreateTag().getInt("ammo") > GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag") + 1)
+                    || (!stack.is(ModTags.Items.EXTRA_ONE_AMMO) && stack.getOrCreateTag().getInt("ammo") > GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag"))
             ) {
-                int count = itemstack.getOrCreateTag().getInt("ammo") - itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag") - (itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0);
+                int count = stack.getOrCreateTag().getInt("ammo") - GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag") - (stack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0);
                 entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
 
-                    if (itemstack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
+                    if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
                         capability.shotgunAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).shotgunAmmo + count;
-                    } else if (itemstack.is(ModTags.Items.USE_SNIPER_AMMO)) {
+                    } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
                         capability.sniperAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).sniperAmmo + count;
-                    } else if (itemstack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
+                    } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
                         capability.handgunAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).handgunAmmo + count;
-                    } else if (itemstack.is(ModTags.Items.USE_RIFLE_AMMO)) {
+                    } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
                         capability.rifleAmmo = entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).rifleAmmo + count;
                     }
                     capability.syncPlayerVariables(entity);
                 });
 
-                itemstack.getOrCreateTag().putInt("ammo", itemstack.getOrCreateTag().getInt("mag") + itemstack.getOrCreateTag().getInt("customMag") + (itemstack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0));
+                stack.getOrCreateTag().putInt("ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag") + (stack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0));
             }
         }
     }
@@ -165,7 +165,7 @@ public abstract class GunItem extends Item {
                 GunsTool.setPerkIntTag(stack, "FourthTimesCharmTick", 0);
                 GunsTool.setPerkIntTag(stack, "FourthTimesCharmCount", 0);
 
-                int mag = stack.getOrCreateTag().getInt("mag") + stack.getOrCreateTag().getInt("customMag");
+                int mag = GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag");
                 stack.getOrCreateTag().putInt("ammo", Math.min(mag, stack.getOrCreateTag().getInt("ammo") + 2));
             }
         }

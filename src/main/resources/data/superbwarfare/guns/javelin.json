@@ -2,7 +2,7 @@
   "CustomZoom": 1.75,
   "Spread": 5,
   "zoomSpread": 5,
-  "mag": 1,
+  "Magazine": 1,
   "Weight": 10,
   "EmptyReloadTime": 78,
   "Damage": 300,

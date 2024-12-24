@@ -5,7 +5,7 @@
   "Damage": 35,
   "Headshot": 3,
   "Velocity": 37.75,
-  "mag": 5,
+  "Magazine": 5,
   "bolt_action_time": 22,
   "Weight": 5,
   "FireMode": 0,

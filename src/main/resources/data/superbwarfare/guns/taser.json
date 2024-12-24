@@ -4,7 +4,7 @@
   "RecoilY": 0.002,
   "Damage": 5,
   "Velocity": 3,
-  "mag": 1,
+  "Magazine": 1,
   "Weight": 1,
   "EmptyReloadTime": 58
 }

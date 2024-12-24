@@ -615,7 +615,7 @@ public class LivingEventHandler {
         float rate = level * 0.1f + (stack.is(ModTags.Items.SMG) || stack.is(ModTags.Items.RIFLE) ? 0.07f : 0f);
 
         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                    int mag = stack.getOrCreateTag().getInt("mag") + stack.getOrCreateTag().getInt("customMag");
+                    int mag = GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag");
                     int ammo = stack.getOrCreateTag().getInt("ammo");
                     int ammoReload = (int) Math.min(mag, mag * rate);
                     int ammoNeed = Math.min(mag - ammo, ammoReload);

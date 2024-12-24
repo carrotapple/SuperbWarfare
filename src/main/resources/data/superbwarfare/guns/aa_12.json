@@ -5,7 +5,7 @@
   "Damage": 2.5,
   "Headshot": 1.5,
   "Velocity": 17,
-  "mag": 25,
+  "Magazine": 25,
   "ProjectileAmount": 12,
   "Weight": 7,
   "FireMode": 2,

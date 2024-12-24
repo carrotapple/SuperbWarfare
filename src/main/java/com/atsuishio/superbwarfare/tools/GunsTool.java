@@ -56,7 +56,7 @@ public class GunsTool {
     // TODO 临时使用，移植完毕后删除
     private static final Set<String> STRING_SET = Set.of("EmptyReloadTime", "FireMode", "Weight", "SoundRadius", "BurstSize", "ProjectileAmount",
             "Spread", "NormalReloadTime", "Headshot", "Semi", "Burst", "Auto", "RecoilX", "RecoilY", "Velocity", "Damage", "BypassesArmor",
-            "RPM");
+            "RPM", "Magazine");
 
     public static void initGun(Level level, ItemStack stack, String location) {
         if (level.getServer() == null) return;
@@ -84,7 +84,7 @@ public class GunsTool {
                     stack.getOrCreateTag().putDouble(k, v);
                 }
             });
-            stack.getOrCreateTag().putInt("ammo", stack.getOrCreateTag().getInt("mag") + stack.getOrCreateTag().getInt("customMag"));
+            stack.getOrCreateTag().putInt("ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag"));
         }
     }
 
@@ -115,7 +115,7 @@ public class GunsTool {
     public static void reload(Player player, ItemStack stack, GunInfo.Type type, boolean extraOne) {
         CompoundTag tag = stack.getOrCreateTag();
 
-        int mag = tag.getInt("mag") + tag.getInt("customMag");
+        int mag = GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag");
         int ammo = tag.getInt("ammo");
         int ammoToAdd = mag - ammo + (extraOne ? 1 : 0);
 

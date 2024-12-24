@@ -6,7 +6,7 @@
   "ExplosionDamage": 150,
   "ExplosionRadius": 10,
   "Velocity": 4,
-  "mag": 1,
+  "Magazine": 1,
   "Weight": 7,
   "EmptyReloadTime": 103
 }

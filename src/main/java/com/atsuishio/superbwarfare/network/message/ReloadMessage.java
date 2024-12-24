@@ -96,24 +96,26 @@ public class ReloadMessage {
                 }
 
                 if (canReload || clipLoad) {
+                    int magazine = GunsTool.getGunIntTag(stack, "Magazine", 0);
+
                     if (stack.is(ModTags.Items.OPEN_BOLT)) {
                         if (stack.is(ModTags.Items.EXTRA_ONE_AMMO)) {
-                            if (tag.getInt("ammo") < tag.getDouble("mag") + tag.getInt("customMag") + 1) {
+                            if (tag.getInt("ammo") < magazine + tag.getInt("customMag") + 1) {
                                 tag.putBoolean("start_reload", true);
                             }
                         } else {
-                            if (tag.getInt("ammo") < tag.getDouble("mag") + tag.getInt("customMag")) {
+                            if (tag.getInt("ammo") < magazine + tag.getInt("customMag")) {
                                 tag.putBoolean("start_reload", true);
                             }
                         }
-                    } else if (tag.getInt("ammo") < tag.getDouble("mag") + tag.getInt("customMag")) {
+                    } else if (tag.getInt("ammo") < magazine + tag.getInt("customMag")) {
                         tag.putBoolean("start_reload", true);
                     }
                     return;
                 }
 
                 if (canSingleReload) {
-                    if (tag.getInt("ammo") < tag.getDouble("mag") + tag.getInt("customMag")) {
+                    if (tag.getInt("ammo") < GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag")) {
                         tag.putBoolean("start_single_reload", true);
                     }
                 }

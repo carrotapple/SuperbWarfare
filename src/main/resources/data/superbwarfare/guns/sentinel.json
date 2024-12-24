@@ -4,7 +4,7 @@
   "RecoilX": 0.007,
   "RecoilY": 0.018,
   "Damage": 35,
-  "mag": 5,
+  "Magazine": 5,
   "Headshot": 3,
   "Velocity": 70,
   "bolt_action_time": 22,
