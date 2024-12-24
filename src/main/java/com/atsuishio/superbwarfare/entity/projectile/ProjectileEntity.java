@@ -99,6 +99,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     private boolean fireBullet = false;
     private int fireLevel = 0;
     private boolean dragonBreath = false;
+    private double knockback = 0.05;
     private final ArrayList<MobEffectInstance> mobEffects = new ArrayList<>();
 
     public ProjectileEntity(EntityType<? extends ProjectileEntity> p_i50159_1_, Level p_i50159_2_) {
@@ -133,16 +134,13 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
         for (Entity entity : entities) {
             if (entity.equals(this.shooter)) continue;
-
             if (entity.equals(this.shooter.getVehicle())) continue;
-
             if (entity instanceof TargetEntity && entity.getEntityData().get(TargetEntity.DOWN_TIME) > 0) continue;
 
             EntityResult result = this.getHitResult(entity, startVec, endVec);
             if (result == null) continue;
 
             Vec3 hitPos = result.getHitPos();
-
             if (hitPos == null) continue;
 
             double distanceToHit = startVec.distanceTo(hitPos);
@@ -221,12 +219,12 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         boolean headshot = false;
         boolean legShot = false;
         float eyeHeight = entity.getEyeHeight();
-        float BodyHeight = entity.getBbHeight();
+        float bodyHeight = entity.getBbHeight();
         if ((eyeHeight - 0.35) < hitBoxPos.y && hitBoxPos.y < (eyeHeight + 0.4) &&
                 !(entity instanceof ClaymoreEntity || entity instanceof MortarEntity || entity instanceof IVehicleEntity || entity instanceof DroneEntity)) {
             headshot = true;
         }
-        if (hitBoxPos.y < (0.33 * BodyHeight) && !(entity instanceof ClaymoreEntity || entity instanceof MortarEntity ||
+        if (hitBoxPos.y < (0.33 * bodyHeight) && !(entity instanceof ClaymoreEntity || entity instanceof MortarEntity ||
                 entity instanceof IVehicleEntity || entity instanceof DroneEntity)) {
             legShot = true;
         }
@@ -310,12 +308,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     @Override
     protected void readAdditionalSaveData(CompoundTag compoundTag) {
-
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag compoundTag) {
-
     }
 
     protected void onProjectileTick() {
@@ -518,13 +514,11 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(1, 5));
             }
-
-            performDamage(entity, this.damage, true);
+            performOnHit(entity, this.damage, true, this.knockback);
         } else {
             if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer player) {
                 var holder = Holder.direct(ModSounds.INDICATION.get());
                 player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getY(), player.getZ(), 1f, 1f, player.level().random.nextLong()));
-
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
             }
 
@@ -540,7 +534,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
                 this.damage *= this.legShot;
             }
 
-            performDamage(entity, this.damage, false);
+            performOnHit(entity, this.damage, false, this.knockback);
         }
 
         if (!this.mobEffects.isEmpty() && entity instanceof LivingEntity living) {
@@ -550,6 +544,17 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         }
 
         this.discard();
+    }
+
+    public void performOnHit(Entity entity, float damage, boolean headshot, double knockback) {
+        if (entity instanceof LivingEntity living) {
+            ICustomKnockback iCustomKnockback = ICustomKnockback.getInstance(living);
+            iCustomKnockback.superbWarfare$setKnockbackStrength(knockback);
+            performDamage(entity, damage, headshot);
+            iCustomKnockback.superbWarfare$resetKnockbackStrength();
+        } else {
+            performDamage(entity, damage, headshot);
+        }
     }
 
     protected void explosionBulletBlock(Entity projectile, float damage, int heLevel, float monsterMultiple, Vec3 hitVec) {
@@ -856,5 +861,10 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         this.entityData.set(COLOR_R, rgb[0]);
         this.entityData.set(COLOR_G, rgb[1]);
         this.entityData.set(COLOR_B, rgb[2]);
+    }
+
+    public ProjectileEntity knockback(double knockback) {
+        this.knockback = knockback;
+        return this;
     }
 }

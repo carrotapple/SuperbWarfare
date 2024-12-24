@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.capability.LaserCapability;
 import com.atsuishio.superbwarfare.capability.ModCapabilities;
 import com.atsuishio.superbwarfare.config.common.GameplayConfig;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
+import com.atsuishio.superbwarfare.entity.ICustomKnockback;
 import com.atsuishio.superbwarfare.entity.IVehicleEntity;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
@@ -784,5 +785,13 @@ public class LivingEventHandler {
         if (entity.getMaxHealth() < 100.0f) return;
 
         event.setAmount(event.getAmount() * (1.15f + 0.05f * level));
+    }
+
+    @SubscribeEvent
+    public static void onKnockback(LivingKnockBackEvent event) {
+        ICustomKnockback knockback = ICustomKnockback.getInstance(event.getEntity());
+        if (knockback.superbWarfare$getKnockbackStrength() >= 0) {
+            event.setStrength((float) knockback.superbWarfare$getKnockbackStrength());
+        }
     }
 }

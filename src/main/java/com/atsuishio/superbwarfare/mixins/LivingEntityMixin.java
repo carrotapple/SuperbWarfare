@@ -1,36 +1,28 @@
 package com.atsuishio.superbwarfare.mixins;
 
-import com.atsuishio.superbwarfare.init.ModDamageTypes;
-import net.minecraft.world.damagesource.DamageSource;
+import com.atsuishio.superbwarfare.entity.ICustomKnockback;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
-public class LivingEntityMixin {
+public class LivingEntityMixin implements ICustomKnockback {
 
     @Unique
-    private DamageSource target$source;
+    private double superbwarfare$knockbackStrength = 0;
 
-    @Inject(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;knockback(DDD)V"))
-    private void capture(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        this.target$source = source;
+    @Override
+    public void superbWarfare$setKnockbackStrength(double strength) {
+        this.superbwarfare$knockbackStrength = strength;
     }
 
-    @ModifyArg(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;knockback(DDD)V"), index = 0)
-    private double modifyApplyKnockbackArgs(double original) {
-        if (this.target$source.is(ModDamageTypes.GUN_FIRE) || this.target$source.is(ModDamageTypes.GUN_FIRE_HEADSHOT)
-                || this.target$source.is(ModDamageTypes.SHOCK) || this.target$source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE)
-                || this.target$source.is(ModDamageTypes.GUN_FIRE_HEADSHOT_ABSOLUTE) || this.target$source.is(ModDamageTypes.BURN)) {
-            return 0.05 * original;
-        }
-        if (this.target$source.is(ModDamageTypes.LASER) || this.target$source.is(ModDamageTypes.LASER_HEADSHOT)) {
-            return -original;
-        }
-        return original;
+    @Override
+    public void superbWarfare$resetKnockbackStrength() {
+        this.superbwarfare$knockbackStrength = -1;
+    }
+
+    @Override
+    public double superbWarfare$getKnockbackStrength() {
+        return this.superbwarfare$knockbackStrength;
     }
 }
