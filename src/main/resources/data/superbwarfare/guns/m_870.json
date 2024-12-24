@@ -13,7 +13,7 @@
   "PrepareTime": 7,
   "PrepareLoadTime": 36,
   "IterativeTime": 16,
-  "finish_time": 12,
+  "FinishTime": 12,
   "BypassesArmor": 0.05,
   "SoundRadius": 16,
   "BoltActionTime": 11

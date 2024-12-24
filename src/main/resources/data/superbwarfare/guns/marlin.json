@@ -11,7 +11,7 @@
   "Semi": 1,
   "PrepareTime": 7,
   "IterativeTime": 16,
-  "finish_time": 19,
+  "FinishTime": 19,
   "BypassesArmor": 0.3,
   "SoundRadius": 15,
   "BoltActionTime": 12

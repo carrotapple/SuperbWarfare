@@ -678,8 +678,9 @@ public class GunEventHandler {
         // 三阶段
         if ((tag.getInt("iterative") == 1 && tag.getInt("reload_stage") == 3) || tag.getBoolean("force_stage3_start")) {
             tag.putBoolean("force_stage3_start", false);
-            tag.putInt("finish", (int) tag.getDouble("finish_time") + 2);
-            player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("finish_time") + 2);
+            int finishTime = GunsTool.getGunIntTag(stack, "FinishTime", 0);
+            tag.putInt("finish", finishTime + 2);
+            player.getCooldowns().addCooldown(stack.getItem(), finishTime + 2);
             playGunEndReloadSounds(player);
         }
 

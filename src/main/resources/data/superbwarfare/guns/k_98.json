@@ -14,7 +14,7 @@
   "ClipLoad": 1,
   "PrepareTime": 29,
   "IterativeTime": 11,
-  "finish_time": 18,
+  "FinishTime": 18,
   "BypassesArmor": 0.5,
   "SoundRadius": 18
 }
