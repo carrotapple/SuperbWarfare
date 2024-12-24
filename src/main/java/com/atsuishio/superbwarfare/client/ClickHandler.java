@@ -328,7 +328,7 @@ public class ClickHandler {
                     ClientEventHandler.holdFire = true;
                 }
                 if (GunsTool.getGunIntTag(stack, "FireMode") == 1 && ClientEventHandler.burstFireSize == 0) {
-                    ClientEventHandler.burstFireSize = (int) stack.getOrCreateTag().getDouble("burst_size");
+                    ClientEventHandler.burstFireSize = GunsTool.getGunIntTag(stack, "BurstSize", 1);
                 }
             }
         }

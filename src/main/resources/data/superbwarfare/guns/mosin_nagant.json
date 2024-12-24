@@ -14,7 +14,6 @@
   "semi": 1,
   "burst": 0,
   "auto": 0,
-  "burst_size": 1,
   "prepare_time": 29,
   "prepare_empty": 16,
   "iterative_time": 11,

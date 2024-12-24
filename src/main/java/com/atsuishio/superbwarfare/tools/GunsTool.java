@@ -55,7 +55,7 @@ public class GunsTool {
     public static void initGun(Level level, ItemStack stack, String location) {
         if (level.getServer() == null) return;
         gunsData.get(location).forEach((k, v) -> {
-            if (k.equals("EmptyReloadTime") || k.equals("FireMode") || k.equals("Weight") || k.equals("SoundRadius")) {
+            if (k.equals("EmptyReloadTime") || k.equals("FireMode") || k.equals("Weight") || k.equals("SoundRadius") || k.equals("BurstSize")) {
                 CompoundTag tag = stack.getOrCreateTag();
                 CompoundTag data = tag.getCompound("GunData");
                 data.putDouble(k, v);
@@ -69,7 +69,7 @@ public class GunsTool {
     public static void initCreativeGun(ItemStack stack, String location) {
         if (gunsData != null && gunsData.get(location) != null) {
             gunsData.get(location).forEach((k, v) -> {
-                if (k.equals("EmptyReloadTime") || k.equals("FireMode") || k.equals("Weight") || k.equals("SoundRadius")) {
+                if (k.equals("EmptyReloadTime") || k.equals("FireMode") || k.equals("Weight") || k.equals("SoundRadius") || k.equals("BurstSize")) {
                     CompoundTag tag = stack.getOrCreateTag();
                     CompoundTag data = tag.getCompound("GunData");
                     data.putDouble(k, v);
@@ -141,6 +141,7 @@ public class GunsTool {
         tag.putBoolean("is_empty_reloading", false);
     }
 
+    /* PerkData */
     public static void setPerkIntTag(ItemStack stack, String name, int num) {
         CompoundTag tag = stack.getOrCreateTag().getCompound("PerkData");
         tag.putInt(name, num);
@@ -174,6 +175,7 @@ public class GunsTool {
         return tag.getBoolean(name);
     }
 
+    /* Attachments */
     public static int getAttachmentType(ItemStack stack, AttachmentType type) {
         CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
         return tag.getInt(type.getName());
@@ -197,6 +199,7 @@ public class GunsTool {
         }
     }
 
+    /* GunData */
     public static void setGunIntTag(ItemStack stack, String name, int num) {
         CompoundTag tag = stack.getOrCreateTag();
         var data = tag.getCompound("GunData");
@@ -205,8 +208,13 @@ public class GunsTool {
     }
 
     public static int getGunIntTag(ItemStack stack, String name) {
+        return getGunIntTag(stack, name, 0);
+    }
+
+    public static int getGunIntTag(ItemStack stack, String name, int defaultValue) {
         CompoundTag tag = stack.getOrCreateTag();
         var data = tag.getCompound("GunData");
+        if (!data.contains(name)) return defaultValue;
         return data.getInt(name);
     }
 
@@ -218,8 +226,13 @@ public class GunsTool {
     }
 
     public static double getGunDoubleTag(ItemStack stack, String name) {
+        return getGunDoubleTag(stack, name, 0);
+    }
+
+    public static double getGunDoubleTag(ItemStack stack, String name, double defaultValue) {
         CompoundTag tag = stack.getOrCreateTag();
         var data = tag.getCompound("GunData");
+        if (!data.contains(name)) return defaultValue;
         return data.getDouble(name);
     }
 }

@@ -14,7 +14,6 @@
   "semi": 1,
   "burst": 0,
   "auto": 1,
-  "burst_size": 1,
   "normal_reload_time": 54,
   "EmptyReloadTime": 71,
   "BypassesArmor": 0.4,
