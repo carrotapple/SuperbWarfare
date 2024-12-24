@@ -548,11 +548,12 @@ public class GunEventHandler {
                 int prepareLoadTime = GunsTool.getGunIntTag(stack, "PrepareLoadTime", 0);
                 tag.putInt("prepare_load", prepareLoadTime + 1);
                 player.getCooldowns().addCooldown(stack.getItem(), prepareLoadTime);
-            } else if (tag.getDouble("prepare_empty") != 0 && tag.getInt("ammo") == 0) {
+            } else if (GunsTool.getGunIntTag(stack, "PrepareEmptyTime", 0) != 0 && tag.getInt("ammo") == 0) {
                 // 此处判断空仓换弹，如莫辛纳甘
                 playGunEmptyPrepareSounds(player);
-                tag.putInt("prepare", (int) tag.getDouble("prepare_empty") + 1);
-                player.getCooldowns().addCooldown(stack.getItem(), (int) tag.getDouble("prepare_empty"));
+                int prepareEmptyTime = GunsTool.getGunIntTag(stack, "PrepareEmptyTime", 0);
+                tag.putInt("prepare", prepareEmptyTime + 1);
+                player.getCooldowns().addCooldown(stack.getItem(), prepareEmptyTime);
             } else {
                 playGunPrepareReloadSounds(player);
                 int prepareTime = GunsTool.getGunIntTag(stack, "PrepareTime", 0);
@@ -772,7 +773,7 @@ public class GunEventHandler {
                 double shooterHeight = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(new Vec3(0, -1, 0).scale(10)),
                         ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
 
-                ModUtils.queueServerWork((int) (stack.getOrCreateTag().getDouble("prepare_empty") / 2 + 3 + 1.5 * shooterHeight), () -> {
+                ModUtils.queueServerWork((int) (GunsTool.getGunIntTag(stack, "PrepareEmptyTime", 0) / 2 + 3 + 1.5 * shooterHeight), () -> {
                     if (stack.is(ModTags.Items.SHOTGUN)) {
                         SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_SHOTGUN.get(), (float) Math.max(0.75 - 0.12 * shooterHeight, 0), 1);
                     } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {

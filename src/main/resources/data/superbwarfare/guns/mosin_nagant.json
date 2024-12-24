@@ -12,7 +12,7 @@
   "FireMode": 0,
   "Semi": 1,
   "PrepareTime": 29,
-  "prepare_empty": 16,
+  "PrepareEmptyTime": 16,
   "IterativeTime": 11,
   "FinishTime": 18,
   "BypassesArmor": 0.54,
