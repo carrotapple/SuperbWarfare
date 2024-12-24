@@ -11,7 +11,7 @@
   "FireMode": 0,
   "Semi": 1,
   "EmptyReloadTime": 59,
-  "clipLoad": 1,
+  "ClipLoad": 1,
   "prepare_time": 29,
   "iterative_time": 11,
   "finish_time": 18,
