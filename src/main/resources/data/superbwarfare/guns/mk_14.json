@@ -1,7 +1,7 @@
 {
   "MinZoom": 1.25,
   "MaxZoom": 6,
-  "spread": 5,
+  "Spread": 5,
   "recoil_x": 0.006,
   "recoil_y": 0.014,
   "damage": 12,

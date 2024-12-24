@@ -11,10 +11,7 @@ import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.EntityFindUtil;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
-import com.atsuishio.superbwarfare.tools.SeekTool;
-import com.atsuishio.superbwarfare.tools.SoundTool;
+import com.atsuishio.superbwarfare.tools.*;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -336,7 +333,7 @@ public class FireMessage {
                 int wireLength = PerkHelper.getItemPerkLevel(ModPerks.LONGER_WIRE.get(), stack);
 
                 boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
-                double spread = stack.getOrCreateTag().getDouble("spread");
+                double spread = GunsTool.getGunDoubleTag(stack, "Spread");
 
                 Level level = player.level();
                 if (!level.isClientSide()) {
@@ -369,7 +366,7 @@ public class FireMessage {
         if (!stack.getOrCreateTag().getBoolean("reloading")) {
             if (!player.getCooldowns().isOnCooldown(stack.getItem()) && stack.getOrCreateTag().getInt("ammo") > 0) {
                 boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
-                double spread = stack.getOrCreateTag().getDouble("spread");
+                double spread = GunsTool.getGunDoubleTag(stack, "Spread");
 
                 Level level = player.level();
                 if (!level.isClientSide()) {
@@ -421,7 +418,7 @@ public class FireMessage {
 
         if (!tag.getBoolean("reloading") && !player.getCooldowns().isOnCooldown(stack.getItem()) && tag.getInt("ammo") > 0) {
             boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
-            double spread = stack.getOrCreateTag().getDouble("spread");
+            double spread = GunsTool.getGunDoubleTag(stack, "Spread");
 
             if (!level.isClientSide()) {
                 RpgRocketEntity rocketEntity = new RpgRocketEntity(player, level,

@@ -19,6 +19,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = ModUtils.MODID)
@@ -52,11 +53,14 @@ public class GunsTool {
         }
     }
 
+    // TODO 临时使用，移植完毕后删除
+    private static final Set<String> STRING_SET = Set.of("EmptyReloadTime", "FireMode", "Weight", "SoundRadius", "BurstSize", "ProjectileAmount",
+            "Spread");
+
     public static void initGun(Level level, ItemStack stack, String location) {
         if (level.getServer() == null) return;
         gunsData.get(location).forEach((k, v) -> {
-            if (k.equals("EmptyReloadTime") || k.equals("FireMode") || k.equals("Weight") || k.equals("SoundRadius") || k.equals("BurstSize")
-                    || k.equals("ProjectileAmount")) {
+            if (STRING_SET.contains(k)) {
                 CompoundTag tag = stack.getOrCreateTag();
                 CompoundTag data = tag.getCompound("GunData");
                 data.putDouble(k, v);
@@ -70,8 +74,7 @@ public class GunsTool {
     public static void initCreativeGun(ItemStack stack, String location) {
         if (gunsData != null && gunsData.get(location) != null) {
             gunsData.get(location).forEach((k, v) -> {
-                if (k.equals("EmptyReloadTime") || k.equals("FireMode") || k.equals("Weight") || k.equals("SoundRadius") || k.equals("BurstSize")
-                        || k.equals("ProjectileAmount")) {
+                if (STRING_SET.contains(k)) {
                     CompoundTag tag = stack.getOrCreateTag();
                     CompoundTag data = tag.getCompound("GunData");
                     data.putDouble(k, v);

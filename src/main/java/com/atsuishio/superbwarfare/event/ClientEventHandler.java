@@ -231,7 +231,7 @@ public class ClientEventHandler {
         // 精准度
         float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
 
-        double basicDev = stack.getOrCreateTag().getDouble("spread");
+        double basicDev = GunsTool.getGunDoubleTag(stack, "Spread");
         double walk = isMoving() ? 0.3 * basicDev : 0;
         double sprint = player.isSprinting() ? 0.25 * basicDev : 0;
         double crouching = player.isCrouching() ? -0.15 * basicDev : 0;
