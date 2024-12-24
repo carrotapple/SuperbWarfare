@@ -3,7 +3,7 @@
   "recoil_x": 0.005,
   "recoil_y": 0.026,
   "damage": 5,
-  "headshot": 1.5,
+  "Headshot": 1.5,
   "velocity": 15,
   "mag": 2,
   "ProjectileAmount": 12,

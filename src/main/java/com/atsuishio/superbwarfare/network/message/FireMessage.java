@@ -238,7 +238,7 @@ public class FireMessage {
 
         CompoundTag tag = heldItem.getOrCreateTag();
         var perk = PerkHelper.getPerkByType(heldItem, Perk.Type.AMMO);
-        float headshot = (float) tag.getDouble("headshot");
+        float headshot = (float) GunsTool.getGunDoubleTag(heldItem, "Headshot", 0);
         float velocity = 2 * (float) tag.getDouble("speed") * (float) perkSpeed(heldItem);
         float bypassArmorRate = (float) heldItem.getOrCreateTag().getDouble("BypassesArmor");
         double damage;

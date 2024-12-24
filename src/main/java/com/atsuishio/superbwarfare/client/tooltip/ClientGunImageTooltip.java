@@ -1,14 +1,15 @@
 package com.atsuishio.superbwarfare.client.tooltip;
 
+import com.atsuishio.superbwarfare.client.tooltip.component.GunImageComponent;
 import com.atsuishio.superbwarfare.init.ModKeyMappings;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.ItemNBTTool;
 import com.atsuishio.superbwarfare.tools.TooltipTool;
-import com.atsuishio.superbwarfare.client.tooltip.component.GunImageComponent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -64,7 +65,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
     }
 
     protected boolean shouldRenderBypassAndHeadshotTooltip() {
-        return ItemNBTTool.getDouble(stack, "BypassesArmor", 0) > 0 || ItemNBTTool.getDouble(stack, "headshot", 0) > 0;
+        return ItemNBTTool.getDouble(stack, "BypassesArmor", 0) > 0 || GunsTool.getGunDoubleTag(stack, "Headshot", 0) > 0;
     }
 
     protected boolean shouldRenderEditTooltip() {
@@ -186,7 +187,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      * 获取武器爆头倍率文本组件
      */
     protected Component getHeadshotComponent() {
-        double headshot = ItemNBTTool.getDouble(stack, "headshot", 0);
+        double headshot = GunsTool.getGunDoubleTag(stack, "Headshot", 0);
         return Component.translatable("des.superbwarfare.tips.headshot").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.#").format(headshot) + "x").withStyle(ChatFormatting.AQUA));

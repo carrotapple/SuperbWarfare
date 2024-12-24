@@ -1,7 +1,7 @@
 {
   "CustomZoom": 0.75,
   "Spread": 4,
-  "headshot": 2.5,
+  "Headshot": 2.5,
   "damage": 48,
   "Weight": 3,
   "BypassesArmor": 0.25

@@ -3,7 +3,7 @@
   "recoil_x": 0.006,
   "recoil_y": 0.018,
   "damage": 9.5,
-  "headshot": 1.5,
+  "Headshot": 1.5,
   "velocity": 15,
   "mag": 7,
   "Weight": 2,

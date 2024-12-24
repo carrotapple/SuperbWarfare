@@ -4,7 +4,7 @@
   "recoil_x": 0.01,
   "recoil_y": 0.038,
   "damage": 140,
-  "headshot": 3,
+  "Headshot": 3,
   "velocity": 36,
   "mag": 3,
   "bolt_action_time": 37,

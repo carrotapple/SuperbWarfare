@@ -3,7 +3,7 @@
   "recoil_x": 0.009,
   "recoil_y": 0.04,
   "damage": 3,
-  "headshot": 1.5,
+  "Headshot": 1.5,
   "velocity": 17,
   "mag": 8,
   "force_stop_reloading": 1,

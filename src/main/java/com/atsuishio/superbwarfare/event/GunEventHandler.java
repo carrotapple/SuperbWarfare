@@ -185,7 +185,7 @@ public class GunEventHandler {
         ItemStack heldItem = player.getMainHandItem();
 
         if (!player.level().isClientSide()) {
-            float headshot = (float) heldItem.getOrCreateTag().getDouble("headshot");
+            float headshot = (float) GunsTool.getGunDoubleTag(heldItem, "Headshot", 0);
             float damage = (float) (heldItem.getOrCreateTag().getDouble("damage") + heldItem.getOrCreateTag().getDouble("sentinelChargeDamage")) * (float) perkDamage(heldItem);
             float velocity = (float) ((heldItem.getOrCreateTag().getDouble("velocity") + heldItem.getOrCreateTag().getDouble("CustomVelocity")) * perkSpeed(heldItem));
             int projectileAmount = GunsTool.getGunIntTag(heldItem, "ProjectileAmount", 1);
@@ -322,7 +322,7 @@ public class GunEventHandler {
                     stack.getOrCreateTag().putBoolean("is_empty_reloading", true);
                     playGunEmptyReloadSounds(player);
                 } else {
-                    data.putInt("ReloadTime", GunsTool.getGunIntTag(stack, "NormalReloadTime") + 1);
+                    data.putInt("ReloadTime", data.getInt("NormalReloadTime") + 1);
                     stack.getOrCreateTag().putBoolean("is_normal_reloading", true);
                     playGunNormalReloadSounds(player);
                 }

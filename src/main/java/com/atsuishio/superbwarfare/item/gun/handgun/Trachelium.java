@@ -1,19 +1,19 @@
 package com.atsuishio.superbwarfare.item.gun.handgun;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.TracheliumItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.GunsTool;
-import com.atsuishio.superbwarfare.tools.TooltipTool;
-import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.AnimatedItem;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.perk.Perk;
+import com.atsuishio.superbwarfare.perk.PerkHelper;
+import com.atsuishio.superbwarfare.tools.GunsTool;
+import com.atsuishio.superbwarfare.tools.TooltipTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -278,12 +278,12 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
             tag.putDouble("CustomVelocity", 15);
             tag.putDouble("BypassesArmor", 0.4);
             tag.putDouble("damage", 21);
-            tag.putDouble("headshot", 2.5);
+            GunsTool.setGunDoubleTag(stack, "Headshot", 2.5);
         } else {
             tag.putDouble("CustomVelocity", 0);
             tag.putDouble("BypassesArmor", 0.3);
             tag.putDouble("damage", 19);
-            tag.putDouble("headshot", 2);
+            GunsTool.setGunDoubleTag(stack, "Headshot", 2);
         }
 
         double customZoom = switch (scopeType) {
