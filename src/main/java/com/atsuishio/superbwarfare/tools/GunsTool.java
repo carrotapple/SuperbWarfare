@@ -55,7 +55,7 @@ public class GunsTool {
 
     // TODO 临时使用，移植完毕后删除
     private static final Set<String> STRING_SET = Set.of("EmptyReloadTime", "FireMode", "Weight", "SoundRadius", "BurstSize", "ProjectileAmount",
-            "Spread", "NormalReloadTime", "Headshot");
+            "Spread", "NormalReloadTime", "Headshot", "Semi", "Burst", "Auto");
 
     public static void initGun(Level level, ItemStack stack, String location) {
         if (level.getServer() == null) return;
@@ -247,5 +247,23 @@ public class GunsTool {
         var data = tag.getCompound("GunData");
         if (!data.contains(name)) return defaultValue;
         return data.getDouble(name);
+    }
+
+    public static void setGunBooleanTag(ItemStack stack, String name, boolean flag) {
+        CompoundTag tag = stack.getOrCreateTag();
+        var data = tag.getCompound("GunData");
+        data.putBoolean(name, flag);
+        stack.addTagElement("GunData", data);
+    }
+
+    public static boolean getGunBooleanTag(ItemStack stack, String name) {
+        return getGunBooleanTag(stack, name, false);
+    }
+
+    public static boolean getGunBooleanTag(ItemStack stack, String name, boolean defaultValue) {
+        CompoundTag tag = stack.getOrCreateTag();
+        var data = tag.getCompound("GunData");
+        if (!data.contains(name)) return defaultValue;
+        return data.getBoolean(name);
     }
 }

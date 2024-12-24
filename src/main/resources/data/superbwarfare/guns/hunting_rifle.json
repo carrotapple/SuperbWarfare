@@ -8,9 +8,7 @@
   "mag": 1,
   "Weight": 5,
   "FireMode": 0,
-  "semi": 1,
-  "burst": 0,
-  "auto": 0,
+  "Semi": 1,
   "EmptyReloadTime": 64,
   "BypassesArmor": 0.7,
   "SoundRadius": 20

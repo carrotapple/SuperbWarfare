@@ -62,12 +62,12 @@ public class FireModeMessage {
         CompoundTag tag = stack.getOrCreateTag();
 
         if (fireMode == 0) {
-            if (tag.getBoolean("burst")) {
+            if (GunsTool.getGunBooleanTag(stack, "Burst", false)) {
                 GunsTool.setGunIntTag(stack, "FireMode", 1);
                 playChangeModeSound(player);
                 return;
             }
-            if (tag.getBoolean("auto")) {
+            if (GunsTool.getGunBooleanTag(stack, "Auto", false)) {
                 GunsTool.setGunIntTag(stack, "FireMode", 2);
                 playChangeModeSound(player);
                 return;
@@ -75,12 +75,12 @@ public class FireModeMessage {
         }
 
         if (fireMode == 1) {
-            if (tag.getBoolean("auto")) {
+            if (GunsTool.getGunBooleanTag(stack, "Auto", false)) {
                 GunsTool.setGunIntTag(stack, "FireMode", 2);
                 playChangeModeSound(player);
                 return;
             }
-            if (tag.getBoolean("semi")) {
+            if (GunsTool.getGunBooleanTag(stack, "Semi", false)) {
                 GunsTool.setGunIntTag(stack, "FireMode", 0);
                 playChangeModeSound(player);
                 return;
@@ -88,12 +88,12 @@ public class FireModeMessage {
         }
 
         if (fireMode == 2) {
-            if (tag.getBoolean("semi")) {
+            if (GunsTool.getGunBooleanTag(stack, "Semi", false)) {
                 GunsTool.setGunIntTag(stack, "FireMode", 0);
                 playChangeModeSound(player);
                 return;
             }
-            if (tag.getBoolean("burst")) {
+            if (GunsTool.getGunBooleanTag(stack, "Burst", false)) {
                 GunsTool.setGunIntTag(stack, "FireMode", 1);
                 playChangeModeSound(player);
                 return;
@@ -116,7 +116,6 @@ public class FireModeMessage {
                     if (flag.get()) {
                         tag.putBoolean("start_sentinel_charge", true);
                     }
-
                 }
             }
         }
