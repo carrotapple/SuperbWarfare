@@ -1,8 +1,8 @@
 {
   "CustomZoom": 3.75,
   "Spread": 8,
-  "recoil_x": 0.01,
-  "recoil_y": 0.038,
+  "RecoilX": 0.01,
+  "RecoilY": 0.038,
   "damage": 140,
   "Headshot": 3,
   "velocity": 36,

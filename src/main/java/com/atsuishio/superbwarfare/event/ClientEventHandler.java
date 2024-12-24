@@ -870,7 +870,7 @@ public class ClientEventHandler {
         float pitch = event.getPitch();
         float roll = event.getRoll();
         ItemStack stack = entity.getMainHandItem();
-        double amplitude = 15000 * stack.getOrCreateTag().getDouble("recoil_y") * stack.getOrCreateTag().getDouble("recoil_x");
+        double amplitude = 15000 * GunsTool.getGunDoubleTag(stack, "RecoilY", 0) * GunsTool.getGunDoubleTag(stack, "RecoilX", 0);
 
         if (fireRecoilTime > 0) {
             firePosTimer = 0.001;
@@ -994,7 +994,7 @@ public class ClientEventHandler {
             rpm = (double) stack.getOrCreateTag().getInt("rpm") / 1800;
         }
 
-        float gunRecoilX = (float) tag.getDouble("recoil_x") * 60;
+        float gunRecoilX = (float) GunsTool.getGunDoubleTag(stack, "RecoilX", 0) * 60;
 
         recoilHorizon = Mth.lerp(0.2 * times, recoilHorizon, 0) + recoilY;
         recoilY = 0;

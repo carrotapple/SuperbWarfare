@@ -1,7 +1,7 @@
 {
   "Spread": 5,
-  "recoil_x": 0.008,
-  "recoil_y": 0.018,
+  "RecoilX": 0.008,
+  "RecoilY": 0.018,
   "damage": 200,
   "ExplosionDamage": 150,
   "ExplosionRadius": 10,

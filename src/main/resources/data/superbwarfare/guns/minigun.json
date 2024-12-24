@@ -1,7 +1,7 @@
 {
   "Spread": 1.5,
-  "recoil_x": 0.003,
-  "recoil_y": 0.02,
+  "RecoilX": 0.003,
+  "RecoilY": 0.02,
   "damage": 8,
   "Headshot": 2,
   "velocity": 46,
