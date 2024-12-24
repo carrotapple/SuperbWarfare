@@ -275,12 +275,12 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
         }
 
         if (scopeType > 0 || gripType > 0) {
-            tag.putDouble("CustomVelocity", 15);
+            GunsTool.setGunDoubleTag(stack, "CustomVelocity", 15);
             GunsTool.setGunDoubleTag(stack, "BypassesArmor", 0.4);
             GunsTool.setGunDoubleTag(stack, "Damage", 21);
             GunsTool.setGunDoubleTag(stack, "Headshot", 2.5);
         } else {
-            tag.putDouble("CustomVelocity", 0);
+            GunsTool.setGunDoubleTag(stack, "CustomVelocity", 0);
             GunsTool.setGunDoubleTag(stack, "BypassesArmor", 0.3);
             GunsTool.setGunDoubleTag(stack, "Damage", 19);
             GunsTool.setGunDoubleTag(stack, "Headshot", 2);
