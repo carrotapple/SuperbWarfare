@@ -1,9 +1,9 @@
 package com.atsuishio.superbwarfare.network.message;
 
-import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -64,7 +64,7 @@ public class ReloadMessage {
                 CompoundTag tag = stack.getOrCreateTag();
 
                 boolean canSingleReload = tag.getDouble("iterative_time") != 0;
-                boolean canReload = (tag.getDouble("normal_reload_time") != 0 || GunsTool.getGunIntTag(stack, "EmptyReloadTime") != 0) && tag.getDouble("clipLoad") != 1;
+                boolean canReload = (GunsTool.getGunIntTag(stack, "NormalReloadTime") != 0 || GunsTool.getGunIntTag(stack, "EmptyReloadTime") != 0) && tag.getDouble("clipLoad") != 1;
                 boolean clipLoad = tag.getInt("ammo") == 0 && tag.getDouble("clipLoad") == 1;
 
                 // 检查备弹

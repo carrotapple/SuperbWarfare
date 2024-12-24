@@ -12,7 +12,7 @@
   "burst": 1,
   "auto": 1,
   "BurstSize": 3,
-  "normal_reload_time": 46,
+  "NormalReloadTime": 46,
   "EmptyReloadTime": 64,
   "BypassesArmor": 0.15,
   "SoundRadius": 11,

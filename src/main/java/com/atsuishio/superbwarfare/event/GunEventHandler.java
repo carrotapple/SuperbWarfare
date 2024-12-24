@@ -273,6 +273,7 @@ public class GunEventHandler {
         return 1;
     }
 
+    @SuppressWarnings("ConstantValue")
     private static boolean handleButterflyBullet(Perk perk, ItemStack heldItem, Player player) {
         int perkLevel = PerkHelper.getItemPerkLevel(perk, heldItem);
 
@@ -321,7 +322,7 @@ public class GunEventHandler {
                     stack.getOrCreateTag().putBoolean("is_empty_reloading", true);
                     playGunEmptyReloadSounds(player);
                 } else {
-                    data.putInt("ReloadTime", (int) tag.getDouble("normal_reload_time") + 1);
+                    data.putInt("ReloadTime", GunsTool.getGunIntTag(stack, "NormalReloadTime") + 1);
                     stack.getOrCreateTag().putBoolean("is_normal_reloading", true);
                     playGunNormalReloadSounds(player);
                 }
@@ -845,9 +846,7 @@ public class GunEventHandler {
                         ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
 
                 if (stack.is(ModItems.MARLIN.get())) {
-                    ModUtils.queueServerWork((int) (5 + 1.5 * shooterHeight), () -> {
-                        SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1);
-                    });
+                    ModUtils.queueServerWork((int) (5 + 1.5 * shooterHeight), () -> SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_NORMAL.get(), (float) Math.max(1.5 - 0.2 * shooterHeight, 0), 1));
                 }
             }
         }

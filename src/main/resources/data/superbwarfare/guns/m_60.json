@@ -11,7 +11,7 @@
   "semi": 0,
   "burst": 0,
   "auto": 1,
-  "normal_reload_time": 114,
+  "NormalReloadTime": 114,
   "EmptyReloadTime": 133,
   "BypassesArmor": 0.25,
   "SoundRadius": 15,
