@@ -7,7 +7,7 @@
   "Headshot": 3,
   "Velocity": 42,
   "Magazine": 5,
-  "bolt_action_time": 22,
+  "BoltActionTime": 22,
   "Weight": 5,
   "FireMode": 0,
   "Semi": 1,

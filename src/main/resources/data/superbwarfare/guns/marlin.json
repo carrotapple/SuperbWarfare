@@ -15,5 +15,5 @@
   "finish_time": 19,
   "BypassesArmor": 0.3,
   "SoundRadius": 15,
-  "bolt_action_time": 12
+  "BoltActionTime": 12
 }

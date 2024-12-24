@@ -258,7 +258,7 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
         var tag = stack.getOrCreateTag();
-        tag.putInt("bolt_action_time", tag.getBoolean("DA") ? 12 : 0);
+        GunsTool.setGunIntTag(stack, "BoltActionTime", tag.getBoolean("DA") ? 12 : 0);
 
         int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
         int gripType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP);

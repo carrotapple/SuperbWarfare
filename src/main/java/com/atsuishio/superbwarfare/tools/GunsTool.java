@@ -56,7 +56,7 @@ public class GunsTool {
     // TODO 临时使用，移植完毕后删除
     private static final Set<String> STRING_SET = Set.of("EmptyReloadTime", "FireMode", "Weight", "SoundRadius", "BurstSize", "ProjectileAmount",
             "Spread", "NormalReloadTime", "Headshot", "Semi", "Burst", "Auto", "RecoilX", "RecoilY", "Velocity", "Damage", "BypassesArmor",
-            "RPM", "Magazine", "MinZoom", "MaxZoom", "CustomZoom", "ExplosionDamage", "ExplosionRadius");
+            "RPM", "Magazine", "MinZoom", "MaxZoom", "CustomZoom", "ExplosionDamage", "ExplosionRadius", "BoltActionTime");
 
     public static void initGun(Level level, ItemStack stack, String location) {
         if (level.getServer() == null) return;
@@ -120,7 +120,7 @@ public class GunsTool {
         int ammoToAdd = mag - ammo + (extraOne ? 1 : 0);
 
         // 空仓换弹的栓动武器应该在换单后取消待上膛标记
-        if (ammo == 0 && tag.getDouble("bolt_action_time") > 0 && !stack.is(ModTags.Items.REVOLVER)) {
+        if (ammo == 0 && GunsTool.getGunIntTag(stack, "BoltActionTime", 0) > 0 && !stack.is(ModTags.Items.REVOLVER)) {
             tag.putBoolean("need_bolt_action", false);
         }
 

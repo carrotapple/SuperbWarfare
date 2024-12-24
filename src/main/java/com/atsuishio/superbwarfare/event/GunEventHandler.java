@@ -168,7 +168,7 @@ public class GunEventHandler {
 
                 if (stack.is(ModTags.Items.REVOLVER)) return;
 
-                ModUtils.queueServerWork((int) (stack.getOrCreateTag().getDouble("bolt_action_time") / 2 + 1.5 * shooterHeight), () -> {
+                ModUtils.queueServerWork((int) (GunsTool.getGunDoubleTag(stack, "BoltActionTime", 0) / 2 + 1.5 * shooterHeight), () -> {
                     if (stack.is(ModTags.Items.SHOTGUN)) {
                         SoundTool.playLocalSound(serverPlayer, ModSounds.SHELL_CASING_SHOTGUN.get(), (float) Math.max(0.75 - 0.12 * shooterHeight, 0), 1);
                     } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
@@ -687,7 +687,7 @@ public class GunEventHandler {
         // 三阶段结束
         if (tag.getInt("finish") == 1) {
             tag.putInt("reload_stage", 0);
-            if (tag.getDouble("bolt_action_time") > 0) {
+            if (GunsTool.getGunIntTag(stack, "BoltActionTime", 0) > 0) {
                 stack.getOrCreateTag().putBoolean("need_bolt_action", false);
             }
             tag.putBoolean("reloading", false);

@@ -330,7 +330,7 @@ public class LivingEventHandler {
                         }
                         var oldTags = oldStack.getTag();
 
-                        if (oldTags.getInt("bolt_action_time") > 0) {
+                        if (GunsTool.getGunDoubleTag(oldStack, "BoltActionTime", 0) > 0) {
                             oldTags.putInt("bolt_action_anim", 0);
                         }
 
@@ -366,7 +366,7 @@ public class LivingEventHandler {
                     if (newStack.getItem() instanceof GunItem) {
                         player.getPersistentData().putDouble("noRun", 40);
                         newStack.getOrCreateTag().putBoolean("draw", true);
-                        if (newStack.getOrCreateTag().getInt("bolt_action_time") > 0) {
+                        if (GunsTool.getGunIntTag(newStack, "BoltActionTime", 0) > 0) {
                             newStack.getOrCreateTag().putInt("bolt_action_anim", 0);
                         }
                         newStack.getOrCreateTag().putBoolean("is_normal_reloading", false);

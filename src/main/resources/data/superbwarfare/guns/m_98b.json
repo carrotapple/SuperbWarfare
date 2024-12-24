@@ -1,7 +1,7 @@
 {
   "CustomZoom": 4.75,
-  "min_zoom": 4,
-  "max_zoom": 8,
+  "MinZoom": 4,
+  "MaxZoom": 8,
   "Spread": 6,
   "RecoilX": 0.007,
   "RecoilY": 0.013,
@@ -9,7 +9,7 @@
   "Headshot": 3,
   "Velocity": 47.2,
   "Magazine": 5,
-  "bolt_action_time": 18,
+  "BoltActionTime": 18,
   "Weight": 7,
   "FireMode": 0,
   "Semi": 1,
