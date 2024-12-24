@@ -188,6 +188,12 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
             this.entityData.set(TARGET_Z, (float) entity.getZ());
         }
 
+        double px = this.getX();
+        double ex = this.entityData.get(TARGET_X);
+        double pz = this.getZ();
+        double ez = this.entityData.get(TARGET_Z);
+        boolean dir = Math.sqrt(Math.pow(px - ex, 2) + Math.pow(pz - ez, 2)) < 10;
+
         if (this.tickCount == 4) {
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, this.xo, this.yo, this.zo, 15, 0.8, 0.8, 0.8, 0.01, true);
@@ -197,16 +203,13 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
 
         if (this.tickCount > 3) {
             if (entityData.get(TOP)) {
-                double px = this.getX();
-                double ex = this.entityData.get(TARGET_X);
-                double pz = this.getZ();
-                double ez = this.entityData.get(TARGET_Z);
-
-                if (Math.sqrt(Math.pow(px - ex, 2) + Math.pow(pz - ez, 2)) > 10) {
+                if (!dir) {
                     this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y) + Mth.clamp(4 * this.tickCount, 0, 90), this.entityData.get(TARGET_Z)));
                 } else {
                     this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y) + (entity instanceof EnderDragon ? -3 : 0), this.entityData.get(TARGET_Z)));
+                    this.setDeltaMovement(this.getDeltaMovement().scale(1.1));
                 }
+
             } else {
                 this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y) + (entity instanceof EnderDragon ? -3 : 0), this.entityData.get(TARGET_Z)));
             }
@@ -214,9 +217,9 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
 
         if (this.tickCount > 4) {
             this.setDeltaMovement(new Vec3(
-                    0.7f * this.getDeltaMovement().x + 1.3f * this.getLookAngle().x,
-                    0.7f * this.getDeltaMovement().y + 1.3f * this.getLookAngle().y,
-                    0.7f * this.getDeltaMovement().z + 1.3f * this.getLookAngle().z
+                    0.7f * this.getDeltaMovement().x + (dir ? 3 : 1.3f) * this.getLookAngle().x,
+                    0.7f * this.getDeltaMovement().y + (dir ? 3 : 1.3f) * this.getLookAngle().y,
+                    0.7f * this.getDeltaMovement().z + (dir ? 3 : 1.3f) * this.getLookAngle().z
             ));
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.xo, this.yo, this.zo, 1, 0, 0, 0, 0, true);

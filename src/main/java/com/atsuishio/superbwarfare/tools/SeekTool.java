@@ -4,7 +4,11 @@ import com.atsuishio.superbwarfare.entity.IVehicleEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.decoration.HangingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.ClipContext;
@@ -25,8 +29,8 @@ public class SeekTool {
                             && e != entity
                             && e.isAlive()
                             && e.getVehicle() == null
-                            && !(e instanceof ProjectileEntity)
-                            && !(e instanceof Projectile)) {
+                            && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand)
+                    ) {
                         return level.clip(new ClipContext(entity.getEyePosition(), e.getEyePosition(),
                                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() != HitResult.Type.BLOCK;
                     }
@@ -40,6 +44,7 @@ public class SeekTool {
                     if (e.distanceTo(entity) <= seekRange && calculateAngle(e, entity) < seekAngle
                             && e != entity
                             && e.isAlive()
+                            && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand)
                             && (e instanceof LivingEntity || e instanceof IVehicleEntity)
                             && !(e instanceof Player player && (player.isCreative() || player.isSpectator()))
                             && (!e.isAlliedTo(entity) || e.getTeam() == null || e.getTeam().getName().equals("TDM"))) {
@@ -56,6 +61,7 @@ public class SeekTool {
                     if (e.distanceTo(entity) <= seekRange && calculateAngle(e, entity) < seekAngle
                             && e != entity
                             && e.isAlive()
+                            && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand)
                             && (e instanceof LivingEntity || e instanceof IVehicleEntity)
                             && !(e instanceof Player player && (player.isCreative() || player.isSpectator()))
                             && (!e.isAlliedTo(entity) || e.getTeam() == null || e.getTeam().getName().equals("TDM"))) {
