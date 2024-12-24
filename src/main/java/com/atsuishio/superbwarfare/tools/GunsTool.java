@@ -19,7 +19,6 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = ModUtils.MODID)
@@ -53,37 +52,23 @@ public class GunsTool {
         }
     }
 
-    // TODO 临时使用，移植完毕后删除
-    private static final Set<String> STRING_SET = Set.of("EmptyReloadTime", "FireMode", "Weight", "SoundRadius", "BurstSize", "ProjectileAmount",
-            "Spread", "NormalReloadTime", "Headshot", "Semi", "Burst", "Auto", "RecoilX", "RecoilY", "Velocity", "Damage", "BypassesArmor",
-            "RPM", "Magazine", "MinZoom", "MaxZoom", "CustomZoom", "ExplosionDamage", "ExplosionRadius", "BoltActionTime", "ClipLoad",
-            "PrepareTime", "IterativeTime", "PrepareLoadTime", "FinishTime", "PrepareEmptyTime");
-
     public static void initGun(Level level, ItemStack stack, String location) {
         if (level.getServer() == null) return;
         gunsData.get(location).forEach((k, v) -> {
-            if (STRING_SET.contains(k)) {
-                CompoundTag tag = stack.getOrCreateTag();
-                CompoundTag data = tag.getCompound("GunData");
-                data.putDouble(k, v);
-                stack.addTagElement("GunData", data);
-            } else {
-                stack.getOrCreateTag().putDouble(k, v);
-            }
+            CompoundTag tag = stack.getOrCreateTag();
+            CompoundTag data = tag.getCompound("GunData");
+            data.putDouble(k, v);
+            stack.addTagElement("GunData", data);
         });
     }
 
     public static void initCreativeGun(ItemStack stack, String location) {
         if (gunsData != null && gunsData.get(location) != null) {
             gunsData.get(location).forEach((k, v) -> {
-                if (STRING_SET.contains(k)) {
-                    CompoundTag tag = stack.getOrCreateTag();
-                    CompoundTag data = tag.getCompound("GunData");
-                    data.putDouble(k, v);
-                    stack.addTagElement("GunData", data);
-                } else {
-                    stack.getOrCreateTag().putDouble(k, v);
-                }
+                CompoundTag tag = stack.getOrCreateTag();
+                CompoundTag data = tag.getCompound("GunData");
+                data.putDouble(k, v);
+                stack.addTagElement("GunData", data);
             });
             stack.getOrCreateTag().putInt("ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag"));
         }
