@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.item.gun.rifle;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.AK12ItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -12,7 +13,6 @@ import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.atsuishio.superbwarfare.tools.GunsTool;
-import com.atsuishio.superbwarfare.client.PoseTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -182,13 +182,11 @@ public class AK12Item extends GunItem implements GeoItem, AnimatedItem {
         double customZoom = switch (scopeType) {
             case 0, 1 -> 0;
             case 2 -> 2.15;
-            default -> stack.getOrCreateTag().getDouble("CustomZoom");
+            default -> GunsTool.getGunDoubleTag(stack, "CustomZoom", 0);
         };
 
         stack.getOrCreateTag().putBoolean("CanAdjustZoomFov", scopeType == 3);
-
-        stack.getOrCreateTag().putDouble("CustomZoom", customZoom);
-
+        GunsTool.setGunDoubleTag(stack, "CustomZoom", customZoom);
         stack.getOrCreateTag().putInt("customMag", customMag);
     }
 

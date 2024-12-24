@@ -1160,7 +1160,7 @@ public class ClientEventHandler {
                 p = zoomPos;
             }
 
-            customZoom = Mth.lerp(0.6 * times, customZoom, stack.getOrCreateTag().getDouble("CustomZoom"));
+            customZoom = Mth.lerp(0.6 * times, customZoom, GunsTool.getGunDoubleTag(stack, "CustomZoom", 0));
 
             double zoomFov = 1.25 + customZoom;
 

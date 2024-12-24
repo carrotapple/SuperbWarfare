@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModMobEffects;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
@@ -60,7 +61,7 @@ public class MouseHandlerMixin {
             return original;
         }
 
-        double zoom = 1.25 + stack.getOrCreateTag().getDouble("CustomZoom");
+        double zoom = 1.25 + GunsTool.getGunDoubleTag(stack, "CustomZoom", 0);
         float customSens = (float) stack.getOrCreateTag().getInt("sensitivity");
 
         if (!player.getMainHandItem().isEmpty() && mc.options.getCameraType() == CameraType.FIRST_PERSON) {

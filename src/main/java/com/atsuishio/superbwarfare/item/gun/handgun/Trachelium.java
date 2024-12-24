@@ -293,8 +293,8 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
         };
 
         stack.getOrCreateTag().putBoolean("CanSwitchScope", scopeType == 2);
-        stack.getOrCreateTag().putDouble("CustomZoom", customZoom);
 
+        GunsTool.setGunDoubleTag(stack, "CustomZoom", customZoom);
     }
 
     @Override

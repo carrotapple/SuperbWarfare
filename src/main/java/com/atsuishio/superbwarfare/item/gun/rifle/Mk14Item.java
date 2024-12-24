@@ -176,13 +176,11 @@ public class Mk14Item extends GunItem implements GeoItem, AnimatedItem {
         double customZoom = switch (scopeType) {
             case 0, 1 -> 0;
             case 2 -> 2.25;
-            default -> stack.getOrCreateTag().getDouble("CustomZoom");
+            default -> GunsTool.getGunDoubleTag(stack, "CustomZoom", 0);
         };
 
         stack.getOrCreateTag().putBoolean("CanAdjustZoomFov", scopeType == 3);
-
-        stack.getOrCreateTag().putDouble("CustomZoom", customZoom);
-
+        GunsTool.setGunDoubleTag(stack, "CustomZoom", customZoom);
         stack.getOrCreateTag().putInt("customMag", customMag);
     }
 

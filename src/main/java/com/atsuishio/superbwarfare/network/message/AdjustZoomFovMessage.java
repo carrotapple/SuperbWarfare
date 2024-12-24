@@ -41,7 +41,6 @@ public class AdjustZoomFovMessage {
             if (!stack.is(ModTags.Items.GUN)) {
                 return;
             }
-            var tag = stack.getOrCreateTag();
 
             if (stack.is(ModItems.MINIGUN.get())) {
                 double minRpm = 300;
@@ -67,8 +66,10 @@ public class AdjustZoomFovMessage {
             } else {
                 double minZoom = GunsTool.getGunDoubleTag(stack, "MinZoom", 0) - 1.25;
                 double maxZoom = GunsTool.getGunDoubleTag(stack, "MaxZoom", 0) - 1.25;
-                tag.putDouble("CustomZoom", Mth.clamp(tag.getDouble("CustomZoom") + 0.5 * message.scroll, minZoom, maxZoom));
-                if (tag.getDouble("CustomZoom") > minZoom && tag.getDouble("CustomZoom") < maxZoom) {
+                double customZoom = GunsTool.getGunDoubleTag(stack, "CustomZoom", 0);
+                GunsTool.setGunDoubleTag(stack, "CustomZoom", Mth.clamp(customZoom + 0.5 * message.scroll, minZoom, maxZoom));
+                if (GunsTool.getGunDoubleTag(stack, "CustomZoom", 0) > minZoom &&
+                        GunsTool.getGunDoubleTag(stack, "CustomZoom", 0) < maxZoom) {
                     SoundTool.playLocalSound(player, ModSounds.ADJUST_FOV.get(), 1f, 0.7f);
                 }
             }
