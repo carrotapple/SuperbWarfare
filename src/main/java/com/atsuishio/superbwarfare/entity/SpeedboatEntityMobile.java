@@ -83,18 +83,18 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity, IVehicleEntity, HasCustomInventoryScreen, ContainerEntity {
+public class SpeedboatEntityMobile extends MobileVehicleEntity implements GeoEntity, IChargeEntity, IVehicleEntity, HasCustomInventoryScreen, ContainerEntity {
 
-    public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> ROT_Y = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> ROTOR = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
-    protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.STRING);
-    public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> ROT_Y = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> ROTOR = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.INT);
 
     public static final float MAX_HEALTH = CannonConfig.SPEEDBOAT_HP.get();
     public static final float MAX_ENERGY = CannonConfig.SPEEDBOAT_MAX_ENERGY.get().floatValue();
@@ -104,12 +104,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
     private LazyOptional<?> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private int lerpSteps;
-    private double lerpX;
-    private double lerpY;
-    private double lerpZ;
-    private double lerpYRot;
-    private double lerpXRot;
 
     public float turretYRot;
     public float turretXRot;
@@ -118,11 +112,11 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
 
     public boolean cannotFire;
 
-    public SpeedboatEntity(PlayMessages.SpawnEntity packet, Level world) {
+    public SpeedboatEntityMobile(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.SPEEDBOAT.get(), world);
     }
 
-    public SpeedboatEntity(EntityType<SpeedboatEntity> type, Level world) {
+    public SpeedboatEntityMobile(EntityType<SpeedboatEntityMobile> type, Level world) {
         super(type, world);
     }
 
@@ -200,7 +194,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         if (!this.level().isClientSide && pReason != RemovalReason.DISCARDED) {
             Containers.dropContents(this.level(), this, this);
         }
-
         super.remove(pReason);
     }
 
@@ -246,11 +239,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.5f * Math.max(amount - 3, 0));
 
         return true;
-    }
-
-    @Override
-    public boolean isPickable() {
-        return !this.isRemoved();
     }
 
     @Override
@@ -357,8 +345,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             crushEntities(this.getDeltaMovement());
         }
 
-        handleClientSync();
-        tickLerp();
         controlBoat();
         collideBlock();
         gunnerAngle();
@@ -504,42 +490,42 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         if (this.entityData.get(ENERGY) <= 0) return;
 
         if (passenger0 == null) {
-            this.getPersistentData().putBoolean("left", false);
-            this.getPersistentData().putBoolean("right", false);
-            this.getPersistentData().putBoolean("forward", false);
-            this.getPersistentData().putBoolean("backward", false);
+            this.leftInputDown = false;
+            this.rightInputDown = false;
+            this.forwardInputDown = false;
+            this.backInputDown = false;
         }
 
         float diffY = 0;
-        if (this.getPersistentData().getBoolean("forward")) {
+        if (forwardInputDown) {
             this.entityData.set(POWER, this.entityData.get(POWER) + 0.02f);
         }
 
-        if (this.getPersistentData().getBoolean("backward")) {
+        if (backInputDown) {
             this.entityData.set(POWER, this.entityData.get(POWER) - 0.02f);
-            if (this.getPersistentData().getBoolean("right")) {
+            if (rightInputDown) {
                 diffY = Mth.clamp(diffY + 1f, 0, 10);
                 handleSetDiffY(diffY);
-            } else if (this.getPersistentData().getBoolean("left")) {
+            } else if (leftInputDown) {
                 diffY = Mth.clamp(diffY - 1f, -10, 0);
                 handleSetDiffY(diffY);
             }
         } else {
-            if (this.getPersistentData().getBoolean("right")) {
+            if (rightInputDown) {
                 diffY = Mth.clamp(diffY - 1f, -10, 0);
                 handleSetDiffY(diffY);
-            } else if (this.getPersistentData().getBoolean("left")) {
+            } else if (this.leftInputDown) {
                 diffY = Mth.clamp(diffY + 1f, 0, 10);
                 handleSetDiffY(diffY);
             }
         }
 
-        if (this.getPersistentData().getBoolean("forward") || this.getPersistentData().getBoolean("backward")) {
+        if (this.forwardInputDown || this.backInputDown) {
             this.entityData.set(ENERGY, Math.max(this.entityData.get(ENERGY) - CannonConfig.SPEEDBOAT_ENERGY_COST.get().floatValue(), 0));
         }
 
         if (level().isClientSide) {
-            level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.getPersistentData().getBoolean("forward") || this.getPersistentData().getBoolean("backward") ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 1f), false);
+            level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.forwardInputDown || this.backInputDown ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 1f), false);
         }
 
         this.entityData.set(POWER, this.entityData.get(POWER) * 0.87f);
@@ -582,26 +568,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         this.entityData.set(DELTA_ROT, (float) Mth.clamp(diffY * 1.3 * Math.max(8 * this.getDeltaMovement().length(), 0.5), -2, 2));
     }
 
-    private void handleClientSync() {
-        if (isControlledByLocalInstance()) {
-            lerpSteps = 0;
-            syncPacketPositionCodec(getX(), getY(), getZ());
-        }
-        if (lerpSteps <= 0) {
-            return;
-        }
-        double interpolatedX = getX() + (lerpX - getX()) / (double) lerpSteps;
-        double interpolatedY = getY() + (lerpY - getY()) / (double) lerpSteps;
-        double interpolatedZ = getZ() + (lerpZ - getZ()) / (double) lerpSteps;
-        double interpolatedYaw = Mth.wrapDegrees(lerpYRot - (double) getYRot());
-        setYRot(getYRot() + (float) interpolatedYaw / (float) lerpSteps);
-        setXRot(getXRot() + (float) (lerpXRot - (double) getXRot()) / (float) lerpSteps);
-
-        setPos(interpolatedX, interpolatedY, interpolatedZ);
-        setRot(getYRot(), getXRot());
-
-        --lerpSteps;
-    }
 
     protected SoundEvent getEngineSound() {
         return ModSounds.BOAT_ENGINE.get();
@@ -648,49 +614,6 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
             }
         }
     }
-
-    public static double calculateAngle(Vec3 move, Vec3 view) {
-        move = move.multiply(1, 0, 1).normalize();
-        view = view.multiply(1, 0, 1).normalize();
-
-        double startLength = move.length();
-        double endLength = view.length();
-        if (startLength > 0.0D && endLength > 0.0D) {
-            return Math.toDegrees(Math.acos(Mth.clamp(move.dot(view) / (startLength * endLength), -1, 1)));
-        } else {
-            return 0.0D;
-        }
-    }
-
-    private void tickLerp() {
-        if (this.isControlledByLocalInstance()) {
-            this.lerpSteps = 0;
-            this.syncPacketPositionCodec(this.getX(), this.getY(), this.getZ());
-        }
-
-        if (this.lerpSteps > 0) {
-            double d0 = this.getX() + (this.lerpX - this.getX()) / (double) this.lerpSteps;
-            double d1 = this.getY() + (this.lerpY - this.getY()) / (double) this.lerpSteps;
-            double d2 = this.getZ() + (this.lerpZ - this.getZ()) / (double) this.lerpSteps;
-            double d3 = Mth.wrapDegrees(this.lerpYRot - (double) this.getYRot());
-            this.setYRot(this.getYRot() + (float) d3 / (float) this.lerpSteps);
-            this.setXRot(this.getXRot() + (float) (this.lerpXRot - (double) this.getXRot()) / (float) this.lerpSteps);
-            --this.lerpSteps;
-            this.setPos(d0, d1, d2);
-            this.setRot(this.getYRot(), this.getXRot());
-        }
-    }
-
-    @Override
-    public void lerpTo(double pX, double pY, double pZ, float pYaw, float pPitch, int pPosRotationIncrements, boolean pTeleport) {
-        this.lerpX = pX;
-        this.lerpY = pY;
-        this.lerpZ = pZ;
-        this.lerpYRot = pYaw;
-        this.lerpXRot = pPitch;
-        this.lerpSteps = 10;
-    }
-
     private void destroy() {
         Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
         CustomExplosion explosion = new CustomExplosion(this.level(), attacker,
@@ -722,7 +645,7 @@ public class SpeedboatEntity extends Entity implements GeoEntity, IChargeEntity,
         this.clampRotation(entity);
     }
 
-    private PlayState firePredicate(AnimationState<SpeedboatEntity> event) {
+    private PlayState firePredicate(AnimationState<SpeedboatEntityMobile> event) {
         if (this.entityData.get(FIRE_ANIM) > 1) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.speedboat.fire"));
         }

@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.network.message;
 
+import com.atsuishio.superbwarfare.entity.MobileVehicleEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent;
@@ -31,19 +32,25 @@ public class VehicleMovementMessage {
                 Player player = context.getSender();
 
                 var vehicle = player.getVehicle();
-                if (vehicle != null) {
+                if (vehicle instanceof MobileVehicleEntity mobileVehicleEntity) {
                     switch (message.direction) {
                         case 0:
-                            vehicle.getPersistentData().putBoolean("left", message.clicked);
+                            mobileVehicleEntity.leftInputDown = message.clicked;
                             break;
                         case 1:
-                            vehicle.getPersistentData().putBoolean("right", message.clicked);
+                            mobileVehicleEntity.rightInputDown = message.clicked;
                             break;
                         case 2:
-                            vehicle.getPersistentData().putBoolean("forward", message.clicked);
+                            mobileVehicleEntity.forwardInputDown = message.clicked;
                             break;
                         case 3:
-                            vehicle.getPersistentData().putBoolean("backward", message.clicked);
+                            mobileVehicleEntity.backInputDown = message.clicked;
+                            break;
+                        case 4:
+                            mobileVehicleEntity.upInputDown = message.clicked;
+                            break;
+                        case 5:
+                            mobileVehicleEntity.downInputDown = message.clicked;
                             break;
                     }
                 }

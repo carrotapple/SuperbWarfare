@@ -6,7 +6,7 @@ import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.DroneEntity;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.entity.IVehicleEntity;
-import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
+import com.atsuishio.superbwarfare.entity.SpeedboatEntityMobile;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.LaserShootMessage;
@@ -52,7 +52,7 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-import static com.atsuishio.superbwarfare.entity.SpeedboatEntity.HEAT;
+import static com.atsuishio.superbwarfare.entity.SpeedboatEntityMobile.HEAT;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
@@ -584,7 +584,7 @@ public class ClientEventHandler {
     }
 
     public static void playVehicleClientSounds(Player player, IVehicleEntity iVehicle) {
-        if (iVehicle instanceof SpeedboatEntity speedboat) {
+        if (iVehicle instanceof SpeedboatEntityMobile speedboat) {
             float pitch = speedboat.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - speedboat.getEntityData().get(HEAT)));
             player.playSound(ModSounds.M_2_FIRE_1P.get(), 1f, pitch);
             player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
@@ -750,7 +750,7 @@ public class ClientEventHandler {
             event.setCanceled(true);
         }
 
-        if ((player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player) && ClientEventHandler.zoom && stack.is(ItemStack.EMPTY.getItem())) {
+        if ((player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntityMobile boat && boat.getFirstPassenger() == player) && ClientEventHandler.zoom && stack.is(ItemStack.EMPTY.getItem())) {
             event.setCanceled(true);
         }
     }
@@ -1238,7 +1238,7 @@ public class ClientEventHandler {
             return;
         }
 
-        if (mc.player.getVehicle() instanceof SpeedboatEntity && zoom) {
+        if (mc.player.getVehicle() instanceof SpeedboatEntityMobile && zoom) {
             event.setCanceled(true);
         }
 

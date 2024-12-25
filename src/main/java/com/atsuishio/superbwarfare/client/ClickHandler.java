@@ -7,7 +7,7 @@ import com.atsuishio.superbwarfare.config.client.ReloadConfig;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.entity.IVehicleEntity;
 import com.atsuishio.superbwarfare.entity.MortarEntity;
-import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
+import com.atsuishio.superbwarfare.entity.SpeedboatEntityMobile;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -107,7 +107,7 @@ public class ClickHandler {
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (stack.is(ModTags.Items.GUN)
                     || (player.isPassenger() && player.getVehicle() instanceof ICannonEntity)
-                    || (player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player && stack.is(ItemStack.EMPTY.getItem()))) {
+                    || (player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntityMobile boat && boat.getFirstPassenger() == player && stack.is(ItemStack.EMPTY.getItem()))) {
                 event.setCanceled(true);
             }
         }
@@ -409,6 +409,10 @@ public class ClickHandler {
                 ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(2, state == 1));
             } else if (key == options.keyDown.getKey().getValue()) {
                 ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(3, state == 1));
+            } else if (key == options.keyJump.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(4, state == 1));
+            } else if (key == options.keySprint.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(5, state == 1));
             }
         }
     }

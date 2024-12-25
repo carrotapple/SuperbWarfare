@@ -61,8 +61,10 @@ public class ModEntities {
             EntityType.Builder.<JavelinMissileEntity>of(JavelinMissileEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(512).setUpdateInterval(1).setCustomClientFactory(JavelinMissileEntity::new).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<LaserEntity>> LASER = register("laser",
             EntityType.Builder.<LaserEntity>of(LaserEntity::new, MobCategory.MISC).sized(0.1f, 0.1f).fireImmune().setUpdateInterval(1));
-    public static final RegistryObject<EntityType<SpeedboatEntity>> SPEEDBOAT = register("speedboat",
-            EntityType.Builder.<SpeedboatEntity>of(SpeedboatEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(512).setUpdateInterval(3).setCustomClientFactory(SpeedboatEntity::new).fireImmune().sized(3.0f, 2.0f));
+    public static final RegistryObject<EntityType<SpeedboatEntityMobile>> SPEEDBOAT = register("speedboat",
+            EntityType.Builder.<SpeedboatEntityMobile>of(SpeedboatEntityMobile::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(512).setUpdateInterval(3).setCustomClientFactory(SpeedboatEntityMobile::new).fireImmune().sized(3.0f, 2.0f));
+    public static final RegistryObject<EntityType<WheelChairEntityMobile>> WHEEL_CHAIR = register("wheel_chair",
+            EntityType.Builder.<WheelChairEntityMobile>of(WheelChairEntityMobile::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(512).setUpdateInterval(3).setCustomClientFactory(WheelChairEntityMobile::new).fireImmune().sized(1.0f, 1.0f));
 
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String name, EntityType.Builder<T> entityTypeBuilder) {
         return REGISTRY.register(name, () -> entityTypeBuilder.build(name));
