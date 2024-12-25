@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.init;
 
 import com.atsuishio.superbwarfare.client.screens.ChargingStationScreen;
+import com.atsuishio.superbwarfare.client.screens.FuMO25Screen;
 import com.atsuishio.superbwarfare.client.screens.ReforgingTableScreen;
 import com.atsuishio.superbwarfare.client.screens.VehicleScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -18,6 +19,7 @@ public class ModScreens {
             MenuScreens.register(ModMenuTypes.REFORGING_TABLE_MENU.get(), ReforgingTableScreen::new);
             MenuScreens.register(ModMenuTypes.CHARGING_STATION_MENU.get(), ChargingStationScreen::new);
             MenuScreens.register(ModMenuTypes.VEHICLE_MENU.get(), VehicleScreen::new);
+            MenuScreens.register(ModMenuTypes.FUMO_25_MENU.get(), FuMO25Screen::new);
         });
     }
 }

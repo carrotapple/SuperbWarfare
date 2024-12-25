@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.menu;
 import com.atsuishio.superbwarfare.init.ModBlocks;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModMenuTypes;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -12,13 +13,19 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+import javax.annotation.Nullable;
+
 public class FuMO25Menu extends AbstractContainerMenu {
 
     protected final Container container;
     protected final ContainerLevelAccess access;
 
-    public static final int X_OFFSET = 0;
-    public static final int Y_OFFSET = 11;
+    private int posX = Integer.MIN_VALUE;
+    private int posY = Integer.MIN_VALUE;
+    private int posZ = Integer.MIN_VALUE;
+
+    public static final int X_OFFSET = 164;
+    public static final int Y_OFFSET = 0;
 
     public FuMO25Menu(int pContainerId, Inventory pPlayerInventory) {
         this(pContainerId, pPlayerInventory, new SimpleContainer(1), ContainerLevelAccess.NULL);
@@ -36,7 +43,7 @@ public class FuMO25Menu extends AbstractContainerMenu {
         this.container = container;
         this.access = access;
 
-        this.addSlot(new ParaSlot(container, 0, 8 + X_OFFSET, 11 + Y_OFFSET));
+        this.addSlot(new ParaSlot(container, 0, 278, 60));
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
@@ -47,6 +54,40 @@ public class FuMO25Menu extends AbstractContainerMenu {
         for (int k = 0; k < 9; ++k) {
             this.addSlot(new Slot(inventory, k, 8 + k * 18 + X_OFFSET, 142 + Y_OFFSET));
         }
+    }
+
+    public void setPos(int x, int y, int z) {
+        this.posX = x;
+        this.posY = y;
+        this.posZ = z;
+    }
+
+    public void resetPos() {
+        this.posX = Integer.MIN_VALUE;
+        this.posY = Integer.MIN_VALUE;
+        this.posZ = Integer.MIN_VALUE;
+    }
+
+    public void setPosToParameters() {
+        if (this.posX != Integer.MIN_VALUE && this.posY != Integer.MIN_VALUE) {
+            ItemStack stack = this.container.getItem(0);
+            if (stack.isEmpty()) return;
+
+            stack.getOrCreateTag().putInt("TargetX", this.posX);
+            stack.getOrCreateTag().putInt("TargetY", this.posY);
+            stack.getOrCreateTag().putInt("TargetZ", this.posZ);
+
+            this.resetPos();
+            this.container.setChanged();
+        }
+    }
+
+    @Nullable
+    public BlockPos getCurrentPos() {
+        if (this.posX != Integer.MIN_VALUE && this.posY != Integer.MIN_VALUE && this.posZ != Integer.MIN_VALUE) {
+            return new BlockPos(this.posX, this.posY, this.posZ);
+        }
+        return null;
     }
 
     @Override
@@ -100,6 +141,7 @@ public class FuMO25Menu extends AbstractContainerMenu {
                 pPlayer.getInventory().placeItemBackInInventory(para);
             }
             this.container.removeItemNoUpdate(0);
+            resetPos();
         });
     }
 
