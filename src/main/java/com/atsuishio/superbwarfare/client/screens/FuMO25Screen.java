@@ -4,12 +4,18 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.block.entity.FuMO25BlockEntity;
 import com.atsuishio.superbwarfare.menu.FuMO25Menu;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @OnlyIn(Dist.CLIENT)
 public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
@@ -54,6 +60,23 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
     }
 
     @Override
+    protected void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+        super.renderTooltip(pGuiGraphics, pX, pY);
+
+        int i = (this.width - this.imageWidth) / 2;
+        int j = (this.height - this.imageHeight) / 2;
+
+        List<Component> tooltip = new ArrayList<>();
+        tooltip.add(Component.translatable("des.superbwarfare.charging_station.energy", FuMO25Screen.this.menu.getEnergy(),
+                FuMO25BlockEntity.MAX_ENERGY));
+
+        if ((pX - i) >= 278 && (pX - i) <= 332 && (pY - j) >= 39 && (pY - j) <= 55) {
+            pGuiGraphics.renderTooltip(this.font, tooltip, Optional.empty(), pX, pY);
+        }
+    }
+
+    // 本方法留空
+    @Override
     protected void renderLabels(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
     }
 
@@ -64,5 +87,68 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
         this.titleLabelY = 5;
         this.inventoryLabelX = 105;
         this.inventoryLabelY = 128;
+
+        int i = (this.width - this.imageWidth) / 2;
+        int j = (this.height - this.imageHeight) / 2;
+
+        LockButton lockButton = new LockButton(i + 304, j + 61);
+        this.addRenderableWidget(lockButton);
+
+        ModeButton widerButton = new ModeButton(i + 171, j + 61, 1);
+        this.addRenderableWidget(widerButton);
+
+        ModeButton glowButton = new ModeButton(i + 201, j + 61, 2);
+        this.addRenderableWidget(glowButton);
+
+        ModeButton guideButton = new ModeButton(i + 231, j + 61, 3);
+        this.addRenderableWidget(guideButton);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    static class LockButton extends AbstractButton {
+
+        public LockButton(int pX, int pY) {
+            super(pX, pY, 29, 15, Component.literal(""));
+        }
+
+        @Override
+        public void onPress() {
+
+        }
+
+        @Override
+        protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+            pGuiGraphics.blit(TEXTURE, this.getX(), this.getY(), 148, this.isHovered() ? 183 : 167, 29, 15, 358, 328);
+        }
+
+        @Override
+        protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    static class ModeButton extends AbstractButton {
+
+        private final int mode;
+
+        public ModeButton(int pX, int pY, int mode) {
+            super(pX, pY, 29, 15, Component.literal(""));
+            this.mode = mode;
+        }
+
+        @Override
+        public void onPress() {
+
+        }
+
+        @Override
+        protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+            pGuiGraphics.blit(TEXTURE, this.getX(), this.getY(), 148, this.isHovered() ? 183 + this.mode * 32 : 167 + this.mode * 32,
+                    29, 15, 358, 328);
+        }
+
+        @Override
+        protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+        }
     }
 }
