@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.block.entity;
 
+import com.atsuishio.superbwarfare.block.FuMO25Block;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import com.atsuishio.superbwarfare.menu.FuMO25Menu;
 import com.atsuishio.superbwarfare.network.dataslot.ContainerEnergyData;
@@ -31,6 +32,9 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
     public static final int DEFAULT_RANGE = 96;
     public static final int MAX_RANGE = 128;
 
+    public static final int DEFAULT_ENERGY_COST = 256;
+    public static final int MAX_ENERGY_COST = 1024;
+
     public static final int MAX_DATA_COUNT = 3;
 
     private LazyOptional<EnergyStorage> energyHandler;
@@ -53,7 +57,8 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
         @Override
         public void set(int pIndex, long pValue) {
             switch (pIndex) {
-                case 0 -> FuMO25BlockEntity.this.energyHandler.ifPresent(handler -> handler.receiveEnergy((int) pValue, false));
+                case 0 ->
+                        FuMO25BlockEntity.this.energyHandler.ifPresent(handler -> handler.receiveEnergy((int) pValue, false));
                 case 1 -> FuMO25BlockEntity.this.type = FuncType.values()[(int) pValue];
                 case 2 -> FuMO25BlockEntity.this.time = (int) pValue;
             }
@@ -71,7 +76,42 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
     }
 
     public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, FuMO25BlockEntity blockEntity) {
+        int energy = blockEntity.energyHandler.map(EnergyStorage::getEnergyStored).orElse(0);
 
+        if (energy <= 0) {
+            if (pState.getValue(FuMO25Block.POWERED)) {
+                pLevel.setBlockAndUpdate(pPos, pState.setValue(FuMO25Block.POWERED, false));
+                setChanged(pLevel, pPos, pState);
+            }
+            if (blockEntity.time > 0) {
+                blockEntity.time = 0;
+                blockEntity.setChanged();
+            }
+        } else {
+            if (!pState.getValue(FuMO25Block.POWERED)) {
+                pLevel.setBlockAndUpdate(pPos, pState.setValue(FuMO25Block.POWERED, true));
+                setChanged(pLevel, pPos, pState);
+            }
+
+            FuncType funcType = blockEntity.type;
+            int energyCost;
+            if (funcType == FuncType.WIDER) {
+                energyCost = MAX_ENERGY_COST;
+            } else {
+                energyCost = DEFAULT_ENERGY_COST;
+            }
+            blockEntity.energyHandler.ifPresent(handler -> handler.extractEnergy(energyCost, false));
+
+            if (blockEntity.time > 0) {
+                blockEntity.time--;
+                blockEntity.setChanged();
+            }
+        }
+
+        if (blockEntity.time <= 0 && blockEntity.type != FuncType.NORMAL) {
+            blockEntity.type = FuncType.NORMAL;
+            blockEntity.setChanged();
+        }
     }
 
     public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState, FuMO25BlockEntity blockEntity) {

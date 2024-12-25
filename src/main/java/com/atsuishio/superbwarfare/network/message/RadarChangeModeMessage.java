@@ -37,7 +37,7 @@ public class RadarChangeModeMessage {
                 if (!player.containerMenu.stillValid(player)) {
                     return;
                 }
-                fuMO25Menu.setFuncType(mode);
+                fuMO25Menu.setFuncTypeAndTime(mode);
             }
         });
         ctx.get().setPacketHandled(true);
