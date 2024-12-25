@@ -1178,11 +1178,12 @@ public class ClientEventHandler {
                 if (level > 0) {
                     Entity seekingEntity = SeekTool.seekLivingEntity(player, player.level(), 32 + 8 * (level - 1), 25 / zoomFov);
                     if (seekingEntity != null && seekingEntity.isAlive()) {
-                        player.lookAt(EntityAnchorArgument.Anchor.EYES, seekingEntity.getEyePosition());
+                        Vec3 targetVec = new Vec3(seekingEntity.getX() - player.getX(),seekingEntity.getEyeY() - player.getEyeY(), seekingEntity.getZ() - player.getZ()).normalize();
+                        Vec3 toVec = new Vec3(player.getViewVector(1).add(targetVec.scale(times)).toVector3f());
+                        look(player, toVec);
                     }
                 }
             }
-
             return;
         }
 
@@ -1199,6 +1200,18 @@ public class ClientEventHandler {
 
             event.setFOV(event.getFOV() / vehicleFovLerp);
         }
+    }
+
+    public static void look(Player player, Vec3 pTarget) {
+        double d0 = pTarget.x;
+        double d1 = pTarget.y;
+        double d2 = pTarget.z;
+        double d3 = Math.sqrt(d0 * d0 + d2 * d2);
+        player.setXRot(Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * 57.2957763671875))));
+        player.setYRot(Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));
+        player.setYHeadRot(player.getYRot());
+        player.xRotO = player.getXRot();
+        player.yRotO = player.getYRot();
     }
 
     @SubscribeEvent
