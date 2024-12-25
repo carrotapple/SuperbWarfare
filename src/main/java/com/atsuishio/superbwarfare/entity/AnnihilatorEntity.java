@@ -6,10 +6,7 @@ import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
-import com.atsuishio.superbwarfare.tools.CustomExplosion;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
-import com.atsuishio.superbwarfare.tools.SoundTool;
-import com.atsuishio.superbwarfare.tools.TraceTool;
+import com.atsuishio.superbwarfare.tools.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -306,6 +303,12 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
             this.entityData.set(LASER_RIGHT_LENGTH, Math.min(laserLength(BarrelRightPos, this), laserLengthEntity(BarrelRightPos, this)));
         }
 
+//        if (this.getPassengers().isEmpty()) {
+//            autoAim();
+//        } else {
+//            travel();
+//        }
+
         travel();
 
         Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
@@ -485,6 +488,44 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
 
         this.setYRot(this.entityData.get(ROT_Y) + diffY);
         this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -45, 5f + this.entityData.get(OFFSET_ANGLE)));
+        this.setRot(this.getYRot(), this.getXRot());
+    }
+
+    public void autoAim() {
+        if (this.entityData.get(ENERGY) <= 0) return;
+
+        Entity target = SeekTool.seekLivingEntity(this, this.level(),64,30);
+
+        if (target == null) return;
+
+        float yRot = this.getYRot();
+        if (yRot < 0) {
+            yRot += 360;
+        }
+        yRot = yRot + 90 % 360;
+
+        var BarrelRoot = new Vector3d(4.95, 2.25, 0);
+        BarrelRoot.rotateY(-yRot * Mth.DEG_TO_RAD);
+
+        Vec3 barrelRootPos = new Vec3(this.getX() + BarrelRoot.x, this.getY() + BarrelRoot.y, this.getZ() + BarrelRoot.z);
+        Vec3 targetVec = new Vec3(target.getX() - barrelRootPos.x,target.getEyeY() - barrelRootPos.y, target.getZ() - barrelRootPos.z).normalize();
+
+        double d0 = targetVec.x;
+        double d1 = targetVec.y;
+        double d2 = targetVec.z;
+        double d3 = Math.sqrt(d0 * d0 + d2 * d2);
+        this.setXRot(Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * 57.2957763671875))));
+        float targetY = Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F);
+
+        float diffY = targetY - this.getYRot();
+        if (diffY > 180.0f) {
+            diffY -= 360.0f;
+        } else if (diffY < -180.0f) {
+            diffY += 360.0f;
+        }
+        diffY = Mth.clamp(diffY * 0.15f, -1f, 1f);
+
+        this.setYRot(this.getYRot() + diffY);
         this.setRot(this.getYRot(), this.getXRot());
     }
 
