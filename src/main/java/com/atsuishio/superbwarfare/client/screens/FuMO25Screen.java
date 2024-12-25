@@ -3,6 +3,8 @@ package com.atsuishio.superbwarfare.client.screens;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.block.entity.FuMO25BlockEntity;
 import com.atsuishio.superbwarfare.menu.FuMO25Menu;
+import com.atsuishio.superbwarfare.network.message.RadarChangeModeMessage;
+import com.atsuishio.superbwarfare.network.message.RadarSetParametersMessage;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -113,7 +115,7 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
 
         @Override
         public void onPress() {
-
+            ModUtils.PACKET_HANDLER.sendToServer(new RadarSetParametersMessage((byte) 0));
         }
 
         @Override
@@ -138,7 +140,7 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
 
         @Override
         public void onPress() {
-
+            ModUtils.PACKET_HANDLER.sendToServer(new RadarChangeModeMessage((byte) this.mode));
         }
 
         @Override

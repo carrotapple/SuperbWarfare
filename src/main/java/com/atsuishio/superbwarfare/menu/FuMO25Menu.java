@@ -157,6 +157,10 @@ public class FuMO25Menu extends EnergyMenu {
         return this.containerData.get(1);
     }
 
+    public void setFuncType(byte type) {
+        this.containerData.set(1, type);
+    }
+
     public long getTime() {
         return this.containerData.get(2);
     }
