@@ -34,6 +34,7 @@ import javax.annotation.Nullable;
 
 @SuppressWarnings("deprecation")
 public class ReforgingTableBlock extends Block {
+
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     private static final Component CONTAINER_TITLE = Component.translatable("container.superbwarfare.reforging_table");
@@ -114,7 +115,6 @@ public class ReforgingTableBlock extends Block {
         }
         return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
     }
-
 
     @Override
     @Nullable

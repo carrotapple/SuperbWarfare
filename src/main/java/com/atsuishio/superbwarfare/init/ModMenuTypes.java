@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.init;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.menu.ChargingStationMenu;
+import com.atsuishio.superbwarfare.menu.FuMO25Menu;
 import com.atsuishio.superbwarfare.menu.ReforgingTableMenu;
 import com.atsuishio.superbwarfare.menu.VehicleMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -23,4 +24,7 @@ public class ModMenuTypes {
     public static final RegistryObject<MenuType<VehicleMenu>> VEHICLE_MENU =
             REGISTRY.register("vehicle_menu",
                     () -> IForgeMenuType.create((windowId, inv, data) -> new VehicleMenu(windowId, inv)));
+    public static final RegistryObject<MenuType<FuMO25Menu>> FUMO_25_MENU =
+            REGISTRY.register("fumo_25_menu",
+                    () -> IForgeMenuType.create((windowId, inv, data) -> new FuMO25Menu(windowId, inv)));
 }
