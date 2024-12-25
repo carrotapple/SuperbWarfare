@@ -55,6 +55,7 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> ROT_Y = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public static final float MAX_HEALTH = CannonConfig.MLE1934_HP.get();
@@ -76,6 +77,8 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
         this.entityData.define(COOL_DOWN, 0);
         this.entityData.define(TYPE, 0);
         this.entityData.define(HEALTH, MAX_HEALTH);
+        this.entityData.define(HEALTH, MAX_HEALTH);
+        this.entityData.define(ROT_Y, 0f);
     }
 
     @Override
@@ -258,6 +261,10 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
         if (this.entityData.get(HEALTH) <= 0) {
             this.ejectPassengers();
             destroy();
+        }
+
+        if (this.level() instanceof ServerLevel) {
+            this.entityData.set(ROT_Y, this.getYRot());
         }
 
         travel();
@@ -478,7 +485,7 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
         diffY = Mth.clamp(diffY * 0.15f, -1.25f, 1.25f);
         diffX = diffX * 0.15f;
 
-        this.setYRot(this.getYRot() + diffY);
+        this.setYRot(this.entityData.get(ROT_Y) + diffY);
         this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -30, 4));
         this.setRot(this.getYRot(), this.getXRot());
     }

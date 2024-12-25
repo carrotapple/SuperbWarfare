@@ -405,6 +405,11 @@ public class ClientEventHandler {
                     actionMove = 1;
                 }
 
+                // 判断是否为栓动武器（BoltActionTime > 0），并在开火后给一个需要上膛的状态
+                if (GunsTool.getGunIntTag(stack, "BoltActionTime", 0) > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) > (stack.is(ModTags.Items.REVOLVER) ? 0 : 1)) {
+                    GunsTool.setGunBooleanTag(stack, "NeedBoltAction", true);
+                }
+
                 revolverPreTime = 0;
                 revolverWheelPreTime = 0;
 

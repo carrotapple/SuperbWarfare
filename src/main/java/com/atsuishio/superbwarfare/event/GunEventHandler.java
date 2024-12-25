@@ -387,6 +387,7 @@ public class GunEventHandler {
             } else {
                 playGunEmptyReload(player);
             }
+            tag.putBoolean("start_reload", false);
         }
 
         stack.addTagElement("GunData", data);
@@ -652,6 +653,7 @@ public class GunEventHandler {
                 GunsTool.setGunBooleanTag(stack, "NeedBoltAction", false);
             }
             tag.putBoolean("reloading", false);
+            tag.putBoolean("start_single_reload", false);
 
             MinecraftForge.EVENT_BUS.post(new ReloadEvent.Post(player, stack));
         }

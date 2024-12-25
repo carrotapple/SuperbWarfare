@@ -53,6 +53,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
 
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> ROT_Y = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public static final float MAX_HEALTH = CannonConfig.MK42_HP.get();
@@ -73,6 +74,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     protected void defineSynchedData() {
         this.entityData.define(COOL_DOWN, 0);
         this.entityData.define(HEALTH, MAX_HEALTH);
+        this.entityData.define(ROT_Y, 0f);
     }
 
     @Override
@@ -246,6 +248,10 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
             destroy();
         }
 
+        if (this.level() instanceof ServerLevel) {
+            this.entityData.set(ROT_Y, this.getYRot());
+        }
+
         travel();
         this.refreshDimensions();
     }
@@ -386,7 +392,7 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
         diffY = Mth.clamp(diffY * 0.15f, -1.75f, 1.75f);
         diffX = diffX * 0.15f;
 
-        this.setYRot(this.getYRot() + diffY);
+        this.setYRot(this.entityData.get(ROT_Y) + diffY);
         this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -3f, 3f), -85, 16.3f));
         this.setRot(this.getYRot(), this.getXRot());
     }
