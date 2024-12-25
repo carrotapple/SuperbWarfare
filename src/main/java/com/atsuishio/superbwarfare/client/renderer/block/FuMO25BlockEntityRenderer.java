@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.client.renderer.block;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.block.FuMO25Block;
 import com.atsuishio.superbwarfare.block.entity.FuMO25BlockEntity;
 import com.atsuishio.superbwarfare.client.model.block.FuMO25Model;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -32,7 +33,8 @@ public class FuMO25BlockEntityRenderer implements BlockEntityRenderer<FuMO25Bloc
         pPoseStack.translate(0.5f, 2.7f, 0.5f);
 
         VertexConsumer vertexconsumer = ItemRenderer.getFoilBufferDirect(pBuffer, this.model.renderType(TEXTURE), false, false);
-        this.model.render(pPoseStack, vertexconsumer, 0xffffff, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F, true);
+        this.model.render(pPoseStack, vertexconsumer, 0xffffff, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F,
+                pBlockEntity.getBlockState().getValue(FuMO25Block.POWERED));
         pPoseStack.popPose();
     }
 

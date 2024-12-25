@@ -633,8 +633,12 @@ public class FuMO25Model<T extends Entity> extends EntityModel<T> {
         poseStack.popPose();
     }
 
-    // TODO 添加旋转
     public void render(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha, boolean roll) {
+        if (roll) {
+            this.yundongjian.yRot = (System.currentTimeMillis() % 36000000) / 1200f;
+        } else {
+            this.yundongjian.yRot = 0;
+        }
         renderToBuffer(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }

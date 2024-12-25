@@ -35,6 +35,8 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
     public static final int DEFAULT_ENERGY_COST = 256;
     public static final int MAX_ENERGY_COST = 1024;
 
+    public static final int DEFAULT_MIN_ENERGY = 64000;
+
     public static final int MAX_DATA_COUNT = 3;
 
     private LazyOptional<EnergyStorage> energyHandler;
@@ -78,7 +80,15 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
     public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, FuMO25BlockEntity blockEntity) {
         int energy = blockEntity.energyHandler.map(EnergyStorage::getEnergyStored).orElse(0);
 
-        if (energy <= 0) {
+        FuncType funcType = blockEntity.type;
+        int energyCost;
+        if (funcType == FuncType.WIDER) {
+            energyCost = MAX_ENERGY_COST;
+        } else {
+            energyCost = DEFAULT_ENERGY_COST;
+        }
+
+        if (energy < energyCost) {
             if (pState.getValue(FuMO25Block.POWERED)) {
                 pLevel.setBlockAndUpdate(pPos, pState.setValue(FuMO25Block.POWERED, false));
                 setChanged(pLevel, pPos, pState);
@@ -89,22 +99,16 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
             }
         } else {
             if (!pState.getValue(FuMO25Block.POWERED)) {
-                pLevel.setBlockAndUpdate(pPos, pState.setValue(FuMO25Block.POWERED, true));
-                setChanged(pLevel, pPos, pState);
-            }
-
-            FuncType funcType = blockEntity.type;
-            int energyCost;
-            if (funcType == FuncType.WIDER) {
-                energyCost = MAX_ENERGY_COST;
+                if (energy >= DEFAULT_MIN_ENERGY) {
+                    pLevel.setBlockAndUpdate(pPos, pState.setValue(FuMO25Block.POWERED, true));
+                    setChanged(pLevel, pPos, pState);
+                }
             } else {
-                energyCost = DEFAULT_ENERGY_COST;
-            }
-            blockEntity.energyHandler.ifPresent(handler -> handler.extractEnergy(energyCost, false));
-
-            if (blockEntity.time > 0) {
-                blockEntity.time--;
-                blockEntity.setChanged();
+                blockEntity.energyHandler.ifPresent(handler -> handler.extractEnergy(energyCost, false));
+                if (blockEntity.time > 0) {
+                    blockEntity.time--;
+                    blockEntity.setChanged();
+                }
             }
         }
 
