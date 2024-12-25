@@ -4,7 +4,7 @@ import com.atsuishio.superbwarfare.client.screens.CrossHairOverlay;
 import com.atsuishio.superbwarfare.client.screens.DroneUIOverlay;
 import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
 import com.atsuishio.superbwarfare.event.KillMessageHandler;
-import com.atsuishio.superbwarfare.menu.ChargingStationMenu;
+import com.atsuishio.superbwarfare.menu.EnergyMenu;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.network.message.ContainerDataMessage;
 import com.atsuishio.superbwarfare.network.message.GunsDataMessage;
@@ -58,7 +58,7 @@ public class ClientPacketHandler {
         if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
             Minecraft mc = Minecraft.getInstance();
             if (mc.player != null && mc.player.containerMenu.containerId == containerId) {
-                data.forEach(p -> ((ChargingStationMenu) mc.player.containerMenu).setData(p.id, p.data));
+                data.forEach(p -> ((EnergyMenu) mc.player.containerMenu).setData(p.id, p.data));
             }
         }
     }

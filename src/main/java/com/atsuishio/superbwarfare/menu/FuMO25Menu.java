@@ -1,24 +1,27 @@
 package com.atsuishio.superbwarfare.menu;
 
+import com.atsuishio.superbwarfare.block.entity.FuMO25BlockEntity;
 import com.atsuishio.superbwarfare.init.ModBlocks;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModMenuTypes;
+import com.atsuishio.superbwarfare.network.dataslot.ContainerEnergyData;
+import com.atsuishio.superbwarfare.network.dataslot.SimpleEnergyData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
 
-public class FuMO25Menu extends AbstractContainerMenu {
+public class FuMO25Menu extends EnergyMenu {
 
     protected final Container container;
     protected final ContainerLevelAccess access;
+    protected final ContainerEnergyData containerData;
 
     private int posX = Integer.MIN_VALUE;
     private int posY = Integer.MIN_VALUE;
@@ -28,20 +31,21 @@ public class FuMO25Menu extends AbstractContainerMenu {
     public static final int Y_OFFSET = 0;
 
     public FuMO25Menu(int pContainerId, Inventory pPlayerInventory) {
-        this(pContainerId, pPlayerInventory, new SimpleContainer(1), ContainerLevelAccess.NULL);
+        this(pContainerId, pPlayerInventory, new SimpleContainer(1), ContainerLevelAccess.NULL, new SimpleEnergyData(FuMO25BlockEntity.MAX_DATA_COUNT));
     }
 
-    public FuMO25Menu(int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess access) {
-        this(pContainerId, pPlayerInventory, new SimpleContainer(1), access);
+    public FuMO25Menu(int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess access, ContainerEnergyData containerData) {
+        this(pContainerId, pPlayerInventory, new SimpleContainer(1), access, containerData);
     }
 
-    public FuMO25Menu(int pContainerId, Inventory inventory, Container container, ContainerLevelAccess access) {
-        super(ModMenuTypes.FUMO_25_MENU.get(), pContainerId);
+    public FuMO25Menu(int pContainerId, Inventory inventory, Container container, ContainerLevelAccess access, ContainerEnergyData containerData) {
+        super(ModMenuTypes.FUMO_25_MENU.get(), pContainerId, containerData);
 
         checkContainerSize(container, 1);
 
         this.container = container;
         this.access = access;
+        this.containerData = containerData;
 
         this.addSlot(new ParaSlot(container, 0, 278, 60));
 
@@ -143,6 +147,18 @@ public class FuMO25Menu extends AbstractContainerMenu {
             this.container.removeItemNoUpdate(0);
             resetPos();
         });
+    }
+
+    public long getEnergy() {
+        return this.containerData.get(0);
+    }
+
+    public long getFuncType() {
+        return this.containerData.get(1);
+    }
+
+    public long getTime() {
+        return this.containerData.get(2);
     }
 
     static class ParaSlot extends Slot {

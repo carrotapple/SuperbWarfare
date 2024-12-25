@@ -1,41 +1,25 @@
 package com.atsuishio.superbwarfare.menu;
 
-import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.block.entity.ChargingStationBlockEntity;
 import com.atsuishio.superbwarfare.init.ModMenuTypes;
 import com.atsuishio.superbwarfare.network.dataslot.ContainerEnergyData;
-import com.atsuishio.superbwarfare.network.dataslot.ContainerEnergyDataSlot;
 import com.atsuishio.superbwarfare.network.dataslot.SimpleEnergyData;
-import com.atsuishio.superbwarfare.network.message.ContainerDataMessage;
-import com.google.common.collect.Lists;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class ChargingStationMenu extends AbstractContainerMenu {
+public class ChargingStationMenu extends EnergyMenu {
 
     private final Container container;
     private final ContainerEnergyData containerData;
     protected final Level level;
-    private final List<ContainerEnergyDataSlot> containerEnergyDataSlots = Lists.newArrayList();
-    private final List<ServerPlayer> usingPlayers = new ArrayList<>();
 
     public static final int X_OFFSET = 0;
     public static final int Y_OFFSET = 0;
@@ -45,7 +29,7 @@ public class ChargingStationMenu extends AbstractContainerMenu {
     }
 
     public ChargingStationMenu(int id, Inventory inventory, Container container, ContainerEnergyData containerData) {
-        super(ModMenuTypes.CHARGING_STATION_MENU.get(), id);
+        super(ModMenuTypes.CHARGING_STATION_MENU.get(), id, containerData);
 
         checkContainerSize(container, 2);
 
@@ -65,35 +49,6 @@ public class ChargingStationMenu extends AbstractContainerMenu {
         for (int k = 0; k < 9; ++k) {
             this.addSlot(new Slot(inventory, k, 8 + k * 18 + X_OFFSET, 142 + Y_OFFSET));
         }
-
-        for (int i = 0; i < containerData.getCount(); ++i) {
-            this.containerEnergyDataSlots.add(ContainerEnergyDataSlot.forContainer(containerData, i));
-        }
-    }
-
-    @Override
-    public void broadcastChanges() {
-        List<ContainerDataMessage.Pair> pairs = new ArrayList<>();
-        for (int i = 0; i < containerEnergyDataSlots.size(); ++i) {
-            ContainerEnergyDataSlot dataSlot = containerEnergyDataSlots.get(i);
-            if (dataSlot.checkAndClearUpdateFlag())
-                pairs.add(new ContainerDataMessage.Pair(i, dataSlot.get()));
-        }
-
-        if (!pairs.isEmpty()) {
-            PacketDistributor.PacketTarget target = PacketDistributor.NMLIST.with(usingPlayers.stream().map(serverPlayer -> serverPlayer.connection.connection)::toList);
-            ModUtils.PACKET_HANDLER.send(target, new ContainerDataMessage(this.containerId, pairs));
-        }
-
-        super.broadcastChanges();
-    }
-
-    public void setData(int id, int data) {
-        containerEnergyDataSlots.get(id).set(data);
-    }
-
-    public void setData(int id, long data) {
-        containerEnergyDataSlots.get(id).set(data);
     }
 
     @Override
@@ -169,27 +124,6 @@ public class ChargingStationMenu extends AbstractContainerMenu {
         @Override
         public boolean mayPlace(ItemStack pStack) {
             return super.mayPlace(pStack);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onContainerOpened(PlayerContainerEvent.Open event) {
-        if (event.getContainer() instanceof ChargingStationMenu menu && event.getEntity() instanceof ServerPlayer serverPlayer) {
-            menu.usingPlayers.add(serverPlayer);
-
-            List<ContainerDataMessage.Pair> toSync = new ArrayList<>();
-            for (int i = 0; i < menu.containerEnergyDataSlots.size(); ++i) {
-                toSync.add(new ContainerDataMessage.Pair(i, menu.containerEnergyDataSlots.get(i).get()));
-            }
-
-            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ContainerDataMessage(menu.containerId, toSync));
-        }
-    }
-
-    @SubscribeEvent
-    public static void onContainerClosed(PlayerContainerEvent.Close event) {
-        if (event.getContainer() instanceof ChargingStationMenu menu && event.getEntity() instanceof ServerPlayer serverPlayer) {
-            menu.usingPlayers.remove(serverPlayer);
         }
     }
 }

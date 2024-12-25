@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.block.entity;
 
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import com.atsuishio.superbwarfare.menu.FuMO25Menu;
+import com.atsuishio.superbwarfare.network.dataslot.ContainerEnergyData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -30,10 +31,39 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
     public static final int DEFAULT_RANGE = 96;
     public static final int MAX_RANGE = 128;
 
+    public static final int MAX_DATA_COUNT = 3;
+
     private LazyOptional<EnergyStorage> energyHandler;
 
     public FuncType type = FuncType.NORMAL;
     public int time = 0;
+
+    protected final ContainerEnergyData dataAccess = new ContainerEnergyData() {
+
+        @Override
+        public long get(int pIndex) {
+            return switch (pIndex) {
+                case 0 -> FuMO25BlockEntity.this.energyHandler.map(EnergyStorage::getEnergyStored).orElse(0);
+                case 1 -> FuMO25BlockEntity.this.type.ordinal();
+                case 2 -> FuMO25BlockEntity.this.time;
+                default -> 0;
+            };
+        }
+
+        @Override
+        public void set(int pIndex, long pValue) {
+            switch (pIndex) {
+                case 0 -> FuMO25BlockEntity.this.energyHandler.ifPresent(handler -> handler.receiveEnergy((int) pValue, false));
+                case 1 -> FuMO25BlockEntity.this.type = FuncType.values()[(int) pValue];
+                case 2 -> FuMO25BlockEntity.this.time = (int) pValue;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return MAX_DATA_COUNT;
+        }
+    };
 
     public FuMO25BlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.FUMO_25.get(), pPos, pBlockState);
@@ -70,14 +100,14 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("container.superbwarfare.fumo_25");
+        return Component.literal("");
     }
 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
         if (this.level == null) return null;
-        return new FuMO25Menu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(this.level, this.getBlockPos()));
+        return new FuMO25Menu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(this.level, this.getBlockPos()), this.dataAccess);
     }
 
     @Override
