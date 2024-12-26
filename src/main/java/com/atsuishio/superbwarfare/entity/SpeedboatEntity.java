@@ -19,6 +19,7 @@ import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -44,7 +45,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.entity.vehicle.ContainerEntity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -55,7 +55,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -82,6 +81,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, IChargeEntity, IVehicleEntity, HasCustomInventoryScreen, ContainerEntity {
 
@@ -155,29 +156,6 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
     }
 
     @Override
-    public boolean canCollideWith(Entity pEntity) {
-        if (this.getDeltaMovement().length() > 0.2) {
-            return false;
-        } else {
-            return canVehicleCollide(this, pEntity);
-        }
-    }
-
-    public static boolean canVehicleCollide(Entity pVehicle, Entity pEntity) {
-        return (pEntity.canBeCollidedWith() || pEntity.isPushable()) && !pVehicle.isPassengerOfSameVehicle(pEntity);
-    }
-
-    @Override
-    public boolean canBeCollidedWith() {
-        return super.canBeCollidedWith();
-    }
-
-    @Override
-    public boolean isPushable() {
-        return true;
-    }
-
-    @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
@@ -198,7 +176,7 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
     @Override
     public boolean hurt(DamageSource source, float amount) {
         if (this.level() instanceof ServerLevel serverLevel) {
-            ParticleTool.sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
+            sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
         }
 
         if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
@@ -335,8 +313,11 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
             destroy();
         }
 
-        if (this.isVehicle() && this.getDeltaMovement().length() > 0.05) {
-            crushEntities(this.getDeltaMovement());
+        if (this.level() instanceof ServerLevel serverLevel) {
+            sendParticle(serverLevel, ParticleTypes.CLOUD, this.getX() + 2 * getLookAngle().x, this.getY() + getSubmergedHeight(this), this.getZ() + 2 * getLookAngle().z, 4, 0.5, 0, 0.5, 0.1, true);
+//            sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 3, z, 30, 2, 1, 2, 0.01, true);
+//            sendParticle(serverLevel, ParticleTypes.FALLING_WATER, x, y + 3, z, 50, 1.5, 4, 1.5, 1, true);
+//            sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, x, y, z, 60, 3, 0.5, 3, 0.1, true);
         }
 
         controlBoat();
@@ -437,33 +418,6 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
         this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
     }
 
-    /**
-     * 撞击实体并造成伤害
-     * @param velocity 动量
-     */
-    public void crushEntities(Vec3 velocity) {
-        var frontBox = getBoundingBox().move(velocity.scale(0.5));
-        var velAdd = velocity.add(0, 0, 0).scale(1.5);
-        for (var entity : level().getEntities(EntityTypeTest.forClass(Entity.class), frontBox, entity -> entity != this && entity != getFirstPassenger() && entity.getVehicle() == null)) {
-
-            double entitySize = entity.getBbWidth() * entity.getBbHeight();
-            double thisSize = this.getBbWidth() * this.getBbHeight();
-            double f = Math.min(entitySize / thisSize, 2);
-            double f1 = Math.min(thisSize / entitySize, 4);
-
-            if (!(entity instanceof TargetEntity)) {
-                this.push(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
-            }
-
-            if (velocity.length() > 0.2 && entity.isAlive() && !(entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ProjectileEntity)) {
-                if (!this.level().isClientSide) {
-                    this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
-                }
-                entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
-                entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (25 * velocity.length()));
-            }
-        }
-    }
 
     /**
      * 撞掉莲叶和冰块

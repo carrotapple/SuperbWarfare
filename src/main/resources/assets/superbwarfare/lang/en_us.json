@@ -362,6 +362,7 @@
   "entity.superbwarfare.drone": "Drone",
   "entity.superbwarfare.annihilator": "Annihilator Energy Gun",
   "entity.superbwarfare.speedboat": "Speedboat",
+  "entity.superbwarfare.wheel_chair": "WheelChair",
 
   "key.categories.superbwarfare": "Superb Warfare",
   "key.superbwarfare.hold_zoom": "Zoom(Hold)",

@@ -1,7 +1,9 @@
 package com.atsuishio.superbwarfare.entity;
 
 import com.atsuishio.superbwarfare.init.ModEntities;
+import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -20,6 +22,8 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
@@ -76,16 +80,6 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
     }
 
     @Override
-    public boolean canBeCollidedWith() {
-        return true;
-    }
-
-    @Override
-    public boolean canCollideWith(Entity pEntity) {
-        return (pEntity.canBeCollidedWith() || pEntity.isPushable()) && !this.isPassengerOfSameVehicle(pEntity);
-    }
-
-    @Override
     protected float getEyeHeight(Pose pPose, EntityDimensions pSize) {
         return 0.75F;
     }
@@ -128,11 +122,30 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
 
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
-        if (this.getFirstPassenger() == null) {
+        if (player.getVehicle() == this) return InteractionResult.PASS;
+        if (player.isShiftKeyDown() && player.getMainHandItem().is(ModItems.CROWBAR.get())) {
+            ItemStack stack = ContainerBlockItem.createInstance(this);
+            if (!player.addItem(stack)) {
+                player.drop(stack, false);
+            }
+            this.remove(RemovalReason.DISCARDED);
+            this.discard();
+        } else {
+            if (player.getMainHandItem().is(Items.IRON_INGOT)) {
+                if (this.entityData.get(HEALTH) < MAX_HEALTH) {
+                    this.entityData.set(HEALTH, Math.min(this.entityData.get(HEALTH) + 0.5f * MAX_HEALTH, MAX_HEALTH));
+                    player.getMainHandItem().shrink(1);
+                    if (!this.level().isClientSide) {
+                        this.level().playSound(null, this, SoundEvents.IRON_GOLEM_REPAIR, this.getSoundSource(), 1, 1);
+                    }
+                } else {
+                    player.startRiding(this);
+                }
+                return InteractionResult.sidedSuccess(this.level().isClientSide());
+            }
             player.startRiding(this);
-            return InteractionResult.sidedSuccess(this.level().isClientSide());
         }
-        return InteractionResult.PASS;
+        return InteractionResult.sidedSuccess(this.level().isClientSide());
     }
 
     @Override
