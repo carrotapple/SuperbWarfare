@@ -4,7 +4,7 @@ import com.atsuishio.superbwarfare.client.layer.SpeedBoatHeatLayer;
 import com.atsuishio.superbwarfare.client.layer.SpeedBoatLayer;
 import com.atsuishio.superbwarfare.client.layer.SpeedBoatPowerLayer;
 import com.atsuishio.superbwarfare.client.model.entity.SpeedboatModel;
-import com.atsuishio.superbwarfare.entity.SpeedboatEntityMobile;
+import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -17,7 +17,7 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class SpeedboatRenderer extends GeoEntityRenderer<SpeedboatEntityMobile> {
+public class SpeedboatRenderer extends GeoEntityRenderer<SpeedboatEntity> {
 
     public SpeedboatRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new SpeedboatModel());
@@ -27,12 +27,12 @@ public class SpeedboatRenderer extends GeoEntityRenderer<SpeedboatEntityMobile> 
     }
 
     @Override
-    public RenderType getRenderType(SpeedboatEntityMobile animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(SpeedboatEntity animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
     @Override
-    public void preRender(PoseStack poseStack, SpeedboatEntityMobile entity, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green,
+    public void preRender(PoseStack poseStack, SpeedboatEntity entity, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green,
                           float blue, float alpha) {
         float scale = 1f;
         this.scaleHeight = scale;
@@ -41,7 +41,7 @@ public class SpeedboatRenderer extends GeoEntityRenderer<SpeedboatEntityMobile> 
     }
 
     @Override
-    public void render(SpeedboatEntityMobile entityIn, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn) {
+    public void render(SpeedboatEntity entityIn, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn) {
         poseStack.pushPose();
         poseStack.mulPose(Axis.YP.rotationDegrees(-Mth.lerp(partialTicks, entityIn.yRotO, entityIn.getYRot())));
         super.render(entityIn, entityYaw, partialTicks, poseStack, bufferIn, packedLightIn);
@@ -49,7 +49,7 @@ public class SpeedboatRenderer extends GeoEntityRenderer<SpeedboatEntityMobile> 
     }
 
     @Override
-    public void renderRecursively(PoseStack poseStack, SpeedboatEntityMobile animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderRecursively(PoseStack poseStack, SpeedboatEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         String name = bone.getName();
         if (name.equals("paota")) {
             bone.setRotY(Mth.lerp(partialTick, animatable.turretYRotO, animatable.getTurretYRot()) * Mth.DEG_TO_RAD);
@@ -64,7 +64,7 @@ public class SpeedboatRenderer extends GeoEntityRenderer<SpeedboatEntityMobile> 
     }
 
     @Override
-    protected float getDeathMaxRotation(SpeedboatEntityMobile entityLivingBaseIn) {
+    protected float getDeathMaxRotation(SpeedboatEntity entityLivingBaseIn) {
         return 0.0F;
     }
 }

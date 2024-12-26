@@ -38,6 +38,7 @@ import net.minecraft.world.phys.*;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
+import org.joml.Math;
 import org.joml.Vector3d;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -59,8 +60,6 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     public static final EntityDataAccessor<Float> LASER_RIGHT_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> OFFSET_ANGLE = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> ROT_Y = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
-
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public static final float MAX_HEALTH = CannonConfig.ANNIHILATOR_HP.get();
@@ -90,7 +89,6 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         this.entityData.define(LASER_RIGHT_LENGTH, 0f);
         this.entityData.define(ENERGY, 0f);
         this.entityData.define(OFFSET_ANGLE, 0f);
-        this.entityData.define(ROT_Y, 0f);
     }
 
     @Override
@@ -258,8 +256,14 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
             }
         }
 
-        if (this.level() instanceof ServerLevel) {
-            this.entityData.set(ROT_Y, this.getYRot());
+        float delta = Math.abs(getYRot() - yRotO);
+        while (getYRot() > 180F) {
+            setYRot(getYRot() - 360F);
+            yRotO = getYRot() - delta;
+        }
+        while (getYRot() <= -180F) {
+            setYRot(getYRot() + 360F);
+            yRotO = delta + getYRot();
         }
 
         if (this.entityData.get(HEALTH) <= 0) {
@@ -468,27 +472,13 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
 
         this.entityData.set(OFFSET_ANGLE, (float) calculateAngle(entity.getViewVector(1), barrelLookAt));
 
-        float passengerY = entity.getYHeadRot();
-
-        if (passengerY > 180.0f) {
-            passengerY -= 360.0f;
-        } else if (passengerY < -180.0f) {
-            passengerY += 360.0f;
-        }
-
-        float diffY = passengerY - this.getYRot();
+        float diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(entity.getYHeadRot() - this.getYRot()));
         float diffX = entity.getXRot() - this.entityData.get(OFFSET_ANGLE) - this.getXRot();
-        if (diffY > 180.0f) {
-            diffY -= 360.0f;
-        } else if (diffY < -180.0f) {
-            diffY += 360.0f;
-        }
-        diffY = Mth.clamp(diffY * 0.15f, -0.6f, 0.6f);
+
         diffX = diffX * 0.15f;
 
-        this.setYRot(this.entityData.get(ROT_Y) + diffY);
+        this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY,-0.6f, 0.6f));
         this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -45, 5f + this.entityData.get(OFFSET_ANGLE)));
-        this.setRot(this.getYRot(), this.getXRot());
     }
 
     public void autoAim() {
@@ -517,15 +507,9 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         this.setXRot(Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * 57.2957763671875))));
         float targetY = Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F);
 
-        float diffY = targetY - this.getYRot();
-        if (diffY > 180.0f) {
-            diffY -= 360.0f;
-        } else if (diffY < -180.0f) {
-            diffY += 360.0f;
-        }
-        diffY = Mth.clamp(diffY * 0.15f, -1f, 1f);
+        float diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(targetY - this.getYRot()));
 
-        this.setYRot(this.getYRot() + diffY);
+        this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY,-1f, 1f));
         this.setRot(this.getYRot(), this.getXRot());
     }
 

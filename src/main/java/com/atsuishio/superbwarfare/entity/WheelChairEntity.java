@@ -19,28 +19,27 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
+import org.joml.Math;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class WheelChairEntityMobile extends MobileVehicleEntity implements GeoEntity, IVehicleEntity {
+public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, IVehicleEntity {
 
-    public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(WheelChairEntityMobile.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> ROT_Y = SynchedEntityData.defineId(WheelChairEntityMobile.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(WheelChairEntity.class, EntityDataSerializers.FLOAT);
 
-    public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(WheelChairEntityMobile.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(WheelChairEntity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = 50;
 
-    public WheelChairEntityMobile(PlayMessages.SpawnEntity packet, Level world) {
+    public WheelChairEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.WHEEL_CHAIR.get(), world);
     }
 
-    public WheelChairEntityMobile(EntityType<WheelChairEntityMobile> type, Level world) {
+    public WheelChairEntity(EntityType<WheelChairEntity> type, Level world) {
         super(type, world);
         this.setMaxUpStep(1.1f);
     }
@@ -48,7 +47,6 @@ public class WheelChairEntityMobile extends MobileVehicleEntity implements GeoEn
     @Override
     protected void defineSynchedData() {
         this.entityData.define(HEALTH, MAX_HEALTH);
-        this.entityData.define(ROT_Y, 0f);
         this.entityData.define(POWER, 0f);
     }
 
@@ -145,10 +143,6 @@ public class WheelChairEntityMobile extends MobileVehicleEntity implements GeoEn
             destroy();
         }
 
-        if (this.level() instanceof ServerLevel) {
-            this.entityData.set(ROT_Y, this.getYRot());
-        }
-
         travel();
         this.refreshDimensions();
     }
@@ -157,23 +151,16 @@ public class WheelChairEntityMobile extends MobileVehicleEntity implements GeoEn
         Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
         if (!(passenger instanceof LivingEntity entity)) return;
 
-        float diffY = entity.getYRot() - this.getYRot();
-        if (diffY > 180.0f) {
-            diffY -= 360.0f;
-        } else if (diffY < -180.0f) {
-            diffY += 360.0f;
-        }
-        diffY = Mth.clamp(diffY * 0.15f, -8f, 8f);
+        float diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(entity.getYHeadRot() - this.getYRot()));
 
-        this.setYRot(this.entityData.get(ROT_Y) + diffY);
-        this.setRot(this.getYRot(), this.getXRot());
+        this.setYRot(this.getYRot() + Mth.clamp(0.4f * diffY,-5f, 5f));
 
         if (this.forwardInputDown) {
-            this.entityData.set(POWER, this.entityData.get(POWER) + 0.02f);
+            this.entityData.set(POWER, this.entityData.get(POWER) + 0.01f);
         }
 
         if (this.backInputDown) {
-            this.entityData.set(POWER, this.entityData.get(POWER) - 0.02f);
+            this.entityData.set(POWER, this.entityData.get(POWER) - 0.01f);
         }
 
         if (this.upInputDown && this.onGround()) {
@@ -188,7 +175,7 @@ public class WheelChairEntityMobile extends MobileVehicleEntity implements GeoEn
         this.entityData.set(POWER, this.entityData.get(POWER) * 0.87f);
 
         if (this.onGround()) {
-            this.setDeltaMovement(this.getDeltaMovement().add(new Vec3(this.getLookAngle().x, 0, this.getLookAngle().z).scale(this.entityData.get(POWER))));
+            this.setDeltaMovement(this.getDeltaMovement().add((double)(Mth.sin(-this.getYRot() * 0.017453292F) * this.entityData.get(POWER)), 0.0, (double)(Mth.cos(this.getYRot() * 0.017453292F) * this.entityData.get(POWER))));
         }
     }
 

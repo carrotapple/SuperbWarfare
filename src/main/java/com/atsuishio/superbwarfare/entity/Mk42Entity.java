@@ -38,6 +38,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
+import org.joml.Math;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -53,7 +54,6 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
 
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> ROT_Y = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public static final float MAX_HEALTH = CannonConfig.MK42_HP.get();
@@ -74,7 +74,6 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
     protected void defineSynchedData() {
         this.entityData.define(COOL_DOWN, 0);
         this.entityData.define(HEALTH, MAX_HEALTH);
-        this.entityData.define(ROT_Y, 0f);
     }
 
     @Override
@@ -248,10 +247,6 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
             destroy();
         }
 
-        if (this.level() instanceof ServerLevel) {
-            this.entityData.set(ROT_Y, this.getYRot());
-        }
-
         travel();
         this.refreshDimensions();
     }
@@ -374,27 +369,13 @@ public class Mk42Entity extends Entity implements GeoEntity, ICannonEntity {
 
         if (!(passenger instanceof LivingEntity entity)) return;
 
-        float passengerY = entity.getYHeadRot();
+        float diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(entity.getYHeadRot() - this.getYRot()));
 
-        if (passengerY > 180.0f) {
-            passengerY -= 360.0f;
-        } else if (passengerY < -180.0f) {
-            passengerY += 360.0f;
-        }
-
-        float diffY = passengerY - this.getYRot();
         float diffX = entity.getXRot() - 1.3f - this.getXRot();
-        if (diffY > 180.0f) {
-            diffY -= 360.0f;
-        } else if (diffY < -180.0f) {
-            diffY += 360.0f;
-        }
-        diffY = Mth.clamp(diffY * 0.15f, -1.75f, 1.75f);
         diffX = diffX * 0.15f;
 
-        this.setYRot(this.entityData.get(ROT_Y) + diffY);
+        this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY,-1.75f, 1.75f));
         this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -3f, 3f), -85, 16.3f));
-        this.setRot(this.getYRot(), this.getXRot());
     }
 
     protected void clampRotation(Entity entity) {

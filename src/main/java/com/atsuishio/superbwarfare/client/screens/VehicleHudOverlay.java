@@ -4,7 +4,7 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.entity.IChargeEntity;
 import com.atsuishio.superbwarfare.entity.IVehicleEntity;
-import com.atsuishio.superbwarfare.entity.SpeedboatEntityMobile;
+import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -134,7 +134,7 @@ public class VehicleHudOverlay {
         if (stack.getItem() == ModItems.HE_5_INCHES.get() && iVehicle instanceof ICannonEntity) {
             return Component.translatable("des.superbwarfare.tips.ammo_type.he").getString();
         }
-        if (iVehicle instanceof SpeedboatEntityMobile) {
+        if (iVehicle instanceof SpeedboatEntity) {
             return Component.translatable("des.superbwarfare.tips.ammo_type.cal50").getString();
         }
         return "";

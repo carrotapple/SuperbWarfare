@@ -83,18 +83,17 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class SpeedboatEntityMobile extends MobileVehicleEntity implements GeoEntity, IChargeEntity, IVehicleEntity, HasCustomInventoryScreen, ContainerEntity {
+public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, IChargeEntity, IVehicleEntity, HasCustomInventoryScreen, ContainerEntity {
 
-    public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> ROT_Y = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> ROTOR = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.INT);
-    protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.STRING);
-    public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(SpeedboatEntityMobile.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> ROTOR = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
+    protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
 
     public static final float MAX_HEALTH = CannonConfig.SPEEDBOAT_HP.get();
     public static final float MAX_ENERGY = CannonConfig.SPEEDBOAT_MAX_ENERGY.get().floatValue();
@@ -112,11 +111,11 @@ public class SpeedboatEntityMobile extends MobileVehicleEntity implements GeoEnt
 
     public boolean cannotFire;
 
-    public SpeedboatEntityMobile(PlayMessages.SpawnEntity packet, Level world) {
+    public SpeedboatEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.SPEEDBOAT.get(), world);
     }
 
-    public SpeedboatEntityMobile(EntityType<SpeedboatEntityMobile> type, Level world) {
+    public SpeedboatEntity(EntityType<SpeedboatEntity> type, Level world) {
         super(type, world);
     }
 
@@ -126,7 +125,6 @@ public class SpeedboatEntityMobile extends MobileVehicleEntity implements GeoEnt
         this.entityData.define(FIRE_ANIM, 0);
         this.entityData.define(HEALTH, MAX_HEALTH);
         this.entityData.define(ENERGY, 0f);
-        this.entityData.define(ROT_Y, 0f);
         this.entityData.define(DELTA_ROT, 0f);
         this.entityData.define(POWER, 0f);
         this.entityData.define(ROTOR, 0f);
@@ -330,10 +328,6 @@ public class SpeedboatEntityMobile extends MobileVehicleEntity implements GeoEnt
             this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.85, f));
         }
 
-        if (this.level() instanceof ServerLevel) {
-            this.entityData.set(ROT_Y, this.getYRot());
-        }
-
         this.entityData.set(HEALTH, java.lang.Math.min(this.entityData.get(HEALTH) + 0.05f, MAX_HEALTH));
 
         if (this.entityData.get(HEALTH) <= 0) {
@@ -533,8 +527,8 @@ public class SpeedboatEntityMobile extends MobileVehicleEntity implements GeoEnt
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.8f);
 
         if (this.isInWater() || this.isUnderWater()) {
-            this.setYRot(this.entityData.get(ROT_Y) - this.entityData.get(DELTA_ROT));
-            this.setDeltaMovement(this.getDeltaMovement().add(new Vec3(this.getLookAngle().x, 0, this.getLookAngle().z).scale(this.entityData.get(POWER))));
+            this.setYRot(this.getYRot() - this.entityData.get(DELTA_ROT));
+            this.setDeltaMovement(this.getDeltaMovement().add((double)(Mth.sin(-this.getYRot() * 0.017453292F) * this.entityData.get(POWER)), 0.0, (double)(Mth.cos(this.getYRot() * 0.017453292F) * this.entityData.get(POWER))));
         }
     }
 
@@ -645,7 +639,7 @@ public class SpeedboatEntityMobile extends MobileVehicleEntity implements GeoEnt
         this.clampRotation(entity);
     }
 
-    private PlayState firePredicate(AnimationState<SpeedboatEntityMobile> event) {
+    private PlayState firePredicate(AnimationState<SpeedboatEntity> event) {
         if (this.entityData.get(FIRE_ANIM) > 1) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.speedboat.fire"));
         }
