@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.network.message;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.entity.IVehicleEntity;
+import com.atsuishio.superbwarfare.entity.WheelChairEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -52,7 +53,7 @@ public class ZoomMessage {
                         capability.syncPlayerVariables(player);
                     });
 
-                    if (player.isPassenger() && player.getVehicle() instanceof IVehicleEntity) {
+                    if (player.isPassenger() && player.getVehicle() instanceof IVehicleEntity && !(player.getVehicle() instanceof WheelChairEntity)) {
                         SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_IN.get(), 2, 1);
                     }
                 }
@@ -64,7 +65,7 @@ public class ZoomMessage {
                         capability.syncPlayerVariables(player);
                     });
 
-                    if (player.isPassenger() && player.getVehicle() instanceof IVehicleEntity) {
+                    if (player.isPassenger() && player.getVehicle() instanceof IVehicleEntity && !(player.getVehicle() instanceof WheelChairEntity)) {
                         SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_OUT.get(), 2, 1);
                     }
 

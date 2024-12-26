@@ -9,6 +9,8 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -27,13 +29,20 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, IVehicleEntity {
+public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, IVehicleEntity, IChargeEntity {
 
     public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(WheelChairEntity.class, EntityDataSerializers.FLOAT);
 
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(WheelChairEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(WheelChairEntity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = 50;
+    public static final float MAX_ENERGY = 24000;
+
+    public float leftWheelRot;
+    public float rightWheelRot;
+    public float leftWheelRotO;
+    public float rightWheelRotO;
 
     public WheelChairEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.WHEEL_CHAIR.get(), world);
@@ -48,6 +57,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
     protected void defineSynchedData() {
         this.entityData.define(HEALTH, MAX_HEALTH);
         this.entityData.define(POWER, 0f);
+        this.entityData.define(ENERGY, 0f);
     }
 
     @Override
@@ -57,11 +67,12 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
         } else {
             this.entityData.set(HEALTH, MAX_HEALTH);
         }
+        compound.putFloat("Energy", this.entityData.get(ENERGY));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
-
+        this.entityData.set(ENERGY, compound.getFloat("Energy"));
     }
 
     @Override
@@ -128,6 +139,9 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
     public void baseTick() {
         super.baseTick();
 
+        leftWheelRotO = this.getLeftWheelRot();
+        rightWheelRotO = this.getRightWheelRot();
+
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.078, 0.0));
         if (this.onGround()) {
             float f = 0.7f + 0.2f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
@@ -143,6 +157,12 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
             destroy();
         }
 
+        if (level().isClientSide && this.entityData.get(ENERGY) > 0) {
+            level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), ModSounds.WHEEL_CHAIR_ENGINE.get(), this.getSoundSource(), (float) (0.2 * this.getDeltaMovement().length()), (random.nextFloat() * 0.1f + 0.7f), false);
+        }
+
+        this.setSprinting(this.getDeltaMovement().length() > 0.15);
+
         travel();
         this.refreshDimensions();
     }
@@ -157,26 +177,78 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
 
         if (this.forwardInputDown) {
             this.entityData.set(POWER, this.entityData.get(POWER) + 0.01f);
+            if (this.entityData.get(ENERGY) <= 0 && entity instanceof Player player) {
+                moveWithOutPower(player, true);
+            }
         }
 
         if (this.backInputDown) {
             this.entityData.set(POWER, this.entityData.get(POWER) - 0.01f);
+            if (this.entityData.get(ENERGY) <= 0 && entity instanceof Player player) {
+                moveWithOutPower(player, false);
+            }
         }
 
-        if (this.upInputDown && this.onGround()) {
+        if (this.upInputDown && this.onGround() && this.entityData.get(ENERGY) > 800) {
+            if (entity instanceof ServerPlayer serverPlayer) {
+                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.WHEEL_CHAIR_JUMP.get(), SoundSource.PLAYERS, 1, 1);
+            }
+            this.entityData.set(ENERGY, this.entityData.get(ENERGY) - 800);
             this.setDeltaMovement(this.getDeltaMovement().add(0, 0.58, 0));
         }
 
-//        if (this.getPersistentData().getBoolean("forward") || this.getPersistentData().getBoolean("backward")) {
-//            this.entityData.set(ENERGY, Math.max(this.entityData.get(ENERGY) - CannonConfig.SPEEDBOAT_ENERGY_COST.get().floatValue(), 0));
-//        }
-
+        if (this.forwardInputDown || this.backInputDown) {
+            this.entityData.set(ENERGY, Math.max(this.entityData.get(ENERGY) - 1, 0));
+        }
 
         this.entityData.set(POWER, this.entityData.get(POWER) * 0.87f);
 
-        if (this.onGround()) {
-            this.setDeltaMovement(this.getDeltaMovement().add((double)(Mth.sin(-this.getYRot() * 0.017453292F) * this.entityData.get(POWER)), 0.0, (double)(Mth.cos(this.getYRot() * 0.017453292F) * this.entityData.get(POWER))));
+        float angle = (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1));
+        double s0;
+
+        if (Mth.abs(angle) < 90) {
+            s0 = this.getDeltaMovement().length();
+        } else {
+            s0 = -this.getDeltaMovement().length();
         }
+
+        this.setLeftWheelRot((float) (this.getLeftWheelRot() - 0.75 * s0) - 0.015f * Mth.clamp(0.4f * diffY,-5f, 5f));
+        this.setRightWheelRot((float) (this.getRightWheelRot() - 0.75 * s0) + 0.015f * Mth.clamp(0.4f * diffY,-5f, 5f));
+
+//        if (entity instanceof Player player) {
+//            player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(this.getRightWheelRot())), true);
+//        }
+
+        if (this.onGround()) {
+            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * this.entityData.get(POWER)));
+        }
+    }
+
+    public void moveWithOutPower(Player player, boolean forward) {
+        this.entityData.set(POWER, this.entityData.get(POWER) + (forward ? 0.015f : -0.015f));
+        if (player instanceof ServerPlayer serverPlayer) {
+            serverPlayer.level().playSound(null, serverPlayer.getOnPos(), SoundEvents.BOAT_PADDLE_LAND, SoundSource.PLAYERS, 1, 1);
+        }
+        player.causeFoodExhaustion(0.03F);
+        // TODO 手动摇轮椅时像划船一样收起物品
+        this.forwardInputDown = false;
+        this.backInputDown = false;
+    }
+
+    public float getLeftWheelRot() {
+        return this.leftWheelRot;
+    }
+
+    public void setLeftWheelRot(float pLeftWheelRot) {
+        this.leftWheelRot = pLeftWheelRot;
+    }
+
+    public float getRightWheelRot() {
+        return this.rightWheelRot;
+    }
+
+    public void setRightWheelRot(float pRightWheelRot) {
+        this.rightWheelRot = pRightWheelRot;
     }
 
     protected void clampRotation(Entity entity) {
@@ -241,5 +313,25 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
     @Override
     public int getAmmoCount(Player player) {
         return -1;
+    }
+
+    @Override
+    public int getEnergy() {
+        return this.entityData.get(ENERGY).intValue();
+    }
+
+    @Override
+    public int getMaxEnergy() {
+        return (int) MAX_ENERGY;
+    }
+
+    @Override
+    public void charge(int amount) {
+        this.entityData.set(ENERGY, Math.min(this.entityData.get(ENERGY) + amount, MAX_ENERGY));
+    }
+
+    @Override
+    public boolean canCharge() {
+        return this.entityData.get(ENERGY) < MAX_ENERGY;
     }
 }

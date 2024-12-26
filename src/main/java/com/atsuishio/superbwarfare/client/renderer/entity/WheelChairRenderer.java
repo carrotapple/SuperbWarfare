@@ -9,7 +9,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class WheelChairRenderer extends GeoEntityRenderer<WheelChairEntity> {
@@ -39,5 +41,23 @@ public class WheelChairRenderer extends GeoEntityRenderer<WheelChairEntity> {
         poseStack.mulPose(Axis.YP.rotationDegrees(-entityYaw));
         super.render(entityIn, entityYaw, partialTicks, poseStack, bufferIn, packedLightIn);
         poseStack.popPose();
+    }
+
+    @Override
+    public void renderRecursively(PoseStack poseStack, WheelChairEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        String name = bone.getName();
+        if (name.equals("w_rb")) {
+            bone.setRotX(Mth.lerp(partialTick, animatable.rightWheelRotO, animatable.getRightWheelRot()));
+        }
+        if (name.equals("w_lb")) {
+            bone.setRotX(Mth.lerp(partialTick, animatable.leftWheelRotO, animatable.getLeftWheelRot()));
+        }
+        if (name.equals("w_rr")) {
+            bone.setRotX(4 * Mth.lerp(partialTick, animatable.rightWheelRotO, animatable.getRightWheelRot()));
+        }
+        if (name.equals("w_lr")) {
+            bone.setRotX(4 * Mth.lerp(partialTick, animatable.leftWheelRotO, animatable.getLeftWheelRot()));
+        }
+        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }
