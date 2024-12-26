@@ -313,11 +313,10 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
             destroy();
         }
 
-        if (this.level() instanceof ServerLevel serverLevel) {
-            sendParticle(serverLevel, ParticleTypes.CLOUD, this.getX() + 2 * getLookAngle().x, this.getY() + getSubmergedHeight(this), this.getZ() + 2 * getLookAngle().z, 4, 0.5, 0, 0.5, 0.1, true);
-//            sendParticle(serverLevel, ParticleTypes.CLOUD, x, y + 3, z, 30, 2, 1, 2, 0.01, true);
-//            sendParticle(serverLevel, ParticleTypes.FALLING_WATER, x, y + 3, z, 50, 1.5, 4, 1.5, 1, true);
-//            sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, x, y, z, 60, 3, 0.5, 3, 0.1, true);
+        if (this.level() instanceof ServerLevel serverLevel && this.isInWater() && this.getDeltaMovement().length() > 0.1) {
+            sendParticle(serverLevel, ParticleTypes.CLOUD, this.getX() + 1.2 * this.getDeltaMovement().x, this.getY() + getSubmergedHeight(this) - 0.2, this.getZ() + 1.2 * this.getDeltaMovement().z, (int)(2 + 4 * this.getDeltaMovement().length()), 0.65, 0, 0.65, 0, true);
+            sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, this.getX() + 1.2 * this.getDeltaMovement().x, this.getY() + getSubmergedHeight(this) - 0.2, this.getZ() + 1.2 * this.getDeltaMovement().z, (int)(2 + 10 * this.getDeltaMovement().length()), 0.65, 0, 0.65, 0, true);
+            sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, this.getX() - 3.5 * this.getLookAngle().x, this.getY() - 0.25, this.getZ() - 3.5 * this.getLookAngle().z, (int)(40 * Mth.abs(this.entityData.get(POWER))), 0.15, 0.15, 0.15, 0.02, true);
         }
 
         controlBoat();
