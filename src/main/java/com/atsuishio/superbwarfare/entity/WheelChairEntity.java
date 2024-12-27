@@ -3,9 +3,7 @@ package com.atsuishio.superbwarfare.entity;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
-import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
-import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
@@ -18,13 +16,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
@@ -43,6 +37,8 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
     public float rightWheelRot;
     public float leftWheelRotO;
     public float rightWheelRotO;
+    public int jumpCoolDown;
+    public int handBusyTime;
 
     public WheelChairEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.WHEEL_CHAIR.get(), world);
@@ -92,62 +88,36 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
     }
 
     @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
-        if (player.getVehicle() == this) return InteractionResult.PASS;
-        if (player.isShiftKeyDown() && player.getMainHandItem().is(ModItems.CROWBAR.get())) {
-            ItemStack stack = ContainerBlockItem.createInstance(this);
-            if (!player.addItem(stack)) {
-                player.drop(stack, false);
-            }
-            this.remove(RemovalReason.DISCARDED);
-            this.discard();
-        } else {
-            if (player.getMainHandItem().is(Items.IRON_INGOT)) {
-                if (this.getHealth() < this.getMaxHealth()) {
-                    this.heal(Math.min(0.5f * this.getMaxHealth(), this.getMaxHealth()));
-                    player.getMainHandItem().shrink(1);
-                    if (!this.level().isClientSide) {
-                        this.level().playSound(null, this, SoundEvents.IRON_GOLEM_REPAIR, this.getSoundSource(), 1, 1);
-                    }
-                } else {
-                    player.startRiding(this);
-                }
-                return InteractionResult.sidedSuccess(this.level().isClientSide());
-            }
-            player.startRiding(this);
-        }
-        return InteractionResult.sidedSuccess(this.level().isClientSide());
-    }
-
-    @Override
     public void baseTick() {
         super.baseTick();
+
+        if (jumpCoolDown > 0 && onGround()) {
+            jumpCoolDown--;
+        }
+
+        if (handBusyTime > 0) {
+            handBusyTime--;
+        }
 
         leftWheelRotO = this.getLeftWheelRot();
         rightWheelRotO = this.getRightWheelRot();
 
-        this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.078, 0.0));
+        this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.048, 0.0));
         if (this.onGround()) {
             float f = 0.7f + 0.2f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
-            this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.99, f));
+            this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.95, f));
         } else {
-            this.setDeltaMovement(this.getDeltaMovement().multiply(0.99, 0.99, 0.99));
+            this.setDeltaMovement(this.getDeltaMovement().multiply(0.99, 0.95, 0.99));
         }
 
         this.move(MoverType.SELF, this.getDeltaMovement());
-
-        if (this.getHealth() <= 0) {
-            this.ejectPassengers();
-            destroy();
-        }
 
         if (level().isClientSide && this.getEnergy() > 0) {
             level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), ModSounds.WHEEL_CHAIR_ENGINE.get(), this.getSoundSource(), (float) (0.2 * this.getDeltaMovement().length()), (random.nextFloat() * 0.1f + 0.7f), false);
         }
 
-        this.setSprinting(this.getDeltaMovement().length() > 0.15);
+        this.setSprinting(this.getDeltaMovement().horizontalDistance() > 0.15);
 
-        travel();
         this.refreshDimensions();
     }
 
@@ -181,16 +151,24 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
             }
         }
 
-        if (this.upInputDown && this.onGround() && this.getEnergy() > 400) {
+        if (this.upInputDown && this.onGround() && this.getEnergy() > 400 && jumpCoolDown == 0) {
             if (passenger instanceof ServerPlayer serverPlayer) {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.WHEEL_CHAIR_JUMP.get(), SoundSource.PLAYERS, 1, 1);
             }
             this.extraEnergy(400);
-            this.setDeltaMovement(this.getDeltaMovement().add(0, 0.58, 0));
+            this.setDeltaMovement(this.getDeltaMovement().add(0, 0.48, 0));
+            jumpCoolDown = 5;
         }
 
         if (this.forwardInputDown || this.backInputDown) {
             this.extraEnergy(1);
+        }
+
+        if (passenger instanceof Player player && handBusyTime > 0) {
+            var localPlayer = Minecraft.getInstance().player;
+            if (localPlayer != null && player.getUUID().equals(localPlayer.getUUID())) {
+                localPlayer.handsBusy = true;
+            }
         }
 
         power *= 0.87f;
@@ -199,9 +177,9 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
         double s0;
 
         if (Mth.abs(angle) < 90) {
-            s0 = this.getDeltaMovement().length();
+            s0 = this.getDeltaMovement().horizontalDistance();
         } else {
-            s0 = -this.getDeltaMovement().length();
+            s0 = -this.getDeltaMovement().horizontalDistance();
         }
 
         this.setLeftWheelRot((float) (this.getLeftWheelRot() - 1 * s0) - 0.015f * Mth.clamp(0.4f * diffY, -5f, 5f));
@@ -211,9 +189,8 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
 //            player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(this.getRightWheelRot())), true);
 //        }
 
-        if (this.onGround()) {
-            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * power, 0.0, Mth.cos(this.getYRot() * 0.017453292F) * power));
-        }
+        this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (this.onGround() ? 1 : 0.1) * power, 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (this.onGround() ? 1 : 0.1) * power));
+
     }
 
     public void moveWithOutPower(Player player, boolean forward) {
@@ -223,11 +200,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
         }
         player.causeFoodExhaustion(0.03F);
 
-        var localPlayer = Minecraft.getInstance().player;
-        if (localPlayer != null && player.getUUID().equals(localPlayer.getUUID())) {
-            localPlayer.handsBusy = true;
-        }
-
+        handBusyTime = 4;
         this.forwardInputDown = false;
         this.backInputDown = false;
     }

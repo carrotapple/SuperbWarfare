@@ -1,16 +1,24 @@
 package com.atsuishio.superbwarfare.entity;
 
+import com.atsuishio.superbwarfare.init.ModItems;
+import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Math;
@@ -51,6 +59,40 @@ public class VehicleEntity extends Entity {
     }
 
     @Override
+    public InteractionResult interact(Player player, InteractionHand hand) {
+        if (player.getVehicle() == this) return InteractionResult.PASS;
+        if (player.isShiftKeyDown() && player.getMainHandItem().is(ModItems.CROWBAR.get())) {
+            ItemStack stack = ContainerBlockItem.createInstance(this);
+            if (!player.addItem(stack)) {
+                player.drop(stack, false);
+            }
+            this.remove(RemovalReason.DISCARDED);
+            this.discard();
+        } else if (player.getMainHandItem().is(Items.IRON_INGOT)) {
+            if (this.getHealth() < this.getMaxHealth()) {
+                this.heal(Math.min(50, this.getMaxHealth()));
+                player.getMainHandItem().shrink(1);
+                if (!this.level().isClientSide) {
+                    this.level().playSound(null, this, SoundEvents.IRON_GOLEM_REPAIR, this.getSoundSource(), 0.5f, 1);
+                }
+            } else if (!this.level().isClientSide) {
+                if (this.getFirstPassenger() == null) {
+                    player.setXRot(this.getXRot());
+                    player.setYRot(this.getYRot());
+                    return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
+                }
+            }
+        } else if (!this.level().isClientSide) {
+            if (this.getFirstPassenger() == null) {
+                player.setXRot(this.getXRot());
+                player.setYRot(this.getYRot());
+                return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
+            }
+        }
+        return InteractionResult.PASS;
+    }
+
+    @Override
     public boolean hurt(DamageSource source, float amount) {
         if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
             return false;
@@ -69,6 +111,10 @@ public class VehicleEntity extends Entity {
         if (source.is(DamageTypes.WITHER))
             return false;
         if (source.is(DamageTypes.WITHER_SKULL))
+            return false;
+        if (source.is(DamageTypes.ON_FIRE))
+            return false;
+        if (source.is(DamageTypes.IN_FIRE))
             return false;
         if (source.getEntity() != null) {
             this.entityData.set(LAST_ATTACKER_UUID, source.getEntity().getStringUUID());

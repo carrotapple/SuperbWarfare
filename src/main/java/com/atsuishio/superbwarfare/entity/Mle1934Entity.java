@@ -5,7 +5,6 @@ import com.atsuishio.superbwarfare.config.server.CannonConfig;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.entity.projectile.CannonShellEntity;
 import com.atsuishio.superbwarfare.init.*;
-import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.item.common.ammo.CannonShellItem;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
@@ -24,8 +23,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
@@ -133,31 +130,6 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
         this.hurt(0.5f * Math.max(amount - 5, 0));
         return true;
-    }
-
-    @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
-        if (player.isShiftKeyDown()) {
-            if (player.getMainHandItem().is(ModItems.CROWBAR.get()) && this.getFirstPassenger() == null) {
-                ItemStack stack = ContainerBlockItem.createInstance(this);
-                if (!player.addItem(stack)) {
-                    player.drop(stack, false);
-                }
-
-                this.discard();
-                return InteractionResult.sidedSuccess(this.level().isClientSide());
-            }
-            return InteractionResult.PASS;
-        } else {
-            if (this.getFirstPassenger() == null) {
-                player.setXRot(this.getXRot());
-                player.setYRot(this.getYRot());
-                player.startRiding(this);
-                return InteractionResult.sidedSuccess(this.level().isClientSide());
-            }
-        }
-
-        return InteractionResult.PASS;
     }
 
     @Override

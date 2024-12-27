@@ -3,8 +3,10 @@ package com.atsuishio.superbwarfare.entity;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.CannonConfig;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
-import com.atsuishio.superbwarfare.init.*;
-import com.atsuishio.superbwarfare.item.ContainerBlockItem;
+import com.atsuishio.superbwarfare.init.ModDamageTypes;
+import com.atsuishio.superbwarfare.init.ModEntities;
+import com.atsuishio.superbwarfare.init.ModParticleTypes;
+import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.*;
 import net.minecraft.core.BlockPos;
@@ -22,8 +24,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -31,7 +31,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -139,30 +138,6 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
         this.hurt(0.5f * Math.max(amount - 40, 0));
 
         return true;
-    }
-
-    @Override
-    public InteractionResult interact(Player player, InteractionHand hand) {
-        if (player.isShiftKeyDown()) {
-            if (player.getMainHandItem().is(ModItems.CROWBAR.get()) && this.getFirstPassenger() == null) {
-                ItemStack stack = ContainerBlockItem.createInstance(this);
-                if (!player.addItem(stack)) {
-                    player.drop(stack, false);
-                }
-
-                this.discard();
-                return InteractionResult.sidedSuccess(this.level().isClientSide());
-            }
-            return InteractionResult.PASS;
-        } else {
-            if (this.getFirstPassenger() == null) {
-                player.setXRot(this.getXRot());
-                player.setYRot(this.getYRot());
-                player.startRiding(this);
-                return InteractionResult.sidedSuccess(this.level().isClientSide());
-            }
-        }
-        return InteractionResult.PASS;
     }
 
     @Override

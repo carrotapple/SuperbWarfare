@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -30,7 +31,9 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
     @Override
     public void baseTick() {
         super.baseTick();
-        crushEntities(this.getDeltaMovement());
+        if (this.level() instanceof ServerLevel) {
+            crushEntities(this.getDeltaMovement());
+        }
         this.refreshDimensions();
     }
 
@@ -40,23 +43,27 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
      */
     public void crushEntities(Vec3 velocity) {
         var frontBox = getBoundingBox().move(velocity.scale(0.5));
-        var velAdd = velocity.add(0, 0, 0).scale(1.5);
+        var velAdd = velocity.add(0, 0, 0).scale(1.3);
         for (var entity : level().getEntities(EntityTypeTest.forClass(Entity.class), frontBox, entity -> entity != this && entity != getFirstPassenger() && entity.getVehicle() == null)) {
 
             double entitySize = entity.getBbWidth() * entity.getBbHeight();
             double thisSize = this.getBbWidth() * this.getBbHeight();
             double f = Math.min(entitySize / thisSize, 2);
             double f1 = Math.min(thisSize / entitySize, 4);
-            if (!(entity instanceof TargetEntity)) {
-                this.push(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
-            }
 
-            if (velocity.length() > 0.25 && entity.isAlive() && !(entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ProjectileEntity)) {
-                if (!this.level().isClientSide) {
-                    this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
+            if (entity.isAlive() && !(entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ProjectileEntity)) {
+                if (velocity.horizontalDistance() > 0.5) {
+                    if (!this.level().isClientSide) {
+                        this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
+                    }
+                    if (!(entity instanceof TargetEntity)) {
+                        this.push(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
+                    }
+                    entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
+                    entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (thisSize * 60 * (velocity.horizontalDistance() - 0.5)));
+                } else {
+                    entity.push(0.2 * f1 * velAdd.x, 0.2 * f1 * velAdd.y, 0.2 * f1 * velAdd.z);
                 }
-                entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
-                entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (20 * velocity.length()));
             }
         }
     }
