@@ -25,11 +25,12 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
@@ -51,24 +52,17 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
 
-public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntity, IChargeEntity {
-
+public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity, ICannonEntity {
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> LASER_LEFT_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> LASER_MIDDLE_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> LASER_RIGHT_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> OFFSET_ANGLE = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public static final float MAX_HEALTH = CannonConfig.ANNIHILATOR_HP.get();
-    public static final float MAX_ENERGY = CannonConfig.ANNIHILATOR_MAX_ENERGY.get().floatValue();
-    public static final float SHOOT_COST = CannonConfig.ANNIHILATOR_SHOOT_COST.get().floatValue();
-
-    protected int interpolationSteps;
-    protected double serverYRot;
-    protected double serverXRot;
+    public static final int MAX_ENERGY = CannonConfig.ANNIHILATOR_MAX_ENERGY.get();
+    public static final int SHOOT_COST = CannonConfig.ANNIHILATOR_SHOOT_COST.get();
     public Vec3 barrelLookAt;
 
     public AnnihilatorEntity(PlayMessages.SpawnEntity packet, Level world) {
@@ -82,31 +76,24 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
 
     @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
         this.entityData.define(COOL_DOWN, 0);
-        this.entityData.define(HEALTH, MAX_HEALTH);
         this.entityData.define(LASER_LEFT_LENGTH, 0f);
         this.entityData.define(LASER_MIDDLE_LENGTH, 0f);
         this.entityData.define(LASER_RIGHT_LENGTH, 0f);
-        this.entityData.define(ENERGY, 0f);
         this.entityData.define(OFFSET_ANGLE, 0f);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
         compound.putInt("CoolDown", this.entityData.get(COOL_DOWN));
-        compound.putFloat("Health", this.entityData.get(HEALTH));
-        compound.putFloat("Energy", this.entityData.get(ENERGY));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
         this.entityData.set(COOL_DOWN, compound.getInt("CoolDown"));
-        this.entityData.set(ENERGY, compound.getFloat("Energy"));
-        if (compound.contains("Health")) {
-            this.entityData.set(HEALTH, compound.getFloat("Health"));
-        } else {
-            this.entityData.set(HEALTH, MAX_HEALTH);
-        }
     }
 
     @Override
@@ -116,16 +103,6 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
             Vec3 vec3 = (new Vec3(1, 0.0, 0.0)).yRot(-this.getYRot() * 0.017453292F - 1.5707964F);
             pCallback.accept(pPassenger, this.getX() + vec3.x, this.getY() + (double) f1, this.getZ() + vec3.z);
         }
-    }
-
-    @Override
-    public boolean canBeCollidedWith() {
-        return true;
-    }
-
-    @Override
-    public boolean canCollideWith(Entity pEntity) {
-        return (pEntity.canBeCollidedWith() || pEntity.isPushable()) && !this.isPassengerOfSameVehicle(pEntity);
     }
 
     @Override
@@ -140,47 +117,28 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
+        super.hurt(source, amount);
         if (this.level() instanceof ServerLevel serverLevel) {
             ParticleTool.sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
         }
 
-        if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
-            return false;
-        if (source.is(DamageTypes.FALL))
-            return false;
-        if (source.is(DamageTypes.CACTUS))
-            return false;
-        if (source.is(DamageTypes.DROWN))
-            return false;
-        if (source.is(DamageTypes.LIGHTNING_BOLT))
-            return false;
-        if (source.is(DamageTypes.FALLING_ANVIL))
-            return false;
-        if (source.is(DamageTypes.DRAGON_BREATH))
-            return false;
-        if (source.is(DamageTypes.WITHER))
-            return false;
-        if (source.is(DamageTypes.WITHER_SKULL))
-            return false;
         if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
             amount *= 0.5f;
         }
         if (source.is(ModDamageTypes.CANNON_FIRE)) {
             amount *= 1.4f;
         }
+        if (source.is(ModDamageTypes.GUN_FIRE)) {
+            amount = 0;
+        }
         if (source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE)) {
-            amount *= 1.6f;
+            amount *= 0.1f;
         }
 
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.5f * Math.max(amount - 40, 0));
+        this.hurt(0.5f * Math.max(amount - 40, 0));
 
         return true;
-    }
-
-    @Override
-    public boolean isPickable() {
-        return !this.isRemoved();
     }
 
     @Override
@@ -228,21 +186,21 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         }
 
         if (this.level() instanceof ServerLevel serverLevel) {
-            if (this.entityData.get(HEALTH) <= 0.4 * CannonConfig.ANNIHILATOR_HP.get()) {
+            if (this.getHealth() <= 0.4 * this.getMaxHealth()) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 2, 0.75, 0.5, 0.75, 0.01, false);
             }
 
-            if (this.entityData.get(HEALTH) <= 0.25 * CannonConfig.ANNIHILATOR_HP.get()) {
+            if (this.getHealth() <= 0.25 * this.getMaxHealth()) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
             }
 
-            if (this.entityData.get(HEALTH) <= 0.15 * CannonConfig.ANNIHILATOR_HP.get()) {
+            if (this.getHealth() <= 0.15 * this.getMaxHealth()) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
             }
 
-            if (this.entityData.get(HEALTH) <= 0.1 * CannonConfig.ANNIHILATOR_HP.get()) {
+            if (this.getHealth() <= 0.1 * this.getMaxHealth()) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 2, 0.75, 0.5, 0.75, 0.01, false);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 2, 0.75, 0.5, 0.75, 0.01, false);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.FLAME, this.getX(), this.getY() + 3.2, this.getZ(), 4, 0.6, 0.1, 0.6, 0.05, false);
@@ -250,9 +208,9 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
                 if (this.tickCount % 15 == 0) {
                     this.level().playSound(null, this.getOnPos(), SoundEvents.FIRE_AMBIENT, SoundSource.PLAYERS, 1, 1);
                 }
-                this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.1f);
+                this.hurt(0.1f);
             } else {
-                this.entityData.set(HEALTH, Math.min(this.entityData.get(HEALTH) + 0.05f, MAX_HEALTH));
+                this.heal(0.05f);
             }
         }
 
@@ -264,11 +222,6 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         while (getYRot() <= -180F) {
             setYRot(getYRot() + 360F);
             yRotO = delta + getYRot();
-        }
-
-        if (this.entityData.get(HEALTH) <= 0) {
-            this.ejectPassengers();
-            destroy();
         }
 
         float yRot = this.getYRot();
@@ -312,8 +265,6 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
 //        } else {
 //            travel();
 //        }
-
-        travel();
 
         Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
 
@@ -386,16 +337,19 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
         ParticleTool.spawnHugeExplosionParticles(this.level(), pos);
     }
 
-    private void destroy() {
-        CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this), 160f,
-                this.getX(), this.getY(), this.getZ(), 20f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
-        explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
-        explosion.finalizeExplosion(false);
-        ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
-
-        this.discard();
+    @Override
+    public void destroy() {
+        if (level() instanceof ServerLevel) {
+            Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
+            CustomExplosion explosion = new CustomExplosion(this.level(), attacker == null ? this : attacker,
+                    ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), attacker == null ? this : attacker, attacker == null ? this : attacker), 200.0f,
+                    this.getX(), this.getY(), this.getZ(), 15f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+            explosion.explode();
+            net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+            explosion.finalizeExplosion(false);
+            ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
+            this.discard();
+        }
     }
 
     @Override
@@ -404,7 +358,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
             return;
         }
 
-        if (this.entityData.get(ENERGY) < SHOOT_COST) {
+        if (this.getEnergy() < SHOOT_COST) {
             player.displayClientMessage(Component.literal("Not Enough Energy!"), true);
             return;
         }
@@ -421,7 +375,7 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
 
             this.entityData.set(COOL_DOWN, 100);
 
-            this.entityData.set(ENERGY, this.entityData.get(ENERGY) - SHOOT_COST);
+            this.extraEnergy(SHOOT_COST);
 
             final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
 
@@ -435,16 +389,10 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     }
 
     @Override
-    public void lerpTo(double x, double y, double z, float yaw, float pitch, int interpolationSteps, boolean interpolate) {
-        serverYRot = yaw;
-        serverXRot = pitch;
-        this.interpolationSteps = 10;
-    }
-
     public void travel() {
         Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
         if (!(passenger instanceof LivingEntity entity)) return;
-        if (this.entityData.get(ENERGY) <= 0) return;
+        if (this.getEnergy() <= 0) return;
 
         float yRot = this.getYRot();
         if (yRot < 0) {
@@ -553,33 +501,13 @@ public class AnnihilatorEntity extends Entity implements GeoEntity, ICannonEntit
     }
 
     @Override
-    public void charge(int amount) {
-        this.entityData.set(ENERGY, Math.min(this.entityData.get(ENERGY) + amount, CannonConfig.ANNIHILATOR_MAX_ENERGY.get().floatValue()));
-    }
-
-    @Override
-    public boolean canCharge() {
-        return this.entityData.get(ENERGY) < MAX_ENERGY;
-    }
-
-    @Override
-    public int getEnergy() {
-        return this.entityData.get(ENERGY).intValue();
-    }
-
-    @Override
     public int getMaxEnergy() {
-        return (int) MAX_ENERGY;
-    }
-
-    @Override
-    public float getHealth() {
-        return this.entityData.get(HEALTH).intValue();
+        return MAX_ENERGY;
     }
 
     @Override
     public float getMaxHealth() {
-        return (int) MAX_HEALTH;
+        return MAX_HEALTH;
     }
 
     @Override

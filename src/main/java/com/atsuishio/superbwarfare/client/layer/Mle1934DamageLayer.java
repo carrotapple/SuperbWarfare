@@ -1,7 +1,6 @@
 package com.atsuishio.superbwarfare.client.layer;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.config.server.CannonConfig;
 import com.atsuishio.superbwarfare.entity.Mle1934Entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -25,7 +24,7 @@ public class Mle1934DamageLayer extends GeoRenderLayer<Mle1934Entity> {
     @Override
     public void render(PoseStack poseStack, Mle1934Entity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
         RenderType glowRenderType = RenderType.entityTranslucent(LAYER);
-        float heal = Mth.clamp((0.3f * CannonConfig.MLE1934_HP.get() - animatable.getEntityData().get(Mle1934Entity.HEALTH)) * 0.00001f * CannonConfig.MLE1934_HP.get(), 0, 1);
+        float heal = Mth.clamp((0.3f * animatable.getMaxHealth() - animatable.getHealth()) * 0.00001f * animatable.getMaxHealth(), 0, 1);
         getRenderer().reRender(getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, glowRenderType, bufferSource.getBuffer(glowRenderType), partialTick, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, heal);
     }
 }

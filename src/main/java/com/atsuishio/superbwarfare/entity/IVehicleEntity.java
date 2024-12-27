@@ -6,10 +6,6 @@ public interface IVehicleEntity {
 
     void vehicleShoot(Player player);
 
-    float getHealth();
-
-    float getMaxHealth();
-
     boolean isDriver(Player player);
 
     int mainGunRpm();

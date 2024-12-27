@@ -1,15 +1,17 @@
 package com.atsuishio.superbwarfare.entity;
 
+import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
+import com.atsuishio.superbwarfare.tools.CustomExplosion;
+import com.atsuishio.superbwarfare.tools.EntityFindUtil;
+import com.atsuishio.superbwarfare.tools.ParticleTool;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -18,12 +20,11 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
@@ -33,13 +34,10 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, IVehicleEntity, IChargeEntity {
-
-    public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(WheelChairEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(WheelChairEntity.class, EntityDataSerializers.FLOAT);
+public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, IVehicleEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = 50;
-    public static final float MAX_ENERGY = 24000;
+    public static final int MAX_ENERGY = 24000;
     public float leftWheelRot;
     public float rightWheelRot;
     public float leftWheelRotO;
@@ -56,23 +54,17 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
 
     @Override
     protected void defineSynchedData() {
-        this.entityData.define(HEALTH, MAX_HEALTH);
-        this.entityData.define(ENERGY, 0f);
+        super.defineSynchedData();
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
-        if (compound.contains("Health")) {
-            this.entityData.set(HEALTH, compound.getFloat("Health"));
-        } else {
-            this.entityData.set(HEALTH, MAX_HEALTH);
-        }
-        compound.putFloat("Energy", this.entityData.get(ENERGY));
+        super.addAdditionalSaveData(compound);
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
-        this.entityData.set(ENERGY, compound.getFloat("Energy"));
+        super.readAdditionalSaveData(compound);
     }
 
     @Override
@@ -92,27 +84,9 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
-            return false;
-        if (source.is(DamageTypes.FALL))
-            return false;
-        if (source.is(DamageTypes.CACTUS))
-            return false;
-        if (source.is(DamageTypes.DROWN))
-            return false;
-        if (source.is(DamageTypes.LIGHTNING_BOLT))
-            return false;
-        if (source.is(DamageTypes.FALLING_ANVIL))
-            return false;
-        if (source.is(DamageTypes.DRAGON_BREATH))
-            return false;
-        if (source.is(DamageTypes.WITHER))
-            return false;
-        if (source.is(DamageTypes.WITHER_SKULL))
-            return false;
-
+        super.hurt(source, amount);
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - amount);
+        this.hurt(amount);
         return true;
     }
 
@@ -128,8 +102,8 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
             this.discard();
         } else {
             if (player.getMainHandItem().is(Items.IRON_INGOT)) {
-                if (this.entityData.get(HEALTH) < MAX_HEALTH) {
-                    this.entityData.set(HEALTH, Math.min(this.entityData.get(HEALTH) + 0.5f * MAX_HEALTH, MAX_HEALTH));
+                if (this.getHealth() < this.getMaxHealth()) {
+                    this.heal(Math.min(0.5f * this.getMaxHealth(), this.getMaxHealth()));
                     player.getMainHandItem().shrink(1);
                     if (!this.level().isClientSide) {
                         this.level().playSound(null, this, SoundEvents.IRON_GOLEM_REPAIR, this.getSoundSource(), 1, 1);
@@ -161,12 +135,12 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
 
         this.move(MoverType.SELF, this.getDeltaMovement());
 
-        if (this.entityData.get(HEALTH) <= 0) {
+        if (this.getHealth() <= 0) {
             this.ejectPassengers();
             destroy();
         }
 
-        if (level().isClientSide && this.entityData.get(ENERGY) > 0) {
+        if (level().isClientSide && this.getEnergy() > 0) {
             level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), ModSounds.WHEEL_CHAIR_ENGINE.get(), this.getSoundSource(), (float) (0.2 * this.getDeltaMovement().length()), (random.nextFloat() * 0.1f + 0.7f), false);
         }
 
@@ -176,38 +150,46 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
         this.refreshDimensions();
     }
 
+    @Override
     public void travel() {
         Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
-        if (!(passenger instanceof LivingEntity entity)) return;
 
-        float diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(entity.getYHeadRot() - this.getYRot()));
+        float diffY = 0;
 
-        this.setYRot(this.getYRot() + Mth.clamp(0.4f * diffY,-5f, 5f));
+        if (passenger == null) {
+            this.leftInputDown = false;
+            this.rightInputDown = false;
+            this.forwardInputDown = false;
+            this.backInputDown = false;
+        } else {
+            diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
+            this.setYRot(this.getYRot() + Mth.clamp(0.4f * diffY, -5f, 5f));
+        }
 
         if (this.forwardInputDown) {
             power += 0.01f;
-            if (this.entityData.get(ENERGY) <= 0 && entity instanceof Player player) {
+            if (this.getEnergy() <= 0 && passenger instanceof Player player) {
                 moveWithOutPower(player, true);
             }
         }
 
         if (this.backInputDown) {
             power -= 0.01f;
-            if (this.entityData.get(ENERGY) <= 0 && entity instanceof Player player) {
+            if (this.getEnergy() <= 0 && passenger instanceof Player player) {
                 moveWithOutPower(player, false);
             }
         }
 
-        if (this.upInputDown && this.onGround() && this.entityData.get(ENERGY) > 800) {
-            if (entity instanceof ServerPlayer serverPlayer) {
+        if (this.upInputDown && this.onGround() && this.getEnergy() > 400) {
+            if (passenger instanceof ServerPlayer serverPlayer) {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.WHEEL_CHAIR_JUMP.get(), SoundSource.PLAYERS, 1, 1);
             }
-            this.entityData.set(ENERGY, this.entityData.get(ENERGY) - 800);
+            this.extraEnergy(400);
             this.setDeltaMovement(this.getDeltaMovement().add(0, 0.58, 0));
         }
 
         if (this.forwardInputDown || this.backInputDown) {
-            this.entityData.set(ENERGY, Math.max(this.entityData.get(ENERGY) - 1, 0));
+            this.extraEnergy(1);
         }
 
         power *= 0.87f;
@@ -221,8 +203,8 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
             s0 = -this.getDeltaMovement().length();
         }
 
-        this.setLeftWheelRot((float) (this.getLeftWheelRot() - 0.85 * s0) - 0.015f * Mth.clamp(0.4f * diffY,-5f, 5f));
-        this.setRightWheelRot((float) (this.getRightWheelRot() - 0.85 * s0) + 0.015f * Mth.clamp(0.4f * diffY,-5f, 5f));
+        this.setLeftWheelRot((float) (this.getLeftWheelRot() - 1 * s0) - 0.015f * Mth.clamp(0.4f * diffY, -5f, 5f));
+        this.setRightWheelRot((float) (this.getRightWheelRot() - 1 * s0) + 0.015f * Mth.clamp(0.4f * diffY, -5f, 5f));
 
 //        if (entity instanceof Player player) {
 //            player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(this.getRightWheelRot())), true);
@@ -274,11 +256,19 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
         this.clampRotation(entity);
     }
 
-    private void destroy() {
+    @Override
+    public void destroy() {
         if (level() instanceof ServerLevel) {
-            level().explode(null, this.getX(), this.getY(), this.getZ(), 0, Level.ExplosionInteraction.NONE);
+            Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
+            CustomExplosion explosion = new CustomExplosion(this.level(), attacker == null ? this : attacker,
+                    ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), attacker == null ? this : attacker, attacker == null ? this : attacker), 25.0f,
+                    this.getX(), this.getY(), this.getZ(), 5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+            explosion.explode();
+            net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+            explosion.finalizeExplosion(false);
+            ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+            this.discard();
         }
-        this.discard();
     }
 
     @Override
@@ -295,13 +285,8 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
     }
 
     @Override
-    public float getHealth() {
-        return this.entityData.get(HEALTH).intValue();
-    }
-
-    @Override
     public float getMaxHealth() {
-        return (int) MAX_HEALTH;
+        return MAX_HEALTH;
     }
 
     @Override
@@ -325,22 +310,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
     }
 
     @Override
-    public int getEnergy() {
-        return this.entityData.get(ENERGY).intValue();
-    }
-
-    @Override
     public int getMaxEnergy() {
-        return (int) MAX_ENERGY;
-    }
-
-    @Override
-    public void charge(int amount) {
-        this.entityData.set(ENERGY, Math.min(this.entityData.get(ENERGY) + amount, MAX_ENERGY));
-    }
-
-    @Override
-    public boolean canCharge() {
-        return this.entityData.get(ENERGY) < MAX_ENERGY;
+        return MAX_ENERGY;
     }
 }

@@ -12,8 +12,6 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
-import static com.atsuishio.superbwarfare.entity.SpeedboatEntity.ENERGY;
-
 public class SpeedBoatPowerLayer extends GeoRenderLayer<SpeedboatEntity> {
 
     private static final ResourceLocation LAYER = ModUtils.loc("textures/entity/speedboat_power.png");
@@ -24,7 +22,7 @@ public class SpeedBoatPowerLayer extends GeoRenderLayer<SpeedboatEntity> {
 
     @Override
     public void render(PoseStack poseStack, SpeedboatEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
-        if (animatable.getEntityData().get(ENERGY) <= 0) return;
+        if (animatable.getEnergy() <= 0) return;
         RenderType glowRenderType = RenderType.eyes(LAYER);
         getRenderer().reRender(getDefaultBakedModel(animatable), poseStack, bufferSource, animatable, glowRenderType, bufferSource.getBuffer(glowRenderType), partialTick, packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
     }

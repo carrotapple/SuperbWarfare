@@ -38,14 +38,15 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.HasCustomInventoryScreen;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.entity.vehicle.ContainerEntity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -87,15 +88,12 @@ import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, IChargeEntity, IVehicleEntity, HasCustomInventoryScreen, ContainerEntity {
     public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
-    protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
 
     public static final float MAX_HEALTH = CannonConfig.SPEEDBOAT_HP.get();
-    public static final float MAX_ENERGY = CannonConfig.SPEEDBOAT_MAX_ENERGY.get().floatValue();
+    public static final int MAX_ENERGY = CannonConfig.SPEEDBOAT_MAX_ENERGY.get();
     public static final int CONTAINER_SIZE = 105;
 
     private NonNullList<ItemStack> items = NonNullList.withSize(CONTAINER_SIZE, ItemStack.EMPTY);
@@ -123,35 +121,24 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
 
     @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
         this.entityData.define(POWER, 0f);
         this.entityData.define(AMMO, 0);
         this.entityData.define(FIRE_ANIM, 0);
-        this.entityData.define(HEALTH, MAX_HEALTH);
-        this.entityData.define(ENERGY, 0f);
         this.entityData.define(DELTA_ROT, 0f);
         this.entityData.define(HEAT, 0);
-        this.entityData.define(LAST_ATTACKER_UUID, "undefined");
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
-        compound.putFloat("Health", this.entityData.get(HEALTH));
+        super.addAdditionalSaveData(compound);
         compound.putFloat("Energy", this.entityData.get(ENERGY));
-        compound.putString("LastAttacker", this.entityData.get(LAST_ATTACKER_UUID));
         ContainerHelper.saveAllItems(compound, this.getItemStacks());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
-        this.entityData.set(ENERGY, compound.getFloat("Energy"));
-        if (compound.contains("Health")) {
-            this.entityData.set(HEALTH, compound.getFloat("Health"));
-        } else {
-            this.entityData.set(HEALTH, MAX_HEALTH);
-        }
-        if (compound.contains("LastAttacker")) {
-            this.entityData.set(LAST_ATTACKER_UUID, compound.getString("LastAttacker"));
-        }
+        super.readAdditionalSaveData(compound);
         ContainerHelper.loadAllItems(compound, this.getItemStacks());
     }
 
@@ -175,44 +162,24 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
+        super.hurt(source, amount);
         if (this.level() instanceof ServerLevel serverLevel) {
             sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
         }
-
-        if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
-            return false;
-        if (source.is(DamageTypes.FALL))
-            return false;
-        if (source.is(DamageTypes.CACTUS))
-            return false;
-        if (source.is(DamageTypes.DROWN))
-            return false;
-        if (source.is(DamageTypes.LIGHTNING_BOLT))
-            return false;
-        if (source.is(DamageTypes.FALLING_ANVIL))
-            return false;
-        if (source.is(DamageTypes.DRAGON_BREATH))
-            return false;
-        if (source.is(DamageTypes.WITHER))
-            return false;
-        if (source.is(DamageTypes.WITHER_SKULL))
-            return false;
         if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
             amount *= 2f;
         }
         if (source.is(ModDamageTypes.CANNON_FIRE)) {
             amount *= 3f;
         }
+        if (source.is(ModDamageTypes.GUN_FIRE)) {
+            amount *= 0.3f;
+        }
         if (source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE)) {
-            amount *= 1.2f;
+            amount *= 0.7f;
         }
-
-        if (source.getEntity() != null) {
-            this.entityData.set(LAST_ATTACKER_UUID, source.getEntity().getStringUUID());
-        }
-
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.5f * Math.max(amount - 3, 0));
+        this.hurt(0.5f * Math.max(amount - 3, 0));
 
         return true;
     }
@@ -235,8 +202,8 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
             }
         } else {
             if (player.getMainHandItem().is(Items.IRON_INGOT)) {
-                if (this.entityData.get(HEALTH) < MAX_HEALTH) {
-                    this.entityData.set(HEALTH, Math.min(this.entityData.get(HEALTH) + 0.1f * MAX_HEALTH, MAX_HEALTH));
+                if (this.getHealth() < this.getMaxHealth()) {
+                    this.heal(Math.min(0.1f * this.getMaxHealth(), this.getMaxHealth()));
                     player.getMainHandItem().shrink(1);
                     if (!this.level().isClientSide) {
                         this.level().playSound(null, this, SoundEvents.IRON_GOLEM_REPAIR, this.getSoundSource(), 1, 1);
@@ -308,12 +275,7 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
             this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.85, f));
         }
 
-        this.entityData.set(HEALTH, java.lang.Math.min(this.entityData.get(HEALTH) + 0.05f, MAX_HEALTH));
-
-        if (this.entityData.get(HEALTH) <= 0) {
-            this.ejectPassengers();
-            destroy();
-        }
+        this.heal(0.05f);
 
         if (this.level() instanceof ServerLevel serverLevel && this.isInWater() && this.getDeltaMovement().length() > 0.1) {
             sendParticle(serverLevel, ParticleTypes.CLOUD, this.getX() + 0.5 * this.getDeltaMovement().x, this.getY() + getSubmergedHeight(this) - 0.2, this.getZ() + 0.5 * this.getDeltaMovement().z, (int)(2 + 4 * this.getDeltaMovement().length()), 0.65, 0, 0.65, 0, true);
@@ -321,7 +283,6 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
             sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, this.getX() - 4.5 * this.getLookAngle().x, this.getY() - 0.25, this.getZ() - 4.5 * this.getLookAngle().z, (int)(40 * Mth.abs(power)), 0.15, 0.15, 0.15, 0.02, true);
         }
 
-        controlBoat();
         collideBlock();
         gunnerAngle();
         pickUpItem();
@@ -433,10 +394,11 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
         });
     }
 
-    private void controlBoat() {
+    @Override
+    public void travel() {
         Entity passenger0 = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
 
-        if (this.entityData.get(ENERGY) <= 0) return;
+        if (this.getEnergy() <= 0) return;
 
         if (passenger0 == null) {
             this.leftInputDown = false;
@@ -465,7 +427,7 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
         }
 
         if (this.forwardInputDown || this.backInputDown) {
-            this.entityData.set(ENERGY, Math.max(this.entityData.get(ENERGY) - CannonConfig.SPEEDBOAT_ENERGY_COST.get().floatValue(), 0));
+            this.extraEnergy(CannonConfig.SPEEDBOAT_ENERGY_COST.get());
         }
 
         if (level().isClientSide) {
@@ -571,11 +533,12 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
             }
         }
     }
-    private void destroy() {
+    @Override
+    public void destroy() {
         Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
-        CustomExplosion explosion = new CustomExplosion(this.level(), attacker,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), 45f,
-                this.getX(), this.getY(), this.getZ(), 3f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+        CustomExplosion explosion = new CustomExplosion(this.level(), attacker == null ? this : attacker,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker == null ? this : attacker, attacker == null ? this : attacker), 75f,
+                this.getX(), this.getY(), this.getZ(), 5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
@@ -618,16 +581,6 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public void charge(int amount) {
-        this.entityData.set(ENERGY, Math.min(this.entityData.get(ENERGY) + amount, MAX_ENERGY));
-    }
-
-    @Override
-    public boolean canCharge() {
-        return this.entityData.get(ENERGY) < MAX_ENERGY;
     }
 
     @Override
@@ -773,23 +726,13 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
     }
 
     @Override
-    public int getEnergy() {
-        return this.entityData.get(ENERGY).intValue();
-    }
-
-    @Override
     public int getMaxEnergy() {
-        return (int) MAX_ENERGY;
-    }
-
-    @Override
-    public float getHealth() {
-        return this.entityData.get(HEALTH).intValue();
+        return MAX_ENERGY;
     }
 
     @Override
     public float getMaxHealth() {
-        return (int) MAX_HEALTH;
+        return MAX_HEALTH;
     }
 
     @Override

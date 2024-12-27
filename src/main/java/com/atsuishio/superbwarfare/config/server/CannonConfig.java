@@ -21,12 +21,12 @@ public class CannonConfig {
     public static ForgeConfigSpec.IntValue MLE1934_HE_EXPLOSION_RADIUS;
 
     public static ForgeConfigSpec.IntValue ANNIHILATOR_HP;
-    public static ForgeConfigSpec.DoubleValue ANNIHILATOR_SHOOT_COST;
-    public static ForgeConfigSpec.DoubleValue ANNIHILATOR_MAX_ENERGY;
+    public static ForgeConfigSpec.IntValue ANNIHILATOR_SHOOT_COST;
+    public static ForgeConfigSpec.IntValue ANNIHILATOR_MAX_ENERGY;
 
     public static ForgeConfigSpec.IntValue SPEEDBOAT_HP;
-    public static ForgeConfigSpec.DoubleValue SPEEDBOAT_ENERGY_COST;
-    public static ForgeConfigSpec.DoubleValue SPEEDBOAT_MAX_ENERGY;
+    public static ForgeConfigSpec.IntValue SPEEDBOAT_ENERGY_COST;
+    public static ForgeConfigSpec.IntValue SPEEDBOAT_MAX_ENERGY;
     public static ForgeConfigSpec.IntValue SPEEDBOAT_GUN_DAMAGE;
 
     public static void init(ForgeConfigSpec.Builder builder) {
@@ -86,10 +86,10 @@ public class CannonConfig {
         ANNIHILATOR_HP = builder.defineInRange("annihilator_hp", 4000, 1, 10000000);
 
         builder.comment("The energy cost of Annihilator per shoot");
-        ANNIHILATOR_SHOOT_COST = builder.defineInRange("annihilator_shoot_cost", 2000000d, 0d, Double.POSITIVE_INFINITY);
+        ANNIHILATOR_SHOOT_COST = builder.defineInRange("annihilator_shoot_cost", 2000000, 0, 2147483647);
 
         builder.comment("The max energy storage of Annihilator");
-        ANNIHILATOR_MAX_ENERGY = builder.defineInRange("annihilator_max_energy", 20000000d, 0d, Double.POSITIVE_INFINITY);
+        ANNIHILATOR_MAX_ENERGY = builder.defineInRange("annihilator_max_energy", 20000000, 0, 2147483647);
 
         builder.pop();
 
@@ -99,10 +99,10 @@ public class CannonConfig {
         SPEEDBOAT_HP = builder.defineInRange("speedboat_hp", 300, 1, 10000000);
 
         builder.comment("The energy cost of Speedboat per control tick");
-        SPEEDBOAT_ENERGY_COST = builder.defineInRange("speedboat_energy_cost", 1d, 0d, Double.POSITIVE_INFINITY);
+        SPEEDBOAT_ENERGY_COST = builder.defineInRange("speedboat_energy_cost", 1, 0, 2147483647);
 
         builder.comment("The max energy storage of Speedboat");
-        SPEEDBOAT_MAX_ENERGY = builder.defineInRange("speedboat_max_energy", 100000d, 0d, Double.POSITIVE_INFINITY);
+        SPEEDBOAT_MAX_ENERGY = builder.defineInRange("speedboat_max_energy", 100000, 0, 2147483647);
 
         builder.comment("The gun damage of Speedboat");
         SPEEDBOAT_GUN_DAMAGE = builder.defineInRange("speedboat_gun_damage", 45, 1, 10000000);

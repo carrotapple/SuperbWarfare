@@ -9,6 +9,7 @@ import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.item.common.ammo.CannonShellItem;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
+import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.particles.ParticleTypes;
@@ -26,10 +27,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -51,18 +50,12 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
 
-public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
+public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEntity {
 
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
     public static final float MAX_HEALTH = CannonConfig.MLE1934_HP.get();
-
-    protected int interpolationSteps;
-    protected double serverYRot;
-    protected double serverXRot;
 
     public Mle1934Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.MLE_1934.get(), world);
@@ -74,37 +67,23 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
 
     @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
         this.entityData.define(COOL_DOWN, 0);
         this.entityData.define(TYPE, 0);
-        this.entityData.define(HEALTH, MAX_HEALTH);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
         compound.putInt("CoolDown", this.entityData.get(COOL_DOWN));
         compound.putInt("Type", this.entityData.get(TYPE));
-        compound.putFloat("Health", this.entityData.get(HEALTH));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
         this.entityData.set(COOL_DOWN, compound.getInt("CoolDown"));
         this.entityData.set(TYPE, compound.getInt("Type"));
-        if (compound.contains("Health")) {
-            this.entityData.set(HEALTH, compound.getFloat("Health"));
-        } else {
-            this.entityData.set(HEALTH, MAX_HEALTH);
-        }
-    }
-
-    @Override
-    public boolean canBeCollidedWith() {
-        return true;
-    }
-
-    @Override
-    public boolean canCollideWith(Entity pEntity) {
-        return (pEntity.canBeCollidedWith() || pEntity.isPushable()) && !this.isPassengerOfSameVehicle(pEntity);
     }
 
     @Override
@@ -133,47 +112,27 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
+        super.hurt(source, amount);
         if (this.level() instanceof ServerLevel serverLevel) {
             ParticleTool.sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
         }
 
-        if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
-            return false;
-        if (source.is(DamageTypes.FALL))
-            return false;
-        if (source.is(DamageTypes.CACTUS))
-            return false;
-        if (source.is(DamageTypes.DROWN))
-            return false;
-        if (source.is(DamageTypes.LIGHTNING_BOLT))
-            return false;
-        if (source.is(DamageTypes.FALLING_ANVIL))
-            return false;
-        if (source.is(DamageTypes.DRAGON_BREATH))
-            return false;
-        if (source.is(DamageTypes.WITHER))
-            return false;
-        if (source.is(DamageTypes.WITHER_SKULL))
-            return false;
         if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
             amount *= 0.5f;
         }
         if (source.is(ModDamageTypes.CANNON_FIRE)) {
             amount *= 1.4f;
         }
+        if (source.is(ModDamageTypes.GUN_FIRE)) {
+            amount *= 0.1f;
+        }
         if (source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE)) {
-            amount *= 1.6f;
+            amount *= 0.5f;
         }
 
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.5f * Math.max(amount - 5, 0));
-
+        this.hurt(0.5f * Math.max(amount - 5, 0));
         return true;
-    }
-
-    @Override
-    public boolean isPickable() {
-        return !this.isRemoved();
     }
 
     @Override
@@ -221,27 +180,27 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
             this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
         }
 
-        if (this.entityData.get(HEALTH) <= 0.4 * CannonConfig.MLE1934_HP.get()) {
+        if (this.getHealth() <= 0.4 * this.getMaxHealth()) {
             if (this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 2, 0.75, 0.5, 0.75, 0.01, false);
             }
         }
 
-        if (this.entityData.get(HEALTH) <= 0.25 * CannonConfig.MLE1934_HP.get()) {
+        if (this.getHealth() <= 0.25 * this.getMaxHealth()) {
             if (this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
             }
         }
 
-        if (this.entityData.get(HEALTH) <= 0.15 * CannonConfig.MLE1934_HP.get()) {
+        if (this.getHealth() <= 0.15 * this.getMaxHealth()) {
             if (this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 1, 0.75, 0.5, 0.75, 0.01, false);
             }
         }
 
-        if (this.entityData.get(HEALTH) <= 0.1 * CannonConfig.MLE1934_HP.get()) {
+        if (this.getHealth() <= 0.1 * this.getMaxHealth()) {
             if (this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 2, 0.75, 0.5, 0.75, 0.01, false);
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX(), this.getY() + 2.5, this.getZ(), 2, 0.75, 0.5, 0.75, 0.01, false);
@@ -251,30 +210,27 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
             if (this.tickCount % 15 == 0) {
                 this.level().playSound(null, this.getOnPos(), SoundEvents.FIRE_AMBIENT, SoundSource.PLAYERS, 1, 1);
             }
-            this.entityData.set(HEALTH, this.entityData.get(HEALTH) - 0.1f);
+            this.hurt(0.1f);
         } else {
-            this.entityData.set(HEALTH, Math.min(this.entityData.get(HEALTH) + 0.05f, MAX_HEALTH));
+            this.heal(0.05f);
         }
 
-        if (this.entityData.get(HEALTH) <= 0) {
-            this.ejectPassengers();
-            destroy();
-        }
-
-        travel();
         this.refreshDimensions();
     }
 
-    private void destroy() {
-        CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this), 140f,
-                this.getX(), this.getY(), this.getZ(), 10f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
-        explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
-        explosion.finalizeExplosion(false);
-        ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
-
-        this.discard();
+    @Override
+    public void destroy() {
+        if (level() instanceof ServerLevel) {
+            Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
+            CustomExplosion explosion = new CustomExplosion(this.level(), attacker == null ? this : attacker,
+                    ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), attacker == null ? this : attacker, attacker == null ? this : attacker), 150.0f,
+                    this.getX(), this.getY(), this.getZ(), 5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+            explosion.explode();
+            net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+            explosion.finalizeExplosion(false);
+            ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+            this.discard();
+        }
     }
 
     @Override
@@ -451,12 +407,6 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
     }
 
     @Override
-    public void lerpTo(double x, double y, double z, float yaw, float pitch, int interpolationSteps, boolean interpolate) {
-        serverYRot = yaw;
-        serverXRot = pitch;
-        this.interpolationSteps = 10;
-    }
-
     public void travel() {
         Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
         if (!(passenger instanceof LivingEntity entity)) return;
@@ -504,15 +454,10 @@ public class Mle1934Entity extends Entity implements GeoEntity, ICannonEntity {
     }
 
     @Override
-    public float getHealth() {
-        return this.entityData.get(HEALTH).intValue();
-    }
-
-    @Override
     public float getMaxHealth() {
-        return (int) MAX_HEALTH;
+        return MAX_HEALTH;
     }
-
+    
     @Override
     public boolean isDriver(Player player) {
         return player == this.getFirstPassenger();
