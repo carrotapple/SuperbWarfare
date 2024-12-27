@@ -9,6 +9,7 @@ import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -221,7 +222,12 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
             serverPlayer.level().playSound(null, serverPlayer.getOnPos(), SoundEvents.BOAT_PADDLE_LAND, SoundSource.PLAYERS, 1, 1);
         }
         player.causeFoodExhaustion(0.03F);
-        // TODO 手动摇轮椅时像划船一样收起物品
+
+        var localPlayer = Minecraft.getInstance().player;
+        if (localPlayer != null && player.getUUID().equals(localPlayer.getUUID())) {
+            localPlayer.handsBusy = true;
+        }
+
         this.forwardInputDown = false;
         this.backInputDown = false;
     }
