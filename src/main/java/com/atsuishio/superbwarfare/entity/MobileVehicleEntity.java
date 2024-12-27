@@ -26,7 +26,7 @@ public class MobileVehicleEntity extends Entity {
     protected double serverXRot;
 
     public float roll;
-
+    public float power;
     public boolean leftInputDown;
     public boolean rightInputDown;
     public boolean forwardInputDown;

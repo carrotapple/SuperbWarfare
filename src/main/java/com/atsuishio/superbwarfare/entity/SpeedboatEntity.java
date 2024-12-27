@@ -85,13 +85,11 @@ import java.util.List;
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, IChargeEntity, IVehicleEntity, HasCustomInventoryScreen, ContainerEntity {
-
+    public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> ROTOR = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
     protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
@@ -104,11 +102,14 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
     private LazyOptional<?> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
     public float turretYRot;
     public float turretXRot;
     public float turretYRotO;
     public float turretXRotO;
+    public float rotorRot;
+    public float rudderRot;
+    public float rotorRotO;
+    public float rudderRotO;
 
     public boolean cannotFire;
 
@@ -122,13 +123,12 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
 
     @Override
     protected void defineSynchedData() {
+        this.entityData.define(POWER, 0f);
         this.entityData.define(AMMO, 0);
         this.entityData.define(FIRE_ANIM, 0);
         this.entityData.define(HEALTH, MAX_HEALTH);
         this.entityData.define(ENERGY, 0f);
         this.entityData.define(DELTA_ROT, 0f);
-        this.entityData.define(POWER, 0f);
-        this.entityData.define(ROTOR, 0f);
         this.entityData.define(HEAT, 0);
         this.entityData.define(LAST_ATTACKER_UUID, "undefined");
     }
@@ -281,6 +281,8 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
 
         turretYRotO = this.getTurretYRot();
         turretXRotO = this.getTurretXRot();
+        rotorRotO = this.getRotorRot();
+        rudderRotO = this.getRudderRot();
 
         Entity driver = this.getFirstPassenger();
         if (driver instanceof Player player) {
@@ -314,9 +316,9 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
         }
 
         if (this.level() instanceof ServerLevel serverLevel && this.isInWater() && this.getDeltaMovement().length() > 0.1) {
-            sendParticle(serverLevel, ParticleTypes.CLOUD, this.getX() + 1.2 * this.getDeltaMovement().x, this.getY() + getSubmergedHeight(this) - 0.2, this.getZ() + 1.2 * this.getDeltaMovement().z, (int)(2 + 4 * this.getDeltaMovement().length()), 0.65, 0, 0.65, 0, true);
-            sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, this.getX() + 1.2 * this.getDeltaMovement().x, this.getY() + getSubmergedHeight(this) - 0.2, this.getZ() + 1.2 * this.getDeltaMovement().z, (int)(2 + 10 * this.getDeltaMovement().length()), 0.65, 0, 0.65, 0, true);
-            sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, this.getX() - 3.5 * this.getLookAngle().x, this.getY() - 0.25, this.getZ() - 3.5 * this.getLookAngle().z, (int)(40 * Mth.abs(this.entityData.get(POWER))), 0.15, 0.15, 0.15, 0.02, true);
+            sendParticle(serverLevel, ParticleTypes.CLOUD, this.getX() + 0.5 * this.getDeltaMovement().x, this.getY() + getSubmergedHeight(this) - 0.2, this.getZ() + 0.5 * this.getDeltaMovement().z, (int)(2 + 4 * this.getDeltaMovement().length()), 0.65, 0, 0.65, 0, true);
+            sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, this.getX() + 0.5 * this.getDeltaMovement().x, this.getY() + getSubmergedHeight(this) - 0.2, this.getZ() + 0.5 * this.getDeltaMovement().z, (int)(2 + 10 * this.getDeltaMovement().length()), 0.65, 0, 0.65, 0, true);
+            sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, this.getX() - 4.5 * this.getLookAngle().x, this.getY() - 0.25, this.getZ() - 4.5 * this.getLookAngle().z, (int)(40 * Mth.abs(power)), 0.15, 0.15, 0.15, 0.02, true);
         }
 
         controlBoat();
@@ -443,7 +445,6 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
             this.backInputDown = false;
         }
 
-        float diffY = 0;
         if (forwardInputDown) {
             this.entityData.set(POWER, this.entityData.get(POWER) + 0.02f);
         }
@@ -451,19 +452,15 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
         if (backInputDown) {
             this.entityData.set(POWER, this.entityData.get(POWER) - 0.02f);
             if (rightInputDown) {
-                diffY = Mth.clamp(diffY + 1f, 0, 10);
-                handleSetDiffY(diffY);
+                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.2f);
             } else if (leftInputDown) {
-                diffY = Mth.clamp(diffY - 1f, -10, 0);
-                handleSetDiffY(diffY);
+                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 0.2f);
             }
         } else {
             if (rightInputDown) {
-                diffY = Mth.clamp(diffY - 1f, -10, 0);
-                handleSetDiffY(diffY);
+                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 0.1f);
             } else if (this.leftInputDown) {
-                diffY = Mth.clamp(diffY + 1f, 0, 10);
-                handleSetDiffY(diffY);
+                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.1f);
             }
         }
 
@@ -476,12 +473,14 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
         }
 
         this.entityData.set(POWER, this.entityData.get(POWER) * 0.87f);
-        this.entityData.set(ROTOR, this.entityData.get(ROTOR) + this.entityData.get(POWER));
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.8f);
 
+        this.setRotorRot(this.getRotorRot() + 10 * this.entityData.get(POWER));
+        this.setRudderRot(Mth.clamp(this.getRudderRot() - this.entityData.get(DELTA_ROT), -1.25f, 1.25f) * 0.7f * (this.entityData.get(POWER) > 0 ? 1 : -1));
+
         if (this.isInWater() || this.isUnderWater()) {
-            this.setYRot(this.getYRot() - this.entityData.get(DELTA_ROT));
-            this.setDeltaMovement(this.getDeltaMovement().add((double)(Mth.sin(-this.getYRot() * 0.017453292F) * this.entityData.get(POWER)), 0.0, (double)(Mth.cos(this.getYRot() * 0.017453292F) * this.entityData.get(POWER))));
+            this.setYRot((float) (this.getYRot() - Math.max(5 * this.getDeltaMovement().length(), 0.3) * this.entityData.get(DELTA_ROT)));
+            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * this.entityData.get(POWER)));
         }
     }
 
@@ -511,10 +510,21 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
         this.turretXRot = pTurretXRot;
     }
 
-    private void handleSetDiffY(float diffY) {
-        this.entityData.set(DELTA_ROT, (float) Mth.clamp(diffY * 1.3 * Math.max(8 * this.getDeltaMovement().length(), 0.5), -2, 2));
+    public float getRotorRot() {
+        return this.rotorRot;
     }
 
+    public void setRotorRot(float pRotorRot) {
+        this.rotorRot = pRotorRot;
+    }
+
+    public float getRudderRot() {
+        return this.rudderRot;
+    }
+
+    public void setRudderRot(float pRudderRot) {
+        this.rudderRot = pRudderRot;
+    }
 
     protected SoundEvent getEngineSound() {
         return ModSounds.BOAT_ENGINE.get();
@@ -526,8 +536,8 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
             double posY = this.getY() + this.getPassengersRidingOffset() + pPassenger.getMyRidingOffset();
 
             if (!zooming() && (this.isInWater() || this.isUnderWater())) {
-                pPassenger.setYRot(pPassenger.getYRot() - 1.27f * this.entityData.get(DELTA_ROT));
-                pPassenger.setYHeadRot(pPassenger.getYHeadRot() - 1.27f * this.entityData.get(DELTA_ROT));
+                pPassenger.setYRot((float) (pPassenger.getYRot() - Math.max(5 * this.getDeltaMovement().length(), 0.3) * this.entityData.get(DELTA_ROT)));
+                pPassenger.setYHeadRot((float) (pPassenger.getYHeadRot() - Math.max(5 * this.getDeltaMovement().length(), 0.3) * this.entityData.get(DELTA_ROT)));
             }
 
             if (this.getPassengers().size() > 1) {

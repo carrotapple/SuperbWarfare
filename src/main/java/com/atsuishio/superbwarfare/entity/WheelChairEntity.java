@@ -35,14 +35,11 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, IVehicleEntity, IChargeEntity {
 
-    public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(WheelChairEntity.class, EntityDataSerializers.FLOAT);
-
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(WheelChairEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> ENERGY = SynchedEntityData.defineId(WheelChairEntity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = 50;
     public static final float MAX_ENERGY = 24000;
-
     public float leftWheelRot;
     public float rightWheelRot;
     public float leftWheelRotO;
@@ -60,7 +57,6 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
     @Override
     protected void defineSynchedData() {
         this.entityData.define(HEALTH, MAX_HEALTH);
-        this.entityData.define(POWER, 0f);
         this.entityData.define(ENERGY, 0f);
     }
 
@@ -189,14 +185,14 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
         this.setYRot(this.getYRot() + Mth.clamp(0.4f * diffY,-5f, 5f));
 
         if (this.forwardInputDown) {
-            this.entityData.set(POWER, this.entityData.get(POWER) + 0.01f);
+            power += 0.01f;
             if (this.entityData.get(ENERGY) <= 0 && entity instanceof Player player) {
                 moveWithOutPower(player, true);
             }
         }
 
         if (this.backInputDown) {
-            this.entityData.set(POWER, this.entityData.get(POWER) - 0.01f);
+            power -= 0.01f;
             if (this.entityData.get(ENERGY) <= 0 && entity instanceof Player player) {
                 moveWithOutPower(player, false);
             }
@@ -214,7 +210,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
             this.entityData.set(ENERGY, Math.max(this.entityData.get(ENERGY) - 1, 0));
         }
 
-        this.entityData.set(POWER, this.entityData.get(POWER) * 0.87f);
+        power *= 0.87f;
 
         float angle = (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1));
         double s0;
@@ -225,20 +221,20 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
             s0 = -this.getDeltaMovement().length();
         }
 
-        this.setLeftWheelRot((float) (this.getLeftWheelRot() - 0.75 * s0) - 0.015f * Mth.clamp(0.4f * diffY,-5f, 5f));
-        this.setRightWheelRot((float) (this.getRightWheelRot() - 0.75 * s0) + 0.015f * Mth.clamp(0.4f * diffY,-5f, 5f));
+        this.setLeftWheelRot((float) (this.getLeftWheelRot() - 0.85 * s0) - 0.015f * Mth.clamp(0.4f * diffY,-5f, 5f));
+        this.setRightWheelRot((float) (this.getRightWheelRot() - 0.85 * s0) + 0.015f * Mth.clamp(0.4f * diffY,-5f, 5f));
 
 //        if (entity instanceof Player player) {
 //            player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(this.getRightWheelRot())), true);
 //        }
 
         if (this.onGround()) {
-            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * this.entityData.get(POWER)));
+            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * power, 0.0, Mth.cos(this.getYRot() * 0.017453292F) * power));
         }
     }
 
     public void moveWithOutPower(Player player, boolean forward) {
-        this.entityData.set(POWER, this.entityData.get(POWER) + (forward ? 0.015f : -0.015f));
+        power += (forward ? 0.015f : -0.015f);
         if (player instanceof ServerPlayer serverPlayer) {
             serverPlayer.level().playSound(null, serverPlayer.getOnPos(), SoundEvents.BOAT_PADDLE_LAND, SoundSource.PLAYERS, 1, 1);
         }

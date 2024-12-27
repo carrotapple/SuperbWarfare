@@ -51,6 +51,12 @@ public class SpeedboatRenderer extends GeoEntityRenderer<SpeedboatEntity> {
     @Override
     public void renderRecursively(PoseStack poseStack, SpeedboatEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         String name = bone.getName();
+        if (name.equals("Rotor")) {
+            bone.setRotZ(Mth.lerp(partialTick, animatable.rotorRotO, animatable.getRotorRot()));
+        }
+        if (name.equals("duo")) {
+            bone.setRotY(Mth.lerp(partialTick, animatable.rudderRotO, animatable.getRudderRot()));
+        }
         if (name.equals("paota")) {
             bone.setRotY(Mth.lerp(partialTick, animatable.turretYRotO, animatable.getTurretYRot()) * Mth.DEG_TO_RAD);
         }
