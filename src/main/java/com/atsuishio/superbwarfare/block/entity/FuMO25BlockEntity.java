@@ -31,6 +31,7 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
     // 固定距离，以后有人改动这个需要自行解决GUI渲染问题
     public static final int DEFAULT_RANGE = 96;
     public static final int MAX_RANGE = 128;
+    public static final int GLOW_RANGE = 64;
 
     public static final int DEFAULT_ENERGY_COST = 256;
     public static final int MAX_ENERGY_COST = 1024;
@@ -106,6 +107,7 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
             } else {
                 blockEntity.energyHandler.ifPresent(handler -> handler.extractEnergy(energyCost, false));
                 if (blockEntity.time > 0) {
+                    blockEntity.setGlowEffect();
                     blockEntity.time--;
                     blockEntity.setChanged();
                 }
@@ -119,6 +121,15 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
     }
 
     public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState, FuMO25BlockEntity blockEntity) {
+
+    }
+
+    private void setGlowEffect() {
+        if (this.type != FuncType.GLOW) return;
+
+        Level level = this.level;
+        if (level == null) return;
+
 
     }
 

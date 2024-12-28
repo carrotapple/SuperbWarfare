@@ -10,7 +10,9 @@ import net.minecraft.world.level.Level;
 import org.joml.Math;
 
 public class EnergyVehicleEntity extends VehicleEntity implements IChargeEntity {
+
     public static final EntityDataAccessor<Integer> ENERGY = SynchedEntityData.defineId(EnergyVehicleEntity.class, EntityDataSerializers.INT);
+
     public EnergyVehicleEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.setEnergy(0);

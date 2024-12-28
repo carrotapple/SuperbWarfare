@@ -17,6 +17,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
+import javax.annotation.Nullable;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.UUID;
@@ -253,5 +254,14 @@ public class GunsTool {
         var data = tag.getCompound("GunData");
         if (!data.contains(name)) return defaultValue;
         return data.getBoolean(name);
+    }
+
+    @Nullable
+    public static UUID getGunUUID(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        if (tag == null || !tag.contains("GunData")) return null;
+        CompoundTag data = tag.getCompound("GunData");
+        if (!data.hasUUID("UUID")) return null;
+        return data.getUUID("UUID");
     }
 }

@@ -4,10 +4,7 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.capability.LaserCapability;
 import com.atsuishio.superbwarfare.capability.ModCapabilities;
 import com.atsuishio.superbwarfare.config.common.GameplayConfig;
-import com.atsuishio.superbwarfare.entity.ICannonEntity;
-import com.atsuishio.superbwarfare.entity.ICustomKnockback;
-import com.atsuishio.superbwarfare.entity.IVehicleEntity;
-import com.atsuishio.superbwarfare.entity.TargetEntity;
+import com.atsuishio.superbwarfare.entity.*;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -48,6 +45,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.text.DecimalFormat;
+import java.util.Objects;
 
 @Mod.EventBusSubscriber
 public class LivingEventHandler {
@@ -320,8 +318,8 @@ public class LivingEventHandler {
             if (player instanceof ServerPlayer serverPlayer) {
                 if (newStack.getItem() != oldStack.getItem()
                         || newStack.getTag() == null || oldStack.getTag() == null
-                        || !GunsTool.getGunData(newStack).hasUUID("UUID") || !GunsTool.getGunData(oldStack).hasUUID("UUID")
-                        || !GunsTool.getGunData(newStack).getUUID("UUID").equals(GunsTool.getGunData(oldStack).getUUID("UUID"))
+//                        || !GunsTool.getGunData(newStack).hasUUID("UUID") || !GunsTool.getGunData(oldStack).hasUUID("UUID")
+                        || !Objects.equals(GunsTool.getGunUUID(newStack), GunsTool.getGunUUID(oldStack))
                 ) {
                     if (oldStack.getItem() instanceof GunItem oldGun) {
                         stopGunReloadSound(serverPlayer, oldGun);
@@ -784,7 +782,7 @@ public class LivingEventHandler {
         if (level <= 0) return;
         if (entity.getHealth() < 100.0f) return;
 
-        event.setAmount((float) (event.getAmount() + entity.getHealth() * 0.00002f * Math.pow(level,2)));
+        event.setAmount((float) (event.getAmount() + entity.getHealth() * 0.00002f * Math.pow(level, 2)));
     }
 
     @SubscribeEvent
@@ -792,6 +790,14 @@ public class LivingEventHandler {
         ICustomKnockback knockback = ICustomKnockback.getInstance(event.getEntity());
         if (knockback.superbWarfare$getKnockbackStrength() >= 0) {
             event.setStrength((float) knockback.superbWarfare$getKnockbackStrength());
+        }
+    }
+
+    @SubscribeEvent
+    public static void onEntityFall(LivingFallEvent event) {
+        LivingEntity living = event.getEntity();
+        if (living.getVehicle() instanceof VehicleEntity) {
+            event.setCanceled(true);
         }
     }
 }

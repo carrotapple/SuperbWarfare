@@ -35,6 +35,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.List;
 
 public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, IVehicleEntity {
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = 50;
     public static final int MAX_ENERGY = 24000;
@@ -191,7 +192,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
             this.extraEnergy(1);
         }
 
-        if (passenger instanceof Player player && handBusyTime > 0) {
+        if (passenger instanceof Player player && player.level().isClientSide && this.handBusyTime > 0) {
             var localPlayer = Minecraft.getInstance().player;
             if (localPlayer != null && player.getUUID().equals(localPlayer.getUUID())) {
                 localPlayer.handsBusy = true;
@@ -212,10 +213,6 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
         this.setLeftWheelRot((float) (this.getLeftWheelRot() - 1 * s0) - 0.015f * Mth.clamp(0.4f * diffY, -5f, 5f));
         this.setRightWheelRot((float) (this.getRightWheelRot() - 1 * s0) + 0.015f * Mth.clamp(0.4f * diffY, -5f, 5f));
 
-//        if (entity instanceof Player player) {
-//            player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(this.getRightWheelRot())), true);
-//        }
-
         this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (this.onGround() ? 1 : 0.1) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (this.onGround() ? 1 : 0.1) * this.entityData.get(POWER)));
     }
 
@@ -226,7 +223,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
         }
         player.causeFoodExhaustion(0.03F);
 
-        handBusyTime = 4;
+        this.handBusyTime = 4;
         this.forwardInputDown = false;
         this.backInputDown = false;
     }

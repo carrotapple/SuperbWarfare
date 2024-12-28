@@ -220,6 +220,8 @@ public class ClientEventHandler {
         if (level == null) return;
 
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return;
+
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
         int mode = GunsTool.getGunIntTag(stack, "FireMode");
 
@@ -1178,7 +1180,7 @@ public class ClientEventHandler {
                 if (level > 0) {
                     Entity seekingEntity = SeekTool.seekLivingEntity(player, player.level(), 32 + 8 * (level - 1), 25 / zoomFov);
                     if (seekingEntity != null && seekingEntity.isAlive()) {
-                        Vec3 targetVec = new Vec3(seekingEntity.getX() - player.getX(),seekingEntity.getEyeY() - player.getEyeY(), seekingEntity.getZ() - player.getZ()).normalize();
+                        Vec3 targetVec = new Vec3(seekingEntity.getX() - player.getX(), seekingEntity.getEyeY() - player.getEyeY(), seekingEntity.getZ() - player.getZ()).normalize();
                         Vec3 toVec = new Vec3(player.getViewVector(1).add(targetVec.scale(times)).toVector3f());
                         look(player, toVec);
                     }
@@ -1188,16 +1190,12 @@ public class ClientEventHandler {
         }
 
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
-
             droneFovLerp = Mth.lerp(0.1 * Minecraft.getInstance().getDeltaFrameTime(), droneFovLerp, droneFov);
-
             event.setFOV(event.getFOV() / droneFovLerp);
         }
 
         if (player.getVehicle() instanceof IVehicleEntity && !(player.getVehicle() instanceof ICannonEntity) && zoom) {
-
             vehicleFovLerp = Mth.lerp(0.1 * Minecraft.getInstance().getDeltaFrameTime(), vehicleFovLerp, vehicleFov);
-
             event.setFOV(event.getFOV() / vehicleFovLerp);
         }
     }

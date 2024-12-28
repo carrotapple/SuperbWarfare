@@ -23,10 +23,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Math;
 
-
 public class VehicleEntity extends Entity {
+
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.FLOAT);
     protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.STRING);
+
     protected int interpolationSteps;
     protected double x;
     protected double y;
@@ -61,17 +62,19 @@ public class VehicleEntity extends Entity {
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (player.getVehicle() == this) return InteractionResult.PASS;
-        if (player.isShiftKeyDown() && player.getMainHandItem().is(ModItems.CROWBAR.get())) {
-            ItemStack stack = ContainerBlockItem.createInstance(this);
-            if (!player.addItem(stack)) {
-                player.drop(stack, false);
+
+        ItemStack stack = player.getItemInHand(hand);
+        if (player.isShiftKeyDown() && stack.is(ModItems.CROWBAR.get())) {
+            ItemStack container = ContainerBlockItem.createInstance(this);
+            if (!player.addItem(container)) {
+                player.drop(container, false);
             }
             this.remove(RemovalReason.DISCARDED);
             this.discard();
-        } else if (player.getMainHandItem().is(Items.IRON_INGOT)) {
+        } else if (stack.is(Items.IRON_INGOT)) {
             if (this.getHealth() < this.getMaxHealth()) {
                 this.heal(Math.min(50, this.getMaxHealth()));
-                player.getMainHandItem().shrink(1);
+                stack.shrink(1);
                 if (!this.level().isClientSide) {
                     this.level().playSound(null, this, SoundEvents.IRON_GOLEM_REPAIR, this.getSoundSource(), 0.5f, 1);
                 }
@@ -159,7 +162,7 @@ public class VehicleEntity extends Entity {
 
     @Override
     public boolean isPushable() {
-        return false;
+        return super.isPushable();
     }
 
     @Override
