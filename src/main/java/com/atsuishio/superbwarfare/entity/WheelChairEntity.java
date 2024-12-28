@@ -13,17 +13,17 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import org.joml.Math;
@@ -31,6 +31,8 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
+import java.util.List;
 
 public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, IVehicleEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -50,6 +52,20 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
     public WheelChairEntity(EntityType<WheelChairEntity> type, Level world) {
         super(type, world);
         this.setMaxUpStep(1.1f);
+    }
+
+    @Override
+    public void playerTouch(Player pPlayer) {
+        if (this.position().distanceTo(pPlayer.position()) > 1.25) return;
+        if (!this.level().isClientSide) {
+            double entitySize = pPlayer.getBbWidth() * pPlayer.getBbHeight();
+            double thisSize = this.getBbWidth() * this.getBbHeight();
+            double f = Math.min(entitySize / thisSize, 2);
+            double f1 = Math.min(thisSize / entitySize, 4);
+            this.setDeltaMovement(this.getDeltaMovement().add(new Vec3(pPlayer.position().vectorTo(this.position()).toVector3f()).scale(0.3 * f * pPlayer.getDeltaMovement().length())));
+            this.setYRot(pPlayer.getYHeadRot());
+            pPlayer.setDeltaMovement(pPlayer.getDeltaMovement().add(new Vec3(this.position().vectorTo(pPlayer.position()).toVector3f()).scale(0.01 * f1 * pPlayer.getDeltaMovement().length())));
+        }
     }
 
     @Override
@@ -75,11 +91,6 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
-    }
-
-    @Override
-    public double getPassengersRidingOffset() {
-        return super.getPassengersRidingOffset() - 0.05;
     }
 
     @Override
@@ -112,14 +123,26 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
         } else {
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.99, 0.95, 0.99));
         }
-
-        if (level().isClientSide && this.getEnergy() > 0) {
-            level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), ModSounds.WHEEL_CHAIR_ENGINE.get(), this.getSoundSource(), (float) (0.2 * this.getDeltaMovement().length()), (random.nextFloat() * 0.1f + 0.7f), false);
-        }
-
         this.setSprinting(this.getDeltaMovement().horizontalDistance() > 0.15);
-
+        attractEntity();
         this.refreshDimensions();
+    }
+
+    public boolean hasEnoughSpaceFor(Entity pEntity) {
+        return pEntity.getBbWidth() < this.getBbWidth();
+    }
+
+    public void attractEntity() {
+        List<Entity> list = this.level().getEntities(this, this.getBoundingBox().inflate(0.2F, -0.01F, 0.2F));
+        if (!list.isEmpty()) {
+            boolean flag = !this.level().isClientSide && !(this.getControllingPassenger() instanceof Player);
+
+            for (Entity entity : list) {
+                if (!entity.hasPassenger(this) && flag && !entity.isPassenger() && this.hasEnoughSpaceFor(entity) && (entity instanceof LivingEntity || entity instanceof MortarEntity) && !(entity instanceof WaterAnimal) && !(entity instanceof Player)) {
+                    entity.startRiding(this);
+                }
+            }
+        }
     }
 
     @Override
@@ -133,20 +156,23 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
             this.rightInputDown = false;
             this.forwardInputDown = false;
             this.backInputDown = false;
-        } else {
+        } else if (passenger instanceof Player) {
+            if (level().isClientSide) {
+                level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.forwardInputDown || this.backInputDown ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 1f), false);
+            }
             diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
             this.setYRot(this.getYRot() + Mth.clamp(0.4f * diffY, -5f, 5f));
         }
 
         if (this.forwardInputDown) {
-            power += 0.01f;
+            this.entityData.set(POWER, this.entityData.get(POWER) + 0.01f);
             if (this.getEnergy() <= 0 && passenger instanceof Player player) {
                 moveWithOutPower(player, true);
             }
         }
 
         if (this.backInputDown) {
-            power -= 0.01f;
+            this.entityData.set(POWER, this.entityData.get(POWER) - 0.01f);
             if (this.getEnergy() <= 0 && passenger instanceof Player player) {
                 moveWithOutPower(player, false);
             }
@@ -158,7 +184,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
             }
             this.extraEnergy(400);
             this.setDeltaMovement(this.getDeltaMovement().add(0, 0.48, 0));
-            jumpCoolDown = 5;
+            jumpCoolDown = 3;
         }
 
         if (this.forwardInputDown || this.backInputDown) {
@@ -172,7 +198,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
             }
         }
 
-        power *= 0.87f;
+        this.entityData.set(POWER, this.entityData.get(POWER) * 0.87f);
 
         float angle = (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1));
         double s0;
@@ -190,12 +216,11 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
 //            player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(this.getRightWheelRot())), true);
 //        }
 
-        this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (this.onGround() ? 1 : 0.1) * power, 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (this.onGround() ? 1 : 0.1) * power));
-
+        this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (this.onGround() ? 1 : 0.1) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (this.onGround() ? 1 : 0.1) * this.entityData.get(POWER)));
     }
 
     public void moveWithOutPower(Player player, boolean forward) {
-        power += (forward ? 0.015f : -0.015f);
+        this.entityData.set(POWER, this.entityData.get(POWER) + (forward ? 0.015f : -0.015f));
         if (player instanceof ServerPlayer serverPlayer) {
             serverPlayer.level().playSound(null, serverPlayer.getOnPos(), SoundEvents.BOAT_PADDLE_LAND, SoundSource.PLAYERS, 1, 1);
         }
@@ -204,6 +229,11 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
         handBusyTime = 4;
         this.forwardInputDown = false;
         this.backInputDown = false;
+    }
+
+    @Override
+    public SoundEvent getEngineSound() {
+        return ModSounds.WHEEL_CHAIR_ENGINE.get();
     }
 
     public float getLeftWheelRot() {

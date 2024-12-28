@@ -80,7 +80,6 @@ import java.util.List;
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, IChargeEntity, IVehicleEntity, HasCustomInventoryScreen, ContainerEntity {
-    public static final EntityDataAccessor<Float> POWER = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
@@ -116,7 +115,6 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(POWER, 0f);
         this.entityData.define(AMMO, 0);
         this.entityData.define(FIRE_ANIM, 0);
         this.entityData.define(DELTA_ROT, 0f);
@@ -237,7 +235,7 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
         if (this.level() instanceof ServerLevel serverLevel && this.isInWater() && this.getDeltaMovement().length() > 0.1) {
             sendParticle(serverLevel, ParticleTypes.CLOUD, this.getX() + 0.5 * this.getDeltaMovement().x, this.getY() + getSubmergedHeight(this) - 0.2, this.getZ() + 0.5 * this.getDeltaMovement().z, (int)(2 + 4 * this.getDeltaMovement().length()), 0.65, 0, 0.65, 0, true);
             sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, this.getX() + 0.5 * this.getDeltaMovement().x, this.getY() + getSubmergedHeight(this) - 0.2, this.getZ() + 0.5 * this.getDeltaMovement().z, (int)(2 + 10 * this.getDeltaMovement().length()), 0.65, 0, 0.65, 0, true);
-            sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, this.getX() - 4.5 * this.getLookAngle().x, this.getY() - 0.25, this.getZ() - 4.5 * this.getLookAngle().z, (int)(40 * Mth.abs(power)), 0.15, 0.15, 0.15, 0.02, true);
+            sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, this.getX() - 4.5 * this.getLookAngle().x, this.getY() - 0.25, this.getZ() - 4.5 * this.getLookAngle().z, (int)(40 * Mth.abs(this.entityData.get(POWER))), 0.15, 0.15, 0.15, 0.02, true);
         }
 
         collideBlock();
@@ -444,8 +442,8 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
     public void setRudderRot(float pRudderRot) {
         this.rudderRot = pRudderRot;
     }
-
-    protected SoundEvent getEngineSound() {
+    @Override
+    public SoundEvent getEngineSound() {
         return ModSounds.BOAT_ENGINE.get();
     }
 
