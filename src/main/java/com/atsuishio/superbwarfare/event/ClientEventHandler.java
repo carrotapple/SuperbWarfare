@@ -4,8 +4,8 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.ClickHandler;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.DroneEntity;
+import com.atsuishio.superbwarfare.entity.IArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
-import com.atsuishio.superbwarfare.entity.IVehicleEntity;
 import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -220,7 +220,12 @@ public class ClientEventHandler {
         if (level == null) return;
 
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(ModTags.Items.GUN)) return;
+        if (!stack.is(ModTags.Items.GUN)) {
+            clientTimer.stop();
+            fireSpread = 0;
+            gunSpread = 0;
+            return;
+        }
 
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
         int mode = GunsTool.getGunIntTag(stack, "FireMode");
@@ -553,7 +558,7 @@ public class ClientEventHandler {
             holdFire = false;
         }
 
-        if (player.getVehicle() instanceof IVehicleEntity iVehicle && iVehicle.isDriver(player) && iVehicle.canShoot(player)) {
+        if (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player) && iVehicle.canShoot(player)) {
             int rpm = iVehicle.mainGunRpm();
             if (rpm == 0) {
                 rpm = 240;
@@ -585,7 +590,7 @@ public class ClientEventHandler {
         }
     }
 
-    public static void playVehicleClientSounds(Player player, IVehicleEntity iVehicle) {
+    public static void playVehicleClientSounds(Player player, IArmedVehicleEntity iVehicle) {
         if (iVehicle instanceof SpeedboatEntity speedboat) {
             float pitch = speedboat.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - speedboat.getEntityData().get(HEAT)));
             player.playSound(ModSounds.M_2_FIRE_1P.get(), 1f, pitch);
@@ -1194,7 +1199,7 @@ public class ClientEventHandler {
             event.setFOV(event.getFOV() / droneFovLerp);
         }
 
-        if (player.getVehicle() instanceof IVehicleEntity && !(player.getVehicle() instanceof ICannonEntity) && zoom) {
+        if (player.getVehicle() instanceof IArmedVehicleEntity && !(player.getVehicle() instanceof ICannonEntity) && zoom) {
             vehicleFovLerp = Mth.lerp(0.1 * Minecraft.getInstance().getDeltaFrameTime(), vehicleFovLerp, vehicleFov);
             event.setFOV(event.getFOV() / vehicleFovLerp);
         }

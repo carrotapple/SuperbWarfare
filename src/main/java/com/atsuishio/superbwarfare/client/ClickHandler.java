@@ -91,7 +91,7 @@ public class ClickHandler {
         if (player.getMainHandItem().is(ModTags.Items.GUN)
                 || stack.is(ModItems.MONITOR.get())
                 || player.hasEffect(ModMobEffects.SHOCK.get())
-                || (player.getVehicle() instanceof IVehicleEntity && !(player.getVehicle() instanceof WheelChairEntity))) {
+                || (player.getVehicle() instanceof IArmedVehicleEntity && !(player.getVehicle() instanceof WheelChairEntity))) {
             if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 event.setCanceled(true);
             }
@@ -118,7 +118,7 @@ public class ClickHandler {
         if ((player.getMainHandItem().is(ModTags.Items.GUN) && !(player.getVehicle() instanceof ICannonEntity))
                 || stack.is(ModItems.MONITOR.get())
                 || (player.getVehicle() instanceof ICannonEntity)
-                || (player.getVehicle() instanceof IVehicleEntity iVehicle && iVehicle.isDriver(player) && stack.is(ItemStack.EMPTY.getItem()))
+                || (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player) && stack.is(ItemStack.EMPTY.getItem()))
                 || (stack.is(Items.SPYGLASS) && player.isScoping() && player.getOffhandItem().is(ModItems.FIRING_PARAMETERS.get()))) {
             if (button == ModKeyMappings.FIRE.getKey().getValue()) {
                 handleWeaponFirePress(player, stack);
@@ -162,7 +162,7 @@ public class ClickHandler {
             event.setCanceled(true);
         }
 
-        if (player.getVehicle() instanceof IVehicleEntity iVehicle && iVehicle.isDriver(player) && ClientEventHandler.zoom) {
+        if (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player) && ClientEventHandler.zoom) {
             ClientEventHandler.vehicleFov = Mth.clamp(ClientEventHandler.vehicleFov + 0.4 * scroll, 1, 6);
             event.setCanceled(true);
         }
@@ -244,7 +244,7 @@ public class ClickHandler {
             if ((player.getMainHandItem().is(ModTags.Items.GUN) && !(player.getVehicle() instanceof ICannonEntity))
                     || stack.is(ModItems.MONITOR.get())
                     || (player.getVehicle() instanceof ICannonEntity)
-                    || (player.getVehicle() instanceof IVehicleEntity iVehicle && iVehicle.isDriver(player) && stack.is(ItemStack.EMPTY.getItem()))
+                    || (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player) && stack.is(ItemStack.EMPTY.getItem()))
                     || (stack.is(Items.SPYGLASS) && player.isScoping() && player.getOffhandItem().is(ModItems.FIRING_PARAMETERS.get()))) {
                 if (key == ModKeyMappings.FIRE.getKey().getValue()) {
                     handleWeaponFirePress(player, stack);
@@ -300,7 +300,7 @@ public class ClickHandler {
             return;
         }
 
-        if (player.getVehicle() instanceof IVehicleEntity iVehicle && iVehicle.isDriver(player)) {
+        if (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player)) {
             ClientEventHandler.holdFire = true;
         }
 
@@ -394,7 +394,7 @@ public class ClickHandler {
     }
 
     private static void handleVehicleMove(int key, int state, Player player) {
-        if (player.getVehicle() != null && player.getVehicle() instanceof IVehicleEntity && player.getVehicle().getFirstPassenger() == player) {
+        if (player.getVehicle() != null && player.getVehicle() instanceof IArmedVehicleEntity && player.getVehicle().getFirstPassenger() == player) {
 
             var options = Minecraft.getInstance().options;
 

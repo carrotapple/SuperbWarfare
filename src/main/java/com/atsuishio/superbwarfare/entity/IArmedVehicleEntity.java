@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.entity;
 
 import net.minecraft.world.entity.player.Player;
 
-public interface IVehicleEntity {
+public interface IArmedVehicleEntity {
 
     void vehicleShoot(Player player);
 

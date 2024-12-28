@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.model.entity;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.entity.IVehicleEntity;
+import com.atsuishio.superbwarfare.entity.IArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -30,7 +30,7 @@ public class ProjectileEntityModel extends GeoModel<ProjectileEntity> {
                 || player.getMainHandItem().is(ModItems.GLOCK_17.get())
                 || player.getMainHandItem().is(ModItems.GLOCK_18.get())
                 || player.getMainHandItem().is(ModItems.BOCEK.get())
-                || (player.getVehicle() instanceof IVehicleEntity iVehicle && iVehicle.isDriver(player) && !player.getMainHandItem().is(ModTags.Items.GUN))) {
+                || (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player) && !player.getMainHandItem().is(ModTags.Items.GUN))) {
             return new ResourceLocation(ModUtils.MODID, "geo/projectile_entity.geo.json");
         } else {
             return new ResourceLocation(ModUtils.MODID, "geo/projectile_entity2.geo.json");

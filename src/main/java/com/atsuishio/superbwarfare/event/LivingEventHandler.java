@@ -93,7 +93,7 @@ public class LivingEventHandler {
         if (vehicle != null) {
             if (vehicle instanceof ICannonEntity) {
                 event.setCanceled(true);
-            } else if (vehicle instanceof IVehicleEntity) {
+            } else if (vehicle instanceof IArmedVehicleEntity) {
                 event.setAmount(0.3f * event.getAmount());
             }
         }
@@ -717,7 +717,7 @@ public class LivingEventHandler {
         if (!(sourceEntity instanceof Player player)) return;
         ItemStack stack = player.getMainHandItem();
 
-        if (sourceEntity.getVehicle() instanceof IVehicleEntity vehicle && DamageTypeTool.isGunDamage(source) && !stack.is(ModTags.Items.GUN)) {
+        if (sourceEntity.getVehicle() instanceof IArmedVehicleEntity vehicle && DamageTypeTool.isGunDamage(source) && !stack.is(ModTags.Items.GUN)) {
             var drops = event.getDrops();
             if (vehicle instanceof ContainerEntity containerEntity) {
                 drops.forEach(itemEntity -> {
@@ -731,7 +731,7 @@ public class LivingEventHandler {
             }
         }
 
-        if (sourceEntity.getVehicle() instanceof IVehicleEntity vehicle && source.is(ModDamageTypes.VEHICLE_STRIKE)) {
+        if (sourceEntity.getVehicle() instanceof IArmedVehicleEntity vehicle && source.is(ModDamageTypes.VEHICLE_STRIKE)) {
             var drops = event.getDrops();
             if (vehicle instanceof ContainerEntity containerEntity) {
                 drops.forEach(itemEntity -> {

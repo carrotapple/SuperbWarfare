@@ -73,7 +73,7 @@ public class VehicleHudOverlay {
 
         PoseStack poseStack = event.getGuiGraphics().pose();
 
-        if (vehicle instanceof IVehicleEntity iVehicle && iVehicle.getAmmoCount(player) != -1) {
+        if (vehicle instanceof IArmedVehicleEntity iVehicle && iVehicle.getAmmoCount(player) != -1) {
 
             boolean iCharge = iVehicle instanceof IChargeEntity;
 
@@ -121,10 +121,10 @@ public class VehicleHudOverlay {
     private static boolean shouldRenderCrossHair(Player player) {
         if (player == null) return false;
         return !player.isSpectator()
-                && (player.getVehicle() != null && player.getVehicle() instanceof IVehicleEntity);
+                && (player.getVehicle() != null && player.getVehicle() instanceof IArmedVehicleEntity);
     }
 
-    private static String getVehicleAmmoType(ItemStack stack, IVehicleEntity iVehicle) {
+    private static String getVehicleAmmoType(ItemStack stack, IArmedVehicleEntity iVehicle) {
         if (stack.getItem() == ModItems.AP_5_INCHES.get() && iVehicle instanceof ICannonEntity) {
             return Component.translatable("des.superbwarfare.tips.ammo_type.ap").getString();
         }

@@ -79,7 +79,7 @@ import java.util.List;
 
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
-public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, IChargeEntity, IVehicleEntity, HasCustomInventoryScreen, ContainerEntity {
+public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, IChargeEntity, IArmedVehicleEntity, HasCustomInventoryScreen, ContainerEntity {
 
     public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);

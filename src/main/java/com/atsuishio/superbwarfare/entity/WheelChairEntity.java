@@ -34,7 +34,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, IVehicleEntity {
+public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = 50;
@@ -279,10 +279,6 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
     }
 
     @Override
-    public void vehicleShoot(Player player) {
-    }
-
-    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
     }
 
@@ -294,26 +290,6 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
     @Override
     public float getMaxHealth() {
         return MAX_HEALTH;
-    }
-
-    @Override
-    public boolean isDriver(Player player) {
-        return player == this.getFirstPassenger();
-    }
-
-    @Override
-    public int mainGunRpm() {
-        return 0;
-    }
-
-    @Override
-    public boolean canShoot(Player player) {
-        return true;
-    }
-
-    @Override
-    public int getAmmoCount(Player player) {
-        return -1;
     }
 
     @Override

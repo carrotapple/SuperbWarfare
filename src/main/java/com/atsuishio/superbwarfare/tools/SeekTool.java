@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.tools;
 
-import com.atsuishio.superbwarfare.entity.IVehicleEntity;
+import com.atsuishio.superbwarfare.entity.IArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -46,7 +46,7 @@ public class SeekTool {
                             && e != entity
                             && e.isAlive()
                             && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand)
-                            && (e instanceof LivingEntity || e instanceof IVehicleEntity)
+                            && (e instanceof LivingEntity || e instanceof IArmedVehicleEntity)
                             && !(e instanceof Player player && (player.isSpectator()))
                             && (!e.isAlliedTo(entity) || e.getTeam() == null || e.getTeam().getName().equals("TDM"))) {
                         return level.clip(new ClipContext(entity.getEyePosition(), e.getEyePosition(),
@@ -63,7 +63,7 @@ public class SeekTool {
                             && e != entity
                             && e.isAlive()
                             && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand)
-                            && (e instanceof LivingEntity || e instanceof IVehicleEntity)
+                            && (e instanceof LivingEntity || e instanceof IArmedVehicleEntity)
                             && !(e instanceof Player player && (player.isCreative() || player.isSpectator()))
                             && (!e.isAlliedTo(entity) || e.getTeam() == null || e.getTeam().getName().equals("TDM"))) {
                         return level.clip(new ClipContext(entity.getEyePosition(), e.getEyePosition(),
@@ -78,7 +78,7 @@ public class SeekTool {
                 .filter(e -> e.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= range * range
                         && e.isAlive()
                         && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand)
-                        && (e instanceof LivingEntity || e instanceof IVehicleEntity)
+                        && (e instanceof LivingEntity || e instanceof IArmedVehicleEntity)
                         && !(e instanceof Player player && (player.isCreative() || player.isSpectator())))
                 .toList();
     }
