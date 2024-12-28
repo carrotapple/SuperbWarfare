@@ -17,7 +17,10 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -109,8 +112,6 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity, 
         } else {
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.99, 0.95, 0.99));
         }
-
-        this.move(MoverType.SELF, this.getDeltaMovement());
 
         if (level().isClientSide && this.getEnergy() > 0) {
             level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), ModSounds.WHEEL_CHAIR_ENGINE.get(), this.getSoundSource(), (float) (0.2 * this.getDeltaMovement().length()), (random.nextFloat() * 0.1f + 0.7f), false);

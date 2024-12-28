@@ -4,9 +4,9 @@ import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
@@ -31,9 +31,9 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
     @Override
     public void baseTick() {
         super.baseTick();
-        if (this.level() instanceof ServerLevel) {
-            crushEntities(this.getDeltaMovement());
-        }
+        crushEntities(this.getDeltaMovement());
+
+        this.move(MoverType.SELF, this.getDeltaMovement());
         this.refreshDimensions();
     }
 
@@ -51,7 +51,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
             double f = Math.min(entitySize / thisSize, 2);
             double f1 = Math.min(thisSize / entitySize, 4);
 
-            if (entity.isAlive() && !(entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ProjectileEntity)) {
+            if (entity.isAlive() && entity.getVehicle() == null && !(entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ProjectileEntity)) {
                 if (velocity.horizontalDistance() > 0.5) {
                     if (!this.level().isClientSide) {
                         this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);

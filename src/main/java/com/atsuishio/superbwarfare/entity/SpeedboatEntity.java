@@ -39,7 +39,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.HasCustomInventoryScreen;
-import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -224,8 +223,6 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
         double fluidFloat;
         fluidFloat = -0.05 + 0.1 * getSubmergedHeight(this);
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, fluidFloat, 0.0));
-
-        this.move(MoverType.SELF, this.getDeltaMovement());
 
         if (this.onGround()) {
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.2, 0.85, 0.2));
