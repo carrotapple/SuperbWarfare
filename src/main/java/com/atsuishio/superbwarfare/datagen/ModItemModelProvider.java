@@ -97,41 +97,41 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.GE_HELMET_M_35);
 
         // blueprints
-        blueprintItem(ModItems.TRACHELIUM_BLUEPRINT);
-        blueprintItem(ModItems.GLOCK_17_BLUEPRINT);
-        blueprintItem(ModItems.GLOCK_18_BLUEPRINT);
-        blueprintItem(ModItems.HUNTING_RIFLE_BLUEPRINT);
-        blueprintItem(ModItems.M_79_BLUEPRINT);
-        blueprintItem(ModItems.RPG_BLUEPRINT);
-        blueprintItem(ModItems.BOCEK_BLUEPRINT);
-        blueprintItem(ModItems.M_4_BLUEPRINT);
-        blueprintItem(ModItems.AA_12_BLUEPRINT);
-        blueprintItem(ModItems.HK_416_BLUEPRINT);
-        blueprintItem(ModItems.RPK_BLUEPRINT);
-        blueprintItem(ModItems.SKS_BLUEPRINT);
-        blueprintItem(ModItems.NTW_20_BLUEPRINT);
-        blueprintItem(ModItems.VECTOR_BLUEPRINT);
-        blueprintItem(ModItems.MINIGUN_BLUEPRINT);
-        blueprintItem(ModItems.MK_14_BLUEPRINT);
-        blueprintItem(ModItems.SENTINEL_BLUEPRINT);
-        blueprintItem(ModItems.M_60_BLUEPRINT);
-        blueprintItem(ModItems.SVD_BLUEPRINT);
-        blueprintItem(ModItems.MARLIN_BLUEPRINT);
-        blueprintItem(ModItems.M_870_BLUEPRINT);
-        blueprintItem(ModItems.M_98B_BLUEPRINT);
-        blueprintItem(ModItems.AK_12_BLUEPRINT);
-        blueprintItem(ModItems.AK_47_BLUEPRINT);
-        blueprintItem(ModItems.DEVOTION_BLUEPRINT);
-        blueprintItem(ModItems.TASER_BLUEPRINT);
-        blueprintItem(ModItems.M_1911_BLUEPRINT);
-        blueprintItem(ModItems.QBZ_95_BLUEPRINT);
-        blueprintItem(ModItems.K_98_BLUEPRINT);
-        blueprintItem(ModItems.MOSIN_NAGANT_BLUEPRINT);
-        blueprintItem(ModItems.JAVELIN_BLUEPRINT);
-        blueprintItem(ModItems.MK_42_BLUEPRINT);
-        blueprintItem(ModItems.MLE_1934_BLUEPRINT);
-        blueprintItem(ModItems.ANNIHILATOR_BLUEPRINT);
-        blueprintItem(ModItems.M_2_HB_BLUEPRINT);
+        gunBlueprintItem(ModItems.TRACHELIUM_BLUEPRINT);
+        gunBlueprintItem(ModItems.GLOCK_17_BLUEPRINT);
+        gunBlueprintItem(ModItems.GLOCK_18_BLUEPRINT);
+        gunBlueprintItem(ModItems.HUNTING_RIFLE_BLUEPRINT);
+        gunBlueprintItem(ModItems.M_79_BLUEPRINT);
+        gunBlueprintItem(ModItems.RPG_BLUEPRINT);
+        gunBlueprintItem(ModItems.BOCEK_BLUEPRINT);
+        gunBlueprintItem(ModItems.M_4_BLUEPRINT);
+        gunBlueprintItem(ModItems.AA_12_BLUEPRINT);
+        gunBlueprintItem(ModItems.HK_416_BLUEPRINT);
+        gunBlueprintItem(ModItems.RPK_BLUEPRINT);
+        gunBlueprintItem(ModItems.SKS_BLUEPRINT);
+        gunBlueprintItem(ModItems.NTW_20_BLUEPRINT);
+        gunBlueprintItem(ModItems.VECTOR_BLUEPRINT);
+        gunBlueprintItem(ModItems.MINIGUN_BLUEPRINT);
+        gunBlueprintItem(ModItems.MK_14_BLUEPRINT);
+        gunBlueprintItem(ModItems.SENTINEL_BLUEPRINT);
+        gunBlueprintItem(ModItems.M_60_BLUEPRINT);
+        gunBlueprintItem(ModItems.SVD_BLUEPRINT);
+        gunBlueprintItem(ModItems.MARLIN_BLUEPRINT);
+        gunBlueprintItem(ModItems.M_870_BLUEPRINT);
+        gunBlueprintItem(ModItems.M_98B_BLUEPRINT);
+        gunBlueprintItem(ModItems.AK_12_BLUEPRINT);
+        gunBlueprintItem(ModItems.AK_47_BLUEPRINT);
+        gunBlueprintItem(ModItems.DEVOTION_BLUEPRINT);
+        gunBlueprintItem(ModItems.TASER_BLUEPRINT);
+        gunBlueprintItem(ModItems.M_1911_BLUEPRINT);
+        gunBlueprintItem(ModItems.QBZ_95_BLUEPRINT);
+        gunBlueprintItem(ModItems.K_98_BLUEPRINT);
+        gunBlueprintItem(ModItems.MOSIN_NAGANT_BLUEPRINT);
+        gunBlueprintItem(ModItems.JAVELIN_BLUEPRINT);
+        cannonBlueprintItem(ModItems.MK_42_BLUEPRINT);
+        cannonBlueprintItem(ModItems.MLE_1934_BLUEPRINT);
+        cannonBlueprintItem(ModItems.ANNIHILATOR_BLUEPRINT);
+        gunBlueprintItem(ModItems.M_2_HB_BLUEPRINT);
 
         // blocks
         evenSimplerBlockItem(ModBlocks.BARBED_WIRE);
@@ -161,9 +161,14 @@ public class ModItemModelProvider extends ItemModelProvider {
                 modLoc("block/" + ForgeRegistries.BLOCKS.getKey(block.get()).getPath()));
     }
 
-    private ItemModelBuilder blueprintItem(RegistryObject<Item> item) {
+    private ItemModelBuilder gunBlueprintItem(RegistryObject<Item> item) {
         return withExistingParent(item.getId().getPath(), new ResourceLocation("item/generated"))
                 .texture("layer0", ModUtils.loc("item/gun_blueprint"));
+    }
+
+    private ItemModelBuilder cannonBlueprintItem(RegistryObject<Item> item) {
+        return withExistingParent(item.getId().getPath(), new ResourceLocation("item/generated"))
+                .texture("layer0", ModUtils.loc("item/cannon_blueprint"));
     }
 
 }

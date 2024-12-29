@@ -1,9 +1,9 @@
-// 1.20.1	2024-12-21T01:11:41.7343972	Item Models: superbwarfare
+// 1.20.1	2024-12-29T21:51:17.35717	Item Models: superbwarfare
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_47_blueprint.json
 c993bddc0db9453ffbefa59f9ac9a74dba909038 assets/superbwarfare/models/item/ancient_cpu.json
-13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/annihilator_blueprint.json
+a5cf666a970906ba6ac0af9a4d5d52dd0e093dec assets/superbwarfare/models/item/annihilator_blueprint.json
 4b8fe8fbe5e64c3449ad539317254e4ed7188411 assets/superbwarfare/models/item/ap_head.json
 984c08ca6f6893a15721a85e30118f9e32c65c7f assets/superbwarfare/models/item/barbed_wire.json
 e8f16946c6f9429989d05e9ec250a72ffc64f9e1 assets/superbwarfare/models/item/beam_test.json
@@ -53,8 +53,8 @@ f66c351b4843ad4d4e086ccfb7d4d0221227d196 assets/superbwarfare/models/item/legend
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/minigun_blueprint.json
 c206cd345f459733399e0be4692586849ef0aac2 assets/superbwarfare/models/item/missile_engine.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/mk_14_blueprint.json
-13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/mk_42_blueprint.json
-13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/mle_1934_blueprint.json
+a5cf666a970906ba6ac0af9a4d5d52dd0e093dec assets/superbwarfare/models/item/mk_42_blueprint.json
+a5cf666a970906ba6ac0af9a4d5d52dd0e093dec assets/superbwarfare/models/item/mle_1934_blueprint.json
 db96dbb75327701d7901c2de48a539bda9fe31c4 assets/superbwarfare/models/item/mortar_barrel.json
 3922427d3921d3de7195614780ee8f57dfc0ee6f assets/superbwarfare/models/item/mortar_base_plate.json
 ac9c6bc308bd741ada7f19d808d0c0722fceb976 assets/superbwarfare/models/item/mortar_bipod.json
