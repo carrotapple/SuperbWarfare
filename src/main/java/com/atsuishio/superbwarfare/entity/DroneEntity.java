@@ -67,10 +67,16 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static double lastTickSpeed = 0;
-
     public double moveX = 0;
     public double moveY = 0;
     public double moveZ = 0;
+    public boolean leftInputDown;
+    public boolean rightInputDown;
+    public boolean forwardInputDown;
+    public boolean backInputDown;
+    public boolean upInputDown;
+    public boolean downInputDown;
+    public boolean fire;
 
     public DroneEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.DRONE.get(), world);
@@ -175,16 +181,16 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
 
         if (!this.onGround()) {
             // left and right
-            if (this.getPersistentData().getBoolean("left")) {
+            if (leftInputDown) {
                 moveX = Mth.clamp(moveX + 0.3f, 0, 3);
-            } else if (this.getPersistentData().getBoolean("right")) {
+            } else if (rightInputDown) {
                 moveX = Mth.clamp(moveX - 0.3f, -3, 0);
             }
 
             // forward and backward
-            if (this.getPersistentData().getBoolean("forward")) {
+            if (forwardInputDown) {
                 moveZ = Mth.clamp(moveZ + 0.3f, 0, 3);
-            } else if (this.getPersistentData().getBoolean("backward")) {
+            } else if (backInputDown) {
                 moveZ = Mth.clamp(moveZ - 0.3f, -3, 0);
             }
 
@@ -197,9 +203,9 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
         }
 
         // up and down
-        if (this.getPersistentData().getBoolean("up")) {
+        if (upInputDown) {
             moveY = Mth.clamp(moveY + 0.3f, 0, 3);
-        } else if (this.getPersistentData().getBoolean("down")) {
+        } else if (downInputDown) {
             moveY = Mth.clamp(moveY - 0.15f, -2, 0);
         }
 
@@ -234,7 +240,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             this.hurt(new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.EXPLOSION), Objects.requireNonNullElse(controller, this)), 0.25f + (float) (2 * lastTickSpeed));
         }
 
-        if (this.getPersistentData().getBoolean("firing")) {
+        if (this.fire) {
             if (this.entityData.get(AMMO) > 0) {
                 this.entityData.set(AMMO, this.entityData.get(AMMO) - 1);
                 if (controller != null) {
@@ -242,9 +248,16 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
                 }
             }
             if (this.entityData.get(KAMIKAZE)) {
-                this.hurt(new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.EXPLOSION), controller), 10000);
+                this.discard();
+                if (controller != null) {
+                    if (controller.getMainHandItem().is(ModItems.MONITOR.get())) {
+                        Monitor.disLink(controller.getMainHandItem());
+                    }
+                    kamikazeExplosion(controller);
+                }
+
             }
-            this.getPersistentData().putBoolean("firing", false);
+            this.fire = false;
         }
 
         this.refreshDimensions();
@@ -351,7 +364,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
 
         if (controller != null) {
             ItemStack stack = controller.getMainHandItem();
-            if (stack.getOrCreateTag().getBoolean("Using")) {
+            if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using")) {
                 this.setYRot(controller.getYRot());
                 this.yRotO = this.getYRot();
                 this.setXRot(Mth.clamp(controller.getXRot(), -25, 90));
@@ -430,10 +443,6 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
                             Monitor.disLink(stack);
                         }
                     });
-        }
-
-        if (this.entityData.get(KAMIKAZE)) {
-            kamikazeExplosion(source.getEntity());
         }
 
         ItemStack stack = new ItemStack(ModItems.RGO_GRENADE.get(), this.entityData.get(AMMO));

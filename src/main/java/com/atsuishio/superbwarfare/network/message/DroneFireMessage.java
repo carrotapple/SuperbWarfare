@@ -3,7 +3,7 @@ package com.atsuishio.superbwarfare.network.message;
 import com.atsuishio.superbwarfare.entity.DroneEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
-import com.atsuishio.superbwarfare.tools.TraceTool;
+import com.atsuishio.superbwarfare.tools.SeekTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -44,12 +44,12 @@ public class DroneFireMessage {
                     DroneEntity drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
                     if (drone != null) {
                         if (!player.getOffhandItem().is(ModItems.FIRING_PARAMETERS.get())) {
-                            drone.getPersistentData().putBoolean("firing", true);
+                            drone.fire = true;
                         } else {
                             ItemStack offStack = player.getOffhandItem();
                             boolean lookAtEntity = false;
 
-                            Entity lookingEntity = TraceTool.findLookingEntity(drone, 520);
+                            Entity lookingEntity = SeekTool.seekLivingEntity(drone, drone.level(), 512, 2);
                             Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(drone.getEyePosition(), drone.getEyePosition().add(drone.getLookAngle().scale(512)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
 
                             if (lookingEntity != null) {

@@ -92,14 +92,13 @@ public class JavelinHudOverlay {
 
                 float fovAdjust = (float) Minecraft.getInstance().options.fov().get() / 80;
 
-
                 Entity targetEntity = EntityFindUtil.findEntity(player.level(), stack.getOrCreateTag().getString("TargetEntity"));
-                List<Entity> entities = SeekTool.seekLivingEntities(player, player.level(), 512, 10 * fovAdjust);
-                Entity naerestEntity = SeekTool.seekLivingEntity(player, player.level(), 512, 8);
+                List<Entity> entities = SeekTool.seekLivingEntities(player, player.level(), 512, 8 * fovAdjust);
+                Entity naerestEntity = SeekTool.seekLivingEntity(player, player.level(), 512, 6);
 
                 float fovAdjust2 = (float) (Minecraft.getInstance().options.fov().get() / 30) - 1;
 
-                double zoom = 3.1 + 0.5 * fovAdjust2;
+                double zoom = Minecraft.getInstance().options.fov().get() / ClientEventHandler.fov + 0.5 * fovAdjust2;
 
                 for (var e : entities) {
                     Vec3 pos = new Vec3(e.getX(), e.getEyeY(), e.getZ());

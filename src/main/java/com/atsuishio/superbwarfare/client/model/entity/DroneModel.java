@@ -61,14 +61,6 @@ public class DroneModel extends GeoModel<DroneEntity> {
 
 		float times = Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1);
 
-		if (Minecraft.getInstance().options.keyUp.isDown()) {
-			rotX = Mth.lerp(0.025f * times, rotX, -0.25f);
-		} else if (Minecraft.getInstance().options.keyDown.isDown()) {
-			rotX = Mth.lerp(0.025f * times, rotX, 0.25f);
-		} else {
-			rotX = Mth.lerp(0.04f * times, rotX, 0);
-		}
-
 		if (Minecraft.getInstance().options.keyRight.isDown()) {
 			rotZ = Mth.lerp(0.025f * times, rotZ, -0.25f);
 		} else if (Minecraft.getInstance().options.keyLeft.isDown()) {
@@ -77,10 +69,9 @@ public class DroneModel extends GeoModel<DroneEntity> {
 			rotZ = Mth.lerp(0.04f * times, rotZ, 0);
 		}
 
-		main.setRotX(rotX);
 		main.setRotZ(rotZ);
 
-		droneBodyAngle(rotX, rotZ);
+		droneBodyAngle(rotZ);
 
 		//螺旋桨控制
 

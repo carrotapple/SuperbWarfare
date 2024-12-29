@@ -1,17 +1,22 @@
 package com.atsuishio.superbwarfare.client.screens;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.tools.EntityFindUtil;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.entity.DroneEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
-import com.atsuishio.superbwarfare.tools.TraceTool;
+import com.atsuishio.superbwarfare.tools.EntityFindUtil;
+import com.atsuishio.superbwarfare.tools.HudUtil;
+import com.atsuishio.superbwarfare.tools.SeekTool;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -24,6 +29,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 import static com.atsuishio.superbwarfare.entity.DroneEntity.AMMO;
@@ -32,7 +38,7 @@ import static com.atsuishio.superbwarfare.entity.DroneEntity.KAMIKAZE;
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class DroneUIOverlay {
     public static int MAX_DISTANCE = 256;
-
+    private static final ResourceLocation FRAME = ModUtils.loc("textures/screens/javelin/frame.png");
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
         int w = event.getWindow().getGuiScaledWidth();
@@ -66,7 +72,7 @@ public class DroneUIOverlay {
 
                     double entity_range = 0;
 
-                    Entity lookingEntity = TraceTool.findLookingEntity(entity, 520);
+                    Entity lookingEntity = SeekTool.seekLivingEntity(entity, entity.level(), 512, 2);
 
                     if (lookingEntity != null) {
                         lookAtEntity = true;
@@ -110,6 +116,30 @@ public class DroneUIOverlay {
                                             .append(Component.literal(new DecimalFormat("##.#").format(block_range) + "M")),
                                     w / 2 + 12, h / 2 - 28, color, false);
                         }
+                    }
+                    Minecraft mc = Minecraft.getInstance();
+                    Camera camera = mc.gameRenderer.getMainCamera();
+                    Vec3 cameraPos = camera.getPosition();
+                    PoseStack poseStack = event.getGuiGraphics().pose();
+
+                    List<Entity> entities = SeekTool.seekLivingEntities(entity, entity.level(), 256, 30);
+                    float fovAdjust2 = (float) (Minecraft.getInstance().options.fov().get() / 30) - 1;
+                    double zoom = 0.975 * ClientEventHandler.droneFovLerp + 0.06 * fovAdjust2;
+
+                    for (var e : entities) {
+                        Vec3 pos = new Vec3(e.getX(), e.getEyeY(), e.getZ());
+                                    Vec3 lookAngle = entity.getLookAngle().normalize().scale(pos.distanceTo(cameraPos) * (1 - 1.0 / zoom));
+
+                        var cPos = cameraPos.add(lookAngle);
+                        Vec3 p = RenderHelper.worldToScreen(pos, cPos);
+                        if (p == null) return;
+
+                        poseStack.pushPose();
+                        int x = (int) p.x;
+                        int y = (int) p.y;
+
+                        HudUtil.blit(poseStack, FRAME, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
+                        poseStack.popPose();
                     }
                 }
             }

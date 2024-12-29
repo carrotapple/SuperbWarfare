@@ -56,7 +56,6 @@ import static com.atsuishio.superbwarfare.entity.SpeedboatEntity.HEAT;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
-
     public static double zoomTime = 0;
     public static double zoomPos = 0;
     public static double zoomPosZ = 0;
@@ -86,7 +85,6 @@ public class ClientEventHandler {
     public static double recoilHorizon = 0;
     public static double recoilY = 0;
 
-    public static double droneRotX = 0;
     public static double droneRotZ = 0;
     public static double droneFov = 1;
     public static double droneFovLerp = 1;
@@ -693,10 +691,9 @@ public class ClientEventHandler {
         }
     }
 
-    public static void droneBodyAngle(float RotX, float RotZ) {
+    public static void droneBodyAngle(float RotZ) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null) {
-            droneRotX = RotX;
             droneRotZ = RotZ;
 
         }
@@ -704,13 +701,11 @@ public class ClientEventHandler {
 
     private static void handleDroneCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
         ItemStack stack = entity.getMainHandItem();
-        double pitch = event.getPitch();
         double roll = event.getRoll();
 
         DroneEntity drone = EntityFindUtil.findDrone(entity.level(), stack.getOrCreateTag().getString("LinkedDrone"));
 
         if (drone != null) {
-            event.setPitch((float) (pitch - Mth.RAD_TO_DEG * droneRotX));
             event.setRoll((float) (roll - Mth.RAD_TO_DEG * droneRotZ));
         }
 
@@ -1195,6 +1190,7 @@ public class ClientEventHandler {
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
             droneFovLerp = Mth.lerp(0.1 * Minecraft.getInstance().getDeltaFrameTime(), droneFovLerp, droneFov);
             event.setFOV(event.getFOV() / droneFovLerp);
+            fov = event.getFOV();
         }
 
         if (player.getVehicle() instanceof IArmedVehicleEntity && !(player.getVehicle() instanceof ICannonEntity) && zoom) {

@@ -40,22 +40,22 @@ public class DroneMovementMessage {
                     if (drone != null) {
                         switch (message.direction) {
                             case 0:
-                                drone.getPersistentData().putBoolean("left", message.clicked);
+                                drone.leftInputDown = message.clicked;
                                 break;
                             case 1:
-                                drone.getPersistentData().putBoolean("right", message.clicked);
+                                drone.rightInputDown = message.clicked;
                                 break;
                             case 2:
-                                drone.getPersistentData().putBoolean("forward", message.clicked);
+                                drone.forwardInputDown = message.clicked;
                                 break;
                             case 3:
-                                drone.getPersistentData().putBoolean("backward", message.clicked);
+                                drone.backInputDown = message.clicked;
                                 break;
                             case 4:
-                                drone.getPersistentData().putBoolean("up", message.clicked);
+                                drone.upInputDown = message.clicked;
                                 break;
                             case 5:
-                                drone.getPersistentData().putBoolean("down", message.clicked);
+                                drone.downInputDown = message.clicked;
                                 break;
                         }
                     }
