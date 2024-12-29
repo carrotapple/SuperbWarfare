@@ -295,7 +295,7 @@ public class ClientEventHandler {
         }
 
         if ((holdFire || burstFireSize > 0)
-                && (player.getMainHandItem().is(ModTags.Items.NORMAL_GUN)
+                && (stack.is(ModTags.Items.NORMAL_GUN)
                 && cantFireTime == 0
                 && drawTime < 0.01
                 && !notInGame()
@@ -306,15 +306,13 @@ public class ClientEventHandler {
                 && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0
                 && !player.getCooldowns().isOnCooldown(stack.getItem())
                 && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false)
-                && revolverPre()
-        )
+                && revolverPre())
                 || (stack.is(ModItems.MINIGUN.get())
                 && !player.isSprinting()
                 && stack.getOrCreateTag().getDouble("overheat") == 0
                 && !player.getCooldowns().isOnCooldown(stack.getItem()) && miniGunRot >= 20
                 && ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())))
         ))) {
-
             if (mode == 0) {
                 if (clientTimer.getProgress() == 0) {
                     clientTimer.start();
@@ -332,7 +330,6 @@ public class ClientEventHandler {
                     clientTimer.setProgress((clientTimer.getProgress() - cooldown));
                 }
             }
-
 
             if (notInGame()) {
                 clientTimer.stop();
@@ -456,12 +453,13 @@ public class ClientEventHandler {
     public static void handleClientShoot() {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
-        if (!player.getMainHandItem().is(ModTags.Items.GUN)) return;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         ModUtils.PACKET_HANDLER.sendToServer(new ShootMessage(gunSpread));
         fireRecoilTime = 10;
 
-        float gunRecoilY = (float) GunsTool.getGunDoubleTag(player.getMainHandItem(), "RecoilY", 0) * 10;
+        float gunRecoilY = (float) GunsTool.getGunDoubleTag(stack, "RecoilY", 0) * 10;
 
         recoilY = (float) (2 * Math.random() - 1) * gunRecoilY;
 
@@ -645,10 +643,11 @@ public class ClientEventHandler {
         Entity entity = event.getCamera().getEntity();
         handlePlayerCamera(event);
 
-        if (level != null && entity instanceof LivingEntity living
-                && living.getMainHandItem().is(ModItems.MONITOR.get())
-                && living.getMainHandItem().getOrCreateTag().getBoolean("Using")
-                && living.getMainHandItem().getOrCreateTag().getBoolean("Linked")) {
+        if (!(entity instanceof LivingEntity living)) return;
+        ItemStack stack = living.getMainHandItem();
+
+        if (level != null &&
+                (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked"))) {
             handleDroneCamera(event, living);
         } else {
             var effect = Minecraft.getInstance().gameRenderer.currentEffect();
@@ -657,7 +656,7 @@ public class ClientEventHandler {
             }
         }
 
-        if (level != null && entity instanceof LivingEntity living && living.getMainHandItem().is(ModTags.Items.GUN)) {
+        if (level != null && stack.is(ModTags.Items.GUN)) {
             handleWeaponSway(living);
             handleWeaponMove(living);
             handleWeaponZoom(living);
@@ -676,12 +675,11 @@ public class ClientEventHandler {
         float yaw = event.getYaw();
         float pitch = event.getPitch();
         float roll = event.getRoll();
-        float shakeRadiusAmplitude;
 
         shakeTime = Mth.lerp(0.25 * times, shakeTime, 0);
 
         if (player != null && shakeTime > 0) {
-            shakeRadiusAmplitude = (float) Mth.clamp(1 - player.position().distanceTo(new Vec3(shakePos[0], shakePos[1], shakePos[2])) / shakeRadius, 0, 1);
+            float shakeRadiusAmplitude = (float) Mth.clamp(1 - player.position().distanceTo(new Vec3(shakePos[0], shakePos[1], shakePos[2])) / shakeRadius, 0, 1);
 
             if (shakeType > 0) {
                 event.setYaw((float) (yaw + (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType)));
@@ -692,7 +690,6 @@ public class ClientEventHandler {
                 event.setPitch((float) (pitch + (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * shakeType)));
                 event.setRoll((float) (roll + (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude)));
             }
-
         }
     }
 
@@ -763,14 +760,15 @@ public class ClientEventHandler {
     }
 
     private static void handleWeaponSway(LivingEntity entity) {
-        if (entity.getMainHandItem().is(ModTags.Items.GUN) && entity instanceof Player player) {
+        ItemStack stack = entity.getMainHandItem();
+        if (stack.is(ModTags.Items.GUN) && entity instanceof Player player) {
             float times = 2 * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
             double pose;
 
             if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && PlayerEventHandler.isProne(player)) {
                 pose = 0.85;
             } else if (PlayerEventHandler.isProne(player)) {
-                pose = GunsTool.getAttachmentType(player.getMainHandItem(), GunsTool.AttachmentType.GRIP) == 3 ? 0 : 0.25f;
+                pose = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 3 ? 0 : 0.25f;
             } else {
                 pose = 1;
             }
@@ -1241,15 +1239,16 @@ public class ClientEventHandler {
             return;
         }
 
+        ItemStack stack = mc.player.getMainHandItem();
+
         if (mc.player.getVehicle() instanceof SpeedboatEntity && zoom) {
             event.setCanceled(true);
         }
 
-        if (mc.player.getMainHandItem().is(ModTags.Items.GUN) || (mc.player.getVehicle() != null && mc.player.getVehicle() instanceof ICannonEntity)) {
+        if (stack.is(ModTags.Items.GUN) || (mc.player.getVehicle() != null && mc.player.getVehicle() instanceof ICannonEntity)) {
             event.setCanceled(true);
         }
 
-        ItemStack stack = mc.player.getMainHandItem();
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
             event.setCanceled(true);
         }

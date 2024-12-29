@@ -85,12 +85,9 @@ public class ClickHandler {
 
         ItemStack stack = player.getMainHandItem();
 
-
         int button = event.getButton();
 
-        if (player.getMainHandItem().is(ModTags.Items.GUN)
-                || stack.is(ModItems.MONITOR.get())
-                || player.hasEffect(ModMobEffects.SHOCK.get())
+        if (stack.is(ModTags.Items.GUN) || stack.is(ModItems.MONITOR.get()) || player.hasEffect(ModMobEffects.SHOCK.get())
                 || (player.getVehicle() instanceof IArmedVehicleEntity && !(player.getVehicle() instanceof WheelChairEntity))) {
             if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 event.setCanceled(true);
@@ -115,7 +112,7 @@ public class ClickHandler {
             }
         }
 
-        if ((player.getMainHandItem().is(ModTags.Items.GUN) && !(player.getVehicle() instanceof ICannonEntity))
+        if ((stack.is(ModTags.Items.GUN) && !(player.getVehicle() instanceof ICannonEntity))
                 || stack.is(ModItems.MONITOR.get())
                 || (player.getVehicle() instanceof ICannonEntity)
                 || (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player) && stack.is(ItemStack.EMPTY.getItem()))
@@ -241,7 +238,7 @@ public class ClickHandler {
                 ModUtils.PACKET_HANDLER.sendToServer(new SensitivityMessage(false));
             }
 
-            if ((player.getMainHandItem().is(ModTags.Items.GUN) && !(player.getVehicle() instanceof ICannonEntity))
+            if ((stack.is(ModTags.Items.GUN) && !(player.getVehicle() instanceof ICannonEntity))
                     || stack.is(ModItems.MONITOR.get())
                     || (player.getVehicle() instanceof ICannonEntity)
                     || (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player) && stack.is(ItemStack.EMPTY.getItem()))
@@ -262,7 +259,6 @@ public class ClickHandler {
                 }
             }
         } else {
-
             if (player.hasEffect(ModMobEffects.SHOCK.get())) {
                 return;
             }
@@ -282,7 +278,6 @@ public class ClickHandler {
     }
 
     public static void handleWeaponFirePress(Player player, ItemStack stack) {
-
         if (player.hasEffect(ModMobEffects.SHOCK.get())) {
             return;
         }
@@ -395,7 +390,6 @@ public class ClickHandler {
 
     private static void handleVehicleMove(int key, int state, Player player) {
         if (player.getVehicle() != null && player.getVehicle() instanceof IArmedVehicleEntity && player.getVehicle().getFirstPassenger() == player) {
-
             var options = Minecraft.getInstance().options;
 
             if (key == options.keyLeft.getKey().getValue()) {
@@ -439,5 +433,4 @@ public class ClickHandler {
             player.displayClientMessage(Component.translatable("des.superbwarfare.no_cloth_config").withStyle(ChatFormatting.RED), true);
         }
     }
-
 }

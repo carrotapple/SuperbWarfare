@@ -318,8 +318,9 @@ public class LivingEventHandler {
             if (player instanceof ServerPlayer serverPlayer) {
                 if (newStack.getItem() != oldStack.getItem()
                         || newStack.getTag() == null || oldStack.getTag() == null
-//                        || !GunsTool.getGunData(newStack).hasUUID("UUID") || !GunsTool.getGunData(oldStack).hasUUID("UUID")
-                        || !Objects.equals(GunsTool.getGunUUID(newStack), GunsTool.getGunUUID(oldStack))
+                        || (newStack.is(ModTags.Items.GUN) && !GunsTool.getGunData(newStack).hasUUID("UUID"))
+                        || (oldStack.is(ModTags.Items.GUN) && !GunsTool.getGunData(oldStack).hasUUID("UUID"))
+                        || (newStack.is(ModTags.Items.GUN) && oldStack.is(ModTags.Items.GUN) && !Objects.equals(GunsTool.getGunUUID(newStack), GunsTool.getGunUUID(oldStack)))
                 ) {
                     if (oldStack.getItem() instanceof GunItem oldGun) {
                         stopGunReloadSound(serverPlayer, oldGun);
