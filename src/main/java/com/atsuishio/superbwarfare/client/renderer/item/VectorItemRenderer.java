@@ -1,14 +1,15 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
-import com.atsuishio.superbwarfare.tools.GunsTool;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.ItemModelHelper;
 import com.atsuishio.superbwarfare.client.layer.VectorLayer;
 import com.atsuishio.superbwarfare.client.model.item.VectorItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.smg.VectorItem;
+import com.atsuishio.superbwarfare.tools.GunsTool;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -29,6 +30,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class VectorItemRenderer extends GeoItemRenderer<VectorItem> {
+
     public VectorItemRenderer() {
         super(new VectorItemModel());
         this.addRenderLayer(new VectorLayer(this));
@@ -81,39 +83,38 @@ public class VectorItemRenderer extends GeoItemRenderer<VectorItem> {
         }
 
         Player player = mc.player;
-        if (player != null) {
-            ItemStack itemStack = player.getMainHandItem();
+        if (player == null) return;
+        ItemStack itemStack = player.getMainHandItem();
+        if (!itemStack.is(ModTags.Items.GUN)) return;
 
-            if (name.equals("Cross1")) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
-                        || !ClientEventHandler.zoom
-                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
-            }
-
-            if (name.equals("Cross2")) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
-                        || !ClientEventHandler.zoom
-                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2);
-            }
-
-            if (name.equals("tuoxin")) {
-                bone.setHidden(GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.STOCK) == 0);
-            }
-
-            if (name.equals("flare")) {
-                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {
-                    bone.setHidden(true);
-                } else {
-                    bone.setHidden(false);
-                    bone.setScaleX((float) (0.55 + 0.5 * (Math.random() - 0.5)));
-                    bone.setScaleY((float) (0.55 + 0.5 * (Math.random() - 0.5)));
-                    bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-                }
-            }
-
-            ItemModelHelper.handleGunAttachments(bone, itemStack, name);
-
+        if (name.equals("Cross1")) {
+            bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                    || !ClientEventHandler.zoom
+                    || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
         }
+
+        if (name.equals("Cross2")) {
+            bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                    || !ClientEventHandler.zoom
+                    || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2);
+        }
+
+        if (name.equals("tuoxin")) {
+            bone.setHidden(GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.STOCK) == 0);
+        }
+
+        if (name.equals("flare")) {
+            if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {
+                bone.setHidden(true);
+            } else {
+                bone.setHidden(false);
+                bone.setScaleX((float) (0.55 + 0.5 * (Math.random() - 0.5)));
+                bone.setScaleY((float) (0.55 + 0.5 * (Math.random() - 0.5)));
+                bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
+            }
+        }
+
+        ItemModelHelper.handleGunAttachments(bone, itemStack, name);
 
         if (this.transformType.firstPerson() && renderingArms) {
             AbstractClientPlayer localPlayer = mc.player;

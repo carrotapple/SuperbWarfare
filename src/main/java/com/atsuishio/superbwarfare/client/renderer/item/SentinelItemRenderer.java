@@ -1,12 +1,13 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.layer.SentinelLayer;
 import com.atsuishio.superbwarfare.client.model.item.SentinelItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.sniper.SentinelItem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -29,6 +30,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SentinelItemRenderer extends GeoItemRenderer<SentinelItem> {
+
     public SentinelItemRenderer() {
         super(new SentinelItemModel());
         this.addRenderLayer(new SentinelLayer(this));
@@ -80,34 +82,33 @@ public class SentinelItemRenderer extends GeoItemRenderer<SentinelItem> {
             bone.setHidden(this.hiddenBones.contains(name));
         }
 
-
         Player player = mc.player;
-        if (player != null) {
-            ItemStack itemStack = player.getMainHandItem();
+        if (player == null) return;
+        ItemStack itemStack = player.getMainHandItem();
+        if (!itemStack.is(ModTags.Items.GUN)) return;
 
-            if (name.equals("flare")) {
-                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
-                    bone.setHidden(true);
-                } else {
-                    bone.setHidden(false);
-                    bone.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-                    bone.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-                    bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-                }
+        if (name.equals("flare")) {
+            if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
+                bone.setHidden(true);
+            } else {
+                bone.setHidden(false);
+                bone.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                bone.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
             }
+        }
 
-            if (name.equals("holo")) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || !ClientEventHandler.zoom);
-            }
+        if (name.equals("holo")) {
+            bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || !ClientEventHandler.zoom);
+        }
 
-            AtomicBoolean flag = new AtomicBoolean(false);
-            itemStack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                    iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() > 0)
-            );
+        AtomicBoolean flag = new AtomicBoolean(false);
+        itemStack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() > 0)
+        );
 
-            if (name.equals("charge")) {
-                bone.setHidden(!flag.get());
-            }
+        if (name.equals("charge")) {
+            bone.setHidden(!flag.get());
         }
 
         if (this.transformType.firstPerson() && renderingArms) {

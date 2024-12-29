@@ -1,14 +1,15 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
-import com.atsuishio.superbwarfare.tools.GunsTool;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.ItemModelHelper;
 import com.atsuishio.superbwarfare.client.layer.Aa12Layer;
 import com.atsuishio.superbwarfare.client.model.item.Aa12ItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.shotgun.Aa12Item;
+import com.atsuishio.superbwarfare.tools.GunsTool;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -29,6 +30,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Aa12ItemRenderer extends GeoItemRenderer<Aa12Item> {
+
     public Aa12ItemRenderer() {
         super(new Aa12ItemModel());
         this.addRenderLayer(new Aa12Layer(this));
@@ -83,6 +85,7 @@ public class Aa12ItemRenderer extends GeoItemRenderer<Aa12Item> {
         Player player = mc.player;
         if (player != null) {
             ItemStack itemStack = player.getMainHandItem();
+            if (!itemStack.is(ModTags.Items.GUN)) return;
 
             if (name.equals("flare")) {
                 if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {

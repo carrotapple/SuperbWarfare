@@ -1,12 +1,13 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.layer.RpgLayer;
 import com.atsuishio.superbwarfare.client.model.item.RpgItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.launcher.RpgItem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -27,6 +28,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class RpgItemRenderer extends GeoItemRenderer<RpgItem> {
+
     public RpgItemRenderer() {
         super(new RpgItemModel());
         this.addRenderLayer(new RpgLayer(this));
@@ -79,23 +81,22 @@ public class RpgItemRenderer extends GeoItemRenderer<RpgItem> {
         }
 
         Player player = mc.player;
-        if (player != null) {
+        if (player == null) return;
+        ItemStack itemStack = player.getMainHandItem();
+        if (!itemStack.is(ModTags.Items.GUN)) return;
 
-            ItemStack itemStack = player.getMainHandItem();
+        if (name.equals("Rockets")) {
+            bone.setHidden(itemStack.getOrCreateTag().getBoolean("empty"));
+        }
 
-            if (name.equals("Rockets")) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("empty"));
-            }
-
-            if (name.equals("flare")) {
-                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
-                    bone.setHidden(true);
-                } else {
-                    bone.setHidden(false);
-                    bone.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-                    bone.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-                    bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-                }
+        if (name.equals("flare")) {
+            if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
+                bone.setHidden(true);
+            } else {
+                bone.setHidden(false);
+                bone.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                bone.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
             }
         }
 

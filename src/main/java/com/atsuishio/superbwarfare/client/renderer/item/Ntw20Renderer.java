@@ -1,12 +1,13 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.layer.Ntw20Layer;
 import com.atsuishio.superbwarfare.client.model.item.Ntw20Model;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.sniper.Ntw20Item;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -27,6 +28,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Ntw20Renderer extends GeoItemRenderer<Ntw20Item> {
+
     public Ntw20Renderer() {
         super(new Ntw20Model());
         this.addRenderLayer(new Ntw20Layer(this));
@@ -44,7 +46,6 @@ public class Ntw20Renderer extends GeoItemRenderer<Ntw20Item> {
     public ItemDisplayContext transformType;
     protected Ntw20Item animatable;
     private final Set<String> hiddenBones = new HashSet<>();
-    private final Set<String> suppressedBones = new HashSet<>();
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {
@@ -80,26 +81,26 @@ public class Ntw20Renderer extends GeoItemRenderer<Ntw20Item> {
         }
 
         Player player = mc.player;
-        if (player != null) {
-            ItemStack itemStack = player.getMainHandItem();
+        if (player == null) return;
+        ItemStack itemStack = player.getMainHandItem();
+        if (!itemStack.is(ModTags.Items.GUN)) return;
 
-            if (name.equals("rex")) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || !ClientEventHandler.zoom);
-            }
+        if (name.equals("rex")) {
+            bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || !ClientEventHandler.zoom);
+        }
 
-            if (name.equals("jing") || name.equals("action") || name.equals("body") || name.equals("base")) {
-                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && ClientEventHandler.zoom);
-            }
+        if (name.equals("jing") || name.equals("action") || name.equals("body") || name.equals("base")) {
+            bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && ClientEventHandler.zoom);
+        }
 
-            if (name.equals("flare")) {
-                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
-                    bone.setHidden(true);
-                } else {
-                    bone.setHidden(false);
-                    bone.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-                    bone.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-                    bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-                }
+        if (name.equals("flare")) {
+            if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
+                bone.setHidden(true);
+            } else {
+                bone.setHidden(false);
+                bone.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                bone.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
             }
         }
 

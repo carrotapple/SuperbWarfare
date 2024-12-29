@@ -1,14 +1,15 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
+import com.atsuishio.superbwarfare.client.ItemModelHelper;
 import com.atsuishio.superbwarfare.client.layer.AK12Layer;
 import com.atsuishio.superbwarfare.client.model.item.AK12ItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.rifle.AK12Item;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.atsuishio.superbwarfare.client.ItemModelHelper;
-import com.atsuishio.superbwarfare.item.gun.rifle.AK12Item;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -29,6 +30,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class AK12ItemRenderer extends GeoItemRenderer<AK12Item> {
+
     public AK12ItemRenderer() {
         super(new AK12ItemModel());
         this.addRenderLayer(new AK12Layer(this));
@@ -83,6 +85,7 @@ public class AK12ItemRenderer extends GeoItemRenderer<AK12Item> {
         Player player = mc.player;
         if (player != null) {
             ItemStack itemStack = player.getMainHandItem();
+            if (!itemStack.is(ModTags.Items.GUN)) return;
 
             if (name.equals("Cross1")) {
                 bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")

@@ -1,12 +1,13 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.layer.SvdLayer;
 import com.atsuishio.superbwarfare.client.model.item.SvdItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.sniper.SvdItem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -27,6 +28,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class SvdItemRenderer extends GeoItemRenderer<SvdItem> {
+
     public SvdItemRenderer() {
         super(new SvdItemModel());
         this.addRenderLayer(new SvdLayer(this));
@@ -44,7 +46,6 @@ public class SvdItemRenderer extends GeoItemRenderer<SvdItem> {
     public ItemDisplayContext transformType;
     protected SvdItem animatable;
     private final Set<String> hiddenBones = new HashSet<>();
-    private final Set<String> suppressedBones = new HashSet<>();
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {
@@ -80,34 +81,34 @@ public class SvdItemRenderer extends GeoItemRenderer<SvdItem> {
         }
 
         Player player = mc.player;
-        if (player != null) {
-            ItemStack itemStack = player.getMainHandItem();
+        if (player == null) return;
+        ItemStack itemStack = player.getMainHandItem();
+        if (!itemStack.is(ModTags.Items.GUN)) return;
 
-            if (name.equals("holo")) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || !ClientEventHandler.zoom);
-            }
+        if (name.equals("holo")) {
+            bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || !ClientEventHandler.zoom);
+        }
 
-            if (name.equals("glass")) {
+        if (name.equals("glass")) {
+            bone.setHidden(true);
+        }
+
+        if (name.equals("handguard")) {
+            bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && ClientEventHandler.zoom);
+        }
+
+        if (name.equals("holo")) {
+            bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || !ClientEventHandler.zoom);
+        }
+
+        if (name.equals("flare")) {
+            if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
                 bone.setHidden(true);
-            }
-
-            if (name.equals("handguard")) {
-                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && ClientEventHandler.zoom);
-            }
-
-            if (name.equals("holo")) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || !ClientEventHandler.zoom);
-            }
-
-            if (name.equals("flare")) {
-                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
-                    bone.setHidden(true);
-                } else {
-                    bone.setHidden(false);
-                    bone.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-                    bone.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-                    bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-                }
+            } else {
+                bone.setHidden(false);
+                bone.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                bone.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
             }
         }
 

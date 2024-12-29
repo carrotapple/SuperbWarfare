@@ -1,12 +1,13 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.layer.Glock18Layer;
 import com.atsuishio.superbwarfare.client.model.item.Glock18ItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.handgun.Glock18Item;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -27,6 +28,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Glock18ItemRenderer extends GeoItemRenderer<Glock18Item> {
+
     public Glock18ItemRenderer() {
         super(new Glock18ItemModel());
         this.addRenderLayer(new Glock18Layer(this));
@@ -79,17 +81,18 @@ public class Glock18ItemRenderer extends GeoItemRenderer<Glock18Item> {
         }
 
         Player player = mc.player;
-        if (player != null) {
+        if (player == null) return;
+        ItemStack itemStack = player.getMainHandItem();
+        if (!itemStack.is(ModTags.Items.GUN)) return;
 
-            if (name.equals("flare")) {
-                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
-                    bone.setHidden(true);
-                } else {
-                    bone.setHidden(false);
-                    bone.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-                    bone.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-                    bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-                }
+        if (name.equals("flare")) {
+            if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
+                bone.setHidden(true);
+            } else {
+                bone.setHidden(false);
+                bone.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                bone.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
             }
         }
 

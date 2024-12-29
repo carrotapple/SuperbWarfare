@@ -1,12 +1,13 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.layer.AbekiriLayer;
 import com.atsuishio.superbwarfare.client.model.item.AbekiriItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.shotgun.AbekiriItem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -27,6 +28,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class AbekiriItemRenderer extends GeoItemRenderer<AbekiriItem> {
+
     public AbekiriItemRenderer() {
         super(new AbekiriItemModel());
         this.addRenderLayer(new AbekiriLayer(this));
@@ -80,6 +82,8 @@ public class AbekiriItemRenderer extends GeoItemRenderer<AbekiriItem> {
 
         Player player = mc.player;
         if (player != null) {
+            ItemStack itemStack = player.getMainHandItem();
+            if (!itemStack.is(ModTags.Items.GUN)) return;
 
             if (name.equals("flare")) {
                 if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {

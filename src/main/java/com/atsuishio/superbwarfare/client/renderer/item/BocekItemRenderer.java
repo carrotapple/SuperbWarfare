@@ -1,12 +1,13 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.layer.BocekLayer;
 import com.atsuishio.superbwarfare.client.model.item.BocekItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.special.BocekItem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -27,6 +28,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class BocekItemRenderer extends GeoItemRenderer<BocekItem> {
+
     public BocekItemRenderer() {
         super(new BocekItemModel());
         this.addRenderLayer(new BocekLayer(this));
@@ -78,35 +80,32 @@ public class BocekItemRenderer extends GeoItemRenderer<BocekItem> {
             bone.setHidden(this.hiddenBones.contains(name));
         }
 
-        Player player_ = mc.player;
-        ItemStack itemStack = null;
-        if (player_ != null) {
-            itemStack = player_.getMainHandItem();
-        }
+        Player player = mc.player;
+        if (player == null) return;
+
+        ItemStack itemStack = player.getMainHandItem();
+        if (!itemStack.is(ModTags.Items.GUN)) return;
 
         if (name.equals("holo")) {
-            if (player_ != null) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || !ClientEventHandler.zoom);
-            }
+            bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden") || !ClientEventHandler.zoom);
         }
 
         if (name.equals("arrow")) {
-            bone.setHidden(itemStack != null && itemStack.getOrCreateTag().getInt("arrow_empty") > 0);
+            bone.setHidden(itemStack.getOrCreateTag().getInt("arrow_empty") > 0);
         }
 
         if (name.equals("jian")) {
-            bone.setHidden(itemStack != null && itemStack.getOrCreateTag().getInt("max_ammo") == 0);
+            bone.setHidden(itemStack.getOrCreateTag().getInt("max_ammo") == 0);
         }
 
-
         if (this.transformType.firstPerson() && renderingArms) {
-            AbstractClientPlayer player = mc.player;
+            AbstractClientPlayer localPlayer = mc.player;
 
-            if (player == null) {
+            if (localPlayer == null) {
                 return;
             }
 
-            PlayerRenderer playerRenderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(player);
+            PlayerRenderer playerRenderer = (PlayerRenderer) mc.getEntityRenderDispatcher().getRenderer(localPlayer);
             PlayerModel<AbstractClientPlayer> model = playerRenderer.getModel();
             stack.pushPose();
             RenderUtils.translateMatrixToBone(stack, bone);
@@ -114,7 +113,7 @@ public class BocekItemRenderer extends GeoItemRenderer<BocekItem> {
             RenderUtils.rotateMatrixAroundBone(stack, bone);
             RenderUtils.scaleMatrixForBone(stack, bone);
             RenderUtils.translateAwayFromPivotPoint(stack, bone);
-            ResourceLocation loc = player.getSkinTextureLocation();
+            ResourceLocation loc = localPlayer.getSkinTextureLocation();
             VertexConsumer armBuilder = this.currentBuffer.getBuffer(RenderType.entitySolid(loc));
             VertexConsumer sleeveBuilder = this.currentBuffer.getBuffer(RenderType.entityTranslucent(loc));
             if (name.equals("Lefthand")) {

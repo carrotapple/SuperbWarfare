@@ -1,13 +1,14 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
-import com.atsuishio.superbwarfare.item.gun.launcher.JavelinItem;
 import com.atsuishio.superbwarfare.client.model.item.JavelinItemModel;
+import com.atsuishio.superbwarfare.item.gun.launcher.JavelinItem;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 public class JavelinItemRenderer extends GeoItemRenderer<JavelinItem> {
+
     public JavelinItemRenderer() {
         super(new JavelinItemModel());
     }

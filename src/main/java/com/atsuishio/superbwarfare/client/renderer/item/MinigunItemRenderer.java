@@ -1,13 +1,14 @@
 package com.atsuishio.superbwarfare.client.renderer.item;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.layer.MinigunHeatLayer;
 import com.atsuishio.superbwarfare.client.layer.MinigunLayer;
 import com.atsuishio.superbwarfare.client.model.item.MinigunItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.machinegun.MinigunItem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -28,6 +29,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MinigunItemRenderer extends GeoItemRenderer<MinigunItem> {
+
     public MinigunItemRenderer() {
         super(new MinigunItemModel());
         this.addRenderLayer(new MinigunLayer(this));
@@ -81,16 +83,18 @@ public class MinigunItemRenderer extends GeoItemRenderer<MinigunItem> {
         }
 
         Player player = mc.player;
-        if (player != null) {
-            if (name.equals("flare")) {
-                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
-                    bone.setHidden(true);
-                } else {
-                    bone.setHidden(false);
-                    bone.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
-                    bone.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
-                    bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-                }
+        if (player == null) return;
+        ItemStack itemStack = player.getMainHandItem();
+        if (!itemStack.is(ModTags.Items.GUN)) return;
+
+        if (name.equals("flare")) {
+            if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5) {
+                bone.setHidden(true);
+            } else {
+                bone.setHidden(false);
+                bone.setScaleX((float) (1 + 0.5 * (Math.random() - 0.5)));
+                bone.setScaleY((float) (1 + 0.5 * (Math.random() - 0.5)));
+                bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
             }
         }
 

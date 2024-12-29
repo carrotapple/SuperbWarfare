@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.client.ItemModelHelper;
 import com.atsuishio.superbwarfare.client.layer.Mk14Layer;
 import com.atsuishio.superbwarfare.client.model.item.Mk14ItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.rifle.Mk14Item;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -29,6 +30,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Mk14ItemRenderer extends GeoItemRenderer<Mk14Item> {
+
     public Mk14ItemRenderer() {
         super(new Mk14ItemModel());
         this.addRenderLayer(new Mk14Layer(this));
@@ -46,7 +48,6 @@ public class Mk14ItemRenderer extends GeoItemRenderer<Mk14Item> {
     public ItemDisplayContext transformType;
     protected Mk14Item animatable;
     private final Set<String> hiddenBones = new HashSet<>();
-    private final Set<String> suppressedBones = new HashSet<>();
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {
@@ -82,55 +83,54 @@ public class Mk14ItemRenderer extends GeoItemRenderer<Mk14Item> {
         }
 
         Player player = mc.player;
-        if (player != null) {
-            ItemStack itemStack = player.getMainHandItem();
+        if (player == null) return;
+        ItemStack itemStack = player.getMainHandItem();
+        if (!itemStack.is(ModTags.Items.GUN)) return;
 
-            if (name.equals("qiaojia")) {
-                bone.setHidden(GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 0);
-            }
-
-            if (name.equals("Cross1")) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
-                        || !ClientEventHandler.zoom
-                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
-            }
-
-            if (name.equals("Cross2")) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
-                        || !ClientEventHandler.zoom
-                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2);
-            }
-
-            if (name.equals("Cross3")) {
-                bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
-                        || !ClientEventHandler.zoom
-                        || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 3);
-            }
-
-            if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2
-                    && (name.equals("hidden"))) {
-                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && ClientEventHandler.zoom);
-            }
-
-            if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 3
-                    && (name.equals("jing") || name.equals("yugu") || name.equals("qiangguan") || name.equals("Barrel"))) {
-                bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && ClientEventHandler.zoom);
-            }
-
-            if (name.equals("flare")) {
-                if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {
-                    bone.setHidden(true);
-                } else {
-                    bone.setHidden(false);
-                    bone.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-                    bone.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
-                    bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-                }
-            }
-
-            ItemModelHelper.handleGunAttachments(bone, itemStack, name);
-
+        if (name.equals("qiaojia")) {
+            bone.setHidden(GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 0);
         }
+
+        if (name.equals("Cross1")) {
+            bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                    || !ClientEventHandler.zoom
+                    || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 1);
+        }
+
+        if (name.equals("Cross2")) {
+            bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                    || !ClientEventHandler.zoom
+                    || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 2);
+        }
+
+        if (name.equals("Cross3")) {
+            bone.setHidden(itemStack.getOrCreateTag().getBoolean("HoloHidden")
+                    || !ClientEventHandler.zoom
+                    || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) != 3);
+        }
+
+        if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2
+                && (name.equals("hidden"))) {
+            bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && ClientEventHandler.zoom);
+        }
+
+        if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 3
+                && (name.equals("jing") || name.equals("yugu") || name.equals("qiangguan") || name.equals("Barrel"))) {
+            bone.setHidden(!itemStack.getOrCreateTag().getBoolean("HoloHidden") && ClientEventHandler.zoom);
+        }
+
+        if (name.equals("flare")) {
+            if (ClientEventHandler.firePosTimer == 0 || ClientEventHandler.firePosTimer > 0.5 || GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.BARREL) == 2) {
+                bone.setHidden(true);
+            } else {
+                bone.setHidden(false);
+                bone.setScaleX((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                bone.setScaleY((float) (0.75 + 0.5 * (Math.random() - 0.5)));
+                bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
+            }
+        }
+
+        ItemModelHelper.handleGunAttachments(bone, itemStack, name);
 
         if (this.transformType.firstPerson() && renderingArms) {
             AbstractClientPlayer localPlayer = mc.player;
