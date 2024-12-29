@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.network;
 
-import com.atsuishio.superbwarfare.client.screens.CrossHairOverlay;
-import com.atsuishio.superbwarfare.client.screens.DroneUIOverlay;
+import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
+import com.atsuishio.superbwarfare.client.overlay.DroneUIOverlay;
 import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
 import com.atsuishio.superbwarfare.event.KillMessageHandler;
 import com.atsuishio.superbwarfare.menu.EnergyMenu;

@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.client.screens;
+package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;

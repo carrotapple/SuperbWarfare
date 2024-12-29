@@ -1,5 +1,5 @@
 
-package com.atsuishio.superbwarfare.client.screens;
+package com.atsuishio.superbwarfare.client.overlay;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
