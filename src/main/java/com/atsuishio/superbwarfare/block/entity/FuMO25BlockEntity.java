@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.block.FuMO25Block;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import com.atsuishio.superbwarfare.menu.FuMO25Menu;
 import com.atsuishio.superbwarfare.network.dataslot.ContainerEnergyData;
+import com.atsuishio.superbwarfare.tools.SeekTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -11,6 +12,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -23,6 +28,8 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.EnergyStorage;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
 
@@ -107,7 +114,9 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
             } else {
                 blockEntity.energyHandler.ifPresent(handler -> handler.extractEnergy(energyCost, false));
                 if (blockEntity.time > 0) {
-                    blockEntity.setGlowEffect();
+                    if (blockEntity.time % 100 == 0) {
+                        blockEntity.setGlowEffect();
+                    }
                     blockEntity.time--;
                     blockEntity.setChanged();
                 }
@@ -129,8 +138,13 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
 
         Level level = this.level;
         if (level == null) return;
-
-
+        BlockPos pos = this.getBlockPos();
+        List<Entity> entities = SeekTool.getEntitiesWithinRange(pos, level, GLOW_RANGE);
+        entities.forEach(e -> {
+            if (e instanceof LivingEntity living) {
+                living.addEffect(new MobEffectInstance(MobEffects.GLOWING, 100, 0, true, false));
+            }
+        });
     }
 
     @Override
