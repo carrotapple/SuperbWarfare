@@ -141,7 +141,7 @@ public class LungeMine extends Item implements GeoItem, AnimatedItem {
     public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(itemstack, world, entity, slot, selected);
 
-        if (itemstack.getOrCreateTag().getInt("AttackTime") ==3) {
+        if (itemstack.getOrCreateTag().getInt("AttackTime") >= 3 && itemstack.getOrCreateTag().getInt("AttackTime") <= 4) {
             if (selected && entity.level() instanceof ServerLevel) {
                 boolean lookAtEntity = false;
 
@@ -175,7 +175,7 @@ public class LungeMine extends Item implements GeoItem, AnimatedItem {
                     }
                     CustomExplosion explosion = new CustomExplosion(entity.level(), null,
                             ModDamageTypes.causeProjectileBoomDamage(entity.level().registryAccess(), entity, entity), 60,
-                            looking.x, looking.y, looking.z, 5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
+                            looking.x, looking.y, looking.z, 4f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
                     explosion.explode();
                     net.minecraftforge.event.ForgeEventFactory.onExplosionStart(entity.level(), explosion);
                     explosion.finalizeExplosion(false);
@@ -192,7 +192,7 @@ public class LungeMine extends Item implements GeoItem, AnimatedItem {
     public static void causeLungeMineExplode(Level pLevel, Entity entity, Entity pLivingEntity) {
         CustomExplosion explosion = new CustomExplosion(pLevel, pLivingEntity,
                 ModDamageTypes.causeProjectileBoomDamage(pLevel.registryAccess(), pLivingEntity, entity), 60,
-                pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), 5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
+                pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), 4f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(pLevel, explosion);
         explosion.finalizeExplosion(false);
