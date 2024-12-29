@@ -389,7 +389,7 @@ public class ClickHandler {
     }
 
     private static void handleVehicleMove(int key, int state, Player player) {
-        if (player.getVehicle() != null && player.getVehicle() instanceof IArmedVehicleEntity && player.getVehicle().getFirstPassenger() == player) {
+        if (player.getVehicle() != null && player.getVehicle() instanceof MobileVehicleEntity && player.getVehicle().getFirstPassenger() == player) {
             var options = Minecraft.getInstance().options;
 
             if (key == options.keyLeft.getKey().getValue()) {

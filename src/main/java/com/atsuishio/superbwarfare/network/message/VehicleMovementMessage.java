@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.network.message;
 
 import com.atsuishio.superbwarfare.entity.MobileVehicleEntity;
+import com.atsuishio.superbwarfare.init.ModItems;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent;
@@ -53,6 +54,17 @@ public class VehicleMovementMessage {
                             mobileVehicleEntity.downInputDown = message.clicked;
                             break;
                     }
+                    if (player.getMainHandItem().is(ModItems.MONITOR.get())) {
+                        if (player.getMainHandItem().getOrCreateTag().getBoolean("Using") && player.getMainHandItem().getOrCreateTag().getBoolean("Linked")) {
+                            mobileVehicleEntity.leftInputDown = false;
+                            mobileVehicleEntity.rightInputDown = false;
+                            mobileVehicleEntity.forwardInputDown = false;
+                            mobileVehicleEntity.backInputDown = false;
+                            mobileVehicleEntity.upInputDown = false;
+                            mobileVehicleEntity.downInputDown = false;
+                        }
+                    }
+
                 }
             }
         });

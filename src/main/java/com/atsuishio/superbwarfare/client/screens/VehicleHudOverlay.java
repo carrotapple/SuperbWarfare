@@ -121,7 +121,7 @@ public class VehicleHudOverlay {
     private static boolean shouldRenderCrossHair(Player player) {
         if (player == null) return false;
         return !player.isSpectator()
-                && (player.getVehicle() != null && player.getVehicle() instanceof IArmedVehicleEntity);
+                && (player.getVehicle() != null && player.getVehicle() instanceof VehicleEntity);
     }
 
     private static String getVehicleAmmoType(ItemStack stack, IArmedVehicleEntity iVehicle) {
