@@ -28,7 +28,7 @@ public class TraceTool {
         Vec3 viewVec = entity.getViewVector(1.0F);
         Vec3 toVec = eyePos.add(viewVec.x * entityReach, viewVec.y * entityReach, viewVec.z * entityReach);
         AABB aabb = entity.getBoundingBox().expandTowards(viewVec.scale(entityReach)).inflate(1.0D, 1.0D, 1.0D);
-        EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(entity, eyePos, toVec, aabb, p -> !p.isSpectator(), distance);
+        EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(entity, eyePos, toVec, aabb, p -> !p.isSpectator() && entity.getVehicle() != p && p.isAlive(), distance);
         if (entityhitresult != null) {
             Vec3 targetPos = entityhitresult.getLocation();
             double distanceToTarget = eyePos.distanceToSqr(targetPos);
@@ -68,7 +68,7 @@ public class TraceTool {
         Vec3 viewVec = player.getViewVector(1.0F);
         Vec3 toVec = eyePos.add(viewVec.x * entityReach, viewVec.y * entityReach, viewVec.z * entityReach);
         AABB aabb = player.getBoundingBox().expandTowards(viewVec.scale(entityReach)).inflate(1.0D, 1.0D, 1.0D);
-        EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(player, eyePos, toVec, aabb, p -> !p.isSpectator() && p.isAlive(), distance);
+        EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(player, eyePos, toVec, aabb, p -> !p.isSpectator() && player.getVehicle() != p && p.isAlive(), distance);
         if (entityhitresult != null) {
             Vec3 targetPos = entityhitresult.getLocation();
             double distanceToTarget = eyePos.distanceToSqr(targetPos);

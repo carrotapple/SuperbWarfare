@@ -99,6 +99,7 @@ public class ModItems {
     public static final RegistryObject<Item> JAVELIN_MISSILE = AMMO.register("javelin_missile", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> MORTAR_SHELLS = AMMO.register("mortar_shells", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> ROCKET = AMMO.register("rocket", Rocket::new);
+    public static final RegistryObject<Item> LUNGE_MINE = AMMO.register("lunge_mine", LungeMine::new);
     public static final RegistryObject<Item> HE_5_INCHES = AMMO.register("he_5_inches", He5Inches::new);
     public static final RegistryObject<Item> AP_5_INCHES = AMMO.register("ap_5_inches", Ap5Inches::new);
     public static final RegistryObject<Item> HAND_GRENADE = AMMO.register("hand_grenade", HandGrenade::new);

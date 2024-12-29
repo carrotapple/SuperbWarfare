@@ -87,9 +87,12 @@ public class ClickHandler {
 
         int button = event.getButton();
 
-        if (stack.is(ModTags.Items.GUN) || stack.is(ModItems.MONITOR.get()) || player.hasEffect(ModMobEffects.SHOCK.get())
+        if (stack.is(ModTags.Items.GUN) || stack.is(ModItems.MONITOR.get()) || stack.is(ModItems.LUNGE_MINE.get()) || player.hasEffect(ModMobEffects.SHOCK.get())
                 || (player.getVehicle() instanceof IArmedVehicleEntity && !(player.getVehicle() instanceof WheelChairEntity))) {
             if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                if (stack.is(ModItems.LUNGE_MINE.get())) {
+                    ModUtils.PACKET_HANDLER.sendToServer(new LungeMineAttackMessage(0));
+                }
                 event.setCanceled(true);
             }
         }

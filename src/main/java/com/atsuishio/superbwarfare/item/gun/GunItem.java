@@ -93,7 +93,7 @@ public abstract class GunItem extends Item {
 
     @Override
     public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        return super.onEntitySwing(stack, entity);
+        return false;
     }
 
     @Override
