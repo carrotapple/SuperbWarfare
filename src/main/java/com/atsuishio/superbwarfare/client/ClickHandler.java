@@ -7,6 +7,7 @@ import com.atsuishio.superbwarfare.config.client.ReloadConfig;
 import com.atsuishio.superbwarfare.entity.*;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.*;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.*;
 import com.atsuishio.superbwarfare.tools.GunsTool;
@@ -302,7 +303,7 @@ public class ClickHandler {
             ClientEventHandler.holdFire = true;
         }
 
-        if (stack.is(ModTags.Items.GUN) && !(player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity)) {
+        if (stack.getItem() instanceof GunItem gunItem && !(player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity)) {
             if ((!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
                     && !stack.getOrCreateTag().getBoolean("reloading")
                     && !stack.getOrCreateTag().getBoolean("charging")
@@ -313,7 +314,7 @@ public class ClickHandler {
                 player.playSound(ModSounds.TRIGGER_CLICK.get(), 1, 1);
             }
 
-            if (!stack.is(ModTags.Items.CANNOT_RELOAD) && GunsTool.getGunIntTag(stack, "Ammo", 0) <= 0 && stack.getOrCreateTag().getInt("ReloadTime") == 0) {
+            if (!gunItem.useBackpackAmmo(stack) && gunItem.getAmmoCount(stack) <= 0 && stack.getOrCreateTag().getInt("ReloadTime") == 0) {
                 if (ReloadConfig.LEFT_CLICK_RELOAD.get()) {
                     ModUtils.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
                 }

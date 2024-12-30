@@ -170,4 +170,8 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
         return Optional.of(new BocekImageComponent(pStack));
     }
 
+    @Override
+    public boolean useBackpackAmmo(ItemStack stack) {
+        return true;
+    }
 }

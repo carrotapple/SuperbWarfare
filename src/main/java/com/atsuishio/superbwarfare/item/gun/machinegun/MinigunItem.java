@@ -212,4 +212,14 @@ public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
             case DAMAGE -> perk == ModPerks.MONSTER_HUNTER.get() || perk == ModPerks.KILLING_TALLY.get();
         };
     }
+
+    @Override
+    public boolean autoWeapon(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean useBackpackAmmo(ItemStack stack) {
+        return true;
+    }
 }

@@ -228,4 +228,9 @@ public class AK47Item extends GunItem implements GeoItem, AnimatedItem {
     public boolean bulletInBarrel(ItemStack stack) {
         return true;
     }
+
+    @Override
+    public boolean autoWeapon(ItemStack stack) {
+        return true;
+    }
 }

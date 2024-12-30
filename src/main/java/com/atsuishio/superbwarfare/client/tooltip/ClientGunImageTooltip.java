@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.client.tooltip.component.GunImageComponent;
 import com.atsuishio.superbwarfare.init.ModKeyMappings;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -29,11 +30,16 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
     protected final int width;
     protected final int height;
     protected final ItemStack stack;
+    protected GunItem gunItem = null;
 
     public ClientGunImageTooltip(GunImageComponent tooltip) {
         this.width = tooltip.width;
         this.height = tooltip.height;
         this.stack = tooltip.stack;
+        if (this.stack.getItem() instanceof GunItem gunItem1) {
+            this.gunItem = gunItem1;
+        }
+
     }
 
     @Override
@@ -100,7 +106,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      * 获取武器射速的文本组件
      */
     protected Component getRpmComponent() {
-        if (!stack.is(ModTags.Items.IS_AUTO_WEAPON)) {
+        if (!gunItem.autoWeapon(this.stack)) {
             return Component.literal("");
         } else {
             return Component.translatable("des.superbwarfare.tips.rpm").withStyle(ChatFormatting.GRAY)

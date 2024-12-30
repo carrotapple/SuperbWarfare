@@ -173,4 +173,9 @@ public class M60Item extends GunItem implements GeoItem, AnimatedItem {
     public boolean isOpenBolt(ItemStack stack) {
         return true;
     }
+
+    @Override
+    public boolean autoWeapon(ItemStack stack) {
+        return true;
+    }
 }

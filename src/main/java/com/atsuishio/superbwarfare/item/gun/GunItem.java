@@ -250,6 +250,7 @@ public abstract class GunItem extends Item {
     public boolean isIterativeReload(ItemStack stack) {
         return false;
     }
+
     public int getAmmoCount(ItemStack stack) {
         return GunsTool.getGunIntTag(stack, "Ammo", 0);
     }
@@ -259,6 +260,14 @@ public abstract class GunItem extends Item {
     }
 
     public boolean bulletInBarrel(ItemStack stack) {
+        return false;
+    }
+
+    public boolean autoWeapon(ItemStack stack) {
+        return false;
+    }
+
+    public boolean useBackpackAmmo(ItemStack stack) {
         return false;
     }
 }
