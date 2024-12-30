@@ -11,6 +11,7 @@ import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.LaserShootMessage;
+import com.atsuishio.superbwarfare.network.message.LungeMineAttackMessage;
 import com.atsuishio.superbwarfare.network.message.ShootMessage;
 import com.atsuishio.superbwarfare.network.message.VehicleFireMessage;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
@@ -22,8 +23,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -33,6 +36,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
@@ -137,6 +142,7 @@ public class ClientEventHandler {
     public static double shakeType = 0;
     public static double vehicleFov = 1;
     public static double vehicleFovLerp = 1;
+    public static int lungeAttack;
 
     @SubscribeEvent
     public static void handleWeaponTurn(RenderHandEvent event) {
@@ -200,7 +206,7 @@ public class ClientEventHandler {
         }
 
         if (miniGunRot > 0) {
-            miniGunRot -= 1;
+            miniGunRot --;
         }
 
         if (notInGame() && !ClickHandler.switchZoom) {
@@ -208,7 +214,42 @@ public class ClientEventHandler {
         }
 
         beamShoot(player, stack);
+        handleLungeAttack(player, stack);
+    }
 
+    public static void handleLungeAttack(Player player, ItemStack stack) {
+        if (stack.is(ModItems.LUNGE_MINE.get()) && lungeAttack == 0 && holdFire && !player.getCooldowns().isOnCooldown(stack.getItem())) {
+            lungeAttack = 6;
+            player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1f, 1);
+        }
+
+        if (stack.is(ModItems.LUNGE_MINE.get()) && lungeAttack >= 1 && lungeAttack <= 2) {
+            boolean lookAtEntity = false;
+
+            Entity lookingEntity = TraceTool.findLookingEntity(player,5);
+
+            BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(5)),
+                    ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
+
+            Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(5)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
+            BlockState blockState = player.level().getBlockState(BlockPos.containing(looking.x(), looking.y(), looking.z()));
+
+            if (lookingEntity != null) {
+                lookAtEntity = true;
+            }
+
+            if (lookAtEntity) {
+                ModUtils.PACKET_HANDLER.sendToServer(new LungeMineAttackMessage(0, lookingEntity.getUUID(), result));
+                lungeAttack = 0;
+            } else if (blockState.canOcclude()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new LungeMineAttackMessage(1, player.getUUID(), result));
+                lungeAttack = 0;
+            }
+        }
+
+        if (lungeAttack > 0) {
+            lungeAttack --;
+        }
     }
 
     @SubscribeEvent

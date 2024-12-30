@@ -9,7 +9,7 @@
 			"parent": "superbwarfare:item/lunge_mine_icon"
 		},
 		"thirdperson_righthand": {
-			"parent": "superbwarfare:item/lunge_mine_base"
+			"parent": "superbwarfare:item/lunge_mine_3d"
 		},
 		"thirdperson_lefthand": {
 			"parent": "superbwarfare:item/lunge_mine_icon"

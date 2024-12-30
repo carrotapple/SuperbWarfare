@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.tools;
 
+import com.atsuishio.superbwarfare.entity.ClaymoreEntity;
 import com.atsuishio.superbwarfare.entity.VehicleEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import net.minecraft.core.BlockPos;
@@ -77,7 +78,7 @@ public class SeekTool {
         return StreamSupport.stream(EntityFindUtil.getEntities(level).getAll().spliterator(), false)
                 .filter(e -> e.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= range * range
                         && e.isAlive()
-                        && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand)
+                        && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand || e instanceof ClaymoreEntity)
                         && !(e instanceof Player player && player.isSpectator()))
                 .toList();
     }
