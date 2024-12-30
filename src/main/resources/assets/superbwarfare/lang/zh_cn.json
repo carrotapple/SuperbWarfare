@@ -216,6 +216,8 @@
   "block.superbwarfare.charging_station": "充电站",
   "des.superbwarfare.charging_station.energy": "能量：%1$s / %2$s FE",
   "block.superbwarfare.fumo_25": "FuMO25火控雷达",
+  "des.superbwarfare.fumo_25.current_pos": "当前坐标：%1$s",
+  "des.superbwarfare.fumo_25.current_target": "目标：%1$s",
 
   "item.superbwarfare.high_energy_explosives": "高能炸药",
   "item.superbwarfare.grain": "推进药柱",

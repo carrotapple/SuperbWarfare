@@ -79,7 +79,7 @@ public class SeekTool {
                         && e.isAlive()
                         && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand)
                         && (e instanceof LivingEntity || e instanceof VehicleEntity)
-                        && !(e instanceof Player player && (player.isCreative() || player.isSpectator())))
+                        && !(e instanceof Player player && player.isSpectator()))
                 .toList();
     }
 

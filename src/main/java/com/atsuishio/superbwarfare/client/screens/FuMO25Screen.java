@@ -3,9 +3,11 @@ package com.atsuishio.superbwarfare.client.screens;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.block.entity.FuMO25BlockEntity;
 import com.atsuishio.superbwarfare.client.RenderHelper;
+import com.atsuishio.superbwarfare.entity.VehicleEntity;
 import com.atsuishio.superbwarfare.menu.FuMO25Menu;
 import com.atsuishio.superbwarfare.network.message.RadarChangeModeMessage;
 import com.atsuishio.superbwarfare.network.message.RadarSetParametersMessage;
+import com.atsuishio.superbwarfare.network.message.RadarSetPosMessage;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
@@ -14,12 +16,16 @@ import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +35,9 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
 
     private static final ResourceLocation TEXTURE = ModUtils.loc("textures/gui/radar.png");
     private static final ResourceLocation SCAN = ModUtils.loc("textures/gui/radar_scan.png");
+
+    private BlockPos currentPos = null;
+    private Entity currentTarget = null;
 
     public FuMO25Screen(FuMO25Menu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -51,16 +60,13 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
         // 网格线
         renderXLine(pGuiGraphics, pPartialTick, i, j);
 
-        RenderSystem.disableDepthTest();
-        RenderSystem.depthMask(false);
-        RenderSystem.enableBlend();
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-
         // FE
         long energy = FuMO25Screen.this.menu.getEnergy();
         float energyRate = (float) energy / (float) FuMO25BlockEntity.MAX_ENERGY;
         pGuiGraphics.blit(TEXTURE, i + 278, j + 39, 178, 167, (int) (54 * energyRate), 16, 358, 328);
+
+        // 信息显示
+        renderInfo(pGuiGraphics);
     }
 
     private void renderXLine(GuiGraphics guiGraphics, float partialTick, int i, int j) {
@@ -74,6 +80,12 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
         RenderSystem.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
 
         guiGraphics.blit(TEXTURE, i + 8, j + 11, 0, 167, 147, 147, 358, 328);
+
+        RenderSystem.disableDepthTest();
+        RenderSystem.depthMask(false);
+        RenderSystem.enableBlend();
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
         poseStack.popPose();
     }
@@ -123,6 +135,63 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
         poseStack.popPose();
     }
 
+    private void renderInfo(GuiGraphics guiGraphics) {
+        int i = (this.width - this.imageWidth) / 2;
+        int j = (this.height - this.imageHeight) / 2;
+
+        if (this.currentPos != null) {
+            guiGraphics.drawString(this.font, Component.translatable("des.superbwarfare.fumo_25.current_pos",
+                    "[" + currentPos.getX() + ", " + currentPos.getY() + ", " + currentPos.getZ() + "]"), i + 173, j + 13, 0xffffff);
+        }
+
+        if (this.currentTarget != null) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(currentTarget.getDisplayName().getString());
+            if (currentTarget instanceof LivingEntity living) {
+                sb.append(" (HP: ").append(new DecimalFormat("##.#").format(living.getHealth()))
+                        .append("/").append(new DecimalFormat("##.#").format(living.getMaxHealth())).append(")");
+            } else if (currentTarget instanceof VehicleEntity vehicle) {
+                sb.append(" (HP: ").append(new DecimalFormat("##.#").format(vehicle.getHealth()))
+                        .append("/").append(new DecimalFormat("##.#").format(vehicle.getMaxHealth())).append(")");
+            }
+
+            guiGraphics.drawString(this.font, Component.translatable("des.superbwarfare.fumo_25.current_target", sb),
+                    i + 173, j + 24, 0xffffff);
+        }
+    }
+
+    @Override
+    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        var entities = FuMO25ScreenHelper.entities;
+        if (entities == null || entities.isEmpty()) return super.mouseClicked(pMouseX, pMouseY, pButton);
+        var pos = FuMO25ScreenHelper.pos;
+        if (pos == null) return super.mouseClicked(pMouseX, pMouseY, pButton);
+        if (pButton != 0) return super.mouseClicked(pMouseX, pMouseY, pButton);
+
+        int type = (int) FuMO25Screen.this.menu.getFuncType();
+        int range = type == 1 ? FuMO25BlockEntity.MAX_RANGE : FuMO25BlockEntity.DEFAULT_RANGE;
+
+        int i = (this.width - this.imageWidth) / 2;
+        int j = (this.height - this.imageHeight) / 2;
+
+        int centerX = i + 81;
+        int centerY = j + 84;
+
+        for (var entity : entities) {
+            double moveX = (entity.getX() - pos.getX()) / range * 74;
+            double moveZ = (entity.getZ() - pos.getZ()) / range * 74;
+
+            if (pMouseX >= centerX + moveX && pMouseX <= centerX + moveX + 4 && pMouseY >= centerY + moveZ && pMouseY <= centerY + moveZ + 4) {
+                ModUtils.PACKET_HANDLER.sendToServer(new RadarSetPosMessage(entity.getOnPos()));
+                this.currentPos = entity.getOnPos();
+                this.currentTarget = entity;
+                return true;
+            }
+        }
+
+        return super.mouseClicked(pMouseX, pMouseY, pButton);
+    }
+
     @Override
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(pGuiGraphics);
@@ -158,6 +227,9 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
         this.titleLabelY = 5;
         this.inventoryLabelX = 105;
         this.inventoryLabelY = 128;
+
+        this.currentPos = null;
+        this.currentTarget = null;
 
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
