@@ -218,6 +218,10 @@
   "block.superbwarfare.fumo_25": "FuMO25火控雷达",
   "des.superbwarfare.fumo_25.current_pos": "当前坐标：%1$s",
   "des.superbwarfare.fumo_25.current_target": "目标：%1$s",
+  "des.superbwarfare.fumo_25.type_0": "普通模式",
+  "des.superbwarfare.fumo_25.type_1": "广域模式",
+  "des.superbwarfare.fumo_25.type_2": "警戒模式",
+  "des.superbwarfare.fumo_25.type_3": "制导模式",
 
   "item.superbwarfare.high_energy_explosives": "高能炸药",
   "item.superbwarfare.grain": "推进药柱",

@@ -218,6 +218,10 @@
   "block.superbwarfare.fumo_25": "FuMO25 Fire Control Radar",
   "des.superbwarfare.fumo_25.current_pos": "Current Pos: %1$s",
   "des.superbwarfare.fumo_25.current_target": "Target: %1$s",
+  "des.superbwarfare.fumo_25.type_0": "Normal Mode",
+  "des.superbwarfare.fumo_25.type_1": "Wider Mode",
+  "des.superbwarfare.fumo_25.type_2": "警戒模式",
+  "des.superbwarfare.fumo_25.type_3": "制导模式",
 
   "item.superbwarfare.high_energy_explosives": "High Energy Explosives",
   "item.superbwarfare.grain": "Grain",

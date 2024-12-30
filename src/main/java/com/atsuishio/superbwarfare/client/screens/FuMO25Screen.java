@@ -58,7 +58,7 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
         renderScan(pGuiGraphics);
 
         // 网格线
-        renderXLine(pGuiGraphics, pPartialTick, i, j);
+        renderXLine(pGuiGraphics, i, j);
 
         // FE
         long energy = FuMO25Screen.this.menu.getEnergy();
@@ -69,7 +69,7 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
         renderInfo(pGuiGraphics);
     }
 
-    private void renderXLine(GuiGraphics guiGraphics, float partialTick, int i, int j) {
+    private void renderXLine(GuiGraphics guiGraphics, int i, int j) {
         var poseStack = guiGraphics.pose();
         poseStack.pushPose();
 
@@ -158,6 +158,18 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
             guiGraphics.drawString(this.font, Component.translatable("des.superbwarfare.fumo_25.current_target", sb),
                     i + 173, j + 24, 0xffffff);
         }
+
+        int type = (int) FuMO25Screen.this.menu.getFuncType();
+        var component = switch (type) {
+            case 1 -> Component.translatable("des.superbwarfare.fumo_25.type_1");
+            case 2 -> Component.translatable("des.superbwarfare.fumo_25.type_2");
+            case 3 -> Component.translatable("des.superbwarfare.fumo_25.type_3");
+            default -> Component.translatable("des.superbwarfare.fumo_25.type_0");
+        };
+        if (type != 0) {
+            component = component.append(Component.literal(" " + FuMO25Screen.this.menu.getTime() / 20 + "s"));
+        }
+        guiGraphics.drawString(this.font, component, i + 173, j + 43, 0xffffff);
     }
 
     @Override
