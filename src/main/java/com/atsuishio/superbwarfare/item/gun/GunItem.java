@@ -55,11 +55,7 @@ public abstract class GunItem extends Item {
                 return;
             }
 
-            GunItem gunItem = null;
-            if (stack.getItem() instanceof GunItem gunItem1) {
-                gunItem = gunItem1;
-            }
-            if (gunItem == null) return;
+            if (!(stack.getItem() instanceof GunItem gunItem)) return;
 
             if (!ItemNBTTool.getBoolean(stack, "init", false)) {
                 GunsTool.initGun(level, stack, this.getDescriptionId().substring(this.getDescriptionId().lastIndexOf('.') + 1));
@@ -268,6 +264,34 @@ public abstract class GunItem extends Item {
     }
 
     public boolean useBackpackAmmo(ItemStack stack) {
+        return false;
+    }
+
+    public boolean canCustom(ItemStack stack) {
+        return false;
+    }
+
+    public boolean canCustomBarrel(ItemStack stack) {
+        return false;
+    }
+
+    public boolean canCustomGrip(ItemStack stack) {
+        return false;
+    }
+
+    public boolean canCustomMagazine(ItemStack stack) {
+        return false;
+    }
+
+    public boolean canCustomScope(ItemStack stack) {
+        return false;
+    }
+
+    public boolean canCustomStock(ItemStack stack) {
+        return false;
+    }
+
+    public boolean ejectShell(ItemStack stack) {
         return false;
     }
 }

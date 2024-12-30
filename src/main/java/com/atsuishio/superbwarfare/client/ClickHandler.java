@@ -214,22 +214,23 @@ public class ClickHandler {
             }
 
             if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
+                if (!(stack.getItem() instanceof GunItem gunItem)) return;
                 if (ModKeyMappings.EDIT_GRIP.getKeyModifier().isActive(KeyConflictContext.IN_GAME)) {
-                    if (key == ModKeyMappings.EDIT_GRIP.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_GRIP)) {
+                    if (key == ModKeyMappings.EDIT_GRIP.getKey().getValue() && gunItem.canCustomGrip(stack)) {
                         ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(4));
                         editModelShake();
                     }
                 } else {
-                    if (key == ModKeyMappings.EDIT_SCOPE.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_SCOPE)) {
+                    if (key == ModKeyMappings.EDIT_SCOPE.getKey().getValue() && gunItem.canCustomScope(stack)) {
                         ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(0));
                         editModelShake();
-                    } else if (key == ModKeyMappings.EDIT_BARREL.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_BARREL)) {
+                    } else if (key == ModKeyMappings.EDIT_BARREL.getKey().getValue() && gunItem.canCustomBarrel(stack)) {
                         ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(1));
                         editModelShake();
-                    } else if (key == ModKeyMappings.EDIT_MAGAZINE.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_MAGAZINE)) {
+                    } else if (key == ModKeyMappings.EDIT_MAGAZINE.getKey().getValue() && gunItem.canCustomMagazine(stack)) {
                         ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(2));
                         editModelShake();
-                    } else if (key == ModKeyMappings.EDIT_STOCK.getKey().getValue() && stack.is(ModTags.Items.CAN_APPLY_STOCK)) {
+                    } else if (key == ModKeyMappings.EDIT_STOCK.getKey().getValue() && gunItem.canCustomStock(stack)) {
                         ModUtils.PACKET_HANDLER.sendToServer(new EditMessage(3));
                         editModelShake();
                     }

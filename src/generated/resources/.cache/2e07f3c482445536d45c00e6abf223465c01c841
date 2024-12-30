@@ -1,4 +1,4 @@
-// 1.20.1	2024-12-30T14:34:41.442112	Tags for minecraft:item mod id superbwarfare
+// 1.20.1	2024-12-30T15:07:23.9778545	Tags for minecraft:item mod id superbwarfare
 cf8d49a8d2872286d1a9c3d4a7e1c2b7690db0b8 data/forge/tags/items/dusts.json
 0fa06c2ff83bf09797e3ddff90f62d1124e645b4 data/forge/tags/items/dusts/coal_coke.json
 295ddf906b7133a0558d03e9a60eea18281fe430 data/forge/tags/items/dusts/iron.json
@@ -26,15 +26,8 @@ af6fd64b4a685c353f243763db268f7b2304c009 data/forge/tags/items/storage_blocks/le
 30d1daa7590f7364b5bc2dc777a00caf2f5eecb0 data/forge/tags/items/storage_blocks/silver.json
 3743c2790deca7e779d3e4b82f092de39b446988 data/forge/tags/items/storage_blocks/steel.json
 144e54d908121dee498b2ebba3b24b09fd6f18d9 data/forge/tags/items/storage_blocks/tungsten.json
-cedce5ff7bbc95b40cbfced0f03a3da712118049 data/superbwarfare/tags/items/can_apply_barrel.json
-4b0864ba4b2bb2ca3b30bdc2fefe3077f5020466 data/superbwarfare/tags/items/can_apply_grip.json
-41a5f975239ec6e000229dfc212b9d886496cccc data/superbwarfare/tags/items/can_apply_magazine.json
-cedce5ff7bbc95b40cbfced0f03a3da712118049 data/superbwarfare/tags/items/can_apply_scope.json
-29af1d9a8f837510bc039feb578330f1a053543f data/superbwarfare/tags/items/can_apply_stock.json
-cedce5ff7bbc95b40cbfced0f03a3da712118049 data/superbwarfare/tags/items/can_custom_gun.json
 52598e22974c8da0d2852defe4c9005e1d67744b data/superbwarfare/tags/items/gun.json
 62eb408544731ce4cfcd119d8a6cc74731189ac0 data/superbwarfare/tags/items/handgun.json
-49fbb8c030fdfafec1f291acc1cdff406c777c7e data/superbwarfare/tags/items/has_shell_effect.json
 68ec25b0ccd68abbbe2f33ab7097572c2140c9da data/superbwarfare/tags/items/launcher.json
 b404c6fd99d2ca68c6738f225cb7d68ee443c10a data/superbwarfare/tags/items/machine_gun.json
 a53020091752016da6602ee1b8b7e08823614344 data/superbwarfare/tags/items/military_armor.json

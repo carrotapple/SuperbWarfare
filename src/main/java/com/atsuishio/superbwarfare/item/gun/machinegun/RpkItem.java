@@ -155,4 +155,9 @@ public class RpkItem extends GunItem implements GeoItem, AnimatedItem {
     public boolean autoWeapon(ItemStack stack) {
         return true;
     }
+
+    @Override
+    public boolean ejectShell(ItemStack stack) {
+        return true;
+    }
 }

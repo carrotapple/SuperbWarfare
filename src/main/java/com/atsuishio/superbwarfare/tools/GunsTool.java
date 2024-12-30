@@ -103,11 +103,7 @@ public class GunsTool {
 
     public static void reload(Player player, ItemStack stack, GunInfo.Type type, boolean extraOne) {
         CompoundTag tag = stack.getOrCreateTag();
-        GunItem gunItem = null;
-        if (stack.getItem() instanceof GunItem gunItem1) {
-            gunItem = gunItem1;
-        }
-        if (gunItem == null) return;
+        if (!(stack.getItem() instanceof GunItem gunItem)) return;
 
         int mag = GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag");
         int ammo = gunItem.getAmmoCount(stack);

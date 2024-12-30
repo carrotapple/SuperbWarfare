@@ -8,6 +8,7 @@ import com.atsuishio.superbwarfare.entity.IArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
 import com.atsuishio.superbwarfare.init.*;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.LaserShootMessage;
 import com.atsuishio.superbwarfare.network.message.ShootMessage;
@@ -489,7 +490,7 @@ public class ClientEventHandler {
 
     public static void playGunClientSounds(Player player) {
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(ModTags.Items.GUN)) {
+        if (!(stack.getItem() instanceof GunItem gunItem)) {
             return;
         }
 
@@ -530,7 +531,7 @@ public class ClientEventHandler {
                 ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
 
         ModUtils.queueClientWork((int) (1 + 1.5 * shooterHeight), () -> {
-            if (stack.is(ModTags.Items.HAS_SHELL_EFFECT)) {
+            if (gunItem.ejectShell(stack)) {
                 if (stack.is(ModTags.Items.SHOTGUN)) {
                     player.playSound(ModSounds.SHELL_CASING_SHOTGUN.get(), (float) Math.max(0.75 - 0.12 * shooterHeight, 0), 1);
                 } else if (stack.is(ModTags.Items.SNIPER_RIFLE)) {
@@ -954,7 +955,7 @@ public class ClientEventHandler {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(ModTags.Items.GUN)) return;
+        if (!(stack.getItem() instanceof GunItem gunItem)) return;
 
         float times = (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 1.6);
         int barrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
@@ -978,7 +979,7 @@ public class ClientEventHandler {
             default -> 2.0;
         };
 
-        if (!stack.is(ModTags.Items.CAN_CUSTOM_GUN)) {
+        if (!gunItem.canCustom(stack)) {
             recoil = 1.6;
             gripRecoilX = 0.75;
             gripRecoilY = 1.25;

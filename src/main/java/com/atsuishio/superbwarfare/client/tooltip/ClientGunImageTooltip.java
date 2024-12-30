@@ -3,7 +3,6 @@ package com.atsuishio.superbwarfare.client.tooltip;
 import com.atsuishio.superbwarfare.client.tooltip.component.GunImageComponent;
 import com.atsuishio.superbwarfare.init.ModKeyMappings;
 import com.atsuishio.superbwarfare.init.ModPerks;
-import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
@@ -75,7 +74,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
     }
 
     protected boolean shouldRenderEditTooltip() {
-        return stack.is(ModTags.Items.CAN_CUSTOM_GUN);
+        return gunItem.canCustom(stack);
     }
 
     protected boolean shouldRenderPerks() {

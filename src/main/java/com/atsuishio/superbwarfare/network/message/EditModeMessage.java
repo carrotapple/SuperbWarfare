@@ -1,9 +1,9 @@
 package com.atsuishio.superbwarfare.network.message;
 
+import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.tools.SoundTool;
-import com.atsuishio.superbwarfare.init.ModSounds;
-import com.atsuishio.superbwarfare.init.ModTags;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -39,9 +39,10 @@ public class EditModeMessage {
 
         if (type == 0) {
             ItemStack mainHandItem = player.getMainHandItem();
+            if (!(mainHandItem.getItem() instanceof GunItem gunItem)) return;
             var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null);
 
-            if (mainHandItem.is(ModTags.Items.CAN_CUSTOM_GUN)) {
+            if (gunItem.canCustom(mainHandItem)) {
                 if (!player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
                     SoundTool.playLocalSound(player, ModSounds.EDIT_MODE.get(), 1f, 1f);
                 }

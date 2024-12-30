@@ -209,4 +209,39 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
     public boolean autoWeapon(ItemStack stack) {
         return true;
     }
+
+    @Override
+    public boolean canCustom(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean canCustomBarrel(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean canCustomGrip(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean canCustomMagazine(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean canCustomScope(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean canCustomStock(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean ejectShell(ItemStack stack) {
+        return true;
+    }
 }

@@ -153,4 +153,9 @@ public class M1911Item extends GunItem implements GeoItem, AnimatedItem {
     public boolean bulletInBarrel(ItemStack stack) {
         return true;
     }
+
+    @Override
+    public boolean ejectShell(ItemStack stack) {
+        return true;
+    }
 }

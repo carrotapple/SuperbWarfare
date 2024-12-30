@@ -312,11 +312,8 @@ public class GunEventHandler {
      */
     private static void handleGunReload(Player player) {
         ItemStack stack = player.getMainHandItem();
-        GunItem gunItem = null;
-        if (stack.getItem() instanceof GunItem gunItem1) {
-            gunItem = gunItem1;
-        }
-        if (gunItem == null) return;
+        if (!(stack.getItem() instanceof GunItem gunItem)) return;
+
         CompoundTag tag = stack.getOrCreateTag();
         CompoundTag data = stack.getOrCreateTag().getCompound("GunData");
         // 启动换弹
@@ -401,12 +398,7 @@ public class GunEventHandler {
 
     public static void playGunNormalReload(Player player) {
         ItemStack stack = player.getMainHandItem();
-
-        GunItem gunItem = null;
-        if (stack.getItem() instanceof GunItem gunItem1) {
-            gunItem = gunItem1;
-        }
-        if (gunItem == null) return;
+        if (!(stack.getItem() instanceof GunItem gunItem)) return;
 
         if (player.getInventory().hasAnyMatching(item -> item.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
             GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag")
