@@ -57,15 +57,13 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
 
     @Override
     public void playerTouch(Player pPlayer) {
-        if (this.position().distanceTo(pPlayer.position()) > 1.25) return;
+        if (this.position().distanceTo(pPlayer.position()) > 1.4) return;
         if (!this.level().isClientSide) {
             double entitySize = pPlayer.getBbWidth() * pPlayer.getBbHeight();
             double thisSize = this.getBbWidth() * this.getBbHeight();
             double f = Math.min(entitySize / thisSize, 2);
-            double f1 = Math.min(thisSize / entitySize, 4);
-            this.setDeltaMovement(this.getDeltaMovement().add(new Vec3(pPlayer.position().vectorTo(this.position()).toVector3f()).scale(0.3 * f * pPlayer.getDeltaMovement().length())));
+            this.setDeltaMovement(this.getDeltaMovement().add(new Vec3(pPlayer.position().vectorTo(this.position()).toVector3f()).scale(0.5 * f * pPlayer.getDeltaMovement().length())));
             this.setYRot(pPlayer.getYHeadRot());
-            pPlayer.setDeltaMovement(pPlayer.getDeltaMovement().add(new Vec3(this.position().vectorTo(pPlayer.position()).toVector3f()).scale(0.01 * f1 * pPlayer.getDeltaMovement().length())));
         }
     }
 
@@ -119,7 +117,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
 
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.048, 0.0));
         if (this.onGround()) {
-            float f = 0.7f + 0.2f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
+            float f = (float) Mth.clamp(0.85f + 0.05f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90, 0.01, 0.99);
             this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.95, f));
         } else {
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.99, 0.95, 0.99));
@@ -158,7 +156,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
             this.forwardInputDown = false;
             this.backInputDown = false;
         } else if (passenger instanceof Player) {
-            if (level().isClientSide) {
+            if (level().isClientSide && this.getEnergy() > 0) {
                 level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.forwardInputDown || this.backInputDown ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 1f), false);
             }
             diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
@@ -210,8 +208,8 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
             s0 = -this.getDeltaMovement().horizontalDistance();
         }
 
-        this.setLeftWheelRot((float) (this.getLeftWheelRot() - 1 * s0) - 0.015f * Mth.clamp(0.4f * diffY, -5f, 5f));
-        this.setRightWheelRot((float) (this.getRightWheelRot() - 1 * s0) + 0.015f * Mth.clamp(0.4f * diffY, -5f, 5f));
+        this.setLeftWheelRot((float) (this.getLeftWheelRot() - 1.25 * s0) - 0.015f * Mth.clamp(0.4f * diffY, -5f, 5f));
+        this.setRightWheelRot((float) (this.getRightWheelRot() - 1.25 * s0) + 0.015f * Mth.clamp(0.4f * diffY, -5f, 5f));
 
         this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (this.onGround() ? 1 : 0.1) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (this.onGround() ? 1 : 0.1) * this.entityData.get(POWER)));
     }
