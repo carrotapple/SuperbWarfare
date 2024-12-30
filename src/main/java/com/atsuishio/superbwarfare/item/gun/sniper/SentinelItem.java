@@ -234,4 +234,13 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
         return Optional.of(new SentinelImageComponent(pStack));
     }
 
+    @Override
+    public boolean isMagazineReload(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean isOpenBolt(ItemStack stack) {
+        return true;
+    }
 }

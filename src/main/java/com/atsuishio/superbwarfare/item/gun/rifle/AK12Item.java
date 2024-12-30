@@ -205,4 +205,8 @@ public class AK12Item extends GunItem implements GeoItem, AnimatedItem {
         return PerkHelper.RIFLE_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk);
     }
 
+    @Override
+    public boolean isOpenBolt(ItemStack stack) {
+        return true;
+    }
 }

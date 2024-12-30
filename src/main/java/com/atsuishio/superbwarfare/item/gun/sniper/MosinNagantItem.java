@@ -172,4 +172,9 @@ public class MosinNagantItem extends GunItem implements GeoItem, AnimatedItem {
     public boolean canApplyPerk(Perk perk) {
         return PerkHelper.SNIPER_RIFLE_PERKS.test(perk);
     }
+
+    @Override
+    public boolean isIterativeReload(ItemStack stack) {
+        return true;
+    }
 }

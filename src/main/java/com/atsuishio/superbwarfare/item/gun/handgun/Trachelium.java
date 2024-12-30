@@ -314,4 +314,8 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
         return PerkHelper.HANDGUN_PERKS.test(perk);
     }
 
+    @Override
+    public boolean isMagazineReload(ItemStack stack) {
+        return true;
+    }
 }

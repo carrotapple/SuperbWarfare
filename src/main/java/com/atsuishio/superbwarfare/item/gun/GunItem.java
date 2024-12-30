@@ -232,4 +232,23 @@ public abstract class GunItem extends Item {
         }
         stack.addTagElement("PerkData", compound);
     }
+
+    public boolean isMagazineReload(ItemStack stack) {
+        return false;
+    }
+
+    public boolean isClipReload(ItemStack stack) {
+        return false;
+    }
+
+    public boolean isIterativeReload(ItemStack stack) {
+        return false;
+    }
+    public int getAmmoCount(ItemStack stack) {
+        return GunsTool.getGunIntTag(stack, "Ammo", 0);
+    }
+
+    public boolean isOpenBolt(ItemStack stack) {
+        return false;
+    }
 }

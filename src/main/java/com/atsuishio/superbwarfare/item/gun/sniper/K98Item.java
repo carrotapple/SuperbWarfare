@@ -1,17 +1,17 @@
 package com.atsuishio.superbwarfare.item.gun.sniper;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.K98ItemRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.perk.Perk;
-import com.atsuishio.superbwarfare.perk.PerkHelper;
-import com.atsuishio.superbwarfare.tools.GunsTool;
-import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.AnimatedItem;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.perk.Perk;
+import com.atsuishio.superbwarfare.perk.PerkHelper;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -171,5 +171,15 @@ public class K98Item extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public boolean canApplyPerk(Perk perk) {
         return PerkHelper.SNIPER_RIFLE_PERKS.test(perk);
+    }
+
+    @Override
+    public boolean isClipReload(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean isIterativeReload(ItemStack stack) {
+        return true;
     }
 }

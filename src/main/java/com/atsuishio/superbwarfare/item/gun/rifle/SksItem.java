@@ -149,4 +149,13 @@ public class SksItem extends GunItem implements GeoItem, AnimatedItem {
         return PerkHelper.RIFLE_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk);
     }
 
+    @Override
+    public boolean isMagazineReload(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean isOpenBolt(ItemStack stack) {
+        return true;
+    }
 }

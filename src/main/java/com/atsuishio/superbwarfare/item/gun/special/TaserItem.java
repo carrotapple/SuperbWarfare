@@ -259,4 +259,8 @@ public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
         return Optional.of(new EnergyImageComponent(pStack));
     }
 
+    @Override
+    public boolean isMagazineReload(ItemStack stack) {
+        return true;
+    }
 }

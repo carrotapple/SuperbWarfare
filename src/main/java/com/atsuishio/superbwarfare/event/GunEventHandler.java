@@ -8,6 +8,7 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
@@ -311,12 +312,17 @@ public class GunEventHandler {
      */
     private static void handleGunReload(Player player) {
         ItemStack stack = player.getMainHandItem();
+        GunItem gunItem = null;
+        if (stack.getItem() instanceof GunItem gunItem1) {
+            gunItem = gunItem1;
+        }
+        if (gunItem == null) return;
         CompoundTag tag = stack.getOrCreateTag();
         CompoundTag data = stack.getOrCreateTag().getCompound("GunData");
         // 启动换弹
         if (tag.getBoolean("start_reload")) {
             MinecraftForge.EVENT_BUS.post(new ReloadEvent.Pre(player, stack));
-            if (stack.is(ModTags.Items.OPEN_BOLT)) {
+            if (gunItem.isOpenBolt(stack)) {
                 if (GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
                     data.putInt("ReloadTime", data.getInt("EmptyReloadTime") + 1);
                     stack.getOrCreateTag().putBoolean("is_empty_reloading", true);
@@ -378,7 +384,7 @@ public class GunEventHandler {
         }
 
         if (data.getInt("ReloadTime") == 1) {
-            if (stack.is(ModTags.Items.OPEN_BOLT)) {
+            if (gunItem.isOpenBolt(stack)) {
                 if (GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
                     playGunEmptyReload(player);
                 } else {

@@ -185,4 +185,9 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
         return Optional.of(new LauncherImageComponent(pStack));
     }
+
+    @Override
+    public boolean isMagazineReload(ItemStack stack) {
+        return true;
+    }
 }

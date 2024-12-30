@@ -29,7 +29,6 @@ public class ModTags {
         public static final TagKey<Item> REVOLVER = tag("revolver");
 
         public static final TagKey<Item> NORMAL_GUN = tag("normal_gun");
-        public static final TagKey<Item> OPEN_BOLT = tag("open_bolt");
         public static final TagKey<Item> CANNOT_RELOAD = tag("cannot_reload");
         public static final TagKey<Item> IS_AUTO_WEAPON = tag("is_auto_weapon");
         public static final TagKey<Item> CAN_CUSTOM_GUN = tag("can_custom_gun");

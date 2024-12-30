@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.network.message;
 
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.nbt.CompoundTag;
@@ -55,18 +56,16 @@ public class ReloadMessage {
             var capability = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables());
 
             if (!player.isSpectator()
-                    && stack.is(ModTags.Items.GUN)
+                    && stack.getItem() instanceof GunItem gunItem
                     && !stack.getOrCreateTag().getBoolean("sentinel_is_charging")
-                    && !(player.getCooldowns().isOnCooldown(stack.getItem()))
                     && GunsTool.getGunIntTag(stack, "ReloadTime") == 0
                     && stack.getOrCreateTag().getInt("bolt_action_anim") == 0
             ) {
                 CompoundTag tag = stack.getOrCreateTag();
 
-                boolean canSingleReload = GunsTool.getGunIntTag(stack, "IterativeTime", 0) != 0;
-                boolean canReload = (GunsTool.getGunIntTag(stack, "NormalReloadTime") != 0 || GunsTool.getGunIntTag(stack, "EmptyReloadTime") != 0)
-                        && GunsTool.getGunIntTag(stack, "ClipLoad", 0) != 1;
-                boolean clipLoad = GunsTool.getGunIntTag(stack, "Ammo", 0) == 0 && GunsTool.getGunIntTag(stack, "ClipLoad", 0) == 1;
+                boolean canSingleReload = gunItem.isIterativeReload(stack);
+                boolean canReload = gunItem.isMagazineReload(stack) && !gunItem.isClipReload(stack);
+                boolean clipLoad = gunItem.getAmmoCount(stack) == 0 && gunItem.isClipReload(stack);
 
                 // 检查备弹
                 int count = 0;
@@ -97,9 +96,9 @@ public class ReloadMessage {
                 }
 
                 if (canReload || clipLoad) {
-                    int magazine = GunsTool.getGunIntTag(stack, "Magazine", 0);
+                    int magazine = gunItem.getAmmoCount(stack);
 
-                    if (stack.is(ModTags.Items.OPEN_BOLT)) {
+                    if (gunItem.isOpenBolt(stack)) {
                         if (stack.is(ModTags.Items.EXTRA_ONE_AMMO)) {
                             if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + tag.getInt("customMag") + 1) {
                                 tag.putBoolean("start_reload", true);

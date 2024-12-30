@@ -134,4 +134,14 @@ public class DevotionItem extends GunItem implements GeoItem, AnimatedItem {
     public boolean canApplyPerk(Perk perk) {
         return PerkHelper.MACHINE_GUN_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk) || perk == ModPerks.DESPERADO.get() || perk == ModPerks.TURBO_CHARGER.get();
     }
+
+    @Override
+    public boolean isMagazineReload(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean isOpenBolt(ItemStack stack) {
+        return true;
+    }
 }
