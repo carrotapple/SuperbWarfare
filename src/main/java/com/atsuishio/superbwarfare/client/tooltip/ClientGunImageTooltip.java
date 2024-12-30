@@ -29,16 +29,11 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
     protected final int width;
     protected final int height;
     protected final ItemStack stack;
-    protected GunItem gunItem = null;
 
     public ClientGunImageTooltip(GunImageComponent tooltip) {
         this.width = tooltip.width;
         this.height = tooltip.height;
         this.stack = tooltip.stack;
-        if (this.stack.getItem() instanceof GunItem gunItem1) {
-            this.gunItem = gunItem1;
-        }
-
     }
 
     @Override
@@ -74,7 +69,10 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
     }
 
     protected boolean shouldRenderEditTooltip() {
-        return gunItem.canCustom(stack);
+        if (this.stack.getItem() instanceof GunItem gunItem) {
+            return gunItem.canCustom(stack);
+        }
+        return false;
     }
 
     protected boolean shouldRenderPerks() {
@@ -105,14 +103,13 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      * 获取武器射速的文本组件
      */
     protected Component getRpmComponent() {
-        if (!gunItem.autoWeapon(this.stack)) {
-            return Component.literal("");
-        } else {
+        if (this.stack.getItem() instanceof GunItem gunItem && gunItem.autoWeapon(this.stack)) {
             return Component.translatable("des.superbwarfare.tips.rpm").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.literal(new DecimalFormat("##").format(GunsTool.getGunIntTag(stack, "RPM", 0) + ItemNBTTool.getDouble(stack, "customRpm", 0)))
                             .withStyle(ChatFormatting.GREEN));
         }
+        return Component.literal("");
     }
 
     /**
