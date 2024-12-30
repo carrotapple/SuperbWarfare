@@ -78,7 +78,6 @@ public class SeekTool {
                 .filter(e -> e.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= range * range
                         && e.isAlive()
                         && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand)
-                        && (e instanceof LivingEntity || e instanceof VehicleEntity)
                         && !(e instanceof Player player && player.isSpectator()))
                 .toList();
     }

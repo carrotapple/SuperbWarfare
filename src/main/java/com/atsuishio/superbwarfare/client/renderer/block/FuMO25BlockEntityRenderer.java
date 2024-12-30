@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -38,4 +39,18 @@ public class FuMO25BlockEntityRenderer implements BlockEntityRenderer<FuMO25Bloc
         pPoseStack.popPose();
     }
 
+    @Override
+    public boolean shouldRenderOffScreen(FuMO25BlockEntity pBlockEntity) {
+        return true;
+    }
+
+    @Override
+    public boolean shouldRender(FuMO25BlockEntity pBlockEntity, Vec3 pCameraPos) {
+        return Vec3.atCenterOf(pBlockEntity.getBlockPos()).multiply(1.0, 0.0, 1.0).closerThan(pCameraPos.multiply(1.0, 0.0, 1.0), (double)this.getViewDistance());
+    }
+
+    @Override
+    public int getViewDistance() {
+        return 192;
+    }
 }
