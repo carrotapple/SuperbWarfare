@@ -95,6 +95,7 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
         if (entities == null || entities.isEmpty()) return;
         var pos = FuMO25ScreenHelper.pos;
         if (pos == null) return;
+        if (!FuMO25Screen.this.menu.isPowered()) return;
 
         int type = (int) FuMO25Screen.this.menu.getFuncType();
         int range = type == 1 ? FuMO25BlockEntity.MAX_RANGE : FuMO25BlockEntity.DEFAULT_RANGE;
@@ -121,6 +122,7 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
 
     private void renderScan(GuiGraphics guiGraphics) {
         if (FuMO25Screen.this.menu.getEnergy() <= 0) return;
+        if (!FuMO25Screen.this.menu.isPowered()) return;
 
         var poseStack = guiGraphics.pose();
         poseStack.pushPose();
@@ -179,6 +181,7 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
         var pos = FuMO25ScreenHelper.pos;
         if (pos == null) return super.mouseClicked(pMouseX, pMouseY, pButton);
         if (pButton != 0) return super.mouseClicked(pMouseX, pMouseY, pButton);
+        if (!FuMO25Screen.this.menu.isPowered()) return super.mouseClicked(pMouseX, pMouseY, pButton);
 
         int type = (int) FuMO25Screen.this.menu.getFuncType();
         int range = type == 1 ? FuMO25BlockEntity.MAX_RANGE : FuMO25BlockEntity.DEFAULT_RANGE;

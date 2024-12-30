@@ -185,6 +185,10 @@ public class FuMO25Menu extends EnergyMenu {
         return this.containerData.get(2);
     }
 
+    public boolean isPowered() {
+        return this.containerData.get(3) == 1;
+    }
+
     static class ParaSlot extends Slot {
 
         public ParaSlot(Container pContainer, int pSlot, int pX, int pY) {

@@ -45,12 +45,13 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
 
     public static final int DEFAULT_MIN_ENERGY = 64000;
 
-    public static final int MAX_DATA_COUNT = 3;
+    public static final int MAX_DATA_COUNT = 4;
 
     private LazyOptional<EnergyStorage> energyHandler;
 
     public FuncType type = FuncType.NORMAL;
     public int time = 0;
+    public boolean powered = false;
 
     protected final ContainerEnergyData dataAccess = new ContainerEnergyData() {
 
@@ -60,6 +61,7 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
                 case 0 -> FuMO25BlockEntity.this.energyHandler.map(EnergyStorage::getEnergyStored).orElse(0);
                 case 1 -> FuMO25BlockEntity.this.type.ordinal();
                 case 2 -> FuMO25BlockEntity.this.time;
+                case 3 -> FuMO25BlockEntity.this.powered ? 1 : 0;
                 default -> 0;
             };
         }
@@ -71,6 +73,7 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
                         FuMO25BlockEntity.this.energyHandler.ifPresent(handler -> handler.receiveEnergy((int) pValue, false));
                 case 1 -> FuMO25BlockEntity.this.type = FuncType.values()[(int) pValue];
                 case 2 -> FuMO25BlockEntity.this.time = (int) pValue;
+                case 3 -> FuMO25BlockEntity.this.powered = pValue == 1;
             }
         }
 
@@ -99,6 +102,7 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
         if (energy < energyCost) {
             if (pState.getValue(FuMO25Block.POWERED)) {
                 pLevel.setBlockAndUpdate(pPos, pState.setValue(FuMO25Block.POWERED, false));
+                blockEntity.powered = false;
                 setChanged(pLevel, pPos, pState);
             }
             if (blockEntity.time > 0) {
@@ -109,6 +113,7 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
             if (!pState.getValue(FuMO25Block.POWERED)) {
                 if (energy >= DEFAULT_MIN_ENERGY) {
                     pLevel.setBlockAndUpdate(pPos, pState.setValue(FuMO25Block.POWERED, true));
+                    blockEntity.powered = true;
                     setChanged(pLevel, pPos, pState);
                 }
             } else {
@@ -156,6 +161,7 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
         }
         this.type = FuncType.values()[Mth.clamp(pTag.getInt("Type"), 0, 3)];
         this.time = pTag.getInt("Time");
+        this.powered = pTag.getBoolean("Powered");
     }
 
     @Override
@@ -165,6 +171,7 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
         getCapability(ForgeCapabilities.ENERGY).ifPresent(handler -> pTag.put("Energy", ((EnergyStorage) handler).serializeNBT()));
         pTag.putInt("Type", this.type.ordinal());
         pTag.putInt("Time", this.time);
+        pTag.putBoolean("Powered", this.powered);
     }
 
     @Override
