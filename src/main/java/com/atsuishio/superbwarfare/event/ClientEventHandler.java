@@ -56,6 +56,7 @@ import static com.atsuishio.superbwarfare.entity.SpeedboatEntity.HEAT;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
+
     public static double zoomTime = 0;
     public static double zoomPos = 0;
     public static double zoomPosZ = 0;

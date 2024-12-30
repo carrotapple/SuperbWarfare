@@ -1,12 +1,16 @@
 package com.atsuishio.superbwarfare.menu;
 
+import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.block.entity.FuMO25BlockEntity;
 import com.atsuishio.superbwarfare.init.ModBlocks;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModMenuTypes;
 import com.atsuishio.superbwarfare.network.dataslot.ContainerEnergyData;
 import com.atsuishio.superbwarfare.network.dataslot.SimpleEnergyData;
+import com.atsuishio.superbwarfare.network.message.RadarMenuCloseMessage;
+import com.atsuishio.superbwarfare.network.message.RadarMenuOpenMessage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -14,9 +18,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.event.entity.player.PlayerContainerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class FuMO25Menu extends EnergyMenu {
 
     protected final Container container;
@@ -92,6 +102,10 @@ public class FuMO25Menu extends EnergyMenu {
             return new BlockPos(this.posX, this.posY, this.posZ);
         }
         return null;
+    }
+
+    public Optional<BlockPos> getSelfPos() {
+        return this.access.evaluate((level, pos) -> pos);
     }
 
     @Override
@@ -180,6 +194,21 @@ public class FuMO25Menu extends EnergyMenu {
         @Override
         public boolean mayPlace(ItemStack pStack) {
             return pStack.is(ModItems.FIRING_PARAMETERS.get());
+        }
+    }
+
+    @SubscribeEvent
+    public static void onContainerOpened(PlayerContainerEvent.Open event) {
+        if (event.getContainer() instanceof FuMO25Menu fuMO25Menu && event.getEntity() instanceof ServerPlayer serverPlayer) {
+            fuMO25Menu.getSelfPos().ifPresent(pos ->
+                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new RadarMenuOpenMessage(pos)));
+        }
+    }
+
+    @SubscribeEvent
+    public static void onContainerClosed(PlayerContainerEvent.Close event) {
+        if (event.getContainer() instanceof FuMO25Menu && event.getEntity() instanceof ServerPlayer serverPlayer) {
+            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new RadarMenuCloseMessage(0));
         }
     }
 }

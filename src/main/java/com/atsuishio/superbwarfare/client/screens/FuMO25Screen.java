@@ -52,6 +52,10 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
     private void renderScan(GuiGraphics guiGraphics, float partialTick) {
         if (FuMO25Screen.this.menu.getEnergy() <= 0) return;
 
+        var entities = FuMO25ScreenHelper.entities;
+        if (entities.isEmpty()) return;
+
+        guiGraphics.drawString(this.font, Component.literal("Entity Count: " + entities.size()), 12, 10, 0xffffff, false);
     }
 
     @Override

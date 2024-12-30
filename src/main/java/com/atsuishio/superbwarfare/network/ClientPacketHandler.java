@@ -2,12 +2,14 @@ package com.atsuishio.superbwarfare.network;
 
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.client.overlay.DroneUIOverlay;
+import com.atsuishio.superbwarfare.client.screens.FuMO25ScreenHelper;
 import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
 import com.atsuishio.superbwarfare.event.KillMessageHandler;
 import com.atsuishio.superbwarfare.menu.EnergyMenu;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.network.message.ContainerDataMessage;
 import com.atsuishio.superbwarfare.network.message.GunsDataMessage;
+import com.atsuishio.superbwarfare.network.message.RadarMenuOpenMessage;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.PlayerKillRecord;
 import net.minecraft.client.Minecraft;
@@ -61,5 +63,15 @@ public class ClientPacketHandler {
                 data.forEach(p -> ((EnergyMenu) mc.player.containerMenu).setData(p.id, p.data));
             }
         }
+    }
+
+    public static void handleRadarMenuOpen(RadarMenuOpenMessage message, Supplier<NetworkEvent.Context> ctx) {
+        FuMO25ScreenHelper.resetEntities();
+        FuMO25ScreenHelper.pos = message.pos;
+    }
+
+    public static void handleRadarMenuClose() {
+        FuMO25ScreenHelper.resetEntities();
+        FuMO25ScreenHelper.pos = null;
     }
 }
