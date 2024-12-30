@@ -5,10 +5,14 @@ import com.atsuishio.superbwarfare.block.entity.FuMO25BlockEntity;
 import com.atsuishio.superbwarfare.menu.FuMO25Menu;
 import com.atsuishio.superbwarfare.network.message.RadarChangeModeMessage;
 import com.atsuishio.superbwarfare.network.message.RadarSetParametersMessage;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.math.Axis;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -37,6 +41,9 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
         int j = (this.height - this.imageHeight) / 2;
         pGuiGraphics.blit(TEXTURE, i, j, 0, 0, this.imageWidth, this.imageHeight, 358, 328);
 
+        // 目标位置
+        renderTargets(pGuiGraphics, pPartialTick);
+
         // 扫描盘
         renderScan(pGuiGraphics, pPartialTick);
 
@@ -49,13 +56,33 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
         pGuiGraphics.blit(TEXTURE, i + 278, j + 39, 178, 167, (int) (54 * energyRate), 16, 358, 328);
     }
 
+    private void renderTargets(GuiGraphics guiGraphics, float partialTick) {
+        var entities = FuMO25ScreenHelper.entities;
+        if (entities == null || entities.isEmpty()) return;
+
+        guiGraphics.drawString(this.font, Component.literal("Entity Count: " + entities.size()), 12, 10, 0xffffff, false);
+    }
+
     private void renderScan(GuiGraphics guiGraphics, float partialTick) {
         if (FuMO25Screen.this.menu.getEnergy() <= 0) return;
 
-        var entities = FuMO25ScreenHelper.entities;
-        if (entities.isEmpty()) return;
+        var poseStack = guiGraphics.pose();
+        poseStack.pushPose();
 
-        guiGraphics.drawString(this.font, Component.literal("Entity Count: " + entities.size()), 12, 10, 0xffffff, false);
+        RenderSystem.disableDepthTest();
+        RenderSystem.depthMask(false);
+        RenderSystem.enableBlend();
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+
+        int i = (this.width - this.imageWidth) / 2;
+        int j = (this.height - this.imageHeight) / 2;
+
+        poseStack.rotateAround(Axis.ZP.rotationDegrees(System.currentTimeMillis() % 36000000 / 30f), i + 9 + 145 / 2f, j + 12 + 145 / 2f, 0);
+
+        guiGraphics.blit(SCAN, i + 9, j + 12, 0, 0, 145, 145, 145, 145);
+
+        poseStack.popPose();
     }
 
     @Override

@@ -13,14 +13,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class FuMO25ScreenHelper {
 
     public static BlockPos pos = null;
-    public static List<Entity> entities = new ArrayList<>();
+    public static List<Entity> entities = null;
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
@@ -33,9 +32,7 @@ public class FuMO25ScreenHelper {
         if (pos == null) return;
 
         if (fuMO25Menu.getEnergy() <= 0) {
-            if (entities != null) {
-                entities.clear();
-            }
+            resetEntities();
             return;
         }
 
@@ -45,7 +42,7 @@ public class FuMO25ScreenHelper {
 
     public static void resetEntities() {
         if (entities != null) {
-            entities.clear();
+            entities = null;
         }
     }
 }
