@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.block.entity;
 
 import com.atsuishio.superbwarfare.block.FuMO25Block;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
+import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.menu.FuMO25Menu;
 import com.atsuishio.superbwarfare.network.dataslot.ContainerEnergyData;
 import com.atsuishio.superbwarfare.tools.SeekTool;
@@ -10,6 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -45,13 +47,14 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
 
     public static final int DEFAULT_MIN_ENERGY = 64000;
 
-    public static final int MAX_DATA_COUNT = 4;
+    public static final int MAX_DATA_COUNT = 5;
 
     private LazyOptional<EnergyStorage> energyHandler;
 
     public FuncType type = FuncType.NORMAL;
     public int time = 0;
     public boolean powered = false;
+    public int tick = 0;
 
     protected final ContainerEnergyData dataAccess = new ContainerEnergyData() {
 
@@ -62,6 +65,7 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
                 case 1 -> FuMO25BlockEntity.this.type.ordinal();
                 case 2 -> FuMO25BlockEntity.this.time;
                 case 3 -> FuMO25BlockEntity.this.powered ? 1 : 0;
+                case 4 -> FuMO25BlockEntity.this.tick;
                 default -> 0;
             };
         }
@@ -74,6 +78,7 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
                 case 1 -> FuMO25BlockEntity.this.type = FuncType.values()[(int) pValue];
                 case 2 -> FuMO25BlockEntity.this.time = (int) pValue;
                 case 3 -> FuMO25BlockEntity.this.powered = pValue == 1;
+                case 4 -> FuMO25BlockEntity.this.tick = (int) pValue;
             }
         }
 
@@ -90,6 +95,7 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
 
     public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, FuMO25BlockEntity blockEntity) {
         int energy = blockEntity.energyHandler.map(EnergyStorage::getEnergyStored).orElse(0);
+        blockEntity.tick++;
 
         FuncType funcType = blockEntity.type;
         int energyCost;
@@ -102,6 +108,7 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
         if (energy < energyCost) {
             if (pState.getValue(FuMO25Block.POWERED)) {
                 pLevel.setBlockAndUpdate(pPos, pState.setValue(FuMO25Block.POWERED, false));
+                pLevel.playSound(null, pPos, ModSounds.RADAR_SEARCH_END.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
                 blockEntity.powered = false;
                 setChanged(pLevel, pPos, pState);
             }
@@ -113,11 +120,16 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
             if (!pState.getValue(FuMO25Block.POWERED)) {
                 if (energy >= DEFAULT_MIN_ENERGY) {
                     pLevel.setBlockAndUpdate(pPos, pState.setValue(FuMO25Block.POWERED, true));
+                    pLevel.playSound(null, pPos, ModSounds.RADAR_SEARCH_START.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
                     blockEntity.powered = true;
                     setChanged(pLevel, pPos, pState);
                 }
             } else {
                 blockEntity.energyHandler.ifPresent(handler -> handler.extractEnergy(energyCost, false));
+                if (blockEntity.tick == 200) {
+                    pLevel.playSound(null, pPos, ModSounds.RADAR_SEARCH_IDLE.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+                }
+
                 if (blockEntity.time > 0) {
                     if (blockEntity.time % 100 == 0) {
                         blockEntity.setGlowEffect();
@@ -128,14 +140,14 @@ public class FuMO25BlockEntity extends BlockEntity implements MenuProvider {
             }
         }
 
+        if (blockEntity.tick >= 200) {
+            blockEntity.tick = 0;
+        }
+
         if (blockEntity.time <= 0 && blockEntity.type != FuncType.NORMAL) {
             blockEntity.type = FuncType.NORMAL;
             blockEntity.setChanged();
         }
-    }
-
-    public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState, FuMO25BlockEntity blockEntity) {
-
     }
 
     private void setGlowEffect() {

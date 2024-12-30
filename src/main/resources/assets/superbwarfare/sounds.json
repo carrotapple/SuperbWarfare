@@ -1407,7 +1407,6 @@
       }
     ]
   },
-
   "m_1911_fire_1p": {
     "sounds": [
       {
@@ -1456,7 +1455,6 @@
       }
     ]
   },
-
   "qbz_95_fire_1p": {
     "sounds": [
       {
@@ -1521,7 +1519,6 @@
       }
     ]
   },
-
   "k_98_fire_1p": {
     "sounds": [
       {
@@ -1594,7 +1591,6 @@
       }
     ]
   },
-
   "mosin_nagant_fire_1p": {
     "sounds": [
       {
@@ -1667,7 +1663,6 @@
       }
     ]
   },
-
   "javelin_fire_1p": {
     "sounds": [
       {
@@ -1716,7 +1711,6 @@
       }
     ]
   },
-
   "ak_12_fire_1p": {
     "sounds": [
       {
@@ -1797,7 +1791,6 @@
       }
     ]
   },
-
   "bullet_supply": {
     "sounds": [
       {
@@ -2491,6 +2484,27 @@
       {
         "name": "superbwarfare:wheel_chair/wheel_chair_jump",
         "stream": false
+      }
+    ]
+  },
+  "radar_search_start": {
+    "sounds": [
+      {
+        "name": "superbwarfare:radar/radar_search_start"
+      }
+    ]
+  },
+  "radar_search_idle": {
+    "sounds": [
+      {
+        "name": "superbwarfare:radar/radar_search_idle"
+      }
+    ]
+  },
+  "radar_search_end": {
+    "sounds": [
+      {
+        "name": "superbwarfare:radar/radar_search_end"
       }
     ]
   }
