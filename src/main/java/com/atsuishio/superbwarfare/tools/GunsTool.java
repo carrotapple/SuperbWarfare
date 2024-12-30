@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.tools;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.GunsDataMessage;
 import com.google.gson.stream.JsonReader;
@@ -102,9 +103,14 @@ public class GunsTool {
 
     public static void reload(Player player, ItemStack stack, GunInfo.Type type, boolean extraOne) {
         CompoundTag tag = stack.getOrCreateTag();
+        GunItem gunItem = null;
+        if (stack.getItem() instanceof GunItem gunItem1) {
+            gunItem = gunItem1;
+        }
+        if (gunItem == null) return;
 
         int mag = GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag");
-        int ammo = GunsTool.getGunIntTag(stack, "Ammo", 0);
+        int ammo = gunItem.getAmmoCount(stack);
         int ammoToAdd = mag - ammo + (extraOne ? 1 : 0);
 
         // 空仓换弹的栓动武器应该在换弹后取消待上膛标记

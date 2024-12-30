@@ -402,18 +402,24 @@ public class GunEventHandler {
     public static void playGunNormalReload(Player player) {
         ItemStack stack = player.getMainHandItem();
 
+        GunItem gunItem = null;
+        if (stack.getItem() instanceof GunItem gunItem1) {
+            gunItem = gunItem1;
+        }
+        if (gunItem == null) return;
+
         if (player.getInventory().hasAnyMatching(item -> item.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
             GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag")
-                    + (stack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0));
+                    + (gunItem.bulletInBarrel(stack) ? 1 : 0));
         } else {
             if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
-                GunsTool.reload(player, stack, GunInfo.Type.SHOTGUN, stack.is(ModTags.Items.EXTRA_ONE_AMMO));
+                GunsTool.reload(player, stack, GunInfo.Type.SHOTGUN, gunItem.bulletInBarrel(stack));
             } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO)) {
                 GunsTool.reload(player, stack, GunInfo.Type.SNIPER, true);
             } else if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
                 GunsTool.reload(player, stack, GunInfo.Type.HANDGUN, true);
             } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-                GunsTool.reload(player, stack, GunInfo.Type.RIFLE, stack.is(ModTags.Items.EXTRA_ONE_AMMO));
+                GunsTool.reload(player, stack, GunInfo.Type.RIFLE, gunItem.bulletInBarrel(stack));
             }
         }
         stack.getOrCreateTag().putBoolean("is_normal_reloading", false);

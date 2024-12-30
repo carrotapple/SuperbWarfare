@@ -55,6 +55,12 @@ public abstract class GunItem extends Item {
                 return;
             }
 
+            GunItem gunItem = null;
+            if (stack.getItem() instanceof GunItem gunItem1) {
+                gunItem = gunItem1;
+            }
+            if (gunItem == null) return;
+
             if (!ItemNBTTool.getBoolean(stack, "init", false)) {
                 GunsTool.initGun(level, stack, this.getDescriptionId().substring(this.getDescriptionId().lastIndexOf('.') + 1));
                 GunsTool.generateAndSetUUID(stack);
@@ -68,10 +74,10 @@ public abstract class GunItem extends Item {
             handleGunPerks(stack);
             handleGunAttachment(stack);
 
-            if ((stack.is(ModTags.Items.EXTRA_ONE_AMMO) && GunsTool.getGunIntTag(stack, "Ammo", 0) > GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag") + 1)
-                    || (!stack.is(ModTags.Items.EXTRA_ONE_AMMO) && GunsTool.getGunIntTag(stack, "Ammo", 0) > GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag"))
+            if ((gunItem.bulletInBarrel(stack) && gunItem.getAmmoCount(stack) > GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag") + 1)
+                    || (!gunItem.bulletInBarrel(stack) && gunItem.getAmmoCount(stack) > GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag"))
             ) {
-                int count = GunsTool.getGunIntTag(stack, "Ammo", 0) - GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag") - (stack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0);
+                int count = gunItem.getAmmoCount(stack) - GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag") - (gunItem.bulletInBarrel(stack) ? 1 : 0);
                 entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
 
                     if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
@@ -86,7 +92,7 @@ public abstract class GunItem extends Item {
                     capability.syncPlayerVariables(entity);
                 });
 
-                GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag") + (stack.is(ModTags.Items.EXTRA_ONE_AMMO) ? 1 : 0));
+                GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag") + (gunItem.bulletInBarrel(stack) ? 1 : 0));
             }
         }
     }
@@ -249,6 +255,10 @@ public abstract class GunItem extends Item {
     }
 
     public boolean isOpenBolt(ItemStack stack) {
+        return false;
+    }
+
+    public boolean bulletInBarrel(ItemStack stack) {
         return false;
     }
 }
