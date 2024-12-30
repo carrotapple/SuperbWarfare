@@ -49,12 +49,33 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
         renderScan(pGuiGraphics);
 
         // 网格线
-        pGuiGraphics.blit(TEXTURE, i + 8, j + 11, 0, 167, 147, 147, 358, 328);
+        renderXLine(pGuiGraphics, pPartialTick, i, j);
+
+        RenderSystem.disableDepthTest();
+        RenderSystem.depthMask(false);
+        RenderSystem.enableBlend();
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
         // FE
         long energy = FuMO25Screen.this.menu.getEnergy();
         float energyRate = (float) energy / (float) FuMO25BlockEntity.MAX_ENERGY;
         pGuiGraphics.blit(TEXTURE, i + 278, j + 39, 178, 167, (int) (54 * energyRate), 16, 358, 328);
+    }
+
+    private void renderXLine(GuiGraphics guiGraphics, float partialTick, int i, int j) {
+        var poseStack = guiGraphics.pose();
+        poseStack.pushPose();
+
+        RenderSystem.disableDepthTest();
+        RenderSystem.depthMask(false);
+        RenderSystem.enableBlend();
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
+
+        guiGraphics.blit(TEXTURE, i + 8, j + 11, 0, 167, 147, 147, 358, 328);
+
+        poseStack.popPose();
     }
 
     private void renderTargets(GuiGraphics guiGraphics) {
@@ -91,12 +112,6 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
 
         var poseStack = guiGraphics.pose();
         poseStack.pushPose();
-
-        RenderSystem.disableDepthTest();
-        RenderSystem.depthMask(false);
-        RenderSystem.enableBlend();
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
