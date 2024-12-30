@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.screens;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.block.entity.FuMO25BlockEntity;
+import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.menu.FuMO25Menu;
 import com.atsuishio.superbwarfare.network.message.RadarChangeModeMessage;
 import com.atsuishio.superbwarfare.network.message.RadarSetParametersMessage;
@@ -42,10 +43,10 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
         pGuiGraphics.blit(TEXTURE, i, j, 0, 0, this.imageWidth, this.imageHeight, 358, 328);
 
         // 目标位置
-        renderTargets(pGuiGraphics, pPartialTick);
+        renderTargets(pGuiGraphics);
 
         // 扫描盘
-        renderScan(pGuiGraphics, pPartialTick);
+        renderScan(pGuiGraphics);
 
         // 网格线
         pGuiGraphics.blit(TEXTURE, i + 8, j + 11, 0, 167, 147, 147, 358, 328);
@@ -56,14 +57,36 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
         pGuiGraphics.blit(TEXTURE, i + 278, j + 39, 178, 167, (int) (54 * energyRate), 16, 358, 328);
     }
 
-    private void renderTargets(GuiGraphics guiGraphics, float partialTick) {
+    private void renderTargets(GuiGraphics guiGraphics) {
         var entities = FuMO25ScreenHelper.entities;
         if (entities == null || entities.isEmpty()) return;
+        var pos = FuMO25ScreenHelper.pos;
+        if (pos == null) return;
 
-        guiGraphics.drawString(this.font, Component.literal("Entity Count: " + entities.size()), 12, 10, 0xffffff, false);
+        int type = (int) FuMO25Screen.this.menu.getFuncType();
+        int range = type == 1 ? FuMO25BlockEntity.MAX_RANGE : FuMO25BlockEntity.DEFAULT_RANGE;
+
+        var poseStack = guiGraphics.pose();
+        poseStack.pushPose();
+
+        int i = (this.width - this.imageWidth) / 2;
+        int j = (this.height - this.imageHeight) / 2;
+
+        int centerX = i + 81;
+        int centerY = j + 84;
+
+        for (var entity : entities) {
+            double moveX = (entity.getX() - pos.getX()) / range * 74;
+            double moveZ = (entity.getZ() - pos.getZ()) / range * 74;
+
+            RenderHelper.preciseBlit(guiGraphics, TEXTURE, (float) (centerX + moveX), (float) (centerY + moveZ),
+                    233, 167, 4, 4, 358, 328);
+        }
+
+        poseStack.popPose();
     }
 
-    private void renderScan(GuiGraphics guiGraphics, float partialTick) {
+    private void renderScan(GuiGraphics guiGraphics) {
         if (FuMO25Screen.this.menu.getEnergy() <= 0) return;
 
         var poseStack = guiGraphics.pose();
