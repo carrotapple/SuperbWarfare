@@ -43,6 +43,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
 
@@ -246,17 +247,7 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public boolean semi(ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    public boolean burst(ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    public boolean auto(ItemStack stack) {
-        return true;
+    public int getFireMode() {
+        return FireMode.SEMI.flag + FireMode.BURST.flag + FireMode.AUTO.flag;
     }
 }

@@ -272,12 +272,7 @@ public class Hk416Item extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public boolean semi(ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    public boolean auto(ItemStack stack) {
-        return true;
+    public int getFireMode() {
+        return FireMode.SEMI.flag + FireMode.AUTO.flag;
     }
 }

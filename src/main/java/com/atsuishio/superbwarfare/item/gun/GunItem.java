@@ -291,15 +291,19 @@ public abstract class GunItem extends Item {
         return false;
     }
 
-    public boolean semi(ItemStack stack) {
-        return false;
+    public int getFireMode() {
+        return 0;
     }
 
-    public boolean burst(ItemStack stack) {
-        return false;
-    }
+    public enum FireMode {
+        SEMI(1),
+        BURST(2),
+        AUTO(4);
 
-    public boolean auto(ItemStack stack) {
-        return false;
+        public final int flag;
+
+        FireMode(int i) {
+            this.flag = i;
+        }
     }
 }

@@ -60,13 +60,16 @@ public class FireModeMessage {
 
             CompoundTag tag = stack.getOrCreateTag();
 
+            int mode = gunItem.getFireMode();
+            mode &= 0b111;
+
             if (fireMode == 0) {
-                if (gunItem.burst(stack)) {
+                if ((mode & 2) != 0) {
                     GunsTool.setGunIntTag(stack, "FireMode", 1);
                     playChangeModeSound(player);
                     return;
                 }
-                if (gunItem.auto(stack)) {
+                if ((mode & 4) != 0) {
                     GunsTool.setGunIntTag(stack, "FireMode", 2);
                     playChangeModeSound(player);
                     return;
@@ -74,12 +77,12 @@ public class FireModeMessage {
             }
 
             if (fireMode == 1) {
-                if (gunItem.auto(stack)) {
+                if ((mode & 4) != 0) {
                     GunsTool.setGunIntTag(stack, "FireMode", 2);
                     playChangeModeSound(player);
                     return;
                 }
-                if (gunItem.semi(stack)) {
+                if ((mode & 1) != 0) {
                     GunsTool.setGunIntTag(stack, "FireMode", 0);
                     playChangeModeSound(player);
                     return;
@@ -87,12 +90,12 @@ public class FireModeMessage {
             }
 
             if (fireMode == 2) {
-                if (gunItem.semi(stack)) {
+                if ((mode & 1) != 0) {
                     GunsTool.setGunIntTag(stack, "FireMode", 0);
                     playChangeModeSound(player);
                     return;
                 }
-                if (gunItem.burst(stack)) {
+                if ((mode & 2) != 0) {
                     GunsTool.setGunIntTag(stack, "FireMode", 1);
                     playChangeModeSound(player);
                     return;

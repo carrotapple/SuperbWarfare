@@ -250,7 +250,7 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public boolean semi(ItemStack stack) {
-        return true;
+    public int getFireMode() {
+        return FireMode.SEMI.flag;
     }
 }
