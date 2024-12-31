@@ -34,6 +34,7 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.*;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
@@ -251,11 +252,26 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     }
 
     private float laserLength(Vec3 pos, Entity cannon) {
-        if (this.entityData.get(COOL_DOWN) > 98) {
-            HitResult result = cannon.level().clip(new ClipContext(pos, pos.add(cannon.getViewVector(1).scale(512)),
+        if (this.level() instanceof ServerLevel) {
+            BlockHitResult result = cannon.level().clip(new ClipContext(pos, pos.add(cannon.getViewVector(1).scale(512)),
                     ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, cannon));
+
+            Vec3 looking = Vec3.atLowerCornerOf(result.getBlockPos());
             Vec3 hitPos = result.getLocation();
-            laserExplosion(hitPos);
+            BlockPos _pos = BlockPos.containing(looking.x, looking.y, looking.z);
+
+            float hardness = this.level().getBlockState(_pos).getBlock().defaultDestroyTime();
+
+            if (ExplosionDestroyConfig.EXPLOSION_DESTROY.get() && hardness != -1) {
+                Block.dropResources(this.level().getBlockState(_pos), this.level(), _pos, null);
+                this.level().destroyBlock(_pos, true);
+            }
+
+            if (this.entityData.get(COOL_DOWN) > 98) {
+                laserExplosion(hitPos);
+            }
+            this.level().explode(this, hitPos.x, hitPos.y, hitPos.z,5, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
+
         }
 
         return (float) pos.distanceTo((Vec3.atLowerCornerOf(cannon.level().clip(
@@ -264,37 +280,39 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     }
 
     private float laserLengthEntity(Vec3 pos, Entity cannon) {
-        double distance = 512 * 512;
-        HitResult hitResult = cannon.pick(512, 1.0f, false);
-        if (hitResult.getType() != HitResult.Type.MISS) {
-            distance = hitResult.getLocation().distanceToSqr(pos);
-            double blockReach = 5;
-            if (distance > blockReach * blockReach) {
-                Vec3 posB = hitResult.getLocation();
-                hitResult = BlockHitResult.miss(posB, Direction.getNearest(pos.x, pos.y, pos.z), BlockPos.containing(posB));
-            }
-        }
-        Vec3 viewVec = cannon.getViewVector(1.0F);
-        Vec3 toVec = pos.add(viewVec.x * 512, viewVec.y * 512, viewVec.z * 512);
-        AABB aabb = cannon.getBoundingBox().expandTowards(viewVec.scale(512)).inflate(1.0D, 1.0D, 1.0D);
-        EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(cannon, pos, toVec, aabb, p -> !p.isSpectator(), distance);
-        if (entityhitresult != null) {
-            Vec3 targetPos = entityhitresult.getLocation();
-            double distanceToTarget = pos.distanceToSqr(targetPos);
-            if (distanceToTarget > distance || distanceToTarget > 512 * 512) {
-                hitResult = BlockHitResult.miss(targetPos, Direction.getNearest(viewVec.x, viewVec.y, viewVec.z), BlockPos.containing(targetPos));
-            } else if (distanceToTarget < distance) {
-                hitResult = entityhitresult;
-            }
-            if (hitResult.getType() == HitResult.Type.ENTITY) {
-                Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
-                Entity target = ((EntityHitResult) hitResult).getEntity();
-                target.hurt(ModDamageTypes.causeLaserDamage(this.level().registryAccess(), passenger, passenger), (float) 200);
-                target.invulnerableTime = 0;
-                if (this.entityData.get(COOL_DOWN) > 98) {
-                    laserExplosion(targetPos);
+        if (this.level() instanceof ServerLevel) {
+            double distance = 512 * 512;
+            HitResult hitResult = cannon.pick(512, 1.0f, false);
+            if (hitResult.getType() != HitResult.Type.MISS) {
+                distance = hitResult.getLocation().distanceToSqr(pos);
+                double blockReach = 5;
+                if (distance > blockReach * blockReach) {
+                    Vec3 posB = hitResult.getLocation();
+                    hitResult = BlockHitResult.miss(posB, Direction.getNearest(pos.x, pos.y, pos.z), BlockPos.containing(posB));
                 }
-                return (float) pos.distanceTo(target.position());
+            }
+            Vec3 viewVec = cannon.getViewVector(1.0F);
+            Vec3 toVec = pos.add(viewVec.x * 512, viewVec.y * 512, viewVec.z * 512);
+            AABB aabb = cannon.getBoundingBox().expandTowards(viewVec.scale(512)).inflate(1.0D, 1.0D, 1.0D);
+            EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(cannon, pos, toVec, aabb, p -> !p.isSpectator(), distance);
+            if (entityhitresult != null) {
+                Vec3 targetPos = entityhitresult.getLocation();
+                double distanceToTarget = pos.distanceToSqr(targetPos);
+                if (distanceToTarget > distance || distanceToTarget > 512 * 512) {
+                    hitResult = BlockHitResult.miss(targetPos, Direction.getNearest(viewVec.x, viewVec.y, viewVec.z), BlockPos.containing(targetPos));
+                } else if (distanceToTarget < distance) {
+                    hitResult = entityhitresult;
+                }
+                if (hitResult.getType() == HitResult.Type.ENTITY) {
+                    Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+                    Entity target = ((EntityHitResult) hitResult).getEntity();
+                    target.hurt(ModDamageTypes.causeLaserDamage(this.level().registryAccess(), passenger, passenger), (float) 200);
+                    target.invulnerableTime = 0;
+                    if (this.entityData.get(COOL_DOWN) > 98) {
+                        laserExplosion(targetPos);
+                    }
+                    return (float) pos.distanceTo(target.position());
+                }
             }
         }
         return 512;
