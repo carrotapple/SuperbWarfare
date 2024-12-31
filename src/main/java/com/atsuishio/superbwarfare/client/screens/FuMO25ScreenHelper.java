@@ -3,10 +3,12 @@ package com.atsuishio.superbwarfare.client.screens;
 import com.atsuishio.superbwarfare.block.entity.FuMO25BlockEntity;
 import com.atsuishio.superbwarfare.menu.FuMO25Menu;
 import com.atsuishio.superbwarfare.tools.SeekTool;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,14 +29,18 @@ public class FuMO25ScreenHelper {
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.side != LogicalSide.CLIENT) return;
         if (event.phase != TickEvent.Phase.END) return;
-        Player player = Minecraft.getInstance().player;
+        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer player = mc.player;
+        Camera camera = mc.gameRenderer.getMainCamera();
+        Vec3 cameraPos = camera.getPosition();
+
         if (player == null) return;
         var menu = player.containerMenu;
         if (!(menu instanceof FuMO25Menu fuMO25Menu)) return;
         if (pos == null) return;
 
-        if (pos.distToCenterSqr(player.getOnPos().getX(), player.getOnPos().getY(), player.getOnPos().getZ()) > TOLERANCE_DISTANCE * TOLERANCE_DISTANCE) {
-            pos = player.getOnPos();
+        if (pos.distToCenterSqr(cameraPos) > TOLERANCE_DISTANCE * TOLERANCE_DISTANCE) {
+            pos = BlockPos.containing(cameraPos);
         }
 
         if (fuMO25Menu.getEnergy() <= 0) {

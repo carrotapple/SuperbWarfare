@@ -177,4 +177,9 @@ public class MosinNagantItem extends GunItem implements GeoItem, AnimatedItem {
     public boolean isIterativeReload(ItemStack stack) {
         return true;
     }
+
+    @Override
+    public boolean semi(ItemStack stack) {
+        return true;
+    }
 }

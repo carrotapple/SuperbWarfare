@@ -70,10 +70,10 @@ public abstract class GunItem extends Item {
             handleGunPerks(stack);
             handleGunAttachment(stack);
 
-            if ((gunItem.bulletInBarrel(stack) && gunItem.getAmmoCount(stack) > GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag") + 1)
-                    || (!gunItem.bulletInBarrel(stack) && gunItem.getAmmoCount(stack) > GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag"))
+            if ((gunItem.bulletInBarrel(stack) && GunsTool.getGunIntTag(stack, "Ammo", 0) > GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag") + 1)
+                    || (!gunItem.bulletInBarrel(stack) && GunsTool.getGunIntTag(stack, "Ammo", 0) > GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag"))
             ) {
-                int count = gunItem.getAmmoCount(stack) - GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag") - (gunItem.bulletInBarrel(stack) ? 1 : 0);
+                int count = GunsTool.getGunIntTag(stack, "Ammo", 0) - GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag") - (gunItem.bulletInBarrel(stack) ? 1 : 0);
                 entity.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
 
                     if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
@@ -247,10 +247,6 @@ public abstract class GunItem extends Item {
         return false;
     }
 
-    public int getAmmoCount(ItemStack stack) {
-        return GunsTool.getGunIntTag(stack, "Ammo", 0);
-    }
-
     public boolean isOpenBolt(ItemStack stack) {
         return false;
     }
@@ -292,6 +288,18 @@ public abstract class GunItem extends Item {
     }
 
     public boolean ejectShell(ItemStack stack) {
+        return false;
+    }
+
+    public boolean semi(ItemStack stack) {
+        return false;
+    }
+
+    public boolean burst(ItemStack stack) {
+        return false;
+    }
+
+    public boolean auto(ItemStack stack) {
         return false;
     }
 }

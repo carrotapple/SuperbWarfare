@@ -183,4 +183,9 @@ public class M60Item extends GunItem implements GeoItem, AnimatedItem {
     public boolean ejectShell(ItemStack stack) {
         return true;
     }
+
+    @Override
+    public boolean auto(ItemStack stack) {
+        return true;
+    }
 }

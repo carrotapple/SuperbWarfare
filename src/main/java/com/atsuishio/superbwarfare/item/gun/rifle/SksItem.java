@@ -168,4 +168,9 @@ public class SksItem extends GunItem implements GeoItem, AnimatedItem {
     public boolean ejectShell(ItemStack stack) {
         return true;
     }
+
+    @Override
+    public boolean semi(ItemStack stack) {
+        return true;
+    }
 }

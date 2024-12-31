@@ -206,6 +206,11 @@ public class AK12Item extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
+    public boolean isMagazineReload(ItemStack stack) {
+        return true;
+    }
+
+    @Override
     public boolean isOpenBolt(ItemStack stack) {
         return true;
     }
@@ -252,6 +257,16 @@ public class AK12Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public boolean ejectShell(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean semi(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean auto(ItemStack stack) {
         return true;
     }
 }

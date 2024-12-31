@@ -7,8 +7,6 @@
   "Velocity": 38,
   "Magazine": 8,
   "Weight": 3,
-  "FireMode": 0,
-  "Semi": 1,
   "PrepareTime": 7,
   "IterativeTime": 16,
   "FinishTime": 19,

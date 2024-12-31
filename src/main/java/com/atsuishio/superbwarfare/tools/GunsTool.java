@@ -106,7 +106,7 @@ public class GunsTool {
         if (!(stack.getItem() instanceof GunItem gunItem)) return;
 
         int mag = GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag");
-        int ammo = gunItem.getAmmoCount(stack);
+        int ammo = GunsTool.getGunIntTag(stack, "Ammo", 0);
         int ammoToAdd = mag - ammo + (extraOne ? 1 : 0);
 
         // 空仓换弹的栓动武器应该在换弹后取消待上膛标记

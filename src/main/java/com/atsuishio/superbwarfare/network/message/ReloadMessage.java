@@ -65,7 +65,7 @@ public class ReloadMessage {
 
                 boolean canSingleReload = gunItem.isIterativeReload(stack);
                 boolean canReload = gunItem.isMagazineReload(stack) && !gunItem.isClipReload(stack);
-                boolean clipLoad = gunItem.getAmmoCount(stack) == 0 && gunItem.isClipReload(stack);
+                boolean clipLoad = GunsTool.getGunIntTag(stack, "Ammo", 0) == 0 && gunItem.isClipReload(stack);
 
                 // 检查备弹
                 int count = 0;
@@ -96,12 +96,26 @@ public class ReloadMessage {
                 }
 
                 if (canReload || clipLoad) {
-                    tag.putBoolean("start_reload", true);
+                    int magazine = GunsTool.getGunIntTag(stack, "Magazine", 0);
+
+                    if (gunItem.isOpenBolt(stack)) {
+                        if (gunItem.bulletInBarrel(stack)) {
+                            if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + tag.getInt("customMag") + 1) {
+                                tag.putBoolean("start_reload", true);
+                            }
+                        } else {
+                            if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + tag.getInt("customMag")) {
+                                tag.putBoolean("start_reload", true);
+                            }
+                        }
+                    } else if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + tag.getInt("customMag")) {
+                        tag.putBoolean("start_reload", true);
+                    }
                     return;
                 }
 
                 if (canSingleReload) {
-                    if (gunItem.getAmmoCount(stack) < GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag")) {
+                    if (GunsTool.getGunIntTag(stack, "Ammo", 0) < GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag")) {
                         tag.putBoolean("start_single_reload", true);
                     }
                 }

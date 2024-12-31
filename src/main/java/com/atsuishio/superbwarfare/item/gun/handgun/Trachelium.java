@@ -343,4 +343,9 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
     public boolean canCustomStock(ItemStack stack) {
         return true;
     }
+
+    @Override
+    public boolean semi(ItemStack stack) {
+        return true;
+    }
 }

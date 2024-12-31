@@ -7,8 +7,6 @@
   "Velocity": 15,
   "Magazine": 7,
   "Weight": 2,
-  "FireMode": 0,
-  "Semi": 1,
   "NormalReloadTime": 30,
   "EmptyReloadTime": 35,
   "BypassesArmor": 0.2,

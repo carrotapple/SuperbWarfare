@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.network.message;
 
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
-import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
@@ -54,93 +54,92 @@ public class FireModeMessage {
 
     public static void changeFireMode(Player player) {
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(ModTags.Items.GUN)) return;
+        if (stack.getItem() instanceof GunItem gunItem) {
+            CompoundTag data = stack.getOrCreateTag().getCompound("GunData");
+            int fireMode = data.getInt("FireMode");
 
-        CompoundTag data = stack.getOrCreateTag().getCompound("GunData");
-        int fireMode = data.getInt("FireMode");
+            CompoundTag tag = stack.getOrCreateTag();
 
-        CompoundTag tag = stack.getOrCreateTag();
-
-        if (fireMode == 0) {
-            if (GunsTool.getGunBooleanTag(stack, "Burst", false)) {
-                GunsTool.setGunIntTag(stack, "FireMode", 1);
-                playChangeModeSound(player);
-                return;
+            if (fireMode == 0) {
+                if (gunItem.burst(stack)) {
+                    GunsTool.setGunIntTag(stack, "FireMode", 1);
+                    playChangeModeSound(player);
+                    return;
+                }
+                if (gunItem.auto(stack)) {
+                    GunsTool.setGunIntTag(stack, "FireMode", 2);
+                    playChangeModeSound(player);
+                    return;
+                }
             }
-            if (GunsTool.getGunBooleanTag(stack, "Auto", false)) {
-                GunsTool.setGunIntTag(stack, "FireMode", 2);
-                playChangeModeSound(player);
-                return;
-            }
-        }
 
-        if (fireMode == 1) {
-            if (GunsTool.getGunBooleanTag(stack, "Auto", false)) {
-                GunsTool.setGunIntTag(stack, "FireMode", 2);
-                playChangeModeSound(player);
-                return;
+            if (fireMode == 1) {
+                if (gunItem.auto(stack)) {
+                    GunsTool.setGunIntTag(stack, "FireMode", 2);
+                    playChangeModeSound(player);
+                    return;
+                }
+                if (gunItem.semi(stack)) {
+                    GunsTool.setGunIntTag(stack, "FireMode", 0);
+                    playChangeModeSound(player);
+                    return;
+                }
             }
-            if (GunsTool.getGunBooleanTag(stack, "Semi", false)) {
-                GunsTool.setGunIntTag(stack, "FireMode", 0);
-                playChangeModeSound(player);
-                return;
+
+            if (fireMode == 2) {
+                if (gunItem.semi(stack)) {
+                    GunsTool.setGunIntTag(stack, "FireMode", 0);
+                    playChangeModeSound(player);
+                    return;
+                }
+                if (gunItem.burst(stack)) {
+                    GunsTool.setGunIntTag(stack, "FireMode", 1);
+                    playChangeModeSound(player);
+                    return;
+                }
             }
-        }
 
-        if (fireMode == 2) {
-            if (GunsTool.getGunBooleanTag(stack, "Semi", false)) {
-                GunsTool.setGunIntTag(stack, "FireMode", 0);
-                playChangeModeSound(player);
-                return;
-            }
-            if (GunsTool.getGunBooleanTag(stack, "Burst", false)) {
-                GunsTool.setGunIntTag(stack, "FireMode", 1);
-                playChangeModeSound(player);
-                return;
-            }
-        }
+            if (stack.getItem() == ModItems.SENTINEL.get()
+                    && !player.isSpectator()
+                    && !(player.getCooldowns().isOnCooldown(stack.getItem()))
+                    && GunsTool.getGunIntTag(stack, "ReloadTime") == 0
+                    && !stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
 
-        if (stack.getItem() == ModItems.SENTINEL.get()
-                && !player.isSpectator()
-                && !(player.getCooldowns().isOnCooldown(stack.getItem()))
-                && GunsTool.getGunIntTag(stack, "ReloadTime") == 0
-                && !stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
+                for (var cell : player.getInventory().items) {
+                    if (cell.is(ModItems.CELL.get())) {
+                        AtomicBoolean flag = new AtomicBoolean(false);
+                        cell.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                                iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() >= 0)
+                        );
 
-            for (var cell : player.getInventory().items) {
-                if (cell.is(ModItems.CELL.get())) {
-                    AtomicBoolean flag = new AtomicBoolean(false);
-                    cell.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                            iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() >= 0)
-                    );
-
-                    if (flag.get()) {
-                        tag.putBoolean("start_sentinel_charge", true);
+                        if (flag.get()) {
+                            tag.putBoolean("start_sentinel_charge", true);
+                        }
                     }
                 }
             }
-        }
 
-        if (stack.getItem() == ModItems.JAVELIN.get()) {
-            tag.putBoolean("TopMode", !tag.getBoolean("TopMode"));
-            if (player instanceof ServerPlayer serverPlayer) {
-                serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ModSounds.CANNON_ZOOM_OUT.get()),
-                        SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1f, 1f, serverPlayer.level().random.nextLong()));
+            if (stack.getItem() == ModItems.JAVELIN.get()) {
+                tag.putBoolean("TopMode", !tag.getBoolean("TopMode"));
+                if (player instanceof ServerPlayer serverPlayer) {
+                    serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ModSounds.CANNON_ZOOM_OUT.get()),
+                            SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1f, 1f, serverPlayer.level().random.nextLong()));
+                }
+            }
+
+            if (stack.getItem() == ModItems.TRACHELIUM.get() && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false)) {
+                if (!tag.getBoolean("DA")) {
+                    tag.putBoolean("DA", true);
+                    player.displayClientMessage(Component.translatable("des.superbwarfare.revolver.sa").withStyle(ChatFormatting.BOLD), true);
+                } else {
+                    tag.putBoolean("DA", false);
+                    player.displayClientMessage(Component.translatable("des.superbwarfare.revolver.da").withStyle(ChatFormatting.BOLD), true);
+                }
+                if (!tag.getBoolean("canImmediatelyShoot")) {
+                    GunsTool.setGunBooleanTag(stack, "NeedBoltAction", true);
+                }
             }
         }
-
-        if (stack.getItem() == ModItems.TRACHELIUM.get() && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false)) {
-            if (!tag.getBoolean("DA")) {
-                tag.putBoolean("DA", true);
-                player.displayClientMessage(Component.translatable("des.superbwarfare.revolver.sa").withStyle(ChatFormatting.BOLD), true);
-            } else {
-                tag.putBoolean("DA", false);
-                player.displayClientMessage(Component.translatable("des.superbwarfare.revolver.da").withStyle(ChatFormatting.BOLD), true);
-            }
-            if (!tag.getBoolean("canImmediatelyShoot")) {
-                GunsTool.setGunBooleanTag(stack, "NeedBoltAction", true);
-            }
-        }
-
     }
 
     private static void playChangeModeSound(Player player) {

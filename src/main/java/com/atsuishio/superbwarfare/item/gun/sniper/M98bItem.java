@@ -165,4 +165,9 @@ public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
     public boolean bulletInBarrel(ItemStack stack) {
         return true;
     }
+
+    @Override
+    public boolean semi(ItemStack stack) {
+        return true;
+    }
 }

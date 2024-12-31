@@ -11,8 +11,6 @@
   "Magazine": 5,
   "BoltActionTime": 18,
   "Weight": 7,
-  "FireMode": 0,
-  "Semi": 1,
   "NormalReloadTime": 60,
   "EmptyReloadTime": 78,
   "BypassesArmor": 0.6,

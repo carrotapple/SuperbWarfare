@@ -268,4 +268,14 @@ public class Mk14Item extends GunItem implements GeoItem, AnimatedItem {
     public boolean ejectShell(ItemStack stack) {
         return true;
     }
+
+    @Override
+    public boolean semi(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean auto(ItemStack stack) {
+        return true;
+    }
 }

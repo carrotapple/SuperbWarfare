@@ -7,8 +7,6 @@
   "Velocity": 24,
   "Magazine": 6,
   "Weight": 2,
-  "FireMode": 0,
-  "Semi": 1,
   "EmptyReloadTime": 65,
   "BypassesArmor": 0.3,
   "SoundRadius": 10,

@@ -9,8 +9,6 @@
   "ProjectileAmount": 12,
   "Weight": 7,
   "FireMode": 2,
-  "Semi": 1,
-  "Auto": 1,
   "NormalReloadTime": 64,
   "EmptyReloadTime": 85,
   "BypassesArmor": 0.05,

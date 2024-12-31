@@ -8,8 +8,6 @@
   "Magazine": 8,
   "ProjectileAmount": 12,
   "Weight": 4,
-  "FireMode": 0,
-  "Semi": 1,
   "PrepareTime": 7,
   "PrepareLoadTime": 36,
   "IterativeTime": 16,

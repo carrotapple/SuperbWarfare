@@ -8,7 +8,6 @@
   "Magazine": 100,
   "Weight": 8,
   "FireMode": 2,
-  "Auto": 1,
   "NormalReloadTime": 114,
   "EmptyReloadTime": 133,
   "BypassesArmor": 0.25,
