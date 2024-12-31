@@ -21,6 +21,8 @@ public class FuMO25ScreenHelper {
     public static BlockPos pos = null;
     public static List<Entity> entities = null;
 
+    public static final int TOLERANCE_DISTANCE = 16;
+
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.side != LogicalSide.CLIENT) return;
@@ -30,6 +32,10 @@ public class FuMO25ScreenHelper {
         var menu = player.containerMenu;
         if (!(menu instanceof FuMO25Menu fuMO25Menu)) return;
         if (pos == null) return;
+
+        if (pos.distToCenterSqr(player.getOnPos().getX(), player.getOnPos().getY(), player.getOnPos().getZ()) > TOLERANCE_DISTANCE * TOLERANCE_DISTANCE) {
+            pos = player.getOnPos();
+        }
 
         if (fuMO25Menu.getEnergy() <= 0) {
             resetEntities();
