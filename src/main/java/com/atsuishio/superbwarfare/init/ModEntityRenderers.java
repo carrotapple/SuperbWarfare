@@ -31,5 +31,6 @@ public class ModEntityRenderers {
         event.registerEntityRenderer(ModEntities.ANNIHILATOR.get(), AnnihilatorRenderer::new);
         event.registerEntityRenderer(ModEntities.SPEEDBOAT.get(), SpeedboatRenderer::new);
         event.registerEntityRenderer(ModEntities.WHEEL_CHAIR.get(), WheelChairRenderer::new);
+        event.registerEntityRenderer(ModEntities.AH_6.get(), Ah6Renderer::new);
     }
 }

@@ -9,6 +9,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Math;
+import org.joml.Vector3f;
 
 public class MobileVehicleEntity extends EnergyVehicleEntity {
 
@@ -30,7 +32,6 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
     public boolean backInputDown;
     public boolean upInputDown;
     public boolean downInputDown;
-    public float roll;
 
     public MobileVehicleEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -85,6 +86,22 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
                 }
             }
         }
+    }
+
+    public Vector3f getForwardDirection() {
+        return new Vector3f(
+                Mth.sin(-getYRot() * ((float) java.lang.Math.PI / 180)),
+                0.0f,
+                Mth.cos(getYRot() * ((float) java.lang.Math.PI / 180))
+        ).normalize();
+    }
+
+    public Vector3f getRightDirection() {
+        return new Vector3f(
+                Mth.cos(-getYRot() * ((float) java.lang.Math.PI / 180)),
+                0.0f,
+                Mth.sin(getYRot() * ((float) java.lang.Math.PI / 180))
+        ).normalize();
     }
 
     public SoundEvent getEngineSound() {

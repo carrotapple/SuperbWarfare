@@ -109,4 +109,8 @@ public class ContainerBlockItem extends BlockItem implements GeoItem {
     public static ItemStack createWheelChairInstance() {
         return createInstance(ModEntities.WHEEL_CHAIR.get());
     }
+
+    public static ItemStack createAh6Instance() {
+        return createInstance(ModEntities.AH_6.get());
+    }
 }

@@ -35,6 +35,21 @@ public class VehicleEntity extends Entity {
     protected double serverYRot;
     protected double serverXRot;
 
+    public float roll;
+    public float prevRoll;
+
+    public float getRoll() {
+        return roll;
+    }
+
+    public float getRoll(float tickDelta) {
+        return Mth.lerp(0.6f * tickDelta, prevRoll, getRoll());
+    }
+
+    public void setZRot(float rot) {
+        roll = rot;
+    }
+
     public VehicleEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         this.setHealth(this.getMaxHealth());
@@ -173,6 +188,9 @@ public class VehicleEntity extends Entity {
     @Override
     public void baseTick() {
         super.baseTick();
+
+        prevRoll = this.getRoll();
+        setZRot(roll * 0.8f);
 
         float delta = Math.abs(getYRot() - yRotO);
         while (getYRot() > 180F) {

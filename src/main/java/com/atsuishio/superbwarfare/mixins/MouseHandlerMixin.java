@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.mixins;
 
+import com.atsuishio.superbwarfare.entity.Ah6Entity;
 import com.atsuishio.superbwarfare.entity.IArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
@@ -41,12 +42,16 @@ public class MouseHandlerMixin {
 
         ItemStack stack = mc.player.getMainHandItem();
 
-        if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity) {
+        if (player.getVehicle() instanceof ICannonEntity) {
             if (ClientEventHandler.zoom) {
                 return 0.15;
             } else {
                 return 0.3;
             }
+        }
+
+        if (player.getVehicle() instanceof Ah6Entity) {
+            return 0.25;
         }
 
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
