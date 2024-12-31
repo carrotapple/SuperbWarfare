@@ -143,6 +143,7 @@ public class ClientEventHandler {
     public static double vehicleFov = 1;
     public static double vehicleFovLerp = 1;
     public static int lungeAttack;
+    public static Entity entity;
 
     @SubscribeEvent
     public static void handleWeaponTurn(RenderHandEvent event) {
@@ -1223,10 +1224,12 @@ public class ClientEventHandler {
                     && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
                 int level = PerkHelper.getItemPerkLevel(ModPerks.INTELLIGENT_CHIP.get(), stack);
                 if (level > 0) {
-                    Entity seekingEntity = SeekTool.seekLivingEntity(player, player.level(), 32 + 8 * (level - 1), 25 / zoomFov);
-                    if (seekingEntity != null && seekingEntity.isAlive()) {
-                        Vec3 targetVec = new Vec3(seekingEntity.getX() - player.getX(), seekingEntity.getEyeY() - player.getEyeY(), seekingEntity.getZ() - player.getZ()).normalize();
-                        Vec3 toVec = new Vec3(player.getViewVector(1).add(targetVec.scale(times)).toVector3f());
+                    if (ClientEventHandler.entity == null || !entity.isAlive()) {
+                        ClientEventHandler.entity = SeekTool.seekLivingEntity(player, player.level(), 32 + 8 * (level - 1), 16 / zoomFov);
+                    }
+                    if (entity != null && entity.isAlive()) {
+                        Vec3 targetVec = player.getEyePosition().vectorTo(entity.getEyePosition());
+                        Vec3 toVec = player.getViewVector(1).add(targetVec.scale(1.1f * times));
                         look(player, toVec);
                     }
                 }

@@ -10,7 +10,9 @@ import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.*;
+import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.atsuishio.superbwarfare.tools.GunsTool;
+import com.atsuishio.superbwarfare.tools.SeekTool;
 import com.atsuishio.superbwarfare.tools.TraceTool;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
@@ -124,13 +126,13 @@ public class ClickHandler {
             }
 
             if (button == ModKeyMappings.HOLD_ZOOM.getKey().getValue()) {
-                handleWeaponZoomPress();
+                handleWeaponZoomPress(player, stack);
                 switchZoom = false;
                 return;
             }
 
             if (button == ModKeyMappings.SWITCH_ZOOM.getKey().getValue()) {
-                handleWeaponZoomPress();
+                handleWeaponZoomPress(player, stack);
                 switchZoom = !switchZoom;
             }
         }
@@ -252,13 +254,13 @@ public class ClickHandler {
                 }
 
                 if (key == ModKeyMappings.HOLD_ZOOM.getKey().getValue()) {
-                    handleWeaponZoomPress();
+                    handleWeaponZoomPress(player, stack);
                     switchZoom = false;
                     return;
                 }
 
                 if (key == ModKeyMappings.SWITCH_ZOOM.getKey().getValue()) {
-                    handleWeaponZoomPress();
+                    handleWeaponZoomPress(player, stack);
                     switchZoom = !switchZoom;
                 }
             }
@@ -340,14 +342,21 @@ public class ClickHandler {
         ClientEventHandler.customRpm = 0;
     }
 
-    public static void handleWeaponZoomPress() {
+    public static void handleWeaponZoomPress(Player player, ItemStack stack) {
         ModUtils.PACKET_HANDLER.sendToServer(new ZoomMessage(0));
         ClientEventHandler.zoom = true;
+        int level = PerkHelper.getItemPerkLevel(ModPerks.INTELLIGENT_CHIP.get(), stack);
+        if (level > 0) {
+            if (ClientEventHandler.entity == null) {
+                ClientEventHandler.entity = SeekTool.seekLivingEntity(player, player.level(), 32 + 8 * (level - 1), 20);
+            }
+        }
     }
 
     public static void handleWeaponZoomRelease() {
         ModUtils.PACKET_HANDLER.sendToServer(new ZoomMessage(1));
         ClientEventHandler.zoom = false;
+        ClientEventHandler.entity = null;
     }
 
     private static void editModelShake() {
