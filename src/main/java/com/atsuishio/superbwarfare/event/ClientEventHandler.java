@@ -434,8 +434,12 @@ public class ClientEventHandler {
                     if (burstFireSize == 1) {
                         cantFireTime = 40;
                     }
+                }
+
+                if (burstFireSize > 0) {
                     burstFireSize--;
                 }
+
 
                 if (stack.is(ModItems.DEVOTION.get())) {
                     int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.TURBO_CHARGER.get(), stack);
