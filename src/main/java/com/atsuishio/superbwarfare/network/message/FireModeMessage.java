@@ -4,11 +4,9 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.tools.GunsTool;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -131,13 +129,7 @@ public class FireModeMessage {
             }
 
             if (stack.getItem() == ModItems.TRACHELIUM.get() && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false)) {
-                if (!tag.getBoolean("DA")) {
-                    tag.putBoolean("DA", true);
-                    player.displayClientMessage(Component.translatable("des.superbwarfare.revolver.sa").withStyle(ChatFormatting.BOLD), true);
-                } else {
-                    tag.putBoolean("DA", false);
-                    player.displayClientMessage(Component.translatable("des.superbwarfare.revolver.da").withStyle(ChatFormatting.BOLD), true);
-                }
+                tag.putBoolean("DA", !tag.getBoolean("DA"));
                 if (!tag.getBoolean("canImmediatelyShoot")) {
                     GunsTool.setGunBooleanTag(stack, "NeedBoltAction", true);
                 }
