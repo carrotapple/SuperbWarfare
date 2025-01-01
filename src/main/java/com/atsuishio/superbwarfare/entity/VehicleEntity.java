@@ -161,11 +161,16 @@ public class VehicleEntity extends Entity {
     }
 
     public void heal(float pHealAmount) {
-        this.setHealth(this.getHealth() + pHealAmount);
+        if (this.level() instanceof ServerLevel) {
+            this.setHealth(this.getHealth() + pHealAmount);
+        }
+
     }
 
     public void hurt(float pHealAmount) {
-        this.setHealth(this.getHealth() - pHealAmount);
+        if (this.level() instanceof ServerLevel) {
+            this.setHealth(this.getHealth() - pHealAmount);
+        }
     }
 
     public float getHealth() {

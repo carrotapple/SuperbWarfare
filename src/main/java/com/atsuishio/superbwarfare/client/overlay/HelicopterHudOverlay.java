@@ -79,7 +79,7 @@ public class HelicopterHudOverlay {
 
                 float power = iHelicopterEntity.getPower();
                 lerpPower = Mth.lerp(0.001f * event.getPartialTick(), lerpPower, power);
-                preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/helicopter/heli_power.png"),  (float) w / 2 + 130f,  ((float) h / 2 - 64 + 124 - power * 900), 0, 0, 4, power * 900, 4, power * 900);
+                preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/helicopter/heli_power.png"),  (float) w / 2 + 130f,  ((float) h / 2 - 64 + 124 - power * 970), 0, 0, 4, power * 970, 4, power * 970);
                 lerpVy = (float) Mth.lerp(0.021f * event.getPartialTick(), lerpVy, mobileVehicle.getDeltaMovement().y() + 0.06f);
                 preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/helicopter/heli_vy_move.png"), (float) w / 2 + 100, ((float) h / 2 - 64 - Math.max(lerpVy, 0) * 100f), 0, 0, 64, 128, 64, 128);
                 event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(mobileVehicle.getY())),

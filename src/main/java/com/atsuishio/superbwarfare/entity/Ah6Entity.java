@@ -131,21 +131,23 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
             this.setXRot(Mth.clamp(this.getXRot() + (this.onGround() ? 0 : 1.2f) * diffX * this.entityData.get(POWER), -80, 80));
             this.setZRot(Mth.clamp(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.75f) * diffY * this.entityData.get(POWER), -50, 50));
 
-            if (this.upInputDown || this.forwardInputDown) {
-                this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.002f, 0.12f));
-            }
+            if (this.level() instanceof ServerLevel) {
+                if (this.upInputDown || this.forwardInputDown) {
+                    this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.002f, 0.12f));
+                }
 
-            if (this.downInputDown || this.backInputDown) {
-                this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0015f, 0));
-            }
+                if (this.downInputDown || this.backInputDown) {
+                    this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0015f, 0));
+                }
 
 //            player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(this.getDeltaMovement().y())), true);
 
-            if(!(this.upInputDown || this.forwardInputDown || this.downInputDown || this.backInputDown)) {
-                if (this.getDeltaMovement().y() + 0.06 < 0) {
-                    this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0002f, 0.12f));
-                } else {
-                    this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0006f, 0));
+                if(!(this.upInputDown || this.forwardInputDown || this.downInputDown || this.backInputDown)) {
+                    if (this.getDeltaMovement().y() + 0.06 < 0) {
+                        this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0002f, 0.12f));
+                    } else {
+                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0006f, 0));
+                    }
                 }
             }
         }
