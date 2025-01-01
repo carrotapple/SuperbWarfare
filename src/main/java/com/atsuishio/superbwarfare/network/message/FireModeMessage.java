@@ -37,9 +37,7 @@ public class FireModeMessage {
         context.enqueueWork(() -> {
             if (context.getSender() == null) return;
 
-            if (message.type == 0) {
-                changeFireMode(context.getSender());
-            }
+            changeFireMode(context.getSender());
         });
         context.setPacketHandled(true);
     }

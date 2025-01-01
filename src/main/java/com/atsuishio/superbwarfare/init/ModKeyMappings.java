@@ -2,7 +2,6 @@ package com.atsuishio.superbwarfare.init;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.network.message.BreathMessage;
-import com.atsuishio.superbwarfare.network.message.InteractMessage;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -22,22 +21,7 @@ public class ModKeyMappings {
     public static final KeyMapping FIRE_MODE = new KeyMapping("key.superbwarfare.fire_mode", GLFW.GLFW_KEY_N, "key.categories.superbwarfare");
     public static final KeyMapping SENSITIVITY_INCREASE = new KeyMapping("key.superbwarfare.sensitivity_increase", GLFW.GLFW_KEY_PAGE_UP, "key.categories.superbwarfare");
     public static final KeyMapping SENSITIVITY_REDUCE = new KeyMapping("key.superbwarfare.sensitivity_reduce", GLFW.GLFW_KEY_PAGE_DOWN, "key.categories.superbwarfare");
-
-    public static final KeyMapping INTERACT = new KeyMapping("key.superbwarfare.interact", GLFW.GLFW_KEY_X, "key.categories.superbwarfare") {
-        private boolean isDownOld = false;
-
-        @Override
-        public void setDown(boolean isDown) {
-            super.setDown(isDown);
-            if (isDownOld != isDown && isDown) {
-                ModUtils.PACKET_HANDLER.sendToServer(new InteractMessage(0));
-                if (Minecraft.getInstance().player != null) {
-                    InteractMessage.pressAction(Minecraft.getInstance().player, 0);
-                }
-            }
-            isDownOld = isDown;
-        }
-    };
+    public static final KeyMapping INTERACT = new KeyMapping("key.superbwarfare.interact", GLFW.GLFW_KEY_X, "key.categories.superbwarfare");
 
     public static final KeyMapping BREATH = new KeyMapping("key.superbwarfare.breath", GLFW.GLFW_KEY_LEFT_CONTROL, "key.categories.superbwarfare") {
         private boolean isDownOld = false;

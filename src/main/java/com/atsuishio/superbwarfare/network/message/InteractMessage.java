@@ -41,47 +41,45 @@ public class InteractMessage {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
             if (context.getSender() != null) {
-                pressAction(context.getSender(), message.type);
+                handleInteract(context.getSender(), message.type);
             }
         });
         context.setPacketHandled(true);
     }
 
-    public static void pressAction(Player player, int type) {
+    public static void handleInteract(Player player, int type) {
         Level level = player.level();
 
-        if (type == 0) {
-            ItemStack stack = player.getMainHandItem();
-            if (player.getMainHandItem().is(ModTags.Items.GUN)) {
-                double block_range = player.getBlockReach();
-                double entity_range = player.getBlockReach();
+        ItemStack stack = player.getMainHandItem();
+        if (stack.is(ModTags.Items.GUN)) {
+            double blockRange = player.getBlockReach();
+            double entityRange = player.getBlockReach();
 
-                Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(block_range)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
+            Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(blockRange)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
+            BlockPos blockPos = BlockPos.containing(looking.x(), looking.y(), looking.z());
+            level.getBlockState(blockPos).use(player.level(), player, InteractionHand.MAIN_HAND, BlockHitResult.miss(new Vec3(blockPos.getX(), blockPos.getY(), blockPos.getZ()), Direction.UP, blockPos));
+
+            if ((level.getBlockState(BlockPos.containing(looking.x(), looking.y(), looking.z()))).getBlock() instanceof BellBlock bell) {
+                bell.attemptToRing(level, blockPos, player.getDirection().getOpposite());
+            }
+
+            Entity lookingEntity = TraceTool.findLookingEntity(player, entityRange);
+            if (lookingEntity == null) return;
+
+            player.interactOn(lookingEntity, InteractionHand.MAIN_HAND);
+        } else if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked") && !player.getCooldowns().isOnCooldown(stack.getItem())) {
+            DroneEntity drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
+
+            if (drone != null) {
+                Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(drone.getEyePosition(), drone.getEyePosition().add(drone.getLookAngle().scale(2)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
                 BlockPos blockPos = BlockPos.containing(looking.x(), looking.y(), looking.z());
-                level.getBlockState(blockPos).use(player.level(), player, InteractionHand.MAIN_HAND, BlockHitResult.miss(new Vec3(blockPos.getX(), blockPos.getY(), blockPos.getZ()), Direction.UP, blockPos));
+                player.level().getBlockState(blockPos).use(player.level(), player, InteractionHand.MAIN_HAND, BlockHitResult.miss(new Vec3(blockPos.getX(), blockPos.getY(), blockPos.getZ()), Direction.UP, blockPos));
 
-                if ((level.getBlockState(BlockPos.containing(looking.x(), looking.y(), looking.z()))).getBlock() instanceof BellBlock bell) {
-                    bell.attemptToRing(level, blockPos, player.getDirection().getOpposite());
-                }
+                Entity lookingEntity = TraceTool.findLookingEntity(drone, 2);
+                if (lookingEntity == null) return;
 
-                Entity lookingEntity = TraceTool.findLookingEntity(player, entity_range);
-                if (lookingEntity == null)
-                    return;
-                player.interactOn(lookingEntity, InteractionHand.MAIN_HAND);
-            } else if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked") && !player.getCooldowns().isOnCooldown(stack.getItem())) {
-                DroneEntity drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
-
-                if (drone != null) {
-                    Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(drone.getEyePosition(), drone.getEyePosition().add(drone.getLookAngle().scale(2)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
-                    BlockPos blockPos = BlockPos.containing(looking.x(), looking.y(), looking.z());
-                    player.level().getBlockState(blockPos).use(player.level(), player, InteractionHand.MAIN_HAND, BlockHitResult.miss(new Vec3(blockPos.getX(), blockPos.getY(), blockPos.getZ()), Direction.UP, blockPos));
-
-                    Entity lookingEntity = TraceTool.findLookingEntity(drone, 2);
-                    if (lookingEntity == null)
-                        return;
-                    player.attack(lookingEntity);
-                    player.getCooldowns().addCooldown(stack.getItem(), 13);
-                }
+                player.attack(lookingEntity);
+                player.getCooldowns().addCooldown(stack.getItem(), 13);
             }
         }
     }
