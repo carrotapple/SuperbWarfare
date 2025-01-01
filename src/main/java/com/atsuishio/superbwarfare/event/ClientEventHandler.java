@@ -142,6 +142,8 @@ public class ClientEventHandler {
     public static int lungeAttack;
     public static Entity entity;
 
+    public static int dismountCountdown = 0;
+
     @SubscribeEvent
     public static void handleWeaponTurn(RenderHandEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
@@ -204,7 +206,11 @@ public class ClientEventHandler {
         }
 
         if (miniGunRot > 0) {
-            miniGunRot --;
+            miniGunRot--;
+        }
+
+        if (dismountCountdown > 0) {
+            dismountCountdown--;
         }
 
         if (notInGame() && !ClickHandler.switchZoom) {
@@ -224,7 +230,7 @@ public class ClientEventHandler {
         if (stack.is(ModItems.LUNGE_MINE.get()) && lungeAttack >= 1 && lungeAttack <= 2) {
             boolean lookAtEntity = false;
 
-            Entity lookingEntity = TraceTool.findLookingEntity(player,5);
+            Entity lookingEntity = TraceTool.findLookingEntity(player, 5);
 
             BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(5)),
                     ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
@@ -246,7 +252,7 @@ public class ClientEventHandler {
         }
 
         if (lungeAttack > 0) {
-            lungeAttack --;
+            lungeAttack--;
         }
     }
 
@@ -1284,7 +1290,7 @@ public class ClientEventHandler {
 
         ItemStack stack = mc.player.getMainHandItem();
 
-        if (mc.player.getVehicle() instanceof Ah6Entity && mc.player.getVehicle() instanceof IHelicopterEntity iHelicopterEntity && iHelicopterEntity .isDriver(mc.player)) {
+        if (mc.player.getVehicle() instanceof Ah6Entity && mc.player.getVehicle() instanceof IHelicopterEntity iHelicopterEntity && iHelicopterEntity.isDriver(mc.player)) {
             event.setCanceled(true);
         }
 

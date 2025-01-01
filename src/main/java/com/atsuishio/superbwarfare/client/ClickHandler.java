@@ -195,7 +195,6 @@ public class ClickHandler {
 
         int key = event.getKey();
         if (event.getAction() == GLFW.GLFW_PRESS) {
-
             if (player.hasEffect(ModMobEffects.SHOCK.get())) {
                 return;
             }
@@ -216,7 +215,7 @@ public class ClickHandler {
                 ModUtils.PACKET_HANDLER.sendToServer(new InteractMessage(0));
             }
             if (key == ModKeyMappings.DISMOUNT.getKey().getValue()) {
-                ModUtils.PACKET_HANDLER.sendToServer(new PlayerStopRidingMessage(0));
+                handleDismountPress(player);
             }
             if (key == ModKeyMappings.EDIT_MODE.getKey().getValue() && ClientEventHandler.burstFireSize == 0) {
                 ClientEventHandler.holdFire = false;
@@ -458,5 +457,17 @@ public class ClickHandler {
         } else {
             player.displayClientMessage(Component.translatable("des.superbwarfare.no_cloth_config").withStyle(ChatFormatting.RED), true);
         }
+    }
+
+    private static void handleDismountPress(Player player) {
+        var vehicle = player.getVehicle();
+        if (!(vehicle instanceof VehicleEntity)) return;
+
+        if ((!vehicle.onGround() || vehicle.getDeltaMovement().length() >= 0.1) && ClientEventHandler.dismountCountdown <= 0) {
+            player.displayClientMessage(Component.translatable("mount.onboard", ModKeyMappings.DISMOUNT.getTranslatedKeyMessage()), true);
+            ClientEventHandler.dismountCountdown = 20;
+            return;
+        }
+        ModUtils.PACKET_HANDLER.sendToServer(new PlayerStopRidingMessage(0));
     }
 }
