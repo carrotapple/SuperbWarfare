@@ -22,6 +22,7 @@ public class ModKeyMappings {
     public static final KeyMapping SENSITIVITY_INCREASE = new KeyMapping("key.superbwarfare.sensitivity_increase", GLFW.GLFW_KEY_PAGE_UP, "key.categories.superbwarfare");
     public static final KeyMapping SENSITIVITY_REDUCE = new KeyMapping("key.superbwarfare.sensitivity_reduce", GLFW.GLFW_KEY_PAGE_DOWN, "key.categories.superbwarfare");
     public static final KeyMapping INTERACT = new KeyMapping("key.superbwarfare.interact", GLFW.GLFW_KEY_X, "key.categories.superbwarfare");
+    public static final KeyMapping DISMOUNT = new KeyMapping("key.superbwarfare.dismount", GLFW.GLFW_KEY_J, "key.categories.superbwarfare");
 
     public static final KeyMapping BREATH = new KeyMapping("key.superbwarfare.breath", GLFW.GLFW_KEY_LEFT_CONTROL, "key.categories.superbwarfare") {
         private boolean isDownOld = false;
@@ -60,6 +61,7 @@ public class ModKeyMappings {
         event.register(SENSITIVITY_INCREASE);
         event.register(SENSITIVITY_REDUCE);
         event.register(INTERACT);
+        event.register(DISMOUNT);
         event.register(BREATH);
         event.register(CONFIG);
         event.register(EDIT_MODE);
@@ -78,8 +80,6 @@ public class ModKeyMappings {
         @SubscribeEvent
         public static void onClientTick(TickEvent.ClientTickEvent event) {
             if (Minecraft.getInstance().screen == null) {
-                FIRE_MODE.consumeClick();
-                INTERACT.consumeClick();
                 BREATH.consumeClick();
             }
         }
