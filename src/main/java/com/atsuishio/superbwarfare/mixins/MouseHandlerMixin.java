@@ -50,8 +50,8 @@ public class MouseHandlerMixin {
             }
         }
 
-        if (player.getVehicle() instanceof Ah6Entity) {
-            return 0.25;
+        if (player.getVehicle() instanceof Ah6Entity ah6Entity && !ah6Entity.onGround()) {
+            return 0.24;
         }
 
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {

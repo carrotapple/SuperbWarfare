@@ -46,6 +46,14 @@ public class VehicleEntity extends Entity {
         return Mth.lerp(0.6f * tickDelta, prevRoll, getRoll());
     }
 
+    public float getYaw(float tickDelta) {
+        return Mth.lerp(0.6f * tickDelta, yRotO, getYRot());
+    }
+
+    public float getPitch(float tickDelta) {
+        return Mth.lerp(0.6f * tickDelta, xRotO, getXRot());
+    }
+
     public void setZRot(float rot) {
         roll = rot;
     }
@@ -190,7 +198,7 @@ public class VehicleEntity extends Entity {
         super.baseTick();
 
         prevRoll = this.getRoll();
-        setZRot(roll * 0.8f);
+        setZRot(roll * 0.9f);
 
         float delta = Math.abs(getYRot() - yRotO);
         while (getYRot() > 180F) {

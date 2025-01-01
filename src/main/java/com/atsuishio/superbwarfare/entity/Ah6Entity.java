@@ -37,7 +37,7 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class Ah6Entity extends MobileVehicleEntity implements GeoEntity {
+public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelicopterEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = 200;
@@ -89,11 +89,11 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity {
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.06, 0.0));
         if (this.onGround()) {
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.6, 0.95, 0.6));
-            this.setZRot(this.roll * 0.4f);
-            this.setXRot(this.getXRot() * 0.4f);
+            this.setZRot(this.roll * 0.7f);
+            this.setXRot(this.getXRot() * 0.7f);
         } else {
-            float f = (float) Mth.clamp(0.93f + 0.03f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90, 0.01, 0.99);
-            this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).scale(0.03 * this.getDeltaMovement().length())));
+            float f = (float) Mth.clamp(0.945f + 0.02f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90, 0.01, 0.99);
+            this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).scale(0.032 * this.getDeltaMovement().length())));
             this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.95, f));
         }
         this.refreshDimensions();
@@ -110,48 +110,55 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity {
             this.rightInputDown = false;
             this.forwardInputDown = false;
             this.backInputDown = false;
+            this.setZRot(this.roll * 0.8f);
+            this.setXRot(this.getXRot() * 0.8f);
+            this.entityData.set(POWER, this.entityData.get(POWER) * 0.98f);
         } else if (passenger instanceof Player player) {
             if (level().isClientSide && this.getEnergy() > 0) {
                 level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.forwardInputDown || this.backInputDown ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 1f), false);
             }
 
-            if (!this.onGround()) {
-                diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
-                diffX = Math.clamp(-60f, 60f, Mth.wrapDegrees(passenger.getXRot() - this.getXRot()));
+            diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
+            diffX = Math.clamp(-60f, 60f, Mth.wrapDegrees(passenger.getXRot() - this.getXRot()));
 
-                if (rightInputDown) {
-                    this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 0.8f);
-                } else if (this.leftInputDown) {
-                    this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.8f);
-                }
-
-                this.setYRot(this.getYRot() + 0.75f * diffY);
-                this.setXRot(Mth.clamp(this.getXRot() + 0.5f * diffX, -85, 85));
-                this.setZRot(Mth.clamp(this.getRoll() - this.entityData.get(DELTA_ROT) + 0.2f * diffY, -85, 85));
+            if (rightInputDown) {
+                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 0.15f);
+            } else if (this.leftInputDown) {
+                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.15f);
             }
 
+            this.setYRot(this.getYRot() + Mth.clamp((this.onGround() ? 0.1f : 1.2f) * diffY * this.entityData.get(POWER) + 0.5f * this.entityData.get(DELTA_ROT), -3f, 3f));
+            this.setXRot(Mth.clamp(this.getXRot() + (this.onGround() ? 0 : 1.2f) * diffX * this.entityData.get(POWER), -80, 80));
+            this.setZRot(Mth.clamp(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.75f) * diffY * this.entityData.get(POWER), -50, 50));
+
             if (this.upInputDown || this.forwardInputDown) {
-                this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.005f, 0.12f));
+                this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.002f, 0.12f));
             }
 
             if (this.downInputDown || this.backInputDown) {
-                this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.005f, 0));
+                this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0015f, 0));
             }
 
-//            player.displayClientMessage(Component.literal("Power:" + new java.text.DecimalFormat("##.####").format(this.entityData.get(POWER))), true);
+//            player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(this.getDeltaMovement().y())), true);
+
+            if(!(this.upInputDown || this.forwardInputDown || this.downInputDown || this.backInputDown)) {
+                if (this.getDeltaMovement().y() + 0.06 < 0) {
+                    this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0005f, 0.12f));
+                } else {
+                    this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0005f, 0));
+                }
+            }
         }
 
-        this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.9f);
-        this.entityData.set(POWER, this.entityData.get(POWER) * 0.9998f);
+        this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.95f);
 
-
-        setDeltaMovement(getDeltaMovement().add(0.0f, Math.sin((90 - this.getXRot()) * Mth.DEG_TO_RAD) * this.entityData.get(POWER), 0.0f));
+        setDeltaMovement(getDeltaMovement().add(0.0f, Math.min(Math.sin((90 - this.getXRot()) * Mth.DEG_TO_RAD), Math.sin((90 + this.getRoll()) * Mth.DEG_TO_RAD)) * this.entityData.get(POWER), 0.0f));
 
         Vector3f direction = getRightDirection().mul(Math.cos((this.getRoll() + 90) * Mth.DEG_TO_RAD) * this.entityData.get(POWER));
-        setDeltaMovement(getDeltaMovement().add(new Vec3(direction.x, direction.y, direction.z).scale(0.8)));
+        setDeltaMovement(getDeltaMovement().add(new Vec3(direction.x, direction.y, direction.z).scale(0.4)));
 
         Vector3f directionZ = getForwardDirection().mul(-Math.cos((this.getXRot() + 90) * Mth.DEG_TO_RAD) * this.entityData.get(POWER));
-        setDeltaMovement(getDeltaMovement().add(new Vec3(directionZ.x, directionZ.y, directionZ.z).scale(0.5)));
+        setDeltaMovement(getDeltaMovement().add(new Vec3(directionZ.x, directionZ.y, directionZ.z).scale(0.35)));
     }
 
     @Override
@@ -167,7 +174,7 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity {
 
         entity.setYBodyRot(this.getYRot());
         float f2 = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
-        float f3 = Mth.clamp(f2, -10.0F, 10.0F);
+        float f3 = Mth.clamp(f2, -60.0F, 60.0F);
         entity.yRotO += f3 - f2;
         entity.setYRot(entity.getYRot() + f3 - f2);
         entity.setYHeadRot(entity.getYRot());
@@ -247,5 +254,50 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity {
     @Override
     public int getMaxEnergy() {
         return MAX_ENERGY;
+    }
+
+    @Override
+    public void vehicleShoot(Player player) {
+    }
+
+    @Override
+    public boolean isDriver(Player player) {
+        return player == this.getFirstPassenger();
+    }
+
+    @Override
+    public int mainGunRpm() {
+        return 360;
+    }
+
+    @Override
+    public boolean canShoot(Player player) {
+        return false;
+    }
+
+    @Override
+    public int getAmmoCount(Player player) {
+        return -1;
+    }
+
+
+    @Override
+    public float getRotX(float tickDelta) {
+        return this.getPitch(tickDelta);
+    }
+
+    @Override
+    public float getRotY(float tickDelta) {
+        return this.getYaw(tickDelta);
+    }
+
+    @Override
+    public float getRotZ(float tickDelta) {
+        return this.getRoll(tickDelta);
+    }
+
+    @Override
+    public float getPower() {
+        return this.entityData.get(POWER);
     }
 }

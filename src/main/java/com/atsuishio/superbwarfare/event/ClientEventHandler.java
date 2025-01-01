@@ -3,10 +3,7 @@ package com.atsuishio.superbwarfare.event;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.ClickHandler;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
-import com.atsuishio.superbwarfare.entity.DroneEntity;
-import com.atsuishio.superbwarfare.entity.IArmedVehicleEntity;
-import com.atsuishio.superbwarfare.entity.ICannonEntity;
-import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
+import com.atsuishio.superbwarfare.entity.*;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -1286,6 +1283,10 @@ public class ClientEventHandler {
         }
 
         ItemStack stack = mc.player.getMainHandItem();
+
+        if (mc.player.getVehicle() instanceof Ah6Entity && mc.player.getVehicle() instanceof IHelicopterEntity iHelicopterEntity && iHelicopterEntity .isDriver(mc.player)) {
+            event.setCanceled(true);
+        }
 
         if (mc.player.getVehicle() instanceof SpeedboatEntity && zoom) {
             event.setCanceled(true);
