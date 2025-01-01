@@ -93,7 +93,7 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
             this.setXRot(this.getXRot() * 0.7f);
         } else {
             float f = (float) Mth.clamp(0.945f + 0.02f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90, 0.01, 0.99);
-            this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).scale(0.032 * this.getDeltaMovement().length())));
+            this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).scale((this.getXRot() < 0 ? -0.032 : 0.032) * this.getDeltaMovement().length())));
             this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.95, f));
         }
         this.refreshDimensions();
