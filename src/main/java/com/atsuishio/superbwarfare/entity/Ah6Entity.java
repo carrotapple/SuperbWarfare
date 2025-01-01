@@ -89,8 +89,8 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.06, 0.0));
         if (this.onGround()) {
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.6, 0.95, 0.6));
-            this.setZRot(this.roll * 0.7f);
-            this.setXRot(this.getXRot() * 0.7f);
+            this.setZRot(this.roll * 0.9f);
+            this.setXRot(this.getXRot() * 0.9f);
         } else {
             float f = (float) Mth.clamp(0.945f + 0.02f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90, 0.01, 0.99);
             this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).scale((this.getXRot() < 0 ? -0.032 : 0.032) * this.getDeltaMovement().length())));
@@ -137,7 +137,7 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
                 }
 
                 if (this.downInputDown || this.backInputDown) {
-                    this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0015f, 0));
+                    this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0015f, this.onGround() ? 0 : 0.0375f));
                 }
 
 //            player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(this.getDeltaMovement().y())), true);
