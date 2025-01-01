@@ -42,9 +42,7 @@ public class FireModeMessage {
 
     public static void pressAction(Player player, int type) {
         if (player == null) return;
-        // security measure to prevent arbitrary chunk generation
-        if (!player.level().isLoaded(player.blockPosition()))
-            return;
+
         if (type == 0) {
             changeFireMode(player);
         }

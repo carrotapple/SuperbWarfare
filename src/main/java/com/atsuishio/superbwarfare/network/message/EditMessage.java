@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.network.message;
 
-import com.atsuishio.superbwarfare.tools.SoundTool;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -11,6 +11,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class EditMessage {
+
     private final int type;
 
     public EditMessage(int type) {
@@ -33,8 +34,6 @@ public class EditMessage {
 
     public static void pressAction(Player player, int type) {
         if (player == null) return;
-        if (!player.level().isLoaded(player.blockPosition()))
-            return;
 
         ItemStack stack = player.getMainHandItem();
 

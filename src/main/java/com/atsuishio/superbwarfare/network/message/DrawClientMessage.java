@@ -9,6 +9,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class DrawClientMessage {
+
     public boolean draw;
 
     public DrawClientMessage(boolean draw) {

@@ -10,6 +10,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class SensitivityMessage {
+
     private final boolean add;
 
     public SensitivityMessage(boolean add) {

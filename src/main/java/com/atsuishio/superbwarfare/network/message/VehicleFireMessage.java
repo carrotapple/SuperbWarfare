@@ -2,7 +2,6 @@ package com.atsuishio.superbwarfare.network.message;
 
 import com.atsuishio.superbwarfare.entity.IArmedVehicleEntity;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -28,11 +27,6 @@ public class VehicleFireMessage {
         context.enqueueWork(() -> {
             if (context.getSender() != null) {
                 var player = context.getSender();
-                Level level = player.level();
-
-                if (!level.isLoaded(player.blockPosition())) {
-                    return;
-                }
 
                 if (player.getVehicle() instanceof IArmedVehicleEntity iVehicle) {
                     iVehicle.vehicleShoot(player);

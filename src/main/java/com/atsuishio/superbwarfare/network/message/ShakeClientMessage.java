@@ -9,14 +9,12 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class ShakeClientMessage {
+
     public double time;
     public double radius;
     public double amplitude;
-
     public double x;
-
     public double y;
-
     public double z;
 
     public ShakeClientMessage(double time, double radius, double amplitude, double x, double y, double z) {

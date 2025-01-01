@@ -16,6 +16,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class LaserShootMessage {
+
     private final double damage;
     private final UUID uuid;
     private final boolean headshot;
@@ -48,10 +49,6 @@ public class LaserShootMessage {
 
     public static void pressAction(ServerPlayer player, double damage, UUID uuid, boolean headshot) {
         Level level = player.level();
-
-        if (!level.isLoaded(player.blockPosition())) {
-            return;
-        }
 
         Entity entity = EntityFindUtil.findEntity(level, String.valueOf(uuid));
 

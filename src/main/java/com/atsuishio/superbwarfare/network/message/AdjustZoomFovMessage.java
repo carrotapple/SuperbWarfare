@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
 import java.util.function.Supplier;
 
 public class AdjustZoomFovMessage {
+
     private final double scroll;
 
     public AdjustZoomFovMessage(double scroll) {

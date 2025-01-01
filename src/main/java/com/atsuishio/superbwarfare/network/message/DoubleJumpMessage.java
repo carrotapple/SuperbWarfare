@@ -12,6 +12,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class DoubleJumpMessage {
+
     private final boolean canDoubleJump;
 
     public DoubleJumpMessage(boolean canDoubleJump) {
@@ -36,10 +37,6 @@ public class DoubleJumpMessage {
                 double x = player.getX();
                 double y = player.getY();
                 double z = player.getZ();
-
-                if (!level.isLoaded(player.blockPosition())) {
-                    return;
-                }
 
                 level.playSound(null, BlockPos.containing(x, y, z), ModSounds.DOUBLE_JUMP.get(), SoundSource.BLOCKS, 1, 1);
 

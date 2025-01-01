@@ -16,6 +16,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class PlayerGunKillMessage {
+
     public final int attackerId;
     public final int targetId;
     public final boolean headshot;

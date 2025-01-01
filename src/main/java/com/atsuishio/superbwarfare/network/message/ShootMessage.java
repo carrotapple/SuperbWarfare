@@ -19,7 +19,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -52,12 +51,6 @@ public class ShootMessage {
     }
 
     public static void pressAction(Player player, double spared) {
-        Level level = player.level();
-
-        if (!level.isLoaded(player.blockPosition())) {
-            return;
-        }
-
         ItemStack stack = player.getMainHandItem();
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
             int projectileAmount = GunsTool.getGunIntTag(stack, "ProjectileAmount", 1);

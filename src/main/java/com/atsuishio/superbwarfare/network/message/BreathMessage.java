@@ -3,12 +3,12 @@ package com.atsuishio.superbwarfare.network.message;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class BreathMessage {
+
     private final boolean type;
 
     public BreathMessage(boolean type) {
@@ -29,12 +29,6 @@ public class BreathMessage {
             ServerPlayer player = context.getSender();
 
             if (player != null) {
-                Level level = player.level();
-
-                if (!level.isLoaded(player.blockPosition())) {
-                    return;
-                }
-
                 var cap = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null);
 
                 if (message.type && !cap.orElse(new ModVariables.PlayerVariables()).breathExhaustion && cap.orElse(new ModVariables.PlayerVariables()).zoom &&

@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.function.Supplier;
 
 public class GunsDataMessage {
+
     public final HashMap<String, HashMap<String, Double>> gunsData;
 
     public GunsDataMessage(HashMap<String, HashMap<String, Double>> gunsData) {
@@ -32,5 +33,4 @@ public class GunsDataMessage {
         ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleGunsDataMessage(message, ctx)));
         ctx.get().setPacketHandled(true);
     }
-
 }

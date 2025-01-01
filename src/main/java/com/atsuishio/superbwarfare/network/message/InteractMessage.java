@@ -22,6 +22,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class InteractMessage {
+
     private final int type;
 
     public InteractMessage(int type) {
@@ -49,8 +50,6 @@ public class InteractMessage {
     public static void pressAction(Player player, int type) {
         Level level = player.level();
 
-        if (!level.isLoaded(player.blockPosition()))
-            return;
         if (type == 0) {
             ItemStack stack = player.getMainHandItem();
             if (player.getMainHandItem().is(ModTags.Items.GUN)) {
@@ -69,9 +68,7 @@ public class InteractMessage {
                 if (lookingEntity == null)
                     return;
                 player.interactOn(lookingEntity, InteractionHand.MAIN_HAND);
-
             } else if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked") && !player.getCooldowns().isOnCooldown(stack.getItem())) {
-
                 DroneEntity drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
 
                 if (drone != null) {

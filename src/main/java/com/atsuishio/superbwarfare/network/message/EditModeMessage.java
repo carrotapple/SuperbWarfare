@@ -12,6 +12,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class EditModeMessage {
+
     private final int type;
 
     public EditModeMessage(int type) {
@@ -34,8 +35,6 @@ public class EditModeMessage {
 
     public static void pressAction(Player player, int type) {
         if (player == null) return;
-
-        if (!player.level().isLoaded(player.blockPosition())) return;
 
         if (type == 0) {
             ItemStack mainHandItem = player.getMainHandItem();

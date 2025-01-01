@@ -10,6 +10,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class DroneMovementMessage {
+
     private final int direction;
     private final boolean clicked;
 

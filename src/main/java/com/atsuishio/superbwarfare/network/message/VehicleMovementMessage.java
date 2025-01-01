@@ -9,6 +9,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class VehicleMovementMessage {
+
     private final int direction;
     private final boolean clicked;
 
@@ -54,6 +55,7 @@ public class VehicleMovementMessage {
                             mobileVehicleEntity.downInputDown = message.clicked;
                             break;
                     }
+
                     if (player.getMainHandItem().is(ModItems.MONITOR.get())) {
                         if (player.getMainHandItem().getOrCreateTag().getBoolean("Using") && player.getMainHandItem().getOrCreateTag().getBoolean("Linked")) {
                             mobileVehicleEntity.leftInputDown = false;
@@ -64,7 +66,6 @@ public class VehicleMovementMessage {
                             mobileVehicleEntity.downInputDown = false;
                         }
                     }
-
                 }
             }
         });

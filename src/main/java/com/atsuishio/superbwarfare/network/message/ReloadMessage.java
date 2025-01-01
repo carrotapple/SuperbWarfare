@@ -9,12 +9,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class ReloadMessage {
+
     private final int type;
 
     public ReloadMessage(int type) {
@@ -40,12 +40,6 @@ public class ReloadMessage {
     }
 
     public static void pressAction(Player player, int type) {
-        Level level = player.level();
-
-        if (!level.isLoaded(player.blockPosition())) {
-            return;
-        }
-
         if (type == 0) {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.edit = false;

@@ -64,12 +64,6 @@ public class FireMessage {
     }
 
     public static void pressAction(Player player, int type) {
-        Level world = player.level();
-
-        if (!world.isLoaded(player.blockPosition())) {
-            return;
-        }
-
         handleGunBolt(player, player.getMainHandItem());
 
         if (type == 0) {

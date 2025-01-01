@@ -17,6 +17,7 @@ import java.util.function.Supplier;
 import static com.atsuishio.superbwarfare.entity.MortarEntity.PITCH;
 
 public class AdjustMortarAngleMessage {
+
     private final double scroll;
 
     public AdjustMortarAngleMessage(double scroll) {

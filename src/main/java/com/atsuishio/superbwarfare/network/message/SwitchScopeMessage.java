@@ -9,6 +9,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class SwitchScopeMessage {
+
     private final double scroll;
 
     public SwitchScopeMessage(double scroll) {

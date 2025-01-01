@@ -71,10 +71,8 @@ public class DroneFireMessage {
                                             + "," + offStack.getOrCreateTag().getInt("TargetY")
                                             + "," + offStack.getOrCreateTag().getInt("TargetZ") + "]")), true);
                         }
-
                     }
                 }
-
             }
         });
         context.setPacketHandled(true);

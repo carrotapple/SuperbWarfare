@@ -12,13 +12,12 @@ import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class ZoomMessage {
+
     private final int type;
 
     public ZoomMessage(int type) {
@@ -39,13 +38,6 @@ public class ZoomMessage {
             ServerPlayer player = context.getSender();
 
             if (player != null) {
-                ItemStack stack = player.getMainHandItem();
-                Level level = player.level();
-
-                if (!level.isLoaded(player.blockPosition())) {
-                    return;
-                }
-
                 if (message.type == 0) {
                     player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                         capability.zoom = true;
@@ -72,9 +64,9 @@ public class ZoomMessage {
                     if (player.getMainHandItem().getItem() == ModItems.JAVELIN.get()) {
                         var handItem = player.getMainHandItem();
                         var tag = handItem.getOrCreateTag();
-                        tag.putBoolean("Seeking",false);
-                        tag.putInt("SeekTime",0);
-                        tag.putString("TargetEntity","none");
+                        tag.putBoolean("Seeking", false);
+                        tag.putInt("SeekTime", 0);
+                        tag.putString("TargetEntity", "none");
                         var clientboundstopsoundpacket = new ClientboundStopSoundPacket(new ResourceLocation(ModUtils.MODID, "javelin_lock"), SoundSource.PLAYERS);
                         player.connection.send(clientboundstopsoundpacket);
                     }

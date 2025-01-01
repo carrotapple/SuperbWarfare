@@ -9,6 +9,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class ClientIndicatorMessage {
+
     public final int type;
     public final int value;
 

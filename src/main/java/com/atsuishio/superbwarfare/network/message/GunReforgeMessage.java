@@ -9,7 +9,8 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class GunReforgeMessage {
-    int type;
+
+    public int type;
 
     public GunReforgeMessage(int type) {
         this.type = type;
