@@ -33,7 +33,7 @@ public class EnergyVehicleEntity extends VehicleEntity implements IChargeEntity 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        compound.putFloat("Energy", this.entityData.get(ENERGY));
+        compound.putInt("Energy", this.entityData.get(ENERGY));
     }
 
     public void extraEnergy(int extraAmount) {

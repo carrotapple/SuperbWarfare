@@ -31,6 +31,7 @@ public class SeekTool {
                             && e != entity
                             && e.isAlive()
                             && e.getVehicle() == null
+                            && !(e instanceof Player player && (player.isSpectator()))
                             && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand)
                     ) {
                         return level.clip(new ClipContext(entity.getEyePosition(), e.getEyePosition(),

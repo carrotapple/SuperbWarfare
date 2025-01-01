@@ -71,7 +71,9 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
             double f = Math.min(entitySize / thisSize, 2);
             double f1 = Math.min(thisSize / entitySize, 4);
 
-            if (entity.isAlive() && !(entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ProjectileEntity)) {
+            if (entity.isAlive()
+                    && !(entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ProjectileEntity)
+                    && !(entity instanceof Player player && (player.isSpectator() || player.isCreative()))) {
                 if (velocity.horizontalDistance() > 0.4) {
                     if (!this.level().isClientSide) {
                         this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
@@ -117,10 +119,12 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
     @Override
     protected void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
+        this.entityData.set(POWER, compound.getFloat("Power"));
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
+        compound.putFloat("Power", this.entityData.get(POWER));
     }
 }

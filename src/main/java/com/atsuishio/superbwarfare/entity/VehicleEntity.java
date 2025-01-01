@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
 
 public class VehicleEntity extends Entity {
@@ -194,6 +196,11 @@ public class VehicleEntity extends Entity {
     }
 
     @Override
+    public boolean skipAttackInteraction(@NotNull Entity attacker) {
+        return hasPassenger(attacker) || super.skipAttackInteraction(attacker);
+    }
+
+    @Override
     public void baseTick() {
         super.baseTick();
 
@@ -212,7 +219,7 @@ public class VehicleEntity extends Entity {
 
         handleClientSync();
 
-        if (this.getHealth() <= 0) {
+        if (this.level() instanceof ServerLevel && this.getHealth() <= 0) {
             this.ejectPassengers();
             destroy();
         }

@@ -91,6 +91,7 @@ public class HandGrenadeEntity extends ThrowableItemProjectile implements GeoEnt
             case ENTITY:
                 EntityHitResult entityResult = (EntityHitResult) result;
                 Entity entity = entityResult.getEntity();
+                if (entity == this.getOwner() || entity == this.getVehicle()) return;
                 double speed_e = this.getDeltaMovement().length();
                 if (speed_e > 0.1) {
                     if (this.getOwner() instanceof LivingEntity living) {
