@@ -10,6 +10,7 @@
   ],
   "client": [
     "CameraMixin",
+    "ClientPacketListenerMixin",
     "ClientPlayerEntityMixin",
     "GameRendererMixin",
     "ItemInHandLayerMixin",
