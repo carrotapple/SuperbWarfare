@@ -127,9 +127,9 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
                 this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.15f);
             }
 
-            this.setYRot(this.getYRot() + Mth.clamp((this.onGround() ? 0.1f : 1.2f) * diffY * this.entityData.get(POWER) + 0.5f * this.entityData.get(DELTA_ROT), -3f, 3f));
-            this.setXRot(Mth.clamp(this.getXRot() + (this.onGround() ? 0 : 1.2f) * diffX * this.entityData.get(POWER), -80, 80));
-            this.setZRot(Mth.clamp(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.75f) * diffY * this.entityData.get(POWER), -50, 50));
+            this.setYRot(this.getYRot() + Mth.clamp((this.onGround() ? 0.1f : 0.6f) * diffY * this.entityData.get(POWER) + 0.5f * this.entityData.get(DELTA_ROT), -3f, 3f));
+            this.setXRot(Mth.clamp(this.getXRot() + (this.onGround() ? 0 : 0.6f) * diffX * this.entityData.get(POWER), -80, 80));
+            this.setZRot(Mth.clamp(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.2f) * diffY * this.entityData.get(POWER), -50, 50));
 
             if (this.level() instanceof ServerLevel) {
                 if (this.upInputDown || this.forwardInputDown) {
@@ -157,7 +157,7 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
         setDeltaMovement(getDeltaMovement().add(0.0f, Math.min(Math.sin((90 - this.getXRot()) * Mth.DEG_TO_RAD), Math.sin((90 + this.getRoll()) * Mth.DEG_TO_RAD)) * this.entityData.get(POWER), 0.0f));
 
         Vector3f direction = getRightDirection().mul(Math.cos((this.getRoll() + 90) * Mth.DEG_TO_RAD) * this.entityData.get(POWER));
-        setDeltaMovement(getDeltaMovement().add(new Vec3(direction.x, direction.y, direction.z).scale(0.4)));
+        setDeltaMovement(getDeltaMovement().add(new Vec3(direction.x, direction.y, direction.z).scale(0.85)));
 
         Vector3f directionZ = getForwardDirection().mul(-Math.cos((this.getXRot() + 90) * Mth.DEG_TO_RAD) * this.entityData.get(POWER));
         setDeltaMovement(getDeltaMovement().add(new Vec3(directionZ.x, directionZ.y, directionZ.z).scale(0.35)));
