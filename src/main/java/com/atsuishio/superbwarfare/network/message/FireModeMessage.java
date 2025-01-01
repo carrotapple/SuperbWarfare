@@ -4,12 +4,10 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.tools.GunsTool;
-import net.minecraft.core.Holder;
+import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -36,16 +34,14 @@ public class FireModeMessage {
 
     public static void handler(FireModeMessage message, Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
-        context.enqueueWork(() -> pressAction(context.getSender(), message.type));
+        context.enqueueWork(() -> {
+            if (context.getSender() == null) return;
+
+            if (message.type == 0) {
+                changeFireMode(context.getSender());
+            }
+        });
         context.setPacketHandled(true);
-    }
-
-    public static void pressAction(Player player, int type) {
-        if (player == null) return;
-
-        if (type == 0) {
-            changeFireMode(player);
-        }
     }
 
     public static void changeFireMode(Player player) {
@@ -121,8 +117,7 @@ public class FireModeMessage {
             if (stack.getItem() == ModItems.JAVELIN.get()) {
                 tag.putBoolean("TopMode", !tag.getBoolean("TopMode"));
                 if (player instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ModSounds.CANNON_ZOOM_OUT.get()),
-                            SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1f, 1f, serverPlayer.level().random.nextLong()));
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.CANNON_ZOOM_OUT.get());
                 }
             }
 
@@ -137,8 +132,7 @@ public class FireModeMessage {
 
     private static void playChangeModeSound(Player player) {
         if (player instanceof ServerPlayer serverPlayer) {
-            serverPlayer.connection.send(new ClientboundSoundPacket(new Holder.Direct<>(ModSounds.FIRE_RATE.get()),
-                    SoundSource.PLAYERS, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 1f, 1f, serverPlayer.level().random.nextLong()));
+            SoundTool.playLocalSound(serverPlayer, ModSounds.FIRE_RATE.get());
         }
     }
 }

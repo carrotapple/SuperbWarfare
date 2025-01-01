@@ -209,6 +209,9 @@ public class ClickHandler {
             if (key == ModKeyMappings.RELOAD.getKey().getValue()) {
                 ModUtils.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
             }
+            if (key == ModKeyMappings.FIRE_MODE.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new FireModeMessage(0));
+            }
             if (key == ModKeyMappings.EDIT_MODE.getKey().getValue() && ClientEventHandler.burstFireSize == 0) {
                 ClientEventHandler.holdFire = false;
                 ModUtils.PACKET_HANDLER.sendToServer(new EditModeMessage(0));
