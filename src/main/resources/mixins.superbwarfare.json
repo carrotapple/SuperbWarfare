@@ -5,7 +5,8 @@
   "refmap": "mixins.superbwarfare.refmap.json",
   "mixins": [
     "ClientboundSetEntityMotionPacketMixin",
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "PlayerEntityMixin"
   ],
   "client": [
     "CameraMixin",
