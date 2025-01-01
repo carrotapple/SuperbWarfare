@@ -143,9 +143,9 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
 
             if(!(this.upInputDown || this.forwardInputDown || this.downInputDown || this.backInputDown)) {
                 if (this.getDeltaMovement().y() + 0.06 < 0) {
-                    this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0005f, 0.12f));
+                    this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0002f, 0.12f));
                 } else {
-                    this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0005f, 0));
+                    this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0006f, 0));
                 }
             }
         }
