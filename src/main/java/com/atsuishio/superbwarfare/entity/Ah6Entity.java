@@ -126,7 +126,7 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
 //                level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.forwardInputDown || this.backInputDown ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 1f), false);
 //            }
 
-            diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYRot() - this.getYRot()));
+            diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
             diffX = Math.clamp(-60f, 60f, Mth.wrapDegrees(passenger.getXRot() - this.getXRot()));
 
             if (rightInputDown) {
