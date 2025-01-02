@@ -187,6 +187,11 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
 
     @Override
     public void baseTick() {
+        turretYRotO = this.getTurretYRot();
+        turretXRotO = this.getTurretXRot();
+        rotorRotO = this.getRotorRot();
+        rudderRotO = this.getRudderRot();
+
         super.baseTick();
 
         if (this.entityData.get(HEAT) > 0) {
@@ -204,11 +209,6 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
         if (this.level() instanceof ServerLevel) {
             this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum());
         }
-
-        turretYRotO = this.getTurretYRot();
-        turretXRotO = this.getTurretXRot();
-        rotorRotO = this.getRotorRot();
-        rudderRotO = this.getRudderRot();
 
         Entity driver = this.getFirstPassenger();
         if (driver instanceof Player player) {

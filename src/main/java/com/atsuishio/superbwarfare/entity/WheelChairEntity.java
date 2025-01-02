@@ -102,7 +102,8 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
 
     @Override
     public void baseTick() {
-        super.baseTick();
+        leftWheelRotO = this.getLeftWheelRot();
+        rightWheelRotO = this.getRightWheelRot();
 
         if (jumpCoolDown > 0 && onGround()) {
             jumpCoolDown--;
@@ -112,8 +113,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
             handBusyTime--;
         }
 
-        leftWheelRotO = this.getLeftWheelRot();
-        rightWheelRotO = this.getRightWheelRot();
+        super.baseTick();
 
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.048, 0.0));
         if (this.onGround()) {
