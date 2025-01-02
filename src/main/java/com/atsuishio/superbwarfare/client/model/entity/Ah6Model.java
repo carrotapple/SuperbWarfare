@@ -15,11 +15,11 @@ public class Ah6Model extends GeoModel<Ah6Entity> {
 
     @Override
     public ResourceLocation getModelResource(Ah6Entity entity) {
-        return new ResourceLocation(ModUtils.MODID, "geo/wheel_chair.geo.json");
+        return new ResourceLocation(ModUtils.MODID, "geo/ah_6.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(Ah6Entity entity) {
-        return ModUtils.loc("textures/entity/wheel_chair.png");
+        return ModUtils.loc("textures/entity/ah_6.png");
     }
 }

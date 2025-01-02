@@ -43,6 +43,11 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
     public static final float MAX_HEALTH = 200;
     public static final int MAX_ENERGY = 4000000;
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> PROPELLER_ROT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.FLOAT);
+    public boolean engineStart;
+    public boolean engineStartOver;
+    public float propellerRot;
+    public float propellerRotO;
 
     public Ah6Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.AH_6.get(), world);
@@ -57,6 +62,7 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DELTA_ROT, 0f);
+        this.entityData.define(PROPELLER_ROT, 0f);
     }
 
     @Override
@@ -84,6 +90,8 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
 
     @Override
     public void baseTick() {
+        propellerRotO = this.getPropellerRot();
+
         super.baseTick();
 
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.06, 0.0));
@@ -114,11 +122,11 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
             this.setXRot(this.getXRot() * 0.8f);
             this.entityData.set(POWER, this.entityData.get(POWER) * 0.98f);
         } else if (passenger instanceof Player player) {
-            if (level().isClientSide && this.getEnergy() > 0) {
-                level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.forwardInputDown || this.backInputDown ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 1f), false);
-            }
+//            if (level().isClientSide && this.getEnergy() > 0) {
+//                level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.forwardInputDown || this.backInputDown ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 1f), false);
+//            }
 
-            diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
+            diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYRot() - this.getYRot()));
             diffX = Math.clamp(-60f, 60f, Mth.wrapDegrees(passenger.getXRot() - this.getXRot()));
 
             if (rightInputDown) {
@@ -127,32 +135,47 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
                 this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.15f);
             }
 
-            this.setYRot(this.getYRot() + Mth.clamp((this.onGround() ? 0.1f : 0.6f) * diffY * this.entityData.get(POWER) + 0.5f * this.entityData.get(DELTA_ROT), -3f, 3f));
+            this.setYRot(this.getYRot() + Mth.clamp((this.onGround() ? 0.1f : 0.7f) * diffY * this.entityData.get(POWER) + 0.5f * this.entityData.get(DELTA_ROT), -5f, 5f));
             this.setXRot(Mth.clamp(this.getXRot() + (this.onGround() ? 0 : 0.6f) * diffX * this.entityData.get(POWER), -80, 80));
             this.setZRot(Mth.clamp(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.2f) * diffY * this.entityData.get(POWER), -50, 50));
 
             if (this.level() instanceof ServerLevel) {
-                if (this.upInputDown || this.forwardInputDown) {
+                boolean up = this.upInputDown || this.forwardInputDown;
+                boolean down = this.downInputDown || this.backInputDown;
+
+
+                if (!engineStart && up) {
+                    engineStart = true;
+                    this.level().playSound(null, this, ModSounds.HELICOPTER_ENGINE_START.get(), this.getSoundSource(), 3, 1);
+                }
+
+                if (up && engineStartOver) {
                     this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.002f, 0.12f));
                 }
 
-                if (this.downInputDown || this.backInputDown) {
+                if (down && engineStartOver) {
                     this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0015f, this.onGround() ? 0 : 0.0375f));
+                }
+
+                if (engineStart && !engineStartOver) {
+                    this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0012f, 0.045f));
                 }
 
 //            player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(this.getDeltaMovement().y())), true);
 
-                if(!(this.upInputDown || this.forwardInputDown || this.downInputDown || this.backInputDown)) {
+                if(!(up || down) && engineStartOver) {
                     if (this.getDeltaMovement().y() + 0.06 < 0) {
                         this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0002f, 0.12f));
                     } else {
-                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0006f, 0));
+                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - (this.onGround() ? 0.00005f : 0.0006f), 0));
                     }
                 }
             }
         }
 
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.95f);
+        this.entityData.set(PROPELLER_ROT, Mth.lerp(0.0001f, this.entityData.get(POWER), this.entityData.get(POWER)));
+        this.setPropellerRot(this.getPropellerRot() + 30 * this.entityData.get(PROPELLER_ROT));
 
         setDeltaMovement(getDeltaMovement().add(0.0f, Math.min(Math.sin((90 - this.getXRot()) * Mth.DEG_TO_RAD), Math.sin((90 + this.getRoll()) * Mth.DEG_TO_RAD)) * this.entityData.get(POWER), 0.0f));
 
@@ -161,11 +184,31 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
 
         Vector3f directionZ = getForwardDirection().mul(-Math.cos((this.getXRot() + 90) * Mth.DEG_TO_RAD) * this.entityData.get(POWER));
         setDeltaMovement(getDeltaMovement().add(new Vec3(directionZ.x, directionZ.y, directionZ.z).scale(0.35)));
-    }
 
+        if (this.entityData.get(POWER) > 0.04f) {
+            engineStartOver = true;
+        }
+
+        if (this.entityData.get(POWER) < 0.0004f) {
+            engineStart = false;
+            engineStartOver = false;
+        }
+
+        if (level().isClientSide) {
+            level().playLocalSound(this.getX() + this.getDeltaMovement().x, this.getY() + this.getBbHeight() + this.getDeltaMovement().y + 0.06, this.getZ() + this.getDeltaMovement().z, this.getEngineSound(), this.getSoundSource(), Math.max((this.upInputDown? 10f : 3f) * 6 * this.entityData.get(POWER) - 0.038f, 0), (random.nextFloat() * 0.1f + 1.0f), false);
+        }
+    }
     @Override
     public SoundEvent getEngineSound() {
-        return ModSounds.WHEEL_CHAIR_ENGINE.get();
+        return ModSounds.HELICOPTER_ENGINE.get();
+    }
+
+    public float getPropellerRot() {
+        return this.propellerRot;
+    }
+
+    public void setPropellerRot(float pPropellerRot) {
+        this.propellerRot = pPropellerRot;
     }
 
     protected void clampRotation(Entity entity) {
@@ -176,7 +219,7 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
 
         entity.setYBodyRot(this.getYRot());
         float f2 = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
-        float f3 = Mth.clamp(f2, -60.0F, 60.0F);
+        float f3 = Mth.clamp(f2, -80.0F, 80.0F);
         entity.yRotO += f3 - f2;
         entity.setYRot(entity.getYRot() + f3 - f2);
         entity.setYHeadRot(entity.getYRot());
@@ -196,10 +239,9 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
 
         Matrix4f transform = getVehicleTransform();
 
-        float x = 0;
-        float y = 0.8f;
-        float z = 0;
-
+        float x = 0.45f;
+        float y = 1.2f;
+        float z = 1f;
 
         y += (float) passenger.getMyRidingOffset();
 

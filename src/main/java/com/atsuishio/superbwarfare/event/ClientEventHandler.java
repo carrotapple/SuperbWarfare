@@ -796,11 +796,15 @@ public class ClientEventHandler {
             }
         }
 
-        if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity) {
+        if (player.getVehicle() instanceof ICannonEntity) {
             event.setCanceled(true);
         }
 
-        if ((player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player) && ClientEventHandler.zoom && stack.is(ItemStack.EMPTY.getItem())) {
+        if (player.getVehicle() instanceof Ah6Entity ah6Entity && ah6Entity.getFirstPassenger() == player && !stack.getItem().isEdible()) {
+            event.setCanceled(true);
+        }
+
+        if ((player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player) && ClientEventHandler.zoom && stack.is(ItemStack.EMPTY.getItem())) {
             event.setCanceled(true);
         }
     }
@@ -1197,6 +1201,11 @@ public class ClientEventHandler {
 
         if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity && zoom) {
             event.setFOV(event.getFOV() / 5);
+            return;
+        }
+
+        if (player.getVehicle() instanceof Ah6Entity ah6Entity && ah6Entity.getFirstPassenger() == player && zoom) {
+            event.setFOV(event.getFOV() / 3);
             return;
         }
 

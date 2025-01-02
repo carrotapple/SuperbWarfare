@@ -356,5 +356,8 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> RADAR_SEARCH_START = REGISTRY.register("radar_search_start", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("radar_search_start")));
     public static final RegistryObject<SoundEvent> RADAR_SEARCH_IDLE = REGISTRY.register("radar_search_idle", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("radar_search_idle")));
     public static final RegistryObject<SoundEvent> RADAR_SEARCH_END = REGISTRY.register("radar_search_end", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("radar_search_end")));
+
+    public static final RegistryObject<SoundEvent> HELICOPTER_ENGINE_START = REGISTRY.register("helicopter_engine_start", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("helicopter_engine_start")));
+    public static final RegistryObject<SoundEvent> HELICOPTER_ENGINE = REGISTRY.register("helicopter_engine", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("helicopter_engine")));
 }
 

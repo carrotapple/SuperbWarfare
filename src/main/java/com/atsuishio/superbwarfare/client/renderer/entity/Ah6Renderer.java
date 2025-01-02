@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class Ah6Renderer extends GeoEntityRenderer<Ah6Entity> {
@@ -44,9 +45,15 @@ public class Ah6Renderer extends GeoEntityRenderer<Ah6Entity> {
         poseStack.popPose();
     }
 
-//    @Override
-//    public void renderRecursively(PoseStack poseStack, Ah6Entity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-//        String name = bone.getName();
-//        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-//    }
+    @Override
+    public void renderRecursively(PoseStack poseStack, Ah6Entity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        String name = bone.getName();
+        if (name.equals("propeller")) {
+            bone.setRotY(Mth.lerp(partialTick, animatable.propellerRotO, animatable.getPropellerRot()));
+        }
+        if (name.equals("tailPropeller")) {
+            bone.setRotX(-6 * Mth.lerp(partialTick, animatable.propellerRotO, animatable.getPropellerRot()));
+        }
+        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+    }
 }

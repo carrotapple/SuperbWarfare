@@ -2507,5 +2507,19 @@
         "name": "superbwarfare:radar/radar_search_end"
       }
     ]
+  },
+  "helicopter_engine_start": {
+    "sounds": [
+      {
+        "name": "superbwarfare:helicopter/heli_engine_start"
+      }
+    ]
+  },
+  "helicopter_engine": {
+    "sounds": [
+      {
+        "name": "superbwarfare:helicopter/heli_engine"
+      }
+    ]
   }
 }

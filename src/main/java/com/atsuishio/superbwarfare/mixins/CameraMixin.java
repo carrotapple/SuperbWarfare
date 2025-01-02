@@ -96,6 +96,10 @@ public abstract class CameraMixin {
             move(-getMaxZoom(3), 1, 0.0);
             return;
         }
+        if (thirdPerson && entity.getVehicle() instanceof Ah6Entity) {
+            move(-getMaxZoom(6), 1, -2.0);
+            return;
+        }
         if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && entity instanceof Player player && player.getMainHandItem().is(ModTags.Items.GUN)) {
             move(-getMaxZoom(-2.9 * Math.max(ClientEventHandler.pullPos, ClientEventHandler.zoomPos)), 0, -ClientEventHandler.cameraLocation * Math.max(ClientEventHandler.pullPos, ClientEventHandler.zoomPos));
         }

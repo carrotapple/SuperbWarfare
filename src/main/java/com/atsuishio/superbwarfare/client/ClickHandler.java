@@ -103,8 +103,9 @@ public class ClickHandler {
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (stack.is(ModTags.Items.GUN)
-                    || (player.isPassenger() && player.getVehicle() instanceof ICannonEntity)
-                    || (player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player && stack.is(ItemStack.EMPTY.getItem()))) {
+                    || (player.getVehicle() instanceof ICannonEntity)
+                    || (player.getVehicle() instanceof Ah6Entity ah6Entity && ah6Entity.getFirstPassenger() == player && !stack.getItem().isEdible())
+                    || (player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player && stack.is(ItemStack.EMPTY.getItem()))) {
                 event.setCanceled(true);
             }
         }
