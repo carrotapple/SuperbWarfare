@@ -2,27 +2,28 @@
 package com.atsuishio.superbwarfare.command;
 
 import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.tools.GunInfo;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.atsuishio.superbwarfare.tools.GunInfo;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.server.command.EnumArgument;
 
-import java.util.Objects;
-
 public class AmmoCommand {
+
     public static LiteralArgumentBuilder<CommandSourceStack> get() {
         // mojang你看看你写的是个牛魔Builder😅
         return Commands.literal("ammo").requires(s -> s.hasPermission(0))
                 .then(Commands.literal("get").then(Commands.argument("player", EntityArgument.player()).then(Commands.argument("type", EnumArgument.enumArgument(GunInfo.Type.class)).executes(context -> {
                     var player = EntityArgument.getPlayer(context, "player");
 
+                    var source = context.getSource();
+
                     // 权限不足时，只允许玩家查询自己的弹药数量
-                    if (context.getSource().isPlayer() && !context.getSource().hasPermission(2)) {
-                        if (!Objects.requireNonNull(context.getSource().getPlayer()).getUUID().equals(player.getUUID())) {
+                    if (source.isPlayer() && !source.hasPermission(2)) {
+                        if (source.getPlayer() != null && !source.getPlayer().getUUID().equals(player.getUUID())) {
                             context.getSource().sendFailure(Component.translatable("commands.ammo.no_permission"));
                             return 0;
                         }

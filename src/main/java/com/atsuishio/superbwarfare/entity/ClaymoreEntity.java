@@ -34,7 +34,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -184,7 +183,7 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
                         && target instanceof LivingEntity
                         && !(target instanceof TargetEntity)
                         && !(target instanceof Player player && (player.isCreative() || player.isSpectator()))
-                        && (!Objects.requireNonNull(this.getOwner()).isAlliedTo(target) || target.getTeam() == null || target.getTeam().getName().equals("TDM"))
+                        && (this.getOwner() != null && !this.getOwner().isAlliedTo(target) || target.getTeam() == null || target.getTeam().getName().equals("TDM"))
                         && !target.isShiftKeyDown();
                 if (!condition) continue;
 
