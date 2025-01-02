@@ -322,7 +322,6 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
             }
         }
 
-
         Level level = player.level();
         final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
 

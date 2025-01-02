@@ -217,7 +217,16 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
 
         entity.setYBodyRot(this.getYRot());
         float f2 = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
+
+        int i = this.getPassengers().indexOf(entity);
+
         float f3 = Mth.clamp(f2, -80.0F, 80.0F);
+        if (i == 2) {
+            f3 = Mth.clamp(f2, -160.0F, -20.0F);
+        }
+        if (i == 3) {
+            f3 = Mth.clamp(f2, 20.0F, 160.0F);
+        }
         entity.yRotO += f3 - f2;
         entity.setYRot(entity.getYRot() + f3 - f2);
         entity.setYHeadRot(entity.getYRot());
