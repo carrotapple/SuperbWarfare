@@ -138,34 +138,34 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
             this.setYRot(this.getYRot() + Mth.clamp((this.onGround() ? 0.1f : 0.7f) * diffY * this.entityData.get(POWER) + 0.5f * this.entityData.get(DELTA_ROT), -5f, 5f));
             this.setXRot(Mth.clamp(this.getXRot() + (this.onGround() ? 0 : 0.6f) * diffX * this.entityData.get(POWER), -80, 80));
             this.setZRot(Mth.clamp(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.2f) * diffY * this.entityData.get(POWER), -50, 50));
+        }
 
-            if (this.level() instanceof ServerLevel) {
-                boolean up = this.upInputDown || this.forwardInputDown;
-                boolean down = this.downInputDown || this.backInputDown;
+        if (this.level() instanceof ServerLevel) {
+            boolean up = this.upInputDown || this.forwardInputDown;
+            boolean down = this.downInputDown || this.backInputDown;
 
-                if (!engineStart && up) {
-                    engineStart = true;
-                    this.level().playSound(null, this, ModSounds.HELICOPTER_ENGINE_START.get(), this.getSoundSource(), 3, 1);
-                }
+            if (!engineStart && up) {
+                engineStart = true;
+                this.level().playSound(null, this, ModSounds.HELICOPTER_ENGINE_START.get(), this.getSoundSource(), 3, 1);
+            }
 
-                if (up && engineStartOver) {
-                    this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.002f, 0.12f));
-                }
+            if (up && engineStartOver) {
+                this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.002f, 0.12f));
+            }
 
-                if (down && engineStartOver) {
-                    this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0015f, this.onGround() ? 0 : 0.0375f));
-                }
+            if (down && engineStartOver) {
+                this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0015f, this.onGround() ? 0 : 0.0375f));
+            }
 
-                if (engineStart && !engineStartOver) {
-                    this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0012f, 0.045f));
-                }
+            if (engineStart && !engineStartOver) {
+                this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0012f, 0.045f));
+            }
 
-                if (!(up || down) && engineStartOver) {
-                    if (this.getDeltaMovement().y() + 0.06 < 0) {
-                        this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0002f, 0.12f));
-                    } else {
-                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - (this.onGround() ? 0.00005f : 0.0006f), 0));
-                    }
+            if (!(up || down) && engineStartOver) {
+                if (this.getDeltaMovement().y() + 0.06 < 0) {
+                    this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0002f, 0.12f));
+                } else {
+                    this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - (this.onGround() ? 0.00005f : 0.0006f), 0));
                 }
             }
         }
@@ -173,6 +173,7 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.95f);
         this.entityData.set(PROPELLER_ROT, Mth.lerp(0.0001f, this.entityData.get(POWER), this.entityData.get(POWER)));
         this.setPropellerRot(this.getPropellerRot() + 30 * this.entityData.get(PROPELLER_ROT));
+        this.entityData.set(PROPELLER_ROT, this.entityData.get(PROPELLER_ROT) * 0.9995f);
 
         setDeltaMovement(getDeltaMovement().add(0.0f, Math.min(Math.sin((90 - this.getXRot()) * Mth.DEG_TO_RAD), Math.sin((90 + this.getRoll()) * Mth.DEG_TO_RAD)) * this.entityData.get(POWER), 0.0f));
 
@@ -191,9 +192,9 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
             engineStartOver = false;
         }
 
-        if (level().isClientSide) {
-            level().playLocalSound(this.getX() + this.getDeltaMovement().x, this.getY() + this.getBbHeight() + this.getDeltaMovement().y + 0.06, this.getZ() + this.getDeltaMovement().z, this.getEngineSound(), this.getSoundSource(), Math.max((this.upInputDown ? 10f : 3f) * 6 * this.entityData.get(POWER) - 0.038f, 0), (random.nextFloat() * 0.1f + 1.0f), false);
-        }
+//        if (level().isClientSide) {
+//            level().playLocalSound(this.getX() + this.getDeltaMovement().x, this.getY() + this.getBbHeight() + this.getDeltaMovement().y + 0.06, this.getZ() + this.getDeltaMovement().z, this.getEngineSound(), this.getSoundSource(), Math.max((this.upInputDown ? 10f : 3f) * 6 * this.entityData.get(POWER) - 0.038f, 0), (random.nextFloat() * 0.1f + 1.0f), false);
+//        }
     }
 
     @Override

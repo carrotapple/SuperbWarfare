@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.tools;
 
 import com.atsuishio.superbwarfare.entity.ClaymoreEntity;
+import com.atsuishio.superbwarfare.entity.MobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.VehicleEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import net.minecraft.core.BlockPos;
@@ -23,6 +24,13 @@ import java.util.List;
 import java.util.stream.StreamSupport;
 
 public class SeekTool {
+
+    public static List<Entity> getVehicleWithinRange(Player player, Level level, double range) {
+        return StreamSupport.stream(EntityFindUtil.getEntities(level).getAll().spliterator(), false)
+                .filter(e -> e.position().distanceTo(player.getEyePosition()) <= range
+                        && e instanceof MobileVehicleEntity)
+                .toList();
+    }
 
     public static Entity seekEntity(Entity entity, Level level, double seekRange, double seekAngle) {
         return StreamSupport.stream(EntityFindUtil.getEntities(level).getAll().spliterator(), false)
