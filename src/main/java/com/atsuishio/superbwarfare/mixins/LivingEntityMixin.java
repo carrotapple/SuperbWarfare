@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Unique;
 public class LivingEntityMixin implements ICustomKnockback {
 
     @Unique
-    private double superbwarfare$knockbackStrength = 0;
+    private double superbwarfare$knockbackStrength = -1;
 
     @Override
     public void superbWarfare$setKnockbackStrength(double strength) {

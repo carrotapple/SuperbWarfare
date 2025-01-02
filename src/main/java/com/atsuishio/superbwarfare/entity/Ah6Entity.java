@@ -143,7 +143,6 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
                 boolean up = this.upInputDown || this.forwardInputDown;
                 boolean down = this.downInputDown || this.backInputDown;
 
-
                 if (!engineStart && up) {
                     engineStart = true;
                     this.level().playSound(null, this, ModSounds.HELICOPTER_ENGINE_START.get(), this.getSoundSource(), 3, 1);
@@ -161,9 +160,7 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
                     this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0012f, 0.045f));
                 }
 
-//            player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(this.getDeltaMovement().y())), true);
-
-                if(!(up || down) && engineStartOver) {
+                if (!(up || down) && engineStartOver) {
                     if (this.getDeltaMovement().y() + 0.06 < 0) {
                         this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0002f, 0.12f));
                     } else {
@@ -195,9 +192,10 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
         }
 
         if (level().isClientSide) {
-            level().playLocalSound(this.getX() + this.getDeltaMovement().x, this.getY() + this.getBbHeight() + this.getDeltaMovement().y + 0.06, this.getZ() + this.getDeltaMovement().z, this.getEngineSound(), this.getSoundSource(), Math.max((this.upInputDown? 10f : 3f) * 6 * this.entityData.get(POWER) - 0.038f, 0), (random.nextFloat() * 0.1f + 1.0f), false);
+            level().playLocalSound(this.getX() + this.getDeltaMovement().x, this.getY() + this.getBbHeight() + this.getDeltaMovement().y + 0.06, this.getZ() + this.getDeltaMovement().z, this.getEngineSound(), this.getSoundSource(), Math.max((this.upInputDown ? 10f : 3f) * 6 * this.entityData.get(POWER) - 0.038f, 0), (random.nextFloat() * 0.1f + 1.0f), false);
         }
     }
+
     @Override
     public SoundEvent getEngineSound() {
         return ModSounds.HELICOPTER_ENGINE.get();
@@ -231,9 +229,9 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
     }
 
     @Override
-    public void positionRider(@NotNull Entity passenger, @NotNull MoveFunction positionUpdater) {
+    public void positionRider(@NotNull Entity passenger, @NotNull MoveFunction callback) {
         // From Immersive_Aircraft
-        if (!hasPassenger(passenger)) {
+        if (!this.hasPassenger(passenger)) {
             return;
         }
 
@@ -242,14 +240,36 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
         float x = 0.45f;
         float y = 1.2f;
         float z = 1f;
-
         y += (float) passenger.getMyRidingOffset();
 
-        Vector4f worldPosition = transformPosition(transform, x, y, z);
+        int i = this.getPassengers().indexOf(passenger);
 
-        passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+        if (i == 0) {
+            Vector4f worldPosition = transformPosition(transform, x, y, z);
+            passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+            callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
+        } else if (i == 1) {
+            Vector4f worldPosition = transformPosition(transform, -x, y, z);
+            passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+            callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
+        } else if (i == 2) {
+            Vector4f worldPosition = transformPosition(transform, x + 1.2f, y - 0.2f, z - 0.8f);
+            passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+            callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
+        } else {
+            Vector4f worldPosition = transformPosition(transform, -x - 1.2f, y - 0.2f, z - 0.8f);
+            passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+            callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
+        }
+    }
 
-        positionUpdater.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
+    @Override
+    protected boolean canAddPassenger(Entity pPassenger) {
+        return this.getPassengers().size() < this.getMaxPassengers();
+    }
+
+    public int getMaxPassengers() {
+        return 4;
     }
 
     // From Immersive_Aircraft
