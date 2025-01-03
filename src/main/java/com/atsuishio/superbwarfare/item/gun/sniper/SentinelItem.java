@@ -177,18 +177,18 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemStack, world, entity, slot, selected);
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
 
-        var tag = itemStack.getOrCreateTag();
-        itemStack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
                 energy -> {
                     int energyStored = energy.getEnergyStored();
                     if (energyStored > 0) {
                         energy.extractEnergy(1, false);
-                        tag.putDouble("sentinelChargeDamage", 0.2857142857142857 * GunsTool.getGunDoubleTag(itemStack, "Damage", 0));
+                        GunsTool.setGunDoubleTag(stack, "ChargedDamage", 0.2857142857142857
+                                * GunsTool.getGunDoubleTag(stack, "Damage", 0));
                     } else {
-                        tag.putDouble("sentinelChargeDamage", 0);
+                        GunsTool.setGunDoubleTag(stack, "ChargedDamage", 0);
                     }
                 }
         );
