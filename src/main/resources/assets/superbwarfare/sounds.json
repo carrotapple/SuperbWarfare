@@ -2521,5 +2521,37 @@
         "name": "superbwarfare:helicopter/heli_engine"
       }
     ]
+  },
+  "heli_cannon_fire_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:helicopter/heli_cannon_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "heli_cannon_fire_3p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:helicopter/heli_cannon_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "heli_cannon_far": {
+    "sounds": [
+      {
+        "name": "superbwarfare:helicopter/heli_cannon_far",
+        "stream": false
+      }
+    ]
+  },
+  "heli_cannon_veryfar": {
+    "sounds": [
+      {
+        "name": "superbwarfare:helicopter/heli_cannon_veryfar",
+        "stream": false
+      }
+    ]
   }
 }

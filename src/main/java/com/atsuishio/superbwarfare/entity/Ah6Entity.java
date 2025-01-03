@@ -1,13 +1,15 @@
 package com.atsuishio.superbwarfare.entity;
 
+import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
-import com.mojang.math.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -15,6 +17,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -24,8 +27,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
@@ -36,6 +41,8 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
+import java.util.Comparator;
 
 public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelicopterEntity {
 
@@ -247,7 +254,7 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
 
         Matrix4f transform = getVehicleTransform();
 
-        float x = 0.45f;
+        float x = 0.6f;
         float y = 1.2f;
         float z = 1f;
         y += (float) passenger.getMyRidingOffset();
@@ -280,20 +287,6 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
 
     public int getMaxPassengers() {
         return 4;
-    }
-
-    // From Immersive_Aircraft
-    public Matrix4f getVehicleTransform() {
-        Matrix4f transform = new Matrix4f();
-        transform.translate((float) getX(), (float) getY(), (float) getZ());
-        transform.rotate(Axis.YP.rotationDegrees(-getYRot()));
-        transform.rotate(Axis.XP.rotationDegrees(getXRot()));
-        transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
-        return transform;
-    }
-
-    protected Vector4f transformPosition(Matrix4f transform, float x, float y, float z) {
-        return transform.transform(new Vector4f(x, y, z, 1));
     }
 
     @Override
@@ -332,6 +325,56 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
 
     @Override
     public void vehicleShoot(Player player) {
+
+        Matrix4f transform = getVehicleTransform();
+        float x = 1f;
+        float y = 0.62f;
+        float z = 0.8f;
+
+        Vector4f worldPositionRight = transformPosition(transform, -x, y, z);
+        ProjectileEntity projectileRight = new ProjectileEntity(player.level())
+                .shooter(player)
+                .damage(20)
+                .headShot(2f)
+                .zoom(false);
+
+        projectileRight.heBullet(true, 8);
+        projectileRight.bypassArmorRate(1);
+        projectileRight.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
+        projectileRight.shoot(player, this.getLookAngle().x, this.getLookAngle().y+ 0.03, this.getLookAngle().z, 20,
+                (float) 0.2);
+        this.level().addFreshEntity(projectileRight);
+
+        Vector4f worldPositionLeft = transformPosition(transform, x, y, z);
+        ProjectileEntity projectileLeft = new ProjectileEntity(player.level())
+                .shooter(player)
+                .damage(20)
+                .headShot(2f)
+                .zoom(false);
+
+        projectileLeft.heBullet(true, 8);
+        projectileLeft.bypassArmorRate(1);
+        projectileLeft.setPos(worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z);
+        projectileLeft.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.03, this.getLookAngle().z, 20,
+                (float) 0.2);
+        this.level().addFreshEntity(projectileLeft);
+
+        if (!player.level().isClientSide) {
+            if (player instanceof ServerPlayer serverPlayer) {
+                serverPlayer.playSound(ModSounds.HELICOPTER_CANNON_FIRE_3P.get(), 4, 1);
+                serverPlayer.playSound(ModSounds.HELICOPTER_CANNON_FAR.get(), 12, 1);
+                serverPlayer.playSound(ModSounds.HELICOPTER_CANNON_VERYFAR.get(), 24, 1);
+            }
+        }
+
+        Level level = player.level();
+        final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
+
+        for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(6), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
+            if (target instanceof ServerPlayer serverPlayer) {
+                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 7, this.getX(), this.getEyeY(), this.getZ()));
+            }
+        }
     }
 
     @Override
@@ -341,12 +384,12 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
 
     @Override
     public int mainGunRpm() {
-        return 360;
+        return 300;
     }
 
     @Override
     public boolean canShoot(Player player) {
-        return false;
+        return true;
     }
 
     @Override

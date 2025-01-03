@@ -120,7 +120,7 @@ public class ClickHandler {
                 || stack.is(ModItems.MONITOR.get())
                 || stack.is(ModItems.LUNGE_MINE.get())
                 || (player.getVehicle() instanceof ICannonEntity)
-                || (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player) && stack.is(ItemStack.EMPTY.getItem()))
+                || (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player))
                 || (stack.is(Items.SPYGLASS) && player.isScoping() && player.getOffhandItem().is(ModItems.FIRING_PARAMETERS.get()))) {
             if (button == ModKeyMappings.FIRE.getKey().getValue()) {
                 handleWeaponFirePress(player, stack);
@@ -256,7 +256,7 @@ public class ClickHandler {
             if ((stack.is(ModTags.Items.GUN) && !(player.getVehicle() instanceof ICannonEntity))
                     || stack.is(ModItems.MONITOR.get())
                     || (player.getVehicle() instanceof ICannonEntity)
-                    || (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player) && stack.is(ItemStack.EMPTY.getItem()))
+                    || (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player))
                     || (stack.is(Items.SPYGLASS) && player.isScoping() && player.getOffhandItem().is(ModItems.FIRING_PARAMETERS.get()))) {
                 if (key == ModKeyMappings.FIRE.getKey().getValue()) {
                     handleWeaponFirePress(player, stack);

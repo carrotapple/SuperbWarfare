@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.entity;
 
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
+import com.mojang.math.Axis;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -24,6 +25,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 public class VehicleEntity extends Entity {
 
@@ -237,6 +240,20 @@ public class VehicleEntity extends Entity {
     }
 
     public void travel() {
+    }
+
+    // From Immersive_Aircraft
+    public Matrix4f getVehicleTransform() {
+        Matrix4f transform = new Matrix4f();
+        transform.translate((float) getX(), (float) getY(), (float) getZ());
+        transform.rotate(Axis.YP.rotationDegrees(-getYRot()));
+        transform.rotate(Axis.XP.rotationDegrees(getXRot()));
+        transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
+        return transform;
+    }
+
+    public Vector4f transformPosition(Matrix4f transform, float x, float y, float z) {
+        return transform.transform(new Vector4f(x, y, z, 1));
     }
 
     protected void handleClientSync() {

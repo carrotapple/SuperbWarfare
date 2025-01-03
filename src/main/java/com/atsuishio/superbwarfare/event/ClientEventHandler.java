@@ -600,6 +600,11 @@ public class ClientEventHandler {
         if (player == null) return;
         if (level == null) return;
 
+        if (player.getMainHandItem().getItem() instanceof GunItem) {
+            clientTimerVehicle.stop();
+            return;
+        }
+
         if (notInGame()) {
             clientTimerVehicle.stop();
             holdFire = false;
@@ -642,6 +647,9 @@ public class ClientEventHandler {
             float pitch = speedboat.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - speedboat.getEntityData().get(HEAT)));
             player.playSound(ModSounds.M_2_FIRE_1P.get(), 1f, pitch);
             player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
+        }
+        if (iVehicle instanceof Ah6Entity ah6Entity) {
+            player.playSound(ModSounds.HELICOPTER_CANNON_FIRE_1P.get(), 1f, 1);
         }
     }
 
