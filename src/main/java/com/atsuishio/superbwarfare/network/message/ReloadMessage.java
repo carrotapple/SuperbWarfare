@@ -78,13 +78,13 @@ public class ReloadMessage {
                         return;
                     } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && capability.rifleAmmo == 0) {
                         return;
-                    } else if (stack.getItem() == ModItems.TASER.get() && tag.getInt("max_ammo") == 0) {
+                    } else if (stack.getItem() == ModItems.TASER.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") == 0) {
                         return;
-                    } else if (stack.getItem() == ModItems.M_79.get() && tag.getInt("max_ammo") == 0) {
+                    } else if (stack.getItem() == ModItems.M_79.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") == 0) {
                         return;
-                    } else if (stack.getItem() == ModItems.RPG.get() && tag.getInt("max_ammo") == 0) {
+                    } else if (stack.getItem() == ModItems.RPG.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") == 0) {
                         return;
-                    } else if (stack.getItem() == ModItems.JAVELIN.get() && tag.getInt("max_ammo") == 0) {
+                    } else if (stack.getItem() == ModItems.JAVELIN.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") == 0) {
                         return;
                     }
                 }

@@ -15,7 +15,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
@@ -120,15 +119,14 @@ public class BocekItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack itemstack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemstack, world, entity, slot, selected);
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
         if (entity instanceof Player player) {
-            itemstack.getOrCreateTag().putInt("max_ammo", getAmmoCount(player));
+            GunsTool.setGunIntTag(stack, "MaxAmmo", getAmmoCount(player));
         }
 
-        CompoundTag tag = itemstack.getOrCreateTag();
-        if (tag.getInt("arrow_empty") > 0) {
-            tag.putInt("arrow_empty", tag.getInt("arrow_empty") - 1);
+        if (GunsTool.getGunIntTag(stack, "ArrowEmpty") > 0) {
+            GunsTool.setGunIntTag(stack, "ArrowEmpty", GunsTool.getGunIntTag(stack, "ArrowEmpty") - 1);
         }
     }
 

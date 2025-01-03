@@ -134,11 +134,11 @@ public class JavelinItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int slot, boolean selected) {
-        super.inventoryTick(itemStack, world, entity, slot, selected);
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
         if (entity instanceof Player player) {
-            var tag = itemStack.getOrCreateTag();
-            tag.putInt("max_ammo", getAmmoCount(player));
+            var tag = stack.getOrCreateTag();
+            GunsTool.setGunIntTag(stack, "MaxAmmo", getAmmoCount(player));
 
             if (tag.getBoolean("Seeking")) {
                 Entity targetEntity = EntityFindUtil.findEntity(player.level(), tag.getString("TargetEntity"));

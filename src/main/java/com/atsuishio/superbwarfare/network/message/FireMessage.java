@@ -206,7 +206,7 @@ public class FireMessage {
             }
 
             player.getCooldowns().addCooldown(stack.getItem(), 7);
-            stack.getOrCreateTag().putInt("arrow_empty", 7);
+            GunsTool.setGunIntTag(stack, "ArrowEmpty", 7);
             GunsTool.setGunDoubleTag(stack, "Power", 0);
 
             int count = 0;
@@ -230,7 +230,6 @@ public class FireMessage {
         ItemStack stack = player.getMainHandItem();
         if (player.level().isClientSide()) return;
 
-        CompoundTag tag = stack.getOrCreateTag();
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
         float headshot = (float) GunsTool.getGunDoubleTag(stack, "Headshot", 0);
         float velocity = 2 * (float) GunsTool.getGunDoubleTag(stack, "Power", 6) * (float) perkSpeed(stack);

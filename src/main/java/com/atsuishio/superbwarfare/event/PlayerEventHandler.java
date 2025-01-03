@@ -11,7 +11,6 @@ import com.atsuishio.superbwarfare.tools.GunInfo;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -242,11 +241,10 @@ public class PlayerEventHandler {
 
     private static void handleBocekPulling(Player player) {
         ItemStack stack = player.getMainHandItem();
-        CompoundTag tag = stack.getOrCreateTag();
 
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).bowPullHold) {
             if (stack.getItem() == ModItems.BOCEK.get()
-                    && tag.getInt("max_ammo") > 0
+                    && GunsTool.getGunIntTag(stack, "MaxAmmo") > 0
                     && !player.getCooldowns().isOnCooldown(stack.getItem())
                     && GunsTool.getGunDoubleTag(stack, "Power") < 12
             ) {
@@ -315,19 +313,19 @@ public class PlayerEventHandler {
                         GunsTool.reload(player, stack, GunInfo.Type.RIFLE);
                     }
 
-                    if (stack.getItem() == ModItems.TASER.get() && stack.getOrCreateTag().getInt("max_ammo") > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
+                    if (stack.getItem() == ModItems.TASER.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
                         GunsTool.setGunIntTag(stack, "Ammo", 1);
                         player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.TASER_ELECTRODE.get(), 1, player.inventoryMenu.getCraftSlots());
                     }
-                    if (stack.getItem() == ModItems.M_79.get() && stack.getOrCreateTag().getInt("max_ammo") > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
+                    if (stack.getItem() == ModItems.M_79.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
                         GunsTool.setGunIntTag(stack, "Ammo", 1);
                         player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.GRENADE_40MM.get(), 1, player.inventoryMenu.getCraftSlots());
                     }
-                    if (stack.getItem() == ModItems.RPG.get() && stack.getOrCreateTag().getInt("max_ammo") > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
+                    if (stack.getItem() == ModItems.RPG.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
                         GunsTool.setGunIntTag(stack, "Ammo", 1);
                         player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.ROCKET.get(), 1, player.inventoryMenu.getCraftSlots());
                     }
-                    if (stack.getItem() == ModItems.JAVELIN.get() && stack.getOrCreateTag().getInt("max_ammo") > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
+                    if (stack.getItem() == ModItems.JAVELIN.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
                         GunsTool.setGunIntTag(stack, "Ammo", 1);
                         player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.JAVELIN_MISSILE.get(), 1, player.inventoryMenu.getCraftSlots());
                     }

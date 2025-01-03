@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.client.model.item.BocekItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.special.BocekItem;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -91,11 +92,11 @@ public class BocekItemRenderer extends GeoItemRenderer<BocekItem> {
         }
 
         if (name.equals("arrow")) {
-            bone.setHidden(itemStack.getOrCreateTag().getInt("arrow_empty") > 0);
+            bone.setHidden(GunsTool.getGunIntTag(itemStack, "ArrowEmpty") > 0);
         }
 
         if (name.equals("jian")) {
-            bone.setHidden(itemStack.getOrCreateTag().getInt("max_ammo") == 0);
+            bone.setHidden(GunsTool.getGunIntTag(itemStack, "MaxAmmo") == 0);
         }
 
         if (this.transformType.firstPerson() && renderingArms) {

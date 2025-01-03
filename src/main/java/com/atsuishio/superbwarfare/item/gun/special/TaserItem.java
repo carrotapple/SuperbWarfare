@@ -183,7 +183,7 @@ public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
         super.inventoryTick(stack, world, entity, slot, selected);
 
         if (entity instanceof Player player) {
-            stack.getOrCreateTag().putInt("max_ammo", getAmmoCount(player));
+            GunsTool.setGunIntTag(stack, "MaxAmmo", getAmmoCount(player));
         }
 
         int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.REGENERATION.get(), stack);
@@ -249,7 +249,8 @@ public class TaserItem extends GunItem implements GeoItem, AnimatedItem {
     public boolean canApplyPerk(Perk perk) {
         return switch (perk.type) {
             case AMMO -> perk == ModPerks.LONGER_WIRE.get();
-            case FUNCTIONAL -> perk == ModPerks.REGENERATION.get() || perk == ModPerks.POWERFUL_ATTRACTION.get() || perk == ModPerks.INTELLIGENT_CHIP.get();
+            case FUNCTIONAL ->
+                    perk == ModPerks.REGENERATION.get() || perk == ModPerks.POWERFUL_ATTRACTION.get() || perk == ModPerks.INTELLIGENT_CHIP.get();
             case DAMAGE -> perk == ModPerks.VOLT_OVERLOAD.get();
         };
     }

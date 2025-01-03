@@ -218,7 +218,7 @@ public class AmmoBarOverlay {
         }
 
         if (stack.getItem() == ModItems.BOCEK.get()) {
-            return stack.getOrCreateTag().getInt("max_ammo");
+            return GunsTool.getGunIntTag(stack, "MaxAmmo");
         }
 
         return GunsTool.getGunIntTag(stack, "Ammo", 0);
@@ -233,7 +233,7 @@ public class AmmoBarOverlay {
 
         if (!hasCreativeAmmo()) {
             if (stack.is(ModTags.Items.LAUNCHER) || stack.getItem() == ModItems.TASER.get()) {
-                return "" + stack.getOrCreateTag().getInt("max_ammo");
+                return "" + GunsTool.getGunIntTag(stack, "MaxAmmo");
             }
             if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
                 return "" + (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).rifleAmmo;
