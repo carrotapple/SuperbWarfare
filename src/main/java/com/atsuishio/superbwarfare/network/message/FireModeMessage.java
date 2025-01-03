@@ -98,7 +98,7 @@ public class FireModeMessage {
                     && !player.isSpectator()
                     && !(player.getCooldowns().isOnCooldown(stack.getItem()))
                     && GunsTool.getGunIntTag(stack, "ReloadTime") == 0
-                    && !stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
+                    && !GunsTool.getGunBooleanTag(stack, "Charging")) {
 
                 for (var cell : player.getInventory().items) {
                     if (cell.is(ModItems.CELL.get())) {

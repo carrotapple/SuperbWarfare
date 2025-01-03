@@ -51,7 +51,7 @@ public class ReloadMessage {
 
             if (!player.isSpectator()
                     && stack.getItem() instanceof GunItem gunItem
-                    && !stack.getOrCreateTag().getBoolean("sentinel_is_charging")
+                    && !GunsTool.getGunBooleanTag(stack, "Charging")
                     && GunsTool.getGunIntTag(stack, "ReloadTime") == 0
                     && stack.getOrCreateTag().getInt("bolt_action_anim") == 0
             ) {
@@ -62,14 +62,9 @@ public class ReloadMessage {
                 boolean clipLoad = GunsTool.getGunIntTag(stack, "Ammo", 0) == 0 && gunItem.isClipReload(stack);
 
                 // 检查备弹
-                int count = 0;
-                for (var inv : player.getInventory().items) {
-                    if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
-                        count++;
-                    }
-                }
+                boolean hasCreativeAmmoBox = player.getInventory().hasAnyMatching(item -> item.is(ModItems.CREATIVE_AMMO_BOX.get()));
 
-                if (count == 0) {
+                if (!hasCreativeAmmoBox) {
                     if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO) && capability.shotgunAmmo == 0) {
                         return;
                     } else if (stack.is(ModTags.Items.USE_SNIPER_AMMO) && capability.sniperAmmo == 0) {

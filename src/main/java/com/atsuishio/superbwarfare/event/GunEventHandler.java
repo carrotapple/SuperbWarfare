@@ -824,7 +824,7 @@ public class GunEventHandler {
         // 启动换弹
         if (tag.getBoolean("start_sentinel_charge")) {
             tag.putInt("sentinel_charge_time", 127);
-            stack.getOrCreateTag().putBoolean("sentinel_is_charging", true);
+            GunsTool.setGunBooleanTag(stack, "Charging", true);
 
             SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, "sentinel_charge"));
             if (sound1p != null && player instanceof ServerPlayer serverPlayer) {
@@ -866,7 +866,7 @@ public class GunEventHandler {
         }
 
         if (tag.getInt("sentinel_charge_time") == 1) {
-            tag.putBoolean("sentinel_is_charging", false);
+            GunsTool.setGunBooleanTag(stack, "Charging", false);
         }
     }
 

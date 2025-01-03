@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.client;
 
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,7 +15,7 @@ public class PoseTool {
         if (stack.getOrCreateTag().getBoolean("is_empty_reloading")
                 || stack.getOrCreateTag().getBoolean("is_normal_reloading")
                 || stack.getOrCreateTag().getBoolean("reloading")
-                || stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
+                || GunsTool.getGunBooleanTag(stack, "Charging")) {
             return HumanoidModel.ArmPose.CROSSBOW_CHARGE;
         } else if (entityLiving.isSprinting() && entityLiving.onGround() && entityLiving.getPersistentData().getDouble("noRun") == 0) {
             return HumanoidModel.ArmPose.CROSSBOW_CHARGE;

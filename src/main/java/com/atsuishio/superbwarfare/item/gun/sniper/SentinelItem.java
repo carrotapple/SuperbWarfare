@@ -136,7 +136,7 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.reload_normal"));
         }
 
-        if (stack.getOrCreateTag().getBoolean("sentinel_is_charging")) {
+        if (GunsTool.getGunBooleanTag(stack, "Charging")) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sentinel.charge"));
         }
 
@@ -152,7 +152,7 @@ public class SentinelItem extends GunItem implements GeoItem, AnimatedItem {
         if (player.isSprinting() && player.onGround()
                 && player.getPersistentData().getDouble("noRun") == 0
                 && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                && !stack.getOrCreateTag().getBoolean("sentinel_is_charging") && ClientEventHandler.drawTime < 0.01) {
+                && !GunsTool.getGunBooleanTag(stack, "Charging") && ClientEventHandler.drawTime < 0.01) {
             if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && stack.getOrCreateTag().getInt("bolt_action_anim") == 0) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sentinel.run_fast"));
             } else {

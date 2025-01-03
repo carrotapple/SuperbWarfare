@@ -353,7 +353,7 @@ public class LivingEventHandler {
                         }
 
                         if (oldStack.is(ModItems.SENTINEL.get())) {
-                            oldTags.putBoolean("sentinel_is_charging", false);
+                            data.putBoolean("Charging", false);
                             oldTags.putInt("sentinel_charge_time", 0);
                         }
 
@@ -388,7 +388,7 @@ public class LivingEventHandler {
                         }
 
                         if (newStack.is(ModItems.SENTINEL.get())) {
-                            newStack.getOrCreateTag().putBoolean("sentinel_is_charging", false);
+                            GunsTool.setGunBooleanTag(newStack, "Charging", false);
                             newStack.getOrCreateTag().putInt("sentinel_charge_time", 0);
                         }
 
