@@ -130,7 +130,7 @@ public class Trachelium extends GunItem implements GeoItem, AnimatedItem {
         boolean stock = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.STOCK) == 2;
         boolean grip = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) > 0 || GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE) > 0;
 
-        if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+        if (GunsTool.getGunIntTag(stack, "BoltActionTick") > 0) {
             if (stock) {
                 if (grip) {
                     return event.setAndContinue(RawAnimation.begin().thenPlay("animation.trachelium.action_stock_grip"));

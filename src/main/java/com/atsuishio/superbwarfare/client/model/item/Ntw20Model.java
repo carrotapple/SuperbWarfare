@@ -112,7 +112,7 @@ public class Ntw20Model extends GeoModel<Ntw20Item> {
         float numR = (float) (1 - 0.92 * zt);
         float numP = (float) (1 - 0.88 * zt);
 
-        if (GunsTool.getGunIntTag(stack, "ReloadTime") > 0 || stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+        if (GunsTool.getGunIntTag(stack, "ReloadTime") > 0 || GunsTool.getGunIntTag(stack, "BoltActionTick") > 0) {
             main.setRotX(numR * main.getRotX());
             main.setRotY(numR * main.getRotY());
             main.setRotZ(numR * main.getRotZ());

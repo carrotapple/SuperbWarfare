@@ -73,7 +73,7 @@ public class MosinNagantItem extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+        if (GunsTool.getGunIntTag(stack, "BoltActionTick") > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mosin.shift"));
         }
 
@@ -114,7 +114,7 @@ public class MosinNagantItem extends GunItem implements GeoItem, AnimatedItem {
                 && stack.getOrCreateTag().getInt("reload_stage") != 3
                 && ClientEventHandler.drawTime < 0.01
                 && !stack.getOrCreateTag().getBoolean("reloading")) {
-            if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && stack.getOrCreateTag().getInt("bolt_action_anim") == 0) {
+            if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && GunsTool.getGunIntTag(stack, "BoltActionTick") == 0) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mosin.run_fast"));
             } else {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mosin.run"));

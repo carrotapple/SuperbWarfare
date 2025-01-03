@@ -79,7 +79,7 @@ public class Ntw20Item extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+        if (GunsTool.getGunIntTag(stack, "BoltActionTick") > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.ntw_20.shift"));
         }
 
@@ -104,7 +104,7 @@ public class Ntw20Item extends GunItem implements GeoItem, AnimatedItem {
                 && player.getPersistentData().getDouble("noRun") == 0
                 && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
                 && ClientEventHandler.drawTime < 0.01) {
-            if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && stack.getOrCreateTag().getInt("bolt_action_anim") == 0) {
+            if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && GunsTool.getGunIntTag(stack, "BoltActionTick") == 0) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.run_fast"));
             } else {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.ntw_20.run"));

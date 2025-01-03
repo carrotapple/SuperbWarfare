@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.sniper.MosinNagantItem;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -121,7 +122,7 @@ public class MosinNagantItemModel extends GeoModel<MosinNagantItem> {
         float numP = (float) (1 - 0.81 * zt);
 
         // TODO 修改本nbt
-        if (stack.getOrCreateTag().getBoolean("reloading") || stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+        if (stack.getOrCreateTag().getBoolean("reloading") || GunsTool.getGunIntTag(stack, "BoltActionTick") > 0) {
             main.setRotX(numR * main.getRotX());
             main.setRotY(numR * main.getRotY());
             main.setRotZ(numR * main.getRotZ());

@@ -64,15 +64,15 @@ public class GunEventHandler {
     private static void handleGunBolt(Player player) {
         ItemStack stack = player.getMainHandItem();
         if (stack.is(ModTags.Items.NORMAL_GUN)) {
-            if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
-                stack.getOrCreateTag().putInt("bolt_action_anim", stack.getOrCreateTag().getInt("bolt_action_anim") - 1);
+            if (GunsTool.getGunIntTag(stack, "BoltActionTick") > 0) {
+                GunsTool.setGunIntTag(stack, "BoltActionTick", GunsTool.getGunIntTag(stack, "BoltActionTick") - 1);
             }
 
-            if (stack.getItem() == ModItems.MARLIN.get() && stack.getOrCreateTag().getInt("bolt_action_anim") == 9) {
+            if (stack.getItem() == ModItems.MARLIN.get() && GunsTool.getGunIntTag(stack, "BoltActionTick") == 9) {
                 stack.getOrCreateTag().putBoolean("empty", false);
             }
 
-            if (stack.getOrCreateTag().getInt("bolt_action_anim") == 1) {
+            if (GunsTool.getGunIntTag(stack, "BoltActionTick") == 1) {
                 GunsTool.setGunBooleanTag(stack, "NeedBoltAction", false);
                 if (stack.is(ModTags.Items.REVOLVER)) {
                     stack.getOrCreateTag().putBoolean("canImmediatelyShoot", true);

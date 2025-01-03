@@ -79,7 +79,7 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (stack.getOrCreateTag().getInt("bolt_action_anim") > 0) {
+        if (GunsTool.getGunIntTag(stack, "BoltActionTick") > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m870.shift"));
         }
 

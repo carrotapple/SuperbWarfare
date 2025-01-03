@@ -144,12 +144,12 @@ public class FireMessage {
 
     private static void handleGunBolt(Player player, ItemStack stack) {
         if (GunsTool.getGunIntTag(stack, "BoltActionTime", 0) > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) > (stack.is(ModTags.Items.REVOLVER) ? -1 : 0)
-                && stack.getOrCreateTag().getInt("bolt_action_anim") == 0
+                && GunsTool.getGunIntTag(stack, "BoltActionTick") == 0
                 && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
                 && !stack.getOrCreateTag().getBoolean("reloading")
                 && !stack.getOrCreateTag().getBoolean("charging")) {
             if (!player.getCooldowns().isOnCooldown(stack.getItem()) && GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false)) {
-                stack.getOrCreateTag().putInt("bolt_action_anim", GunsTool.getGunIntTag(stack, "BoltActionTime", 0) + 1);
+                GunsTool.setGunIntTag(stack, "BoltActionTick", GunsTool.getGunIntTag(stack, "BoltActionTime", 0) + 1);
                 GunEventHandler.playGunBoltSounds(player);
             }
         }

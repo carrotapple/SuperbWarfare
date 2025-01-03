@@ -53,7 +53,7 @@ public class ReloadMessage {
                     && stack.getItem() instanceof GunItem gunItem
                     && !GunsTool.getGunBooleanTag(stack, "Charging")
                     && GunsTool.getGunIntTag(stack, "ReloadTime") == 0
-                    && stack.getOrCreateTag().getInt("bolt_action_anim") == 0
+                    && GunsTool.getGunIntTag(stack, "BoltActionTick") == 0
             ) {
                 CompoundTag tag = stack.getOrCreateTag();
 

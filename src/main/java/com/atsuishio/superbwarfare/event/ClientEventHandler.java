@@ -333,7 +333,8 @@ public class ClientEventHandler {
         int cooldown = (int) (1000 / rps);
 
         //左轮类
-        if (clientTimer.getProgress() == 0 && stack.is(ModTags.Items.REVOLVER) && ((holdFire && !stack.getOrCreateTag().getBoolean("DA")) || (stack.getOrCreateTag().getInt("bolt_action_anim") < 7 && stack.getOrCreateTag().getInt("bolt_action_anim") > 2) || stack.getOrCreateTag().getBoolean("canImmediatelyShoot"))) {
+        if (clientTimer.getProgress() == 0 && stack.is(ModTags.Items.REVOLVER) && ((holdFire && !stack.getOrCreateTag().getBoolean("DA"))
+                || (GunsTool.getGunIntTag(stack, "BoltActionTick") < 7 && GunsTool.getGunIntTag(stack, "BoltActionTick") > 2) || stack.getOrCreateTag().getBoolean("canImmediatelyShoot"))) {
             revolverPreTime = Mth.clamp(revolverPreTime + 0.3 * times, 0, 1);
             revolverWheelPreTime = Mth.clamp(revolverWheelPreTime + 0.32 * times, 0, revolverPreTime > 0.7 ? 1 : 0.55);
         } else if (!stack.getOrCreateTag().getBoolean("DA") && !stack.getOrCreateTag().getBoolean("canImmediatelyShoot")) {
