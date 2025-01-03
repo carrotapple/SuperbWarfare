@@ -29,7 +29,6 @@ import java.text.DecimalFormat;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class CannonHudOverlay {
-    public static float indicatorPosH = 0;
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
@@ -49,6 +48,7 @@ public class CannonHudOverlay {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
+        float indicatorPosH = 0;
         if (cannon instanceof Mk42Entity) {
             indicatorPosH = 1.3f;
         }
@@ -80,27 +80,26 @@ public class CannonHudOverlay {
         if (ClientEventHandler.zoom) {
             Entity lookingEntity = TraceTool.findLookingEntity(player, 512);
             boolean lookAtEntity = false;
-            double block_range = player.position().distanceTo((Vec3.atLowerCornerOf(player.level().clip(
+            double blockRange = player.position().distanceTo((Vec3.atLowerCornerOf(player.level().clip(
                     new ClipContext(new Vec3(player.getX(), player.getEyeY() + 1, player.getZ()), new Vec3(player.getX(), player.getEyeY() + 1, player.getZ()).add(player.getLookAngle().scale(512)),
                             ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
 
-            double entity_range = 0;
-
+            double entityRange = 0;
             if (lookingEntity instanceof LivingEntity living) {
                 lookAtEntity = true;
-                entity_range = player.distanceTo(living);
+                entityRange = player.distanceTo(living);
             }
             if (lookAtEntity) {
                 event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
-                                .append(Component.literal(new DecimalFormat("##.#").format(entity_range) + "M " + lookingEntity.getDisplayName().getString())),
+                                .append(Component.literal(new DecimalFormat("##.#").format(entityRange) + "M " + lookingEntity.getDisplayName().getString())),
                         w / 2 + 14, h / 2 - 20, -1, false);
             } else {
-                if (block_range > 511) {
+                if (blockRange > 511) {
                     event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
                             .append(Component.literal("---M")), w / 2 + 14, h / 2 - 20, -1, false);
                 } else {
                     event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
-                                    .append(Component.literal(new DecimalFormat("##.#").format(block_range) + "M")),
+                                    .append(Component.literal(new DecimalFormat("##.#").format(blockRange) + "M")),
                             w / 2 + 14, h / 2 - 20, -1, false);
                 }
             }
@@ -117,8 +116,6 @@ public class CannonHudOverlay {
         event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.mortar.pitch")
                         .append(Component.literal(new DecimalFormat("##.#").format(-cannon.getXRot()) + "°")),
                 w / 2 + 14, h / 2 - 29, -1, false);
-
-
     }
 
     private static boolean shouldRenderCrossHair(Player player) {

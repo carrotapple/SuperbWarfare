@@ -37,103 +37,112 @@ import static com.atsuishio.superbwarfare.entity.DroneEntity.KAMIKAZE;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class DroneUIOverlay {
+
     public static int MAX_DISTANCE = 256;
     private static final ResourceLocation FRAME = ModUtils.loc("textures/screens/javelin/frame.png");
+
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
         int w = event.getWindow().getGuiScaledWidth();
         int h = event.getWindow().getGuiScaledHeight();
-        Player player = Minecraft.getInstance().player;
 
-        if (player != null) {
-            ItemStack stack = player.getMainHandItem();
-            RenderSystem.disableDepthTest();
-            RenderSystem.depthMask(false);
-            RenderSystem.enableBlend();
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-            RenderSystem.setShaderColor(1, 1, 1, 1);
-            if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
-                event.getGuiGraphics().blit(ModUtils.loc("textures/screens/drone.png"), w / 2 - 16, h / 2 - 16, 0, 0, 32, 32, 32, 32);
-                event.getGuiGraphics().blit(ModUtils.loc("textures/screens/drone_fov.png"), w / 2 + 100, h / 2 - 64, 0, 0, 64, 129, 64, 129);
-                GuiGraphics guiGraphics = event.getGuiGraphics();
-                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/drone_fov_move.png"), (float) w / 2 + 100, (float) (h / 2 - 64 - ((ClientEventHandler.droneFovLerp - 1) * 23.8)), 0, 0, 64, 129, 64, 129);
-                event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##.#").format(ClientEventHandler.droneFovLerp) + "x"),
-                        w / 2 + 144, h / 2 + 56 - (int) ((ClientEventHandler.droneFovLerp - 1) * 23.8), -1, false);
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
 
-                DroneEntity entity = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
+        if (player == null) return;
 
-                if (entity != null) {
-                    boolean lookAtEntity = false;
-                    double distance = player.distanceTo(entity);
-                    double block_range = entity.position().distanceTo((Vec3.atLowerCornerOf(entity.level().clip(
-                            new ClipContext(entity.getEyePosition(), entity.getEyePosition().add(entity.getViewVector(event.getPartialTick()).scale(520)),
-                                    ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, entity)).getBlockPos())));
+        GuiGraphics guiGraphics = event.getGuiGraphics();
+        PoseStack poseStack = guiGraphics.pose();
 
-                    double entity_range = 0;
+        ItemStack stack = player.getMainHandItem();
 
-                    Entity lookingEntity = SeekTool.seekLivingEntity(entity, entity.level(), 512, 2);
+        poseStack.pushPose();
 
-                    if (lookingEntity != null) {
-                        lookAtEntity = true;
-                        entity_range = entity.distanceTo(lookingEntity);
-                    }
+        RenderSystem.disableDepthTest();
+        RenderSystem.depthMask(false);
+        RenderSystem.enableBlend();
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
 
-                    int color = -1;
+        if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+            guiGraphics.blit(ModUtils.loc("textures/screens/drone.png"), w / 2 - 16, h / 2 - 16, 0, 0, 32, 32, 32, 32);
+            guiGraphics.blit(ModUtils.loc("textures/screens/drone_fov.png"), w / 2 + 100, h / 2 - 64, 0, 0, 64, 129, 64, 129);
 
-                    if (distance > MAX_DISTANCE - 48) {
-                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.warning"),
-                                w / 2 - 18, h / 2 - 47, -65536, false);
-                        color = -65536;
-                    }
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/drone_fov_move.png"), (float) w / 2 + 100, (float) (h / 2 - 64 - ((ClientEventHandler.droneFovLerp - 1) * 23.8)), 0, 0, 64, 129, 64, 129);
+            guiGraphics.drawString(mc.font, Component.literal(new DecimalFormat("##.#").format(ClientEventHandler.droneFovLerp) + "x"),
+                    w / 2 + 144, h / 2 + 56 - (int) ((ClientEventHandler.droneFovLerp - 1) * 23.8), -1, false);
 
-                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.distance")
-                                    .append(Component.literal(new DecimalFormat("##.#").format(distance) + "M")),
-                            w / 2 + 10, h / 2 + 33, color, false);
+            DroneEntity entity = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
 
-                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.health")
-                                    .append(Component.literal(new DecimalFormat("##.#").format(entity.getHealth()) + "/" + new DecimalFormat("##.#").format(entity.getMaxHealth()))),
-                            w / 2 - 77, h / 2 + 33, -1, false);
-                    if (!entity.getEntityData().get(KAMIKAZE)) {
-                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.ammo")
-                                        .append(Component.literal(new DecimalFormat("##.#").format(entity.getEntityData().get(AMMO)) + " / 6")),
-                                w / 2 + 12, h / 2 - 37, -1, false);
+            if (entity != null) {
+                boolean lookAtEntity = false;
+                double distance = player.distanceTo(entity);
+                double blockRange = entity.position().distanceTo((Vec3.atLowerCornerOf(entity.level().clip(
+                        new ClipContext(entity.getEyePosition(), entity.getEyePosition().add(entity.getViewVector(event.getPartialTick()).scale(520)),
+                                ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, entity)).getBlockPos())));
+
+                double entityRange = 0;
+
+                Entity lookingEntity = SeekTool.seekLivingEntity(entity, entity.level(), 512, 2);
+                if (lookingEntity != null) {
+                    lookAtEntity = true;
+                    entityRange = entity.distanceTo(lookingEntity);
+                }
+
+                int color = -1;
+
+                if (distance > MAX_DISTANCE - 48) {
+                    guiGraphics.drawString(mc.font, Component.translatable("des.superbwarfare.drone.warning"),
+                            w / 2 - 18, h / 2 - 47, -65536, false);
+                    color = -65536;
+                }
+
+                guiGraphics.drawString(mc.font, Component.translatable("des.superbwarfare.drone.distance")
+                                .append(Component.literal(new DecimalFormat("##.#").format(distance) + "M")),
+                        w / 2 + 10, h / 2 + 33, color, false);
+
+                guiGraphics.drawString(mc.font, Component.translatable("des.superbwarfare.drone.health")
+                                .append(Component.literal(new DecimalFormat("##.#").format(entity.getHealth()) + "/" + new DecimalFormat("##.#").format(entity.getMaxHealth()))),
+                        w / 2 - 77, h / 2 + 33, -1, false);
+                if (!entity.getEntityData().get(KAMIKAZE)) {
+                    guiGraphics.drawString(mc.font, Component.translatable("des.superbwarfare.drone.ammo")
+                                    .append(Component.literal(new DecimalFormat("##.#").format(entity.getEntityData().get(AMMO)) + " / 6")),
+                            w / 2 + 12, h / 2 - 37, -1, false);
+                } else {
+                    guiGraphics.drawString(mc.font, Component.translatable("des.superbwarfare.drone.kamikaze"),
+                            w / 2 + 12, h / 2 - 37, -65536, false);
+                }
+
+                if (lookAtEntity) {
+                    guiGraphics.drawString(mc.font, Component.translatable("des.superbwarfare.drone.range")
+                                    .append(Component.literal(new DecimalFormat("##.#").format(entityRange) + "M " + lookingEntity.getDisplayName().getString())),
+                            w / 2 + 12, h / 2 - 28, color, false);
+                } else {
+                    if (blockRange > 512) {
+                        guiGraphics.drawString(mc.font, Component.translatable("des.superbwarfare.drone.range")
+                                .append(Component.literal("---M")), w / 2 + 12, h / 2 - 28, color, false);
                     } else {
-                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.kamikaze"),
-                                w / 2 + 12, h / 2 - 37, -65536, false);
-                    }
-
-                    if (lookAtEntity) {
-                        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
-                                        .append(Component.literal(new DecimalFormat("##.#").format(entity_range) + "M " + lookingEntity.getDisplayName().getString())),
+                        guiGraphics.drawString(mc.font, Component.translatable("des.superbwarfare.drone.range")
+                                        .append(Component.literal(new DecimalFormat("##.#").format(blockRange) + "M")),
                                 w / 2 + 12, h / 2 - 28, color, false);
-                    } else {
-                        if (block_range > 512) {
-                            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
-                                    .append(Component.literal("---M")), w / 2 + 12, h / 2 - 28, color, false);
-                        } else {
-                            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
-                                            .append(Component.literal(new DecimalFormat("##.#").format(block_range) + "M")),
-                                    w / 2 + 12, h / 2 - 28, color, false);
-                        }
                     }
-                    Minecraft mc = Minecraft.getInstance();
-                    Camera camera = mc.gameRenderer.getMainCamera();
-                    Vec3 cameraPos = camera.getPosition();
-                    PoseStack poseStack = event.getGuiGraphics().pose();
+                }
 
-                    List<Entity> entities = SeekTool.seekLivingEntities(entity, entity.level(), 256, 30);
-                    float fovAdjust2 = (float) (Minecraft.getInstance().options.fov().get() / 30) - 1;
-                    double zoom = 0.975 * ClientEventHandler.droneFovLerp + 0.06 * fovAdjust2;
+                Camera camera = mc.gameRenderer.getMainCamera();
+                Vec3 cameraPos = camera.getPosition();
 
-                    for (var e : entities) {
-                        Vec3 pos = new Vec3(e.getX(), e.getEyeY(), e.getZ());
-                                    Vec3 lookAngle = entity.getLookAngle().normalize().scale(pos.distanceTo(cameraPos) * (1 - 1.0 / zoom));
+                List<Entity> entities = SeekTool.seekLivingEntities(entity, entity.level(), 256, 30);
+                float fovAdjust2 = (float) (mc.options.fov().get() / 30) - 1;
+                double zoom = 0.975 * ClientEventHandler.droneFovLerp + 0.06 * fovAdjust2;
 
-                        var cPos = cameraPos.add(lookAngle);
-                        Vec3 p = RenderHelper.worldToScreen(pos, cPos);
-                        if (p == null) return;
+                for (var e : entities) {
+                    Vec3 pos = new Vec3(e.getX(), e.getEyeY(), e.getZ());
+                    Vec3 lookAngle = entity.getLookAngle().normalize().scale(pos.distanceTo(cameraPos) * (1 - 1.0 / zoom));
 
+                    var cPos = cameraPos.add(lookAngle);
+                    Vec3 p = RenderHelper.worldToScreen(pos, cPos);
+                    if (p != null) {
                         poseStack.pushPose();
                         int x = (int) p.x;
                         int y = (int) p.y;
@@ -143,12 +152,14 @@ public class DroneUIOverlay {
                     }
                 }
             }
-
-            RenderSystem.depthMask(true);
-            RenderSystem.defaultBlendFunc();
-            RenderSystem.enableDepthTest();
-            RenderSystem.disableBlend();
-            RenderSystem.setShaderColor(1, 1, 1, 1);
         }
+
+        RenderSystem.depthMask(true);
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.enableDepthTest();
+        RenderSystem.disableBlend();
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+
+        poseStack.popPose();
     }
 }

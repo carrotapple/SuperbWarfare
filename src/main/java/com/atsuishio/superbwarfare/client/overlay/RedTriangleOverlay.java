@@ -22,48 +22,41 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class RedTriangleOverlay {
+
     private static final ResourceLocation TRIANGLE = ModUtils.loc("textures/screens/red_triangle.png");
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
-        int w = event.getWindow().getGuiScaledWidth();
-        int h = event.getWindow().getGuiScaledHeight();
         Minecraft mc = Minecraft.getInstance();
         Camera camera = mc.gameRenderer.getMainCamera();
         Vec3 cameraPos = camera.getPosition();
         PoseStack poseStack = event.getGuiGraphics().pose();
 
-        Player player = Minecraft.getInstance().player;
+        Player player = mc.player;
         if (player == null) return;
 
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModItems.RPG.get())) return;
 
-        if (stack.is(ModItems.RPG.get())) {
-            Entity idf = SeekTool.seekLivingEntity(player, player.level(),128,6);
+        Entity idf = SeekTool.seekLivingEntity(player, player.level(), 128, 6);
+        if (idf == null) return;
+        double distance = idf.position().distanceTo(cameraPos);
 
-            if (idf == null) return;
+        Vec3 p = RenderHelper.worldToScreen(new Vec3(idf.getX(), idf.getEyeY() + 0.5 + 0.07 * distance, idf.getZ()), cameraPos);
+        if (p == null) return;
 
-            double distance = idf.position().distanceTo(cameraPos);
+        poseStack.pushPose();
+        int x = (int) p.x;
+        int y = (int) p.y;
 
-            Vec3 p = RenderHelper.worldToScreen(new Vec3(idf.getX(), idf.getEyeY() + 0.5 + 0.07 * distance, idf.getZ()), cameraPos);
-
-            if (p == null) return;
-
-            poseStack.pushPose();
-
-            int x = (int) p.x;
-            int y = (int) p.y;
-
-            HudUtil.blit(poseStack, TRIANGLE, x-4, y-4, 0, 0, 8, 8, 8, 8, -65536);
-
-            poseStack.popPose();
-
-        }
+        HudUtil.blit(poseStack, TRIANGLE, x - 4, y - 4, 0, 0, 8, 8, 8, 8, -65536);
 
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
         RenderSystem.disableBlend();
         RenderSystem.setShaderColor(1, 1, 1, 1);
+
+        poseStack.popPose();
     }
 }

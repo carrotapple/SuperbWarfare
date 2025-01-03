@@ -33,6 +33,7 @@ import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class CrossHairOverlay {
+
     private static final ResourceLocation REX_HORIZONTAL = ModUtils.loc("textures/screens/rex_horizontal.png");
     private static final ResourceLocation REX_VERTICAL = ModUtils.loc("textures/screens/rex_vertical.png");
 
@@ -52,7 +53,8 @@ public class CrossHairOverlay {
             return;
         }
 
-        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) return;
+        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit)
+            return;
         if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity) return;
 
         GuiGraphics guiGraphics = event.getGuiGraphics();
@@ -131,7 +133,7 @@ public class CrossHairOverlay {
         PoseStack poseStack = guiGraphics.pose();
 
         poseStack.pushPose();
-        poseStack.rotateAround(Axis.ZP.rotationDegrees(-gunRot * Mth.RAD_TO_DEG),w / 2f + moveX, h / 2f + moveY, 0);
+        poseStack.rotateAround(Axis.ZP.rotationDegrees(-gunRot * Mth.RAD_TO_DEG), w / 2f + moveX, h / 2f + moveY, 0);
         preciseBlit(guiGraphics, REX_HORIZONTAL, (float) (w / 2f - 13.5f - 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
         preciseBlit(guiGraphics, REX_HORIZONTAL, (float) (w / 2f - 2.5f + 2.8f * spread) + moveX, h / 2f - 7.5f + moveY, 0, 0, 16, 16, 16, 16);
         preciseBlit(guiGraphics, REX_VERTICAL, w / 2f - 7.5f + moveX, (float) (h / 2f - 2.5f + 2.8f * spread) + moveY, 0, 0, 16, 16, 16, 16);

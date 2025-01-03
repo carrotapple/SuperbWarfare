@@ -32,17 +32,10 @@ public class AmmoBarOverlay {
     private static final ResourceLocation DIR = ModUtils.loc("textures/gun_icon/fire_mode/dir.png");
     private static final ResourceLocation MOUSE = ModUtils.loc("textures/gun_icon/fire_mode/mouse.png");
 
-    private static boolean creativeAmmo() {
+    private static boolean hasCreativeAmmo() {
         Player player = Minecraft.getInstance().player;
-        int count = 0;
-        if (player != null) {
-            for (var inv : player.getInventory().items) {
-                if (inv.is(ModItems.CREATIVE_AMMO_BOX.get())) {
-                    count++;
-                }
-            }
-        }
-        return count > 0;
+        if (player == null) return false;
+        return player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
     }
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
@@ -150,7 +143,7 @@ public class AmmoBarOverlay {
             poseStack.pushPose();
             poseStack.scale(1.5f, 1.5f, 1f);
 
-            if ((stack.getItem() == ModItems.MINIGUN.get() || stack.getItem() == ModItems.BOCEK.get()) && creativeAmmo()) {
+            if ((stack.getItem() == ModItems.MINIGUN.get() || stack.getItem() == ModItems.BOCEK.get()) && hasCreativeAmmo()) {
                 event.getGuiGraphics().drawString(
                         Minecraft.getInstance().font,
                         "∞",
@@ -238,7 +231,7 @@ public class AmmoBarOverlay {
             return "";
         }
 
-        if (!creativeAmmo()) {
+        if (!hasCreativeAmmo()) {
             if (stack.is(ModTags.Items.LAUNCHER) || stack.getItem() == ModItems.TASER.get()) {
                 return "" + stack.getOrCreateTag().getInt("max_ammo");
             }

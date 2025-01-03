@@ -31,6 +31,7 @@ import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class KillMessageOverlay {
+
     private static final ResourceLocation HEADSHOT = ModUtils.loc("textures/screens/damage_types/headshot.png");
 
     private static final ResourceLocation KNIFE = ModUtils.loc("textures/screens/damage_types/knife.png");

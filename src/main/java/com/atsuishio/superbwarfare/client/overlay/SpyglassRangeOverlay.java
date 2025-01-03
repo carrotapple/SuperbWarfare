@@ -26,30 +26,29 @@ public class SpyglassRangeOverlay {
         Player player = Minecraft.getInstance().player;
         if (player != null && (player.getMainHandItem().getItem() == Items.SPYGLASS || player.getOffhandItem().getItem() == Items.SPYGLASS) && player.isUsingItem()) {
             boolean lookAtEntity = false;
-            double block_range = player.position().distanceTo((Vec3.atLowerCornerOf(player.level().clip(
+            double blockRange = player.position().distanceTo((Vec3.atLowerCornerOf(player.level().clip(
                     new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(520)),
                             ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
 
-            double entity_range = 0;
-
+            double entityRange = 0;
             Entity lookingEntity = TraceTool.findLookingEntity(player, 520);
 
             if (lookingEntity != null) {
                 lookAtEntity = true;
-                entity_range = player.distanceTo(lookingEntity);
+                entityRange = player.distanceTo(lookingEntity);
             }
 
             if (lookAtEntity) {
                 event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
-                                .append(Component.literal(new DecimalFormat("##.#").format(entity_range) + "M " + lookingEntity.getDisplayName().getString())),
+                                .append(Component.literal(new DecimalFormat("##.#").format(entityRange) + "M " + lookingEntity.getDisplayName().getString())),
                         w / 2 + 12, h / 2 - 28, -1, false);
             } else {
-                if (block_range > 512) {
+                if (blockRange > 512) {
                     event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
                             .append(Component.literal("---M")), w / 2 + 12, h / 2 - 28, -1, false);
                 } else {
                     event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
-                                    .append(Component.literal(new DecimalFormat("##.#").format(block_range) + "M")),
+                                    .append(Component.literal(new DecimalFormat("##.#").format(blockRange) + "M")),
                             w / 2 + 12, h / 2 - 28, -1, false);
                 }
             }

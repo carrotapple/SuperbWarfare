@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.*;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -136,6 +137,7 @@ public class VehicleHudOverlay {
         ItemStack stack = player.getItemBySlot(EquipmentSlot.CHEST);
         if (stack == ItemStack.EMPTY) return 0;
         if (stack.getTag() == null || !stack.getTag().contains("ArmorPlate")) return 0;
+        if (!DisplayConfig.ARMOR_PLATE_HUD.get()) return 0;
         return 9;
     }
 }

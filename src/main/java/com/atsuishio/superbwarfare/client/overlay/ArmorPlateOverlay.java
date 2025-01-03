@@ -74,6 +74,5 @@ public class ArmorPlateOverlay {
         guiGraphics.blit(texture, 20, h - 12, 0, 0, (int) amount, 6, length, 6);
 
         guiGraphics.pose().popPose();
-
     }
 }
