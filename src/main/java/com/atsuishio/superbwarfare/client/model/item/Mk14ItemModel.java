@@ -164,7 +164,7 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
 
         CoreGeoBone shell = getAnimationProcessor().getBone("shell");
 
-        if (stack.getOrCreateTag().getBoolean("HoldOpen")) {
+        if (GunsTool.getGunBooleanTag(stack, "HoldOpen")) {
             action.setPosZ(2.5f);
             shell.setScaleX(0);
             shell.setScaleY(0);

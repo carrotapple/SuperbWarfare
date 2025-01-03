@@ -58,7 +58,7 @@ public class ShootMessage {
             if (GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
                 // 空仓挂机
                 if (GunsTool.getGunIntTag(stack, "Ammo", 0) == 1) {
-                    stack.getOrCreateTag().putBoolean("HoldOpen", true);
+                    GunsTool.setGunBooleanTag(stack, "HoldOpen", true);
                 }
 
                 if (stack.is(ModTags.Items.REVOLVER)) {

@@ -165,7 +165,7 @@ public class Qbz95ItemModel extends GeoModel<Qbz95Item> {
         l.setRotX(rotXBipod * Mth.DEG_TO_RAD);
         r.setRotX(rotXBipod * Mth.DEG_TO_RAD);
 
-        if (stack.getOrCreateTag().getBoolean("HoldOpen")) {
+        if (GunsTool.getGunBooleanTag(stack, "HoldOpen")) {
             bolt.setPosZ(5f);
         }
 

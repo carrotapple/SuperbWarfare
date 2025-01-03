@@ -317,7 +317,7 @@ public class GunEventHandler {
         CompoundTag tag = stack.getOrCreateTag();
         CompoundTag data = stack.getOrCreateTag().getCompound("GunData");
         // 启动换弹
-        if (tag.getBoolean("start_reload")) {
+        if (GunsTool.getGunBooleanTag(stack, "StartReload")) {
             MinecraftForge.EVENT_BUS.post(new ReloadEvent.Pre(player, stack));
             if (gunItem.isOpenBolt(stack)) {
                 if (GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
@@ -334,7 +334,7 @@ public class GunEventHandler {
                 stack.getOrCreateTag().putBoolean("is_empty_reloading", true);
                 playGunEmptyReloadSounds(player);
             }
-            tag.putBoolean("start_reload", false);
+            GunsTool.setGunBooleanTag(stack, "StartReload", false);
         }
 
         if (data.getInt("ReloadTime") > 0) {
@@ -352,13 +352,13 @@ public class GunEventHandler {
 
         if (stack.getItem() == ModItems.MK_14.get()) {
             if (data.getInt("ReloadTime") == 18) {
-                tag.putBoolean("HoldOpen", false);
+                GunsTool.setGunBooleanTag(stack, "HoldOpen", false);
             }
         }
 
         if (stack.getItem() == ModItems.SKS.get()) {
             if (data.getInt("ReloadTime") == 14) {
-                tag.putBoolean("HoldOpen", false);
+                GunsTool.setGunBooleanTag(stack, "HoldOpen", false);
             }
         }
 
@@ -370,13 +370,13 @@ public class GunEventHandler {
 
         if (stack.getItem() == ModItems.GLOCK_17.get() || stack.getItem() == ModItems.GLOCK_18.get() || stack.getItem() == ModItems.M_1911.get()) {
             if (data.getInt("ReloadTime") == 5) {
-                tag.putBoolean("HoldOpen", false);
+                GunsTool.setGunBooleanTag(stack, "HoldOpen", false);
             }
         }
 
         if (stack.getItem() == ModItems.QBZ_95.get()) {
             if (data.getInt("ReloadTime") == 14) {
-                tag.putBoolean("HoldOpen", false);
+                GunsTool.setGunBooleanTag(stack, "HoldOpen", false);
             }
         }
 
@@ -390,7 +390,7 @@ public class GunEventHandler {
             } else {
                 playGunEmptyReload(player);
             }
-            tag.putBoolean("start_reload", false);
+            GunsTool.setGunBooleanTag(stack, "StartReload", false);
         }
 
         stack.addTagElement("GunData", data);

@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.sniper.SvdItem;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -48,7 +49,7 @@ public class SvdItemModel extends GeoModel<SvdItem> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        if (stack.getOrCreateTag().getBoolean("HoldOpen")) {
+        if (GunsTool.getGunBooleanTag(stack, "HoldOpen")) {
             bolt.setPosZ(3.25f);
         }
 

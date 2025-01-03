@@ -95,15 +95,15 @@ public class ReloadMessage {
                     if (gunItem.isOpenBolt(stack)) {
                         if (gunItem.bulletInBarrel(stack)) {
                             if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + tag.getInt("customMag") + 1) {
-                                tag.putBoolean("start_reload", true);
+                                GunsTool.setGunBooleanTag(stack, "StartReload", true);
                             }
                         } else {
                             if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + tag.getInt("customMag")) {
-                                tag.putBoolean("start_reload", true);
+                                GunsTool.setGunBooleanTag(stack, "StartReload", true);
                             }
                         }
                     } else if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + tag.getInt("customMag")) {
-                        tag.putBoolean("start_reload", true);
+                        GunsTool.setGunBooleanTag(stack, "StartReload", true);
                     }
                     return;
                 }

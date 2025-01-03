@@ -127,7 +127,7 @@ public class Glock17ItemModel extends GeoModel<Glock17Item> {
         AnimationHelper.handleShellsAnimation(getAnimationProcessor(), 0.7f, 1f);
 
         CoreGeoBone shell = getAnimationProcessor().getBone("shell");
-        if (stack.getOrCreateTag().getBoolean("HoldOpen")) {
+        if (GunsTool.getGunBooleanTag(stack, "HoldOpen")) {
             slide.setPosZ(1.5f);
             bullet.setScaleX(0);
             bullet.setScaleY(0);

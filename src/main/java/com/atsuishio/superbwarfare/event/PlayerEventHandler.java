@@ -334,7 +334,7 @@ public class PlayerEventHandler {
                 } else {
                     GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag"));
                 }
-                stack.getOrCreateTag().putBoolean("HoldOpen", false);
+                GunsTool.setGunBooleanTag(stack, "HoldOpen", false);
             }
         }
     }
