@@ -129,7 +129,7 @@ public class GunEventHandler {
                 player.playSound(ModSounds.HENG.get(), 4f, 1f);
             }
 
-            float soundRadius = (float) (stack.getOrCreateTag().getDouble("SoundRadius") * stack.getOrCreateTag().getDouble("CustomSoundRadius"));
+            float soundRadius = (float) (GunsTool.getGunDoubleTag(stack, "SoundRadius") * GunsTool.getGunDoubleTag(stack, "CustomSoundRadius", 1));
 
             int barrelType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.BARREL);
 

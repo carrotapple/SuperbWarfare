@@ -210,7 +210,7 @@ public abstract class GunItem extends Item {
         double soundRadius = tag.getInt("Barrel") == 2 ? 0.6 : 1;
 
         GunsTool.setGunDoubleTag(stack, "CustomWeight", scopeWeight + barrelWeight + magazineWeight + stockWeight + gripWeight);
-        stack.getOrCreateTag().putDouble("CustomSoundRadius", soundRadius);
+        GunsTool.setGunDoubleTag(stack, "CustomSoundRadius", soundRadius);
     }
 
     public boolean canApplyPerk(Perk perk) {
