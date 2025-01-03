@@ -117,6 +117,11 @@ public class VehicleEntity extends Entity {
                     player.setYRot(this.getYRot());
                     return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
                 }
+                if (this.getPassengers().size() < this.getMaxPassengers()) {
+                    player.setXRot(this.getXRot());
+                    player.setYRot(this.getYRot());
+                    return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
+                }
             }
         } else if (!this.level().isClientSide) {
             if (this.getFirstPassenger() == null) {
@@ -125,6 +130,11 @@ public class VehicleEntity extends Entity {
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             } else if (!(this.getFirstPassenger() instanceof Player)) {
                 this.getFirstPassenger().stopRiding();
+                player.setXRot(this.getXRot());
+                player.setYRot(this.getYRot());
+                return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
+            }
+            if (this.getPassengers().size() < this.getMaxPassengers()) {
                 player.setXRot(this.getXRot());
                 player.setYRot(this.getYRot());
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
@@ -206,6 +216,15 @@ public class VehicleEntity extends Entity {
     @Override
     public boolean skipAttackInteraction(@NotNull Entity attacker) {
         return hasPassenger(attacker) || super.skipAttackInteraction(attacker);
+    }
+
+    @Override
+    protected boolean canAddPassenger(Entity pPassenger) {
+        return this.getPassengers().size() < this.getMaxPassengers();
+    }
+
+    public int getMaxPassengers() {
+        return 1;
     }
 
     @Override

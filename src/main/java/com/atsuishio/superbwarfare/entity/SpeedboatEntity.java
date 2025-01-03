@@ -542,10 +542,6 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
     }
 
     @Override
-    protected boolean canAddPassenger(Entity pPassenger) {
-        return this.getPassengers().size() < this.getMaxPassengers();
-    }
-
     public int getMaxPassengers() {
         return 5;
     }
