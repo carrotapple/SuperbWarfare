@@ -334,7 +334,7 @@ public class GunEventHandler {
                 stack.getOrCreateTag().putBoolean("is_empty_reloading", true);
                 playGunEmptyReloadSounds(player);
             }
-            GunsTool.setGunBooleanTag(stack, "StartReload", false);
+            data.putBoolean("StartReload", false);
         }
 
         if (data.getInt("ReloadTime") > 0) {
@@ -346,19 +346,19 @@ public class GunEventHandler {
                 tag.putBoolean("empty", false);
             }
             if (data.getInt("ReloadTime") == 7) {
-                tag.putBoolean("close_hammer", false);
+                data.putBoolean("CloseHammer", false);
             }
         }
 
         if (stack.getItem() == ModItems.MK_14.get()) {
             if (data.getInt("ReloadTime") == 18) {
-                GunsTool.setGunBooleanTag(stack, "HoldOpen", false);
+                data.putBoolean("HoldOpen", false);
             }
         }
 
         if (stack.getItem() == ModItems.SKS.get()) {
             if (data.getInt("ReloadTime") == 14) {
-                GunsTool.setGunBooleanTag(stack, "HoldOpen", false);
+                data.putBoolean("HoldOpen", false);
             }
         }
 
@@ -370,13 +370,13 @@ public class GunEventHandler {
 
         if (stack.getItem() == ModItems.GLOCK_17.get() || stack.getItem() == ModItems.GLOCK_18.get() || stack.getItem() == ModItems.M_1911.get()) {
             if (data.getInt("ReloadTime") == 5) {
-                GunsTool.setGunBooleanTag(stack, "HoldOpen", false);
+                data.putBoolean("HoldOpen", false);
             }
         }
 
         if (stack.getItem() == ModItems.QBZ_95.get()) {
             if (data.getInt("ReloadTime") == 14) {
-                GunsTool.setGunBooleanTag(stack, "HoldOpen", false);
+                data.putBoolean("HoldOpen", false);
             }
         }
 
@@ -390,7 +390,7 @@ public class GunEventHandler {
             } else {
                 playGunEmptyReload(player);
             }
-            GunsTool.setGunBooleanTag(stack, "StartReload", false);
+            data.putBoolean("StartReload", false);
         }
 
         stack.addTagElement("GunData", data);

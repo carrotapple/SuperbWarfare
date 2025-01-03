@@ -182,8 +182,7 @@ public class FireMessage {
             SoundTool.stopSound(serverPlayer, ModSounds.BOCEK_PULL_3P.getId(), SoundSource.PLAYERS);
         }
 
-        if (stack.getOrCreateTag().getDouble("power") >= 6) {
-            stack.getOrCreateTag().putDouble("speed", stack.getOrCreateTag().getDouble("power"));
+        if (GunsTool.getGunDoubleTag(stack, "Power") >= 6) {
             if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
                 spawnBullet(player);
 
@@ -206,9 +205,9 @@ public class FireMessage {
                 }
             }
 
-            player.getCooldowns().addCooldown(player.getMainHandItem().getItem(), 7);
-            player.getMainHandItem().getOrCreateTag().putInt("arrow_empty", 7);
-            player.getMainHandItem().getOrCreateTag().putDouble("power", 0);
+            player.getCooldowns().addCooldown(stack.getItem(), 7);
+            stack.getOrCreateTag().putInt("arrow_empty", 7);
+            GunsTool.setGunDoubleTag(stack, "Power", 0);
 
             int count = 0;
             for (var inv : player.getInventory().items) {
@@ -234,7 +233,7 @@ public class FireMessage {
         CompoundTag tag = stack.getOrCreateTag();
         var perk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
         float headshot = (float) GunsTool.getGunDoubleTag(stack, "Headshot", 0);
-        float velocity = 2 * (float) tag.getDouble("speed") * (float) perkSpeed(stack);
+        float velocity = 2 * (float) GunsTool.getGunDoubleTag(stack, "Power", 6) * (float) perkSpeed(stack);
         float bypassArmorRate = (float) GunsTool.getGunDoubleTag(stack, "BypassesArmor", 0);
         double damage;
         boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
@@ -242,11 +241,13 @@ public class FireMessage {
         float spread;
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).zoom) {
             spread = 0.01f;
-            damage = 0.08333333 * GunsTool.getGunDoubleTag(stack, "Damage", 0) * tag.getDouble("speed") * perkDamage(stack);
+            damage = 0.08333333 * GunsTool.getGunDoubleTag(stack, "Damage", 0) *
+                    GunsTool.getGunDoubleTag(stack, "Power", 6) * perkDamage(stack);
         } else {
             spread = perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.5f : 2.5f;
             damage = (perk instanceof AmmoPerk ammoPerk && ammoPerk.slug ? 0.08333333 : 0.008333333) *
-                    GunsTool.getGunDoubleTag(stack, "Damage", 0) * tag.getDouble("speed") * perkDamage(stack);
+                    GunsTool.getGunDoubleTag(stack, "Damage", 0) *
+                    GunsTool.getGunDoubleTag(stack, "Power", 6) * perkDamage(stack);
         }
 
         ProjectileEntity projectile = new ProjectileEntity(player.level())
@@ -443,7 +444,7 @@ public class FireMessage {
 
             if (GunsTool.getGunIntTag(stack, "Ammo", 0) == 1) {
                 tag.putBoolean("empty", true);
-                tag.putBoolean("close_hammer", true);
+                GunsTool.setGunBooleanTag(stack, "CloseHammer", true);
             }
 
             player.getCooldowns().addCooldown(stack.getItem(), 10);

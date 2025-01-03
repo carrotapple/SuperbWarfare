@@ -241,16 +241,16 @@ public class PlayerEventHandler {
     }
 
     private static void handleBocekPulling(Player player) {
-        ItemStack mainHandItem = player.getMainHandItem();
-        CompoundTag tag = mainHandItem.getOrCreateTag();
+        ItemStack stack = player.getMainHandItem();
+        CompoundTag tag = stack.getOrCreateTag();
 
         if ((player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables())).bowPullHold) {
-            if (mainHandItem.getItem() == ModItems.BOCEK.get()
+            if (stack.getItem() == ModItems.BOCEK.get()
                     && tag.getInt("max_ammo") > 0
-                    && !player.getCooldowns().isOnCooldown(mainHandItem.getItem())
-                    && tag.getDouble("power") < 12
+                    && !player.getCooldowns().isOnCooldown(stack.getItem())
+                    && GunsTool.getGunDoubleTag(stack, "Power") < 12
             ) {
-                tag.putDouble("power", tag.getDouble("power") + 1);
+                GunsTool.setGunDoubleTag(stack, "Power", GunsTool.getGunDoubleTag(stack, "Power") + 1);
 
                 player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                     capability.bowPull = true;
@@ -259,15 +259,15 @@ public class PlayerEventHandler {
                 });
                 player.setSprinting(false);
             }
-            if (tag.getDouble("power") == 1) {
+            if (GunsTool.getGunDoubleTag(stack, "Power") == 1) {
                 if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.BOCEK_PULL_1P.get(), 2f, 1f);
                     player.level().playSound(null, player.blockPosition(), ModSounds.BOCEK_PULL_3P.get(), SoundSource.PLAYERS, 0.5f, 1);
                 }
             }
         } else {
-            if (mainHandItem.getItem() == ModItems.BOCEK.get()) {
-                tag.putDouble("power", 0);
+            if (stack.getItem() == ModItems.BOCEK.get()) {
+                GunsTool.setGunDoubleTag(stack, "Power", 0);
             }
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.bowPull = false;
@@ -275,7 +275,7 @@ public class PlayerEventHandler {
             });
         }
 
-        if (tag.getDouble("power") > 0) {
+        if (GunsTool.getGunDoubleTag(stack, "Power") > 0) {
             player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
                 capability.tacticalSprint = false;
                 capability.syncPlayerVariables(player);
