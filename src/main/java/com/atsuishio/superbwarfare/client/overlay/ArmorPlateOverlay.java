@@ -65,13 +65,13 @@ public class ArmorPlateOverlay {
 
         guiGraphics.pose().pushPose();
         // 渲染图标
-        guiGraphics.blit(ICON, 10, h - 16, 0, 0, 8, 8, 8, 8);
+        guiGraphics.blit(ICON, 10, h - 13, 0, 0, 8, 8, 8, 8);
 
         // 渲染框架
-        guiGraphics.blit(frame, 20, h - 15, 0, 0, length, 6, length, 6);
+        guiGraphics.blit(frame, 20, h - 12, 0, 0, length, 6, length, 6);
 
         // 渲染盔甲值
-        guiGraphics.blit(texture, 20, h - 15, 0, 0, (int) amount, 6, length, 6);
+        guiGraphics.blit(texture, 20, h - 12, 0, 0, (int) amount, 6, length, 6);
 
         guiGraphics.pose().popPose();
 

@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -22,12 +23,6 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class VehicleHudOverlay {
-
-    public static float health = 0;
-    public static float maxHealth = 0;
-
-    public static float energy = 0;
-    public static float maxEnergy = 0;
 
     private static final ResourceLocation ARMOR = ModUtils.loc("textures/screens/armor.png");
     private static final ResourceLocation ENERGY = ModUtils.loc("textures/screens/energy.png");
@@ -40,10 +35,15 @@ public class VehicleHudOverlay {
         int h = event.getWindow().getGuiScaledHeight();
         Player player = Minecraft.getInstance().player;
 
-        if (!shouldRenderCrossHair(player)) return;
+        if (!shouldRenderHud(player)) return;
 
         Entity vehicle = player.getVehicle();
         if (vehicle == null) return;
+
+        GuiGraphics guiGraphics = event.getGuiGraphics();
+        PoseStack poseStack = guiGraphics.pose();
+
+        poseStack.pushPose();
 
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
@@ -51,36 +51,32 @@ public class VehicleHudOverlay {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        GuiGraphics guiGraphics = event.getGuiGraphics();
 
-        guiGraphics.pose().pushPose();
+        int compatHeight = getArmorPlateCompatHeight(player);
+
         if (vehicle instanceof EnergyVehicleEntity energyVehicleEntity) {
-            energy = energyVehicleEntity.getEnergy();
-            maxEnergy = energyVehicleEntity.getMaxEnergy();
-            guiGraphics.blit(ENERGY, w - 96, h - 28, 0, 0, 12, 12, 12, 12);
-            guiGraphics.blit(HEALTH_FRAME, w - 83, h - 26, 0, 0, 80, 8, 80, 8);
-            guiGraphics.blit(HEALTH, w - 83, h - 26, 0, 0, (int) (80 * energy / maxEnergy), 8, 80, 8);
+            float energy = energyVehicleEntity.getEnergy();
+            float maxEnergy = energyVehicleEntity.getMaxEnergy();
+            guiGraphics.blit(ENERGY, 10, h - 22 - compatHeight, 0, 0, 8, 8, 8, 8);
+            guiGraphics.blit(HEALTH_FRAME, 20, h - 21 - compatHeight, 0, 0, 60, 6, 60, 6);
+            guiGraphics.blit(HEALTH, 20, h - 21 - compatHeight, 0, 0, (int) (60 * energy / maxEnergy), 6, 60, 6);
         }
 
         if (vehicle instanceof VehicleEntity pVehicle) {
-            health = pVehicle.getHealth();
-            maxHealth = pVehicle.getMaxHealth();
-            guiGraphics.blit(ARMOR, w - 96, h - 14, 0, 0, 12, 12, 12, 12);
-            guiGraphics.blit(HEALTH_FRAME, w - 83, h - 12, 0, 0, 80, 8, 80, 8);
-            guiGraphics.blit(HEALTH, w - 83, h - 12, 0, 0, (int) (80 * health / maxHealth), 8, 80, 8);
+            float health = pVehicle.getHealth();
+            float maxHealth = pVehicle.getMaxHealth();
+            guiGraphics.blit(ARMOR, 10, h - 13 - compatHeight, 0, 0, 8, 8, 8, 8);
+            guiGraphics.blit(HEALTH_FRAME, 20, h - 12 - compatHeight, 0, 0, 60, 6, 60, 6);
+            guiGraphics.blit(HEALTH, 20, h - 12 - compatHeight, 0, 0, (int) (60 * health / maxHealth), 6, 60, 6);
         }
-        guiGraphics.pose().popPose();
-
-        PoseStack poseStack = event.getGuiGraphics().pose();
+        poseStack.popPose();
 
         if (vehicle instanceof IArmedVehicleEntity iVehicle && iVehicle.getAmmoCount(player) != -1) {
-
             boolean iCharge = iVehicle instanceof IChargeEntity;
 
             // 渲染当前弹药量
             poseStack.pushPose();
             poseStack.scale(1.5f, 1.5f, 1f);
-
             float v = h / 1.5f - (iCharge ? 42 : 29) / 1.5f;
 
             if (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) && !(iVehicle instanceof ICannonEntity)) {
@@ -118,10 +114,9 @@ public class VehicleHudOverlay {
         }
     }
 
-    private static boolean shouldRenderCrossHair(Player player) {
+    private static boolean shouldRenderHud(Player player) {
         if (player == null) return false;
-        return !player.isSpectator()
-                && (player.getVehicle() != null && player.getVehicle() instanceof VehicleEntity);
+        return !player.isSpectator() && (player.getVehicle() != null && player.getVehicle() instanceof VehicleEntity);
     }
 
     private static String getVehicleAmmoType(ItemStack stack, IArmedVehicleEntity iVehicle) {
@@ -135,5 +130,12 @@ public class VehicleHudOverlay {
             return Component.translatable("des.superbwarfare.tips.ammo_type.cal50").getString();
         }
         return "";
+    }
+
+    private static int getArmorPlateCompatHeight(Player player) {
+        ItemStack stack = player.getItemBySlot(EquipmentSlot.CHEST);
+        if (stack == ItemStack.EMPTY) return 0;
+        if (stack.getTag() == null || !stack.getTag().contains("ArmorPlate")) return 0;
+        return 9;
     }
 }

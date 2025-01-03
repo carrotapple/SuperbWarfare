@@ -23,6 +23,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class AmmoBarOverlay {
+
     private static final ResourceLocation LINE = ModUtils.loc("textures/gun_icon/fire_mode/line.png");
     private static final ResourceLocation SEMI = ModUtils.loc("textures/gun_icon/fire_mode/semi.png");
     private static final ResourceLocation BURST = ModUtils.loc("textures/gun_icon/fire_mode/burst.png");
@@ -53,7 +54,6 @@ public class AmmoBarOverlay {
         Player player = Minecraft.getInstance().player;
 
         if (player == null) return;
-
         if (player.isSpectator()) return;
 
         ItemStack stack = player.getMainHandItem();
