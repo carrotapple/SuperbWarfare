@@ -118,8 +118,6 @@ public class VehicleEntity extends Entity {
                     return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
                 }
                 if (this.getPassengers().size() < this.getMaxPassengers()) {
-                    player.setXRot(this.getXRot());
-                    player.setYRot(this.getYRot());
                     return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
                 }
             }
@@ -135,8 +133,6 @@ public class VehicleEntity extends Entity {
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             }
             if (this.getPassengers().size() < this.getMaxPassengers()) {
-                player.setXRot(this.getXRot());
-                player.setYRot(this.getYRot());
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             }
         }
