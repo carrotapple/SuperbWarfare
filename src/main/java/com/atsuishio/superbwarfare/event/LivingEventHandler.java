@@ -189,14 +189,14 @@ public class LivingEventHandler {
         // 先处理发射器类武器或高爆弹的爆炸伤害
         if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
             if (stack.is(ModTags.Items.LAUNCHER) || PerkHelper.getItemPerkLevel(ModPerks.HE_BULLET.get(), stack) > 0) {
-                stack.getOrCreateTag().putDouble("Exp", stack.getOrCreateTag().getDouble("Exp") + amount);
+                GunsTool.setGunDoubleTag(stack, "Exp", GunsTool.getGunDoubleTag(stack, "Exp", 0) + amount);
             }
         }
 
         // 再判断是不是枪械能造成的伤害
         if (!DamageTypeTool.isGunDamage(source)) return;
 
-        stack.getOrCreateTag().putDouble("Exp", stack.getOrCreateTag().getDouble("Exp") + amount);
+        GunsTool.setGunDoubleTag(stack, "Exp", GunsTool.getGunDoubleTag(stack, "Exp", 0) + amount);
     }
 
     private static void giveKillExpToWeapon(LivingDeathEvent event) {
@@ -209,32 +209,31 @@ public class LivingEventHandler {
         if (event.getEntity() instanceof TargetEntity) return;
 
         double amount = 20 + 2 * event.getEntity().getMaxHealth();
-        var tag = stack.getOrCreateTag();
 
         // 先处理发射器类武器或高爆弹的爆炸伤害
         if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
             if (stack.is(ModTags.Items.LAUNCHER) || PerkHelper.getItemPerkLevel(ModPerks.HE_BULLET.get(), stack) > 0) {
-                tag.putDouble("Exp", tag.getDouble("Exp") + amount);
+                GunsTool.setGunDoubleTag(stack, "Exp", GunsTool.getGunDoubleTag(stack, "Exp", 0) + amount);
             }
         }
 
         // 再判断是不是枪械能造成的伤害
         if (DamageTypeTool.isGunDamage(source)) {
-            tag.putDouble("Exp", tag.getDouble("Exp") + amount);
+            GunsTool.setGunDoubleTag(stack, "Exp", GunsTool.getGunDoubleTag(stack, "Exp", 0) + amount);
         }
 
         // 提升武器等级
-        int level = tag.getInt("Level");
-        double exp = tag.getDouble("Exp");
+        int level = GunsTool.getGunIntTag(stack, "Level", 0);
+        double exp = GunsTool.getGunDoubleTag(stack, "Exp", 0);
         double upgradeExpNeeded = 20 * Math.pow(level, 2) + 160 * level + 20;
 
         while (exp >= upgradeExpNeeded) {
             exp -= upgradeExpNeeded;
-            level = tag.getInt("Level") + 1;
+            level = GunsTool.getGunIntTag(stack, "Level", 0) + 1;
             upgradeExpNeeded = 20 * Math.pow(level, 2) + 160 * level + 20;
-            tag.putDouble("Exp", exp);
-            tag.putInt("Level", level);
-            tag.putDouble("UpgradePoint", tag.getDouble("UpgradePoint") + 0.5);
+            GunsTool.setGunDoubleTag(stack, "Exp", exp);
+            GunsTool.setGunIntTag(stack, "Level", level);
+            GunsTool.setGunDoubleTag(stack, "UpgradePoint", GunsTool.getGunDoubleTag(stack, "UpgradePoint", 0) + 0.5);
         }
     }
 
@@ -247,18 +246,17 @@ public class LivingEventHandler {
         if (!stack.is(ModTags.Items.GUN)) return;
         if (event.getEntity() instanceof TargetEntity) return;
 
-        var tag = stack.getOrCreateTag();
-        int level = tag.getInt("Level");
-        double exp = tag.getDouble("Exp");
+        int level = GunsTool.getGunIntTag(stack, "Level", 0);
+        double exp = GunsTool.getGunDoubleTag(stack, "Exp", 0);
         double upgradeExpNeeded = 20 * Math.pow(level, 2) + 160 * level + 20;
 
         while (exp >= upgradeExpNeeded) {
             exp -= upgradeExpNeeded;
-            level = tag.getInt("Level") + 1;
+            level = GunsTool.getGunIntTag(stack, "Level", 0) + 1;
             upgradeExpNeeded = 20 * Math.pow(level, 2) + 160 * level + 20;
-            tag.putDouble("Exp", exp);
-            tag.putInt("Level", level);
-            tag.putDouble("UpgradePoint", tag.getDouble("UpgradePoint") + 0.5);
+            GunsTool.setGunDoubleTag(stack, "Exp", exp);
+            GunsTool.setGunIntTag(stack, "Level", level);
+            GunsTool.setGunDoubleTag(stack, "UpgradePoint", GunsTool.getGunDoubleTag(stack, "UpgradePoint", 0) + 0.5);
         }
     }
 

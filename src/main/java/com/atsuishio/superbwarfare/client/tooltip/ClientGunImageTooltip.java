@@ -8,7 +8,6 @@ import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.atsuishio.superbwarfare.tools.GunsTool;
-import com.atsuishio.superbwarfare.tools.ItemNBTTool;
 import com.atsuishio.superbwarfare.tools.TooltipTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -23,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 
-// TODO 等nbt重置后，修改nbt位置
 public class ClientGunImageTooltip implements ClientTooltipComponent {
 
     protected final int width;
@@ -106,7 +104,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
         if (this.stack.getItem() instanceof GunItem gunItem && gunItem.autoWeapon(this.stack)) {
             return Component.translatable("des.superbwarfare.tips.rpm").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                    .append(Component.literal(new DecimalFormat("##").format(GunsTool.getGunIntTag(stack, "RPM", 0) + ItemNBTTool.getDouble(stack, "customRpm", 0)))
+                    .append(Component.literal(new DecimalFormat("##").format(GunsTool.getGunIntTag(stack, "RPM", 0)))
                             .withStyle(ChatFormatting.GREEN));
         }
         return Component.literal("");
@@ -125,8 +123,8 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      * 获取武器等级文本组件
      */
     protected Component getLevelComponent() {
-        int level = ItemNBTTool.getInt(stack, "Level", 0);
-        double rate = ItemNBTTool.getDouble(stack, "Exp", 0) / (20 * Math.pow(level, 2) + 160 * level + 20);
+        int level = GunsTool.getGunIntTag(stack, "Level", 0);
+        double rate = GunsTool.getGunDoubleTag(stack, "Exp", 0) / (20 * Math.pow(level, 2) + 160 * level + 20);
 
         ChatFormatting formatting;
         if (level < 10) {
@@ -152,7 +150,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      * 获取武器强化点数文本组件
      */
     protected Component getUpgradePointComponent() {
-        int upgradePoint = Mth.floor(ItemNBTTool.getDouble(stack, "UpgradePoint", 0));
+        int upgradePoint = Mth.floor(GunsTool.getGunDoubleTag(stack, "UpgradePoint", 0));
         return Component.translatable("des.superbwarfare.tips.upgrade_point").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(String.valueOf(upgradePoint)).withStyle(ChatFormatting.WHITE).withStyle(ChatFormatting.BOLD));

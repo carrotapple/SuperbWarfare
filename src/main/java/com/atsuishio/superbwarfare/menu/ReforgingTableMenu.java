@@ -7,6 +7,7 @@ import com.atsuishio.superbwarfare.item.PerkItem;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -204,13 +205,13 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
             return;
         }
 
-        double oldPoint = stack.getOrCreateTag().getDouble("UpgradePoint");
+        double oldPoint = GunsTool.getGunDoubleTag(stack, "UpgradePoint", 0);
         int point = (int) oldPoint;
         int newPoint = this.upgradePoint.get();
         int delta = newPoint - point;
 
         if (delta != 0) {
-            stack.getOrCreateTag().putDouble("UpgradePoint", oldPoint + delta);
+            GunsTool.setGunDoubleTag(stack, "UpgradePoint", oldPoint + delta);
         }
     }
 
@@ -286,14 +287,14 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
             int level = PerkHelper.getItemPerkLevel(perkItem.getPerk(), gun);
 
             if (level <= 0) {
-                this.upgradePoint.set((int) gun.getOrCreateTag().getDouble("UpgradePoint"));
+                this.upgradePoint.set((int) GunsTool.getGunDoubleTag(gun, "UpgradePoint", 0));
                 return;
             }
 
             ItemStack output = gun.copy();
             PerkHelper.removePerkByType(output, perkItem.getPerk().type);
-            output.getOrCreateTag().putDouble("UpgradePoint", Math.min(MAX_UPGRADE_POINT, level - 1 + output.getOrCreateTag().getDouble("UpgradePoint")));
-            this.upgradePoint.set((int) output.getOrCreateTag().getDouble("UpgradePoint"));
+            GunsTool.setGunDoubleTag(output, "UpgradePoint", Math.min(MAX_UPGRADE_POINT, level - 1 + GunsTool.getGunDoubleTag(output, "UpgradePoint", 0)));
+            this.upgradePoint.set((int) GunsTool.getGunDoubleTag(gun, "UpgradePoint", 0));
 
             this.container.setItem(INPUT_SLOT, output);
             this.container.setChanged();
@@ -320,33 +321,33 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
     /**
      * 将枪械放入输入槽中时，根据枪械上已有的Perk生成对应的Perk物品，并将等级调整为当前的等级
      *
-     * @param pStack 输入的枪械
+     * @param stack 输入的枪械
      */
-    private void onPlaceGun(ItemStack pStack) {
-        if (!(pStack.getItem() instanceof GunItem)) {
+    private void onPlaceGun(ItemStack stack) {
+        if (!(stack.getItem() instanceof GunItem)) {
             return;
         }
 
-        int point = (int) pStack.getOrCreateTag().getDouble("UpgradePoint");
+        int point = (int) GunsTool.getGunDoubleTag(stack, "UpgradePoint", 0);
         this.upgradePoint.set(Mth.clamp(point, 0, MAX_UPGRADE_POINT));
 
-        var ammoPerk = PerkHelper.getPerkByType(pStack, Perk.Type.AMMO);
+        var ammoPerk = PerkHelper.getPerkByType(stack, Perk.Type.AMMO);
         if (ammoPerk != null) {
-            this.ammoPerkLevel.set(PerkHelper.getItemPerkLevel(ammoPerk, pStack));
+            this.ammoPerkLevel.set(PerkHelper.getItemPerkLevel(ammoPerk, stack));
             var ammoPerkItem = PerkHelper.getPerkItem(ammoPerk);
             ammoPerkItem.ifPresent(registryObject -> this.container.setItem(AMMO_PERK_SLOT, registryObject.get().getDefaultInstance()));
         }
 
-        var funcPerk = PerkHelper.getPerkByType(pStack, Perk.Type.FUNCTIONAL);
+        var funcPerk = PerkHelper.getPerkByType(stack, Perk.Type.FUNCTIONAL);
         if (funcPerk != null) {
-            this.funcPerkLevel.set(PerkHelper.getItemPerkLevel(funcPerk, pStack));
+            this.funcPerkLevel.set(PerkHelper.getItemPerkLevel(funcPerk, stack));
             var funcPerkItem = PerkHelper.getPerkItem(funcPerk);
             funcPerkItem.ifPresent(registryObject -> this.container.setItem(FUNC_PERK_SLOT, registryObject.get().getDefaultInstance()));
         }
 
-        var damagePerk = PerkHelper.getPerkByType(pStack, Perk.Type.DAMAGE);
+        var damagePerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
         if (damagePerk != null) {
-            this.damagePerkLevel.set(PerkHelper.getItemPerkLevel(damagePerk, pStack));
+            this.damagePerkLevel.set(PerkHelper.getItemPerkLevel(damagePerk, stack));
             var damagePerkItem = PerkHelper.getPerkItem(damagePerk);
             damagePerkItem.ifPresent(registryObject -> this.container.setItem(DAMAGE_PERK_SLOT, registryObject.get().getDefaultInstance()));
         }

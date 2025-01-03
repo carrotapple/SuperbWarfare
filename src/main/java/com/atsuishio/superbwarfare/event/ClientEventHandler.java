@@ -446,7 +446,6 @@ public class ClientEventHandler {
                     burstFireSize--;
                 }
 
-
                 if (stack.is(ModItems.DEVOTION.get())) {
                     int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.TURBO_CHARGER.get(), stack);
                     customRpm = Math.min(customRpm + 15 + ((perkLevel > 0 ? 5 : 0) + 3 * perkLevel), 500);

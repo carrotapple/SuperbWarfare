@@ -380,7 +380,7 @@ public class PlayerEventHandler {
         if (left.is(ModTags.Items.GUN) && right.getItem() == ModItems.SHORTCUT_PACK.get()) {
             ItemStack output = left.copy();
 
-            output.getOrCreateTag().putDouble("UpgradePoint", output.getOrCreateTag().getDouble("UpgradePoint") + 1);
+            GunsTool.setGunDoubleTag(output, "UpgradePoint", GunsTool.getGunDoubleTag(output, "UpgradePoint", 0) + 1);
 
             event.setOutput(output);
             event.setCost(10);
