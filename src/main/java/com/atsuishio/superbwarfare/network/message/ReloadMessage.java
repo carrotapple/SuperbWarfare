@@ -94,22 +94,23 @@ public class ReloadMessage {
 
                     if (gunItem.isOpenBolt(stack)) {
                         if (gunItem.bulletInBarrel(stack)) {
-                            if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + tag.getInt("customMag") + 1) {
+                            if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + GunsTool.getGunIntTag(stack, "CustomMagazine", 0) + 1) {
                                 GunsTool.setGunBooleanTag(stack, "StartReload", true);
                             }
                         } else {
-                            if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + tag.getInt("customMag")) {
+                            if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + GunsTool.getGunIntTag(stack, "CustomMagazine", 0)) {
                                 GunsTool.setGunBooleanTag(stack, "StartReload", true);
                             }
                         }
-                    } else if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + tag.getInt("customMag")) {
+                    } else if (GunsTool.getGunIntTag(stack, "Ammo", 0) < magazine + GunsTool.getGunIntTag(stack, "CustomMagazine", 0)) {
                         GunsTool.setGunBooleanTag(stack, "StartReload", true);
                     }
                     return;
                 }
 
                 if (canSingleReload) {
-                    if (GunsTool.getGunIntTag(stack, "Ammo", 0) < GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag")) {
+                    if (GunsTool.getGunIntTag(stack, "Ammo", 0) < GunsTool.getGunIntTag(stack, "Magazine", 0)
+                            + GunsTool.getGunIntTag(stack, "CustomMagazine", 0)) {
                         tag.putBoolean("start_single_reload", true);
                     }
                 }

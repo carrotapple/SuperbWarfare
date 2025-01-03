@@ -401,7 +401,8 @@ public class GunEventHandler {
         if (!(stack.getItem() instanceof GunItem gunItem)) return;
 
         if (player.getInventory().hasAnyMatching(item -> item.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
-            GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag")
+            GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0)
+                    + GunsTool.getGunIntTag(stack, "CustomMagazine", 0)
                     + (gunItem.bulletInBarrel(stack) ? 1 : 0));
         } else {
             if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
@@ -424,7 +425,8 @@ public class GunEventHandler {
         ItemStack stack = player.getMainHandItem();
 
         if (player.getInventory().hasAnyMatching(item -> item.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
-            GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag"));
+            GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0)
+                    + GunsTool.getGunIntTag(stack, "CustomMagazine", 0));
         } else {
             if (stack.is(ModTags.Items.USE_SHOTGUN_AMMO)) {
                 GunsTool.reload(player, stack, GunInfo.Type.SHOTGUN);
@@ -581,7 +583,8 @@ public class GunEventHandler {
                 && tag.getInt("reload_stage") == 2
                 && tag.getInt("iterative") == 0
                 && !tag.getBoolean("stop")
-                && GunsTool.getGunIntTag(stack, "Ammo", 0) < GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag")) {
+                && GunsTool.getGunIntTag(stack, "Ammo", 0) < GunsTool.getGunIntTag(stack, "Magazine", 0)
+                + GunsTool.getGunIntTag(stack, "CustomMagazine", 0)) {
 
             playGunLoopReloadSounds(player);
             int iterativeTime = GunsTool.getGunIntTag(stack, "IterativeTime", 0);
@@ -611,7 +614,8 @@ public class GunEventHandler {
         // 二阶段结束
         if (tag.getInt("iterative") == 1) {
             // 装满结束
-            if (GunsTool.getGunIntTag(stack, "Ammo", 0) >= GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag")) {
+            if (GunsTool.getGunIntTag(stack, "Ammo", 0) >= GunsTool.getGunIntTag(stack, "Magazine", 0)
+                    + GunsTool.getGunIntTag(stack, "CustomMagazine", 0)) {
                 tag.putInt("reload_stage", 3);
             }
 

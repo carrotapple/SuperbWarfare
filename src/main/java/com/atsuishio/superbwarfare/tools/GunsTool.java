@@ -73,7 +73,7 @@ public class GunsTool {
                 stack.addTagElement("GunData", data);
             });
             GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0)
-                    + stack.getOrCreateTag().getInt("customMag"));
+                    + GunsTool.getGunIntTag(stack, "CustomMagazine", 0));
         }
     }
 
@@ -103,9 +103,9 @@ public class GunsTool {
 
     public static void reload(Player player, ItemStack stack, GunInfo.Type type, boolean extraOne) {
         CompoundTag tag = stack.getOrCreateTag();
-        if (!(stack.getItem() instanceof GunItem gunItem)) return;
+        if (!(stack.getItem() instanceof GunItem)) return;
 
-        int mag = GunsTool.getGunIntTag(stack, "Magazine", 0) + tag.getInt("customMag");
+        int mag = GunsTool.getGunIntTag(stack, "Magazine", 0) + GunsTool.getGunIntTag(stack, "CustomMagazine", 0);
         int ammo = GunsTool.getGunIntTag(stack, "Ammo", 0);
         int ammoToAdd = mag - ammo + (extraOne ? 1 : 0);
 

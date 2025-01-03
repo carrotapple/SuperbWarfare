@@ -196,7 +196,7 @@ public class AK47Item extends GunItem implements GeoItem, AnimatedItem {
 
         stack.getOrCreateTag().putBoolean("CanAdjustZoomFov", scopeType == 3);
         GunsTool.setGunDoubleTag(stack, "CustomZoom", customZoom);
-        stack.getOrCreateTag().putInt("customMag", customMag);
+        GunsTool.setGunIntTag(stack, "CustomMagazine", customMag);
     }
 
     @Override

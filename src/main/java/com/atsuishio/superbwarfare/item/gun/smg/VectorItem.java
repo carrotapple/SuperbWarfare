@@ -158,7 +158,7 @@ public class VectorItem extends GunItem implements GeoItem, AnimatedItem {
         };
 
         GunsTool.setGunDoubleTag(stack, "CustomZoom", customZoom);
-        stack.getOrCreateTag().putInt("customMag", customMag);
+        GunsTool.setGunDoubleTag(stack, "CustomMagazine", customMag);
     }
 
     public static ItemStack getGunInstance() {

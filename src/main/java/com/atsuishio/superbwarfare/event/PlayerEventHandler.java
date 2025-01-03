@@ -330,7 +330,8 @@ public class PlayerEventHandler {
                         player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.JAVELIN_MISSILE.get(), 1, player.inventoryMenu.getCraftSlots());
                     }
                 } else {
-                    GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0) + stack.getOrCreateTag().getInt("customMag"));
+                    GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Magazine", 0)
+                            + GunsTool.getGunIntTag(stack, "CustomMagazine", 0));
                 }
                 GunsTool.setGunBooleanTag(stack, "HoldOpen", false);
             }
