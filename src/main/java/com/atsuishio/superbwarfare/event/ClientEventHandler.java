@@ -55,6 +55,7 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
+import static com.atsuishio.superbwarfare.entity.Ah6Entity.WEAPON_TYPE;
 import static com.atsuishio.superbwarfare.entity.SpeedboatEntity.HEAT;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -649,7 +650,12 @@ public class ClientEventHandler {
             player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
         }
         if (iVehicle instanceof Ah6Entity ah6Entity) {
-            player.playSound(ModSounds.HELICOPTER_CANNON_FIRE_1P.get(), 1f, 1);
+            if (ah6Entity.getEntityData().get(WEAPON_TYPE) == 0) {
+                player.playSound(ModSounds.HELICOPTER_CANNON_FIRE_1P.get(), 1f, 1);
+            } else if (ah6Entity.getEntityData().get(WEAPON_TYPE) == 1) {
+                player.playSound(ModSounds.HELICOPTER_ROCKET_FIRE_1P.get(), 1f, 1);
+            }
+
         }
     }
 

@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.entity;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.entity.projectile.GunGrenadeEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
@@ -29,6 +30,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
@@ -44,17 +46,20 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
 
-public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelicopterEntity {
+public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelicopterEntity, MultiWeaponVehicleEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = 200;
     public static final int MAX_ENERGY = 4000000;
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> PROPELLER_ROT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Integer> WEAPON_TYPE = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
     public boolean engineStart;
     public boolean engineStartOver;
     public float propellerRot;
     public float propellerRotO;
+
+    public int fireIndex;
 
     public Ah6Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.AH_6.get(), world);
@@ -69,6 +74,7 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DELTA_ROT, 0f);
+        this.entityData.define(WEAPON_TYPE, 0);
         this.entityData.define(PROPELLER_ROT, 0f);
     }
 
@@ -297,7 +303,7 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
                     ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), attacker == null ? this : attacker, attacker == null ? this : attacker), 25.0f,
                     this.getX(), this.getY(), this.getZ(), 5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
             explosion.explode();
-            net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+            ForgeEventFactory.onExplosionStart(this.level(), explosion);
             explosion.finalizeExplosion(false);
             ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
             this.discard();
@@ -327,43 +333,88 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
     public void vehicleShoot(Player player) {
 
         Matrix4f transform = getVehicleTransform();
-        float x = 1f;
-        float y = 0.62f;
-        float z = 0.8f;
+        float x;
+        float y;
+        float z;
 
-        Vector4f worldPositionRight = transformPosition(transform, -x, y, z);
-        ProjectileEntity projectileRight = new ProjectileEntity(player.level())
-                .shooter(player)
-                .damage(20)
-                .headShot(2f)
-                .zoom(false);
+        Vector4f worldPositionRight;
+        Vector4f worldPositionLeft;
 
-        projectileRight.heBullet(true, 8);
-        projectileRight.bypassArmorRate(1);
-        projectileRight.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
-        projectileRight.shoot(player, this.getLookAngle().x, this.getLookAngle().y+ 0.03, this.getLookAngle().z, 20,
-                (float) 0.2);
-        this.level().addFreshEntity(projectileRight);
+        if (entityData.get(WEAPON_TYPE) == 0) {
+            x = 1f;
+            y = 0.62f;
+            z = 0.8f;
 
-        Vector4f worldPositionLeft = transformPosition(transform, x, y, z);
-        ProjectileEntity projectileLeft = new ProjectileEntity(player.level())
-                .shooter(player)
-                .damage(20)
-                .headShot(2f)
-                .zoom(false);
+            worldPositionRight = transformPosition(transform, -x, y, z);
+            worldPositionLeft = transformPosition(transform, x, y, z);
 
-        projectileLeft.heBullet(true, 8);
-        projectileLeft.bypassArmorRate(1);
-        projectileLeft.setPos(worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z);
-        projectileLeft.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.03, this.getLookAngle().z, 20,
-                (float) 0.2);
-        this.level().addFreshEntity(projectileLeft);
+            ProjectileEntity projectileRight = new ProjectileEntity(player.level())
+                    .shooter(player)
+                    .damage(25)
+                    .headShot(2f)
+                    .zoom(false);
 
-        if (!player.level().isClientSide) {
-            if (player instanceof ServerPlayer serverPlayer) {
-                serverPlayer.playSound(ModSounds.HELICOPTER_CANNON_FIRE_3P.get(), 4, 1);
-                serverPlayer.playSound(ModSounds.HELICOPTER_CANNON_FAR.get(), 12, 1);
-                serverPlayer.playSound(ModSounds.HELICOPTER_CANNON_VERYFAR.get(), 24, 1);
+            projectileRight.heBullet(true, 5);
+            projectileRight.bypassArmorRate(1);
+            projectileRight.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
+            projectileRight.shoot(player, this.getLookAngle().x, this.getLookAngle().y+ 0.03, this.getLookAngle().z, 20,
+                    (float) 0.2);
+            this.level().addFreshEntity(projectileRight);
+
+            ProjectileEntity projectileLeft = new ProjectileEntity(player.level())
+                    .shooter(player)
+                    .damage(25)
+                    .headShot(2f)
+                    .zoom(false);
+
+            projectileLeft.heBullet(true, 5);
+            projectileLeft.bypassArmorRate(1);
+            projectileLeft.setPos(worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z);
+            projectileLeft.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.03, this.getLookAngle().z, 20,
+                    (float) 0.2);
+            this.level().addFreshEntity(projectileLeft);
+
+            if (!player.level().isClientSide) {
+                if (player instanceof ServerPlayer serverPlayer) {
+                    serverPlayer.playSound(ModSounds.HELICOPTER_CANNON_FIRE_3P.get(), 4, 1);
+                    serverPlayer.playSound(ModSounds.HELICOPTER_CANNON_FAR.get(), 12, 1);
+                    serverPlayer.playSound(ModSounds.HELICOPTER_CANNON_VERYFAR.get(), 24, 1);
+                }
+            }
+        } else if (entityData.get(WEAPON_TYPE) == 1) {
+            x = 1.15f;
+            y = 0.62f;
+            z = 0.8f;
+
+            worldPositionRight = transformPosition(transform, -x, y, z);
+            worldPositionLeft = transformPosition(transform, x, y, z);
+
+            if (fireIndex == 0) {
+                GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, player.level(),
+                        110,
+                        40,
+                        6);
+
+                gunGrenadeEntity.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
+                gunGrenadeEntity.shoot(this.getLookAngle().x, this.getLookAngle().y+ 0.03, this.getLookAngle().z, 8, 0.25f);
+                player.level().addFreshEntity(gunGrenadeEntity);
+                fireIndex = 1;
+            } else if (fireIndex == 1){
+                GunGrenadeEntity gunGrenadeEntityLeft = new GunGrenadeEntity(player, player.level(),
+                        110,
+                        40,
+                        5);
+
+                gunGrenadeEntityLeft.setPos(worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z);
+                gunGrenadeEntityLeft.shoot(this.getLookAngle().x, this.getLookAngle().y+ 0.03, this.getLookAngle().z, 8, 0.25f);
+                player.level().addFreshEntity(gunGrenadeEntityLeft);
+                fireIndex = 0;
+            }
+
+            if (!player.level().isClientSide) {
+                if (player instanceof ServerPlayer serverPlayer) {
+                    serverPlayer.playSound(ModSounds.HELICOPTER_ROCKET_FIRE_3P.get(), 6, 1);
+                }
             }
         }
 
@@ -416,5 +467,18 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
     @Override
     public float getPower() {
         return this.entityData.get(POWER);
+    }
+
+    @Override
+    public void changeWeapon() {
+        entityData.set(WEAPON_TYPE, entityData.get(WEAPON_TYPE) + 1);
+        if (entityData.get(WEAPON_TYPE) == 2) {
+            entityData.set(WEAPON_TYPE, 0);
+        }
+    }
+
+    @Override
+    public int getWeaponType() {
+        return entityData.get(WEAPON_TYPE);
     }
 }

@@ -2553,5 +2553,21 @@
         "stream": false
       }
     ]
+  },
+  "heli_rocket_fire_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:helicopter/heli_rocket_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "heli_rocket_fire_3p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:helicopter/heli_rocket_fire_3p",
+        "stream": false
+      }
+    ]
   }
 }
