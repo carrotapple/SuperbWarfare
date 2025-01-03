@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity;
 
+import com.atsuishio.superbwarfare.entity.projectile.LaserEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModSounds;
@@ -65,27 +66,31 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
         if (velocity.horizontalDistance() < 0.1) return;
         var frontBox = getBoundingBox().move(velocity.scale(0.5));
         var velAdd = velocity.add(0, 0, 0).scale(0.9);
-        for (var entity : level().getEntities(EntityTypeTest.forClass(Entity.class), frontBox, entity -> entity != this && entity != getFirstPassenger() && entity.getVehicle() == null)) {
+
+        var entities = level().getEntities(EntityTypeTest.forClass(Entity.class), frontBox,
+                        entity -> entity != this && entity != getFirstPassenger() && entity.getVehicle() == null)
+                .stream().filter(entity -> entity.isAlive()
+                        && !(entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ProjectileEntity || entity instanceof LaserEntity)
+                        && !(entity instanceof Player player && (player.isSpectator() || player.isCreative())))
+                .toList();
+
+        for (var entity : entities) {
             double entitySize = entity.getBbWidth() * entity.getBbHeight();
             double thisSize = this.getBbWidth() * this.getBbHeight();
             double f = Math.min(entitySize / thisSize, 2);
             double f1 = Math.min(thisSize / entitySize, 4);
 
-            if (entity.isAlive()
-                    && !(entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ProjectileEntity)
-                    && !(entity instanceof Player player && (player.isSpectator() || player.isCreative()))) {
-                if (velocity.horizontalDistance() > 0.4) {
-                    if (!this.level().isClientSide) {
-                        this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
-                    }
-                    if (!(entity instanceof TargetEntity)) {
-                        this.push(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
-                    }
-                    entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
-                    entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (thisSize * 40 * (velocity.horizontalDistance() - 0.4)));
-                } else {
-                    entity.push(0.2 * f1 * velAdd.x, 0.2 * f1 * velAdd.y, 0.2 * f1 * velAdd.z);
+            if (velocity.horizontalDistance() > 0.4) {
+                if (!this.level().isClientSide) {
+                    this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
                 }
+                if (!(entity instanceof TargetEntity)) {
+                    this.push(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
+                }
+                entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
+                entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (thisSize * 40 * (velocity.horizontalDistance() - 0.4)));
+            } else {
+                entity.push(0.2 * f1 * velAdd.x, 0.2 * f1 * velAdd.y, 0.2 * f1 * velAdd.z);
             }
         }
     }
