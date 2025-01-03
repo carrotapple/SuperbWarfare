@@ -253,7 +253,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
         float f3 = Mth.clamp(f2, -90F, 90.0F);
         entity.yRotO += f3 - f2;
         entity.setYRot(entity.getYRot() + f3 - f2);
-        entity.setYHeadRot(entity.getYRot());
+        entity.setYBodyRot(this.getYRot());
     }
 
     @Override

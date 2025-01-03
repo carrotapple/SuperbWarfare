@@ -11,6 +11,8 @@ import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
+import com.google.common.collect.Lists;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -25,7 +27,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -44,6 +49,7 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelicopterEntity, MultiWeaponVehicleEntity {
@@ -143,14 +149,14 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
             diffX = Math.clamp(-60f, 60f, Mth.wrapDegrees(passenger.getXRot() - this.getXRot()));
 
             if (rightInputDown) {
-                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 0.15f);
+                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 0.25f);
             } else if (this.leftInputDown) {
-                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.15f);
+                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.25f);
             }
 
-            this.setYRot(this.getYRot() + Mth.clamp((this.onGround() ? 0.1f : 0.7f) * diffY * this.entityData.get(POWER) + 0.5f * this.entityData.get(DELTA_ROT), -5f, 5f));
-            this.setXRot(Mth.clamp(this.getXRot() + (this.onGround() ? 0 : 0.6f) * diffX * this.entityData.get(POWER), -80, 80));
-            this.setZRot(Mth.clamp(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.2f) * diffY * this.entityData.get(POWER), -50, 50));
+            this.setYRot(this.getYRot() + Mth.clamp((this.onGround() ? 0.1f : 2f) * diffY * this.entityData.get(POWER) - 0.5f * this.entityData.get(DELTA_ROT), -8f, 8f));
+            this.setXRot(Mth.clamp(this.getXRot() + (this.onGround() ? 0 : 1.4f) * diffX * this.entityData.get(POWER), -80, 80));
+            this.setZRot(Mth.clamp(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.2f) * diffY * this.entityData.get(POWER), -80, 80));
         }
 
         if (this.level() instanceof ServerLevel) {
@@ -243,7 +249,7 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
         }
         entity.yRotO += f3 - f2;
         entity.setYRot(entity.getYRot() + f3 - f2);
-        entity.setYHeadRot(entity.getYRot());
+        entity.setYBodyRot(this.getYRot());
     }
 
     @Override
@@ -265,25 +271,47 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
         float z = 1f;
         y += (float) passenger.getMyRidingOffset();
 
+        Vector4f worldPosition;
+
         int i = this.getPassengers().indexOf(passenger);
 
         if (i == 0) {
-            Vector4f worldPosition = transformPosition(transform, x, y, z);
+            worldPosition = transformPosition(transform, x, y, z);
             passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
             callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
         } else if (i == 1) {
-            Vector4f worldPosition = transformPosition(transform, -x, y, z);
+            worldPosition = transformPosition(transform, -x, y, z);
             passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
             callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
         } else if (i == 2) {
-            Vector4f worldPosition = transformPosition(transform, x + 1.2f, y - 0.2f, z - 0.8f);
+            worldPosition = transformPosition(transform, x + 1.05f, y - 0.4f, z - 0.8f);
             passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
             callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
         } else {
-            Vector4f worldPosition = transformPosition(transform, -x - 1.2f, y - 0.2f, z - 0.8f);
+            worldPosition = transformPosition(transform, -x - 1.05f, y - 0.4f, z - 0.8f);
             passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
             callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
         }
+
+
+        if (passenger != this.getFirstPassenger()){
+            passenger.setYRot(passenger.getYRot() + (getYRot() - yRotO));
+            passenger.setYHeadRot(passenger.getYHeadRot() + (getYRot() - yRotO));
+            passenger.setXRot(passenger.getXRot() + (getXRot() - xRotO));
+        }
+
+        callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
+        copyEntityData(passenger);
+    }
+
+    public void copyEntityData(Entity entity) {
+        entity.setYBodyRot(getYRot());
+        float f = Mth.wrapDegrees(entity.getYRot() - getYRot());
+        float g = Mth.clamp(f, -105.0f, 105.0f);
+
+        entity.yRotO += g - f;
+        entity.setYRot(entity.getYRot() + g - f);
+        entity.setYHeadRot(entity.getYRot());
     }
 
     @Override
@@ -426,6 +454,40 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 7, this.getX(), this.getEyeY(), this.getZ()));
             }
         }
+    }
+
+    @Override
+    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+        Vec3 vec3d = getDismountOffset(getBbWidth() * Mth.SQRT_OF_TWO, passenger.getBbWidth() * Mth.SQRT_OF_TWO);
+        double ox = getX() + vec3d.x;;
+        int i = this.getPassengers().indexOf(passenger);
+        if (i == 0 || i == 2) {
+            ox = getX() - vec3d.x;
+        }
+
+        double oz = getZ() + vec3d.z;
+        BlockPos exitPos = new BlockPos((int) ox, (int) getY(), (int) oz);
+        BlockPos floorPos = exitPos.below();
+        if (!level().isWaterAt(floorPos)) {
+            ArrayList<Vec3> list = Lists.newArrayList();
+            double exitHeight = level().getBlockFloorHeight(exitPos);
+            if (DismountHelper.isBlockFloorValid(exitHeight)) {
+                list.add(new Vec3(ox, (double) exitPos.getY() + exitHeight, oz));
+            }
+            double floorHeight = level().getBlockFloorHeight(floorPos);
+            if (DismountHelper.isBlockFloorValid(floorHeight)) {
+                list.add(new Vec3(ox, (double) floorPos.getY() + floorHeight, oz));
+            }
+            for (Pose entityPose : passenger.getDismountPoses()) {
+                for (Vec3 vec3d2 : list) {
+                    if (!DismountHelper.canDismountTo(level(), vec3d2, passenger, entityPose)) continue;
+                    passenger.setPose(entityPose);
+                    return vec3d2;
+                }
+            }
+        }
+
+        return super.getDismountLocationForPassenger(passenger);
     }
 
     @Override

@@ -2,7 +2,9 @@ package com.atsuishio.superbwarfare.entity;
 
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
+import com.google.common.collect.Lists;
 import com.mojang.math.Axis;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -14,11 +16,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.entity.AreaEffectCloud;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -27,6 +28,8 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
+
+import java.util.ArrayList;
 
 public class VehicleEntity extends Entity {
 
@@ -313,5 +316,43 @@ public class VehicleEntity extends Entity {
         } else {
             return 0.0D;
         }
+    }
+
+    protected Vec3 getDismountOffset(double vehicleWidth, double passengerWidth) {
+        double offset = (vehicleWidth + passengerWidth + (double) 1.0E-5f) / 2.0;
+        float yaw = getYRot() + 90.0f;
+        float x = -Mth.sin(yaw * ((float) java.lang.Math.PI / 180));
+        float z = Mth.cos(yaw * ((float) java.lang.Math.PI / 180));
+        float n = java.lang.Math.max(java.lang.Math.abs(x), java.lang.Math.abs(z));
+        return new Vec3((double) x * offset / (double) n, 0.0, (double) z * offset / (double) n);
+    }
+
+    @Override
+    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+        Vec3 vec3d = getDismountOffset(getBbWidth() * Mth.SQRT_OF_TWO, passenger.getBbWidth() * Mth.SQRT_OF_TWO);
+        double ox = getX() - vec3d.x;
+        double oz = getZ() + vec3d.z;
+        BlockPos exitPos = new BlockPos((int) ox, (int) getY(), (int) oz);
+        BlockPos floorPos = exitPos.below();
+        if (!level().isWaterAt(floorPos)) {
+            ArrayList<Vec3> list = Lists.newArrayList();
+            double exitHeight = level().getBlockFloorHeight(exitPos);
+            if (DismountHelper.isBlockFloorValid(exitHeight)) {
+                list.add(new Vec3(ox, (double) exitPos.getY() + exitHeight, oz));
+            }
+            double floorHeight = level().getBlockFloorHeight(floorPos);
+            if (DismountHelper.isBlockFloorValid(floorHeight)) {
+                list.add(new Vec3(ox, (double) floorPos.getY() + floorHeight, oz));
+            }
+            for (Pose entityPose : passenger.getDismountPoses()) {
+                for (Vec3 vec3d2 : list) {
+                    if (!DismountHelper.canDismountTo(level(), vec3d2, passenger, entityPose)) continue;
+                    passenger.setPose(entityPose);
+                    return vec3d2;
+                }
+            }
+        }
+
+        return super.getDismountLocationForPassenger(passenger);
     }
 }

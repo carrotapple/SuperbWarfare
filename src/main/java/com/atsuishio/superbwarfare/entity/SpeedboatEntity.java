@@ -515,7 +515,7 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
         float f3 = Mth.clamp(f2, -140.0F, 140.0F);
         entity.yRotO += f3 - f2;
         entity.setYRot(entity.getYRot() + f3 - f2);
-        entity.setYHeadRot(entity.getYRot());
+        entity.setYBodyRot(this.getYRot());
     }
 
     @Override

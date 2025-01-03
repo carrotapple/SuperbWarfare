@@ -50,7 +50,7 @@ public class MouseHandlerMixin {
             }
         }
 
-        if (player.getVehicle() instanceof Ah6Entity ah6Entity && !ah6Entity.onGround()) {
+        if (player.getVehicle() instanceof Ah6Entity ah6Entity && !ah6Entity.onGround() && ah6Entity.getFirstPassenger() == player) {
             return 0.24;
         }
 

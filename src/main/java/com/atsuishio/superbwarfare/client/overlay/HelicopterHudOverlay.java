@@ -108,13 +108,13 @@ public class HelicopterHudOverlay {
             guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z) * 72) + "KM/H"),
                     w / 2 - 140, h / 2, 0x66FF00, false);
 
-            if (((lerpVy * 20 < -5 || (lerpVy * 20 < -1 && length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z) * 72 > 100)) && height < 36)
+            if (lerpVy * 20 < -20) {
+                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("SINK RATE，PULL UP!"),
+                        w / 2 - 53, h / 2 + 24, -65536, false);
+            } else if (((lerpVy * 20 < -5 || (lerpVy * 20 < -1 && length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z) * 72 > 100)) && height < 36)
                     || (length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z) * 72 > 40 && blockInWay < 72)) {
                 guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("TERRAIN TERRAIN"),
                         w / 2 - 42, h / 2 + 24, -65536, false);
-            } else if (lerpVy * 20 < -20) {
-                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("SINK RATE，PULL UP!"),
-                        w / 2 - 53, h / 2 + 24, -65536, false);
             }
 
             Matrix4f transform = getVehicleTransform(mobileVehicle);
