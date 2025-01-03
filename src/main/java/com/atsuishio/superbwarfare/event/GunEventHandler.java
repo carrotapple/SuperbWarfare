@@ -821,9 +821,8 @@ public class GunEventHandler {
      */
     private static void handleSentinelCharge(Player player) {
         ItemStack stack = player.getMainHandItem();
-        CompoundTag tag = stack.getOrCreateTag();
         // 启动换弹
-        if (tag.getBoolean("start_sentinel_charge")) {
+        if (GunsTool.getGunBooleanTag(stack, "StartCharge")) {
             GunsTool.setGunIntTag(stack, "ChargeTime", 127);
             GunsTool.setGunBooleanTag(stack, "Charging", true);
 
@@ -832,7 +831,7 @@ public class GunEventHandler {
                 SoundTool.playLocalSound(serverPlayer, sound1p, 2f, 1f);
             }
 
-            tag.putBoolean("start_sentinel_charge", false);
+            GunsTool.setGunBooleanTag(stack, "StartCharge", false);
         }
 
         if (GunsTool.getGunIntTag(stack, "ChargeTime", 0) > 0) {

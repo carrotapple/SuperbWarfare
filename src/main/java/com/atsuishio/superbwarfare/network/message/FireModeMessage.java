@@ -108,7 +108,7 @@ public class FireModeMessage {
                         );
 
                         if (flag.get()) {
-                            tag.putBoolean("start_sentinel_charge", true);
+                            GunsTool.setGunBooleanTag(stack, "StartCharge", true);
                         }
                     }
                 }
