@@ -58,32 +58,33 @@ public class M60ItemModel extends GeoModel<M60Item> {
         }
 
         int ammo = GunsTool.getGunIntTag(stack, "Ammo", 0);
+        boolean flag = GunsTool.getGunBooleanTag(stack, "HideBulletChain");
 
-        if (ammo < 5 && stack.getOrCreateTag().getBoolean("HideBulletChain")) {
+        if (ammo < 5 && flag) {
             b5.setScaleX(0);
             b5.setScaleY(0);
             b5.setScaleZ(0);
         }
 
-        if (ammo < 4 && stack.getOrCreateTag().getBoolean("HideBulletChain")) {
+        if (ammo < 4 && flag) {
             b4.setScaleX(0);
             b4.setScaleY(0);
             b4.setScaleZ(0);
         }
 
-        if (ammo < 3 && stack.getOrCreateTag().getBoolean("HideBulletChain")) {
+        if (ammo < 3 && flag) {
             b3.setScaleX(0);
             b3.setScaleY(0);
             b3.setScaleZ(0);
         }
 
-        if (ammo < 2 && stack.getOrCreateTag().getBoolean("HideBulletChain")) {
+        if (ammo < 2 && flag) {
             b2.setScaleX(0);
             b2.setScaleY(0);
             b2.setScaleZ(0);
         }
 
-        if (ammo < 1 && stack.getOrCreateTag().getBoolean("HideBulletChain")) {
+        if (ammo < 1 && flag) {
             b1.setScaleX(0);
             b1.setScaleY(0);
             b1.setScaleZ(0);

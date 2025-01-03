@@ -75,7 +75,7 @@ public class ShootMessage {
                 stack.getOrCreateTag().putDouble("empty", 1);
 
                 if (stack.getItem() == ModItems.M_60.get() && GunsTool.getGunIntTag(stack, "Ammo", 0) <= 5) {
-                    stack.getOrCreateTag().putBoolean("HideBulletChain", true);
+                    GunsTool.setGunBooleanTag(stack, "HideBulletChain", true);
                 }
 
                 if (stack.getItem() == ModItems.ABEKIRI.get()) {

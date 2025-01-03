@@ -364,7 +364,7 @@ public class GunEventHandler {
 
         if (stack.getItem() == ModItems.M_60.get()) {
             if (data.getInt("ReloadTime") == 55) {
-                tag.putBoolean("HideBulletChain", false);
+                data.putBoolean("HideBulletChain", false);
             }
         }
 

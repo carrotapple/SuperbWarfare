@@ -134,15 +134,15 @@ public class M60Item extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public void inventoryTick(ItemStack itemstack, Level level, Entity entity, int slot, boolean selected) {
-        if (itemstack.getOrCreateTag().getBoolean("draw")) {
-            itemstack.getOrCreateTag().putBoolean("draw", false);
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slot, boolean selected) {
+        if (stack.getOrCreateTag().getBoolean("draw")) {
+            stack.getOrCreateTag().putBoolean("draw", false);
 
-            if (GunsTool.getGunIntTag(itemstack, "Ammo", 0) <= 5) {
-                itemstack.getOrCreateTag().putBoolean("HideBulletChain", true);
+            if (GunsTool.getGunIntTag(stack, "Ammo", 0) <= 5) {
+                GunsTool.setGunBooleanTag(stack, "HideBulletChain", true);
             }
         }
-        super.inventoryTick(itemstack, level, entity, slot, selected);
+        super.inventoryTick(stack, level, entity, slot, selected);
     }
 
     @Override
