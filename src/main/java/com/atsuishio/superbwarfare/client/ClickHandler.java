@@ -320,8 +320,8 @@ public class ClickHandler {
 
         if (stack.getItem() instanceof GunItem gunItem && !(player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity)) {
             if ((!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                    && !stack.getOrCreateTag().getBoolean("reloading")
-                    && !stack.getOrCreateTag().getBoolean("charging")
+                    && !GunsTool.getGunBooleanTag(stack, "Reloading")
+                    && !GunsTool.getGunBooleanTag(stack, "Charging")
                     && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false))
                     && cantFireTime == 0
                     && drawTime < 0.01

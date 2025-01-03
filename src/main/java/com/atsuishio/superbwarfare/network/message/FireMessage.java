@@ -130,7 +130,7 @@ public class FireMessage {
             }
         }
 
-        if (tag.getDouble("prepare") == 0 && tag.getBoolean("reloading") && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
+        if (tag.getDouble("prepare") == 0 && GunsTool.getGunBooleanTag(stack, "Reloading") && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
             tag.putDouble("force_stop", 1);
         }
 
@@ -146,8 +146,8 @@ public class FireMessage {
         if (GunsTool.getGunIntTag(stack, "BoltActionTime", 0) > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) > (stack.is(ModTags.Items.REVOLVER) ? -1 : 0)
                 && GunsTool.getGunIntTag(stack, "BoltActionTick") == 0
                 && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                && !stack.getOrCreateTag().getBoolean("reloading")
-                && !stack.getOrCreateTag().getBoolean("charging")) {
+                && !GunsTool.getGunBooleanTag(stack, "Reloading")
+                && !GunsTool.getGunBooleanTag(stack, "Charging")) {
             if (!player.getCooldowns().isOnCooldown(stack.getItem()) && GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false)) {
                 GunsTool.setGunIntTag(stack, "BoltActionTick", GunsTool.getGunIntTag(stack, "BoltActionTime", 0) + 1);
                 GunEventHandler.playGunBoltSounds(player);
@@ -307,7 +307,7 @@ public class FireMessage {
         if (player.isSpectator()) return;
 
         ItemStack stack = player.getMainHandItem();
-        if (!stack.getOrCreateTag().getBoolean("reloading")) {
+        if (!GunsTool.getGunBooleanTag(stack, "Reloading")) {
             int perkLevel = PerkHelper.getItemPerkLevel(ModPerks.VOLT_OVERLOAD.get(), stack);
             AtomicBoolean flag = new AtomicBoolean(false);
             stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
@@ -357,7 +357,7 @@ public class FireMessage {
         if (player.isSpectator()) return;
 
         ItemStack stack = player.getMainHandItem();
-        if (!stack.getOrCreateTag().getBoolean("reloading")) {
+        if (!GunsTool.getGunBooleanTag(stack, "Reloading")) {
             if (!player.getCooldowns().isOnCooldown(stack.getItem()) && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
                 boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
                 double spread = GunsTool.getGunDoubleTag(stack, "Spread");
@@ -412,7 +412,7 @@ public class FireMessage {
         ItemStack stack = player.getMainHandItem();
         CompoundTag tag = stack.getOrCreateTag();
 
-        if (!tag.getBoolean("reloading") && !player.getCooldowns().isOnCooldown(stack.getItem()) && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
+        if (!GunsTool.getGunBooleanTag(stack, "Reloading") && !player.getCooldowns().isOnCooldown(stack.getItem()) && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
             boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
             double spread = GunsTool.getGunDoubleTag(stack, "Spread");
 

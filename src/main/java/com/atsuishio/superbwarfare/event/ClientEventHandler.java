@@ -348,8 +348,8 @@ public class ClientEventHandler {
                 && !notInGame()
                 && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit
                 && (!(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
-                && !stack.getOrCreateTag().getBoolean("reloading")
-                && !stack.getOrCreateTag().getBoolean("charging")
+                && !GunsTool.getGunBooleanTag(stack, "Reloading")
+                && !GunsTool.getGunBooleanTag(stack, "Charging")
                 && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0
                 && !player.getCooldowns().isOnCooldown(stack.getItem())
                 && !GunsTool.getGunBooleanTag(stack, "NeedBoltAction", false)

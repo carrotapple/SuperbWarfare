@@ -113,7 +113,7 @@ public class K98Item extends GunItem implements GeoItem, AnimatedItem {
                 && stack.getOrCreateTag().getInt("reload_stage") != 2
                 && stack.getOrCreateTag().getInt("reload_stage") != 3
                 && ClientEventHandler.drawTime < 0.01
-                && !stack.getOrCreateTag().getBoolean("reloading")) {
+                && !GunsTool.getGunBooleanTag(stack, "Reloading")) {
             if (player.hasEffect(MobEffects.MOVEMENT_SPEED) && GunsTool.getGunIntTag(stack, "BoltActionTick") == 0) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.k98.run_fast"));
             } else {

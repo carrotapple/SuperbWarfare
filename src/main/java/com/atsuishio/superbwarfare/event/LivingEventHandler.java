@@ -343,7 +343,7 @@ public class LivingEventHandler {
                             oldTags.putBoolean("force_stop", false);
                             oldTags.putBoolean("stop", false);
                             oldTags.putInt("reload_stage", 0);
-                            oldTags.putBoolean("reloading", false);
+                            data.putBoolean("Reloading", false);
                             oldTags.putDouble("prepare", 0);
                             oldTags.putDouble("prepare_load", 0);
                             oldTags.putDouble("iterative", 0);
@@ -378,7 +378,7 @@ public class LivingEventHandler {
                             newStack.getOrCreateTag().putBoolean("force_stop", false);
                             newStack.getOrCreateTag().putBoolean("stop", false);
                             newStack.getOrCreateTag().putInt("reload_stage", 0);
-                            newStack.getOrCreateTag().putBoolean("reloading", false);
+                            GunsTool.setGunBooleanTag(newStack, "Reloading", false);
                             newStack.getOrCreateTag().putDouble("prepare", 0);
                             newStack.getOrCreateTag().putDouble("prepare_load", 0);
                             newStack.getOrCreateTag().putDouble("iterative", 0);

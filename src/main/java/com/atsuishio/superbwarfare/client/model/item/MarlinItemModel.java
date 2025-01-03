@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.rifle.MarlinItem;
+import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -99,8 +100,7 @@ public class MarlinItemModel extends GeoModel<MarlinItem> {
         float numR = (float) (1 - 0.55 * zt);
         float numP = (float) (1 - 0.88 * zt);
 
-        // TODO 修改本nbt
-        if (stack.getOrCreateTag().getBoolean("reloading")) {
+        if (GunsTool.getGunBooleanTag(stack, "Reloading")) {
             main.setRotX(numR * main.getRotX());
             main.setRotY(numR * main.getRotY());
             main.setRotZ(numR * main.getRotZ());

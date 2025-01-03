@@ -542,7 +542,7 @@ public class GunEventHandler {
             tag.putBoolean("force_stop", false);
             tag.putBoolean("stop", false);
             tag.putInt("reload_stage", 1);
-            tag.putBoolean("reloading", true);
+            GunsTool.setGunBooleanTag(stack, "Reloading", true);
             tag.putBoolean("start_single_reload", false);
         }
 
@@ -661,7 +661,7 @@ public class GunEventHandler {
             if (GunsTool.getGunIntTag(stack, "BoltActionTime", 0) > 0) {
                 GunsTool.setGunBooleanTag(stack, "NeedBoltAction", false);
             }
-            tag.putBoolean("reloading", false);
+            GunsTool.setGunBooleanTag(stack, "Reloading", false);
             tag.putBoolean("start_single_reload", false);
 
             MinecraftForge.EVENT_BUS.post(new ReloadEvent.Post(player, stack));

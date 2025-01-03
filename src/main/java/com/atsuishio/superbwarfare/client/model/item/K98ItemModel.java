@@ -107,7 +107,7 @@ public class K98ItemModel extends GeoModel<K98Item> {
         float numR = (float) (1 - 0.52 * zt);
         float numP = (float) (1 - 0.58 * zt);
 
-        if (GunsTool.getGunIntTag(stack, "ReloadTime") > 0 || stack.getOrCreateTag().getBoolean("reloading")) {
+        if (GunsTool.getGunIntTag(stack, "ReloadTime") > 0 || GunsTool.getGunBooleanTag(stack, "Reloading")) {
             main.setRotX(numR * main.getRotX());
             main.setRotY(numR * main.getRotY());
             main.setRotZ(numR * main.getRotZ());
