@@ -352,7 +352,7 @@ public class LivingEventHandler {
 
                         if (oldStack.is(ModItems.SENTINEL.get())) {
                             data.putBoolean("Charging", false);
-                            oldTags.putInt("sentinel_charge_time", 0);
+                            data.putInt("ChargeTime", 0);
                         }
 
                         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
@@ -387,7 +387,7 @@ public class LivingEventHandler {
 
                         if (newStack.is(ModItems.SENTINEL.get())) {
                             GunsTool.setGunBooleanTag(newStack, "Charging", false);
-                            newStack.getOrCreateTag().putInt("sentinel_charge_time", 0);
+                            GunsTool.setGunIntTag(newStack, "ChargeTime", 0);
                         }
 
                         int level = PerkHelper.getItemPerkLevel(ModPerks.KILLING_TALLY.get(), newStack);

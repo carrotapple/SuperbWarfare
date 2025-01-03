@@ -824,7 +824,7 @@ public class GunEventHandler {
         CompoundTag tag = stack.getOrCreateTag();
         // 启动换弹
         if (tag.getBoolean("start_sentinel_charge")) {
-            tag.putInt("sentinel_charge_time", 127);
+            GunsTool.setGunIntTag(stack, "ChargeTime", 127);
             GunsTool.setGunBooleanTag(stack, "Charging", true);
 
             SoundEvent sound1p = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(ModUtils.MODID, "sentinel_charge"));
@@ -835,12 +835,11 @@ public class GunEventHandler {
             tag.putBoolean("start_sentinel_charge", false);
         }
 
-        if (tag.getInt("sentinel_charge_time") > 0) {
-            tag.putInt("sentinel_charge_time", tag.getInt("sentinel_charge_time") - 1);
+        if (GunsTool.getGunIntTag(stack, "ChargeTime", 0) > 0) {
+            GunsTool.setGunIntTag(stack, "ChargeTime", GunsTool.getGunIntTag(stack, "ChargeTime", 0) - 1);
         }
 
-        if (tag.getInt("sentinel_charge_time") == 17) {
-
+        if (GunsTool.getGunIntTag(stack, "ChargeTime", 0) == 17) {
             for (var cell : player.getInventory().items) {
                 if (cell.is(ModItems.CELL.get())) {
                     assert stack.getCapability(ForgeCapabilities.ENERGY).resolve().isPresent();
@@ -866,9 +865,8 @@ public class GunEventHandler {
             }
         }
 
-        if (tag.getInt("sentinel_charge_time") == 1) {
+        if (GunsTool.getGunIntTag(stack, "ChargeTime", 0) == 1) {
             GunsTool.setGunBooleanTag(stack, "Charging", false);
         }
     }
-
 }
