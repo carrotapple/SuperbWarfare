@@ -350,6 +350,9 @@
   "death.attack.vehicle_strike": "%1$s被创死了",
   "death.attack.vehicle_strike.entity": "%1$s被%2$s创死了",
   "death.attack.vehicle_strike.item": "%1$s的被%2$s用%3$s创死了",
+  "death.attack.air_crash": "%1$s坠机了",
+  "death.attack.air_crash.entity": "%1$s坠机了",
+  "death.attack.air_crash.item": "%1$s坠机了",
 
   "entity.superbwarfare.projectile": "Bullet",
   "entity.superbwarfare.projectile_mortar_shell": "Mortar Shell",

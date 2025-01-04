@@ -125,10 +125,8 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
         }
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
         this.hurt(0.75f * Math.max(amount - 5, 0));
-
         return true;
     }
-
     @Override
     public void baseTick() {
         propellerRotO = this.getPropellerRot();
@@ -329,14 +327,14 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
     public void destroy() {
         if (level() instanceof ServerLevel) {
             Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
-            CustomExplosion explosion = new CustomExplosion(this.level(), attacker == null ? this : attacker,
-                    ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), attacker == null ? this : attacker, attacker == null ? this : attacker), 300.0f,
-                    this.getX(), this.getY(), this.getZ(), 5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+            CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                    crash ? ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), this, attacker) : ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, attacker), 300.0f,
+                    this.getX(), this.getY(), this.getZ(), 8f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
             explosion.explode();
             ForgeEventFactory.onExplosionStart(this.level(), explosion);
             explosion.finalizeExplosion(false);
             ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
-            this.discard();
+            this.remove(RemovalReason.KILLED);
         }
     }
 
@@ -390,7 +388,7 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
             projectileRight.shoot(player, this.getLookAngle().x, this.getLookAngle().y+ 0.03, this.getLookAngle().z, 20,
                     (float) 0.2);
             this.level().addFreshEntity(projectileRight);
-            ParticleTool.sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPositionRight.x, worldPositionRight.y, worldPositionRight.z, 1, 0, 0, 0, 0, false);
+            sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPositionRight.x, worldPositionRight.y, worldPositionRight.z, 1, 0, 0, 0, 0, false);
 
             ProjectileEntity projectileLeft = new ProjectileEntity(player.level())
                     .shooter(player)
@@ -404,7 +402,7 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
             projectileLeft.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.03, this.getLookAngle().z, 20,
                     (float) 0.2);
             this.level().addFreshEntity(projectileLeft);
-            ParticleTool.sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z, 1, 0, 0, 0, 0, false);
+            sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z, 1, 0, 0, 0, 0, false);
 
             if (!player.level().isClientSide) {
                 if (player instanceof ServerPlayer serverPlayer) {

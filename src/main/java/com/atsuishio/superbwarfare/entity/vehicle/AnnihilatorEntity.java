@@ -331,13 +331,13 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     public void destroy() {
         if (level() instanceof ServerLevel) {
             Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
-            CustomExplosion explosion = new CustomExplosion(this.level(), attacker == null ? this : attacker,
-                    ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), attacker == null ? this : attacker, attacker == null ? this : attacker), 200.0f,
-                    this.getX(), this.getY(), this.getZ(), 15f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+            CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), 200f,
+                    this.getX(), this.getY(), this.getZ(), 10f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
             explosion.explode();
             net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
             explosion.finalizeExplosion(false);
-            ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
+            ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
             this.discard();
         }
     }

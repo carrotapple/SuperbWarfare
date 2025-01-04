@@ -82,6 +82,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
                 this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
             }
             collisionCoolDown = 4;
+            crash = true;
         }
 
         if (this.horizontalCollision) {
@@ -91,10 +92,11 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
                 this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
             }
             collisionCoolDown = 4;
+            crash = true;
         }
     }
 
-    private void bounceHorizontal(Direction direction) {
+    public void bounceHorizontal(Direction direction) {
         switch (direction.getAxis()) {
             case X:
                 this.setDeltaMovement(this.getDeltaMovement().multiply(-0.8, 0.99, 0.99));
@@ -105,7 +107,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
         }
     }
 
-    private void bounceVertical(Direction direction) {
+    public void bounceVertical(Direction direction) {
         if (direction.getAxis() == Direction.Axis.Y) {
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.9, -0.8, 0.9));
         }
@@ -117,6 +119,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
      */
     public void crushEntities(Vec3 velocity) {
         if (velocity.horizontalDistance() < 0.1) return;
+        if (isRemoved()) return;
         var frontBox = getBoundingBox().move(velocity.scale(0.5));
         var velAdd = velocity.add(0, 0, 0).scale(0.9);
 

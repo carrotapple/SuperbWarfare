@@ -191,8 +191,8 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
     public void destroy() {
         if (level() instanceof ServerLevel) {
             Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
-            CustomExplosion explosion = new CustomExplosion(this.level(), attacker == null ? this : attacker,
-                    ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), attacker == null ? this : attacker, attacker == null ? this : attacker), 150.0f,
+            CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), 150f,
                     this.getX(), this.getY(), this.getZ(), 5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
             explosion.explode();
             net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);

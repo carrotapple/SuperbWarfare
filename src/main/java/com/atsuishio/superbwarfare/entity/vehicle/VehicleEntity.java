@@ -46,7 +46,8 @@ public class VehicleEntity extends Entity {
 
     public float roll;
     public float prevRoll;
-
+    public int lastHurtTick;
+    public boolean crash;
     public float getRoll() {
         return roll;
     }
@@ -167,11 +168,18 @@ public class VehicleEntity extends Entity {
             return false;
         if (source.is(DamageTypes.IN_FIRE))
             return false;
-        if (source.is(ModDamageTypes.VEHICLE_STRIKE))
+        if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
             amount -= 20;
+            crash = true;
+        } else {
+            crash = false;
+        }
+
         if (source.getEntity() != null) {
             this.entityData.set(LAST_ATTACKER_UUID, source.getEntity().getStringUUID());
         }
+        lastHurtTick = 0;
+
         return super.hurt(source, amount);
     }
 
@@ -232,6 +240,8 @@ public class VehicleEntity extends Entity {
     @Override
     public void baseTick() {
         super.baseTick();
+
+        lastHurtTick ++;
 
         prevRoll = this.getRoll();
         setZRot(roll * 0.9f);
