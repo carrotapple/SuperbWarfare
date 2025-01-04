@@ -1,8 +1,8 @@
 package com.atsuishio.superbwarfare.item.common.ammo;
 
+import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.tools.ItemNBTTool;
-import com.atsuishio.superbwarfare.init.ModSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -22,6 +22,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 public class AmmoBox extends Item {
+
     public AmmoBox() {
         super(new Properties().stacksTo(1));
     }
