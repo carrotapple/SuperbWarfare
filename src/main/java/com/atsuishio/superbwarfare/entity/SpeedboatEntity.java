@@ -232,7 +232,6 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
             this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.85, f));
         }
 
-        this.heal(0.05f);
 
         if (this.level() instanceof ServerLevel serverLevel && this.isInWater() && this.getDeltaMovement().length() > 0.1) {
             sendParticle(serverLevel, ParticleTypes.CLOUD, this.getX() + 0.5 * this.getDeltaMovement().x, this.getY() + getSubmergedHeight(this) - 0.2, this.getZ() + 0.5 * this.getDeltaMovement().z, (int) (2 + 4 * this.getDeltaMovement().length()), 0.65, 0, 0.65, 0, true);

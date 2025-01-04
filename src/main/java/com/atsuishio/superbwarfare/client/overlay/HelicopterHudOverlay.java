@@ -7,7 +7,6 @@ import com.atsuishio.superbwarfare.entity.MobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.VehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.tools.HudUtil;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -58,7 +57,7 @@ public class HelicopterHudOverlay {
         if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit)
             return;
 
-        if (player.getVehicle() instanceof IHelicopterEntity iHelicopterEntity && player.getVehicle() instanceof MobileVehicleEntity mobileVehicle && iHelicopterEntity.isDriver(player) && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
+        if (player.getVehicle() instanceof IHelicopterEntity iHelicopterEntity && player.getVehicle() instanceof MobileVehicleEntity mobileVehicle && iHelicopterEntity.isDriver(player)) {
             poseStack.pushPose();
 
             RenderSystem.disableDepthTest();
@@ -75,46 +74,49 @@ public class HelicopterHudOverlay {
             float j = Mth.floor(f * f1);
             float k = ((w - i) / 2);
             float l = ((h - j) / 2);
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_base.png"), k, l, 0, 0.0F, i, j, i, j);
 
-            poseStack.pushPose();
-            poseStack.rotateAround(Axis.ZP.rotationDegrees(-iHelicopterEntity.getRotZ(event.getPartialTick())), w / 2f, h / 2f, 0);
-            float pitch = iHelicopterEntity.getRotX(event.getPartialTick());
+            if (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_base.png"), k, l, 0, 0.0F, i, j, i, j);
 
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_line.png"), (float) w / 2 - 128, (float) h / 2 - 512 - 5.475f * pitch, 0, 0, 256, 1024, 256, 1024);
-            poseStack.popPose();
-            poseStack.pushPose();
-            poseStack.rotateAround(Axis.ZP.rotationDegrees(-iHelicopterEntity.getRotZ(event.getPartialTick())), w / 2f, h / 2f - 56, 0);
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/roll_ind.png"), (float) w / 2 - 8, (float) h / 2 - 88, 0, 0, 16, 16, 16, 16);
-            poseStack.popPose();
+                poseStack.pushPose();
+                poseStack.rotateAround(Axis.ZP.rotationDegrees(-iHelicopterEntity.getRotZ(event.getPartialTick())), w / 2f, h / 2f, 0);
+                float pitch = iHelicopterEntity.getRotX(event.getPartialTick());
 
-            guiGraphics.blit(ModUtils.loc("textures/screens/helicopter/heli_power_ruler.png"), w / 2 + 100, h / 2 - 64, 0, 0, 64, 128, 64, 128);
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_line.png"), (float) w / 2 - 128, (float) h / 2 - 512 - 5.475f * pitch, 0, 0, 256, 1024, 256, 1024);
+                poseStack.popPose();
+                poseStack.pushPose();
+                poseStack.rotateAround(Axis.ZP.rotationDegrees(-iHelicopterEntity.getRotZ(event.getPartialTick())), w / 2f, h / 2f - 56, 0);
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/roll_ind.png"), (float) w / 2 - 8, (float) h / 2 - 88, 0, 0, 16, 16, 16, 16);
+                poseStack.popPose();
 
-            double height = mobileVehicle.position().distanceTo((Vec3.atLowerCornerOf(mobileVehicle.level().clip(new ClipContext(mobileVehicle.position(), mobileVehicle.position().add(new Vec3(0, -1, 0).scale(100)),
-                    ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, mobileVehicle)).getBlockPos())));
-            double blockInWay = mobileVehicle.position().distanceTo((Vec3.atLowerCornerOf(mobileVehicle.level().clip(new ClipContext(mobileVehicle.position(), mobileVehicle.position().add(new Vec3(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z).normalize().scale(100)),
-                    ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, mobileVehicle)).getBlockPos())));
+                guiGraphics.blit(ModUtils.loc("textures/screens/helicopter/heli_power_ruler.png"), w / 2 + 100, h / 2 - 64, 0, 0, 64, 128, 64, 128);
 
-            float power = iHelicopterEntity.getPower();
-            lerpPower = Mth.lerp(0.001f * event.getPartialTick(), lerpPower, power);
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_power.png"), (float) w / 2 + 130f, ((float) h / 2 - 64 + 124 - power * 980), 0, 0, 4, power * 980, 4, power * 980);
-            lerpVy = (float) Mth.lerp(0.021f * event.getPartialTick(), lerpVy, mobileVehicle.getDeltaMovement().y() + 0.06f);
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_vy_move.png"), (float) w / 2 + 138, ((float) h / 2 - 3 - Math.max(lerpVy * 20, -24) * 2.5f), 0, 0, 8, 8, 8, 8);
-            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(lerpVy * 20) + "m/s"),
-                    w / 2 + 146, (int) (h / 2 - 3 - Math.max(lerpVy * 20, -24) * 2.5), (((lerpVy < -20 || lerpVy * 20 < -5 || (lerpVy * 20 < -1 && length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z) * 72 > 100)) && height < 36) || (length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z) * 72 > 40 && blockInWay < 72) ? -65536 : 0x66FF00), false);
-            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(mobileVehicle.getY())),
-                    w / 2 + 104, h / 2, 0x66FF00, false);
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/speed_frame.png"), (float) w / 2 - 144, (float) h / 2 - 6, 0, 0, 50, 18, 50, 18);
-            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z) * 72) + "KM/H"),
-                    w / 2 - 140, h / 2, 0x66FF00, false);
+                double height = mobileVehicle.position().distanceTo((Vec3.atLowerCornerOf(mobileVehicle.level().clip(new ClipContext(mobileVehicle.position(), mobileVehicle.position().add(new Vec3(0, -1, 0).scale(100)),
+                        ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, mobileVehicle)).getBlockPos())));
+                double blockInWay = mobileVehicle.position().distanceTo((Vec3.atLowerCornerOf(mobileVehicle.level().clip(new ClipContext(mobileVehicle.position(), mobileVehicle.position().add(new Vec3(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z).normalize().scale(100)),
+                        ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, mobileVehicle)).getBlockPos())));
 
-            if (lerpVy * 20 < -20) {
-                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("SINK RATE，PULL UP!"),
-                        w / 2 - 53, h / 2 + 24, -65536, false);
-            } else if (((lerpVy * 20 < -5 || (lerpVy * 20 < -1 && length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z) * 72 > 100)) && height < 36)
-                    || (length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z) * 72 > 40 && blockInWay < 72)) {
-                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("TERRAIN TERRAIN"),
-                        w / 2 - 42, h / 2 + 24, -65536, false);
+                float power = iHelicopterEntity.getPower();
+                lerpPower = Mth.lerp(0.001f * event.getPartialTick(), lerpPower, power);
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_power.png"), (float) w / 2 + 130f, ((float) h / 2 - 64 + 124 - power * 980), 0, 0, 4, power * 980, 4, power * 980);
+                lerpVy = (float) Mth.lerp(0.021f * event.getPartialTick(), lerpVy, mobileVehicle.getDeltaMovement().y() + 0.06f);
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_vy_move.png"), (float) w / 2 + 138, ((float) h / 2 - 3 - Math.max(lerpVy * 20, -24) * 2.5f), 0, 0, 8, 8, 8, 8);
+                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(lerpVy * 20) + "m/s"),
+                        w / 2 + 146, (int) (h / 2 - 3 - Math.max(lerpVy * 20, -24) * 2.5), (((lerpVy < -20 || lerpVy * 20 < -5 || (lerpVy * 20 < -1 && length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z) * 72 > 100)) && height < 36) || (length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z) * 72 > 40 && blockInWay < 72) ? -65536 : 0x66FF00), false);
+                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(mobileVehicle.getY())),
+                        w / 2 + 104, h / 2, 0x66FF00, false);
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/speed_frame.png"), (float) w / 2 - 144, (float) h / 2 - 6, 0, 0, 50, 18, 50, 18);
+                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z) * 72) + "KM/H"),
+                        w / 2 - 140, h / 2, 0x66FF00, false);
+
+                if (lerpVy * 20 < -20) {
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("SINK RATE，PULL UP!"),
+                            w / 2 - 53, h / 2 + 24, -65536, false);
+                } else if (((lerpVy * 20 < -5 || (lerpVy * 20 < -1 && length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z) * 72 > 100)) && height < 36)
+                        || (length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z) * 72 > 40 && blockInWay < 72)) {
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("TERRAIN TERRAIN"),
+                            w / 2 - 42, h / 2 + 24, -65536, false);
+                }
             }
 
             Matrix4f transform = getVehicleTransform(mobileVehicle);
@@ -133,11 +135,21 @@ public class HelicopterHudOverlay {
             var cPos = cameraPos.add(lookAngle);
 
             Vec3 p = RenderHelper.worldToScreen(new Vec3(worldPosition.x, worldPosition.y, worldPosition.z).add(mobileVehicle.getViewVector(event.getPartialTick()).scale(500)), ClientEventHandler.zoom ? cPos : cameraPos);
-            if (p != null) {
+
+            Vec3 p3 = RenderHelper.worldToScreen(new Vec3(worldPosition.x, worldPosition.y, worldPosition.z).add(mobileVehicle.getViewVector(event.getPartialTick()).scale(500)), cameraPos);
+            if (p != null && p3 != null) {
                 poseStack.pushPose();
-                int x = (int) p.x;
-                int y = (int) p.y;
-                HudUtil.blit(poseStack, ModUtils.loc("textures/screens/helicopter/crosshair_ind.png"), x - 8, y - 8, 0, 0, 16, 16, 16, 16, 0x66FF00);
+                float x = (float) p.x;
+                float y = (float) p.y;
+
+                float x3 = (float) p3.x;
+                float y3 = (float) p3.y;
+                if (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
+                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/crosshair_ind.png"), x - 8, y - 8, 0, 0, 16, 16, 16, 16);
+                } else if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK) {
+                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/drone.png"), x3 - 8, y3 - 8, 0, 0, 16, 16, 16, 16);
+                }
+
                 poseStack.popPose();
             }
 

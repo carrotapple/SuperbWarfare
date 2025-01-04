@@ -182,9 +182,6 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
             if (this.tickCount % 15 == 0) {
                 this.level().playSound(null, this.getOnPos(), SoundEvents.FIRE_AMBIENT, SoundSource.PLAYERS, 1, 1);
             }
-            this.hurt(0.1f);
-        } else {
-            this.heal(0.05f);
         }
 
         this.refreshDimensions();

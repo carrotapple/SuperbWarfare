@@ -44,8 +44,8 @@ public class ClientSoundHandler {
                 SoundEvent engineSound = mobileVehicle.getEngineSound();
                 float distanceReduce;
                 if (e instanceof Ah6Entity ah6Entity) {
-                    distanceReduce = (float) (1 - distance / 128);
-                    player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), 20 * (mobileVehicle.getEntityData().get(POWER) - 0.012f) * distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.1f + 1.0f), false);
+                    distanceReduce = (float) (1 - distance / 64);
+                    player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), 5 * (mobileVehicle.getEntityData().get(POWER) - 0.012f) * distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.1f + 1.0f), false);
 //                    player.displayClientMessage(Component.literal("Angle:" + engineSoundPos), true);
                 }
             }

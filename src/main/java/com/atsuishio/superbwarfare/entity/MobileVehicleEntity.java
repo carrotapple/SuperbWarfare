@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.entity.projectile.LaserEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
 import org.joml.Vector3f;
 
@@ -33,6 +35,8 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
     public boolean backInputDown;
     public boolean upInputDown;
     public boolean downInputDown;
+    public double lastTickSpeed;
+    public int collisionCoolDown;
 
     public MobileVehicleEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -52,10 +56,56 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
 
     @Override
     public void baseTick() {
+        lastTickSpeed = new Vec3(this.getDeltaMovement().x, this.getDeltaMovement().y + 0.06, this.getDeltaMovement().z).length();
+        if (collisionCoolDown > 0) {
+            collisionCoolDown--;
+        }
         super.baseTick();
         crushEntities(this.getDeltaMovement());
         this.move(MoverType.SELF, this.getDeltaMovement());
         this.refreshDimensions();
+    }
+
+    @Override
+    public void move(@NotNull MoverType movementType, @NotNull Vec3 movement) {
+        super.move(movementType, movement);
+        if (lastTickSpeed < 0.4 || collisionCoolDown > 0) return;
+
+        if (horizontalCollision || verticalCollision) {
+            collisionCoolDown = 4;
+        }
+
+        if ((horizontalCollision)) {
+            this.bounceHorizontal(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
+            this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (160 * ((lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
+            if (!this.level().isClientSide) {
+                this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
+            }
+        }
+
+        if ((verticalCollision)) {
+            this.bounceVertical(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
+            this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (100 * ((lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
+            if (!this.level().isClientSide) {
+                this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
+            }
+        }
+    }
+
+    private void bounceHorizontal(Direction direction) {
+        switch (direction.getAxis()) {
+            case X:
+                this.setDeltaMovement(this.getDeltaMovement().multiply(-0.8, 0.99, 0.99));
+                break;
+            case Z:
+                this.setDeltaMovement(this.getDeltaMovement().multiply(0.99, 0.99, -0.8));
+                break;
+        }
+    }
+    private void bounceVertical(Direction direction) {
+       if (direction.getAxis() == Direction.Axis.Y) {
+           this.setDeltaMovement(this.getDeltaMovement().multiply(0.9, -0.8, 0.9));
+       }
     }
 
     /**
@@ -80,7 +130,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
             double f = Math.min(entitySize / thisSize, 2);
             double f1 = Math.min(thisSize / entitySize, 4);
 
-            if (velocity.horizontalDistance() > 0.4) {
+            if (velocity.length() > 0.4) {
                 if (!this.level().isClientSide) {
                     this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
                 }
@@ -88,7 +138,10 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
                     this.push(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
                 }
                 entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
-                entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (thisSize * 40 * (velocity.horizontalDistance() - 0.4)));
+                entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (thisSize * 10 * ((velocity.length() - 0.4) * (velocity.length() - 0.4))));
+                if (entities instanceof VehicleEntity) {
+                    this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), entity, entity.getFirstPassenger() == null ? entity : entity.getFirstPassenger()), (float) (entitySize * 10 * ((velocity.length() - 0.4) * (velocity.length() - 0.4))));
+                }
             } else {
                 entity.push(0.2 * f1 * velAdd.x, 0.2 * f1 * velAdd.y, 0.2 * f1 * velAdd.z);
             }

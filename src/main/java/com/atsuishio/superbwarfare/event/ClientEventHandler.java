@@ -1213,12 +1213,12 @@ public class ClientEventHandler {
 
         ItemStack stack = player.getMainHandItem();
 
-        if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity && zoom) {
+        if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity && zoom && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
             event.setFOV(event.getFOV() / 5);
             return;
         }
 
-        if (player.getVehicle() instanceof Ah6Entity ah6Entity && ah6Entity.getFirstPassenger() == player && zoom) {
+        if (player.getVehicle() instanceof Ah6Entity ah6Entity && ah6Entity.getFirstPassenger() == player && zoom && mc.options.getCameraType() == CameraType.FIRST_PERSON) {
             event.setFOV(event.getFOV() / 3);
             return;
         }

@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity;
 
+import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.google.common.collect.Lists;
@@ -166,10 +167,12 @@ public class VehicleEntity extends Entity {
             return false;
         if (source.is(DamageTypes.IN_FIRE))
             return false;
+        if (source.is(ModDamageTypes.VEHICLE_STRIKE))
+            amount-= 20;
         if (source.getEntity() != null) {
             this.entityData.set(LAST_ATTACKER_UUID, source.getEntity().getStringUUID());
         }
-        return true;
+        return super.hurt(source, amount);
     }
 
     public void heal(float pHealAmount) {
@@ -251,6 +254,13 @@ public class VehicleEntity extends Entity {
         }
 
         travel();
+
+        if (this.getHealth() <= 0.1 * this.getMaxHealth()) {
+            this.hurt(0.1f);
+        } else {
+            this.heal(0.05f);
+        }
+
         this.refreshDimensions();
     }
 
