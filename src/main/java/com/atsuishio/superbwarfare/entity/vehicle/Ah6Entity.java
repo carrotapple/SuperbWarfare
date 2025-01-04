@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.entity;
+package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
@@ -132,10 +132,8 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
     @Override
     public void baseTick() {
         propellerRotO = this.getPropellerRot();
-
         super.baseTick();
 
-        this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.06, 0.0));
         if (this.onGround()) {
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.8, 0.95, 0.8));
             this.setZRot(this.roll * 0.9f);

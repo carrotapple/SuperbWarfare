@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.entity;
+package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.CannonConfig;
@@ -221,7 +221,7 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
         }
 
         double fluidFloat;
-        fluidFloat = -0.05 + 0.1 * getSubmergedHeight(this);
+        fluidFloat = -0.06 + 0.12 * getSubmergedHeight(this);
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, fluidFloat, 0.0));
 
         if (this.onGround()) {

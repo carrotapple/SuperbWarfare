@@ -4,7 +4,7 @@ import com.atsuishio.superbwarfare.client.layer.SpeedBoatHeatLayer;
 import com.atsuishio.superbwarfare.client.layer.SpeedBoatLayer;
 import com.atsuishio.superbwarfare.client.layer.SpeedBoatPowerLayer;
 import com.atsuishio.superbwarfare.client.model.entity.SpeedboatModel;
-import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.SpeedboatEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;

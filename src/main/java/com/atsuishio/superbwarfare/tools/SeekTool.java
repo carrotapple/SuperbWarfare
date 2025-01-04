@@ -1,9 +1,9 @@
 package com.atsuishio.superbwarfare.tools;
 
 import com.atsuishio.superbwarfare.entity.ClaymoreEntity;
-import com.atsuishio.superbwarfare.entity.MobileVehicleEntity;
-import com.atsuishio.superbwarfare.entity.VehicleEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;

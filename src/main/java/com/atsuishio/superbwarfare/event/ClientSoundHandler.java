@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.event;
 
-import com.atsuishio.superbwarfare.entity.Ah6Entity;
-import com.atsuishio.superbwarfare.entity.MobileVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
+import com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity;
 import com.atsuishio.superbwarfare.tools.SeekTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -17,7 +17,7 @@ import org.joml.Math;
 
 import java.util.List;
 
-import static com.atsuishio.superbwarfare.entity.MobileVehicleEntity.POWER;
+import static com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity.POWER;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientSoundHandler {

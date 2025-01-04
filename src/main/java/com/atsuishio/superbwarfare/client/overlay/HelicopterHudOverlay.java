@@ -2,9 +2,9 @@ package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.RenderHelper;
-import com.atsuishio.superbwarfare.entity.IHelicopterEntity;
-import com.atsuishio.superbwarfare.entity.MobileVehicleEntity;
-import com.atsuishio.superbwarfare.entity.VehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.IHelicopterEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.mojang.blaze3d.platform.GlStateManager;

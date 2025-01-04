@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.layer;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.entity.SpeedboatEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.SpeedboatEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -12,7 +12,7 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
-import static com.atsuishio.superbwarfare.entity.SpeedboatEntity.HEAT;
+import static com.atsuishio.superbwarfare.entity.vehicle.SpeedboatEntity.HEAT;
 
 public class SpeedBoatHeatLayer extends GeoRenderLayer<SpeedboatEntity> {
     private static final ResourceLocation LAYER = ModUtils.loc("textures/entity/speedboat_heat.png");

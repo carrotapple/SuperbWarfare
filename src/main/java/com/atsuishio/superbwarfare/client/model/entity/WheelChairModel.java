@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.model.entity;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.entity.WheelChairEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.WheelChairEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 

@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.mixins;
 
-import com.atsuishio.superbwarfare.entity.VehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;

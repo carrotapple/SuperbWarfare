@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.mixins;
 
-import com.atsuishio.superbwarfare.entity.Ah6Entity;
+import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;

@@ -1,5 +1,6 @@
-package com.atsuishio.superbwarfare.entity;
+package com.atsuishio.superbwarfare.entity.vehicle;
 
+import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.entity.projectile.LaserEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
@@ -36,6 +37,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
     public boolean upInputDown;
     public boolean downInputDown;
     public double lastTickSpeed;
+    public double lastTickVerticalSpeed;
     public int collisionCoolDown;
 
     public MobileVehicleEntity(EntityType<?> pEntityType, Level pLevel) {
@@ -57,11 +59,13 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
     @Override
     public void baseTick() {
         lastTickSpeed = new Vec3(this.getDeltaMovement().x, this.getDeltaMovement().y + 0.06, this.getDeltaMovement().z).length();
+        lastTickVerticalSpeed = this.getDeltaMovement().y + 0.06;
         if (collisionCoolDown > 0) {
             collisionCoolDown--;
         }
         super.baseTick();
         crushEntities(this.getDeltaMovement());
+        this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.06, 0.0));
         this.move(MoverType.SELF, this.getDeltaMovement());
         this.refreshDimensions();
     }
@@ -69,28 +73,24 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
     @Override
     public void move(@NotNull MoverType movementType, @NotNull Vec3 movement) {
         super.move(movementType, movement);
-        if (lastTickSpeed < 0.4 || collisionCoolDown > 0) return;
+        if (lastTickSpeed < 0.3 || collisionCoolDown > 0) return;
 
-        if (horizontalCollision || verticalCollision) {
+        if ((verticalCollision) && Mth.abs((float) lastTickVerticalSpeed) > 0.6) {
+            this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (240 * ((Mth.abs((float) lastTickVerticalSpeed) - 0.6) * (lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
+            this.bounceVertical(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
+            if (!this.level().isClientSide) {
+                this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
+            }
             collisionCoolDown = 4;
         }
 
         if (this.horizontalCollision) {
+            this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (180 * ((lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
             this.bounceHorizontal(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
-            this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (160 * ((lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
             if (!this.level().isClientSide) {
                 this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
             }
-        }
-
-        // TODO bug修复：本方法会在速度到达一定程度且乘客不为空时，持续对自身造成伤害
-        if (this.verticalCollision) {
-            this.bounceVertical(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
-            this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this,
-                    this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (100 * ((lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
-            if (!this.level().isClientSide) {
-                this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
-            }
+            collisionCoolDown = 4;
         }
     }
 

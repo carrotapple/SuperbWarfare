@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.block;
 
-import com.atsuishio.superbwarfare.entity.ICannonEntity;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.ICannonEntity;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import net.minecraft.core.BlockPos;

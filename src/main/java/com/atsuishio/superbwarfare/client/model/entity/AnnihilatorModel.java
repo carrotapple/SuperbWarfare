@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.client.model.entity;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.CannonConfig;
-import com.atsuishio.superbwarfare.entity.AnnihilatorEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.AnnihilatorEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib.constant.DataTickets;
@@ -11,7 +11,7 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
-import static com.atsuishio.superbwarfare.entity.AnnihilatorEntity.*;
+import static com.atsuishio.superbwarfare.entity.vehicle.AnnihilatorEntity.*;
 
 public class AnnihilatorModel extends GeoModel<AnnihilatorEntity> {
 

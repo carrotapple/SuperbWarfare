@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.network.message;
 
-import com.atsuishio.superbwarfare.entity.IArmedVehicleEntity;
-import com.atsuishio.superbwarfare.entity.MultiWeaponVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.MultiWeaponVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;

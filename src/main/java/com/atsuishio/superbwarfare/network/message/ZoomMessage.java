@@ -1,8 +1,8 @@
 package com.atsuishio.superbwarfare.network.message;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.entity.IArmedVehicleEntity;
-import com.atsuishio.superbwarfare.entity.WheelChairEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.WheelChairEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.ModVariables;

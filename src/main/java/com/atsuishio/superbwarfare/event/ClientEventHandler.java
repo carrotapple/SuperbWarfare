@@ -3,7 +3,8 @@ package com.atsuishio.superbwarfare.event;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.ClickHandler;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
-import com.atsuishio.superbwarfare.entity.*;
+import com.atsuishio.superbwarfare.entity.DroneEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.*;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -55,8 +56,8 @@ import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-import static com.atsuishio.superbwarfare.entity.Ah6Entity.WEAPON_TYPE;
-import static com.atsuishio.superbwarfare.entity.SpeedboatEntity.HEAT;
+import static com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity.WEAPON_TYPE;
+import static com.atsuishio.superbwarfare.entity.vehicle.SpeedboatEntity.HEAT;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {

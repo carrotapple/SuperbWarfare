@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.network.message;
 
-import com.atsuishio.superbwarfare.entity.MobileVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;

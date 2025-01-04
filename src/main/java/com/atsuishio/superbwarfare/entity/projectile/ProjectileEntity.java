@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.entity.projectile;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.block.BarbedWireBlock;
 import com.atsuishio.superbwarfare.entity.*;
+import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.Transcript;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;

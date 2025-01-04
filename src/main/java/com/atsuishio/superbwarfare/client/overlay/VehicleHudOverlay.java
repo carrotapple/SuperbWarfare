@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
-import com.atsuishio.superbwarfare.entity.*;
+import com.atsuishio.superbwarfare.entity.vehicle.*;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;

@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.network.message;
 
-import com.atsuishio.superbwarfare.entity.IArmedVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 

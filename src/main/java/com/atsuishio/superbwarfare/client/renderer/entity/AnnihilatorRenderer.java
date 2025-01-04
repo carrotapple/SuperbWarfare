@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.client.renderer.entity;
 
 import com.atsuishio.superbwarfare.client.layer.*;
 import com.atsuishio.superbwarfare.client.model.entity.AnnihilatorModel;
-import com.atsuishio.superbwarfare.entity.AnnihilatorEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.AnnihilatorEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;

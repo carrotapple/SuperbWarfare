@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.SpawnConfig;
 import com.atsuishio.superbwarfare.entity.*;
 import com.atsuishio.superbwarfare.entity.projectile.*;
+import com.atsuishio.superbwarfare.entity.vehicle.*;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.Monster;

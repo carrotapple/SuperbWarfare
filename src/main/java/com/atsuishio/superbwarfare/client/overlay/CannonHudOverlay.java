@@ -2,10 +2,10 @@ package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.RenderHelper;
-import com.atsuishio.superbwarfare.entity.AnnihilatorEntity;
-import com.atsuishio.superbwarfare.entity.ICannonEntity;
-import com.atsuishio.superbwarfare.entity.Mk42Entity;
-import com.atsuishio.superbwarfare.entity.Mle1934Entity;
+import com.atsuishio.superbwarfare.entity.vehicle.AnnihilatorEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.ICannonEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.Mk42Entity;
+import com.atsuishio.superbwarfare.entity.vehicle.Mle1934Entity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.tools.TraceTool;
 import com.mojang.blaze3d.platform.GlStateManager;

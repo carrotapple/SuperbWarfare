@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.model.entity;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.entity.Ah6Entity;
+import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 

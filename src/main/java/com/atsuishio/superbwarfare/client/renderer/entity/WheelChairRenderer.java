@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
 import com.atsuishio.superbwarfare.client.model.entity.WheelChairModel;
-import com.atsuishio.superbwarfare.entity.WheelChairEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.WheelChairEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;

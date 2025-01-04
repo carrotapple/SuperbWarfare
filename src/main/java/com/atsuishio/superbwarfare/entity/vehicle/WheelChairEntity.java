@@ -1,5 +1,6 @@
-package com.atsuishio.superbwarfare.entity;
+package com.atsuishio.superbwarfare.entity.vehicle;
 
+import com.atsuishio.superbwarfare.entity.MortarEntity;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
@@ -114,8 +115,6 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
         }
 
         super.baseTick();
-
-        this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.048, 0.0));
         if (this.onGround()) {
             float f = (float) Mth.clamp(0.85f + 0.05f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90, 0.01, 0.99);
             this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.95, f));
@@ -182,7 +181,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.WHEEL_CHAIR_JUMP.get(), SoundSource.PLAYERS, 1, 1);
             }
             this.extraEnergy(400);
-            this.setDeltaMovement(this.getDeltaMovement().add(0, 0.48, 0));
+            this.setDeltaMovement(this.getDeltaMovement().add(0, 0.6, 0));
             jumpCoolDown = 3;
         }
 

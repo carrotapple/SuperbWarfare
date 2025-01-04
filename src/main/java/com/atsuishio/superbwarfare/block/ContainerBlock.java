@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.block;
 
 import com.atsuishio.superbwarfare.block.entity.ContainerBlockEntity;
-import com.atsuishio.superbwarfare.entity.ICannonEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.ICannonEntity;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -111,6 +111,7 @@ public class ContainerBlock extends BaseEntityBlock {
                     if (i == 0 && j == 0 && k == 0) {
                         continue;
                     }
+                    //TODO 修改开箱
                     if (!pLevel.getBlockState(pPos.offset(i, j, k)).isAir()) {
                         flag = false;
                     }
