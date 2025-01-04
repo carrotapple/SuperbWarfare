@@ -37,8 +37,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEntity {
     private float monsterMultiplier = 0.0f;
     private float damage = 40.0f;
-    private float explosion_damage = 80f;
-    private float explosion_radius = 5f;
+    private float explosionDamage = 80f;
+    private float explosionRadius = 5f;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public GunGrenadeEntity(EntityType<? extends GunGrenadeEntity> type, Level world) {
@@ -46,11 +46,11 @@ public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
         this.noCulling = true;
     }
 
-    public GunGrenadeEntity(LivingEntity entity, Level level, float damage, float explosion_damage, float explosion_radius) {
+    public GunGrenadeEntity(LivingEntity entity, Level level, float damage, float explosionDamage, float explosionRadius) {
         super(ModEntities.GUN_GRENADE.get(), entity, level);
         this.damage = damage;
-        this.explosion_damage = explosion_damage;
-        this.explosion_radius = explosion_radius;
+        this.explosionDamage = explosionDamage;
+        this.explosionRadius = explosionRadius;
     }
 
     public GunGrenadeEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
@@ -105,7 +105,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        entity, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
+                        entity, this.explosionDamage, this.explosionRadius, this.monsterMultiplier);
             }
         }
 
@@ -125,7 +125,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
+                        this, this.explosionDamage, this.explosionRadius, this.monsterMultiplier);
             }
         }
 
@@ -145,7 +145,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
+                        this, this.explosionDamage, this.explosionRadius, this.monsterMultiplier);
             }
             this.discard();
         }

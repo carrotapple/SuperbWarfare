@@ -120,7 +120,9 @@ public class MortarShellEntity extends ThrowableItemProjectile implements GeoEnt
             bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
         }
         if (!this.level().isClientSide() && this.level() instanceof ServerLevel) {
-            ProjectileTool.causeCustomExplode(this, this.damage, this.radius);
+            if (this.tickCount > 1) {
+                ProjectileTool.causeCustomExplode(this, this.damage, this.radius);
+            }
         }
         this.discard();
     }
