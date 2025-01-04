@@ -75,7 +75,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
             collisionCoolDown = 4;
         }
 
-        if ((horizontalCollision)) {
+        if (this.horizontalCollision) {
             this.bounceHorizontal(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
             this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (160 * ((lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
             if (!this.level().isClientSide) {
@@ -83,9 +83,11 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
             }
         }
 
-        if ((verticalCollision)) {
+        // TODO bug修复：本方法会在速度到达一定程度且乘客不为空时，持续对自身造成伤害
+        if (this.verticalCollision) {
             this.bounceVertical(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
-            this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (100 * ((lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
+            this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this,
+                    this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (100 * ((lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
             if (!this.level().isClientSide) {
                 this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
             }
@@ -102,10 +104,11 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
                 break;
         }
     }
+
     private void bounceVertical(Direction direction) {
-       if (direction.getAxis() == Direction.Axis.Y) {
-           this.setDeltaMovement(this.getDeltaMovement().multiply(0.9, -0.8, 0.9));
-       }
+        if (direction.getAxis() == Direction.Axis.Y) {
+            this.setDeltaMovement(this.getDeltaMovement().multiply(0.9, -0.8, 0.9));
+        }
     }
 
     /**

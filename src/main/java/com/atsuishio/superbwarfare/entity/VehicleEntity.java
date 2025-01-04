@@ -168,7 +168,7 @@ public class VehicleEntity extends Entity {
         if (source.is(DamageTypes.IN_FIRE))
             return false;
         if (source.is(ModDamageTypes.VEHICLE_STRIKE))
-            amount-= 20;
+            amount -= 20;
         if (source.getEntity() != null) {
             this.entityData.set(LAST_ATTACKER_UUID, source.getEntity().getStringUUID());
         }
