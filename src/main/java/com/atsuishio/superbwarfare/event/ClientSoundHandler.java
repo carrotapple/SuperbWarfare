@@ -17,7 +17,7 @@ import org.joml.Math;
 
 import java.util.List;
 
-import static com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity.POWER;
+import static com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity.PROPELLER_ROT;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientSoundHandler {
@@ -45,7 +45,7 @@ public class ClientSoundHandler {
                 float distanceReduce;
                 if (e instanceof Ah6Entity ah6Entity) {
                     distanceReduce = (float) (1 - distance / 64);
-                    player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), 5 * (mobileVehicle.getEntityData().get(POWER) - 0.012f) * distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.1f + 1.0f), false);
+                    player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), 5 * (mobileVehicle.getEntityData().get(PROPELLER_ROT) - 0.012f) * distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.1f + 1.0f), false);
 //                    player.displayClientMessage(Component.literal("Angle:" + engineSoundPos), true);
                 }
             }
