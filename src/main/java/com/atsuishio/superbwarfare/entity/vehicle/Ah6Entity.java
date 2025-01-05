@@ -13,7 +13,6 @@ import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -34,7 +33,6 @@ import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -135,6 +133,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
         this.hurt(0.75f * Math.max(amount - 5, 0));
         return true;
     }
+
     @Override
     public void baseTick() {
         propellerRotO = this.getPropellerRot();
@@ -171,7 +170,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.95, f));
         }
 
-        if (this.isInWater() && this.tickCount %4 == 0) {
+        if (this.isInWater() && this.tickCount % 4 == 0) {
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.6, 0.6, 0.6));
             this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), 26 + (float) (60 * ((lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
         }
@@ -326,7 +325,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
         }
 
-        if (passenger != this.getFirstPassenger()){
+        if (passenger != this.getFirstPassenger()) {
             passenger.setXRot(passenger.getXRot() + (getXRot() - xRotO));
         }
 
@@ -355,34 +354,17 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     @Override
     public void destroy() {
         Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
-        if (crash) {
-            List<Entity> passenger = this.getPassengers();
-            for (var e : passenger) {
-                if (e instanceof LivingEntity living) {
-                    if (e instanceof ServerPlayer victim && !(victim.isCreative() || victim.isSpectator())) {
-                        living.setHealth(0);
-                        if (attacker == null || attacker == victim) {
-                            living.level().players().forEach(
-                                    p -> p.sendSystemMessage(
-                                            Component.translatable("death.attack.air_crash", victim.getDisplayName())
-                                    )
-                            );
-                        } else {
-                            living.level().players().forEach(
-                                    p -> p.sendSystemMessage(
-                                            Component.translatable("death.attack.air_crash_entity",
-                                                    victim.getDisplayName(),
-                                                    attacker.getDisplayName()
-                                            )
-                                    )
-                            );
-                        }
-                    } else {
-                        living.setHealth(0);
-                        living.level().broadcastEntityEvent(living, (byte) 60);
-                        living.remove(RemovalReason.KILLED);
-                        living.gameEvent(GameEvent.ENTITY_DIE);
-                    }
+        if (this.crash) {
+            List<Entity> passengers = this.getPassengers();
+            for (var entity : passengers) {
+                if (entity instanceof LivingEntity living) {
+                    var tempAttacker = living == attacker ? null : attacker;
+
+                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
                 }
             }
         }
