@@ -140,13 +140,13 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
         super.baseTick();
 
         if (this.level() instanceof ServerLevel) {
-            if (reloadCoolDown > 0){
+            if (reloadCoolDown > 0) {
                 reloadCoolDown--;
             }
             Player player = (Player) this.getFirstPassenger();
             if (player != null) {
                 if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.ROCKET_70.get())).mapToInt(ItemStack::getCount).sum() > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && reloadCoolDown == 0 && this.getEntityData().get(LOADED_ROCKET) < 14) {
-                    this.entityData.set(LOADED_ROCKET,this.getEntityData().get(LOADED_ROCKET) + 1);
+                    this.entityData.set(LOADED_ROCKET, this.getEntityData().get(LOADED_ROCKET) + 1);
                     reloadCoolDown = 30;
                     this.getItemStacks().stream().filter(stack -> stack.is(ModItems.ROCKET_70.get())).findFirst().ifPresent(stack -> stack.shrink(1));
                     this.level().playSound(null, this, ModSounds.MISSILE_RELOAD.get(), this.getSoundSource(), 1, 1);
@@ -484,7 +484,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                 heliRocketEntityRight.shoot(this.getLookAngle().x, this.getLookAngle().y + 0.0125, this.getLookAngle().z, 5, 0.25f);
                 player.level().addFreshEntity(heliRocketEntityRight);
                 fireIndex = 1;
-            } else if (fireIndex == 1){
+            } else if (fireIndex == 1) {
                 HeliRocketEntity heliRocketEntityLeft = new HeliRocketEntity(player, player.level(),
                         140,
                         40,
@@ -519,7 +519,8 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     @Override
     public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
         Vec3 vec3d = getDismountOffset(getBbWidth() * Mth.SQRT_OF_TWO, passenger.getBbWidth() * Mth.SQRT_OF_TWO);
-        double ox = getX() + vec3d.x;;
+        double ox = getX() + vec3d.x;
+        ;
         int i = this.getPassengers().indexOf(passenger);
         if (i == 0 || i == 2) {
             ox = getX() - vec3d.x;
