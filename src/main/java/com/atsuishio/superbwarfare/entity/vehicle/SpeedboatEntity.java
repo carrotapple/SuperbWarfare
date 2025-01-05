@@ -5,19 +5,13 @@ import com.atsuishio.superbwarfare.config.server.CannonConfig;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.*;
-import com.atsuishio.superbwarfare.item.PerkItem;
-import com.atsuishio.superbwarfare.menu.VehicleMenu;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
-import com.atsuishio.superbwarfare.perk.AmmoPerk;
-import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -25,44 +19,27 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.Containers;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.HasCustomInventoryScreen;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.ContainerEntity;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -73,13 +50,11 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
-public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, IChargeEntity, IArmedVehicleEntity, HasCustomInventoryScreen, ContainerEntity {
+public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity, IChargeEntity, IArmedVehicleEntity {
 
     public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
@@ -88,10 +63,6 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
 
     public static final float MAX_HEALTH = CannonConfig.SPEEDBOAT_HP.get();
     public static final int MAX_ENERGY = CannonConfig.SPEEDBOAT_MAX_ENERGY.get();
-    public static final int CONTAINER_SIZE = 105;
-
-    private NonNullList<ItemStack> items = NonNullList.withSize(CONTAINER_SIZE, ItemStack.EMPTY);
-    private LazyOptional<?> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public float turretYRot;
@@ -125,14 +96,11 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        compound.putFloat("Energy", this.entityData.get(ENERGY));
-        ContainerHelper.saveAllItems(compound, this.getItemStacks());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        ContainerHelper.loadAllItems(compound, this.getItemStacks());
     }
 
     @Override
@@ -143,14 +111,6 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
     @Override
     public double getPassengersRidingOffset() {
         return super.getPassengersRidingOffset() - 0.8;
-    }
-
-    @Override
-    public void remove(Entity.RemovalReason pReason) {
-        if (!this.level().isClientSide && pReason != RemovalReason.DISCARDED) {
-            Containers.dropContents(this.level(), this, this);
-        }
-        super.remove(pReason);
     }
 
     @Override
@@ -241,7 +201,6 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
 
         collideBlock();
         gunnerAngle();
-        pickUpItem();
 
         this.refreshDimensions();
     }
@@ -267,43 +226,6 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
                 .damage(CannonConfig.SPEEDBOAT_GUN_DAMAGE.get())
                 .headShot(2f)
                 .zoom(false);
-
-        if (this.getItemStacks().size() > 102) {
-            ItemStack perkItem = this.getItemStacks().get(102);
-            if (perkItem.getItem() instanceof PerkItem perk) {
-                if (perk.getPerk() == ModPerks.SILVER_BULLET.get()) {
-                    projectile.undeadMultiple(2.5f);
-                } else if (perk.getPerk() == ModPerks.BEAST_BULLET.get()) {
-                    projectile.beast();
-                } else if (perk.getPerk() == ModPerks.JHP_BULLET.get()) {
-                    projectile.jhpBullet(true, 3);
-                } else if (perk.getPerk() == ModPerks.HE_BULLET.get()) {
-                    projectile.heBullet(true, 3);
-                } else if (perk.getPerk() == ModPerks.INCENDIARY_BULLET.get()) {
-                    projectile.fireBullet(true, 3, false);
-                }
-
-                if (perk.getPerk() instanceof AmmoPerk ammoPerk) {
-                    projectile.setRGB(ammoPerk.rgb);
-                    if (!ammoPerk.mobEffects.get().isEmpty()) {
-                        ArrayList<MobEffectInstance> mobEffectInstances = new ArrayList<>();
-                        for (MobEffect effect : ammoPerk.mobEffects.get()) {
-                            mobEffectInstances.add(new MobEffectInstance(effect, 160, 2));
-                        }
-                        projectile.effect(mobEffectInstances);
-                    }
-                }
-            }
-        }
-
-        if (this.getItemStacks().size() > 104) {
-            ItemStack perkItem = this.getItemStacks().get(104);
-            if (perkItem.getItem() instanceof PerkItem perk) {
-                if (perk.getPerk() == ModPerks.MONSTER_HUNTER.get()) {
-                    projectile.monsterMultiple(0.5f);
-                }
-            }
-        }
 
         projectile.bypassArmorRate(0.9f);
         projectile.setPos(this.xo - this.getViewVector(1).scale(0.54).x - this.getDeltaMovement().x, this.yo + 3.0, this.zo - this.getViewVector(1).scale(0.54).z - this.getDeltaMovement().z);
@@ -479,17 +401,6 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
         }
     }
 
-    public void pickUpItem() {
-        List<ItemEntity> list = this.level().getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(0.2F, 0.1, 0.2F));
-        if (!list.isEmpty()) {
-            for (ItemEntity entity : list) {
-                if (!this.level().isClientSide) {
-                    HopperBlockEntity.addItem(this, entity);
-                }
-            }
-        }
-    }
-
     @Override
     public void destroy() {
         Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
@@ -543,139 +454,6 @@ public class SpeedboatEntity extends MobileVehicleEntity implements GeoEntity, I
     @Override
     public int getMaxPassengers() {
         return 5;
-    }
-
-    @Override
-    public void openCustomInventoryScreen(Player pPlayer) {
-        pPlayer.openMenu(this);
-        if (!pPlayer.level().isClientSide) {
-            this.gameEvent(GameEvent.CONTAINER_OPEN, pPlayer);
-        }
-    }
-
-    @Nullable
-    @Override
-    public ResourceLocation getLootTable() {
-        return null;
-    }
-
-    @Override
-    public void setLootTable(@Nullable ResourceLocation pLootTable) {
-    }
-
-    @Override
-    public long getLootTableSeed() {
-        return 0;
-    }
-
-    @Override
-    public void setLootTableSeed(long pLootTableSeed) {
-    }
-
-    @Override
-    public NonNullList<ItemStack> getItemStacks() {
-        return this.items;
-    }
-
-    @Override
-    public void clearItemStacks() {
-        this.items.clear();
-    }
-
-    @Override
-    public int getContainerSize() {
-        return CONTAINER_SIZE;
-    }
-
-    @Override
-    public ItemStack getItem(int pSlot) {
-        return this.items.get(pSlot);
-    }
-
-    @Override
-    public ItemStack removeItem(int pSlot, int pAmount) {
-        return ContainerHelper.removeItem(this.items, pSlot, pAmount);
-    }
-
-    @Override
-    public boolean canPlaceItem(int pIndex, ItemStack pStack) {
-        return switch (pIndex) {
-            case VehicleMenu.DEFAULT_AMMO_PERK_SLOT ->
-                    pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == Perk.Type.AMMO;
-            case VehicleMenu.DEFAULT_FUNC_PERK_SLOT ->
-                    pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == Perk.Type.FUNCTIONAL && perkItem.getPerk() == ModPerks.POWERFUL_ATTRACTION.get();
-            case VehicleMenu.DEFAULT_DAMAGE_PERK_SLOT ->
-                    pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == Perk.Type.DAMAGE && perkItem.getPerk() == ModPerks.MONSTER_HUNTER.get();
-            default -> true;
-        };
-    }
-
-    @Override
-    public ItemStack removeItemNoUpdate(int pSlot) {
-        ItemStack itemstack = this.getItemStacks().get(pSlot);
-        if (itemstack.isEmpty()) {
-            return ItemStack.EMPTY;
-        } else {
-            this.getItemStacks().set(pSlot, ItemStack.EMPTY);
-            return itemstack;
-        }
-    }
-
-    @Override
-    public void setItem(int pSlot, ItemStack pStack) {
-        this.getItemStacks().set(pSlot, pStack);
-        if (!pStack.isEmpty() && pStack.getCount() > this.getMaxStackSize()) {
-            pStack.setCount(this.getMaxStackSize());
-        }
-    }
-
-    @Override
-    public void setChanged() {
-    }
-
-    @Override
-    public boolean stillValid(Player pPlayer) {
-        return !this.isRemoved() && this.position().closerThan(pPlayer.position(), 8.0D);
-    }
-
-    @Override
-    public void clearContent() {
-        this.getItemStacks().clear();
-    }
-
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        if (pPlayer.isSpectator()) {
-            return null;
-        } else {
-            return new VehicleMenu(pContainerId, pPlayerInventory, this);
-        }
-    }
-
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-        if (this.isAlive() && capability == ForgeCapabilities.ITEM_HANDLER) {
-            return itemHandler.cast();
-        }
-        return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        itemHandler.invalidate();
-    }
-
-    @Override
-    public void reviveCaps() {
-        super.reviveCaps();
-        itemHandler = LazyOptional.of(() -> new InvWrapper(this));
-    }
-
-    @Override
-    public void stopOpen(Player pPlayer) {
-        this.level().gameEvent(GameEvent.CONTAINER_CLOSE, this.position(), GameEvent.Context.of(pPlayer));
     }
 
     @Override

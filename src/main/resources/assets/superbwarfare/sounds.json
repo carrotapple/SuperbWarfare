@@ -2569,5 +2569,29 @@
         "stream": false
       }
     ]
+  },
+  "into_cannon": {
+    "sounds": [
+      {
+        "name": "superbwarfare:into_cannon",
+        "stream": false
+      }
+    ]
+  },
+  "into_missile": {
+    "sounds": [
+      {
+        "name": "superbwarfare:into_missile",
+        "stream": false
+      }
+    ]
+  },
+  "missile_reload": {
+    "sounds": [
+      {
+        "name": "superbwarfare:missile_reload",
+        "stream": false
+      }
+    ]
   }
 }

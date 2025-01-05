@@ -154,6 +154,7 @@
   "item.superbwarfare.javelin_missile": "标枪导弹",
   "item.superbwarfare.heavy_ammo": "重型弹药",
   "item.superbwarfare.lunge_mine": "突刺爆雷",
+  "item.superbwarfare.rocket_70": "70mm火箭弹",
 
   "block.superbwarfare.container": "集装箱",
   "des.superbwarfare.container.empty": "空的",
@@ -473,5 +474,7 @@
   "des.superbwarfare.revolver.sa": "单动",
   "des.superbwarfare.tips.ammo_type.ap": "AP SHELL",
   "des.superbwarfare.tips.ammo_type.he": "HE SHELL",
-  "des.superbwarfare.tips.ammo_type.cal50": ".50 BMG"
+  "des.superbwarfare.tips.ammo_type.cal50": ".50 BMG",
+  "des.superbwarfare.tips.ammo_type.20mm_cannon": "20MM HE",
+  "des.superbwarfare.tips.ammo_type.rocket": "ROCKET"
 }

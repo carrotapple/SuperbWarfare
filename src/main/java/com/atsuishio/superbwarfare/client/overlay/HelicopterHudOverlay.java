@@ -32,6 +32,7 @@ import org.joml.Vector4f;
 import java.text.DecimalFormat;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
+import static com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay.*;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class HelicopterHudOverlay {
@@ -146,8 +147,10 @@ public class HelicopterHudOverlay {
                 float y3 = (float) p3.y;
                 if (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
                     preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/crosshair_ind.png"), x - 8, y - 8, 0, 0, 16, 16, 16, 16);
+                    renderKillIndicator(guiGraphics, x - 7.5f + (float) (2 * (Math.random() - 0.5f)), y - 7.5f + (float) (2 * (Math.random() - 0.5f)));
                 } else if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK) {
                     preciseBlit(guiGraphics, ModUtils.loc("textures/screens/drone.png"), x3 - 8, y3 - 8, 0, 0, 16, 16, 16, 16);
+                    renderKillIndicator(guiGraphics, x3 - 7.5f + (float) (2 * (Math.random() - 0.5f)), y3 - 7.5f + (float) (2 * (Math.random() - 0.5f)));
                 }
 
                 poseStack.popPose();
@@ -156,6 +159,30 @@ public class HelicopterHudOverlay {
             poseStack.popPose();
         } else {
             scopeScale = 0.7f;
+        }
+    }
+
+    private static void renderKillIndicator(GuiGraphics guiGraphics, float posX, float posY) {
+        float rate = (40 - KILL_INDICATOR * 5) / 5.5f;
+
+        if (HIT_INDICATOR > 0) {
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/hit_marker.png"), posX, posY, 0, 0, 16, 16, 16, 16);
+        }
+
+        if (HEAD_INDICATOR > 0) {
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/headshot_mark.png"), posX, posY, 0, 0, 16, 16, 16, 16);
+        }
+
+        if (KILL_INDICATOR > 0) {
+            float posX1 = posX - 2 + rate;
+            float posY1 = posY - 2 + rate;
+            float posX2 = posX + 2 - rate;
+            float posY2 = posY + 2 - rate;
+
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark1.png"), posX1, posY1, 0, 0, 16, 16, 16, 16);
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark2.png"), posX2, posY1, 0, 0, 16, 16, 16, 16);
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark3.png"), posX1, posY2, 0, 0, 16, 16, 16, 16);
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark4.png"), posX2, posY2, 0, 0, 16, 16, 16, 16);
         }
     }
 

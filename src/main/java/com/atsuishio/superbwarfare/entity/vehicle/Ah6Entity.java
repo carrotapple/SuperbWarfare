@@ -2,12 +2,9 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
-import com.atsuishio.superbwarfare.entity.projectile.GunGrenadeEntity;
+import com.atsuishio.superbwarfare.entity.projectile.HeliRocketEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
-import com.atsuishio.superbwarfare.init.ModDamageTypes;
-import com.atsuishio.superbwarfare.init.ModEntities;
-import com.atsuishio.superbwarfare.init.ModParticleTypes;
-import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
@@ -34,6 +31,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.DismountHelper;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -59,21 +57,24 @@ import java.util.List;
 
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
-public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelicopterEntity, MultiWeaponVehicleEntity {
+public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHelicopterEntity, MultiWeaponVehicleEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public static final float MAX_HEALTH = 300;
+    public static final float MAX_HEALTH = 400;
     public static final int MAX_ENERGY = 4000000;
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> PROPELLER_ROT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Integer> WEAPON_TYPE = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
+
+    public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> LOADED_ROCKET = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
     public boolean engineStart;
     public boolean engineStartOver;
     public float propellerRot;
     public float propellerRotO;
 
     public double velocity;
-
+    public int reloadCoolDown;
     public int fireIndex;
 
     public Ah6Entity(PlayMessages.SpawnEntity packet, Level world) {
@@ -88,6 +89,8 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
+        this.entityData.define(AMMO, 0);
+        this.entityData.define(LOADED_ROCKET, 0);
         this.entityData.define(DELTA_ROT, 0f);
         this.entityData.define(WEAPON_TYPE, 0);
         this.entityData.define(PROPELLER_ROT, 0f);
@@ -96,11 +99,13 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
+        compound.putInt("LoadedRocket", this.entityData.get(LOADED_ROCKET));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
+        this.entityData.set(LOADED_ROCKET, compound.getInt("LoadedRocket"));
     }
 
     @Override
@@ -134,6 +139,27 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
     public void baseTick() {
         propellerRotO = this.getPropellerRot();
         super.baseTick();
+
+        if (this.level() instanceof ServerLevel) {
+            if (reloadCoolDown > 0){
+                reloadCoolDown--;
+            }
+            Player player = (Player) this.getFirstPassenger();
+            if (player != null) {
+                if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.ROCKET_70.get())).mapToInt(ItemStack::getCount).sum() > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && reloadCoolDown == 0 && this.getEntityData().get(LOADED_ROCKET) < 14) {
+                    this.entityData.set(LOADED_ROCKET,this.getEntityData().get(LOADED_ROCKET) + 1);
+                    reloadCoolDown = 30;
+                    this.getItemStacks().stream().filter(stack -> stack.is(ModItems.ROCKET_70.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+                    this.level().playSound(null, this, ModSounds.MISSILE_RELOAD.get(), this.getSoundSource(), 1, 1);
+                }
+            }
+
+            if (this.getEntityData().get(WEAPON_TYPE) == 0) {
+                this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum());
+            } else {
+                this.entityData.set(AMMO, this.getEntityData().get(LOADED_ROCKET));
+            }
+        }
 
         if (this.onGround()) {
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.8, 0.95, 0.8));
@@ -333,7 +359,7 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
             List<Entity> passenger = this.getPassengers();
             for (var e : passenger) {
                 if (e instanceof LivingEntity living) {
-                    if (e instanceof ServerPlayer victim) {
+                    if (e instanceof ServerPlayer victim && !(victim.isCreative() || victim.isSpectator())) {
                         living.setHealth(0);
                         if (attacker == null || attacker == victim) {
                             living.level().players().forEach(
@@ -404,7 +430,7 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
         Vector4f worldPositionLeft;
 
         if (entityData.get(WEAPON_TYPE) == 0) {
-            x = 1f;
+            x = 1.1f;
             y = 0.62f;
             z = 0.8f;
 
@@ -417,10 +443,10 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
                     .headShot(2f)
                     .zoom(false);
 
-            projectileRight.heBullet(true, 5);
-            projectileRight.bypassArmorRate(1);
+            projectileRight.heBullet(true, 3);
+            projectileRight.bypassArmorRate(0.5f);
             projectileRight.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
-            projectileRight.shoot(player, this.getLookAngle().x, this.getLookAngle().y+ 0.03, this.getLookAngle().z, 20,
+            projectileRight.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.025, this.getLookAngle().z, 20,
                     (float) 0.2);
             this.level().addFreshEntity(projectileRight);
             sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPositionRight.x, worldPositionRight.y, worldPositionRight.z, 1, 0, 0, 0, 0, false);
@@ -431,10 +457,10 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
                     .headShot(2f)
                     .zoom(false);
 
-            projectileLeft.heBullet(true, 5);
-            projectileLeft.bypassArmorRate(1);
+            projectileLeft.heBullet(true, 3);
+            projectileLeft.bypassArmorRate(0.5f);
             projectileLeft.setPos(worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z);
-            projectileLeft.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.03, this.getLookAngle().z, 20,
+            projectileLeft.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.025, this.getLookAngle().z, 20,
                     (float) 0.2);
             this.level().addFreshEntity(projectileLeft);
             sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z, 1, 0, 0, 0, 0, false);
@@ -446,8 +472,20 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
                     serverPlayer.playSound(ModSounds.HELICOPTER_CANNON_VERYFAR.get(), 24, 1);
                 }
             }
-        } else if (entityData.get(WEAPON_TYPE) == 1) {
-            x = 1.15f;
+
+            this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+
+            Level level = player.level();
+            final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
+
+            for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(6), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
+                if (target instanceof ServerPlayer serverPlayer) {
+                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 7, this.getX(), this.getEyeY(), this.getZ()));
+                }
+            }
+
+        } else if (entityData.get(WEAPON_TYPE) == 1 && this.getEntityData().get(LOADED_ROCKET) > 0) {
+            x = 1.7f;
             y = 0.62f;
             z = 0.8f;
 
@@ -455,24 +493,24 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
             worldPositionLeft = transformPosition(transform, x, y, z);
 
             if (fireIndex == 0) {
-                GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, player.level(),
-                        110,
-                        40,
-                        6);
-
-                gunGrenadeEntity.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
-                gunGrenadeEntity.shoot(this.getLookAngle().x, this.getLookAngle().y+ 0.03, this.getLookAngle().z, 8, 0.25f);
-                player.level().addFreshEntity(gunGrenadeEntity);
-                fireIndex = 1;
-            } else if (fireIndex == 1){
-                GunGrenadeEntity gunGrenadeEntityLeft = new GunGrenadeEntity(player, player.level(),
-                        110,
+                HeliRocketEntity heliRocketEntityRight = new HeliRocketEntity(player, player.level(),
+                        140,
                         40,
                         5);
 
-                gunGrenadeEntityLeft.setPos(worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z);
-                gunGrenadeEntityLeft.shoot(this.getLookAngle().x, this.getLookAngle().y+ 0.03, this.getLookAngle().z, 8, 0.25f);
-                player.level().addFreshEntity(gunGrenadeEntityLeft);
+                heliRocketEntityRight.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
+                heliRocketEntityRight.shoot(this.getLookAngle().x, this.getLookAngle().y + 0.0125, this.getLookAngle().z, 5, 0.25f);
+                player.level().addFreshEntity(heliRocketEntityRight);
+                fireIndex = 1;
+            } else if (fireIndex == 1){
+                HeliRocketEntity heliRocketEntityLeft = new HeliRocketEntity(player, player.level(),
+                        140,
+                        40,
+                        5);
+
+                heliRocketEntityLeft.setPos(worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z);
+                heliRocketEntityLeft.shoot(this.getLookAngle().x, this.getLookAngle().y + 0.0125, this.getLookAngle().z, 5, 0.25f);
+                player.level().addFreshEntity(heliRocketEntityLeft);
                 fireIndex = 0;
             }
 
@@ -481,14 +519,17 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
                     serverPlayer.playSound(ModSounds.HELICOPTER_ROCKET_FIRE_3P.get(), 6, 1);
                 }
             }
-        }
 
-        Level level = player.level();
-        final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
+            this.entityData.set(LOADED_ROCKET, this.getEntityData().get(LOADED_ROCKET) - 1);
+            reloadCoolDown = 30;
 
-        for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(6), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
-            if (target instanceof ServerPlayer serverPlayer) {
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 7, this.getX(), this.getEyeY(), this.getZ()));
+            Level level = player.level();
+            final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
+
+            for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(6), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
+                if (target instanceof ServerPlayer serverPlayer) {
+                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 7, this.getX(), this.getEyeY(), this.getZ()));
+                }
             }
         }
     }
@@ -534,17 +575,22 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
 
     @Override
     public int mainGunRpm() {
-        return 300;
+        return 480;
     }
 
     @Override
     public boolean canShoot(Player player) {
-        return true;
+        if (entityData.get(WEAPON_TYPE) == 0) {
+            return this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
+        } else if (entityData.get(WEAPON_TYPE) == 1) {
+            return this.entityData.get(AMMO) > 0;
+        }
+        return false;
     }
 
     @Override
     public int getAmmoCount(Player player) {
-        return -1;
+        return this.entityData.get(AMMO);
     }
 
 
@@ -570,9 +616,13 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
 
     @Override
     public void changeWeapon() {
-        entityData.set(WEAPON_TYPE, entityData.get(WEAPON_TYPE) + 1);
-        if (entityData.get(WEAPON_TYPE) == 2) {
+//        entityData.set(WEAPON_TYPE, entityData.get(WEAPON_TYPE) + 1);
+        if (entityData.get(WEAPON_TYPE) == 0) {
+            this.level().playSound(null, this, ModSounds.INTO_MISSILE.get(), this.getSoundSource(), 1, 1);
+            entityData.set(WEAPON_TYPE, 1);
+        } else if (entityData.get(WEAPON_TYPE) == 1) {
             entityData.set(WEAPON_TYPE, 0);
+            this.level().playSound(null, this, ModSounds.INTO_CANNON.get(), this.getSoundSource(), 1, 1);
         }
     }
 

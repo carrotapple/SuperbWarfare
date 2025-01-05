@@ -68,6 +68,8 @@ public class ModEntities {
             EntityType.Builder.<WheelChairEntity>of(WheelChairEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(512).setUpdateInterval(3).setCustomClientFactory(WheelChairEntity::new).fireImmune().sized(1.0f, 1.0f));
     public static final RegistryObject<EntityType<Ah6Entity>> AH_6 = register("ah_6",
             EntityType.Builder.<Ah6Entity>of(Ah6Entity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(512).setUpdateInterval(3).setCustomClientFactory(Ah6Entity::new).fireImmune().sized(2.8f, 2.9f));
+    public static final RegistryObject<EntityType<HeliRocketEntity>> HELI_ROCKET = register("projectile_heli_rocket",
+            EntityType.Builder.<HeliRocketEntity>of(HeliRocketEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(512).setUpdateInterval(1).setCustomClientFactory(HeliRocketEntity::new).sized(0.5f, 0.5f));
 
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String name, EntityType.Builder<T> entityTypeBuilder) {
         return REGISTRY.register(name, () -> entityTypeBuilder.build(name));

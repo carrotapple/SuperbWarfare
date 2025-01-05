@@ -22,6 +22,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import static com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity.WEAPON_TYPE;
+
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class VehicleHudOverlay {
 
@@ -80,7 +82,10 @@ public class VehicleHudOverlay {
             poseStack.scale(1.5f, 1.5f, 1f);
             float v = h / 1.5f - (iCharge ? 42 : 29) / 1.5f;
 
-            if (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) && !(iVehicle instanceof ICannonEntity)) {
+            if (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))
+                    && !(iVehicle instanceof ICannonEntity
+                    || (iVehicle instanceof Ah6Entity ah6Entity && ah6Entity.getEntityData().get(WEAPON_TYPE) == 1))
+            ) {
                 event.getGuiGraphics().drawString(
                         Minecraft.getInstance().font,
                         "∞",
@@ -129,6 +134,14 @@ public class VehicleHudOverlay {
         }
         if (iVehicle instanceof SpeedboatEntity) {
             return Component.translatable("des.superbwarfare.tips.ammo_type.cal50").getString();
+        }
+        if (iVehicle instanceof Ah6Entity ah6Entity) {
+            if (ah6Entity.getEntityData().get(WEAPON_TYPE) == 0) {
+                return Component.translatable("des.superbwarfare.tips.ammo_type.20mm_cannon").getString();
+            } else {
+                return Component.translatable("des.superbwarfare.tips.ammo_type.rocket").getString();
+            }
+
         }
         return "";
     }

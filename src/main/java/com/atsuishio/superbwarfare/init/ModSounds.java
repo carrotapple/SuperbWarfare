@@ -365,5 +365,8 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> HELICOPTER_CANNON_VERYFAR = REGISTRY.register("heli_cannon_veryfar", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("heli_cannon_veryfar")));
     public static final RegistryObject<SoundEvent> HELICOPTER_ROCKET_FIRE_1P = REGISTRY.register("heli_rocket_fire_1p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("heli_rocket_fire_1p")));
     public static final RegistryObject<SoundEvent> HELICOPTER_ROCKET_FIRE_3P = REGISTRY.register("heli_rocket_fire_3p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("heli_rocket_fire_3p")));
+    public static final RegistryObject<SoundEvent> INTO_CANNON = REGISTRY.register("into_cannon", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("into_cannon")));
+    public static final RegistryObject<SoundEvent> INTO_MISSILE = REGISTRY.register("into_missile", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("into_missile")));
+    public static final RegistryObject<SoundEvent> MISSILE_RELOAD = REGISTRY.register("missile_reload", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("missile_reload")));
 }
 

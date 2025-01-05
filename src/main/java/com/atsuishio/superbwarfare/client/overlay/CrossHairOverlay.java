@@ -118,7 +118,7 @@ public class CrossHairOverlay {
         }
 
         // 在开启伤害指示器时才进行渲染
-        if (DisplayConfig.KILL_INDICATION.get()) {
+        if (DisplayConfig.KILL_INDICATION.get() && stack.is(ModTags.Items.GUN)) {
             renderKillIndicator(guiGraphics, w, h, moveX, moveY);
         }
 

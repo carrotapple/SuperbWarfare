@@ -1,9 +1,6 @@
 package com.atsuishio.superbwarfare.menu;
 
 import com.atsuishio.superbwarfare.init.ModMenuTypes;
-import com.atsuishio.superbwarfare.init.ModPerks;
-import com.atsuishio.superbwarfare.item.PerkItem;
-import com.atsuishio.superbwarfare.perk.Perk;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -13,14 +10,10 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class VehicleMenu extends AbstractContainerMenu {
-
     private final Container container;
     private final int containerRows;
 
-    public static final int DEFAULT_SIZE = 105;
-    public static final int DEFAULT_AMMO_PERK_SLOT = 102;
-    public static final int DEFAULT_FUNC_PERK_SLOT = 103;
-    public static final int DEFAULT_DAMAGE_PERK_SLOT = 104;
+    public static final int DEFAULT_SIZE = 102;
 
     public static final int X_OFFSET = 97;
     public static final int Y_OFFSET = 20;
@@ -44,10 +37,6 @@ public class VehicleMenu extends AbstractContainerMenu {
             }
         }
 
-        this.addSlot(new PerkSlot(pContainer, this.containerRows * 17, Perk.Type.AMMO, 8, 36));
-        this.addSlot(new PerkSlot(pContainer, this.containerRows * 17 + 1, Perk.Type.FUNCTIONAL, 8, 54));
-        this.addSlot(new PerkSlot(pContainer, this.containerRows * 17 + 2, Perk.Type.DAMAGE, 8, 72));
-
         for (int l = 0; l < 3; ++l) {
             for (int j = 0; j < 9; ++j) {
                 this.addSlot(new Slot(pPlayerInventory, j + l * 9 + 9, 8 + j * 18 + X_OFFSET, 84 + l * 18 + Y_OFFSET + i));
@@ -70,13 +59,6 @@ public class VehicleMenu extends AbstractContainerMenu {
                 if (!this.moveItemStackTo(itemstack1, this.containerRows * 17 + 3, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (itemstack1.getItem() instanceof PerkItem) {
-                if (!this.moveItemStackTo(itemstack1, this.containerRows * 17, this.containerRows * 17 + 3, false)) {
-                    if (!this.moveItemStackTo(itemstack1, 0, this.containerRows * 17, false)) {
-                        return ItemStack.EMPTY;
-                    }
-                    return ItemStack.EMPTY;
-                }
             } else if (!this.moveItemStackTo(itemstack1, 0, this.containerRows * 17, false)) {
                 return ItemStack.EMPTY;
             }
@@ -96,30 +78,5 @@ public class VehicleMenu extends AbstractContainerMenu {
         return this.container.stillValid(pPlayer);
     }
 
-    static class PerkSlot extends Slot {
 
-        public Perk.Type type;
-
-        public PerkSlot(Container pContainer, int pSlot, Perk.Type type, int pX, int pY) {
-            super(pContainer, pSlot, pX, pY);
-            this.type = type;
-        }
-
-        @Override
-        public boolean mayPlace(ItemStack pStack) {
-            return pStack.getItem() instanceof PerkItem perkItem && perkItem.getPerk().type == this.type && switch (this.type) {
-                case AMMO:
-                    yield true;
-                case FUNCTIONAL:
-                    yield perkItem.getPerk() == ModPerks.POWERFUL_ATTRACTION.get();
-                case DAMAGE:
-                    yield perkItem.getPerk() == ModPerks.MONSTER_HUNTER.get();
-            };
-        }
-
-        @Override
-        public int getMaxStackSize() {
-            return 1;
-        }
-    }
 }

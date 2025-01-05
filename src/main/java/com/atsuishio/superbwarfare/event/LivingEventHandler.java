@@ -720,20 +720,6 @@ public class LivingEventHandler {
         if (!(sourceEntity instanceof Player player)) return;
         ItemStack stack = player.getMainHandItem();
 
-        if (sourceEntity.getVehicle() instanceof IArmedVehicleEntity vehicle && DamageTypeTool.isGunDamage(source) && !stack.is(ModTags.Items.GUN)) {
-            var drops = event.getDrops();
-            if (vehicle instanceof ContainerEntity containerEntity) {
-                drops.forEach(itemEntity -> {
-                    ItemStack item = itemEntity.getItem();
-                    if (!HopperBlockEntity.addItem(containerEntity, itemEntity)) {
-                        player.drop(item, false);
-                    }
-                });
-                event.setCanceled(true);
-                return;
-            }
-        }
-
         if (sourceEntity.getVehicle() instanceof IArmedVehicleEntity vehicle && source.is(ModDamageTypes.VEHICLE_STRIKE)) {
             var drops = event.getDrops();
             if (vehicle instanceof ContainerEntity containerEntity) {
