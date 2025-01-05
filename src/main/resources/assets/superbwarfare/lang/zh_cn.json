@@ -351,8 +351,7 @@
   "death.attack.vehicle_strike.entity": "%1$s被%2$s创死了",
   "death.attack.vehicle_strike.item": "%1$s的被%2$s用%3$s创死了",
   "death.attack.air_crash": "%1$s坠机了",
-  "death.attack.air_crash.entity": "%1$s坠机了",
-  "death.attack.air_crash.item": "%1$s坠机了",
+  "death.attack.air_crash_entity": "%1$s坠机了,凶手是%2$s",
 
   "entity.superbwarfare.projectile": "子弹",
   "entity.superbwarfare.projectile_mortar_shell": "迫击炮弹",

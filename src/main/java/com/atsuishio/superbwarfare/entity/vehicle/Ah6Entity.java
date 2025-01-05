@@ -16,6 +16,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -35,6 +36,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -53,6 +55,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
@@ -325,16 +328,48 @@ public class Ah6Entity extends MobileVehicleEntity implements GeoEntity, IHelico
 
     @Override
     public void destroy() {
+        Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
+        if (crash) {
+            List<Entity> passenger = this.getPassengers();
+            for (var e : passenger) {
+                if (e instanceof LivingEntity living) {
+                    if (e instanceof ServerPlayer victim) {
+                        living.setHealth(0);
+                        if (attacker == null || attacker == victim) {
+                            living.level().players().forEach(
+                                    p -> p.sendSystemMessage(
+                                            Component.translatable("death.attack.air_crash", victim.getDisplayName())
+                                    )
+                            );
+                        } else {
+                            living.level().players().forEach(
+                                    p -> p.sendSystemMessage(
+                                            Component.translatable("death.attack.air_crash_entity",
+                                                    victim.getDisplayName(),
+                                                    attacker.getDisplayName()
+                                            )
+                                    )
+                            );
+                        }
+                    } else {
+                        living.setHealth(0);
+                        living.level().broadcastEntityEvent(living, (byte) 60);
+                        living.remove(RemovalReason.KILLED);
+                        living.gameEvent(GameEvent.ENTITY_DIE);
+                    }
+                }
+            }
+        }
+
         if (level() instanceof ServerLevel) {
-            Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
             CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                    crash ? ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), this, attacker) : ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, attacker), 300.0f,
+                    ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, attacker), 300.0f,
                     this.getX(), this.getY(), this.getZ(), 8f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
             explosion.explode();
             ForgeEventFactory.onExplosionStart(this.level(), explosion);
             explosion.finalizeExplosion(false);
             ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
-            this.remove(RemovalReason.KILLED);
+            this.discard();
         }
     }
 

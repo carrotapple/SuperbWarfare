@@ -259,7 +259,6 @@ public class VehicleEntity extends Entity {
         handleClientSync();
 
         if (this.level() instanceof ServerLevel && this.getHealth() <= 0) {
-            this.ejectPassengers();
             destroy();
         }
 

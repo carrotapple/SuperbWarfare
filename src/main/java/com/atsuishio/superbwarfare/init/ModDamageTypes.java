@@ -31,7 +31,6 @@ public class ModDamageTypes {
     public static final ResourceKey<DamageType> LASER = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "laser"));
     public static final ResourceKey<DamageType> LASER_HEADSHOT = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "laser_headshot"));
     public static final ResourceKey<DamageType> VEHICLE_STRIKE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "vehicle_strike"));
-    public static final ResourceKey<DamageType> AIR_CRASH = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, "air_crash"));
 
     public static DamageSource causeGunFireDamage(RegistryAccess registryAccess, @Nullable Entity directEntity, @Nullable Entity attacker) {
         return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(GUN_FIRE), directEntity, attacker);
@@ -87,10 +86,6 @@ public class ModDamageTypes {
 
     public static DamageSource causeVehicleStrikeDamage(RegistryAccess registryAccess, @Nullable Entity directEntity, @Nullable Entity attacker) {
         return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(VEHICLE_STRIKE), directEntity, attacker);
-    }
-
-    public static DamageSource causeAirCrashDamage(RegistryAccess registryAccess, @Nullable Entity directEntity, @Nullable Entity attacker) {
-        return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(AIR_CRASH), directEntity, attacker);
     }
 
     private static class DamageMessages extends DamageSource {
