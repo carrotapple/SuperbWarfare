@@ -103,12 +103,12 @@ public class ModTabs {
                     .withTabsBefore(AMMO_TAB.getKey())
                     .displayItems((param, output) -> ModItems.ITEMS.getEntries().forEach(registryObject -> {
                         if (registryObject.get() == ModItems.CONTAINER.get()) {
-                            output.accept(ContainerBlockItem.createMk42Instance());
-                            output.accept(ContainerBlockItem.createMle1934Instance());
-                            output.accept(ContainerBlockItem.createAnnihilatorInstance());
-                            output.accept(ContainerBlockItem.createSpeedboatInstance());
-                            output.accept(ContainerBlockItem.createWheelChairInstance());
-                            output.accept(ContainerBlockItem.createAh6Instance());
+                            output.accept(ContainerBlockItem.createInstance(ModEntities.MK_42.get()));
+                            output.accept(ContainerBlockItem.createInstance(ModEntities.MLE_1934.get()));
+                            output.accept(ContainerBlockItem.createInstance(ModEntities.ANNIHILATOR.get()));
+                            output.accept(ContainerBlockItem.createInstance(ModEntities.SPEEDBOAT.get(), true));
+                            output.accept(ContainerBlockItem.createInstance(ModEntities.WHEEL_CHAIR.get()));
+                            output.accept(ContainerBlockItem.createInstance(ModEntities.AH_6.get()));
                         } else {
                             output.accept(registryObject.get());
                             if (registryObject.get() == ModItems.ARMOR_PLATE.get()) {

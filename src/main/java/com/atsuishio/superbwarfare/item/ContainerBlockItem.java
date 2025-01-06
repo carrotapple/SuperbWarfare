@@ -3,7 +3,6 @@ package com.atsuishio.superbwarfare.item;
 import com.atsuishio.superbwarfare.client.renderer.block.ContainerBlockItemRenderer;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import com.atsuishio.superbwarfare.init.ModBlocks;
-import com.atsuishio.superbwarfare.init.ModEntities;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -129,29 +128,5 @@ public class ContainerBlockItem extends BlockItem implements GeoItem {
         BlockItem.setBlockEntityData(stack, ModBlockEntities.CONTAINER.get(), tag);
         stack.getOrCreateTag().putBoolean("CanPlacedAboveWater", canPlacedAboveWater);
         return stack;
-    }
-
-    public static ItemStack createMk42Instance() {
-        return createInstance(ModEntities.MK_42.get());
-    }
-
-    public static ItemStack createMle1934Instance() {
-        return createInstance(ModEntities.MLE_1934.get());
-    }
-
-    public static ItemStack createAnnihilatorInstance() {
-        return createInstance(ModEntities.ANNIHILATOR.get());
-    }
-
-    public static ItemStack createSpeedboatInstance() {
-        return createInstance(ModEntities.SPEEDBOAT.get(), true);
-    }
-
-    public static ItemStack createWheelChairInstance() {
-        return createInstance(ModEntities.WHEEL_CHAIR.get());
-    }
-
-    public static ItemStack createAh6Instance() {
-        return createInstance(ModEntities.AH_6.get());
     }
 }
