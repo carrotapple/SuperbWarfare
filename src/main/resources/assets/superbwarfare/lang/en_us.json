@@ -53,19 +53,20 @@
   "des.superbwarfare.guns.upgrade_point": "Upgrade Point: ",
   "des.superbwarfare.guns.rpm": "Rpm: ",
   "des.superbwarfare.guns.headshot": "Headshot: ",
+  "des.superbwarfare.guns.edit": "Press %1$s key to edit this weapon",
 
   "item.superbwarfare.ammo_box": "Ammo Box",
-  "des.superbwarfare.tips.rifle_ammo": "Storage Rifle Ammo: ",
-  "des.superbwarfare.tips.handgun_ammo": "Storage Handgun Ammo: ",
-  "des.superbwarfare.tips.shotgun_ammo": "Storage Shotgun Ammo: ",
-  "des.superbwarfare.tips.sniper_ammo": "Storage Sniper Ammo: ",
+  "des.superbwarfare.ammo_box.rifle": "Storage Rifle Ammo: ",
+  "des.superbwarfare.ammo_box.handgun": "Storage Handgun Ammo: ",
+  "des.superbwarfare.ammo_box.shotgun": "Storage Shotgun Ammo: ",
+  "des.superbwarfare.ammo_box.sniper": "Storage Sniper Ammo: ",
 
-  "des.superbwarfare.tips.ammo_type.all": "All Ammo Chosen",
-  "des.superbwarfare.tips.ammo_type.rifle": "Rifle Ammo Chosen",
-  "des.superbwarfare.tips.ammo_type.handgun": "Handgun Ammo Chosen",
-  "des.superbwarfare.tips.ammo_type.shotgun": "Shotgun Ammo Chosen",
-  "des.superbwarfare.tips.ammo_type.sniper": "Sniper Ammo Chosen",
-  "des.superbwarfare.use_tip.ammo_box": "When sneaking, left-click to switch ammo types, right-click to store that type of ammo. Right-click with out sneaking to take out the corresponding type of ammo ",
+  "des.superbwarfare.ammo_box.type.all": "All Ammo Chosen",
+  "des.superbwarfare.ammo_box.type.rifle": "Rifle Ammo Chosen",
+  "des.superbwarfare.ammo_box.type.handgun": "Handgun Ammo Chosen",
+  "des.superbwarfare.ammo_box.type.shotgun": "Shotgun Ammo Chosen",
+  "des.superbwarfare.ammo_box.type.sniper": "Sniper Ammo Chosen",
+  "des.superbwarfare.ammo_box": "When sneaking, left-click to switch ammo types, right-click to store that type of ammo. Right-click with out sneaking to take out the corresponding type of ammo ",
 
   "item.superbwarfare.vector_blueprint": "VECTOR Blueprint",
   "item.superbwarfare.m_60_blueprint": "M60 Blueprint",
@@ -374,6 +375,7 @@
   "entity.superbwarfare.speedboat": "Speedboat",
   "entity.superbwarfare.wheel_chair": "WheelChair",
   "entity.superbwarfare.ah_6": "AH-6 Little Bird",
+  "entity.minecraft.villager.superbwarfare.armory": "Armory",
 
   "key.categories.superbwarfare": "Superb Warfare",
   "key.superbwarfare.hold_zoom": "Zoom(Hold)",
@@ -433,8 +435,6 @@
   "tips.superbwarfare.mortar.target_pos": "Target Position：",
   "tips.superbwarfare.mortar.warn": "迫击炮无法瞄准该位置",
 
-  "entity.minecraft.villager.superbwarfare.armory": "Armory",
-
   "container.superbwarfare.reforging_table": "Gun Reforge Table",
   "container.superbwarfare.charging_station": "Charging Station",
 
@@ -473,7 +473,6 @@
   "des.superbwarfare.perk_speed_plus": "Velocity +",
   "des.superbwarfare.perk_slug": "Slug",
 
-  "des.superbwarfare.tips.edit": "Press %1$s key to edit this weapon",
   "des.superbwarfare.revolver.da": "DA",
   "des.superbwarfare.revolver.sa": "SA",
   "des.superbwarfare.tips.ammo_type.ap": "AP SHELL",

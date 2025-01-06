@@ -204,7 +204,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      * 获取武器改装信息文本组件
      */
     protected Component getEditComponent() {
-        return Component.translatable("des.superbwarfare.tips.edit", "[" + ModKeyMappings.EDIT_MODE.getKey().getDisplayName().getString() + "]")
+        return Component.translatable("des.superbwarfare.guns.edit", "[" + ModKeyMappings.EDIT_MODE.getKey().getDisplayName().getString() + "]")
                 .withStyle(ChatFormatting.LIGHT_PURPLE).withStyle(ChatFormatting.ITALIC);
     }
 

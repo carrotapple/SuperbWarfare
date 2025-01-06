@@ -107,15 +107,15 @@ public class AmmoBox extends Item {
 
             switch (type) {
                 case 0 ->
-                        player.displayClientMessage(Component.translatable("des.superbwarfare.tips.ammo_type.all").withStyle(ChatFormatting.WHITE), true);
+                        player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.all").withStyle(ChatFormatting.WHITE), true);
                 case 1 ->
-                        player.displayClientMessage(Component.translatable("des.superbwarfare.tips.ammo_type.rifle").withStyle(ChatFormatting.GREEN), true);
+                        player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.rifle").withStyle(ChatFormatting.GREEN), true);
                 case 2 ->
-                        player.displayClientMessage(Component.translatable("des.superbwarfare.tips.ammo_type.handgun").withStyle(ChatFormatting.AQUA), true);
+                        player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.handgun").withStyle(ChatFormatting.AQUA), true);
                 case 3 ->
-                        player.displayClientMessage(Component.translatable("des.superbwarfare.tips.ammo_type.shotgun").withStyle(ChatFormatting.RED), true);
+                        player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.shotgun").withStyle(ChatFormatting.RED), true);
                 case 4 ->
-                        player.displayClientMessage(Component.translatable("des.superbwarfare.tips.ammo_type.sniper").withStyle(ChatFormatting.GOLD), true);
+                        player.displayClientMessage(Component.translatable("des.superbwarfare.ammo_box.type.sniper").withStyle(ChatFormatting.GOLD), true);
             }
 
             entity.playSound(ModSounds.FIRE_RATE.get(), 1f, 1f);
@@ -129,20 +129,20 @@ public class AmmoBox extends Item {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         int type = stack.getOrCreateTag().getInt("Type");
 
-        tooltip.add(Component.translatable("des.superbwarfare.use_tip.ammo_box").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("des.superbwarfare.tips.rifle_ammo").withStyle(ChatFormatting.GREEN)
+        tooltip.add(Component.translatable("des.superbwarfare.ammo_box").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("des.superbwarfare.ammo_box.rifle").withStyle(ChatFormatting.GREEN)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getInt(stack, "RifleAmmo", 0)) + ((type == 0 || type == 1) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
 
-        tooltip.add(Component.translatable("des.superbwarfare.tips.handgun_ammo").withStyle(ChatFormatting.AQUA)
+        tooltip.add(Component.translatable("des.superbwarfare.ammo_box.handgun").withStyle(ChatFormatting.AQUA)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getInt(stack, "HandgunAmmo", 0)) + ((type == 0 || type == 2) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
 
-        tooltip.add(Component.translatable("des.superbwarfare.tips.shotgun_ammo").withStyle(ChatFormatting.RED)
+        tooltip.add(Component.translatable("des.superbwarfare.ammo_box.shotgun").withStyle(ChatFormatting.RED)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getInt(stack, "ShotgunAmmo", 0)) + ((type == 0 || type == 3) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
 
-        tooltip.add(Component.translatable("des.superbwarfare.tips.sniper_ammo").withStyle(ChatFormatting.GOLD)
+        tooltip.add(Component.translatable("des.superbwarfare.ammo_box.sniper").withStyle(ChatFormatting.GOLD)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getInt(stack, "SniperAmmo", 0)) + ((type == 0 || type == 4) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
     }

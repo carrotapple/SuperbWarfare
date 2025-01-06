@@ -53,19 +53,19 @@
   "des.superbwarfare.guns.bypass": "护甲穿透: ",
   "des.superbwarfare.guns.rpm": "射速: ",
   "des.superbwarfare.guns.headshot": "爆头倍率: ",
+  "des.superbwarfare.guns.edit": "按下 %1$s 键进行改装",
 
   "item.superbwarfare.ammo_box": "弹药盒",
-  "des.superbwarfare.tips.rifle_ammo": "已存储的步枪弹药: ",
-  "des.superbwarfare.tips.handgun_ammo": "已存储的手枪弹药: ",
-  "des.superbwarfare.tips.shotgun_ammo": "已存储的霰弹弹药: ",
-  "des.superbwarfare.tips.sniper_ammo": "已存储的狙击弹药: ",
-
-  "des.superbwarfare.tips.ammo_type.all": "已选择所有弹药种类",
-  "des.superbwarfare.tips.ammo_type.rifle": "已选择步枪弹药",
-  "des.superbwarfare.tips.ammo_type.handgun": "已选择手枪弹药",
-  "des.superbwarfare.tips.ammo_type.shotgun": "已选择霰弹弹药",
-  "des.superbwarfare.tips.ammo_type.sniper": "已选择狙击弹药",
-  "des.superbwarfare.use_tip.ammo_box": "潜行时，左击选择弹药类型，右击存入该类型的弹药，非潜行时右击取出对应类型的弹药",
+  "des.superbwarfare.ammo_box.rifle": "已存储的步枪弹药: ",
+  "des.superbwarfare.ammo_box.handgun": "已存储的手枪弹药: ",
+  "des.superbwarfare.ammo_box.shotgun": "已存储的霰弹弹药: ",
+  "des.superbwarfare.ammo_box.sniper": "已存储的狙击弹药: ",
+  "des.superbwarfare.ammo_box.type.all": "已选择所有弹药种类",
+  "des.superbwarfare.ammo_box.type.rifle": "已选择步枪弹药",
+  "des.superbwarfare.ammo_box.type.handgun": "已选择手枪弹药",
+  "des.superbwarfare.ammo_box.type.shotgun": "已选择霰弹弹药",
+  "des.superbwarfare.ammo_box.type.sniper": "已选择狙击弹药",
+  "des.superbwarfare.ammo_box": "潜行时，左击选择弹药类型，右击存入该类型的弹药，非潜行时右击取出对应类型的弹药",
 
   "item.superbwarfare.vector_blueprint": "短剑冲锋枪蓝图",
   "item.superbwarfare.m_60_blueprint": "M60通用机枪蓝图",
@@ -374,6 +374,7 @@
   "entity.superbwarfare.speedboat": "快艇",
   "entity.superbwarfare.wheel_chair": "轮椅",
   "entity.superbwarfare.ah_6": "AH-6 小鸟直升机",
+  "entity.minecraft.villager.superbwarfare.armory": "军械师",
 
   "key.categories.superbwarfare": "卓越前线",
   "key.superbwarfare.hold_zoom": "瞄准(按住)",
@@ -433,8 +434,6 @@
   "tips.superbwarfare.mortar.target_pos": "目标坐标：",
   "tips.superbwarfare.mortar.warn": "迫击炮无法瞄准该位置",
 
-  "entity.minecraft.villager.superbwarfare.armory": "军械师",
-
   "container.superbwarfare.reforging_table": "枪械重铸台",
   "container.superbwarfare.charging_station": "充电站",
 
@@ -473,7 +472,6 @@
   "des.superbwarfare.perk_speed_plus": "子弹初速 +",
   "des.superbwarfare.perk_slug": "独头弹",
 
-  "des.superbwarfare.tips.edit": "按下 %1$s 键进行改装",
   "des.superbwarfare.revolver.da": "双动",
   "des.superbwarfare.revolver.sa": "单动",
   "des.superbwarfare.tips.ammo_type.ap": "AP SHELL",
