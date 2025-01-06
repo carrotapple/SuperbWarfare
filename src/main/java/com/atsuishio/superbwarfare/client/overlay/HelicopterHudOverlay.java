@@ -85,6 +85,9 @@ public class HelicopterHudOverlay {
             if (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_base.png"), k, l, 0, 0.0F, i, j, i, j);
                 renderDriverAngle(guiGraphics, player, mobileVehicle, k, l, i, j);
+
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/compass.png"), (float) w / 2 - 128, (float) 6, 128 + ((float) 64 / 45 * mobileVehicle.getYRot()), 0, 256, 16, 512, 16);
+
                 poseStack.pushPose();
                 poseStack.rotateAround(Axis.ZP.rotationDegrees(-iHelicopterEntity.getRotZ(event.getPartialTick())), w / 2f, h / 2f, 0);
                 float pitch = iHelicopterEntity.getRotX(event.getPartialTick());
