@@ -67,6 +67,9 @@ public class ContainerMobileEntity extends MobileVehicleEntity implements HasCus
     public void baseTick() {
         super.baseTick();
         pickUpItem();
+        // TODO 载具储存空间有电池时，消耗电池能量给载具充电
+//        ItemStack cell = this.getItemStacks().forEach());
+
         this.refreshDimensions();
     }
 

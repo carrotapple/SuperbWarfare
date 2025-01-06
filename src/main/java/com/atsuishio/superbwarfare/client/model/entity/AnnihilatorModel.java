@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.model.entity;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.config.server.CannonConfig;
+import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.AnnihilatorEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -72,7 +72,7 @@ public class AnnihilatorModel extends GeoModel<AnnihilatorEntity> {
         CoreGeoBone ledRed5 = getAnimationProcessor().getBone("ledred5");
 
         float coolDown = animatable.getEntityData().get(COOL_DOWN);
-        boolean cantShoot = animatable.getEnergy() < CannonConfig.ANNIHILATOR_SHOOT_COST.get();
+        boolean cantShoot = animatable.getEnergy() < VehicleConfig.ANNIHILATOR_SHOOT_COST.get();
 
         ledGreen.setHidden(coolDown > 80 || cantShoot);
         ledGreen2.setHidden(coolDown > 60 || cantShoot);

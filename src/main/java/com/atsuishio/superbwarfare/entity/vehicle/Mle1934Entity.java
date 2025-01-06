@@ -1,8 +1,8 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.config.server.CannonConfig;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.CannonShellEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.common.ammo.CannonShellItem;
@@ -52,7 +52,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> TYPE = SynchedEntityData.defineId(Mle1934Entity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public static final float MAX_HEALTH = CannonConfig.MLE1934_HP.get();
+    public static final float MAX_HEALTH = VehicleConfig.MLE1934_HP.get();
 
     public Mle1934Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.MLE_1934.get(), world);
@@ -225,9 +225,9 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
             boolean salvoShoot = false;
 
             if (stack.is(ModItems.HE_5_INCHES.get())) {
-                hitDamage = CannonConfig.MLE1934_HE_DAMAGE.get();
-                explosionRadius = CannonConfig.MLE1934_HE_EXPLOSION_RADIUS.get();
-                explosionDamage = CannonConfig.MLE1934_HE_EXPLOSION_DAMAGE.get();
+                hitDamage = VehicleConfig.MLE1934_HE_DAMAGE.get();
+                explosionRadius = VehicleConfig.MLE1934_HE_EXPLOSION_RADIUS.get();
+                explosionDamage = VehicleConfig.MLE1934_HE_EXPLOSION_DAMAGE.get();
                 fireProbability = 0.24F;
                 fireTime = 5;
                 durability = 1;
@@ -235,9 +235,9 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
             }
 
             if (stack.is(ModItems.AP_5_INCHES.get())) {
-                hitDamage = CannonConfig.MLE1934_AP_DAMAGE.get();
-                explosionRadius = CannonConfig.MLE1934_AP_EXPLOSION_RADIUS.get();
-                explosionDamage = CannonConfig.MLE1934_AP_EXPLOSION_DAMAGE.get();
+                hitDamage = VehicleConfig.MLE1934_AP_DAMAGE.get();
+                explosionRadius = VehicleConfig.MLE1934_AP_EXPLOSION_RADIUS.get();
+                explosionDamage = VehicleConfig.MLE1934_AP_EXPLOSION_DAMAGE.get();
                 fireProbability = 0;
                 fireTime = 0;
                 durability = 70;

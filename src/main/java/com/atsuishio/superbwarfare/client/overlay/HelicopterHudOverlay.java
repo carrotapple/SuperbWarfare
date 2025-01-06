@@ -135,6 +135,15 @@ public class HelicopterHudOverlay {
                     guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("TERRAIN TERRAIN"),
                             w / 2 - 42, h / 2 + 24, -65536, false);
                 }
+
+                if (mobileVehicle.getEnergy() < 0.02 * mobileVehicle.getMaxEnergy()) {
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal( "NO POWER!"),
+                            w / 2 - 144, h / 2 + 14, -65536, false);
+                } else if (mobileVehicle.getEnergy() < 0.2 * mobileVehicle.getMaxEnergy()) {
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal( "LOW POWER"),
+                            w / 2 - 144, h / 2 + 14, 0xFF6B00, false);
+                }
+
             }
 
             Matrix4f transform = getVehicleTransform(mobileVehicle);

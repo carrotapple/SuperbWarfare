@@ -1,8 +1,8 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.config.server.CannonConfig;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModParticleTypes;
@@ -62,9 +62,9 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     public static final EntityDataAccessor<Float> OFFSET_ANGLE = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public static final float MAX_HEALTH = CannonConfig.ANNIHILATOR_HP.get();
-    public static final int MAX_ENERGY = CannonConfig.ANNIHILATOR_MAX_ENERGY.get();
-    public static final int SHOOT_COST = CannonConfig.ANNIHILATOR_SHOOT_COST.get();
+    public static final float MAX_HEALTH = VehicleConfig.ANNIHILATOR_HP.get();
+    public static final int MAX_ENERGY = VehicleConfig.ANNIHILATOR_MAX_ENERGY.get();
+    public static final int SHOOT_COST = VehicleConfig.ANNIHILATOR_SHOOT_COST.get();
     public Vec3 barrelLookAt;
 
     public AnnihilatorEntity(PlayMessages.SpawnEntity packet, Level world) {

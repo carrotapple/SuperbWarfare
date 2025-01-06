@@ -1,8 +1,8 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.config.server.CannonConfig;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.CannonShellEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.common.ammo.CannonShellItem;
@@ -49,7 +49,7 @@ import java.util.Comparator;
 public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntity {
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public static final float MAX_HEALTH = CannonConfig.MK42_HP.get();
+    public static final float MAX_HEALTH = VehicleConfig.MK42_HP.get();
 
     public Mk42Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.MK_42.get(), world);
@@ -209,18 +209,18 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntit
             int durability = 0;
 
             if (stack.is(ModItems.HE_5_INCHES.get())) {
-                hitDamage = CannonConfig.MK42_HE_DAMAGE.get();
-                explosionRadius = CannonConfig.MK42_HE_EXPLOSION_RADIUS.get();
-                explosionDamage = CannonConfig.MK42_HE_EXPLOSION_DAMAGE.get();
+                hitDamage = VehicleConfig.MK42_HE_DAMAGE.get();
+                explosionRadius = VehicleConfig.MK42_HE_EXPLOSION_RADIUS.get();
+                explosionDamage = VehicleConfig.MK42_HE_EXPLOSION_DAMAGE.get();
                 fireProbability = 0.18F;
                 fireTime = 2;
                 durability = 1;
             }
 
             if (stack.is(ModItems.AP_5_INCHES.get())) {
-                hitDamage = CannonConfig.MK42_AP_DAMAGE.get();
-                explosionRadius = CannonConfig.MK42_AP_EXPLOSION_RADIUS.get();
-                explosionDamage = CannonConfig.MK42_AP_EXPLOSION_DAMAGE.get();
+                hitDamage = VehicleConfig.MK42_AP_DAMAGE.get();
+                explosionRadius = VehicleConfig.MK42_AP_EXPLOSION_RADIUS.get();
+                explosionDamage = VehicleConfig.MK42_AP_EXPLOSION_DAMAGE.get();
                 fireProbability = 0;
                 fireTime = 0;
                 durability = 60;

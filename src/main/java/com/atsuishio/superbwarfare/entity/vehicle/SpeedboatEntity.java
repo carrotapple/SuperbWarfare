@@ -1,8 +1,8 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.config.server.CannonConfig;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -61,8 +61,8 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
     public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
 
-    public static final float MAX_HEALTH = CannonConfig.SPEEDBOAT_HP.get();
-    public static final int MAX_ENERGY = CannonConfig.SPEEDBOAT_MAX_ENERGY.get();
+    public static final float MAX_HEALTH = VehicleConfig.SPEEDBOAT_HP.get();
+    public static final int MAX_ENERGY = VehicleConfig.SPEEDBOAT_MAX_ENERGY.get();
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public float turretYRot;
@@ -223,7 +223,7 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
 
         ProjectileEntity projectile = new ProjectileEntity(player.level())
                 .shooter(player)
-                .damage(CannonConfig.SPEEDBOAT_GUN_DAMAGE.get())
+                .damage(VehicleConfig.SPEEDBOAT_GUN_DAMAGE.get())
                 .headShot(2f)
                 .zoom(false);
 
@@ -304,7 +304,7 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
         }
 
         if (this.forwardInputDown || this.backInputDown) {
-            this.extraEnergy(CannonConfig.SPEEDBOAT_ENERGY_COST.get());
+            this.extraEnergy(VehicleConfig.SPEEDBOAT_ENERGY_COST.get());
         }
 
         if (level().isClientSide) {
