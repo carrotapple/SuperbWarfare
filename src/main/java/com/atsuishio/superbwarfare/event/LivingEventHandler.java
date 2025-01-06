@@ -167,8 +167,8 @@ public class LivingEventHandler {
         event.setAmount((float) damage);
 
         if (entity instanceof TargetEntity && sourceEntity instanceof Player player) {
-            player.displayClientMessage(Component.literal("Damage:" + new DecimalFormat("##.##").format(damage) +
-                    " Distance:" + new DecimalFormat("##.#").format(entity.position().distanceTo(sourceEntity.position())) + "M"), false);
+            player.displayClientMessage(Component.translatable("des.superbwarfare.target.damage", new DecimalFormat("##.##").format(damage),
+                    new DecimalFormat("##.#").format(entity.position().distanceTo(sourceEntity.position())) + "M"), false);
         }
     }
 

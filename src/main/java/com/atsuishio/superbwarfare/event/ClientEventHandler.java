@@ -618,8 +618,6 @@ public class ClientEventHandler {
                 rpm = 240;
             }
 
-//            player.displayClientMessage(Component.literal("114 : " + clientTimerVehicle.getProgress()), true);
-
             double rps = (double) rpm / 60;
 
             // cooldown in ms
@@ -1304,7 +1302,8 @@ public class ClientEventHandler {
         }
 
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null) {
+        Player player = mc.player;
+        if (player == null) {
             return;
         }
 
@@ -1312,17 +1311,17 @@ public class ClientEventHandler {
             return;
         }
 
-        ItemStack stack = mc.player.getMainHandItem();
+        ItemStack stack = player.getMainHandItem();
 
-        if (mc.player.getVehicle() instanceof Ah6Entity && mc.player.getVehicle() instanceof IHelicopterEntity iHelicopterEntity && iHelicopterEntity.isDriver(mc.player)) {
+        if (player.getVehicle() instanceof IHelicopterEntity iHelicopterEntity && iHelicopterEntity.isDriver(player)) {
             event.setCanceled(true);
         }
 
-        if (mc.player.getVehicle() instanceof SpeedboatEntity && zoom) {
+        if (player.getVehicle() instanceof SpeedboatEntity && zoom) {
             event.setCanceled(true);
         }
 
-        if (stack.is(ModTags.Items.GUN) || (mc.player.getVehicle() != null && mc.player.getVehicle() instanceof ICannonEntity)) {
+        if (stack.is(ModTags.Items.GUN) || (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity)) {
             event.setCanceled(true);
         }
 

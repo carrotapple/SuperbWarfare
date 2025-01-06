@@ -44,12 +44,13 @@ public class AdjustMortarAngleMessage {
 
             double angle = 0;
 
-            if (looking instanceof MortarEntity mortar){
-                mortar.getEntityData().set(PITCH, (float)Mth.clamp(mortar.getEntityData().get(PITCH) + 0.5 * message.scroll,20,89));
+            if (looking instanceof MortarEntity mortar) {
+                mortar.getEntityData().set(PITCH, (float) Mth.clamp(mortar.getEntityData().get(PITCH) + 0.5 * message.scroll, 20, 89));
                 angle = mortar.getEntityData().get(PITCH);
             }
 
-            player.displayClientMessage(Component.literal("Angle:" + new java.text.DecimalFormat("##.##").format(angle) + " Range:" + new java.text.DecimalFormat("##.#").format((int) RangeHelper.getRange(angle)) + "M"), true);
+            player.displayClientMessage(Component.translatable("des.superbwarfare.mortar.angle", new java.text.DecimalFormat("##.##").format(angle),
+                    new java.text.DecimalFormat("##.#").format((int) RangeHelper.getRange(angle)) + "M"), true);
             SoundTool.playLocalSound(player, ModSounds.ADJUST_FOV.get(), 1f, 0.7f);
         });
         context.get().setPacketHandled(true);

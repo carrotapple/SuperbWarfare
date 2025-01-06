@@ -424,6 +424,14 @@
   "des.superbwarfare.drone.kamikaze": "KAMIKAZE",
   "des.superbwarfare.drone.warning": "WARNING!",
   "des.superbwarfare.shoot.rings": "Rings ",
+  "des.superbwarfare.annihilator.energy_not_enough": "Energy is Not Enough",
+  "des.superbwarfare.target.down": "Target Down %1$s",
+  "des.superbwarfare.target.damage": "Damage: %1$s Distance: %2$s",
+  "des.superbwarfare.mortar.angle": "Angle: %1$s Range: %2$s",
+  "des.superbwarfare.mortar.yaw": "Yaw：",
+  "des.superbwarfare.mortar.pitch": "Pitch：",
+  "des.superbwarfare.mortar.target_pos": "Target Position：",
+  "des.superbwarfare.mortar.warn": "迫击炮无法瞄准该位置",
 
   "entity.minecraft.villager.superbwarfare.armory": "Armory",
 
@@ -465,10 +473,6 @@
   "des.superbwarfare.perk_speed_plus": "Velocity +",
   "des.superbwarfare.perk_slug": "Slug",
 
-  "des.superbwarfare.mortar.yaw": "Yaw：",
-  "des.superbwarfare.mortar.pitch": "Pitch：",
-  "des.superbwarfare.target.pos": "Target Position：",
-  "des.superbwarfare.target.warn": "迫击炮无法瞄准该位置",
   "des.superbwarfare.tips.edit": "Press %1$s key to edit this weapon",
   "commands.ammo.no_permission": "Permission denied",
   "des.superbwarfare.revolver.da": "DA",
