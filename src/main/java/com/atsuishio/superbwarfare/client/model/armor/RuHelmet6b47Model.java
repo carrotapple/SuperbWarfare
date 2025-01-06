@@ -6,18 +6,19 @@ import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
 public class RuHelmet6b47Model extends GeoModel<RuHelmet6b47> {
-	@Override
-	public ResourceLocation getAnimationResource(RuHelmet6b47 object) {
-		return null;
-	}
 
-	@Override
-	public ResourceLocation getModelResource(RuHelmet6b47 object) {
-		return new ResourceLocation(ModUtils.MODID, "geo/ru_helmet_6b47.geo.json");
-	}
+    @Override
+    public ResourceLocation getAnimationResource(RuHelmet6b47 object) {
+        return null;
+    }
 
-	@Override
-	public ResourceLocation getTextureResource(RuHelmet6b47 object) {
-		return new ResourceLocation(ModUtils.MODID, "textures/armor/ru_helmet_6b47.png");
-	}
+    @Override
+    public ResourceLocation getModelResource(RuHelmet6b47 object) {
+        return ModUtils.loc("geo/ru_helmet_6b47.geo.json");
+    }
+
+    @Override
+    public ResourceLocation getTextureResource(RuHelmet6b47 object) {
+        return ModUtils.loc("textures/armor/ru_helmet_6b47.png");
+    }
 }

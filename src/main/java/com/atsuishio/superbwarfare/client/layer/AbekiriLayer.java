@@ -1,9 +1,9 @@
 package com.atsuishio.superbwarfare.client.layer;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.item.gun.shotgun.AbekiriItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.atsuishio.superbwarfare.item.gun.shotgun.AbekiriItem;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -13,7 +13,7 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class AbekiriLayer extends GeoRenderLayer<AbekiriItem> {
-    private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/item/abekiri_e.png");
+    private static final ResourceLocation LAYER = ModUtils.loc("textures/item/abekiri_e.png");
 
     public AbekiriLayer(GeoRenderer<AbekiriItem> entityRenderer) {
         super(entityRenderer);
