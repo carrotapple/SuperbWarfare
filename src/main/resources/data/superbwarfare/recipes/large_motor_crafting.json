@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "aaa",
+    "aaa",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "superbwarfare:motor"
+    }
+  },
+  "result": {
+    "item": "superbwarfare:large_motor",
+    "count": 1
+  }
+}

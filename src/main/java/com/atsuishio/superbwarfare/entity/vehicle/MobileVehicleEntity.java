@@ -78,15 +78,12 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
         if ((verticalCollision)) {
             if (this instanceof IHelicopterEntity) {
                 this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (100 * ((lastTickSpeed - 0.3) * (lastTickSpeed - 0.3))));
+                this.bounceVertical(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
+                crash = true;
             } else if (Mth.abs((float) lastTickVerticalSpeed) > 0.6) {
                 this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (240 * ((Mth.abs((float) lastTickVerticalSpeed) - 0.6) * (lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
+                this.bounceVertical(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
             }
-            this.bounceVertical(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
-            if (!this.level().isClientSide) {
-                this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
-            }
-            collisionCoolDown = 4;
-            crash = true;
         }
 
         if (this.horizontalCollision) {
@@ -113,6 +110,10 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
 
     public void bounceVertical(Direction direction) {
         if (direction.getAxis() == Direction.Axis.Y) {
+            if (!this.level().isClientSide) {
+                this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
+            }
+            collisionCoolDown = 4;
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.9, -0.8, 0.9));
         }
     }

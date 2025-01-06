@@ -120,6 +120,7 @@ public class ModItems {
     public static final RegistryObject<Item> ANCIENT_CPU = ITEMS.register("ancient_cpu", () -> new Item(new Item.Properties().rarity(Rarity.RARE)));
     public static final RegistryObject<Item> PROPELLER = ITEMS.register("propeller", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> MOTOR = ITEMS.register("motor", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> LARGE_MOTOR = ITEMS.register("large_motor", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> DRONE = ITEMS.register("drone", Drone::new);
 
     public static final RegistryObject<Item> MONITOR = ITEMS.register("monitor", Monitor::new);
