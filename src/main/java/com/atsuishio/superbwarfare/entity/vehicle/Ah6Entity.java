@@ -148,7 +148,9 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                 if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.ROCKET_70.get())).mapToInt(ItemStack::getCount).sum() > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && reloadCoolDown == 0 && this.getEntityData().get(LOADED_ROCKET) < 14) {
                     this.entityData.set(LOADED_ROCKET, this.getEntityData().get(LOADED_ROCKET) + 1);
                     reloadCoolDown = 30;
-                    this.getItemStacks().stream().filter(stack -> stack.is(ModItems.ROCKET_70.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+                    if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+                        this.getItemStacks().stream().filter(stack -> stack.is(ModItems.ROCKET_70.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+                    }
                     this.level().playSound(null, this, ModSounds.MISSILE_RELOAD.get(), this.getSoundSource(), 1, 1);
                 }
             }
@@ -419,33 +421,43 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             worldPositionRight = transformPosition(transform, -x, y, z);
             worldPositionLeft = transformPosition(transform, x, y, z);
 
-            ProjectileEntity projectileRight = new ProjectileEntity(player.level())
-                    .shooter(player)
-                    .damage(18)
-                    .headShot(2f)
-                    .zoom(false);
+            if (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+                ProjectileEntity projectileRight = new ProjectileEntity(player.level())
+                        .shooter(player)
+                        .damage(15)
+                        .headShot(2f)
+                        .zoom(false);
 
-            projectileRight.heBullet(true, 2);
-            projectileRight.bypassArmorRate(0.2f);
-            projectileRight.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
-            projectileRight.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.025, this.getLookAngle().z, 20,
-                    (float) 0.2);
-            this.level().addFreshEntity(projectileRight);
-            sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPositionRight.x, worldPositionRight.y, worldPositionRight.z, 1, 0, 0, 0, 0, false);
+                projectileRight.heBullet(true, 1);
+                projectileRight.bypassArmorRate(0.2f);
+                projectileRight.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
+                projectileRight.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.025, this.getLookAngle().z, 20,
+                        (float) 0.2);
+                this.level().addFreshEntity(projectileRight);
+                sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPositionRight.x, worldPositionRight.y, worldPositionRight.z, 1, 0, 0, 0, 0, false);
+                if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+                    this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+                }
+            }
 
-            ProjectileEntity projectileLeft = new ProjectileEntity(player.level())
-                    .shooter(player)
-                    .damage(18)
-                    .headShot(2f)
-                    .zoom(false);
+            if (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+                ProjectileEntity projectileLeft = new ProjectileEntity(player.level())
+                        .shooter(player)
+                        .damage(15)
+                        .headShot(2f)
+                        .zoom(false);
 
-            projectileLeft.heBullet(true, 2);
-            projectileLeft.bypassArmorRate(0.2f);
-            projectileLeft.setPos(worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z);
-            projectileLeft.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.025, this.getLookAngle().z, 20,
-                    (float) 0.2);
-            this.level().addFreshEntity(projectileLeft);
-            sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z, 1, 0, 0, 0, 0, false);
+                projectileLeft.heBullet(true, 1);
+                projectileLeft.bypassArmorRate(0.2f);
+                projectileLeft.setPos(worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z);
+                projectileLeft.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.025, this.getLookAngle().z, 20,
+                        (float) 0.2);
+                this.level().addFreshEntity(projectileLeft);
+                sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z, 1, 0, 0, 0, 0, false);
+                if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+                    this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+                }
+            }
 
             if (!player.level().isClientSide) {
                 if (player instanceof ServerPlayer serverPlayer) {
@@ -454,8 +466,6 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                     serverPlayer.playSound(ModSounds.HELICOPTER_CANNON_VERYFAR.get(), 24, 1);
                 }
             }
-
-            this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
 
             Level level = player.level();
             final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
