@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
+import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.menu.VehicleMenu;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,8 +69,18 @@ public class ContainerMobileEntity extends MobileVehicleEntity implements HasCus
     public void baseTick() {
         super.baseTick();
         pickUpItem();
-        // TODO 载具储存空间有电池时，消耗电池能量给载具充电
-//        ItemStack cell = this.getItemStacks().forEach());
+
+        this.getItemStacks().stream().filter(stack -> stack.is(ModItems.CELL.get()) && stack.getCapability(ForgeCapabilities.ENERGY).map(IEnergyStorage::getEnergyStored).orElse(0) > 0)
+                .forEach(stack ->
+                        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(energyStorage -> {
+                            if (this.getEnergy() < this.getMaxEnergy()) {
+                                int energy = this.getMaxEnergy() - this.getEnergy();
+                                int stackEnergyNeed = Math.min(energyStorage.getEnergyStored(), energy);
+                                energyStorage.extractEnergy(stackEnergyNeed, false);
+                                this.setEnergy(this.getEnergy() + stackEnergyNeed);
+                            }
+                        })
+                );
 
         this.refreshDimensions();
     }
