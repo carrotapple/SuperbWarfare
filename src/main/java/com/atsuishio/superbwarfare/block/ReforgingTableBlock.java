@@ -122,5 +122,4 @@ public class ReforgingTableBlock extends Block {
         return new SimpleMenuProvider((i, inventory, player) ->
                 new ReforgingTableMenu(i, inventory, ContainerLevelAccess.create(pLevel, pPos)), CONTAINER_TITLE);
     }
-
 }

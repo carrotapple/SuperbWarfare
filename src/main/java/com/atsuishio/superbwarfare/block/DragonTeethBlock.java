@@ -24,11 +24,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @SuppressWarnings("deprecation")
 public class DragonTeethBlock extends Block {
+
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
     public DragonTeethBlock() {
         super(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.BASEDRUM).sound(SoundType.STONE).strength(25f, 500f).requiresCorrectToolForDrops().pushReaction(PushReaction.BLOCK).noOcclusion().isRedstoneConductor((bs, br, bp) -> false));
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false));
-
     }
 
     @Override
@@ -79,6 +80,5 @@ public class DragonTeethBlock extends Block {
         }
         return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
     }
-
 }
 
