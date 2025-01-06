@@ -39,7 +39,7 @@ public class FiringParameters extends Item {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(Component.translatable("des.superbwarfare.mortar.target_pos").withStyle(ChatFormatting.GRAY)
+        pTooltipComponents.add(Component.translatable("tips.superbwarfare.mortar.target_pos").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("[" + pStack.getOrCreateTag().getInt("TargetX")
                         + "," + pStack.getOrCreateTag().getInt("TargetY")
                         + "," + pStack.getOrCreateTag().getInt("TargetZ") + "]")));

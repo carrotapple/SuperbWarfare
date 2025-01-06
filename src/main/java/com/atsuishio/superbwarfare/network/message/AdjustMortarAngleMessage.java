@@ -12,6 +12,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.network.NetworkEvent;
 
+import java.text.DecimalFormat;
 import java.util.function.Supplier;
 
 import static com.atsuishio.superbwarfare.entity.MortarEntity.PITCH;
@@ -49,11 +50,11 @@ public class AdjustMortarAngleMessage {
                 angle = mortar.getEntityData().get(PITCH);
             }
 
-            player.displayClientMessage(Component.translatable("des.superbwarfare.mortar.angle", new java.text.DecimalFormat("##.##").format(angle),
-                    new java.text.DecimalFormat("##.#").format((int) RangeHelper.getRange(angle)) + "M"), true);
+            player.displayClientMessage(Component.translatable("tips.superbwarfare.mortar.angle",
+                    new DecimalFormat("##.##").format(angle) + "°",
+                    new DecimalFormat("##.#").format((int) RangeHelper.getRange(angle)) + "m"), true);
             SoundTool.playLocalSound(player, ModSounds.ADJUST_FOV.get(), 1f, 0.7f);
         });
         context.get().setPacketHandled(true);
     }
-
 }

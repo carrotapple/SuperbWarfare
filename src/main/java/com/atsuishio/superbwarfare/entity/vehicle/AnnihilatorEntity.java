@@ -351,7 +351,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
         }
 
         if (this.getEnergy() < SHOOT_COST) {
-            player.displayClientMessage(Component.translatable("des.superbwarfare.annihilator.energy_not_enough").withStyle(ChatFormatting.RED), true);
+            player.displayClientMessage(Component.translatable("tips.superbwarfare.annihilator.energy_not_enough").withStyle(ChatFormatting.RED), true);
             return;
         }
 

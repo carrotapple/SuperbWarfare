@@ -42,7 +42,7 @@ public class SensitivityMessage {
             } else {
                 stack.getOrCreateTag().putInt("sensitivity", Math.max(-10, stack.getOrCreateTag().getInt("sensitivity") - 1));
             }
-            player.displayClientMessage(Component.translatable("des.superbwarfare.sensitivity", stack.getOrCreateTag().getInt("sensitivity")), true);
+            player.displayClientMessage(Component.translatable("tips.superbwarfare.sensitivity", stack.getOrCreateTag().getInt("sensitivity")), true);
         });
         context.get().setPacketHandled(true);
     }

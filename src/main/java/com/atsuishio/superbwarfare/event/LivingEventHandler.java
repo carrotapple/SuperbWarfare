@@ -150,7 +150,7 @@ public class LivingEventHandler {
             damage = Math.max(damage - armorValue, 0);
         }
 
-        //计算防弹护具减伤
+        // 计算防弹护具减伤
         if (source.is(ModTags.DamageTypes.PROJECTILE) || source.is(DamageTypes.MOB_PROJECTILE)) {
             damage *= 1 - 0.8 * Mth.clamp(entity.getAttributeValue(ModAttributes.BULLET_RESISTANCE.get()), 0, 1);
         }
@@ -167,8 +167,9 @@ public class LivingEventHandler {
         event.setAmount((float) damage);
 
         if (entity instanceof TargetEntity && sourceEntity instanceof Player player) {
-            player.displayClientMessage(Component.translatable("des.superbwarfare.target.damage", new DecimalFormat("##.##").format(damage),
-                    new DecimalFormat("##.#").format(entity.position().distanceTo(sourceEntity.position())) + "M"), false);
+            player.displayClientMessage(Component.translatable("tips.superbwarfare.target.damage",
+                    new DecimalFormat("##.##").format(damage),
+                    new DecimalFormat("##.#").format(entity.position().distanceTo(sourceEntity.position())) + "m"), false);
         }
     }
 

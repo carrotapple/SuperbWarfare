@@ -110,7 +110,8 @@ public class Monitor extends Item {
         DroneEntity drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString(LINKED_DRONE));
         if (drone == null) return;
 
-        list.add(Component.translatable("des.superbwarfare.tips.distance", new DecimalFormat("##.#").format(player.distanceTo(drone))).withStyle(ChatFormatting.GRAY));
+        list.add(Component.translatable("des.superbwarfare.monitor",
+                new DecimalFormat("##.#").format(player.distanceTo(drone)) + "m").withStyle(ChatFormatting.GRAY));
     }
 
     @Override

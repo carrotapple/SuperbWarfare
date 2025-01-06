@@ -19,7 +19,7 @@ public class ClientLauncherImageTooltip extends ClientGunImageTooltip {
         double damage = GunsTool.getGunDoubleTag(stack, "Damage", 0) * TooltipTool.perkDamage(stack);
         double explosionDamage = GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0);
 
-        return Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
+        return Component.translatable("des.superbwarfare.guns.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.#").format(damage)).withStyle(ChatFormatting.GREEN)
                         .append(Component.literal("").withStyle(ChatFormatting.RESET))

@@ -93,37 +93,37 @@ public class DroneUIOverlay {
                 int color = -1;
 
                 if (distance > MAX_DISTANCE - 48) {
-                    guiGraphics.drawString(mc.font, Component.translatable("des.superbwarfare.drone.warning"),
+                    guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.warning"),
                             w / 2 - 18, h / 2 - 47, -65536, false);
                     color = -65536;
                 }
 
-                guiGraphics.drawString(mc.font, Component.translatable("des.superbwarfare.drone.distance")
+                guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.distance")
                                 .append(Component.literal(new DecimalFormat("##.#").format(distance) + "M")),
                         w / 2 + 10, h / 2 + 33, color, false);
 
-                guiGraphics.drawString(mc.font, Component.translatable("des.superbwarfare.drone.health")
+                guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.health")
                                 .append(Component.literal(new DecimalFormat("##.#").format(entity.getHealth()) + "/" + new DecimalFormat("##.#").format(entity.getMaxHealth()))),
                         w / 2 - 77, h / 2 + 33, -1, false);
                 if (!entity.getEntityData().get(KAMIKAZE)) {
-                    guiGraphics.drawString(mc.font, Component.translatable("des.superbwarfare.drone.ammo")
+                    guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.ammo")
                                     .append(Component.literal(new DecimalFormat("##.#").format(entity.getEntityData().get(AMMO)) + " / 6")),
                             w / 2 + 12, h / 2 - 37, -1, false);
                 } else {
-                    guiGraphics.drawString(mc.font, Component.translatable("des.superbwarfare.drone.kamikaze"),
+                    guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.kamikaze"),
                             w / 2 + 12, h / 2 - 37, -65536, false);
                 }
 
                 if (lookAtEntity) {
-                    guiGraphics.drawString(mc.font, Component.translatable("des.superbwarfare.drone.range")
+                    guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.range")
                                     .append(Component.literal(new DecimalFormat("##.#").format(entityRange) + "M " + lookingEntity.getDisplayName().getString())),
                             w / 2 + 12, h / 2 - 28, color, false);
                 } else {
                     if (blockRange > 512) {
-                        guiGraphics.drawString(mc.font, Component.translatable("des.superbwarfare.drone.range")
+                        guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.range")
                                 .append(Component.literal("---M")), w / 2 + 12, h / 2 - 28, color, false);
                     } else {
-                        guiGraphics.drawString(mc.font, Component.translatable("des.superbwarfare.drone.range")
+                        guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.range")
                                         .append(Component.literal(new DecimalFormat("##.#").format(blockRange) + "M")),
                                 w / 2 + 12, h / 2 - 28, color, false);
                     }

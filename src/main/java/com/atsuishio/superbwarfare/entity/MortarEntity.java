@@ -178,7 +178,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
                 player.swing(InteractionHand.MAIN_HAND);
                 return InteractionResult.SUCCESS;
             } else {
-                player.displayClientMessage(Component.translatable("des.superbwarfare.mortar.warn").withStyle(ChatFormatting.RED), true);
+                player.displayClientMessage(Component.translatable("tips.superbwarfare.mortar.warn").withStyle(ChatFormatting.RED), true);
                 return InteractionResult.FAIL;
             }
         }
@@ -187,7 +187,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
                 player.swing(InteractionHand.OFF_HAND);
                 return InteractionResult.SUCCESS;
             } else {
-                player.displayClientMessage(Component.translatable("des.superbwarfare.mortar.warn").withStyle(ChatFormatting.RED), true);
+                player.displayClientMessage(Component.translatable("tips.superbwarfare.mortar.warn").withStyle(ChatFormatting.RED), true);
                 return InteractionResult.FAIL;
             }
         }

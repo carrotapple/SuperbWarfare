@@ -27,10 +27,10 @@ public class MortarInfoOverlay {
             lookingEntity = TraceTool.findLookingEntity(player, 6);
         }
         if (lookingEntity instanceof MortarEntity mortar) {
-            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.mortar.yaw")
+            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.mortar.yaw")
                             .append(Component.literal(new DecimalFormat("##.#").format(mortar.getEntityData().get(MortarEntity.Y_ROT)) + "°")),
                     w / 2 + 12, h / 2 - 36, -1, false);
-            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.mortar.pitch")
+            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.mortar.pitch")
                             .append(Component.literal(new DecimalFormat("##.#").format(mortar.getEntityData().get(MortarEntity.PITCH)) + "°")),
                     w / 2 + 12, h / 2 - 28, -1, false);
         }

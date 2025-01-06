@@ -91,7 +91,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      */
     protected Component getDamageComponent() {
         double damage = GunsTool.getGunDoubleTag(stack, "Damage", 0) * TooltipTool.perkDamage(stack);
-        return Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
+        return Component.translatable("des.superbwarfare.guns.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.#").format(damage) + (TooltipTool.heBullet(stack) ? " + "
                         + new DecimalFormat("##.#").format(0.8 * damage * (1 + 0.1 * TooltipTool.heBulletLevel(stack))) : "")).withStyle(ChatFormatting.GREEN));
@@ -102,7 +102,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      */
     protected Component getRpmComponent() {
         if (this.stack.getItem() instanceof GunItem gunItem && gunItem.autoWeapon(this.stack)) {
-            return Component.translatable("des.superbwarfare.tips.rpm").withStyle(ChatFormatting.GRAY)
+            return Component.translatable("des.superbwarfare.guns.rpm").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.literal(new DecimalFormat("##").format(GunsTool.getGunIntTag(stack, "RPM", 0)))
                             .withStyle(ChatFormatting.GREEN));
@@ -139,7 +139,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
             formatting = ChatFormatting.RED;
         }
 
-        return Component.translatable("des.superbwarfare.tips.level").withStyle(ChatFormatting.GRAY)
+        return Component.translatable("des.superbwarfare.guns.level").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(level + "").withStyle(formatting).withStyle(ChatFormatting.BOLD))
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
@@ -151,7 +151,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      */
     protected Component getUpgradePointComponent() {
         int upgradePoint = Mth.floor(GunsTool.getGunDoubleTag(stack, "UpgradePoint", 0));
-        return Component.translatable("des.superbwarfare.tips.upgrade_point").withStyle(ChatFormatting.GRAY)
+        return Component.translatable("des.superbwarfare.guns.upgrade_point").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(String.valueOf(upgradePoint)).withStyle(ChatFormatting.WHITE).withStyle(ChatFormatting.BOLD));
     }
@@ -178,7 +178,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
         }
         double bypassRate = Math.max(GunsTool.getGunDoubleTag(stack, "BypassesArmor", 0) + perkBypassArmorRate, 0);
 
-        return Component.translatable("des.superbwarfare.tips.bypass").withStyle(ChatFormatting.GRAY)
+        return Component.translatable("des.superbwarfare.guns.bypass").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.##").format(bypassRate * 100) + "%").withStyle(ChatFormatting.GOLD));
     }
@@ -188,7 +188,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
      */
     protected Component getHeadshotComponent() {
         double headshot = GunsTool.getGunDoubleTag(stack, "Headshot", 0);
-        return Component.translatable("des.superbwarfare.tips.headshot").withStyle(ChatFormatting.GRAY)
+        return Component.translatable("des.superbwarfare.guns.headshot").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(new DecimalFormat("##.#").format(headshot) + "x").withStyle(ChatFormatting.AQUA));
     }

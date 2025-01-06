@@ -90,15 +90,15 @@ public class CannonHudOverlay {
                 entityRange = player.distanceTo(living);
             }
             if (lookAtEntity) {
-                event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
+                event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.drone.range")
                                 .append(Component.literal(new DecimalFormat("##.#").format(entityRange) + "M " + lookingEntity.getDisplayName().getString())),
                         w / 2 + 14, h / 2 - 20, -1, false);
             } else {
                 if (blockRange > 511) {
-                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
+                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.drone.range")
                             .append(Component.literal("---M")), w / 2 + 14, h / 2 - 20, -1, false);
                 } else {
-                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.drone.range")
+                    event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.drone.range")
                                     .append(Component.literal(new DecimalFormat("##.#").format(blockRange) + "M")),
                             w / 2 + 14, h / 2 - 20, -1, false);
                 }
@@ -113,7 +113,7 @@ public class CannonHudOverlay {
             RenderHelper.preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
         }
 
-        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("des.superbwarfare.mortar.pitch")
+        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.mortar.pitch")
                         .append(Component.literal(new DecimalFormat("##.#").format(-cannon.getXRot()) + "°")),
                 w / 2 + 14, h / 2 - 29, -1, false);
     }

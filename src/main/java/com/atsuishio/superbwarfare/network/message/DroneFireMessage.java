@@ -66,7 +66,7 @@ public class DroneFireMessage {
                                 offStack.getOrCreateTag().putInt("TargetZ", (int) looking.z());
                             }
 
-                            player.displayClientMessage(Component.translatable("des.superbwarfare.mortar.target_pos").withStyle(ChatFormatting.GRAY)
+                            player.displayClientMessage(Component.translatable("tips.superbwarfare.mortar.target_pos").withStyle(ChatFormatting.GRAY)
                                     .append(Component.literal("[" + offStack.getOrCreateTag().getInt("TargetX")
                                             + "," + offStack.getOrCreateTag().getInt("TargetY")
                                             + "," + offStack.getOrCreateTag().getInt("TargetZ") + "]")), true);

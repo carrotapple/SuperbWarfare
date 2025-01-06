@@ -28,14 +28,14 @@ public class ClientSentinelImageTooltip extends ClientEnergyImageTooltip {
             double damage = (GunsTool.getGunDoubleTag(stack, "Damage", 0) +
                     GunsTool.getGunDoubleTag(stack, "ChargedDamage", 0))
                     * TooltipTool.perkDamage(stack);
-            return Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
+            return Component.translatable("des.superbwarfare.guns.damage").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.literal(new DecimalFormat("##.#").format(damage) + (TooltipTool.heBullet(stack) ? " + " + new DecimalFormat("##.#")
                                     .format(0.8 * damage * (1 + 0.1 * TooltipTool.heBulletLevel(stack))) : ""))
                             .withStyle(ChatFormatting.AQUA).withStyle(ChatFormatting.BOLD));
         } else {
             double damage = GunsTool.getGunDoubleTag(stack, "Damage", 0) * TooltipTool.perkDamage(stack);
-            return Component.translatable("des.superbwarfare.tips.damage").withStyle(ChatFormatting.GRAY)
+            return Component.translatable("des.superbwarfare.guns.damage").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
                     .append(Component.literal(new DecimalFormat("##.#").format(damage) + (TooltipTool.heBullet(stack) ? new DecimalFormat("##.#")
                             .format(0.4 * damage * (1 + 0.1 * TooltipTool.heBulletLevel(stack))) : "")).withStyle(ChatFormatting.GREEN));

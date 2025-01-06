@@ -457,7 +457,7 @@ public class ClickHandler {
         if (ModList.get().isLoaded(CompatHolder.CLOTH_CONFIG)) {
             CompatHolder.hasMod(CompatHolder.CLOTH_CONFIG, () -> Minecraft.getInstance().setScreen(ClothConfigHelper.getConfigScreen(null)));
         } else {
-            player.displayClientMessage(Component.translatable("des.superbwarfare.no_cloth_config").withStyle(ChatFormatting.RED), true);
+            player.displayClientMessage(Component.translatable("tips.superbwarfare.no_cloth_config").withStyle(ChatFormatting.RED), true);
         }
     }
 

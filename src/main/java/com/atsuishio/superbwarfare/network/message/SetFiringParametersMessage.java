@@ -55,7 +55,7 @@ public class SetFiringParametersMessage {
                     stack.getOrCreateTag().putInt("TargetZ", (int) looking.z());
                 }
 
-                player.displayClientMessage(Component.translatable("des.superbwarfare.mortar.target_pos").withStyle(ChatFormatting.GRAY)
+                player.displayClientMessage(Component.translatable("tips.superbwarfare.mortar.target_pos").withStyle(ChatFormatting.GRAY)
                         .append(Component.literal("[" + stack.getOrCreateTag().getInt("TargetX")
                                 + "," + stack.getOrCreateTag().getInt("TargetY")
                                 + "," + stack.getOrCreateTag().getInt("TargetZ") + "]")), true);

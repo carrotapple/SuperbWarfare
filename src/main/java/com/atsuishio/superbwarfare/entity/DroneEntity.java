@@ -282,7 +282,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             if (!player.isCrouching()) {
                 if (!this.entityData.get(LINKED)) {
                     if (stack.getOrCreateTag().getBoolean("Linked")) {
-                        player.displayClientMessage(Component.translatable("des.superbwarfare.monitor.monitor_already_linked").withStyle(ChatFormatting.RED), true);
+                        player.displayClientMessage(Component.translatable("tips.superbwarfare.monitor.already_linked").withStyle(ChatFormatting.RED), true);
                         return InteractionResult.sidedSuccess(this.level().isClientSide());
                     }
 
@@ -290,18 +290,18 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
                     this.entityData.set(CONTROLLER, player.getStringUUID());
 
                     Monitor.link(stack, this.getStringUUID());
-                    player.displayClientMessage(Component.translatable("des.superbwarfare.monitor.linked").withStyle(ChatFormatting.GREEN), true);
+                    player.displayClientMessage(Component.translatable("tips.superbwarfare.monitor.linked").withStyle(ChatFormatting.GREEN), true);
 
                     if (player instanceof ServerPlayer serverPlayer) {
                         serverPlayer.level().playSound(null, serverPlayer.getOnPos(), SoundEvents.ARROW_HIT_PLAYER, SoundSource.PLAYERS, 0.5F, 1);
                     }
                 } else {
-                    player.displayClientMessage(Component.translatable("des.superbwarfare.monitor.already_linked").withStyle(ChatFormatting.RED), true);
+                    player.displayClientMessage(Component.translatable("tips.superbwarfare.drone.already_linked").withStyle(ChatFormatting.RED), true);
                 }
             } else {
                 if (this.entityData.get(LINKED)) {
                     if (!stack.getOrCreateTag().getBoolean("Linked")) {
-                        player.displayClientMessage(Component.translatable("des.superbwarfare.monitor.already_linked").withStyle(ChatFormatting.RED), true);
+                        player.displayClientMessage(Component.translatable("tips.superbwarfare.drone.already_linked").withStyle(ChatFormatting.RED), true);
                         return InteractionResult.sidedSuccess(this.level().isClientSide());
                     }
 
@@ -309,7 +309,7 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
                     this.entityData.set(LINKED, false);
 
                     Monitor.disLink(stack);
-                    player.displayClientMessage(Component.translatable("des.superbwarfare.monitor.unlinked").withStyle(ChatFormatting.RED), true);
+                    player.displayClientMessage(Component.translatable("tips.superbwarfare.monitor.unlinked").withStyle(ChatFormatting.RED), true);
 
                     if (player instanceof ServerPlayer serverPlayer) {
                         serverPlayer.level().playSound(null, serverPlayer.getOnPos(), SoundEvents.ARROW_HIT_PLAYER, SoundSource.PLAYERS, 0.5F, 1);
