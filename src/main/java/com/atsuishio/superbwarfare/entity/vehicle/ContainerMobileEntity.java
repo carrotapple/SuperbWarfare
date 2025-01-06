@@ -82,6 +82,12 @@ public class ContainerMobileEntity extends MobileVehicleEntity implements HasCus
                         })
                 );
 
+//        Player player = (Player) this.getFirstPassenger();
+
+//        if (player != null) {
+//            player.displayClientMessage(Component.literal( new DecimalFormat("##.#").format(this.getEnergy())), true);
+//        }
+
         this.refreshDimensions();
     }
 
