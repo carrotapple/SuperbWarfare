@@ -44,6 +44,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.level.ExplosionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
@@ -53,6 +54,13 @@ import java.util.Objects;
 
 @Mod.EventBusSubscriber
 public class LivingEventHandler {
+
+    @SubscribeEvent
+    public static void onExplode(ExplosionEvent.Detonate event) {
+        event.getExplosion().clearToBlow();
+
+    }
+
 
     @SubscribeEvent
     public static void onEntityAttacked(LivingAttackEvent event) {

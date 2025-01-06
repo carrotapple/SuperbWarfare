@@ -28,6 +28,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         // misc
         simpleItem(ModItems.ANCIENT_CPU);
         simpleItem(ModItems.PROPELLER);
+        simpleItem(ModItems.LARGE_PROPELLER);
         simpleItem(ModItems.MOTOR);
         simpleItem(ModItems.LARGE_MOTOR);
         simpleItem(ModItems.DRONE);

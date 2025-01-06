@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.tools;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
@@ -201,8 +202,11 @@ public class CustomExplosion extends Explosion {
                         zDistance *= d11;
 
                         Vec3 knockbackVec = new Vec3(0.2 * xDistance, 0.2 * yDistance, 0.2 * zDistance);
-                        entity.setDeltaMovement(entity.getDeltaMovement().add(knockbackVec));
-
+                        if (entity instanceof VehicleEntity vehicle) {
+                            vehicle.setDeltaMovement(vehicle.getDeltaMovement().add(knockbackVec.scale(0.05f)));
+                        } else {
+                            entity.setDeltaMovement(entity.getDeltaMovement().add(knockbackVec));
+                        }
                         if (entity instanceof Player player) {
                             if (!player.isSpectator() && (!player.isCreative() || !player.getAbilities().flying)) {
                                 this.getHitPlayers().put(player, knockbackVec);
@@ -213,5 +217,4 @@ public class CustomExplosion extends Explosion {
             }
         }
     }
-
 }

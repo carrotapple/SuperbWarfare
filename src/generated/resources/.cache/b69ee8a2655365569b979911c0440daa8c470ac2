@@ -1,4 +1,4 @@
-// 1.20.1	2025-01-07T02:18:22.6361822	Item Models: superbwarfare
+// 1.20.1	2025-01-07T03:38:49.7324927	Item Models: superbwarfare
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_47_blueprint.json
@@ -47,6 +47,7 @@ e04bbd61e716fc5d53c9425aba508fc3287bfd57 assets/superbwarfare/models/item/iron_p
 195c1b7cbcce9b0ac42ecbfc21a8cafff8c78372 assets/superbwarfare/models/item/jump_pad.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/k_98_blueprint.json
 4c9b6c2911ae5e6e2a026d2ae9d3c0564cdba0b3 assets/superbwarfare/models/item/large_motor.json
+95c0f92c4a4b3adff9c95878540071b04a921792 assets/superbwarfare/models/item/large_propeller.json
 ce9e4fd8ea92cfdbdda158776c1b6e1b482a3f2a assets/superbwarfare/models/item/lead_ingot.json
 f66c351b4843ad4d4e086ccfb7d4d0221227d196 assets/superbwarfare/models/item/legendary_material_pack.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/m2hb_blueprint.json

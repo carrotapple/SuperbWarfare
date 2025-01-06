@@ -96,7 +96,7 @@ public class VehicleEntity extends Entity {
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (player.getVehicle() == this) return InteractionResult.PASS;
 
-        ItemStack stack = player.getItemInHand(hand);
+        ItemStack stack = player.getMainHandItem();
         if (player.isShiftKeyDown() && stack.is(ModItems.CROWBAR.get())) {
             ItemStack container = ContainerBlockItem.createInstance(this);
             if (!player.addItem(container)) {
@@ -104,29 +104,15 @@ public class VehicleEntity extends Entity {
             }
             this.remove(RemovalReason.DISCARDED);
             this.discard();
-        } else if (stack.is(Items.IRON_INGOT)) {
-            if (this.getHealth() < this.getMaxHealth()) {
-                this.heal(Math.min(50, this.getMaxHealth()));
-                stack.shrink(1);
-                if (!this.level().isClientSide) {
-                    this.level().playSound(null, this, SoundEvents.IRON_GOLEM_REPAIR, this.getSoundSource(), 0.5f, 1);
-                }
-            } else if (!this.level().isClientSide) {
-                if (this.getFirstPassenger() == null) {
-                    player.setXRot(this.getXRot());
-                    player.setYRot(this.getYRot());
-                    return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
-                } else if (!(this.getFirstPassenger() instanceof Player)) {
-                    this.getFirstPassenger().stopRiding();
-                    player.setXRot(this.getXRot());
-                    player.setYRot(this.getYRot());
-                    return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
-                }
-                if (this.getPassengers().size() < this.getMaxPassengers()) {
-                    return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
-                }
+            return InteractionResult.SUCCESS;
+        } else if (this.getHealth() < this.getMaxHealth() && stack.is(Items.IRON_INGOT)) {
+            this.heal(Math.min(50, this.getMaxHealth()));
+            stack.shrink(1);
+            if (!this.level().isClientSide) {
+                this.level().playSound(null, this, SoundEvents.IRON_GOLEM_REPAIR, this.getSoundSource(), 0.5f, 1);
             }
-        } else if (!this.level().isClientSide) {
+            return InteractionResult.SUCCESS;
+        } else if (!player.isShiftKeyDown()) {
             if (this.getFirstPassenger() == null) {
                 player.setXRot(this.getXRot());
                 player.setYRot(this.getYRot());

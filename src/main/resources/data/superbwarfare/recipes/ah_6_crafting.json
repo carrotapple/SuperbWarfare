@@ -4,23 +4,23 @@
   "pattern": [
     "abc",
     "def",
-    "ghi"
+    "hgh"
   ],
   "key": {
     "a": {
-      "item": "superbwarfare:m2hb_blueprint"
+      "item": "superbwarfare:large_propeller"
     },
     "b": {
-      "item": "superbwarfare:rare_material_pack"
+      "item": "superbwarfare:large_motor"
     },
     "c": {
-      "tag":"forge:ingots/steel"
+      "item": "superbwarfare:propeller"
     },
     "d": {
-      "item": "minecraft:comparator"
+      "item": "minecraft:compass"
     },
     "e": {
-      "tag": "minecraft:boats"
+      "item":"superbwarfare:steel_block"
     },
     "f": {
       "item": "minecraft:chest"
@@ -29,17 +29,14 @@
       "item": "superbwarfare:cell"
     },
     "h": {
-      "item": "superbwarfare:large_motor"
-    },
-    "i": {
-      "item": "superbwarfare:large_propeller"
+      "item": "minecraft:dispenser"
     }
   },
   "result": {
     "item": "superbwarfare:container",
     "nbt": {
       "BlockEntityTag": {
-        "EntityType": "superbwarfare:speedboat"
+        "EntityType": "superbwarfare:ah_6"
       }
     }
   }
