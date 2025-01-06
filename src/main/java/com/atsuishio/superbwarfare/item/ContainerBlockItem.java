@@ -6,7 +6,9 @@ import com.atsuishio.superbwarfare.init.ModBlocks;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -14,6 +16,11 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -31,6 +38,30 @@ public class ContainerBlockItem extends BlockItem implements GeoItem {
 
     public ContainerBlockItem() {
         super(ModBlocks.CONTAINER.get(), new Item.Properties().stacksTo(1));
+    }
+
+    @Override
+    public InteractionResult useOn(UseOnContext context) {
+        ItemStack stack = context.getItemInHand();
+        if (stack.getTag() != null && stack.getTag().getBoolean("CanPlacedAboveWater")) {
+            return InteractionResult.PASS;
+        }
+        return super.useOn(context);
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (stack.getTag() != null && stack.getTag().getBoolean("CanPlacedAboveWater")) {
+            BlockHitResult playerPOVHitResult = getPlayerPOVHitResult(level, player, ClipContext.Fluid.WATER);
+            if (playerPOVHitResult.getType() == HitResult.Type.MISS) {
+                return super.use(level, player, hand);
+            }
+            BlockHitResult blockHitResult = playerPOVHitResult.withPosition(playerPOVHitResult.getBlockPos().above());
+            InteractionResult interactionresult = super.useOn(new UseOnContext(player, hand, blockHitResult));
+            return new InteractionResultHolder<>(interactionresult, player.getItemInHand(hand));
+        }
+        return super.use(level, player, hand);
     }
 
     @Override
@@ -74,19 +105,29 @@ public class ContainerBlockItem extends BlockItem implements GeoItem {
     }
 
     public static ItemStack createInstance(Entity entity) {
+        return createInstance(entity, false);
+    }
+
+    public static ItemStack createInstance(EntityType<?> entityType) {
+        return createInstance(entityType, false);
+    }
+
+    public static ItemStack createInstance(Entity entity, boolean canPlacedAboveWater) {
         ItemStack stack = new ItemStack(ModBlocks.CONTAINER.get());
         CompoundTag tag = new CompoundTag();
         tag.put("Entity", entity.serializeNBT());
         tag.putString("EntityType", EntityType.getKey(entity.getType()).toString());
         BlockItem.setBlockEntityData(stack, ModBlockEntities.CONTAINER.get(), tag);
+        stack.getOrCreateTag().putBoolean("CanPlacedAboveWater", canPlacedAboveWater);
         return stack;
     }
 
-    public static ItemStack createInstance(EntityType<?> entityType) {
+    public static ItemStack createInstance(EntityType<?> entityType, boolean canPlacedAboveWater) {
         ItemStack stack = new ItemStack(ModBlocks.CONTAINER.get());
         CompoundTag tag = new CompoundTag();
         tag.putString("EntityType", EntityType.getKey(entityType).toString());
         BlockItem.setBlockEntityData(stack, ModBlockEntities.CONTAINER.get(), tag);
+        stack.getOrCreateTag().putBoolean("CanPlacedAboveWater", canPlacedAboveWater);
         return stack;
     }
 
@@ -103,7 +144,7 @@ public class ContainerBlockItem extends BlockItem implements GeoItem {
     }
 
     public static ItemStack createSpeedboatInstance() {
-        return createInstance(ModEntities.SPEEDBOAT.get());
+        return createInstance(ModEntities.SPEEDBOAT.get(), true);
     }
 
     public static ItemStack createWheelChairInstance() {
