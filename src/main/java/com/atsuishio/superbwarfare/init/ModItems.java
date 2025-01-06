@@ -25,6 +25,7 @@ import com.atsuishio.superbwarfare.item.gun.smg.VectorItem;
 import com.atsuishio.superbwarfare.item.gun.sniper.*;
 import com.atsuishio.superbwarfare.item.gun.special.BocekItem;
 import com.atsuishio.superbwarfare.item.gun.special.TaserItem;
+import com.atsuishio.superbwarfare.tools.GunInfo;
 import com.atsuishio.superbwarfare.tools.RarityTool;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -84,15 +85,15 @@ public class ModItems {
      */
     public static final DeferredRegister<Item> AMMO = DeferredRegister.create(ForgeRegistries.ITEMS, ModUtils.MODID);
 
-    public static final RegistryObject<Item> HANDGUN_AMMO = AMMO.register("handgun_ammo", HandgunAmmo::new);
-    public static final RegistryObject<Item> RIFLE_AMMO = AMMO.register("rifle_ammo", RifleAmmo::new);
-    public static final RegistryObject<Item> SNIPER_AMMO = AMMO.register("sniper_ammo", SniperAmmo::new);
-    public static final RegistryObject<Item> SHOTGUN_AMMO = AMMO.register("shotgun_ammo", ShotgunAmmo::new);
+    public static final RegistryObject<Item> HANDGUN_AMMO = AMMO.register("handgun_ammo", () -> new AmmoSupplierItem(GunInfo.Type.HANDGUN, 5, new Item.Properties()));
+    public static final RegistryObject<Item> RIFLE_AMMO = AMMO.register("rifle_ammo", () -> new AmmoSupplierItem(GunInfo.Type.RIFLE, 5, new Item.Properties()));
+    public static final RegistryObject<Item> SNIPER_AMMO = AMMO.register("sniper_ammo", () -> new AmmoSupplierItem(GunInfo.Type.SNIPER, 2, new Item.Properties()));
+    public static final RegistryObject<Item> SHOTGUN_AMMO = AMMO.register("shotgun_ammo", () -> new AmmoSupplierItem(GunInfo.Type.SHOTGUN, 2, new Item.Properties()));
     public static final RegistryObject<Item> HANDGUN_AMMO_BOX = AMMO.register("handgun_ammo_box", HandgunAmmoBox::new);
     public static final RegistryObject<Item> RIFLE_AMMO_BOX = AMMO.register("rifle_ammo_box", RifleAmmoBox::new);
     public static final RegistryObject<Item> SNIPER_AMMO_BOX = AMMO.register("sniper_ammo_box", SniperAmmoBox::new);
     public static final RegistryObject<Item> SHOTGUN_AMMO_BOX = AMMO.register("shotgun_ammo_box", ShotgunAmmoBox::new);
-    public static final RegistryObject<Item> CREATIVE_AMMO_BOX = AMMO.register("creative_ammo_box", () -> new Item(new Item.Properties().rarity(Rarity.EPIC)));
+    public static final RegistryObject<Item> CREATIVE_AMMO_BOX = AMMO.register("creative_ammo_box", () -> new Item(new Item.Properties().rarity(Rarity.EPIC).stacksTo(1)));
     public static final RegistryObject<Item> AMMO_BOX = AMMO.register("ammo_box", AmmoBox::new);
     public static final RegistryObject<Item> TASER_ELECTRODE = AMMO.register("taser_electrode", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> GRENADE_40MM = AMMO.register("grenade_40mm", () -> new Item(new Item.Properties()));
@@ -100,8 +101,8 @@ public class ModItems {
     public static final RegistryObject<Item> MORTAR_SHELLS = AMMO.register("mortar_shells", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> ROCKET = AMMO.register("rocket", Rocket::new);
     public static final RegistryObject<Item> LUNGE_MINE = AMMO.register("lunge_mine", LungeMine::new);
-    public static final RegistryObject<Item> HE_5_INCHES = AMMO.register("he_5_inches", He5Inches::new);
-    public static final RegistryObject<Item> AP_5_INCHES = AMMO.register("ap_5_inches", Ap5Inches::new);
+    public static final RegistryObject<Item> HE_5_INCHES = AMMO.register("he_5_inches", () -> new CannonShellItem(new Item.Properties().rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> AP_5_INCHES = AMMO.register("ap_5_inches", () -> new CannonShellItem(new Item.Properties().rarity(Rarity.RARE)));
     public static final RegistryObject<Item> HAND_GRENADE = AMMO.register("hand_grenade", HandGrenade::new);
     public static final RegistryObject<Item> RGO_GRENADE = AMMO.register("rgo_grenade", RgoGrenade::new);
     public static final RegistryObject<Item> CLAYMORE_MINE = AMMO.register("claymore_mine", ClaymoreMine::new);
