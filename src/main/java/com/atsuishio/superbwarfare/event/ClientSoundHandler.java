@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.event;
 
 import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity;
+import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.tools.SeekTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -45,8 +46,11 @@ public class ClientSoundHandler {
                 float distanceReduce;
                 if (e instanceof Ah6Entity ah6Entity) {
                     distanceReduce = (float) (1 - distance / 64);
-                    player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), 5 * (mobileVehicle.getEntityData().get(PROPELLER_ROT) - 0.012f) * distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.1f + 1.0f), false);
-//                    player.displayClientMessage(Component.literal("Angle:" + engineSoundPos), true);
+                    if (player.getVehicle() == ah6Entity) {
+                        player.playSound(ModSounds.HELICOPTER_ENGINE_1P.get(), 2 * (mobileVehicle.getEntityData().get(PROPELLER_ROT) - 0.012f), (float) ((2 * Math.random() - 1) * 0.1f + 1.0f));
+                    } else {
+                        player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), 5 * (mobileVehicle.getEntityData().get(PROPELLER_ROT) - 0.012f) * distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.1f + 1.0f), false);
+                    }
                 }
             }
         }

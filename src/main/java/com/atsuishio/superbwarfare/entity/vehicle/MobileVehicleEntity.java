@@ -183,10 +183,12 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
     @Override
     protected void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
+        this.entityData.set(POWER, compound.getFloat("Power"));
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
+        compound.putFloat("Power", this.entityData.get(POWER));
     }
 }

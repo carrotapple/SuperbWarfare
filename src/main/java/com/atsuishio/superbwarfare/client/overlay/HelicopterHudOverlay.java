@@ -2,10 +2,12 @@ package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.RenderHelper;
+import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.IHelicopterEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -18,6 +20,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.Vec3;
@@ -26,6 +29,7 @@ import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
@@ -33,6 +37,7 @@ import java.text.DecimalFormat;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 import static com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay.*;
+import static com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity.WEAPON_TYPE;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class HelicopterHudOverlay {
@@ -61,6 +66,7 @@ public class HelicopterHudOverlay {
         if (player.getVehicle() instanceof IHelicopterEntity iHelicopterEntity && player.getVehicle() instanceof MobileVehicleEntity mobileVehicle && iHelicopterEntity.isDriver(player)) {
             poseStack.pushPose();
 
+            poseStack.translate(-6 * ClientEventHandler.turnRot[1],-6 * ClientEventHandler.turnRot[0],0);
             RenderSystem.disableDepthTest();
             RenderSystem.depthMask(false);
             RenderSystem.enableBlend();
@@ -78,7 +84,7 @@ public class HelicopterHudOverlay {
 
             if (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_base.png"), k, l, 0, 0.0F, i, j, i, j);
-
+                renderDriverAngle(guiGraphics, player, mobileVehicle, k, l, i, j);
                 poseStack.pushPose();
                 poseStack.rotateAround(Axis.ZP.rotationDegrees(-iHelicopterEntity.getRotZ(event.getPartialTick())), w / 2f, h / 2f, 0);
                 float pitch = iHelicopterEntity.getRotX(event.getPartialTick());
@@ -103,18 +109,26 @@ public class HelicopterHudOverlay {
                 lerpVy = (float) Mth.lerp(0.021f * event.getPartialTick(), lerpVy, mobileVehicle.getDeltaMovement().y());
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_vy_move.png"), (float) w / 2 + 138, ((float) h / 2 - 3 - Math.max(lerpVy * 20, -24) * 2.5f), 0, 0, 8, 8, 8, 8);
                 guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(lerpVy * 20) + "m/s"),
-                        w / 2 + 146, (int) (h / 2 - 3 - Math.max(lerpVy * 20, -24) * 2.5), (((lerpVy < -20 || lerpVy * 20 < -5 || (lerpVy * 20 < -1 && length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z) * 72 > 100)) && height < 36) || (length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z) * 72 > 40 && blockInWay < 72) ? -65536 : 0x66FF00), false);
+                        w / 2 + 146, (int) (h / 2 - 3 - Math.max(lerpVy * 20, -24) * 2.5), (lerpVy * 20 < -24 || ((lerpVy * 20 < -10 || (lerpVy * 20 < -1 && length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y, mobileVehicle.getDeltaMovement().z) * 72 > 100)) && height < 36) || (length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y, mobileVehicle.getDeltaMovement().z) * 72 > 40 && blockInWay < 72) ? -65536 : 0x66FF00), false);
                 guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(mobileVehicle.getY())),
                         w / 2 + 104, h / 2, 0x66FF00, false);
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/speed_frame.png"), (float) w / 2 - 144, (float) h / 2 - 6, 0, 0, 50, 18, 50, 18);
                 guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y, mobileVehicle.getDeltaMovement().z) * 72) + "KM/H"),
                         w / 2 - 140, h / 2, 0x66FF00, false);
 
-                if (lerpVy * 20 < -20) {
+                if (mobileVehicle instanceof Ah6Entity ah6Entity) {
+                    if (ah6Entity.getEntityData().get(WEAPON_TYPE) == 0) {
+                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("20MM CANNON " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : ah6Entity.getAmmoCount(player))), w / 2 - 160, h / 2 - 60, 0x66FF00, false);
+                    } else {
+                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("70MM ROCKET " + ah6Entity.getAmmoCount(player)), w / 2 - 160, h / 2 - 60, 0x66FF00, false);
+                    }
+                }
+
+                if (lerpVy * 20 < -24) {
                     guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("SINK RATE，PULL UP!"),
                             w / 2 - 53, h / 2 + 24, -65536, false);
-                } else if (((lerpVy * 20 < -5 || (lerpVy * 20 < -1 && length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z) * 72 > 100)) && height < 36)
-                        || (length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y + 0.06, mobileVehicle.getDeltaMovement().z) * 72 > 40 && blockInWay < 72)) {
+                } else if (((lerpVy * 20 < -10 || (lerpVy * 20 < -1 && length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y, mobileVehicle.getDeltaMovement().z) * 72 > 100)) && height < 36)
+                        || (length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y, mobileVehicle.getDeltaMovement().z) * 72 > 40 && blockInWay < 72)) {
                     guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("TERRAIN TERRAIN"),
                             w / 2 - 42, h / 2 + 24, -65536, false);
                 }
@@ -184,6 +198,13 @@ public class HelicopterHudOverlay {
             preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark3.png"), posX1, posY2, 0, 0, 16, 16, 16, 16);
             preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark4.png"), posX2, posY2, 0, 0, 16, 16, 16, 16);
         }
+    }
+
+    private static void renderDriverAngle(GuiGraphics guiGraphics, Player player, Entity heli, float k, float l, float i, float j) {
+        float diffY = Mth.wrapDegrees(player.getYHeadRot() - heli.getYRot()) * 0.35f;
+        float diffX = Mth.wrapDegrees(player.getXRot() - heli.getXRot()) * 0.072f;
+
+        preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_driver_angle.png"), k + diffY, l + diffX, 0, 0.0F, i, j, i, j);
     }
 
     public static Matrix4f getVehicleTransform(VehicleEntity vehicle) {

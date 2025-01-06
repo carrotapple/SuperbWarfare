@@ -2522,6 +2522,13 @@
       }
     ]
   },
+  "helicopter_engine_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:helicopter/heli_engine_1p"
+      }
+    ]
+  },
   "heli_cannon_fire_1p": {
     "sounds": [
       {

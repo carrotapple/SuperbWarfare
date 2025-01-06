@@ -58,7 +58,7 @@ import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHelicopterEntity, MultiWeaponVehicleEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public static final float MAX_HEALTH = 400;
+    public static final float MAX_HEALTH = 500;
     public static final int MAX_ENERGY = 4000000;
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> PROPELLER_ROT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.FLOAT);
@@ -421,12 +421,12 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
 
             ProjectileEntity projectileRight = new ProjectileEntity(player.level())
                     .shooter(player)
-                    .damage(25)
+                    .damage(18)
                     .headShot(2f)
                     .zoom(false);
 
-            projectileRight.heBullet(true, 3);
-            projectileRight.bypassArmorRate(0.5f);
+            projectileRight.heBullet(true, 2);
+            projectileRight.bypassArmorRate(0.2f);
             projectileRight.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
             projectileRight.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.025, this.getLookAngle().z, 20,
                     (float) 0.2);
@@ -435,12 +435,12 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
 
             ProjectileEntity projectileLeft = new ProjectileEntity(player.level())
                     .shooter(player)
-                    .damage(25)
+                    .damage(18)
                     .headShot(2f)
                     .zoom(false);
 
-            projectileLeft.heBullet(true, 3);
-            projectileLeft.bypassArmorRate(0.5f);
+            projectileLeft.heBullet(true, 2);
+            projectileLeft.bypassArmorRate(0.2f);
             projectileLeft.setPos(worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z);
             projectileLeft.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.025, this.getLookAngle().z, 20,
                     (float) 0.2);
@@ -477,7 +477,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             if (fireIndex == 0) {
                 HeliRocketEntity heliRocketEntityRight = new HeliRocketEntity(player, player.level(),
                         140,
-                        40,
+                        50,
                         5);
 
                 heliRocketEntityRight.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
@@ -487,7 +487,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             } else if (fireIndex == 1) {
                 HeliRocketEntity heliRocketEntityLeft = new HeliRocketEntity(player, player.level(),
                         140,
-                        40,
+                        50,
                         5);
 
                 heliRocketEntityLeft.setPos(worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z);
@@ -558,7 +558,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
 
     @Override
     public int mainGunRpm() {
-        return 480;
+        return 360;
     }
 
     @Override

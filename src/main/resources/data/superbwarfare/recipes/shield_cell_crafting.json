@@ -2,19 +2,16 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "aba",
+    " b ",
     "cdc",
-    "aea"
+    " e "
   ],
   "key": {
-    "a": {
-      "item": "minecraft:light_blue_concrete"
-    },
     "b": {
       "tag": "forge:plates/copper"
     },
     "c": {
-      "tag": "forge:stained_glass_panes"
+      "tag": "forge:glass_panes"
     },
     "d": {
       "item": "minecraft:redstone"
@@ -25,6 +22,6 @@
   },
   "result": {
     "item": "superbwarfare:cell",
-    "count": 2
+    "count": 1
   }
 }
