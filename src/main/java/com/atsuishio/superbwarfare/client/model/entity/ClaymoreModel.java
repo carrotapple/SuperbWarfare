@@ -27,5 +27,4 @@ public class ClaymoreModel extends GeoModel<ClaymoreEntity> {
         }
         return ModUtils.loc("textures/entity/claymore.png");
     }
-
 }

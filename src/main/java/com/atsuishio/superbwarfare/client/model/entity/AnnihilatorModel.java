@@ -22,9 +22,7 @@ public class AnnihilatorModel extends GeoModel<AnnihilatorEntity> {
 
     @Override
     public ResourceLocation getModelResource(AnnihilatorEntity entity) {
-
         return ModUtils.loc("geo/annihilator.geo.json");
-
 //        Player player = Minecraft.getInstance().player;
 //
 //        int distance = 0;
@@ -87,6 +85,5 @@ public class AnnihilatorModel extends GeoModel<AnnihilatorEntity> {
         ledRed3.setHidden(!ledGreen3.isHidden());
         ledRed4.setHidden(!ledGreen4.isHidden());
         ledRed5.setHidden(!ledGreen5.isHidden());
-
     }
 }

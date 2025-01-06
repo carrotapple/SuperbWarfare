@@ -6,19 +6,19 @@ import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
 public class HeliRocketModel extends GeoModel<HeliRocketEntity> {
-	@Override
-	public ResourceLocation getAnimationResource(HeliRocketEntity entity) {
-		return new ResourceLocation(ModUtils.MODID, "animations/rpg_rocket.animation.json");
-	}
 
-	@Override
-	public ResourceLocation getModelResource(HeliRocketEntity entity) {
-		return new ResourceLocation(ModUtils.MODID, "geo/heli_rocket.geo.json");
-	}
+    @Override
+    public ResourceLocation getAnimationResource(HeliRocketEntity entity) {
+        return ModUtils.loc("animations/rpg_rocket.animation.json");
+    }
 
-	@Override
-	public ResourceLocation getTextureResource(HeliRocketEntity entity) {
-		return new ResourceLocation(ModUtils.MODID, "textures/entity/heli_rocket.png");
-	}
+    @Override
+    public ResourceLocation getModelResource(HeliRocketEntity entity) {
+        return ModUtils.loc("geo/heli_rocket.geo.json");
+    }
 
+    @Override
+    public ResourceLocation getTextureResource(HeliRocketEntity entity) {
+        return ModUtils.loc("textures/entity/heli_rocket.png");
+    }
 }

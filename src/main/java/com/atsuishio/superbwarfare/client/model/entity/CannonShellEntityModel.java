@@ -8,24 +8,25 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class CannonShellEntityModel extends GeoModel<CannonShellEntity> {
-	@Override
-	public ResourceLocation getAnimationResource(CannonShellEntity entity) {
-		return new ResourceLocation(ModUtils.MODID, "animations/cannon_shell.animation.json");
-	}
 
-	@Override
-	public ResourceLocation getModelResource(CannonShellEntity entity) {
-		return new ResourceLocation(ModUtils.MODID, "geo/cannon_shell.geo.json");
-	}
+    @Override
+    public ResourceLocation getAnimationResource(CannonShellEntity entity) {
+        return ModUtils.loc("animations/cannon_shell.animation.json");
+    }
 
-	@Override
-	public ResourceLocation getTextureResource(CannonShellEntity entity) {
-		return new ResourceLocation(ModUtils.MODID, "textures/entity/cannon_shell.png");
-	}
+    @Override
+    public ResourceLocation getModelResource(CannonShellEntity entity) {
+        return ModUtils.loc("geo/cannon_shell.geo.json");
+    }
 
-	@Override
-	public void setCustomAnimations(CannonShellEntity animatable, long instanceId, AnimationState animationState) {
-		CoreGeoBone bone = getAnimationProcessor().getBone("bone");
-		bone.setHidden(animatable.tickCount <= 1);
-	}
+    @Override
+    public ResourceLocation getTextureResource(CannonShellEntity entity) {
+        return ModUtils.loc("textures/entity/cannon_shell.png");
+    }
+
+    @Override
+    public void setCustomAnimations(CannonShellEntity animatable, long instanceId, AnimationState animationState) {
+        CoreGeoBone bone = getAnimationProcessor().getBone("bone");
+        bone.setHidden(animatable.tickCount <= 1);
+    }
 }

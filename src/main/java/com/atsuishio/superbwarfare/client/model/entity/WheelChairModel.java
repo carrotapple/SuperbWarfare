@@ -15,7 +15,7 @@ public class WheelChairModel extends GeoModel<WheelChairEntity> {
 
     @Override
     public ResourceLocation getModelResource(WheelChairEntity entity) {
-        return new ResourceLocation(ModUtils.MODID, "geo/wheel_chair.geo.json");
+        return ModUtils.loc("geo/wheel_chair.geo.json");
     }
 
     @Override

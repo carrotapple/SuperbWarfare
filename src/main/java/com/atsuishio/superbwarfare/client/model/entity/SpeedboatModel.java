@@ -14,7 +14,7 @@ public class SpeedboatModel extends GeoModel<SpeedboatEntity> {
 
     @Override
     public ResourceLocation getModelResource(SpeedboatEntity entity) {
-        return new ResourceLocation(ModUtils.MODID, "geo/speedboat.geo.json");
+        return ModUtils.loc("geo/speedboat.geo.json");
     }
 
     @Override

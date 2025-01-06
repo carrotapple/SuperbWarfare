@@ -6,19 +6,19 @@ import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
 public class MortarShellEntityModel extends GeoModel<MortarShellEntity> {
-	@Override
-	public ResourceLocation getAnimationResource(MortarShellEntity entity) {
-		return null;
-	}
 
-	@Override
-	public ResourceLocation getModelResource(MortarShellEntity entity) {
-		return new ResourceLocation(ModUtils.MODID, "geo/mortar_shell.geo.json");
-	}
+    @Override
+    public ResourceLocation getAnimationResource(MortarShellEntity entity) {
+        return null;
+    }
 
-	@Override
-	public ResourceLocation getTextureResource(MortarShellEntity entity) {
-		return ModUtils.loc("textures/entity/mortar.png");
-	}
+    @Override
+    public ResourceLocation getModelResource(MortarShellEntity entity) {
+        return ModUtils.loc("geo/mortar_shell.geo.json");
+    }
 
+    @Override
+    public ResourceLocation getTextureResource(MortarShellEntity entity) {
+        return ModUtils.loc("textures/entity/mortar.png");
+    }
 }

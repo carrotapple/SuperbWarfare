@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
 public class SenpaiModel extends GeoModel<SenpaiEntity> {
+
     @Override
     public ResourceLocation getAnimationResource(SenpaiEntity entity) {
         return ModUtils.loc("animations/senpai.animation.json");
@@ -20,5 +21,4 @@ public class SenpaiModel extends GeoModel<SenpaiEntity> {
     public ResourceLocation getTextureResource(SenpaiEntity entity) {
         return ModUtils.loc("textures/entity/senpai.png");
     }
-
 }

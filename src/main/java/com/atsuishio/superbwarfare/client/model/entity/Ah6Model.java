@@ -15,7 +15,7 @@ public class Ah6Model extends GeoModel<Ah6Entity> {
 
     @Override
     public ResourceLocation getModelResource(Ah6Entity entity) {
-        return new ResourceLocation(ModUtils.MODID, "geo/ah_6.geo.json");
+        return ModUtils.loc("geo/ah_6.geo.json");
     }
 
     @Override

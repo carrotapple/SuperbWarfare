@@ -14,6 +14,7 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class ProjectileEntityModel extends GeoModel<ProjectileEntity> {
+
     @Override
     public ResourceLocation getAnimationResource(ProjectileEntity entity) {
         return null;
@@ -23,7 +24,7 @@ public class ProjectileEntityModel extends GeoModel<ProjectileEntity> {
     public ResourceLocation getModelResource(ProjectileEntity entity) {
         Player player = Minecraft.getInstance().player;
         if (player == null) {
-            return new ResourceLocation(ModUtils.MODID, "geo/projectile_entity2.geo.json");
+            return ModUtils.loc("geo/projectile_entity2.geo.json");
         }
 
         if ((ClientEventHandler.zoom && !player.getMainHandItem().is(ModItems.MINIGUN.get()))
@@ -31,15 +32,15 @@ public class ProjectileEntityModel extends GeoModel<ProjectileEntity> {
                 || player.getMainHandItem().is(ModItems.GLOCK_18.get())
                 || player.getMainHandItem().is(ModItems.BOCEK.get())
                 || (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player) && !player.getMainHandItem().is(ModTags.Items.GUN))) {
-            return new ResourceLocation(ModUtils.MODID, "geo/projectile_entity.geo.json");
+            return ModUtils.loc("geo/projectile_entity.geo.json");
         } else {
-            return new ResourceLocation(ModUtils.MODID, "geo/projectile_entity2.geo.json");
+            return ModUtils.loc("geo/projectile_entity2.geo.json");
         }
     }
 
     @Override
     public ResourceLocation getTextureResource(ProjectileEntity entity) {
-        return new ResourceLocation(ModUtils.MODID, "textures/entity/empty.png");
+        return ModUtils.loc("textures/entity/empty.png");
     }
 
     @Override

@@ -13,9 +13,10 @@ import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.model.data.EntityModelData;
 
 public class Mle1934Model extends GeoModel<Mle1934Entity> {
+
     @Override
     public ResourceLocation getAnimationResource(Mle1934Entity entity) {
-        return new ResourceLocation(ModUtils.MODID, "animations/mle1934.animation.json");
+        return ModUtils.loc("animations/mle1934.animation.json");
     }
 
     @Override
@@ -23,27 +24,26 @@ public class Mle1934Model extends GeoModel<Mle1934Entity> {
         Player player = Minecraft.getInstance().player;
 
         int distance = 0;
-
         if (player != null) {
             distance = (int) player.position().distanceTo(entity.position());
         }
 
         if (distance < 32) {
-            return new ResourceLocation(ModUtils.MODID, "geo/mle1934.geo.json");
-        } else{
-            return new ResourceLocation(ModUtils.MODID, "geo/mle1934_lod1.geo.json");
+            return ModUtils.loc("geo/mle1934.geo.json");
+        } else {
+            return ModUtils.loc("geo/mle1934_lod1.geo.json");
         }
     }
 
     @Override
     public ResourceLocation getTextureResource(Mle1934Entity entity) {
-        return new ResourceLocation(ModUtils.MODID, "textures/entity/mle1934.png");
+        return ModUtils.loc("textures/entity/mle1934.png");
     }
 
     @Override
-    public void setCustomAnimations(Mle1934Entity animatable, long instanceId, AnimationState animationState) {
-        CoreGeoBone barrle = getAnimationProcessor().getBone("barrel");
-        EntityModelData entityData = (EntityModelData) animationState.getData(DataTickets.ENTITY_MODEL_DATA);
-        barrle.setRotX((entityData.headPitch()) * Mth.DEG_TO_RAD);
+    public void setCustomAnimations(Mle1934Entity animatable, long instanceId, AnimationState<Mle1934Entity> animationState) {
+        CoreGeoBone barrel = getAnimationProcessor().getBone("barrel");
+        EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
+        barrel.setRotX((entityData.headPitch()) * Mth.DEG_TO_RAD);
     }
 }

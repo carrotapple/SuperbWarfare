@@ -6,18 +6,19 @@ import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
 public class RgoGrenadeEntityModel extends GeoModel<RgoGrenadeEntity> {
-	@Override
-	public ResourceLocation getAnimationResource(RgoGrenadeEntity entity) {
-		return null;
-	}
 
-	@Override
-	public ResourceLocation getModelResource(RgoGrenadeEntity entity) {
-		return new ResourceLocation(ModUtils.MODID, "geo/rgo_grenade.geo.json");
-	}
+    @Override
+    public ResourceLocation getAnimationResource(RgoGrenadeEntity entity) {
+        return null;
+    }
 
-	@Override
-	public ResourceLocation getTextureResource(RgoGrenadeEntity entity) {
-		return new ResourceLocation(ModUtils.MODID, "textures/item/rgo_grenade.png");
-	}
+    @Override
+    public ResourceLocation getModelResource(RgoGrenadeEntity entity) {
+        return ModUtils.loc("geo/rgo_grenade.geo.json");
+    }
+
+    @Override
+    public ResourceLocation getTextureResource(RgoGrenadeEntity entity) {
+        return ModUtils.loc("textures/item/rgo_grenade.png");
+    }
 }
