@@ -100,11 +100,12 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     private boolean fireBullet = false;
     private int fireLevel = 0;
     private boolean dragonBreath = false;
-    private double knockback = 0.05;
+    private float knockback = 0.05f;
+    private boolean forceKnockback = false;
     private final ArrayList<MobEffectInstance> mobEffects = new ArrayList<>();
 
-    public ProjectileEntity(EntityType<? extends ProjectileEntity> p_i50159_1_, Level p_i50159_2_) {
-        super(p_i50159_1_, p_i50159_2_);
+    public ProjectileEntity(EntityType<? extends ProjectileEntity> entityType, Level level) {
+        super(entityType, level);
         this.noCulling = true;
     }
 
@@ -112,8 +113,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         super(ModEntities.PROJECTILE.get(), level);
     }
 
-    public ProjectileEntity(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModEntities.PROJECTILE.get(), world);
+    public ProjectileEntity(PlayMessages.SpawnEntity packet, Level level) {
+        super(ModEntities.PROJECTILE.get(), level);
     }
 
     @Nullable
@@ -244,7 +245,6 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     public void tick() {
         super.tick();
         this.updateHeading();
-        this.onProjectileTick();
 
         Vec3 vec = this.getDeltaMovement();
 
@@ -308,14 +308,31 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag compoundTag) {
+    protected void readAdditionalSaveData(CompoundTag tag) {
+        this.damage = tag.getFloat("Damage");
+        this.headShot = tag.getFloat("HeadShot");
+        this.monsterMultiple = tag.getFloat("MonsterMultiple");
+        this.legShot = tag.getFloat("LegShot");
+        this.bypassArmorRate = tag.getFloat("BypassArmorRate");
+        this.undeadMultiple = tag.getFloat("UndeadMultiple");
+        this.knockback = tag.getFloat("Knockback");
+
+        this.beast = tag.getBoolean("Beast");
+        this.forceKnockback = tag.getBoolean("ForceKnockback");
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag compoundTag) {
-    }
+    protected void addAdditionalSaveData(CompoundTag tag) {
+        tag.putFloat("Damage", this.damage);
+        tag.putFloat("HeadShot", this.headShot);
+        tag.putFloat("MonsterMultiple", this.monsterMultiple);
+        tag.putFloat("LegShot", this.legShot);
+        tag.putFloat("BypassArmorRate", this.bypassArmorRate);
+        tag.putFloat("UndeadMultiple", this.undeadMultiple);
+        tag.putFloat("Knockback", this.knockback);
 
-    protected void onProjectileTick() {
+        tag.putBoolean("Beast", this.beast);
+        tag.putBoolean("ForceKnockback", this.forceKnockback);
     }
 
     private void onHit(HitResult result) {
@@ -549,10 +566,16 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
     public void performOnHit(Entity entity, float damage, boolean headshot, double knockback) {
         if (entity instanceof LivingEntity living) {
-            ICustomKnockback iCustomKnockback = ICustomKnockback.getInstance(living);
-            iCustomKnockback.superbWarfare$setKnockbackStrength(knockback);
-            performDamage(entity, damage, headshot);
-            iCustomKnockback.superbWarfare$resetKnockbackStrength();
+            if (this.forceKnockback) {
+                Vec3 vec3 = this.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D).normalize();
+                living.addDeltaMovement(vec3.scale(knockback));
+                performDamage(entity, damage, headshot);
+            } else {
+                ICustomKnockback iCustomKnockback = ICustomKnockback.getInstance(living);
+                iCustomKnockback.superbWarfare$setKnockbackStrength(knockback);
+                performDamage(entity, damage, headshot);
+                iCustomKnockback.superbWarfare$resetKnockbackStrength();
+            }
         } else {
             performDamage(entity, damage, headshot);
         }
@@ -864,8 +887,13 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         this.entityData.set(COLOR_B, rgb[2]);
     }
 
-    public ProjectileEntity knockback(double knockback) {
+    public ProjectileEntity knockback(float knockback) {
         this.knockback = knockback;
+        return this;
+    }
+
+    public ProjectileEntity forceKnockback() {
+        this.forceKnockback = true;
         return this;
     }
 }

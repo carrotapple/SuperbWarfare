@@ -225,6 +225,11 @@ public class GunEventHandler {
                     }
                     projectile.effect(mobEffectInstances);
                 }
+
+                if (perk.descriptionId.equals("bread_bullet")) {
+                    projectile.knockback(level * 0.3f);
+                    projectile.forceKnockback();
+                }
             }
 
             bypassArmorRate = Math.max(bypassArmorRate, 0);

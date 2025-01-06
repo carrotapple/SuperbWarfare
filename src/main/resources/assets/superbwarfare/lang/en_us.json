@@ -271,6 +271,8 @@
   "des.superbwarfare.incendiary_bullet": "The bullet will ignites the target after hitting the target",
   "item.superbwarfare.butterfly_bullet": "Butterfly Bullet",
   "des.superbwarfare.butterfly_bullet": "Replace the bullet with Rain Shower Butterfly",
+  "item.superbwarfare.bread_bullet": "Bread Bullet",
+  "des.superbwarfare.bread_bullet": "命中后会使目标移速下降，并造成强大的击退",
 
   "item.superbwarfare.heal_clip": "Heal Clip",
   "des.superbwarfare.heal_clip": "Reloading after dealing a final blow will heal you and your nearby allies",

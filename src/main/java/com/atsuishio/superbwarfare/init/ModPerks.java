@@ -77,6 +77,8 @@ public class ModPerks {
         if (ModList.get().isLoaded(CompatHolder.DMV)) {
             AMMO_PERKS.register("blade_bullet", () -> new AmmoPerk(new AmmoPerk.Builder("blade_bullet", Perk.Type.AMMO)
                     .bypassArmorRate(-0.2f).damageRate(0.7f).speedRate(0.8f).rgb(0xB4, 0x4B, 0x88).mobEffect(() -> CompatHolder.DMV_BLEEDING)));
+            AMMO_PERKS.register("bread_bullet", () -> new AmmoPerk(new AmmoPerk.Builder("bread_bullet", Perk.Type.AMMO)
+                    .bypassArmorRate(1.0f).damageRate(0.5f).speedRate(0.6f).rgb(0xde, 0xab, 0x82).mobEffect(() -> MobEffects.MOVEMENT_SLOWDOWN)));
         }
         if (ModList.get().isLoaded(CompatHolder.VRC)) {
             AMMO_PERKS.register("curse_flame_bullet", () -> new AmmoPerk(new AmmoPerk.Builder("curse_flame_bullet", Perk.Type.AMMO)

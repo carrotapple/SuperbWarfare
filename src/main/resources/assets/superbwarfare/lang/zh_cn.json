@@ -270,6 +270,8 @@
   "des.superbwarfare.incendiary_bullet": "子弹在命中后点燃目标",
   "item.superbwarfare.butterfly_bullet": "蝴蝶弹",
   "des.superbwarfare.butterfly_bullet": "将子弹替换成骤雨之蝶",
+  "item.superbwarfare.bread_bullet": "面包弹",
+  "des.superbwarfare.bread_bullet": "命中后会使目标移速下降，并造成强大的击退",
 
   "item.superbwarfare.heal_clip": "治疗弹匣",
   "des.superbwarfare.heal_clip": "最后一击后短时间内填装，可治疗自身和附近队友",
