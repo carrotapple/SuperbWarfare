@@ -195,7 +195,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                             5,
                             5);
                     gunGrenadeEntity.setPos(this.getX(), this.getY() + 0.3, this.getZ());
-                    gunGrenadeEntity.decoyShoot(this, this.getViewVector(1).yRot(60 * i), 0.4f);
+                    gunGrenadeEntity.decoyShoot(this, this.getDeltaMovement().normalize().yRot(60 * i * Mth.DEG_TO_RAD), 0.4f);
                     this.level().addFreshEntity(gunGrenadeEntity);
                 }
 
@@ -278,7 +278,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
         this.entityData.set(PROPELLER_ROT, this.entityData.get(PROPELLER_ROT) * 0.9995f);
 
         if (engineStart) {
-            this.extraEnergy((int)(VehicleConfig.AH_6_MIN_ENERGY_COST.get() + this.entityData.get(POWER) * ((VehicleConfig.AH_6_MAX_ENERGY_COST.get() - VehicleConfig.AH_6_MIN_ENERGY_COST.get()) / 0.12)));
+            this.extraEnergy((int) (VehicleConfig.AH_6_MIN_ENERGY_COST.get() + this.entityData.get(POWER) * ((VehicleConfig.AH_6_MAX_ENERGY_COST.get() - VehicleConfig.AH_6_MIN_ENERGY_COST.get()) / 0.12)));
         }
 
         setDeltaMovement(getDeltaMovement().add(0.0f, Math.min(Math.sin((90 - this.getXRot()) * Mth.DEG_TO_RAD), Math.sin((90 + this.getRoll()) * Mth.DEG_TO_RAD)) * this.entityData.get(PROPELLER_ROT), 0.0f));
@@ -438,7 +438,6 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
 
     @Override
     public void vehicleShoot(Player player) {
-
         Matrix4f transform = getVehicleTransform();
         float x;
         float y;
@@ -619,7 +618,6 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     public int getAmmoCount(Player player) {
         return this.entityData.get(AMMO);
     }
-
 
     @Override
     public float getRotX(float tickDelta) {
