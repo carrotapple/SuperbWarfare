@@ -60,7 +60,6 @@
   "des.superbwarfare.ammo_box.handgun": "Storage Handgun Ammo: ",
   "des.superbwarfare.ammo_box.shotgun": "Storage Shotgun Ammo: ",
   "des.superbwarfare.ammo_box.sniper": "Storage Sniper Ammo: ",
-
   "des.superbwarfare.ammo_box.type.all": "All Ammo Chosen",
   "des.superbwarfare.ammo_box.type.rifle": "Rifle Ammo Chosen",
   "des.superbwarfare.ammo_box.type.handgun": "Handgun Ammo Chosen",
@@ -184,7 +183,7 @@
   "item.superbwarfare.monitor": "Monitor",
   "des.superbwarfare.monitor": "Drone Distance: %1$s",
   "item.superbwarfare.propeller": "Propeller",
-  "item.superbwarfare.large_propeller": "Large_Propeller",
+  "item.superbwarfare.large_propeller": "Large Propeller",
   "item.superbwarfare.motor": "Motor",
   "item.superbwarfare.large_motor": "Large Motor",
   "item.superbwarfare.hand_grenade": "Hand Grenade",
