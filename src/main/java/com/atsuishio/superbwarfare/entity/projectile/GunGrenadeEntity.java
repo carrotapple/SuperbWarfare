@@ -15,6 +15,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
@@ -158,6 +160,16 @@ public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    public void decoyShoot(Entity entity, Vec3 shootVec, float pVelocity) {
+        Vec3 vec3 = shootVec.normalize().scale(pVelocity);
+        this.setDeltaMovement(entity.getDeltaMovement().add(vec3));
+        double d0 = vec3.horizontalDistance();
+        this.setYRot((float)(Mth.atan2(vec3.x, vec3.z) * 57.2957763671875));
+        this.setXRot((float)(Mth.atan2(vec3.y, d0) * 57.2957763671875));
+        this.yRotO = this.getYRot();
+        this.xRotO = this.getXRot();
     }
 
 }

@@ -54,6 +54,9 @@ public class VehicleMovementMessage {
                         case 5:
                             mobileVehicleEntity.downInputDown = message.clicked;
                             break;
+                        case 6:
+                            mobileVehicleEntity.decoyInputDown = message.clicked;
+                            break;
                     }
 
                     if (player.getMainHandItem().is(ModItems.MONITOR.get())) {
@@ -64,6 +67,7 @@ public class VehicleMovementMessage {
                             mobileVehicleEntity.backInputDown = false;
                             mobileVehicleEntity.upInputDown = false;
                             mobileVehicleEntity.downInputDown = false;
+                            mobileVehicleEntity.decoyInputDown = false;
                         }
                     }
                 }

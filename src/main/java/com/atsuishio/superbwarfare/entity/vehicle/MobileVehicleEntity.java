@@ -36,6 +36,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
     public boolean backInputDown;
     public boolean upInputDown;
     public boolean downInputDown;
+    public boolean decoyInputDown;
     public double lastTickSpeed;
     public double lastTickVerticalSpeed;
     public int collisionCoolDown;

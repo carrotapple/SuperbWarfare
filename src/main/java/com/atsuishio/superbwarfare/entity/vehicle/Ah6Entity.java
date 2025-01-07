@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
+import com.atsuishio.superbwarfare.entity.projectile.GunGrenadeEntity;
 import com.atsuishio.superbwarfare.entity.projectile.HeliRocketEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.*;
@@ -179,8 +180,28 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
         }
 
         lowHealthWarning();
+        releaseDecoy();
 
         this.refreshDimensions();
+    }
+
+    public void releaseDecoy() {
+        if (decoyInputDown) {
+            if (!this.level().isClientSide()) {
+                Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+                for (int i = 0; i < 6; i++) {
+                    GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity((LivingEntity) passenger, this.level(),
+                            5,
+                            5,
+                            5);
+                    gunGrenadeEntity.setPos(this.getX(), this.getY() + 0.3, this.getZ());
+                    gunGrenadeEntity.decoyShoot(this, this.getViewVector(1).yRot(60 * i), 0.4f);
+                    this.level().addFreshEntity(gunGrenadeEntity);
+                }
+
+            }
+            decoyInputDown = false;
+        }
     }
 
     @Override

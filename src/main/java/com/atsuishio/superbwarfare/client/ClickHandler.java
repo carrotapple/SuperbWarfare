@@ -431,6 +431,8 @@ public class ClickHandler {
                 ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(4, state == 1));
             } else if (key == options.keyShift.getKey().getValue()) {
                 ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(5, state == 1));
+            } else if (key == ModKeyMappings.RELEASE_DECOY.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(6, state == 1));
             }
         }
     }
