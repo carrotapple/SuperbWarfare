@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.JavelinItemRenderer;
 import com.atsuishio.superbwarfare.client.tooltip.component.LauncherImageComponent;
+import com.atsuishio.superbwarfare.entity.projectile.FlareDecoyEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -44,6 +45,7 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -145,8 +147,15 @@ public class JavelinItem extends GunItem implements GeoItem, AnimatedItem {
             GunsTool.setGunIntTag(stack, "MaxAmmo", getAmmoCount(player));
 
             if (tag.getBoolean("Seeking")) {
+                List<Entity> decoy = SeekTool.seekLivingEntities(player, player.level(), 512, 8);
                 Entity targetEntity = EntityFindUtil.findEntity(player.level(), tag.getString("TargetEntity"));
                 Entity seekingEntity = SeekTool.seekEntity(player, player.level(), 512, 8);
+                for (var e : decoy) {
+                    if (e instanceof FlareDecoyEntity flareDecoy) {
+                        tag.putString("TargetEntity", flareDecoy.getStringUUID());
+                    }
+                }
+
                 if (seekingEntity != null && seekingEntity == targetEntity) {
                     tag.putInt("SeekTime", tag.getInt("SeekTime") + 1);
                     if (tag.getInt("SeekTime") > 0 && (!seekingEntity.getPassengers().isEmpty() || seekingEntity instanceof VehicleEntity) && seekingEntity.tickCount %3 == 0) {

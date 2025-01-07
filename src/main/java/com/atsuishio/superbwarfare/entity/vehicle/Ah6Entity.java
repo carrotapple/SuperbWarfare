@@ -3,7 +3,7 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
-import com.atsuishio.superbwarfare.entity.projectile.GunGrenadeEntity;
+import com.atsuishio.superbwarfare.entity.projectile.FlareDecoyEntity;
 import com.atsuishio.superbwarfare.entity.projectile.HeliRocketEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.*;
@@ -15,6 +15,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -51,6 +52,7 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -67,6 +69,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     public static final EntityDataAccessor<Integer> WEAPON_TYPE = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
 
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> DECOY_COUNT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> LOADED_ROCKET = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
     public boolean engineStart;
     public boolean engineStartOver;
@@ -75,6 +78,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
 
     public double velocity;
     public int reloadCoolDown;
+    public int decoyReloadCoolDown;
     public int fireIndex;
 
     public Ah6Entity(PlayMessages.SpawnEntity packet, Level world) {
@@ -94,18 +98,23 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
         this.entityData.define(DELTA_ROT, 0f);
         this.entityData.define(WEAPON_TYPE, 0);
         this.entityData.define(PROPELLER_ROT, 0f);
+        this.entityData.define(DECOY_COUNT, 6);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("LoadedRocket", this.entityData.get(LOADED_ROCKET));
+        compound.putFloat("propellerRot", this.entityData.get(PROPELLER_ROT));
+        compound.putInt("decoyCount", this.entityData.get(DECOY_COUNT));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.entityData.set(LOADED_ROCKET, compound.getInt("LoadedRocket"));
+        this.entityData.set(PROPELLER_ROT, compound.getFloat("propellerRot"));
+        this.entityData.set(DECOY_COUNT, compound.getInt("decoyCount"));
     }
 
     @Override
@@ -145,6 +154,9 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             if (reloadCoolDown > 0) {
                 reloadCoolDown--;
             }
+            if (decoyReloadCoolDown > 0) {
+                decoyReloadCoolDown--;
+            }
             Player player = (Player) this.getFirstPassenger();
             if (player != null) {
                 if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.ROCKET_70.get())).mapToInt(ItemStack::getCount).sum() > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && reloadCoolDown == 0 && this.getEntityData().get(LOADED_ROCKET) < 14) {
@@ -179,28 +191,34 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), 26 + (float) (60 * ((lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
         }
 
-        lowHealthWarning();
         releaseDecoy();
+        lowHealthWarning();
 
         this.refreshDimensions();
     }
 
     public void releaseDecoy() {
         if (decoyInputDown) {
-            if (!this.level().isClientSide()) {
+            if (this.entityData.get(DECOY_COUNT) > 0) {
                 Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
-                for (int i = 0; i < 6; i++) {
-                    GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity((LivingEntity) passenger, this.level(),
-                            5,
-                            5,
-                            5);
-                    gunGrenadeEntity.setPos(this.getX(), this.getY() + 0.3, this.getZ());
-                    gunGrenadeEntity.decoyShoot(this, this.getDeltaMovement().normalize().yRot(60 * i * Mth.DEG_TO_RAD), 0.4f);
-                    this.level().addFreshEntity(gunGrenadeEntity);
+                for (int i = 0; i < 4; i++) {
+                    FlareDecoyEntity flareDecoyEntity = new FlareDecoyEntity((LivingEntity) passenger, this.level());
+                    flareDecoyEntity.setPos(this.getX() + this.getDeltaMovement().x, this.getY() + 0.5 + this.getDeltaMovement().y, this.getZ()+ this.getDeltaMovement().z);
+                    flareDecoyEntity.decoyShoot(this, this.getViewVector(1).yRot((45 + 90 * i) * Mth.DEG_TO_RAD), 0.8f, 8);
+                    this.level().addFreshEntity(flareDecoyEntity);
                 }
-
+                this.getEntityData().set(DECOY_COUNT, this.getEntityData().get(DECOY_COUNT) - 1);
             }
             decoyInputDown = false;
+        }
+        if (this.entityData.get(DECOY_COUNT) < 6 && decoyReloadCoolDown == 0) {
+            this.entityData.set(DECOY_COUNT, this.entityData.get(DECOY_COUNT) + 1);
+            decoyReloadCoolDown = 300;
+        }
+        Player player = (Player) this.getFirstPassenger();
+
+        if (player != null) {
+            player.displayClientMessage(Component.literal( new DecimalFormat("##").format(this.getEntityData().get(DECOY_COUNT))), true);
         }
     }
 

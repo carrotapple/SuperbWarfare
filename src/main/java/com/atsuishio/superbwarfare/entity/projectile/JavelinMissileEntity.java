@@ -11,6 +11,7 @@ import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.ProjectileTool;
+import com.atsuishio.superbwarfare.tools.SeekTool;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -50,6 +51,8 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.List;
+
 public class JavelinMissileEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<String> TARGET_UUID = SynchedEntityData.defineId(JavelinMissileEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Boolean> TOP = SynchedEntityData.defineId(JavelinMissileEntity.class, EntityDataSerializers.BOOLEAN);
@@ -61,6 +64,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
     private float damage = 500.0f;
     private float explosion_damage = 140f;
     private float explosion_radius = 6f;
+    private boolean distracted = false;
 
     public JavelinMissileEntity(EntityType<? extends JavelinMissileEntity> type, Level world) {
         super(type, world);
@@ -183,17 +187,31 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
     @Override
     public void tick() {
         super.tick();
-
         Entity entity = EntityFindUtil.findEntity(this.level(), entityData.get(TARGET_UUID));
+        List<Entity> decoy = SeekTool.seekLivingEntities(this, this.level(), 48 , 160);
 
-        if (entity != null && entity.level() instanceof ServerLevel) {
-            this.entityData.set(TARGET_X, (float) entity.getX());
-            this.entityData.set(TARGET_Y, (float) entity.getEyeY());
-            this.entityData.set(TARGET_Z, (float) entity.getZ());
-            if ((!entity.getPassengers().isEmpty() || entity instanceof VehicleEntity) && entity.tickCount %((int)Math.max(0.04 * this.distanceTo(entity),2)) == 0) {
-                entity.level().playSound(null, entity.getOnPos(), entity instanceof Pig ? SoundEvents.PIG_HURT : ModSounds.MISSILE_WARNING.get(), SoundSource.PLAYERS, 2, 1f);
+        for (var e : decoy) {
+            if (e instanceof FlareDecoyEntity flareDecoy && !distracted) {
+                this.entityData.set(TARGET_UUID, flareDecoy.getStringUUID());
+                distracted = true;
             }
         }
+
+        if (entity != null) {
+            if (entity.level() instanceof ServerLevel) {
+                this.entityData.set(TARGET_X, (float) entity.getX());
+                this.entityData.set(TARGET_Y, (float) entity.getEyeY());
+                this.entityData.set(TARGET_Z, (float) entity.getZ());
+                if ((!entity.getPassengers().isEmpty() || entity instanceof VehicleEntity) && entity.tickCount %((int)Math.max(0.04 * this.distanceTo(entity),2)) == 0) {
+                    entity.level().playSound(null, entity.getOnPos(), entity instanceof Pig ? SoundEvents.PIG_HURT : ModSounds.MISSILE_WARNING.get(), SoundSource.PLAYERS, 2, 1f);
+                }
+            }
+        } else  {
+            this.entityData.set(TARGET_X, (float)(this.getX() + this.getDeltaMovement().scale(10).x));
+            this.entityData.set(TARGET_Y, (float)(this.getY() + this.getDeltaMovement().scale(10).y));
+            this.entityData.set(TARGET_Z, (float)(this.getZ() + this.getDeltaMovement().scale(10).z));
+        }
+
 
         double px = this.getX();
         double ex = this.entityData.get(TARGET_X);

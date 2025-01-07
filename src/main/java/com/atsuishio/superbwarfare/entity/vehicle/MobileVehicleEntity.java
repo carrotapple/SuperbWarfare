@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.entity.TargetEntity;
+import com.atsuishio.superbwarfare.entity.projectile.FlareDecoyEntity;
 import com.atsuishio.superbwarfare.entity.projectile.LaserEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
@@ -135,7 +136,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
         var entities = level().getEntities(EntityTypeTest.forClass(Entity.class), frontBox,
                         entity -> entity != this && entity != getFirstPassenger() && entity.getVehicle() == null)
                 .stream().filter(entity -> entity.isAlive()
-                        && !(entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ProjectileEntity || entity instanceof LaserEntity)
+                        && !(entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ProjectileEntity || entity instanceof LaserEntity || entity instanceof FlareDecoyEntity)
                         && !(entity instanceof Player player && (player.isSpectator() || player.isCreative())))
                 .toList();
 

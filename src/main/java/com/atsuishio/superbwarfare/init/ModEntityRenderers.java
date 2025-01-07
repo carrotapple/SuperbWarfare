@@ -33,5 +33,6 @@ public class ModEntityRenderers {
         event.registerEntityRenderer(ModEntities.SPEEDBOAT.get(), SpeedboatRenderer::new);
         event.registerEntityRenderer(ModEntities.WHEEL_CHAIR.get(), WheelChairRenderer::new);
         event.registerEntityRenderer(ModEntities.AH_6.get(), Ah6Renderer::new);
+        event.registerEntityRenderer(ModEntities.FLARE_DECOY.get(), FlareDecoyEntityRenderer::new);
     }
 }

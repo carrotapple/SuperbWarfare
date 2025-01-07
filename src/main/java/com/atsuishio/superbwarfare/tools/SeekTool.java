@@ -3,12 +3,10 @@ package com.atsuishio.superbwarfare.tools;
 import com.atsuishio.superbwarfare.entity.ClaymoreEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -56,7 +54,7 @@ public class SeekTool {
                             && e != entity
                             && e.isAlive()
                             && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand)
-                            && (e instanceof LivingEntity || e instanceof VehicleEntity)
+                            && e.getVehicle() == null
                             && !(e instanceof Player player && (player.isSpectator()))
                             && (!e.isAlliedTo(entity) || e.getTeam() == null || e.getTeam().getName().equals("TDM"))) {
                         return level.clip(new ClipContext(entity.getEyePosition(), e.getEyePosition(),
@@ -73,7 +71,7 @@ public class SeekTool {
                             && e != entity
                             && e.isAlive()
                             && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand)
-                            && (e instanceof LivingEntity || e instanceof VehicleEntity)
+                            && e.getVehicle() == null
                             && !(e instanceof Player player && (player.isSpectator()))
                             && (!e.isAlliedTo(entity) || e.getTeam() == null || e.getTeam().getName().equals("TDM"))) {
                         return level.clip(new ClipContext(entity.getEyePosition(), e.getEyePosition(),
