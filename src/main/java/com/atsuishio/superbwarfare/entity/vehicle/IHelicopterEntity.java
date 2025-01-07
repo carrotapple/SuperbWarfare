@@ -7,6 +7,6 @@ public interface IHelicopterEntity extends IArmedVehicleEntity {
     float getRotY(float tickDelta);
 
     float getRotZ(float tickDelta);
-
     float getPower();
+    int getDecoy();
 }

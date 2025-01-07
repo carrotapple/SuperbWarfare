@@ -2640,5 +2640,21 @@
         "stream": false
       }
     ]
+  },
+  "decoy_reload": {
+    "sounds": [
+      {
+        "name": "superbwarfare:helicopter/decoy_reload",
+        "stream": false
+      }
+    ]
+  },
+  "decoy_fire": {
+    "sounds": [
+      {
+        "name": "superbwarfare:helicopter/decoy_fire",
+        "stream": false
+      }
+    ]
   }
 }

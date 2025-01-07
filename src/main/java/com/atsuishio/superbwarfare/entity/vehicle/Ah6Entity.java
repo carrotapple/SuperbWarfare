@@ -15,7 +15,6 @@ import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -52,7 +51,6 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -199,7 +197,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
 
     public void releaseDecoy() {
         if (decoyInputDown) {
-            if (this.entityData.get(DECOY_COUNT) > 0) {
+            if (this.entityData.get(DECOY_COUNT) > 0 && this.level() instanceof ServerLevel) {
                 Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
                 for (int i = 0; i < 4; i++) {
                     FlareDecoyEntity flareDecoyEntity = new FlareDecoyEntity((LivingEntity) passenger, this.level());
@@ -207,19 +205,24 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                     flareDecoyEntity.decoyShoot(this, this.getViewVector(1).yRot((45 + 90 * i) * Mth.DEG_TO_RAD), 0.8f, 8);
                     this.level().addFreshEntity(flareDecoyEntity);
                 }
+                this.level().playSound(null, this, ModSounds.DECOY_FIRE.get(), this.getSoundSource(), 1, 1);
+                if (this.getEntityData().get(DECOY_COUNT) == 6) {
+                    decoyReloadCoolDown = 300;
+                }
                 this.getEntityData().set(DECOY_COUNT, this.getEntityData().get(DECOY_COUNT) - 1);
             }
             decoyInputDown = false;
         }
-        if (this.entityData.get(DECOY_COUNT) < 6 && decoyReloadCoolDown == 0) {
+        if (this.entityData.get(DECOY_COUNT) < 6 && decoyReloadCoolDown == 0  && this.level() instanceof ServerLevel) {
             this.entityData.set(DECOY_COUNT, this.entityData.get(DECOY_COUNT) + 1);
+            this.level().playSound(null, this, ModSounds.DECOY_RELOAD.get(), this.getSoundSource(), 1, 1);
             decoyReloadCoolDown = 300;
         }
-        Player player = (Player) this.getFirstPassenger();
-
-        if (player != null) {
-            player.displayClientMessage(Component.literal( new DecimalFormat("##").format(this.getEntityData().get(DECOY_COUNT))), true);
-        }
+//        Player player = (Player) this.getFirstPassenger();
+//
+//        if (player != null) {
+//            player.displayClientMessage(Component.literal( new DecimalFormat("##").format(this.getEntityData().get(DECOY_COUNT))), true);
+//        }
     }
 
     @Override
@@ -465,7 +468,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
         Vector4f worldPositionLeft;
 
         if (entityData.get(WEAPON_TYPE) == 0) {
-            x = 1.4f;
+            x = 1.25f;
             y = 0.62f;
             z = 0.8f;
 
@@ -479,7 +482,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                         .headShot(2f)
                         .zoom(false);
 
-                projectileRight.heBullet(true, 1);
+                projectileRight.heBullet(true, 3);
                 projectileRight.bypassArmorRate(0.2f);
                 projectileRight.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
                 projectileRight.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.018, this.getLookAngle().z, 20,
@@ -655,6 +658,11 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     @Override
     public float getPower() {
         return this.entityData.get(POWER);
+    }
+
+    @Override
+    public int getDecoy() {
+        return this.entityData.get(DECOY_COUNT);
     }
 
     @Override

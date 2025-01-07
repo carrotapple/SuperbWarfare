@@ -2,9 +2,9 @@ package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.RenderHelper;
-import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.IHelicopterEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.MultiWeaponVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -37,7 +37,6 @@ import java.text.DecimalFormat;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 import static com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay.*;
-import static com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity.WEAPON_TYPE;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class HelicopterHudOverlay {
@@ -63,7 +62,7 @@ public class HelicopterHudOverlay {
         if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit)
             return;
 
-        if (player.getVehicle() instanceof IHelicopterEntity iHelicopterEntity && player.getVehicle() instanceof MobileVehicleEntity mobileVehicle && iHelicopterEntity.isDriver(player)) {
+        if (player.getVehicle() instanceof IHelicopterEntity iHelicopterEntity && player.getVehicle() instanceof MobileVehicleEntity mobileVehicle && iHelicopterEntity.isDriver(player) && player.getVehicle() instanceof MultiWeaponVehicleEntity multiWeaponVehicle) {
             poseStack.pushPose();
 
             poseStack.translate(-6 * ClientEventHandler.turnRot[1],-6 * ClientEventHandler.turnRot[0],0);
@@ -119,13 +118,13 @@ public class HelicopterHudOverlay {
                 guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y, mobileVehicle.getDeltaMovement().z) * 72) + "KM/H"),
                         w / 2 - 140, h / 2, 0x66FF00, false);
 
-                if (mobileVehicle instanceof Ah6Entity ah6Entity) {
-                    if (ah6Entity.getEntityData().get(WEAPON_TYPE) == 0) {
-                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("20MM CANNON " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : ah6Entity.getAmmoCount(player))), w / 2 - 160, h / 2 - 60, 0x66FF00, false);
-                    } else {
-                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("70MM ROCKET " + ah6Entity.getAmmoCount(player)), w / 2 - 160, h / 2 - 60, 0x66FF00, false);
-                    }
+                if (multiWeaponVehicle.getWeaponType() == 0) {
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("20MM CANNON " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : iHelicopterEntity.getAmmoCount(player))), w / 2 - 160, h / 2 - 60, 0x66FF00, false);
+                } else {
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("70MM ROCKET " + iHelicopterEntity.getAmmoCount(player)), w / 2 - 160, h / 2 - 60, 0x66FF00, false);
                 }
+
+                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("FLARE " + iHelicopterEntity.getDecoy()), w / 2 - 160, h / 2 - 50, 0x66FF00, false);
 
                 if (lerpVy * 20 < -24) {
                     guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("SINK RATE，PULL UP!"),
