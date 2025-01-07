@@ -2600,5 +2600,45 @@
         "stream": false
       }
     ]
+  },
+  "low_health": {
+    "sounds": [
+      {
+        "name": "superbwarfare:warning/low_health",
+        "stream": false
+      }
+    ]
+  },
+  "no_health": {
+    "sounds": [
+      {
+        "name": "superbwarfare:warning/no_health",
+        "stream": false
+      }
+    ]
+  },
+  "locking_warning": {
+    "sounds": [
+      {
+        "name": "superbwarfare:warning/locking",
+        "stream": false
+      }
+    ]
+  },
+  "locked_warning": {
+    "sounds": [
+      {
+        "name": "superbwarfare:warning/locked",
+        "stream": false
+      }
+    ]
+  },
+  "missile_warning": {
+    "sounds": [
+      {
+        "name": "superbwarfare:warning/missile",
+        "stream": false
+      }
+    ]
   }
 }

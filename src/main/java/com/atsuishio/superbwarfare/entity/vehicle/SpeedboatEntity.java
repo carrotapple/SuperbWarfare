@@ -201,6 +201,7 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
 
         collideBlock();
         gunnerAngle();
+        lowHealthWarning();
 
         this.refreshDimensions();
     }

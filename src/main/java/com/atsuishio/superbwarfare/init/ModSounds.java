@@ -369,5 +369,10 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> INTO_CANNON = REGISTRY.register("into_cannon", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("into_cannon")));
     public static final RegistryObject<SoundEvent> INTO_MISSILE = REGISTRY.register("into_missile", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("into_missile")));
     public static final RegistryObject<SoundEvent> MISSILE_RELOAD = REGISTRY.register("missile_reload", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("missile_reload")));
+    public static final RegistryObject<SoundEvent> LOW_HEALTH = REGISTRY.register("low_health", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("low_health")));
+    public static final RegistryObject<SoundEvent> NO_HEALTH = REGISTRY.register("no_health", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("no_health")));
+    public static final RegistryObject<SoundEvent> LOCKING_WARNING = REGISTRY.register("locking_warning", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("locking_warning")));
+    public static final RegistryObject<SoundEvent> LOCKED_WARNING = REGISTRY.register("locked_warning", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("locked_warning")));
+    public static final RegistryObject<SoundEvent> MISSILE_WARNING = REGISTRY.register("missile_warning", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("missile_warning")));
 }
 

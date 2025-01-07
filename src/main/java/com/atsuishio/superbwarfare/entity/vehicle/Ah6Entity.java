@@ -177,6 +177,9 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.6, 0.6, 0.6));
             this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), 26 + (float) (60 * ((lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
         }
+
+        lowHealthWarning();
+
         this.refreshDimensions();
     }
 
@@ -441,7 +444,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                 projectileRight.heBullet(true, 1);
                 projectileRight.bypassArmorRate(0.2f);
                 projectileRight.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
-                projectileRight.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.025, this.getLookAngle().z, 20,
+                projectileRight.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.018, this.getLookAngle().z, 20,
                         (float) 0.2);
                 this.level().addFreshEntity(projectileRight);
                 sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPositionRight.x, worldPositionRight.y, worldPositionRight.z, 1, 0, 0, 0, 0, false);
@@ -460,7 +463,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                 projectileLeft.heBullet(true, 1);
                 projectileLeft.bypassArmorRate(0.2f);
                 projectileLeft.setPos(worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z);
-                projectileLeft.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.025, this.getLookAngle().z, 20,
+                projectileLeft.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.018, this.getLookAngle().z, 20,
                         (float) 0.2);
                 this.level().addFreshEntity(projectileLeft);
                 sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z, 1, 0, 0, 0, 0, false);

@@ -74,7 +74,7 @@ public class SeekTool {
                             && e.isAlive()
                             && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand)
                             && (e instanceof LivingEntity || e instanceof VehicleEntity)
-                            && !(e instanceof Player player && (player.isCreative() || player.isSpectator()))
+                            && !(e instanceof Player player && (player.isSpectator()))
                             && (!e.isAlliedTo(entity) || e.getTeam() == null || e.getTeam().getName().equals("TDM"))) {
                         return level.clip(new ClipContext(entity.getEyePosition(), e.getEyePosition(),
                                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() != HitResult.Type.BLOCK;
