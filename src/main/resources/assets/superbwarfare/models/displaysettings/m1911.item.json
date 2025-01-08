@@ -33,14 +33,9 @@
     },
     "firstperson_righthand": {
       "translation": [
-        -7,
-        3.25,
-        0.75
-      ],
-      "scale": [
-        1.05,
-        1.05,
-        1.05
+        -6.75,
+        2.75,
+        -1.25
       ]
     },
     "firstperson_lefthand": {

@@ -67,36 +67,48 @@ public class M1911Item extends GunItem implements GeoItem, AnimatedItem {
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState<M1911Item> event) {
+    private PlayState fireAnimPredicate(AnimationState<M1911Item> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m1911.reload_empty"));
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.reload_empty"));
         }
 
         if (stack.getOrCreateTag().getBoolean("is_normal_reloading")) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.m1911.reload_normal"));
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.glock.reload_normal"));
         }
+
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.idle"));
+    }
+
+    private PlayState idlePredicate(AnimationState<M1911Item> event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (player.isSprinting() && player.onGround()
                 && player.getPersistentData().getDouble("noRun") == 0
                 && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading")) && ClientEventHandler.drawTime < 0.01) {
             if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m1911.run_fast"));
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.run_fast"));
             } else {
-                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m1911.run"));
+                return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.run"));
             }
         }
 
-        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.m1911.idle"));
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.glock.idle"));
     }
 
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        var fireAnimController = new AnimationController<>(this, "fireAnimController", 1, this::fireAnimPredicate);
+        data.add(fireAnimController);
         var idleController = new AnimationController<>(this, "idleController", 2, this::idlePredicate);
         data.add(idleController);
     }

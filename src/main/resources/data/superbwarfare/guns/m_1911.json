@@ -7,8 +7,8 @@
   "Velocity": 15,
   "Magazine": 7,
   "Weight": 2,
-  "NormalReloadTime": 30,
-  "EmptyReloadTime": 35,
+  "NormalReloadTime": 44,
+  "EmptyReloadTime": 47,
   "BypassesArmor": 0.2,
   "SoundRadius": 10,
   "RPM": 400

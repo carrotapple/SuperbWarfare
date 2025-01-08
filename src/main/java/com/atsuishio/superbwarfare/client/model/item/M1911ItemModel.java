@@ -20,7 +20,7 @@ public class M1911ItemModel extends GeoModel<M1911Item> {
 
     @Override
     public ResourceLocation getAnimationResource(M1911Item animatable) {
-        return ModUtils.loc("animations/m1911.animation.json");
+        return ModUtils.loc("animations/glock17.animation.json");
     }
 
     @Override
@@ -64,11 +64,11 @@ public class M1911ItemModel extends GeoModel<M1911Item> {
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
-        gun.setPosX(1.86f * (float) zp);
+        gun.setPosX(2.23f * (float) zp);
 
-        gun.setPosY(1.55f * (float) zp - (float) (0.2f * zpz));
+        gun.setPosY(3.15f * (float) zp - (float) (0.2f * zpz));
 
-        gun.setPosZ(2f * (float) zp + (float) (0.3f * zpz));
+        gun.setPosZ(5f * (float) zp + (float) (0.3f * zpz));
 
         gun.setScaleZ(1f - (0.35f * (float) zp));
 
@@ -82,7 +82,7 @@ public class M1911ItemModel extends GeoModel<M1911Item> {
         shen.setPosX((float) (shen.getPosX() * (1 - 0.4 * zt)));
         shen.setPosY((float) (shen.getPosY() * (1 - 0.5 * zt)));
         shen.setPosZ((float) (shen.getPosZ() * (1 - 0.3 * zt)));
-        shen.setRotX((float) (shen.getRotX() * (1 - 0.27 * zt)));
+        shen.setRotX((float) (shen.getRotX() * (1 - 0.5 * zt)));
         shen.setRotY((float) (shen.getRotY() * (1 - 0.7 * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.65 * zt)));
 

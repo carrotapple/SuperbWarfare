@@ -110,7 +110,7 @@ public class Glock17Item extends GunItem implements GeoItem, AnimatedItem {
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         var fireAnimController = new AnimationController<>(this, "fireAnimController", 1, this::fireAnimPredicate);
         data.add(fireAnimController);
-        var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
+        var idleController = new AnimationController<>(this, "idleController", 2, this::idlePredicate);
         data.add(idleController);
     }
 

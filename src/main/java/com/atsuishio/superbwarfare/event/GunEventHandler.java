@@ -351,7 +351,7 @@ public class GunEventHandler {
             if (data.getInt("ReloadTime") == 84) {
                 tag.putBoolean("empty", false);
             }
-            if (data.getInt("ReloadTime") == 7) {
+            if (data.getInt("ReloadTime") == 9) {
                 data.putBoolean("CloseHammer", false);
             }
         }
@@ -375,7 +375,7 @@ public class GunEventHandler {
         }
 
         if (stack.getItem() == ModItems.GLOCK_17.get() || stack.getItem() == ModItems.GLOCK_18.get() || stack.getItem() == ModItems.M_1911.get()) {
-            if (data.getInt("ReloadTime") == 5) {
+            if (data.getInt("ReloadTime") == 9) {
                 data.putBoolean("HoldOpen", false);
             }
         }
