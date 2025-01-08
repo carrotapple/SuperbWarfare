@@ -88,6 +88,8 @@ public class ModVillagers {
             trades.get(2).add(new BasicItemListing(new ItemStack(Items.EMERALD, 16),
                     new ItemStack(ModItems.M_1911_BLUEPRINT.get()), 8, 15, 0.05f));
             trades.get(2).add(new BasicItemListing(new ItemStack(Items.EMERALD, 16),
+                    new ItemStack(ModItems.MP_443_BLUEPRINT.get()), 8, 15, 0.05f));
+            trades.get(2).add(new BasicItemListing(new ItemStack(Items.EMERALD, 16),
                     new ItemStack(ModItems.TASER_BLUEPRINT.get()), 8, 15, 0.05f));
 
             // 等级 3 交易

@@ -1,10 +1,11 @@
 package com.atsuishio.superbwarfare.client;
 
+import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
@@ -26,6 +27,22 @@ public class AnimationHelper {
         model.xRot = 0.0f;
         model.yRot = 0.0f;
         model.zRot = 0.0f;
+    }
+
+    public static void renderPartOverBone2(ModelPart model, GeoBone bone, PoseStack stack, VertexConsumer buffer, int packedLightIn, int packedOverlayIn, float alpha) {
+        renderPartOverBone2(model, bone, stack, buffer, packedLightIn, packedOverlayIn, 1.0f, 1.0f, 1.0f, alpha);
+    }
+
+    public static void renderPartOverBone2(ModelPart model, GeoBone bone, PoseStack stack, VertexConsumer buffer, int packedLightIn, int packedOverlayIn, float r, float g, float b, float a) {
+        setupModelFromBone2(model, bone);
+        model.render(stack, buffer, packedLightIn, packedOverlayIn, r, g, b, a);
+    }
+
+    public static void setupModelFromBone2(ModelPart model, GeoBone bone) {
+        model.setPos(bone.getPivotX(), bone.getPivotY() + 7, bone.getPivotZ());
+        model.xRot = 0.0f;
+        model.yRot = 180 * Mth.DEG_TO_RAD;
+        model.zRot = 180 * Mth.DEG_TO_RAD;
     }
 
     public static void handleShellsAnimation(AnimationProcessor<?> animationProcessor, float x, float y) {

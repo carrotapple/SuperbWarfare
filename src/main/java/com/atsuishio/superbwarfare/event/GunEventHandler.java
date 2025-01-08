@@ -374,7 +374,7 @@ public class GunEventHandler {
             }
         }
 
-        if (stack.getItem() == ModItems.GLOCK_17.get() || stack.getItem() == ModItems.GLOCK_18.get() || stack.getItem() == ModItems.M_1911.get()) {
+        if (stack.getItem() == ModItems.GLOCK_17.get() || stack.getItem() == ModItems.GLOCK_18.get() || stack.getItem() == ModItems.M_1911.get() || stack.getItem() == ModItems.MP_443.get()) {
             if (data.getInt("ReloadTime") == 9) {
                 data.putBoolean("HoldOpen", false);
             }

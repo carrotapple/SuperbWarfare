@@ -6,10 +6,7 @@ import com.atsuishio.superbwarfare.item.armor.*;
 import com.atsuishio.superbwarfare.item.common.BlueprintItem;
 import com.atsuishio.superbwarfare.item.common.MaterialPack;
 import com.atsuishio.superbwarfare.item.common.ammo.*;
-import com.atsuishio.superbwarfare.item.gun.handgun.Glock17Item;
-import com.atsuishio.superbwarfare.item.gun.handgun.Glock18Item;
-import com.atsuishio.superbwarfare.item.gun.handgun.M1911Item;
-import com.atsuishio.superbwarfare.item.gun.handgun.Trachelium;
+import com.atsuishio.superbwarfare.item.gun.handgun.*;
 import com.atsuishio.superbwarfare.item.gun.launcher.JavelinItem;
 import com.atsuishio.superbwarfare.item.gun.launcher.M79Item;
 import com.atsuishio.superbwarfare.item.gun.launcher.RpgItem;
@@ -50,6 +47,7 @@ public class ModItems {
     public static final RegistryObject<Item> TASER = GUNS.register("taser", TaserItem::new);
     public static final RegistryObject<Item> GLOCK_17 = GUNS.register("glock_17", Glock17Item::new);
     public static final RegistryObject<Item> GLOCK_18 = GUNS.register("glock_18", Glock18Item::new);
+    public static final RegistryObject<Item> MP_443 = GUNS.register("mp_443", Mp443Item::new);
     public static final RegistryObject<Item> M_1911 = GUNS.register("m_1911", M1911Item::new);
     public static final RegistryObject<Item> ABEKIRI = GUNS.register("abekiri", AbekiriItem::new);
     public static final RegistryObject<Item> TRACHELIUM = GUNS.register("trachelium", Trachelium::new);
@@ -193,6 +191,7 @@ public class ModItems {
 
     public static final RegistryObject<Item> TRACHELIUM_BLUEPRINT = ITEMS.register("trachelium_blueprint", () -> new BlueprintItem(Rarity.EPIC));
     public static final RegistryObject<Item> GLOCK_17_BLUEPRINT = ITEMS.register("glock_17_blueprint", () -> new BlueprintItem(Rarity.COMMON));
+    public static final RegistryObject<Item> MP_443_BLUEPRINT = ITEMS.register("mp_443_blueprint", () -> new BlueprintItem(Rarity.COMMON));
     public static final RegistryObject<Item> GLOCK_18_BLUEPRINT = ITEMS.register("glock_18_blueprint", () -> new BlueprintItem(Rarity.RARE));
     public static final RegistryObject<Item> HUNTING_RIFLE_BLUEPRINT = ITEMS.register("hunting_rifle_blueprint", () -> new BlueprintItem(Rarity.EPIC));
     public static final RegistryObject<Item> M_79_BLUEPRINT = ITEMS.register("m_79_blueprint", () -> new BlueprintItem(Rarity.RARE));

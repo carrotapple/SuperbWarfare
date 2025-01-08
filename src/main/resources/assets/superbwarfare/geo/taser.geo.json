@@ -6,7 +6,7 @@
 				"identifier": "geometry.taser",
 				"texture_width": 32,
 				"texture_height": 32,
-				"visible_bounds_width": 3,
+				"visible_bounds_width": 4,
 				"visible_bounds_height": 3,
 				"visible_bounds_offset": [0, 0.5, 0]
 			},
@@ -167,11 +167,11 @@
 				{
 					"name": "Righthand",
 					"parent": "0",
-					"pivot": [-2.4, -2.9, 11.5],
-					"rotation": [96.64168, 7.15102, -177.73292],
+					"pivot": [-1.15468, -2.08634, -0.45413],
+					"rotation": [-76.32882, 10.3564, 179.6036],
 					"cubes": [
 						{
-							"origin": [-4.4, -2.9, 9.5],
+							"origin": [-3.15468, -3.08634, -2.45413],
 							"size": [4, 12, 4],
 							"uv": {
 								"north": {"uv": [1.25, 30], "uv_size": [-1.25, 2]},
@@ -187,14 +187,12 @@
 				{
 					"name": "Lefthand",
 					"parent": "0",
-					"pivot": [2.2, -6.3, 9.6],
-					"rotation": [109.69635, -4.47536, 178.48092],
+					"pivot": [0.4046, -2.34567, -1.07012],
+					"rotation": [-68.00049, -19.4896, 179.16409],
 					"cubes": [
 						{
-							"origin": [0.6, -6.3, 7.9],
+							"origin": [-1.5954, -3.34567, -3.07012],
 							"size": [4, 12, 4],
-							"pivot": [2.6, -0.3, 9.9],
-							"rotation": [0, 17, 0],
 							"uv": {
 								"north": {"uv": [1.25, 32], "uv_size": [-1.25, -2]},
 								"east": {"uv": [1.25, 32], "uv_size": [-1.25, -2]},

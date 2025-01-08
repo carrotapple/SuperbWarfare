@@ -103,6 +103,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         gunBlueprintItem(ModItems.TRACHELIUM_BLUEPRINT);
         gunBlueprintItem(ModItems.GLOCK_17_BLUEPRINT);
         gunBlueprintItem(ModItems.GLOCK_18_BLUEPRINT);
+        gunBlueprintItem(ModItems.MP_443_BLUEPRINT);
         gunBlueprintItem(ModItems.HUNTING_RIFLE_BLUEPRINT);
         gunBlueprintItem(ModItems.M_79_BLUEPRINT);
         gunBlueprintItem(ModItems.RPG_BLUEPRINT);
