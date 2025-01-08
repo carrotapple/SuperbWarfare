@@ -31,7 +31,7 @@ public class ClientSoundHandler {
             return;
         }
 
-        List<Entity>  engineVehicle = SeekTool.getVehicleWithinRange(player, player.level(), 196);
+        List<Entity>  engineVehicle = SeekTool.getVehicleWithinRange(player, player.level(), 192);
 
         for (var e : engineVehicle) {
             if (e instanceof MobileVehicleEntity mobileVehicle){
@@ -45,7 +45,7 @@ public class ClientSoundHandler {
                 SoundEvent engineSound = mobileVehicle.getEngineSound();
                 float distanceReduce;
                 if (e instanceof Ah6Entity ah6Entity) {
-                    distanceReduce = (float) (1 - distance / 64);
+                    distanceReduce = (float) Math.max((1 - distance / 128), 0);
                     if (player.getVehicle() == ah6Entity) {
                         player.playSound(ModSounds.HELICOPTER_ENGINE_1P.get(), 2 * (mobileVehicle.getEntityData().get(PROPELLER_ROT) - 0.012f), (float) ((2 * Math.random() - 1) * 0.1f + 1.0f));
                     } else {

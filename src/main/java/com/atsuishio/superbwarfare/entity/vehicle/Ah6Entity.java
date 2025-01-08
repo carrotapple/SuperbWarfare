@@ -318,10 +318,6 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             engineStart = false;
             engineStartOver = false;
         }
-
-//        if (level().isClientSide) {
-//            level().playLocalSound(this.getX() + this.getDeltaMovement().x, this.getY() + this.getBbHeight() + this.getDeltaMovement().y + 0.06, this.getZ() + this.getDeltaMovement().z, this.getEngineSound(), this.getSoundSource(), Math.max((this.upInputDown ? 10f : 3f) * 6 * this.entityData.get(POWER) - 0.038f, 0), (random.nextFloat() * 0.1f + 1.0f), false);
-//        }
     }
 
     @Override
