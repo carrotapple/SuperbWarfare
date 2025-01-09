@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.network.message.AimVillagerMessage;
 import com.atsuishio.superbwarfare.network.message.SimulationDistanceMessage;
 import com.atsuishio.superbwarfare.tools.*;
 import net.minecraft.server.level.ServerLevel;
@@ -17,7 +18,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.AnvilUpdateEvent;
@@ -100,12 +101,11 @@ public class PlayerEventHandler {
     public static void aimAtVillager(Player player) {
         if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom) {
             Entity entity = TraceTool.findLookingEntity(player, 10);
-            if (entity instanceof AbstractVillager villager) {
-                List<Entity> gunner = SeekTool.seekLivingEntities(villager, villager.level(), 16, 120);
-                for (var e : gunner) {
+            if (entity instanceof Villager villager) {
+                List<Entity> entities = SeekTool.seekLivingEntities(villager, villager.level(), 16, 120);
+                for (var e : entities) {
                     if (e == player) {
-                        // TODO 让村民恐慌并生气涨价
-//                        villager.getBrain().addActivity(Activity.PANIC, );
+                        ModUtils.PACKET_HANDLER.sendToServer(new AimVillagerMessage(villager.getId()));
                     }
                 }
             }

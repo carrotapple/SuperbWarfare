@@ -39,6 +39,7 @@ import java.util.UUID;
 
 @Mod.EventBusSubscriber
 public abstract class GunItem extends Item {
+
     public GunItem(Properties properties) {
         super(properties);
     }

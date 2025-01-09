@@ -61,13 +61,10 @@ public class Cell extends Item {
         return 0xFFFF00;
     }
 
-
-
     @Override
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
     }
-
 
     public static ItemStack getGunInstance() {
         ItemStack stack = new ItemStack(ModItems.TASER.get());
@@ -81,5 +78,4 @@ public class Cell extends Item {
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
         return Optional.of(new CellImageComponent(pStack));
     }
-
 }
