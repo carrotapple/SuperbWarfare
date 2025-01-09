@@ -2,7 +2,9 @@ package com.atsuishio.superbwarfare.item;
 
 import com.atsuishio.superbwarfare.client.renderer.item.LungeMineRenderer;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -72,15 +74,24 @@ public class LungeMine extends Item implements GeoItem, AnimatedItem {
     }
 
     private PlayState idlePredicate(AnimationState<LungeMine> event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
+
+
         if (ClientEventHandler.lungeAttack > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.lunge_mine.fire"));
         }
+
+        if (player.isSprinting() && player.onGround()) {
+            return event.setAndContinue(RawAnimation.begin().thenLoop("animation.lunge_mine.run"));
+        }
+
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.lunge_mine.idle"));
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        var idleController = new AnimationController<>(this, "idleController", 0, this::idlePredicate);
+        var idleController = new AnimationController<>(this, "idleController", 2, this::idlePredicate);
         data.add(idleController);
     }
 

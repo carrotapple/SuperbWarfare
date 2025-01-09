@@ -33,6 +33,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BellBlock;
+import net.minecraft.world.level.block.CrossCollisionBlock;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -246,11 +249,12 @@ public class ClientEventHandler {
 
     public static void handleLungeAttack(Player player, ItemStack stack) {
         if (stack.is(ModItems.LUNGE_MINE.get()) && lungeAttack == 0 && holdFire && !player.getCooldowns().isOnCooldown(stack.getItem())) {
-            lungeAttack = 6;
+            lungeAttack = 36;
             player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1f, 1);
         }
 
-        if (stack.is(ModItems.LUNGE_MINE.get()) && lungeAttack >= 1 && lungeAttack <= 2) {
+        if (stack.is(ModItems.LUNGE_MINE.get()) && lungeAttack >= 18 && lungeAttack <= 21) {
+
             boolean lookAtEntity = false;
 
             Entity lookingEntity = TraceTool.findLookingEntity(player, 5);
@@ -267,10 +271,8 @@ public class ClientEventHandler {
 
             if (lookAtEntity) {
                 ModUtils.PACKET_HANDLER.sendToServer(new LungeMineAttackMessage(0, lookingEntity.getUUID(), result));
-                lungeAttack = 0;
-            } else if (blockState.canOcclude()) {
+            } else if (blockState.canOcclude() || blockState.getBlock() instanceof DoorBlock || blockState.getBlock() instanceof CrossCollisionBlock || blockState.getBlock() instanceof BellBlock) {
                 ModUtils.PACKET_HANDLER.sendToServer(new LungeMineAttackMessage(1, player.getUUID(), result));
-                lungeAttack = 0;
             }
         }
 
@@ -1190,7 +1192,7 @@ public class ClientEventHandler {
             angle = Math.atan(Mth.abs((float) cameraLocation) / (lookDistance + 2.9)) * Mth.RAD_TO_DEG;
         }
 
-        if (player.getMainHandItem().is(ModTags.Items.GUN)) {
+        if (player.getMainHandItem().is(ModTags.Items.GUN) || player.getMainHandItem().is(ModItems.LUNGE_MINE.get())) {
             event.setPitch((float) (pitch + cameraRot[0] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.2 : 0) * turnRot[0] + 3 * velocityY));
             if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK) {
                 event.setYaw((float) (yaw + cameraRot[1] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.8 : 0) * turnRot[1] - (cameraLocation > 0 ? 1 : -1) * angle * zoomPos));
