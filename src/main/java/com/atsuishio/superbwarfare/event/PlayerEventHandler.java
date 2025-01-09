@@ -18,7 +18,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.AnvilUpdateEvent;
@@ -101,7 +101,7 @@ public class PlayerEventHandler {
     public static void aimAtVillager(Player player) {
         if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom) {
             Entity entity = TraceTool.findLookingEntity(player, 10);
-            if (entity instanceof Villager villager) {
+            if (entity instanceof AbstractVillager villager) {
                 List<Entity> entities = SeekTool.seekLivingEntities(villager, villager.level(), 16, 120);
                 for (var e : entities) {
                     if (e == player) {

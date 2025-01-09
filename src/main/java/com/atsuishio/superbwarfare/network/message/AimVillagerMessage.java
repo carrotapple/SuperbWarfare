@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.network.message;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.gossip.GossipType;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraftforge.network.NetworkEvent;
@@ -31,10 +32,13 @@ public class AimVillagerMessage {
             if (sender == null) return;
 
             Entity entity = sender.level().getEntity(message.villagerId);
-            if (entity instanceof Villager villager) {
-                villager.getBrain().setActiveActivityIfPossible(Activity.PANIC);
-                villager.getGossips().add(sender.getUUID(), GossipType.MINOR_NEGATIVE, 10);
+            if (entity instanceof AbstractVillager abstractVillager) {
+                if (entity instanceof Villager villager) {
+                    villager.getGossips().add(sender.getUUID(), GossipType.MINOR_NEGATIVE, 10);
+                }
+                abstractVillager.getBrain().setActiveActivityIfPossible(Activity.PANIC);
             }
+
         });
         context.get().setPacketHandled(true);
     }
