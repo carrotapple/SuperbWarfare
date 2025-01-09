@@ -443,6 +443,8 @@
 
   "container.superbwarfare.reforging_table": "枪械重铸台",
   "container.superbwarfare.charging_station": "充电站",
+  "container.superbwarfare.charging_station.show_range": "显示范围",
+  "container.superbwarfare.charging_station.hide_range": "隐藏范围",
 
   "config.superbwarfare.title": "卓越前线",
   "config.superbwarfare.client.reload": "换弹配置",

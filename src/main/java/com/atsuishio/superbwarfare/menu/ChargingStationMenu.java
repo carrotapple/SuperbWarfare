@@ -115,6 +115,14 @@ public class ChargingStationMenu extends EnergyMenu {
         return this.containerData.get(2);
     }
 
+    public boolean showRange() {
+        return this.containerData.get(3) == 1;
+    }
+
+    public void setShowRange(boolean showRange) {
+        this.containerData.set(3, showRange ? 1 : 0);
+    }
+
     static class ChargingSlot extends Slot {
 
         public ChargingSlot(Container pContainer, int pSlot, int pX, int pY) {

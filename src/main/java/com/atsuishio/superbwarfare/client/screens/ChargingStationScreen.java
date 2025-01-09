@@ -3,7 +3,10 @@ package com.atsuishio.superbwarfare.client.screens;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.block.entity.ChargingStationBlockEntity;
 import com.atsuishio.superbwarfare.menu.ChargingStationMenu;
+import com.atsuishio.superbwarfare.network.message.ShowChargingRangeMessage;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -73,6 +76,35 @@ public class ChargingStationScreen extends AbstractContainerScreen<ChargingStati
         }
     }
 
+    @OnlyIn(Dist.CLIENT)
+    class ShowRangeButton extends AbstractButton {
+
+        @Override
+        protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+            this.setMessage(ChargingStationScreen.this.menu.showRange() ? Component.translatable("container.superbwarfare.charging_station.hide_range") : Component.translatable("container.superbwarfare.charging_station.show_range"));
+            super.renderWidget(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        }
+
+        public ShowRangeButton(int pX, int pY) {
+            super(pX + 7, pY + 55, 33, 14, Component.translatable("container.superbwarfare.charging_station.show_range"));
+        }
+
+        @Override
+        public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+            super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        }
+
+        @Override
+        public void onPress() {
+            ModUtils.PACKET_HANDLER.sendToServer(new ShowChargingRangeMessage(!ChargingStationScreen.this.menu.showRange()));
+        }
+
+        @Override
+        protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+
+        }
+    }
+
     @Override
     protected void init() {
         super.init();
@@ -80,6 +112,10 @@ public class ChargingStationScreen extends AbstractContainerScreen<ChargingStati
         this.titleLabelY = 5;
         this.inventoryLabelX = 8;
         this.inventoryLabelY = 74;
+
+        int i = (this.width - this.imageWidth) / 2;
+        int j = (this.height - this.imageHeight) / 2;
+        this.addRenderableWidget(new ShowRangeButton(i, j));
     }
 
 }

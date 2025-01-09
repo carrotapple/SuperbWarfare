@@ -216,6 +216,8 @@
   "block.superbwarfare.silver_block": "Silver Block",
   "block.superbwarfare.cemented_carbide_block": "Cemented Carbide Block",
   "block.superbwarfare.charging_station": "Charging Station",
+  "container.superbwarfare.charging_station.show_range": "Show Range",
+  "container.superbwarfare.charging_station.hide_range": "Hide Range",
   "des.superbwarfare.charging_station.energy": "Energy: %1$s / %2$s FE",
   "block.superbwarfare.fumo_25": "FuMO25 Fire Control Radar",
   "des.superbwarfare.fumo_25.current_pos": "Current Pos: %1$s",

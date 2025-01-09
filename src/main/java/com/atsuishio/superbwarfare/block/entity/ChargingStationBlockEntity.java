@@ -45,7 +45,7 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
     protected static final int SLOT_CHARGE = 1;
 
     public static final int MAX_ENERGY = 4000000;
-    public static final int MAX_DATA_COUNT = 3;
+    public static final int MAX_DATA_COUNT = 4;
     public static final int DEFAULT_FUEL_TIME = 1600;
     public static final int CHARGE_SPEED = 128;
     public static final int CHARGE_OTHER_SPEED = 100000;
@@ -59,6 +59,8 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
     public int fuelTick = 0;
     public int maxFuelTick = DEFAULT_FUEL_TIME;
 
+    public boolean showRange = false;
+
     protected final ContainerEnergyData dataAccess = new ContainerEnergyData() {
         public long get(int pIndex) {
             return switch (pIndex) {
@@ -69,6 +71,7 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
                     ChargingStationBlockEntity.this.getCapability(ForgeCapabilities.ENERGY).ifPresent(consumer -> energy.set(consumer.getEnergyStored()));
                     yield energy.get();
                 }
+                case 3 -> ChargingStationBlockEntity.this.showRange ? 1 : 0;
                 default -> 0;
             };
         }
@@ -83,6 +86,9 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
                     break;
                 case 2:
                     ChargingStationBlockEntity.this.getCapability(ForgeCapabilities.ENERGY).ifPresent(consumer -> consumer.receiveEnergy((int) pValue, false));
+                    break;
+                case 3:
+                    ChargingStationBlockEntity.this.showRange = pValue == 1;
                     break;
             }
         }
@@ -217,6 +223,7 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
         }
         this.fuelTick = pTag.getInt("FuelTick");
         this.maxFuelTick = pTag.getInt("MaxFuelTick");
+        this.showRange = pTag.getBoolean("ShowRange");
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(pTag, this.items);
     }
@@ -228,6 +235,7 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
         getCapability(ForgeCapabilities.ENERGY).ifPresent(handler -> pTag.put("Energy", ((EnergyStorage) handler).serializeNBT()));
         pTag.putInt("FuelTick", this.fuelTick);
         pTag.putInt("MaxFuelTick", this.maxFuelTick);
+        pTag.putBoolean("ShowRange", this.showRange);
         ContainerHelper.saveAllItems(pTag, this.items);
     }
 
