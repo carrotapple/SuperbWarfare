@@ -105,12 +105,8 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
     }
 
     public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, ChargingStationBlockEntity blockEntity) {
-        if (blockEntity.showRange && !pState.getValue(ChargingStationBlock.SHOW_RANGE)) {
-            pLevel.setBlockAndUpdate(pPos, pState.setValue(ChargingStationBlock.SHOW_RANGE, true));
-            setChanged(pLevel, pPos, pState);
-        }
-        if (!blockEntity.showRange && pState.getValue(ChargingStationBlock.SHOW_RANGE)) {
-            pLevel.setBlockAndUpdate(pPos, pState.setValue(ChargingStationBlock.SHOW_RANGE, false));
+        if (blockEntity.showRange != pState.getValue(ChargingStationBlock.SHOW_RANGE)) {
+            pLevel.setBlockAndUpdate(pPos, pState.setValue(ChargingStationBlock.SHOW_RANGE, blockEntity.showRange));
             setChanged(pLevel, pPos, pState);
         }
 
