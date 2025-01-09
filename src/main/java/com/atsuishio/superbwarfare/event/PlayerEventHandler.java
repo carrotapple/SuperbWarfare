@@ -6,9 +6,10 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.network.message.AimVillagerMessage;
 import com.atsuishio.superbwarfare.network.message.SimulationDistanceMessage;
-import com.atsuishio.superbwarfare.tools.*;
+import com.atsuishio.superbwarfare.tools.GunInfo;
+import com.atsuishio.superbwarfare.tools.GunsTool;
+import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -16,9 +17,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.AnvilUpdateEvent;
@@ -27,8 +26,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
-
-import java.util.List;
 
 @Mod.EventBusSubscriber
 public class PlayerEventHandler {
@@ -88,27 +85,13 @@ public class PlayerEventHandler {
                 handlePlayerSprint(player);
                 handleSpecialWeaponAmmo(player);
                 handleBocekPulling(player);
-                aimAtVillager(player);
+
             }
 
             handleGround(player);
             handleSimulationDistance(player);
             handleTacticalSprint(player);
             handleBreath(player);
-        }
-    }
-
-    public static void aimAtVillager(Player player) {
-        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom) {
-            Entity entity = TraceTool.findLookingEntity(player, 10);
-            if (entity instanceof AbstractVillager villager) {
-                List<Entity> entities = SeekTool.seekLivingEntities(villager, villager.level(), 16, 120);
-                for (var e : entities) {
-                    if (e == player) {
-                        ModUtils.PACKET_HANDLER.sendToServer(new AimVillagerMessage(villager.getId()));
-                    }
-                }
-            }
         }
     }
 

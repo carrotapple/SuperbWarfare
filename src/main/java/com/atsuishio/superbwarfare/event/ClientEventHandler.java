@@ -8,10 +8,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.*;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
-import com.atsuishio.superbwarfare.network.message.LaserShootMessage;
-import com.atsuishio.superbwarfare.network.message.LungeMineAttackMessage;
-import com.atsuishio.superbwarfare.network.message.ShootMessage;
-import com.atsuishio.superbwarfare.network.message.VehicleFireMessage;
+import com.atsuishio.superbwarfare.network.message.*;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
@@ -31,6 +28,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
@@ -54,6 +52,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.lwjgl.glfw.GLFW;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
@@ -146,6 +145,7 @@ public class ClientEventHandler {
     public static Entity entity;
 
     public static int dismountCountdown = 0;
+    public static int aimVillagerCountdown = 0;
 
     @SubscribeEvent
     public static void handleWeaponTurn(RenderHandEvent event) {
@@ -208,6 +208,21 @@ public class ClientEventHandler {
             }
         }
 
+        if (notInGame() && !ClickHandler.switchZoom) {
+            zoom = false;
+        }
+
+        isProne(player);
+        beamShoot(player, stack);
+        handleLungeAttack(player, stack);
+
+        if (event.phase == TickEvent.Phase.END) {
+            handleVariableDecrease();
+            aimAtVillager(player);
+        }
+    }
+
+    private static void handleVariableDecrease() {
         if (miniGunRot > 0) {
             miniGunRot--;
         }
@@ -216,13 +231,9 @@ public class ClientEventHandler {
             dismountCountdown--;
         }
 
-        if (notInGame() && !ClickHandler.switchZoom) {
-            zoom = false;
+        if (aimVillagerCountdown > 0) {
+            aimVillagerCountdown--;
         }
-
-        isProne(player);
-        beamShoot(player, stack);
-        handleLungeAttack(player, stack);
     }
 
     public static boolean isProne(Player player) {
@@ -1368,6 +1379,23 @@ public class ClientEventHandler {
             shells[i].setPosY((float) (y * randomShell[0] * shellIndexTime[i] - 0.025 * Math.pow(shellIndexTime[i], 2)));
             shells[i].setRotX((float) (randomShell[1] * shellIndexTime[i]));
             shells[i].setRotY((float) (randomShell[2] * shellIndexTime[i]));
+        }
+    }
+
+    public static void aimAtVillager(Player player) {
+        if (aimVillagerCountdown > 0) return;
+
+        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom) {
+            Entity entity = TraceTool.findLookingEntity(player, 10);
+            if (entity instanceof AbstractVillager villager) {
+                List<Entity> entities = SeekTool.seekLivingEntities(villager, villager.level(), 16, 120);
+                for (var e : entities) {
+                    if (e == player) {
+                        ModUtils.PACKET_HANDLER.sendToServer(new AimVillagerMessage(villager.getId()));
+                        aimVillagerCountdown = 80;
+                    }
+                }
+            }
         }
     }
 }
