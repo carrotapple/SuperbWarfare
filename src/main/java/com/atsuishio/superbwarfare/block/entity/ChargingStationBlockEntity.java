@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.block.entity;
 
+import com.atsuishio.superbwarfare.block.ChargingStationBlock;
 import com.atsuishio.superbwarfare.entity.vehicle.IChargeEntity;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import com.atsuishio.superbwarfare.menu.ChargingStationMenu;
@@ -58,7 +59,6 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
 
     public int fuelTick = 0;
     public int maxFuelTick = DEFAULT_FUEL_TIME;
-
     public boolean showRange = false;
 
     protected final ContainerEnergyData dataAccess = new ContainerEnergyData() {
@@ -105,6 +105,15 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
     }
 
     public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, ChargingStationBlockEntity blockEntity) {
+        if (blockEntity.showRange && !pState.getValue(ChargingStationBlock.SHOW_RANGE)) {
+            pLevel.setBlockAndUpdate(pPos, pState.setValue(ChargingStationBlock.SHOW_RANGE, true));
+            setChanged(pLevel, pPos, pState);
+        }
+        if (!blockEntity.showRange && pState.getValue(ChargingStationBlock.SHOW_RANGE)) {
+            pLevel.setBlockAndUpdate(pPos, pState.setValue(ChargingStationBlock.SHOW_RANGE, false));
+            setChanged(pLevel, pPos, pState);
+        }
+
         blockEntity.energyHandler.ifPresent(handler -> {
             int energy = handler.getEnergyStored();
             if (energy > 0) {
@@ -329,6 +338,7 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
     public CompoundTag getUpdateTag() {
         CompoundTag compoundtag = new CompoundTag();
         ContainerHelper.saveAllItems(compoundtag, this.items, true);
+        compoundtag.putBoolean("ShowRange", this.showRange);
         return compoundtag;
     }
 

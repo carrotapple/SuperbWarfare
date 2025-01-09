@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer.block;
 
+import com.atsuishio.superbwarfare.block.ChargingStationBlock;
 import com.atsuishio.superbwarfare.block.entity.ChargingStationBlockEntity;
 import com.atsuishio.superbwarfare.client.renderer.CustomRenderType;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -15,8 +16,7 @@ public class ChargingStationBlockEntityRenderer implements BlockEntityRenderer<C
 
     @Override
     public void render(ChargingStationBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        // TODO 正确判断是否开启范围展示
-        if (!pBlockEntity.showRange) return;
+        if (!pBlockEntity.getBlockState().getValue(ChargingStationBlock.SHOW_RANGE)) return;
 
         pPoseStack.pushPose();
         var pos = pBlockEntity.getBlockPos();
