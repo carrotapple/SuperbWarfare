@@ -4,7 +4,6 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.event.PlayerEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.machinegun.M60Item;
 import com.atsuishio.superbwarfare.tools.GunsTool;
@@ -16,6 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
+
+import static com.atsuishio.superbwarfare.event.ClientEventHandler.isProne;
 
 public class M60ItemModel extends GeoModel<M60Item> {
 
@@ -52,7 +53,7 @@ public class M60ItemModel extends GeoModel<M60Item> {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
-        if (PlayerEventHandler.isProne(player)) {
+        if (isProne(player)) {
             l.setRotX(1.5f);
             r.setRotX(1.5f);
         }

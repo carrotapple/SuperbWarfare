@@ -34,6 +34,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -219,8 +220,17 @@ public class ClientEventHandler {
             zoom = false;
         }
 
+        isProne(player);
         beamShoot(player, stack);
         handleLungeAttack(player, stack);
+    }
+
+    public static boolean isProne(Player player) {
+        Level level = player.level();
+        if (player.getBbHeight() <= 1) return true;
+
+        return player.isCrouching() && level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 0.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude()
+                && !level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 1.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude();
     }
 
     public static void handleLungeAttack(Player player, ItemStack stack) {
@@ -284,7 +294,7 @@ public class ClientEventHandler {
         double walk = isMoving() ? 0.3 * basicDev : 0;
         double sprint = player.isSprinting() ? 0.25 * basicDev : 0;
         double crouching = player.isCrouching() ? -0.15 * basicDev : 0;
-        double prone = PlayerEventHandler.isProne(player) ? -0.3 * basicDev : 0;
+        double prone = isProne(player) ? -0.3 * basicDev : 0;
         double jump = player.onGround() ? 0 * basicDev : 0.35 * basicDev;
         double ride = player.onGround() ? -0.25 * basicDev : 0;
 
@@ -669,9 +679,9 @@ public class ClientEventHandler {
         float pose;
         float times = 2 * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
 
-        if (player.isCrouching() && player.getBbHeight() >= 1 && !PlayerEventHandler.isProne(player)) {
+        if (player.isCrouching() && player.getBbHeight() >= 1 && !isProne(player)) {
             pose = 0.85f;
-        } else if (PlayerEventHandler.isProne(player)) {
+        } else if (isProne(player)) {
             pose = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 3 ? 0 : 0.25f;
         } else {
             pose = 1;
@@ -828,9 +838,9 @@ public class ClientEventHandler {
             float times = 2 * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
             double pose;
 
-            if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && PlayerEventHandler.isProne(player)) {
+            if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && isProne(player)) {
                 pose = 0.85;
-            } else if (PlayerEventHandler.isProne(player)) {
+            } else if (isProne(player)) {
                 pose = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 3 ? 0 : 0.25f;
             } else {
                 pose = 1;
@@ -1066,9 +1076,9 @@ public class ClientEventHandler {
 
         // 计算后坐力
         float pose = 1;
-        if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && !PlayerEventHandler.isProne(player)) {
+        if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && !isProne(player)) {
             pose = 0.7f;
-        } else if (PlayerEventHandler.isProne(player)) {
+        } else if (isProne(player)) {
             if (GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 3) {
                 pose = 0.1f;
             } else {

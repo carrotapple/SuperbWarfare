@@ -8,7 +8,6 @@ import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.SimulationDistanceMessage;
 import com.atsuishio.superbwarfare.tools.*;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -20,9 +19,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -90,7 +87,6 @@ public class PlayerEventHandler {
                 handlePlayerSprint(player);
                 handleSpecialWeaponAmmo(player);
                 handleBocekPulling(player);
-                isProne(player);
                 aimAtVillager(player);
             }
 
@@ -109,19 +105,11 @@ public class PlayerEventHandler {
                 for (var e : gunner) {
                     if (e == player) {
                         // TODO 让村民恐慌并生气涨价
-                        villager.getBrain().addActivity(Activity.PANIC, );
+//                        villager.getBrain().addActivity(Activity.PANIC, );
                     }
                 }
             }
         }
-    }
-
-    public static boolean isProne(Player player) {
-        Level level = player.level();
-        if (player.getBbHeight() <= 1) return true;
-
-        return player.isCrouching() && level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 0.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude()
-                && !level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 1.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude();
     }
 
     private static void handleBreath(Player player) {

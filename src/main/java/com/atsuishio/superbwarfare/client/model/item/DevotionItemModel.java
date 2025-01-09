@@ -4,7 +4,6 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.event.PlayerEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.machinegun.DevotionItem;
 import net.minecraft.client.Minecraft;
@@ -15,6 +14,8 @@ import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
+
+import static com.atsuishio.superbwarfare.event.ClientEventHandler.isProne;
 
 public class DevotionItemModel extends GeoModel<DevotionItem> {
 
@@ -99,7 +100,7 @@ public class DevotionItemModel extends GeoModel<DevotionItem> {
         root.setRotY((float) (0.2f * movePosX + Mth.DEG_TO_RAD * 300 * ClientEventHandler.drawTime + Mth.DEG_TO_RAD * turnRotY));
         root.setRotZ((float) (0.2f * movePosX + moveRotZ + Mth.DEG_TO_RAD * 90 * ClientEventHandler.drawTime + 2.7f * mph + Mth.DEG_TO_RAD * turnRotZ));
 
-        if (PlayerEventHandler.isProne(player)) {
+        if (isProne(player)) {
             l.setRotX(1.5f);
             r.setRotX(1.5f);
         }

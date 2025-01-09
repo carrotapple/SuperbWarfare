@@ -4,7 +4,6 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
-import com.atsuishio.superbwarfare.event.PlayerEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.gun.rifle.Mk14Item;
 import com.atsuishio.superbwarfare.tools.GunsTool;
@@ -16,6 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
+
+import static com.atsuishio.superbwarfare.event.ClientEventHandler.isProne;
 
 public class Mk14ItemModel extends GeoModel<Mk14Item> {
 
@@ -128,8 +129,8 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
 
         shen.setPosX((float) (shen.getPosX() * (1 - 0.4 * zt)));
         shen.setPosY((float) (shen.getPosY() * (-1 + 0.8 * zt)));
-        shen.setPosZ((float) (shen.getPosZ() * (1 - 0.6 * zt) * (barrelType == 1 ? 0.8 : 1.0) * (stockType == 2 ? 0.9 : 1.0) * (gripType == 1 ? 0.9 : 1.0) * (PlayerEventHandler.isProne(player) && gripType == 3 ? 0.9 : 1.0)));
-        shen.setRotX((float) (shen.getRotX() * (1 - 0.8 * zt) * (barrelType == 1 ? 0.4 : 1.0) * (stockType == 2 ? 0.6 : 1.0) * (gripType == 1 ? 0.7 : 1.0) * (PlayerEventHandler.isProne(player) && gripType == 3 ? 0.1 : 1.0)));
+        shen.setPosZ((float) (shen.getPosZ() * (1 - 0.6 * zt) * (barrelType == 1 ? 0.8 : 1.0) * (stockType == 2 ? 0.9 : 1.0) * (gripType == 1 ? 0.9 : 1.0) * (isProne(player) && gripType == 3 ? 0.9 : 1.0)));
+        shen.setRotX((float) (shen.getRotX() * (1 - 0.8 * zt) * (barrelType == 1 ? 0.4 : 1.0) * (stockType == 2 ? 0.6 : 1.0) * (gripType == 1 ? 0.7 : 1.0) * (isProne(player) && gripType == 3 ? 0.1 : 1.0)));
         shen.setRotY((float) (shen.getRotY() * (1 - 0.85 * zt)));
         shen.setRotZ((float) (shen.getRotZ() * (1 - 0.4 * zt)));
 
@@ -154,7 +155,7 @@ public class Mk14ItemModel extends GeoModel<Mk14Item> {
 
         CoreGeoBone l = getAnimationProcessor().getBone("l");
         CoreGeoBone r = getAnimationProcessor().getBone("r");
-        rotXBipod = Mth.lerp(1.5f * times, rotXBipod, PlayerEventHandler.isProne(player) ? -90 : 0);
+        rotXBipod = Mth.lerp(1.5f * times, rotXBipod, isProne(player) ? -90 : 0);
         l.setRotX(rotXBipod * Mth.DEG_TO_RAD);
         r.setRotX(rotXBipod * Mth.DEG_TO_RAD);
 
