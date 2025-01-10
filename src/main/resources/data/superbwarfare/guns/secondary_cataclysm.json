@@ -8,9 +8,8 @@
   "Velocity": 3.75,
   "Magazine": 8,
   "Weight": 9,
-  "PrepareTime": 29,
-  "PrepareEmptyTime": 16,
-  "IterativeTime": 11,
-  "FinishTime": 18,
+  "PrepareLoadTime": 31,
+  "IterativeTime": 20,
+  "FinishTime": 19,
   "SoundRadius": 8
 }

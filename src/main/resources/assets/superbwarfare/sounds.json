@@ -2640,5 +2640,29 @@
         "stream": false
       }
     ]
+  },
+  "secondary_cataclysm_loop": {
+    "sounds": [
+      {
+        "name": "superbwarfare:secondary_cataclysm/secondary_cataclysm_loop",
+        "stream": false
+      }
+    ]
+  },
+  "secondary_cataclysm_prepare_load": {
+    "sounds": [
+      {
+        "name": "superbwarfare:secondary_cataclysm/secondary_cataclysm_start",
+        "stream": false
+      }
+    ]
+  },
+  "secondary_cataclysm_end": {
+    "sounds": [
+      {
+        "name": "superbwarfare:secondary_cataclysm/secondary_cataclysm_end",
+        "stream": false
+      }
+    ]
   }
 }

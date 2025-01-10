@@ -521,12 +521,19 @@ public class GunEventHandler {
             tag.putDouble("finish", tag.getDouble("finish") - 1);
         }
 
+//        player.displayClientMessage(Component.literal("prepare: " +  new DecimalFormat("##.#").format(tag.getDouble("prepare"))
+//                        + " prepare_load: " +  new DecimalFormat("##.#").format(tag.getDouble("prepare_load"))
+//                        + " iterative: " +  new DecimalFormat("##.#").format(tag.getDouble("iterative"))
+//                        + " finish: " +  new DecimalFormat("##.#").format(tag.getDouble("finish"))
+//                        + " reload_stage: " +  new DecimalFormat("##.#").format(tag.getDouble("reload_stage"))
+//        ), true);
+
         // 一阶段
         if (tag.getBoolean("start_single_reload")) {
             MinecraftForge.EVENT_BUS.post(new ReloadEvent.Pre(player, stack));
 
-            // 此处判断空仓换弹的时候，是否在准备阶段就需要装填一发，如M870
-            if (GunsTool.getGunIntTag(stack, "PrepareLoadTime", 0) != 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) {
+            if ((GunsTool.getGunIntTag(stack, "PrepareLoadTime", 0) != 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) == 0) || stack.is(ModItems.SECONDARY_CATACLYSM.get())) {
+                // 此处判断空仓换弹的时候，是否在准备阶段就需要装填一发，如M870
                 playGunPrepareLoadReloadSounds(player);
                 int prepareLoadTime = GunsTool.getGunIntTag(stack, "PrepareLoadTime", 0);
                 tag.putInt("prepare_load", prepareLoadTime + 1);
@@ -557,6 +564,12 @@ public class GunEventHandler {
             }
         }
 
+        if (stack.getItem() == ModItems.SECONDARY_CATACLYSM.get()) {
+            if (tag.getInt("prepare_load") == 3) {
+                singleLoad(player);
+            }
+        }
+
         // 一阶段结束，检查备弹，如果有则二阶段启动，无则直接跳到三阶段
         if ((tag.getDouble("prepare") == 1 || tag.getDouble("prepare_load") == 1)) {
             if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
@@ -571,18 +584,23 @@ public class GunEventHandler {
                     tag.putBoolean("force_stage3_start", true);
                 } else if (stack.is(ModTags.Items.LAUNCHER) && GunsTool.getGunIntTag(stack, "MaxAmmo") == 0) {
                     tag.putBoolean("force_stage3_start", true);
+                } else if (stack.is(ModItems.SECONDARY_CATACLYSM.get()) && GunsTool.getGunIntTag(stack, "Ammo", 0) >= GunsTool.getGunIntTag(stack, "Magazine", 0)) {
+                    tag.putBoolean("force_stage3_start", true);
                 } else {
                     tag.putInt("reload_stage", 2);
                 }
             } else {
-                tag.putInt("reload_stage", 2);
+                if (stack.is(ModItems.SECONDARY_CATACLYSM.get()) && GunsTool.getGunIntTag(stack, "Ammo", 0) >= GunsTool.getGunIntTag(stack, "Magazine", 0)) {
+                    tag.putBoolean("force_stage3_start", true);
+                } else {
+                    tag.putInt("reload_stage", 2);
+                }
             }
             // 检查备弹
-
         }
 
         // 强制停止换弹，进入三阶段
-        if (tag.getBoolean("force_stop") && GunsTool.getGunIntTag(stack, "Ammo", 0) > 1) {
+        if (tag.getBoolean("force_stop") && tag.getInt("reload_stage") == 2 && tag.getInt("iterative") > 0) {
             tag.putBoolean("stop", true);
         }
 
@@ -614,7 +632,7 @@ public class GunEventHandler {
         }
 
         if (stack.getItem() == ModItems.SECONDARY_CATACLYSM.get()) {
-            if (tag.getInt("iterative") == 5) {
+            if (tag.getInt("iterative") == 16) {
                 singleLoad(player);
             }
         }
@@ -657,6 +675,7 @@ public class GunEventHandler {
 
         // 三阶段
         if ((tag.getInt("iterative") == 1 && tag.getInt("reload_stage") == 3) || tag.getBoolean("force_stage3_start")) {
+            tag.putInt("reload_stage", 3);
             tag.putBoolean("force_stage3_start", false);
             int finishTime = GunsTool.getGunIntTag(stack, "FinishTime", 0);
             tag.putInt("finish", finishTime + 2);

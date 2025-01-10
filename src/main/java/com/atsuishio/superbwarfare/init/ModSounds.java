@@ -321,6 +321,9 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> SECONDARY_CATACLYSM_FIRE_3P = REGISTRY.register("secondary_cataclysm_fire_3p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("secondary_cataclysm_fire_3p")));
     public static final RegistryObject<SoundEvent> SECONDARY_CATACLYSM_FAR = REGISTRY.register("secondary_cataclysm_far", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("secondary_cataclysm_far")));
     public static final RegistryObject<SoundEvent> SECONDARY_CATACLYSM_VERYFAR = REGISTRY.register("secondary_cataclysm_veryfar", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("secondary_cataclysm_veryfar")));
+    public static final RegistryObject<SoundEvent> SECONDARY_CATACLYSM_PREPARE_LOAD = REGISTRY.register("secondary_cataclysm_prepare_load", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("secondary_cataclysm_prepare_load")));
+    public static final RegistryObject<SoundEvent> SECONDARY_CATACLYSM_LOOP = REGISTRY.register("secondary_cataclysm_loop", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("secondary_cataclysm_loop")));
+    public static final RegistryObject<SoundEvent> SECONDARY_CATACLYSM_END = REGISTRY.register("secondary_cataclysm_end", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("secondary_cataclysm_end")));
 
     public static final RegistryObject<SoundEvent> M_2_FIRE_1P = REGISTRY.register("m2_fire_1p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("m2_fire_1p")));
     public static final RegistryObject<SoundEvent> M_2_FIRE_3P = REGISTRY.register("m2_fire_3p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("m2_fire_3p")));

@@ -80,15 +80,36 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, AnimatedItem
         transformType = type;
     }
 
-    private PlayState idlePredicate(AnimationState<SecondaryCataclysm> event) {
+    private PlayState reloadAnimPredicate(AnimationState<SecondaryCataclysm> event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return PlayState.STOP;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-//        if (stack.getOrCreateTag().getBoolean("is_empty_reloading")) {
-//            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sc.reload"));
-//        }
+        if (stack.getOrCreateTag().getInt("reload_stage") == 1 && stack.getOrCreateTag().getDouble("prepare_load") > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sc.prepare"));
+        }
+
+        if (stack.getOrCreateTag().getDouble("load_index") == 0 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sc.iterativeload"));
+        }
+
+        if (stack.getOrCreateTag().getDouble("load_index") == 1 && stack.getOrCreateTag().getInt("reload_stage") == 2) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sc.iterativeload2"));
+        }
+
+        if (stack.getOrCreateTag().getInt("reload_stage") == 3) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sc.finish"));
+        }
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sc.idle"));
+    }
+
+    private PlayState idlePredicate(AnimationState<SecondaryCataclysm> event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
         if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
             if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
@@ -108,6 +129,8 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, AnimatedItem
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        var reloadAnimController = new AnimationController<>(this, "reloadAnimController", 1, this::reloadAnimPredicate);
+        data.add(reloadAnimController);
         var idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
     }

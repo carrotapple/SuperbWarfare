@@ -75,7 +75,7 @@ public class CustomExplosion extends Explosion {
             }
         }
         if (pLevel instanceof ServerLevel) {
-            pLevel.explode(source == null ? null : source.getEntity(), pToBlowX, pToBlowY, pToBlowZ, 0.8f * pRadius , ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
+            pLevel.explode(source == null ? null : source.getEntity(), pToBlowX, pToBlowY, pToBlowZ, 0.5f * pRadius , ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
         }
     }
 

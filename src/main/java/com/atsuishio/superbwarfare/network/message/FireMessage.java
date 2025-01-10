@@ -576,7 +576,7 @@ public class FireMessage {
                 }
 
                 GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) - 1);
-                player.getCooldowns().addCooldown(stack.getItem(), 5);
+                player.getCooldowns().addCooldown(stack.getItem(), 6);
 
                 if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
                     ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
