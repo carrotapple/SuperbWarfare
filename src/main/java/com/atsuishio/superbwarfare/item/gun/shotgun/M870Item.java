@@ -165,7 +165,7 @@ public class M870Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public String getGunDisplayName() {
-        return " M870 MCS";
+        return "M870 MCS";
     }
 
     @Override

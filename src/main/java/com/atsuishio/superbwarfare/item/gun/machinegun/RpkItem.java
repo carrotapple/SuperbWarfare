@@ -40,8 +40,8 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class RpkItem extends GunItem implements GeoItem, AnimatedItem {
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public String animationProcedure = "empty";
     public static ItemDisplayContext transformType;
 
     public RpkItem() {
@@ -96,7 +96,8 @@ public class RpkItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar data) {;
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        ;
         var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
         data.add(idleController);
     }
@@ -123,12 +124,12 @@ public class RpkItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/rpk_icon.png");
+        return ModUtils.loc("textures/gun_icon/rpk_icon.png");
     }
 
     @Override
     public String getGunDisplayName() {
-        return "   RPK";
+        return "RPK";
     }
 
     @Override

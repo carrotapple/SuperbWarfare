@@ -136,12 +136,12 @@ public class Glock17Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/glock_icon.png");
+        return ModUtils.loc("textures/gun_icon/glock_icon.png");
     }
 
     @Override
     public String getGunDisplayName() {
-        return " GLOCK-17";
+        return "GLOCK-17";
     }
 
     @Override

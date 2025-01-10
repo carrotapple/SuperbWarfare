@@ -136,12 +136,12 @@ public class Mp443Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/mp443_icon.png");
+        return ModUtils.loc("textures/gun_icon/mp443_icon.png");
     }
 
     @Override
     public String getGunDisplayName() {
-        return " MP-443";
+        return "MP-443";
     }
 
     @Override

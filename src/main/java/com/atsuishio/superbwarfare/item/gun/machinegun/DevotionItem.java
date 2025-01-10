@@ -40,6 +40,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class DevotionItem extends GunItem implements GeoItem, AnimatedItem {
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
 
@@ -122,12 +123,12 @@ public class DevotionItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/devotion_icon.png");
+        return ModUtils.loc("textures/gun_icon/devotion_icon.png");
     }
 
     @Override
     public String getGunDisplayName() {
-        return "  Devotion";
+        return "Devotion";
     }
 
     @Override

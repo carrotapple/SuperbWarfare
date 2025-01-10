@@ -131,7 +131,7 @@ public class AbekiriItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public String getGunDisplayName() {
-        return "    Abekiri";
+        return "Abekiri";
     }
 
     @Override

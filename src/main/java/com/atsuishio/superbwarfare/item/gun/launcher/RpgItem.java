@@ -172,7 +172,7 @@ public class RpgItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public String getGunDisplayName() {
-        return " RPG-7";
+        return "RPG-7";
     }
 
     @Override

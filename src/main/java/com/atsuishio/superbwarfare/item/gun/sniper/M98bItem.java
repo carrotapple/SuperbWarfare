@@ -39,6 +39,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
 
@@ -138,12 +139,12 @@ public class M98bItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/m98b_icon.png");
+        return ModUtils.loc("textures/gun_icon/m98b_icon.png");
     }
 
     @Override
     public String getGunDisplayName() {
-        return " M98-B";
+        return "M98-B";
     }
 
     @Override

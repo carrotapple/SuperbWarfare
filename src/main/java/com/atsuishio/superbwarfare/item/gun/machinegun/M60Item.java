@@ -42,6 +42,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class M60Item extends GunItem implements GeoItem, AnimatedItem {
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
 
@@ -156,7 +157,7 @@ public class M60Item extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public String getGunDisplayName() {
-        return "   M60";
+        return "M60";
     }
 
     @Override

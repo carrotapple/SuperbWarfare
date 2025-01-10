@@ -49,13 +49,13 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, AnimatedItem
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
 
+    public SecondaryCataclysm() {
+        super(new Properties().stacksTo(1).fireResistant().rarity(Rarity.EPIC));
+    }
+
     @Override
     public Set<SoundEvent> getReloadSound() {
         return Set.of(ModSounds.M_79_RELOAD_EMPTY.get());
-    }
-
-    public SecondaryCataclysm() {
-        super(new Properties().stacksTo(1).fireResistant().rarity(Rarity.RARE));
     }
 
     @Override

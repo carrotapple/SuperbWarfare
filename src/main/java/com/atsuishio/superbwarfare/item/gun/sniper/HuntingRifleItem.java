@@ -39,6 +39,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class HuntingRifleItem extends GunItem implements GeoItem, AnimatedItem {
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
 
@@ -117,12 +118,12 @@ public class HuntingRifleItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/hunting_rifle_icon.png");
+        return ModUtils.loc("textures/gun_icon/hunting_rifle_icon.png");
     }
 
     @Override
     public String getGunDisplayName() {
-        return " Hunting Rifle";
+        return "Hunting Rifle";
     }
 
     @Override

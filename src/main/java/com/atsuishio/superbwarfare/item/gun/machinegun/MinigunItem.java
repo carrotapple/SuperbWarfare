@@ -46,6 +46,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.function.Consumer;
 
 public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
+
     private static final String TAG_HEAT = "heat";
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
@@ -196,7 +197,7 @@ public class MinigunItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public ResourceLocation getGunIcon() {
-        return new ResourceLocation(ModUtils.MODID, "textures/gun_icon/minigun_icon.png");
+        return ModUtils.loc("textures/gun_icon/minigun_icon.png");
     }
 
     @Override

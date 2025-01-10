@@ -179,20 +179,22 @@ public class AmmoBarOverlay {
             poseStack.scale(0.9f, 0.9f, 1f);
 
             // 渲染物品名称
+            String gunName = gunItem.getGunDisplayName();
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
-                    centerString(gunItem.getGunDisplayName(), 20),
-                    w / 0.9f - 144 / 0.9f,
+                    gunName,
+                    w / 0.9f - (100 + Minecraft.getInstance().font.width(gunName) / 2f) / 0.9f,
                     h / 0.9f - 60 / 0.9f,
                     0xFFFFFF,
                     true
             );
 
             // 渲染弹药类型
+            String ammoName = getGunAmmoType(stack);
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
-                    centerString(getGunAmmoType(stack), 20),
-                    w / 0.9f - 144 / 0.9f,
+                    ammoName,
+                    w / 0.9f - (100 + Minecraft.getInstance().font.width(ammoName) / 2f) / 0.9f,
                     h / 0.9f - 51 / 0.9f,
                     0xC8A679,
                     true
@@ -255,7 +257,7 @@ public class AmmoBarOverlay {
 
     private static String getGunAmmoType(ItemStack stack) {
         if (stack.getItem() == ModItems.BOCEK.get()) {
-            return "   Arrow";
+            return "Arrow";
         }
         if (stack.getItem() == ModItems.M_79.get()) {
             return "40mm Grenade";
@@ -273,7 +275,7 @@ public class AmmoBarOverlay {
             return "Rifle Ammo";
         }
         if (stack.is(ModTags.Items.USE_RIFLE_AMMO)) {
-            return "  Rifle Ammo";
+            return "Rifle Ammo";
         }
         if (stack.is(ModTags.Items.USE_HANDGUN_AMMO)) {
             return "Handgun Ammo";
@@ -286,19 +288,4 @@ public class AmmoBarOverlay {
         }
         return "";
     }
-
-    private static String centerString(String string, int length) {
-        int spaceBefore = (length - string.length()) / 2;
-        int spaceAfter = length - string.length() - spaceBefore;
-
-        return String.join("",
-                repeatChar(spaceBefore),
-                string,
-                repeatChar(spaceAfter));
-    }
-
-    private static String repeatChar(int count) {
-        return new String(new char[count]).replace('\0', ' ');
-    }
-
 }
