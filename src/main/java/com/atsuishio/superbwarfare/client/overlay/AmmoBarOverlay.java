@@ -259,7 +259,7 @@ public class AmmoBarOverlay {
         if (stack.getItem() == ModItems.BOCEK.get()) {
             return "Arrow";
         }
-        if (stack.getItem() == ModItems.M_79.get()) {
+        if (stack.getItem() == ModItems.M_79.get() || stack.getItem() == ModItems.SECONDARY_CATACLYSM.get()) {
             return "40mm Grenade";
         }
         if (stack.getItem() == ModItems.RPG.get()) {

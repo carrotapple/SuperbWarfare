@@ -13,6 +13,7 @@ import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.atsuishio.superbwarfare.tools.GunsTool;
+import com.atsuishio.superbwarfare.tools.RarityTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -27,7 +28,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.NotNull;
@@ -50,7 +50,7 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, AnimatedItem
     public static ItemDisplayContext transformType;
 
     public SecondaryCataclysm() {
-        super(new Properties().stacksTo(1).fireResistant().rarity(Rarity.EPIC));
+        super(new Properties().stacksTo(1).fireResistant().rarity(RarityTool.LEGENDARY));
     }
 
     @Override
