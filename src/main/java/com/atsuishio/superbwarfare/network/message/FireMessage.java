@@ -116,6 +116,10 @@ public class FireMessage {
             handleM79Fire(player);
         }
 
+        if (stack.getItem() == ModItems.SECONDARY_CATACLYSM.get()) {
+            handleSecondaryCataclysmFire(player);
+        }
+
         if (stack.getItem() == ModItems.RPG.get()) {
             handleRpgFire(player);
         }
@@ -525,6 +529,59 @@ public class FireMessage {
 
         if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
             ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
+        }
+    }
+
+    private static void handleSecondaryCataclysmFire(Player player) {
+        if (player.isSpectator()) return;
+
+        ItemStack stack = player.getMainHandItem();
+        if (!GunsTool.getGunBooleanTag(stack, "Reloading")) {
+            if (!player.getCooldowns().isOnCooldown(stack.getItem()) && GunsTool.getGunIntTag(stack, "Ammo", 0) > 0) {
+                boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
+                double spread = GunsTool.getGunDoubleTag(stack, "Spread");
+
+                Level level = player.level();
+                if (!level.isClientSide()) {
+                    GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, level,
+                            (float) GunsTool.getGunDoubleTag(stack, "Damage", 0),
+                            (float) GunsTool.getGunDoubleTag(stack, "ExplosionDamage", 0),
+                            (float) GunsTool.getGunDoubleTag(stack, "ExplosionRadius", 0));
+
+                    var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
+                    if (dmgPerk == ModPerks.MONSTER_HUNTER.get()) {
+                        int perkLevel = PerkHelper.getItemPerkLevel(dmgPerk, stack);
+                        gunGrenadeEntity.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
+                    }
+
+                    gunGrenadeEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
+                    gunGrenadeEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0),
+                            (float) (zoom ? 0.1 : spread));
+                    level.addFreshEntity(gunGrenadeEntity);
+                }
+
+                if (player.level() instanceof ServerLevel serverLevel) {
+                    ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, player.getX() + 1.8 * player.getLookAngle().x,
+                            player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y,
+                            player.getZ() + 1.8 * player.getLookAngle().z,
+                            4, 0.1, 0.1, 0.1, 0.002, true);
+                }
+                player.getCooldowns().addCooldown(stack.getItem(), 2);
+
+                if (player instanceof ServerPlayer serverPlayer) {
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.SECONDARY_CATACLYSM_FIRE_1P.get(), 1, 1);
+                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_FIRE_3P.get(), SoundSource.PLAYERS, 3, 1);
+                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_FAR.get(), SoundSource.PLAYERS, 5, 1);
+                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_VERYFAR.get(), SoundSource.PLAYERS, 10, 1);
+                }
+
+                GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) - 1);
+                player.getCooldowns().addCooldown(stack.getItem(), 5);
+
+                if (player.level() instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
+                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShootClientMessage(10));
+                }
+            }
         }
     }
 }

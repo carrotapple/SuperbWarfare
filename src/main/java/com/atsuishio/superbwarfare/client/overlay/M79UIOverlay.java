@@ -48,7 +48,7 @@ public class M79UIOverlay {
     private static boolean shouldRenderCrossHair(Player player) {
         if (player == null) return false;
         return !player.isSpectator()
-                && player.getMainHandItem().getItem() == ModItems.M_79.get()
+                && (player.getMainHandItem().getItem() == ModItems.M_79.get() || player.getMainHandItem().getItem() == ModItems.SECONDARY_CATACLYSM.get())
                 && (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || (player.isPassenger() && player.getVehicle() instanceof ICannonEntity))
                 && !ClientEventHandler.zoom;
     }

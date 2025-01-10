@@ -7,6 +7,7 @@ import com.atsuishio.superbwarfare.item.gun.handgun.*;
 import com.atsuishio.superbwarfare.item.gun.launcher.JavelinItem;
 import com.atsuishio.superbwarfare.item.gun.launcher.M79Item;
 import com.atsuishio.superbwarfare.item.gun.launcher.RpgItem;
+import com.atsuishio.superbwarfare.item.gun.launcher.SecondaryCataclysm;
 import com.atsuishio.superbwarfare.item.gun.machinegun.DevotionItem;
 import com.atsuishio.superbwarfare.item.gun.machinegun.M60Item;
 import com.atsuishio.superbwarfare.item.gun.machinegun.MinigunItem;
@@ -72,6 +73,7 @@ public class ModTabs {
                                 output.accept(MinigunItem.getGunInstance());
                                 output.accept(BocekItem.getGunInstance());
                                 output.accept(M79Item.getGunInstance());
+                                output.accept(SecondaryCataclysm.getGunInstance());
                                 output.accept(RpgItem.getGunInstance());
                                 output.accept(JavelinItem.getGunInstance());
                             }

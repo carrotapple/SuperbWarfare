@@ -2608,5 +2608,37 @@
         "stream": false
       }
     ]
+  },
+  "secondary_cataclysm_fire_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:secondary_cataclysm/secondary_cataclysm_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "secondary_cataclysm_fire_3p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:secondary_cataclysm/secondary_cataclysm_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "secondary_cataclysm_far": {
+    "sounds": [
+      {
+        "name": "superbwarfare:secondary_cataclysm/secondary_cataclysm_far",
+        "stream": false
+      }
+    ]
+  },
+  "secondary_cataclysm_veryfar": {
+    "sounds": [
+      {
+        "name": "superbwarfare:secondary_cataclysm/secondary_cataclysm_veryfar",
+        "stream": false
+      }
+    ]
   }
 }

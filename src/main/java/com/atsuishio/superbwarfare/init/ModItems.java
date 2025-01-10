@@ -10,6 +10,7 @@ import com.atsuishio.superbwarfare.item.gun.handgun.*;
 import com.atsuishio.superbwarfare.item.gun.launcher.JavelinItem;
 import com.atsuishio.superbwarfare.item.gun.launcher.M79Item;
 import com.atsuishio.superbwarfare.item.gun.launcher.RpgItem;
+import com.atsuishio.superbwarfare.item.gun.launcher.SecondaryCataclysm;
 import com.atsuishio.superbwarfare.item.gun.machinegun.DevotionItem;
 import com.atsuishio.superbwarfare.item.gun.machinegun.M60Item;
 import com.atsuishio.superbwarfare.item.gun.machinegun.MinigunItem;
@@ -74,6 +75,7 @@ public class ModItems {
     public static final RegistryObject<Item> M_60 = GUNS.register("m_60", M60Item::new);
     public static final RegistryObject<Item> MINIGUN = GUNS.register("minigun", MinigunItem::new);
     public static final RegistryObject<Item> M_79 = GUNS.register("m_79", M79Item::new);
+    public static final RegistryObject<Item> SECONDARY_CATACLYSM = GUNS.register("secondary_cataclysm", SecondaryCataclysm::new);
     public static final RegistryObject<Item> RPG = GUNS.register("rpg", RpgItem::new);
     public static final RegistryObject<Item> JAVELIN = GUNS.register("javelin", JavelinItem::new);
     public static final RegistryObject<Item> BOCEK = GUNS.register("bocek", BocekItem::new);

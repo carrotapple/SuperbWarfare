@@ -47,6 +47,7 @@
   "item.superbwarfare.k_98": "KAR-98K",
   "item.superbwarfare.mosin_nagant": "莫辛纳甘",
   "item.superbwarfare.javelin": "FGM-148标枪导弹",
+  "item.superbwarfare.secondary_cataclysm": "“二次灾变” 榴弹发射器",
 
   "des.superbwarfare.guns.upgrade_point": "升级点数: ",
   "des.superbwarfare.guns.damage": "伤害: ",
@@ -104,6 +105,7 @@
   "item.superbwarfare.mle_1934_blueprint": "138.6mm50 Mle1934 R1938蓝图",
   "item.superbwarfare.annihilator_blueprint": "歼灭者能量炮蓝图",
   "item.superbwarfare.m2hb_blueprint": "M2HB重机枪蓝图",
+  "item.superbwarfare.secondary_cataclysm_blueprint": "“二次灾变” 榴弹发射器蓝图",
 
   "item.superbwarfare.common_material_pack": "普通材料包",
   "item.superbwarfare.rare_material_pack": "稀有材料包",

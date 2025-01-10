@@ -152,7 +152,7 @@ public class CrossHairOverlay {
         if (!player.getMainHandItem().is(ModTags.Items.GUN) || ClientEventHandler.zoomTime > 0.8)
             return false;
 
-        return !(player.getMainHandItem().getItem() == ModItems.M_79.get() || player.getMainHandItem().getItem() == ModItems.BOCEK.get())
+        return !(player.getMainHandItem().getItem() == ModItems.M_79.get() || player.getMainHandItem().getItem() == ModItems.BOCEK.get() || player.getMainHandItem().getItem() == ModItems.SECONDARY_CATACLYSM.get())
                 && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON;
     }
 

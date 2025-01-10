@@ -75,11 +75,7 @@ public class ReloadMessage {
                         return;
                     } else if (stack.getItem() == ModItems.TASER.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") == 0) {
                         return;
-                    } else if (stack.getItem() == ModItems.M_79.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") == 0) {
-                        return;
-                    } else if (stack.getItem() == ModItems.RPG.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") == 0) {
-                        return;
-                    } else if (stack.getItem() == ModItems.JAVELIN.get() && GunsTool.getGunIntTag(stack, "MaxAmmo") == 0) {
+                    } else if (stack.is(ModTags.Items.LAUNCHER) && GunsTool.getGunIntTag(stack, "MaxAmmo") == 0) {
                         return;
                     }
                 }

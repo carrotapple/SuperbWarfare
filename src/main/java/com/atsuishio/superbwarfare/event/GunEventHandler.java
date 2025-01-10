@@ -569,6 +569,8 @@ public class GunEventHandler {
                     tag.putBoolean("force_stage3_start", true);
                 } else if (stack.is(ModTags.Items.USE_RIFLE_AMMO) && capability.rifleAmmo == 0) {
                     tag.putBoolean("force_stage3_start", true);
+                } else if (stack.is(ModTags.Items.LAUNCHER) && GunsTool.getGunIntTag(stack, "MaxAmmo") == 0) {
+                    tag.putBoolean("force_stage3_start", true);
                 } else {
                     tag.putInt("reload_stage", 2);
                 }
@@ -607,6 +609,12 @@ public class GunEventHandler {
         // 装填
         if (stack.getItem() == ModItems.M_870.get() || stack.getItem() == ModItems.MARLIN.get()) {
             if (tag.getInt("iterative") == 3) {
+                singleLoad(player);
+            }
+        }
+
+        if (stack.getItem() == ModItems.SECONDARY_CATACLYSM.get()) {
+            if (tag.getInt("iterative") == 5) {
                 singleLoad(player);
             }
         }
@@ -699,6 +707,8 @@ public class GunEventHandler {
                     capability.rifleAmmo -= 1;
                     capability.syncPlayerVariables(player);
                 });
+            } else if (stack.getItem() == ModItems.SECONDARY_CATACLYSM.get()) {
+                player.getInventory().clearOrCountMatchingItems(p -> p.getItem() == ModItems.GRENADE_40MM.get(), 1, player.inventoryMenu.getCraftSlots());
             }
         }
     }

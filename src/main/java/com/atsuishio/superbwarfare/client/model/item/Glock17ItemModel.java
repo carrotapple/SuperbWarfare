@@ -98,7 +98,6 @@ public class Glock17ItemModel extends GeoModel<Glock17Item> {
 
         CoreGeoBone camera = getAnimationProcessor().getBone("camera");
         CoreGeoBone main = getAnimationProcessor().getBone("0");
-        CoreGeoBone body = getAnimationProcessor().getBone("gun");
 
         float numR = (float) (1 - 0.12 * zt);
         float numP = (float) (1 - 0.68 * zt);
@@ -110,12 +109,6 @@ public class Glock17ItemModel extends GeoModel<Glock17Item> {
             main.setPosX(numP * main.getPosX());
             main.setPosY(numP * main.getPosY());
             main.setPosZ(numP * main.getPosZ());
-            body.setRotX(numR * body.getRotX());
-            body.setRotY(numR * body.getRotY());
-            body.setRotZ(numR * body.getRotZ());
-            body.setPosX(numP * body.getPosX());
-            body.setPosY(numP * body.getPosY());
-            body.setPosZ(numP * body.getPosZ());
             camera.setRotX(numR * camera.getRotX());
             camera.setRotY(numR * camera.getRotY());
             camera.setRotZ(numR * camera.getRotZ());
