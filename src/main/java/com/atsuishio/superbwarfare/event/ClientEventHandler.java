@@ -971,7 +971,7 @@ public class ClientEventHandler {
         }
 
         fireSpread = Mth.clamp(fireSpread - 0.1 * (Math.pow(fireSpread, 2) * times), 0, 2);
-        firePosZ = Mth.clamp(firePosZ - 1.2 * (Math.pow(firePosZ, 2) * times), 0, 1.5) * 0.98;
+        firePosZ = Mth.clamp(firePosZ - 1.2 * (Math.pow(firePosZ, 2) * times), 0, 1.5) * 0.95;
 
         if (0 < firePosTimer) {
             firePosTimer += 0.35 * (1.1 - firePosTimer) * times;

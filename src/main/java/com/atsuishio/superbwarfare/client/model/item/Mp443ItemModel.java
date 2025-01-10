@@ -64,8 +64,8 @@ public class Mp443ItemModel extends GeoModel<Mp443Item> {
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
-        gun.setPosX(2.96f * (float) zp);
-        gun.setPosY(2.53f * (float) zp - (float) (0.2f * zpz));
+        gun.setPosX(1.23f * (float) zp);
+        gun.setPosY(1.53f * (float) zp - (float) (0.2f * zpz));
         gun.setPosZ(7f * (float) zp + (float) (0.3f * zpz));
         gun.setScaleZ(1f - (0.55f * (float) zp));
 

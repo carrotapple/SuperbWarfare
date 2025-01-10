@@ -63,9 +63,9 @@ public class Glock17ItemModel extends GeoModel<Glock17Item> {
         double fp = ClientEventHandler.firePos;
         double fr = ClientEventHandler.fireRot;
 
-        gun.setPosX(2.96f * (float) zp);
+        gun.setPosX(1.23f * (float) zp);
 
-        gun.setPosY(2.43f * (float) zp - (float) (0.2f * zpz));
+        gun.setPosY(1.43f * (float) zp - (float) (0.2f * zpz));
 
         gun.setPosZ(7f * (float) zp + (float) (0.3f * zpz));
 
@@ -74,7 +74,7 @@ public class Glock17ItemModel extends GeoModel<Glock17Item> {
         shen.setPosX((float) (0.95f * ClientEventHandler.recoilHorizon * fpz * fp));
         shen.setPosY((float) (0.25f * fp + 0.28f * fr));
         shen.setPosZ((float) (2.375 * fp + 0.44f * fr + 0.75 * fpz));
-        shen.setRotX((float) (0.15f * fp + 0.3f * fr + 0.3f * fpz));
+        shen.setRotX((float) (0.1f * fp + 0.15f * fr + 0.15f * fpz));
         shen.setRotY((float) (0.1f * ClientEventHandler.recoilHorizon * fpz));
         shen.setRotZ((float) ((0.08f + 0.1 * fr) * ClientEventHandler.recoilHorizon));
 
