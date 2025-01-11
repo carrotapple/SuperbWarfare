@@ -14,7 +14,7 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class TracheliumLightLayer extends GeoRenderLayer<Trachelium> {
-    private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/item/trachelium_texture_light.png");
+    private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/item/trachelium_texture_e.png");
 
     public TracheliumLightLayer(GeoRenderer<Trachelium> itemGeoRenderer) {
         super(itemGeoRenderer);

@@ -14,7 +14,7 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class Glock17LightLayer extends GeoRenderLayer<Glock17Item> {
-    private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/item/glock17_light.png");
+    private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/item/glock17_e.png");
 
     public Glock17LightLayer(GeoRenderer<Glock17Item> itemGeoRenderer) {
         super(itemGeoRenderer);

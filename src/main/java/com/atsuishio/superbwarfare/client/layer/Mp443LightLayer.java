@@ -14,7 +14,7 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class Mp443LightLayer extends GeoRenderLayer<Mp443Item> {
-    private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/item/mp443_light_e.png");
+    private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/item/mp443_e.png");
 
     public Mp443LightLayer(GeoRenderer<Mp443Item> itemGeoRenderer) {
         super(itemGeoRenderer);

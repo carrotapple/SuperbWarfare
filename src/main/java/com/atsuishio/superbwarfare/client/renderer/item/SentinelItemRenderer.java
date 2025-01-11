@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.renderer.item;
 
 import com.atsuishio.superbwarfare.client.AnimationHelper;
 import com.atsuishio.superbwarfare.client.layer.SentinelLayer;
+import com.atsuishio.superbwarfare.client.layer.SentinelLightLayer;
 import com.atsuishio.superbwarfare.client.model.item.SentinelItemModel;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModTags;
@@ -34,6 +35,7 @@ public class SentinelItemRenderer extends GeoItemRenderer<SentinelItem> {
     public SentinelItemRenderer() {
         super(new SentinelItemModel());
         this.addRenderLayer(new SentinelLayer(this));
+        this.addRenderLayer(new SentinelLightLayer(this));
     }
 
     @Override
