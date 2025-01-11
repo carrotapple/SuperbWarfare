@@ -24,6 +24,7 @@ public class ClientRenderHandler {
         event.register(CellImageComponent.class, ClientCellImageTooltip::new);
         event.register(SentinelImageComponent.class, ClientSentinelImageTooltip::new);
         event.register(LauncherImageComponent.class, ClientLauncherImageTooltip::new);
+        event.register(SecondaryCataclysmImageComponent.class, ClientSecondaryCataclysmImageTooltip::new);
     }
 
     @SubscribeEvent

@@ -1,12 +1,12 @@
 package com.atsuishio.superbwarfare.item.gun.launcher;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.capability.energy.ItemEnergyProvider;
 import com.atsuishio.superbwarfare.client.PoseTool;
 import com.atsuishio.superbwarfare.client.renderer.item.SecondaryCataclysmRenderer;
-import com.atsuishio.superbwarfare.client.tooltip.component.LauncherImageComponent;
+import com.atsuishio.superbwarfare.client.tooltip.component.SecondaryCataclysmImageComponent;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
-import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.AnimatedItem;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -18,8 +18,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -30,6 +30,8 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -41,21 +43,52 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Optional;
-import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class SecondaryCataclysm extends GunItem implements GeoItem, AnimatedItem {
+    private final Supplier<Integer> energyCapacity;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static ItemDisplayContext transformType;
 
     public SecondaryCataclysm() {
         super(new Properties().stacksTo(1).fireResistant().rarity(RarityTool.LEGENDARY));
+        this.energyCapacity = () -> 24000;
     }
 
     @Override
-    public Set<SoundEvent> getReloadSound() {
-        return Set.of(ModSounds.M_79_RELOAD_EMPTY.get());
+    public boolean isBarVisible(ItemStack pStack) {
+        if (!pStack.getCapability(ForgeCapabilities.ENERGY).isPresent()) {
+            return false;
+        }
+
+        AtomicInteger energy = new AtomicInteger(0);
+        pStack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                e -> energy.set(e.getEnergyStored())
+        );
+        return energy.get() != 0;
+    }
+
+    @Override
+    public int getBarWidth(ItemStack pStack) {
+        AtomicInteger energy = new AtomicInteger(0);
+        pStack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                e -> energy.set(e.getEnergyStored())
+        );
+
+        return Math.round((float) energy.get() * 13.0F / 24000F);
+    }
+
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag tag) {
+        return new ItemEnergyProvider(stack, energyCapacity.get());
+    }
+
+    @Override
+    public int getBarColor(ItemStack pStack) {
+        return 0x95E9FF;
     }
 
     @Override
@@ -195,7 +228,7 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, AnimatedItem
 
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack pStack) {
-        return Optional.of(new LauncherImageComponent(pStack));
+        return Optional.of(new SecondaryCataclysmImageComponent(pStack));
     }
 
     @Override
