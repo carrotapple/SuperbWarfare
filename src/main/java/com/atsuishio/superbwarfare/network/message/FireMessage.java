@@ -265,11 +265,25 @@ public class FireMessage {
             projectile.setRGB(ammoPerk.rgb);
 
             if (!ammoPerk.mobEffects.get().isEmpty()) {
+                int amplifier;
+                if (perk.descriptionId.equals("blade_bullet")) {
+                    amplifier = level / 3;
+                } else if (perk.descriptionId.equals("bread_bullet")) {
+                    amplifier = 1;
+                } else {
+                    amplifier = level - 1;
+                }
+
                 ArrayList<MobEffectInstance> mobEffectInstances = new ArrayList<>();
                 for (MobEffect effect : ammoPerk.mobEffects.get()) {
-                    mobEffectInstances.add(new MobEffectInstance(effect, 70 + 30 * level, level - 1));
+                    mobEffectInstances.add(new MobEffectInstance(effect, 70 + 30 * level, amplifier));
                 }
                 projectile.effect(mobEffectInstances);
+            }
+
+            if (perk.descriptionId.equals("bread_bullet")) {
+                projectile.knockback(level * 0.3f);
+                projectile.forceKnockback();
             }
         }
 

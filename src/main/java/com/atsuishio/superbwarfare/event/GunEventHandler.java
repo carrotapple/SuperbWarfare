@@ -215,6 +215,8 @@ public class GunEventHandler {
                     int amplifier;
                     if (perk.descriptionId.equals("blade_bullet")) {
                         amplifier = level / 3;
+                    } else if (perk.descriptionId.equals("bread_bullet")) {
+                        amplifier = 1;
                     } else {
                         amplifier = level - 1;
                     }
