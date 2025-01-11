@@ -2664,5 +2664,37 @@
         "stream": false
       }
     ]
+  },
+  "secondary_cataclysm_fire_1p_charge": {
+    "sounds": [
+      {
+        "name": "superbwarfare:secondary_cataclysm/secondary_cataclysm_charge_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "secondary_cataclysm_fire_3p_charge": {
+    "sounds": [
+      {
+        "name": "superbwarfare:secondary_cataclysm/secondary_cataclysm_charge_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "secondary_cataclysm_far_charge": {
+    "sounds": [
+      {
+        "name": "superbwarfare:secondary_cataclysm/secondary_cataclysm_charge_far",
+        "stream": false
+      }
+    ]
+  },
+  "secondary_cataclysm_veryfar_charge": {
+    "sounds": [
+      {
+        "name": "superbwarfare:secondary_cataclysm/secondary_cataclysm_charge_veryfar",
+        "stream": false
+      }
+    ]
   }
 }

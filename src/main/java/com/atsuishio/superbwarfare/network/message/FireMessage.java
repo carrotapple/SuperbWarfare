@@ -541,6 +541,13 @@ public class FireMessage {
                 boolean zoom = player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).zoom;
                 double spread = GunsTool.getGunDoubleTag(stack, "Spread");
 
+                AtomicBoolean flag = new AtomicBoolean(false);
+                stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                        iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() >= 1500)
+                );
+
+                boolean chargeFire = zoom && flag.get();
+
                 Level level = player.level();
                 if (!level.isClientSide()) {
                     GunGrenadeEntity gunGrenadeEntity = new GunGrenadeEntity(player, level,
@@ -555,7 +562,7 @@ public class FireMessage {
                     }
 
                     gunGrenadeEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
-                    gunGrenadeEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0),
+                    gunGrenadeEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (chargeFire ? 3 : 1) * (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0),
                             (float) (zoom ? 0.1 : spread));
                     level.addFreshEntity(gunGrenadeEntity);
                 }
@@ -574,6 +581,13 @@ public class FireMessage {
                     serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_FAR.get(), SoundSource.PLAYERS, 5, 1);
                     serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_VERYFAR.get(), SoundSource.PLAYERS, 10, 1);
                 }
+
+                if (chargeFire) {
+                    stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                            energy -> energy.extractEnergy(1500, false)
+                    );
+                }
+
 
                 GunsTool.setGunIntTag(stack, "Ammo", GunsTool.getGunIntTag(stack, "Ammo", 0) - 1);
                 player.getCooldowns().addCooldown(stack.getItem(), 6);

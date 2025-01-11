@@ -195,6 +195,32 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, AnimatedItem
         if (entity instanceof Player player) {
             GunsTool.setGunIntTag(stack, "MaxAmmo", getAmmoCount(player));
         }
+
+        if (entity instanceof Player player) {
+            for (var cell : player.getInventory().items) {
+                if (cell.is(ModItems.CELL.get())) {
+                    assert stack.getCapability(ForgeCapabilities.ENERGY).resolve().isPresent();
+                    var stackStorage = stack.getCapability(ForgeCapabilities.ENERGY).resolve().get();
+                    int stackMaxEnergy = stackStorage.getMaxEnergyStored();
+                    int stackEnergy = stackStorage.getEnergyStored();
+
+                    assert cell.getCapability(ForgeCapabilities.ENERGY).resolve().isPresent();
+                    var cellStorage = cell.getCapability(ForgeCapabilities.ENERGY).resolve().get();
+                    int cellEnergy = cellStorage.getEnergyStored();
+
+                    int stackEnergyNeed = Math.min(cellEnergy, stackMaxEnergy - stackEnergy);
+
+                    if (cellEnergy > 0) {
+                        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                                iEnergyStorage -> iEnergyStorage.receiveEnergy(stackEnergyNeed, false)
+                        );
+                    }
+                    cell.getCapability(ForgeCapabilities.ENERGY).ifPresent(
+                            cEnergy -> cEnergy.extractEnergy(stackEnergyNeed, false)
+                    );
+                }
+            }
+        }
     }
 
     protected static boolean check(ItemStack stack) {
