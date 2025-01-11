@@ -87,6 +87,9 @@ repositories {
     maven {
         url "https://maven.shedaniel.me/"
     }
+    maven {
+        url "https://cursemaven.com"
+    }
 }
 
 dependencies {
@@ -105,6 +108,9 @@ dependencies {
     runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
 
     implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:${cloth_config_version}")
+
+    implementation fg.deobf("curse.maven:oculus-581495:6020952")
+    implementation fg.deobf("curse.maven:embeddium-908741:5681725")
 }
 
 mixin {
