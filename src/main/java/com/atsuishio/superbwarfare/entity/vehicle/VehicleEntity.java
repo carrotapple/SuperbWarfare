@@ -310,6 +310,14 @@ public class VehicleEntity extends Entity {
     public void travel() {
     }
 
+    public float ignoreExplosionHorizontalKnockBack() {
+        return -1f;
+    }
+
+    public float ignoreExplosionVerticalKnockBack() {
+        return -1f;
+    }
+
     // From Immersive_Aircraft
     public Matrix4f getVehicleTransform() {
         Matrix4f transform = new Matrix4f();

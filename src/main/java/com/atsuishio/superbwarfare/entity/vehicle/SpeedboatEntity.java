@@ -181,7 +181,7 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
         }
 
         double fluidFloat;
-        fluidFloat = -0.06 + 0.12 * getSubmergedHeight(this);
+        fluidFloat = 0.12 * getSubmergedHeight(this);
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, fluidFloat, 0.0));
 
         if (this.onGround()) {
@@ -450,6 +450,16 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    @Override
+    public float ignoreExplosionHorizontalKnockBack() {
+        return -0.5f;
+    }
+
+    @Override
+    public float ignoreExplosionVerticalKnockBack() {
+        return -0.9f;
     }
 
     @Override

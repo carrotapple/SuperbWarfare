@@ -17,7 +17,7 @@ public class ProjectileTool {
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(projectile.level(), explosion);
         explosion.finalizeExplosion(false);
-        ParticleTool.spawnMediumExplosionParticles(projectile.level(), target.position());
+        ParticleTool.spawnMediumExplosionParticles(projectile.level(), projectile.position());
         projectile.discard();
     }
 

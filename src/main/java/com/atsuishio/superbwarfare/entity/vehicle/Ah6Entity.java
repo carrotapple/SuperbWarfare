@@ -612,6 +612,16 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     }
 
     @Override
+    public float ignoreExplosionHorizontalKnockBack() {
+        return -0.5f;
+    }
+
+    @Override
+    public float ignoreExplosionVerticalKnockBack() {
+        return -0.9f;
+    }
+
+    @Override
     public boolean isDriver(Player player) {
         return player == this.getFirstPassenger();
     }
