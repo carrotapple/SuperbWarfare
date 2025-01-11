@@ -51,17 +51,15 @@ public class LungeMineAttackMessage {
 
                 if (stack.is(ModItems.LUNGE_MINE.get())) {
                     if (message.type == 0) {
-                        player.getCooldowns().addCooldown(stack.getItem(), 10);
                         if (!player.isCreative()) {
                             stack.shrink(1);
                         }
                         Entity lookingEntity = EntityFindUtil.findEntity(player.level(), String.valueOf(message.uuid));
                         if (lookingEntity != null) {
-                            lookingEntity.hurt(ModDamageTypes.causeCannonFireDamage(player.level().registryAccess(), player, player), 150);
+                            lookingEntity.hurt(ModDamageTypes.causeLungeMineDamage(player.level().registryAccess(), player, player), 150);
                             causeLungeMineExplode(player.level(), player, lookingEntity);
                         }
                     } else if (message.type == 1) {
-                        player.getCooldowns().addCooldown(stack.getItem(), 10);
                         if (!player.isCreative()) {
                             stack.shrink(1);
                         }

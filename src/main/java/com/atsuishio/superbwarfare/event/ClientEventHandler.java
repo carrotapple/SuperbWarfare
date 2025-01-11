@@ -145,6 +145,8 @@ public class ClientEventHandler {
     public static double vehicleFov = 1;
     public static double vehicleFovLerp = 1;
     public static int lungeAttack;
+    public static int lungeDraw;
+    public static int lungeSprint;
     public static Entity entity;
 
     public static int dismountCountdown = 0;
@@ -248,21 +250,22 @@ public class ClientEventHandler {
     }
 
     public static void handleLungeAttack(Player player, ItemStack stack) {
-        if (stack.is(ModItems.LUNGE_MINE.get()) && lungeAttack == 0 && holdFire && !player.getCooldowns().isOnCooldown(stack.getItem())) {
+        if (stack.is(ModItems.LUNGE_MINE.get()) && lungeAttack == 0 && lungeDraw == 0 && holdFire) {
             lungeAttack = 36;
+            holdFire = false;
             player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1f, 1);
         }
 
-        if (stack.is(ModItems.LUNGE_MINE.get()) && lungeAttack >= 18 && lungeAttack <= 21) {
+        if (stack.is(ModItems.LUNGE_MINE.get()) && ((lungeAttack >= 18 && lungeAttack <= 21) || lungeSprint > 0)) {
 
             boolean lookAtEntity = false;
 
-            Entity lookingEntity = TraceTool.findLookingEntity(player, 5);
+            Entity lookingEntity = TraceTool.findLookingEntity(player, 3.5);
 
-            BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(5)),
+            BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(3.5)),
                     ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
 
-            Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(5)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
+            Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(3.5)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
             BlockState blockState = player.level().getBlockState(BlockPos.containing(looking.x(), looking.y(), looking.z()));
 
             if (lookingEntity != null) {
@@ -271,13 +274,27 @@ public class ClientEventHandler {
 
             if (lookAtEntity) {
                 ModUtils.PACKET_HANDLER.sendToServer(new LungeMineAttackMessage(0, lookingEntity.getUUID(), result));
+                lungeSprint = 0;
+                lungeAttack = 0;
+                lungeDraw = 30;
             } else if (blockState.canOcclude() || blockState.getBlock() instanceof DoorBlock || blockState.getBlock() instanceof CrossCollisionBlock || blockState.getBlock() instanceof BellBlock) {
                 ModUtils.PACKET_HANDLER.sendToServer(new LungeMineAttackMessage(1, player.getUUID(), result));
+                lungeSprint = 0;
+                lungeAttack = 0;
+                lungeDraw = 30;
             }
+        }
+
+        if (lungeSprint > 0) {
+            lungeSprint--;
         }
 
         if (lungeAttack > 0) {
             lungeAttack--;
+        }
+
+        if (lungeDraw > 0) {
+            lungeDraw--;
         }
     }
 

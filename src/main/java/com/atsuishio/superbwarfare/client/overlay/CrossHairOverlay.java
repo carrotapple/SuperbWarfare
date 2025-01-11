@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
+import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.ICannonEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -118,7 +119,7 @@ public class CrossHairOverlay {
         }
 
         // 在开启伤害指示器时才进行渲染
-        if (DisplayConfig.KILL_INDICATION.get() && stack.is(ModTags.Items.GUN)) {
+        if (DisplayConfig.KILL_INDICATION.get() && !(player.getVehicle() instanceof Ah6Entity ah6Entity && ah6Entity.getFirstPassenger() == player)) {
             renderKillIndicator(guiGraphics, w, h, moveX, moveY);
         }
 

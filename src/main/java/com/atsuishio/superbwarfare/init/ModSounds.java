@@ -395,5 +395,6 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> MISSILE_WARNING = REGISTRY.register("missile_warning", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("missile_warning")));
     public static final RegistryObject<SoundEvent> DECOY_FIRE = REGISTRY.register("decoy_fire", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("decoy_fire")));
     public static final RegistryObject<SoundEvent> DECOY_RELOAD = REGISTRY.register("decoy_reload", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("decoy_reload")));
+    public static final RegistryObject<SoundEvent> LUNGE_MINE_GROWL = REGISTRY.register("lunge_mine_growl", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("lunge_mine_growl")));
 }
 

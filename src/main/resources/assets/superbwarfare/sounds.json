@@ -2696,5 +2696,13 @@
         "stream": false
       }
     ]
+  },
+  "lunge_mine_growl": {
+    "sounds": [
+      {
+        "name": "superbwarfare:lunge_mine_growl",
+        "stream": false
+      }
+    ]
   }
 }

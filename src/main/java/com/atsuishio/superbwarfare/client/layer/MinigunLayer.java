@@ -13,7 +13,7 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class MinigunLayer extends GeoRenderLayer<MinigunItem> {
-    private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/item/minigun_heat_e.png");
+    private static final ResourceLocation LAYER = new ResourceLocation(ModUtils.MODID, "textures/item/minigun_e.png");
 
     public MinigunLayer(GeoRenderer<MinigunItem> entityRenderer) {
         super(entityRenderer);

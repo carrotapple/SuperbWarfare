@@ -144,7 +144,14 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, AnimatedItem
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
 
-        if (player.isSprinting() && player.onGround() && player.getPersistentData().getDouble("noRun") == 0 && ClientEventHandler.drawTime < 0.01) {
+        if (player.isSprinting() && player.onGround()
+                && player.getPersistentData().getDouble("noRun") == 0
+                && !(stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+                && stack.getOrCreateTag().getInt("reload_stage") != 1
+                && stack.getOrCreateTag().getInt("reload_stage") != 2
+                && stack.getOrCreateTag().getInt("reload_stage") != 3
+                && ClientEventHandler.drawTime < 0.01
+                && !GunsTool.getGunBooleanTag(stack, "Reloading")) {
             if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sc.run_fast"));
             } else {
