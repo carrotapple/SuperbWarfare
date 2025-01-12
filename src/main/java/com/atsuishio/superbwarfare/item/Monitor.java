@@ -41,9 +41,14 @@ public class Monitor extends Item {
         itemstack.getOrCreateTag().putString(LINKED_DRONE, id);
     }
 
-    public static void disLink(ItemStack itemstack) {
+    public static void disLink(ItemStack itemstack, Player player) {
         ItemNBTTool.setBoolean(itemstack, LINKED, false);
         itemstack.getOrCreateTag().putString(LINKED_DRONE, "none");
+        if (player.level().isClientSide) {
+            if (lastCameraType != null) {
+                Minecraft.getInstance().options.setCameraType(lastCameraType);
+            }
+        }
     }
 
     private void resetDroneData(DroneEntity drone) {

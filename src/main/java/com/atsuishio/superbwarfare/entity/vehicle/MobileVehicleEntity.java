@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
+import com.atsuishio.superbwarfare.entity.DroneEntity;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.entity.projectile.FlareDecoyEntity;
 import com.atsuishio.superbwarfare.entity.projectile.LaserEntity;
@@ -128,6 +129,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
      * @param velocity 动量
      */
     public void crushEntities(Vec3 velocity) {
+        if (this instanceof DroneEntity) return;
         if (velocity.horizontalDistance() < 0.1) return;
         if (isRemoved()) return;
         var frontBox = getBoundingBox().move(velocity.scale(0.5));

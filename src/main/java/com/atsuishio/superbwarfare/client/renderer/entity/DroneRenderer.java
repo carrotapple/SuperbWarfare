@@ -5,11 +5,14 @@ import com.atsuishio.superbwarfare.client.model.entity.DroneModel;
 import com.atsuishio.superbwarfare.entity.DroneEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class DroneRenderer extends GeoEntityRenderer<DroneEntity> {
@@ -33,12 +36,30 @@ public class DroneRenderer extends GeoEntityRenderer<DroneEntity> {
 	}
 
 	@Override
-	protected float getDeathMaxRotation(DroneEntity entityLivingBaseIn) {
-		return 0.0F;
+	public void render(DroneEntity entityIn, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn) {
+		poseStack.pushPose();
+		poseStack.mulPose(Axis.YP.rotationDegrees(-entityIn.getYaw(partialTicks)));
+		poseStack.mulPose(Axis.XP.rotationDegrees(entityIn.getBodyPitch(partialTicks)));
+		poseStack.mulPose(Axis.ZP.rotationDegrees(entityIn.getRoll(partialTicks)));
+		super.render(entityIn, entityYaw, partialTicks, poseStack, bufferIn, packedLightIn);
+		poseStack.popPose();
 	}
 
 	@Override
-	public boolean shouldShowName(DroneEntity animatable) {
-		return animatable.hasCustomName();
+	public void renderRecursively(PoseStack poseStack, DroneEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		String name = bone.getName();
+		if (name.equals("wingFL")) {
+			bone.setRotY(Mth.lerp(partialTick, animatable.propellerRotO, animatable.getPropellerRot()));
+		}
+		if (name.equals("wingFR")) {
+			bone.setRotY(Mth.lerp(partialTick, animatable.propellerRotO, animatable.getPropellerRot()));
+		}
+		if (name.equals("wingBL")) {
+			bone.setRotY(Mth.lerp(partialTick, animatable.propellerRotO, animatable.getPropellerRot()));
+		}
+		if (name.equals("wingBR")) {
+			bone.setRotY(Mth.lerp(partialTick, animatable.propellerRotO, animatable.getPropellerRot()));
+		}
+		super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 	}
 }

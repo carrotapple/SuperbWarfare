@@ -94,7 +94,6 @@ public class ClientEventHandler {
     public static double recoilHorizon = 0;
     public static double recoilY = 0;
 
-    public static double droneRotZ = 0;
     public static double droneFov = 1;
     public static double droneFovLerp = 1;
 
@@ -795,22 +794,14 @@ public class ClientEventHandler {
         }
     }
 
-    public static void droneBodyAngle(float RotZ) {
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player != null) {
-            droneRotZ = RotZ;
-
-        }
-    }
-
     private static void handleDroneCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
         ItemStack stack = entity.getMainHandItem();
-        double roll = event.getRoll();
+        float yaw = event.getYaw();
 
         DroneEntity drone = EntityFindUtil.findDrone(entity.level(), stack.getOrCreateTag().getString("LinkedDrone"));
 
         if (drone != null) {
-            event.setRoll((float) (roll - Mth.RAD_TO_DEG * droneRotZ));
+            event.setRoll(drone.getRoll((float) event.getPartialTick()) * (1 - (drone.getPitch((float) event.getPartialTick()) / 90)));
         }
 
         if (drone != null && stack.getOrCreateTag().getBoolean("Using")) {

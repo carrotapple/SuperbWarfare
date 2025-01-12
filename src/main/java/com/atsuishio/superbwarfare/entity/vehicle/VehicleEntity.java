@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
+import com.atsuishio.superbwarfare.entity.DroneEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModParticleTypes;
@@ -58,15 +59,15 @@ public class VehicleEntity extends Entity {
     }
 
     public float getRoll(float tickDelta) {
-        return Mth.lerp(0.6f * tickDelta, prevRoll, getRoll());
+        return Mth.lerp(tickDelta, prevRoll, getRoll());
     }
 
     public float getYaw(float tickDelta) {
-        return Mth.lerp(0.6f * tickDelta, yRotO, getYRot());
+        return Mth.lerp(tickDelta, yRotO, getYRot());
     }
 
     public float getPitch(float tickDelta) {
-        return Mth.lerp(0.6f * tickDelta, xRotO, getXRot());
+        return Mth.lerp(tickDelta, xRotO, getXRot());
     }
 
     public void setZRot(float rot) {
@@ -258,7 +259,9 @@ public class VehicleEntity extends Entity {
         if (this.getHealth() <= 0.1 * this.getMaxHealth()) {
             this.hurt(0.1f);
         } else {
-            this.heal(0.05f);
+            if (!(this instanceof DroneEntity)) {
+                this.heal(0.05f);
+            }
         }
 
         this.refreshDimensions();
