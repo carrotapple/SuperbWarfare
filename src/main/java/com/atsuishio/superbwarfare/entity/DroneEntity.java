@@ -42,12 +42,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -66,7 +65,6 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
     public static final EntityDataAccessor<Boolean> KAMIKAZE = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public static double lastTickSpeed = 0;
     public double moveX = 0;
     public double moveY = 0;
     public double moveZ = 0;
@@ -77,6 +75,10 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
     public boolean upInputDown;
     public boolean downInputDown;
     public boolean fire;
+    public int collisionCoolDown;
+
+    public double lastTickSpeed;
+    public double lastTickVerticalSpeed;
 
     public DroneEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.DRONE.get(), world);
@@ -178,6 +180,13 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
     @Override
     public void baseTick() {
         super.baseTick();
+
+        lastTickSpeed = this.getDeltaMovement().length();
+        lastTickVerticalSpeed = this.getDeltaMovement().y;
+
+        if (collisionCoolDown > 0) {
+            collisionCoolDown--;
+        }
 
         if (!this.onGround()) {
             // left and right
@@ -375,9 +384,6 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
         }
 
         super.travel(dir);
-
-        lastTickSpeed = this.getDeltaMovement().length();
-        crash(controller);
         float f = 0.7f;
         AABB aabb = AABB.ofSize(this.getEyePosition(), f, 0.3, f);
         var level = this.level();
@@ -388,12 +394,6 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
             }
         }
 
-    }
-
-    public void crash(Player controller) {
-        if (isHit() && lastTickSpeed > 0.3) {
-            this.hurt(new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.EXPLOSION), Objects.requireNonNullElse(controller, this)), (float) ((this.entityData.get(KAMIKAZE) ? 6 : 2) * lastTickSpeed));
-        }
     }
 
     public void hitEntityCrash(Player controller, Entity target) {
@@ -409,13 +409,21 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
         }
     }
 
-    public boolean isHit() {
-        float f = 0.7f;
-        AABB aabb = AABB.ofSize(this.getEyePosition(), f, 0.3, f);
-        return BlockPos.betweenClosedStream(aabb).anyMatch((block) -> {
-            BlockState blockstate = this.level().getBlockState(block);
-            return !blockstate.isAir() && blockstate.isSuffocating(this.level(), block) && Shapes.joinIsNotEmpty(blockstate.getCollisionShape(this.level(), block).move(block.getX(), block.getY(), block.getZ()), Shapes.create(aabb), BooleanOp.AND);
-        });
+    @Override
+    public void move(@NotNull MoverType movementType, @NotNull Vec3 movement) {
+        super.move(movementType, movement);
+        Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
+
+        if (lastTickSpeed < 0.2 || collisionCoolDown > 0) return;
+
+        if ((verticalCollision) && Mth.abs((float) lastTickVerticalSpeed) > 0.2) {
+            this.hurt(ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, controller == null ? this : controller), (float) (20 * ((Mth.abs((float) lastTickVerticalSpeed) - 0.3) * (lastTickSpeed - 0.2) * (lastTickSpeed - 0.2))));
+        }
+
+        if (this.horizontalCollision) {
+            this.hurt(ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, controller == null ? this : controller), (float) (10 * ((lastTickSpeed - 0.2) * (lastTickSpeed - 0.2))));
+            collisionCoolDown = 4;
+        }
     }
 
     @Override
@@ -443,6 +451,19 @@ public class DroneEntity extends LivingEntity implements GeoEntity {
                             Monitor.disLink(stack);
                         }
                     });
+        }
+
+        Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
+
+        if (this.entityData.get(KAMIKAZE)) {
+            this.discard();
+            if (controller != null) {
+                if (controller.getMainHandItem().is(ModItems.MONITOR.get())) {
+                    Monitor.disLink(controller.getMainHandItem());
+                }
+                kamikazeExplosion(controller);
+            }
+
         }
 
         ItemStack stack = new ItemStack(ModItems.RGO_GRENADE.get(), this.entityData.get(AMMO));
