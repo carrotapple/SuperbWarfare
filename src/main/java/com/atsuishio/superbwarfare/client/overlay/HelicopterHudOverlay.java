@@ -155,29 +155,43 @@ public class HelicopterHudOverlay {
             float fovAdjust2 = (float) (Minecraft.getInstance().options.fov().get() / 30) - 1;
             double zoom = 0.96 * 3 + 0.06 * fovAdjust2;
 
-            Vec3 pos = new Vec3(worldPosition.x, worldPosition.y, worldPosition.z).add(mobileVehicle.getViewVector(event.getPartialTick()).scale(500));
+            Vec3 pos = new Vec3(worldPosition.x, worldPosition.y, worldPosition.z).add(mobileVehicle.getViewVector(event.getPartialTick()).scale(192));
             Vec3 lookAngle = player.getLookAngle().normalize().scale(pos.distanceTo(cameraPos) * (1 - 1.0 / zoom));
 
             var cPos = cameraPos.add(lookAngle);
 
-            Vec3 p = RenderHelper.worldToScreen(new Vec3(worldPosition.x, worldPosition.y, worldPosition.z).add(mobileVehicle.getViewVector(event.getPartialTick()).scale(500)), ClientEventHandler.zoom ? cPos : cameraPos);
+            Vec3 p = RenderHelper.worldToScreen(new Vec3(worldPosition.x, worldPosition.y, worldPosition.z).add(mobileVehicle.getViewVector(event.getPartialTick()).scale(192)), ClientEventHandler.zoom ? cPos : cameraPos);
 
-            Vec3 p3 = RenderHelper.worldToScreen(new Vec3(worldPosition.x, worldPosition.y, worldPosition.z).add(mobileVehicle.getViewVector(event.getPartialTick()).scale(500)), cameraPos);
-            if (p != null && p3 != null) {
+            if (p != null) {
                 poseStack.pushPose();
                 float x = (float) p.x;
                 float y = (float) p.y;
 
-                float x3 = (float) p3.x;
-                float y3 = (float) p3.y;
+
                 if (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
                     preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/crosshair_ind.png"), x - 8, y - 8, 0, 0, 16, 16, 16, 16);
                     renderKillIndicator(guiGraphics, x - 7.5f + (float) (2 * (Math.random() - 0.5f)), y - 7.5f + (float) (2 * (Math.random() - 0.5f)));
                 } else if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK) {
-                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/drone.png"), x3 - 8, y3 - 8, 0, 0, 16, 16, 16, 16);
-                    renderKillIndicator(guiGraphics, x3 - 7.5f + (float) (2 * (Math.random() - 0.5f)), y3 - 7.5f + (float) (2 * (Math.random() - 0.5f)));
-                }
+                    poseStack.pushPose();
+                    poseStack.rotateAround(Axis.ZP.rotationDegrees(iHelicopterEntity.getRotZ(event.getPartialTick())), x, y, 0);
+                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/drone.png"), x - 8, y - 8, 0, 0, 16, 16, 16, 16);
+                    renderKillIndicator(guiGraphics, x - 7.5f + (float) (2 * (Math.random() - 0.5f)), y - 7.5f + (float) (2 * (Math.random() - 0.5f)));
 
+                    poseStack.pushPose();
+
+                    poseStack.translate(x, y, 0);
+                    poseStack.scale(0.75f, 0.75f, 1);
+
+                    if (multiWeaponVehicle.getWeaponType() == 0) {
+                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("20MM CANNON " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : iHelicopterEntity.getAmmoCount(player))), 25, -9, -1, false);
+                    } else {
+                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("70MM ROCKET " + iHelicopterEntity.getAmmoCount(player)), 25, -9, -1, false);
+                    }
+
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("FLARE " + iHelicopterEntity.getDecoy()), 25, 1, -1, false);
+                    poseStack.popPose();
+                    poseStack.popPose();
+                }
                 poseStack.popPose();
             }
 
