@@ -464,7 +464,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
         Vector4f worldPositionLeft;
 
         if (entityData.get(WEAPON_TYPE) == 0) {
-            x = 1.25f;
+            x = 1.15f;
             y = 0.62f;
             z = 0.8f;
 

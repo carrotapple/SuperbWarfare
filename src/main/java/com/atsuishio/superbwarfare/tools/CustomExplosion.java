@@ -45,6 +45,7 @@ public class CustomExplosion extends Explosion {
     private final float damage;
     private int fireTime;
     private float damageMultiplier;
+    private boolean bullet;
 
     public CustomExplosion(Level pLevel, @Nullable Entity pSource, @Nullable DamageSource source, @Nullable ExplosionDamageCalculator pDamageCalculator,
                            float damage, double pToBlowX, double pToBlowY, double pToBlowZ, float pRadius,
@@ -98,6 +99,11 @@ public class CustomExplosion extends Explosion {
 
     public CustomExplosion setDamageMultiplier(float damageMultiplier) {
         this.damageMultiplier = damageMultiplier;
+        return this;
+    }
+
+    public CustomExplosion isBulletExplode(boolean bullet) {
+        this.bullet = bullet;
         return this;
     }
 
@@ -198,7 +204,7 @@ public class CustomExplosion extends Explosion {
                         yDistance *= d11;
                         zDistance *= d11;
 
-                        if (entity instanceof VehicleEntity vehicle) {
+                        if (entity instanceof VehicleEntity vehicle && !bullet) {
                             Vec3 knockbackVec = new Vec3(vehicle.ignoreExplosionHorizontalKnockBack() * xDistance, vehicle.ignoreExplosionVerticalKnockBack() * yDistance, vehicle.ignoreExplosionHorizontalKnockBack() * zDistance);
                             vehicle.setDeltaMovement(vehicle.getDeltaMovement().add(knockbackVec));
                         }

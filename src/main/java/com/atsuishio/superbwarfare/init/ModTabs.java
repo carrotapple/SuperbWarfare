@@ -109,6 +109,7 @@ public class ModTabs {
                             output.accept(ContainerBlockItem.createInstance(ModEntities.SPEEDBOAT.get(), true));
                             output.accept(ContainerBlockItem.createInstance(ModEntities.WHEEL_CHAIR.get()));
                             output.accept(ContainerBlockItem.createInstance(ModEntities.AH_6.get()));
+                            output.accept(ContainerBlockItem.createInstance(ModEntities.LAV_150.get()));
                         } else {
                             output.accept(registryObject.get());
                             if (registryObject.get() == ModItems.ARMOR_PLATE.get()) {

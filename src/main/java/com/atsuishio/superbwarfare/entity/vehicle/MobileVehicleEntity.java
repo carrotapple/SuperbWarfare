@@ -148,7 +148,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
             double f = Math.min(entitySize / thisSize, 2);
             double f1 = Math.min(thisSize / entitySize, 4);
 
-            if (velocity.length() > 0.4) {
+            if (velocity.length() > 0.3) {
                 if (!this.level().isClientSide) {
                     this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
                 }
@@ -156,12 +156,12 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
                     this.push(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
                 }
                 entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
-                entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (thisSize * 10 * ((velocity.length() - 0.4) * (velocity.length() - 0.4))));
+                entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (thisSize * 20 * ((velocity.length() - 0.3) * (velocity.length() - 0.3))));
                 if (entities instanceof VehicleEntity) {
-                    this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), entity, entity.getFirstPassenger() == null ? entity : entity.getFirstPassenger()), (float) (entitySize * 10 * ((velocity.length() - 0.4) * (velocity.length() - 0.4))));
+                    this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), entity, entity.getFirstPassenger() == null ? entity : entity.getFirstPassenger()), (float) (entitySize * 10 * ((velocity.length() - 0.3) * (velocity.length() - 0.3))));
                 }
             } else {
-                entity.push(0.2 * f1 * velAdd.x, 0.2 * f1 * velAdd.y, 0.2 * f1 * velAdd.z);
+                entity.push(0.3 * f1 * velAdd.x, 0.3 * f1 * velAdd.y, 0.3 * f1 * velAdd.z);
             }
         }
     }

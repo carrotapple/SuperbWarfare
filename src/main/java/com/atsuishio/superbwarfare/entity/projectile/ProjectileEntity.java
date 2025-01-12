@@ -594,7 +594,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
     protected void explosionBulletEntity(Entity projectile, Entity target, float damage, int heLevel, float monsterMultiple) {
         CustomExplosion explosion = new CustomExplosion(projectile.level(), projectile,
                 ModDamageTypes.causeProjectileBoomDamage(projectile.level().registryAccess(), projectile, this.getShooter()), (float) ((0.8 * damage) * (1 + 0.1 * heLevel)),
-                target.getX(), target.getY(), target.getZ(), (float) ((1.5 + 0.02 * damage) * (1 + 0.05 * heLevel))).setDamageMultiplier(monsterMultiple);
+                target.getX(), target.getY(), target.getZ(), (float) ((1.5 + 0.02 * damage) * (1 + 0.05 * heLevel))).setDamageMultiplier(monsterMultiple).isBulletExplode(true);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(projectile.level(), explosion);
         explosion.finalizeExplosion(false);

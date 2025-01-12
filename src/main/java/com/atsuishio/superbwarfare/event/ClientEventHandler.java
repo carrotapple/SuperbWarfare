@@ -382,6 +382,7 @@ public class ClientEventHandler {
         }
 
         if ((holdFire || burstFireSize > 0)
+                && !((player.getVehicle() instanceof Ah6Entity ah6Entity && ah6Entity.isDriver(player)) || player.getVehicle() instanceof Lav150Entity)
                 && (stack.is(ModTags.Items.NORMAL_GUN)
                 && cantFireTime == 0
                 && drawTime < 0.01
@@ -840,7 +841,7 @@ public class ClientEventHandler {
             }
         }
 
-        if (player.getVehicle() instanceof ICannonEntity) {
+        if (player.getVehicle() instanceof ICannonEntity || player.getVehicle() instanceof Lav150Entity) {
             event.setCanceled(true);
         }
 
@@ -1321,7 +1322,7 @@ public class ClientEventHandler {
     public static void setPlayerInvisible(RenderPlayerEvent.Pre event) {
         var otherPlayer = event.getEntity();
 
-        if (otherPlayer.getVehicle() instanceof ICannonEntity) {
+        if (otherPlayer.getVehicle() instanceof ICannonEntity || otherPlayer.getVehicle() instanceof Lav150Entity) {
             event.setCanceled(true);
         }
     }

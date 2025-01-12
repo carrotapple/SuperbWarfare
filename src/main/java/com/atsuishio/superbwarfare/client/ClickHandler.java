@@ -106,6 +106,7 @@ public class ClickHandler {
             if (stack.is(ModTags.Items.GUN)
                     || (player.getVehicle() instanceof ICannonEntity)
                     || (player.getVehicle() instanceof Ah6Entity ah6Entity && ah6Entity.getFirstPassenger() == player && !stack.getItem().isEdible())
+                    || (player.getVehicle() instanceof Lav150Entity lav150 && lav150.isDriver(player) && !stack.getItem().isEdible())
                     || (player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player && stack.is(ItemStack.EMPTY.getItem()))) {
                 event.setCanceled(true);
             }

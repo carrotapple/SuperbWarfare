@@ -11,6 +11,7 @@ import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
+import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -40,26 +41,25 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationState;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
 
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
-public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity, IChargeEntity, IArmedVehicleEntity {
+public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IChargeEntity, IArmedVehicleEntity {
 
-    public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(SpeedboatEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
 
     public static final float MAX_HEALTH = VehicleConfig.SPEEDBOAT_HP.get();
     public static final int MAX_ENERGY = VehicleConfig.SPEEDBOAT_MAX_ENERGY.get();
@@ -69,19 +69,21 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
     public float turretXRot;
     public float turretYRotO;
     public float turretXRotO;
-    public float rotorRot;
     public float rudderRot;
-    public float rotorRotO;
     public float rudderRotO;
-
+    public float leftWheelRot;
+    public float rightWheelRot;
+    public float leftWheelRotO;
+    public float rightWheelRotO;
     public boolean cannotFire;
 
-    public SpeedboatEntity(PlayMessages.SpawnEntity packet, Level world) {
-        this(ModEntities.SPEEDBOAT.get(), world);
+    public Lav150Entity(PlayMessages.SpawnEntity packet, Level world) {
+        this(ModEntities.LAV_150.get(), world);
     }
 
-    public SpeedboatEntity(EntityType<SpeedboatEntity> type, Level world) {
+    public Lav150Entity(EntityType<Lav150Entity> type, Level world) {
         super(type, world);
+        this.setMaxUpStep(1.5f);
     }
 
     @Override
@@ -109,11 +111,6 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
     }
 
     @Override
-    public double getPassengersRidingOffset() {
-        return super.getPassengersRidingOffset() - 0.8;
-    }
-
-    @Override
     public boolean hurt(DamageSource source, float amount) {
         super.hurt(source, amount);
         if (this.level() instanceof ServerLevel serverLevel) {
@@ -126,13 +123,13 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
             amount *= 3f;
         }
         if (source.is(ModDamageTypes.GUN_FIRE)) {
-            amount *= 0.3f;
+            amount *= 0.2f;
         }
         if (source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE)) {
-            amount *= 0.7f;
+            amount *= 0.4f;
         }
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.hurt(0.5f * Math.max(amount - 3, 0));
+        this.hurt(0.5f * Math.max(amount - 40, 0));
 
         return true;
     }
@@ -149,8 +146,9 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
     public void baseTick() {
         turretYRotO = this.getTurretYRot();
         turretXRotO = this.getTurretXRot();
-        rotorRotO = this.getRotorRot();
         rudderRotO = this.getRudderRot();
+        leftWheelRotO = this.getLeftWheelRot();
+        rightWheelRotO = this.getRightWheelRot();
 
         super.baseTick();
 
@@ -181,23 +179,41 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
         }
 
         double fluidFloat;
-        fluidFloat = 0.12 * getSubmergedHeight(this);
+        fluidFloat = 0.045 * getSubmergedHeight(this);
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, fluidFloat, 0.0));
 
         if (this.onGround()) {
-            this.setDeltaMovement(this.getDeltaMovement().multiply(0.2, 0.85, 0.2));
-        } else {
-            float f = 0.74f + 0.09f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
+            float f0 = 0.44f + 0.25f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90 - 0.02f * Mth.abs(this.getRudderRot());
+            this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.05 * this.getDeltaMovement().horizontalDistance())));
+            this.setDeltaMovement(this.getDeltaMovement().multiply(f0, 0.85, f0));
+        } else if (this.isInWater()) {
+            float f1 = 0.74f + 0.09f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90 - 0.01f * Mth.abs(this.getRudderRot());
             this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.04 * this.getDeltaMovement().horizontalDistance())));
-            this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.85, f));
+            this.setDeltaMovement(this.getDeltaMovement().multiply(f1, 0.85, f1));
+        } else {
+            this.setDeltaMovement(this.getDeltaMovement().multiply(0.99, 0.95, 0.99));
         }
-
 
         if (this.level() instanceof ServerLevel serverLevel && this.isInWater() && this.getDeltaMovement().length() > 0.1) {
             sendParticle(serverLevel, ParticleTypes.CLOUD, this.getX() + 0.5 * this.getDeltaMovement().x, this.getY() + getSubmergedHeight(this) - 0.2, this.getZ() + 0.5 * this.getDeltaMovement().z, (int) (2 + 4 * this.getDeltaMovement().length()), 0.65, 0, 0.65, 0, true);
             sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, this.getX() + 0.5 * this.getDeltaMovement().x, this.getY() + getSubmergedHeight(this) - 0.2, this.getZ() + 0.5 * this.getDeltaMovement().z, (int) (2 + 10 * this.getDeltaMovement().length()), 0.65, 0, 0.65, 0, true);
-            sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, this.getX() - 4.5 * this.getLookAngle().x, this.getY() - 0.25, this.getZ() - 4.5 * this.getLookAngle().z, (int) (40 * Mth.abs(this.entityData.get(POWER))), 0.15, 0.15, 0.15, 0.02, true);
         }
+
+        float deltaT = Math.abs(getTurretYRot() - turretYRotO);
+        while (getTurretYRot() > 180F) {
+            setTurretYRot(getTurretYRot() - 360F);
+            turretYRotO = getTurretYRot() - deltaT;
+        }
+        while (getTurretYRot() <= -180F) {
+            setTurretYRot(getTurretYRot() + 360F);
+            turretYRotO = deltaT + getTurretYRot();
+        }
+
+//        Player player = (Player) this.getFirstPassenger();
+//
+//        if (player != null) {
+//            player.displayClientMessage(Component.literal( new DecimalFormat("##").format(getTurretYRot())), true);
+//        }
 
         collideBlock();
         gunnerAngle();
@@ -222,6 +238,14 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
     public void vehicleShoot(Player player) {
         if (this.cannotFire) return;
 
+        Matrix4f transform = getBarrelTransform();
+
+        float x = -0.0234375f;
+        float y = 0f;
+        float z = 3f;
+
+        Vector4f worldPosition = transformPosition(transform, x, y, z);
+
         ProjectileEntity projectile = new ProjectileEntity(player.level())
                 .shooter(player)
                 .damage(VehicleConfig.SPEEDBOAT_GUN_DAMAGE.get())
@@ -229,10 +253,12 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
                 .zoom(false);
 
         projectile.bypassArmorRate(0.9f);
-        projectile.setPos(this.xo - this.getViewVector(1).scale(0.54).x - this.getDeltaMovement().x, this.yo + 3.0, this.zo - this.getViewVector(1).scale(0.54).z - this.getDeltaMovement().z);
-        projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y + (zooming() ? 0.002f : -0.009f), player.getLookAngle().z, 20,
+        projectile.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
+        projectile.shoot(player, getBarrelVector(1).x, getBarrelVector(1).y + 0.002f, getBarrelVector(1).z, 20,
                 (float) 0.4);
         this.level().addFreshEntity(projectile);
+
+        sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z, 1, 0.02, 0.02, 0.02, 0, false);
 
         float pitch = this.entityData.get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - this.entityData.get(HEAT)));
 
@@ -256,6 +282,18 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
         this.entityData.set(HEAT, this.entityData.get(HEAT) + 3);
         this.entityData.set(FIRE_ANIM, 3);
         this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+    }
+
+    public final Vec3 getBarrelVector(float pPartialTicks) {
+        return this.calculateViewVector(this.getBarrelXRot(pPartialTicks), this.getBarrelYRot(pPartialTicks));
+    }
+
+    public float getBarrelXRot(float pPartialTicks) {
+        return Mth.lerp(pPartialTicks, turretXRotO - this.xRotO, getTurretXRot() - this.getXRot());
+    }
+
+    public float getBarrelYRot(float pPartialTick) {
+        return -Mth.lerp(pPartialTick, turretYRotO - this.yRotO, getTurretYRot() - this.getYRot());
     }
 
 
@@ -286,22 +324,17 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
         }
 
         if (forwardInputDown) {
-            this.entityData.set(POWER, this.entityData.get(POWER) + 0.02f);
+            this.entityData.set(POWER, this.entityData.get(POWER) + 0.006f);
         }
 
         if (backInputDown) {
-            this.entityData.set(POWER, this.entityData.get(POWER) - 0.02f);
-            if (rightInputDown) {
-                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.2f);
-            } else if (leftInputDown) {
-                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 0.2f);
-            }
-        } else {
-            if (rightInputDown) {
-                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 0.1f);
-            } else if (this.leftInputDown) {
-                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.1f);
-            }
+            this.entityData.set(POWER, this.entityData.get(POWER) - 0.005f);
+        }
+
+        if (rightInputDown) {
+            this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.1f);
+        } else if (this.leftInputDown) {
+            this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 0.1f);
         }
 
         if (this.forwardInputDown || this.backInputDown) {
@@ -312,15 +345,26 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
             level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.forwardInputDown || this.backInputDown ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 1f), false);
         }
 
-        this.entityData.set(POWER, this.entityData.get(POWER) * 0.87f);
-        this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.8f);
+        this.entityData.set(POWER, this.entityData.get(POWER) * 0.97f);
+        this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * (float)Math.max(0.7f - 0.1f * this.getDeltaMovement().horizontalDistance(), 0.3));
 
-        this.setRotorRot(this.getRotorRot() + 10 * this.entityData.get(POWER));
-        this.setRudderRot(Mth.clamp(this.getRudderRot() - this.entityData.get(DELTA_ROT), -1.25f, 1.25f) * 0.7f * (this.entityData.get(POWER) > 0 ? 1 : -1));
+        float angle = (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1));
+        double s0;
 
-        if (this.isInWater() || this.isUnderWater()) {
-            this.setYRot((float) (this.getYRot() - Math.max(5 * this.getDeltaMovement().length(), 0.3) * this.entityData.get(DELTA_ROT)));
-            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * this.entityData.get(POWER)));
+        if (Mth.abs(angle) < 90) {
+            s0 = this.getDeltaMovement().horizontalDistance();
+        } else {
+            s0 = -this.getDeltaMovement().horizontalDistance();
+        }
+
+        this.setLeftWheelRot((float) ((this.getLeftWheelRot() - 1.25 * s0) - this.getDeltaMovement().horizontalDistance() * Mth.clamp(1.5f * this.entityData.get(DELTA_ROT), -5f, 5f)));
+        this.setRightWheelRot((float) ((this.getRightWheelRot() - 1.25 * s0) + this.getDeltaMovement().horizontalDistance() * Mth.clamp(1.5f * this.entityData.get(DELTA_ROT), -5f, 5f)));
+
+        this.setRudderRot(Mth.clamp(this.getRudderRot() - this.entityData.get(DELTA_ROT), -0.8f, 0.8f) * 0.75f);
+
+        if (this.isInWater() || onGround()) {
+            this.setYRot((float) (this.getYRot() - Math.max(10 * this.getDeltaMovement().horizontalDistance(), 0) * this.getRudderRot() * (this.entityData.get(POWER) > 0 ? 1 : -1)));
+            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (isInWater() ? 0.3f : 1) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (isInWater() ? 0.3f : 1) * this.entityData.get(POWER)));
         }
     }
 
@@ -328,10 +372,17 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
         Entity driver = this.getFirstPassenger();
         if (driver == null) return;
 
-        float gunAngle = -Math.clamp(-140f, 140f, Mth.wrapDegrees(driver.getYHeadRot() - this.getYRot()));
+        float gunAngle = -Mth.wrapDegrees(driver.getYHeadRot() - this.getYRot());
 
-        this.setTurretYRot(gunAngle);
-        this.setTurretXRot(driver.getXRot() - this.getXRot());
+        float diffY;
+        float diffX;
+
+        diffY = Mth.wrapDegrees(gunAngle - getTurretYRot());
+        diffX = Mth.wrapDegrees(driver.getXRot() - this.getTurretXRot());
+
+
+        this.setTurretXRot(Mth.clamp(this.getTurretXRot() + Mth.clamp(0.5f * diffX, -2, 2), -25, 10));
+        this.setTurretYRot(this.getTurretYRot() + Mth.clamp(0.5f * diffY, -8, 8));
     }
 
     public float getTurretYRot() {
@@ -350,14 +401,6 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
         this.turretXRot = pTurretXRot;
     }
 
-    public float getRotorRot() {
-        return this.rotorRot;
-    }
-
-    public void setRotorRot(float pRotorRot) {
-        this.rotorRot = pRotorRot;
-    }
-
     public float getRudderRot() {
         return this.rudderRot;
     }
@@ -366,40 +409,72 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
         this.rudderRot = pRudderRot;
     }
 
+    public float getLeftWheelRot() {
+        return this.leftWheelRot;
+    }
+
+    public void setLeftWheelRot(float pLeftWheelRot) {
+        this.leftWheelRot = pLeftWheelRot;
+    }
+
+    public float getRightWheelRot() {
+        return this.rightWheelRot;
+    }
+
+    public void setRightWheelRot(float pRightWheelRot) {
+        this.rightWheelRot = pRightWheelRot;
+    }
+
     @Override
     public SoundEvent getEngineSound() {
         return ModSounds.BOAT_ENGINE.get();
     }
 
     @Override
-    protected void positionRider(Entity pPassenger, MoveFunction pCallback) {
-        if (this.hasPassenger(pPassenger)) {
-            double posY = this.getY() + this.getPassengersRidingOffset() + pPassenger.getMyRidingOffset();
-
-            if (!zooming() && (this.isInWater() || this.isUnderWater())) {
-                pPassenger.setYRot((float) (pPassenger.getYRot() - Math.max(5 * this.getDeltaMovement().length(), 0.3) * this.entityData.get(DELTA_ROT)));
-                pPassenger.setYHeadRot((float) (pPassenger.getYHeadRot() - Math.max(5 * this.getDeltaMovement().length(), 0.3) * this.entityData.get(DELTA_ROT)));
-            }
-
-            if (this.getPassengers().size() > 1) {
-                int i = this.getPassengers().indexOf(pPassenger);
-                if (i == 0) {
-                    pCallback.accept(pPassenger, this.getX(), posY, this.getZ());
-                    return;
-                }
-
-                double zOffset = -0.8;
-                if (i % 2 == 0) {
-                    zOffset = 0.8;
-                }
-
-                double xOffset = (int) -((i - 1) / 2.0 + 1) * 0.95;
-                Vec3 vec3 = (new Vec3(xOffset, 0.0D, zOffset)).yRot(-this.getYRot() * ((float) java.lang.Math.PI / 180F) - ((float) java.lang.Math.PI / 2F));
-                pCallback.accept(pPassenger, this.getX() + vec3.x, posY, this.getZ() + vec3.z);
-            } else {
-                pCallback.accept(pPassenger, this.getX(), posY, this.getZ());
-            }
+    public void positionRider(@NotNull Entity passenger, @NotNull MoveFunction callback) {
+        // From Immersive_Aircraft
+        if (!this.hasPassenger(passenger)) {
+            return;
         }
+
+        Matrix4f transform = getTurretTransform();
+
+        float x = 0.36f;
+        float y = -0.3f;
+        float z = 0.56f;
+        y += (float) passenger.getMyRidingOffset();
+
+        int i = this.getPassengers().indexOf(passenger);
+
+        if (i == 0) {
+            Vector4f worldPosition = transformPosition(transform, x, y, z);
+            passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+            callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
+        }
+    }
+
+    public Matrix4f getBarrelTransform() {
+        Matrix4f transformT = getTurretTransform();
+        float x = 0f;
+        float y = 0.33795f;
+        float z = 0.825f;
+        Vector4f worldPosition = transformPosition(transformT, x, y, z);
+
+        Matrix4f transform = new Matrix4f();
+        transform.translate(worldPosition.x, worldPosition.y, worldPosition.z);
+        transform.rotate(Axis.YP.rotationDegrees(getTurretYRot() - getYRot()));
+        transform.rotate(Axis.XP.rotationDegrees(getTurretXRot()));
+        transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
+        return transform;
+    }
+
+    public Matrix4f getTurretTransform() {
+        Matrix4f transform = new Matrix4f();
+        transform.translate((float) getX(), (float) getY() + 2.4f, (float) getZ());
+        transform.rotate(Axis.YP.rotationDegrees(getTurretYRot() - getYRot()));
+        transform.rotate(Axis.XP.rotationDegrees(getXRot()));
+        transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
+        return transform;
     }
 
     @Override
@@ -417,16 +492,9 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
 
     protected void clampRotation(Entity entity) {
         float f = Mth.wrapDegrees(entity.getXRot());
-        float f1 = Mth.clamp(f, -40.0F, 20F);
+        float f1 = Mth.clamp(f, -25.0F, 10F);
         entity.xRotO += f1 - f;
         entity.setXRot(entity.getXRot() + f1 - f);
-
-        entity.setYBodyRot(this.getYRot());
-        float f2 = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
-        float f3 = Mth.clamp(f2, -140.0F, 140.0F);
-        entity.yRotO += f3 - f2;
-        entity.setYRot(entity.getYRot() + f3 - f2);
-        entity.setYBodyRot(this.getYRot());
     }
 
     @Override
@@ -434,17 +502,17 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
         this.clampRotation(entity);
     }
 
-    private PlayState firePredicate(AnimationState<SpeedboatEntity> event) {
-        if (this.entityData.get(FIRE_ANIM) > 1) {
-            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.speedboat.fire"));
-        }
-
-        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.speedboat.idle"));
-    }
+//    private PlayState firePredicate(AnimationState<Lav150Entity> event) {
+//        if (this.entityData.get(FIRE_ANIM) > 1) {
+//            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.speedboat.fire"));
+//        }
+//
+//        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.speedboat.idle"));
+//    }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "movement", 0, this::firePredicate));
+//        data.add(new AnimationController<>(this, "movement", 0, this::firePredicate));
     }
 
     @Override
@@ -460,11 +528,6 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
     @Override
     public float ignoreExplosionVerticalKnockBack() {
         return -0.9f;
-    }
-
-    @Override
-    public int getMaxPassengers() {
-        return 5;
     }
 
     @Override
@@ -484,7 +547,7 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
 
     @Override
     public int mainGunRpm() {
-        return 500;
+        return 240;
     }
 
     @Override
