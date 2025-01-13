@@ -750,6 +750,15 @@ public class ClientEventHandler {
             }
         }
 
+        if (level != null && living.getVehicle() instanceof Lav150Entity vehicle) {
+            handleLandArmorCamera(event, vehicle);
+        } else {
+            var effect = Minecraft.getInstance().gameRenderer.currentEffect();
+            if (effect != null && effect.getName().equals(ModUtils.MODID + ":shaders/post/scan_pincushion.json")) {
+                Minecraft.getInstance().gameRenderer.shutdownEffect();
+            }
+        }
+
         if (level != null && stack.is(ModTags.Items.GUN)) {
             handleWeaponSway(living);
             handleWeaponMove(living);
@@ -758,10 +767,11 @@ public class ClientEventHandler {
             handleWeaponFire(event, living);
             handleWeaponShell();
             handleGunRecoil();
-            handleShockCamera(event, living);
             handleBowPullAnimation(living);
             handleWeaponDraw(living);
         }
+
+        handleShockCamera(event, living);
 
         float times = Minecraft.getInstance().getDeltaFrameTime();
         LocalPlayer player = Minecraft.getInstance().player;
@@ -801,6 +811,12 @@ public class ClientEventHandler {
             if (Minecraft.getInstance().gameRenderer.currentEffect() == null) {
                 Minecraft.getInstance().gameRenderer.loadEffect(ModUtils.loc("shaders/post/scan_pincushion.json"));
             }
+        }
+    }
+
+    private static void handleLandArmorCamera(ViewportEvent.ComputeCameraAngles event, Lav150Entity entity) {
+        if (Minecraft.getInstance().gameRenderer.currentEffect() == null) {
+            Minecraft.getInstance().gameRenderer.loadEffect(ModUtils.loc("shaders/post/scan_pincushion.json"));
         }
     }
 
