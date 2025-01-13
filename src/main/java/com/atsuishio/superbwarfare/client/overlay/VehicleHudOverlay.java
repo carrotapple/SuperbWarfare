@@ -60,17 +60,17 @@ public class VehicleHudOverlay {
         if (vehicle instanceof EnergyVehicleEntity energyVehicleEntity) {
             float energy = energyVehicleEntity.getEnergy();
             float maxEnergy = energyVehicleEntity.getMaxEnergy();
-            guiGraphics.blit(ENERGY, 10, h - 22 - compatHeight,100, 0, 0, 8, 8, 8, 8);
-            guiGraphics.blit(HEALTH_FRAME, 20, h - 21 - compatHeight,100, 0, 0, 60, 6, 60, 6);
-            guiGraphics.blit(HEALTH, 20, h - 21 - compatHeight,100, 0, 0, (int) (60 * energy / maxEnergy), 6, 60, 6);
+            guiGraphics.blit(ENERGY, 10, h - 22 - compatHeight, 100, 0, 0, 8, 8, 8, 8);
+            guiGraphics.blit(HEALTH_FRAME, 20, h - 21 - compatHeight, 100, 0, 0, 60, 6, 60, 6);
+            guiGraphics.blit(HEALTH, 20, h - 21 - compatHeight, 100, 0, 0, (int) (60 * energy / maxEnergy), 6, 60, 6);
         }
 
         if (vehicle instanceof VehicleEntity pVehicle) {
             float health = pVehicle.getHealth();
             float maxHealth = pVehicle.getMaxHealth();
-            guiGraphics.blit(ARMOR, 10, h - 13 - compatHeight,100, 0, 0, 8, 8, 8, 8);
-            guiGraphics.blit(HEALTH_FRAME, 20, h - 12 - compatHeight,100, 0, 0, 60, 6, 60, 6);
-            guiGraphics.blit(HEALTH, 20, h - 12 - compatHeight,100, 0, 0, (int) (60 * health / maxHealth), 6, 60, 6);
+            guiGraphics.blit(ARMOR, 10, h - 13 - compatHeight, 100, 0, 0, 8, 8, 8, 8);
+            guiGraphics.blit(HEALTH_FRAME, 20, h - 12 - compatHeight, 100, 0, 0, 60, 6, 60, 6);
+            guiGraphics.blit(HEALTH, 20, h - 12 - compatHeight, 100, 0, 0, (int) (60 * health / maxHealth), 6, 60, 6);
         }
         poseStack.popPose();
 
