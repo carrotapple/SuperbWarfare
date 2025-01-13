@@ -65,7 +65,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
     public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
 
-    public static final float MAX_HEALTH = VehicleConfig.SPEEDBOAT_HP.get();
+    public static final float MAX_HEALTH = 850;
     public static final int MAX_ENERGY = VehicleConfig.SPEEDBOAT_MAX_ENERGY.get();
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -127,13 +127,13 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
             amount *= 3f;
         }
         if (source.is(ModDamageTypes.GUN_FIRE)) {
-            amount *= 0.2f;
-        }
-        if (source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE)) {
             amount *= 0.4f;
         }
+        if (source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE)) {
+            amount *= 0.7f;
+        }
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.hurt(0.5f * Math.max(amount - 40, 0));
+        this.hurt(0.5f * Math.max(amount - 25, 0));
 
         return true;
     }
@@ -246,29 +246,14 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         float z = 3f;
 
         Vector4f worldPosition = transformPosition(transform, x, y, z);
-
-//        ProjectileEntity projectile = new ProjectileEntity(player.level())
-//                .shooter(player)
-//                .damage(80)
-//                .headShot(3f)
-//                .zoom(false);
-//
-//        projectile.heBullet(true, 5);
-//        projectile.bypassArmorRate(1);
-//        projectile.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
-//        projectile.shoot(player, getBarrelVector(1).x, getBarrelVector(1).y + 0.002f, getBarrelVector(1).z, 20,
-//                (float) 0.4);
-//        this.level().addFreshEntity(projectile);
-
         SmallCannonShellEntity smallCannonShell = new SmallCannonShellEntity(player, this.level(),
-                50,
-                40,
-                4.5f);
-
+                58,
+                22,
+                3.5f);
 
         smallCannonShell.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
-        smallCannonShell.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 15,
-                0.5f);
+        smallCannonShell.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 22,
+                0.25f);
         this.level().addFreshEntity(smallCannonShell);
 
         sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z, 1, 0.02, 0.02, 0.02, 0, false);
@@ -292,7 +277,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
             }
         }
 
-        this.entityData.set(HEAT, this.entityData.get(HEAT) + 6);
+        this.entityData.set(HEAT, this.entityData.get(HEAT) + 10);
         this.entityData.set(FIRE_ANIM, 3);
         this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
     }
@@ -390,7 +375,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         float diffY;
         float diffX;
 
-        diffY = Mth.wrapDegrees(gunAngle - getTurretYRot());
+        diffY = Mth.wrapDegrees(gunAngle - getTurretYRot() + 0.1f);
         diffX = Mth.wrapDegrees(driver.getXRot() - this.getTurretXRot());
 
 
@@ -535,7 +520,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
     @Override
     public float ignoreExplosionHorizontalKnockBack() {
-        return -0.5f;
+        return -0.9f;
     }
 
     @Override

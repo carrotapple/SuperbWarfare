@@ -1246,6 +1246,11 @@ public class ClientEventHandler {
             return;
         }
 
+        if (player.getVehicle() instanceof Lav150Entity && zoom) {
+            event.setFOV(event.getFOV() / 3);
+            return;
+        }
+
         if (stack.is(ModTags.Items.GUN)) {
             if (!event.usedConfiguredFov()) {
                 return;

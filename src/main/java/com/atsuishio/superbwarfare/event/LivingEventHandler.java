@@ -9,6 +9,7 @@ import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.ICannonEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -56,7 +57,7 @@ public class LivingEventHandler {
 
     @SubscribeEvent
     public static void onEntityAttacked(LivingAttackEvent event) {
-        if (event.getEntity().getVehicle() != null && event.getEntity().getVehicle() instanceof ICannonEntity) {
+        if (event.getEntity().getVehicle() instanceof ICannonEntity || event.getEntity().getVehicle() instanceof Lav150Entity) {
             event.setCanceled(true);
         }
     }
@@ -95,7 +96,7 @@ public class LivingEventHandler {
     private static void handleVehicleHurt(LivingHurtEvent event) {
         var vehicle = event.getEntity().getVehicle();
         if (vehicle != null) {
-            if (vehicle instanceof ICannonEntity) {
+            if (vehicle instanceof ICannonEntity || vehicle instanceof Lav150Entity) {
                 event.setCanceled(true);
             } else if (vehicle instanceof IArmedVehicleEntity) {
                 event.setAmount(0.3f * event.getAmount());

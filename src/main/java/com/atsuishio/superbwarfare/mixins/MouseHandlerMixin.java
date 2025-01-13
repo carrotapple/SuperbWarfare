@@ -55,8 +55,12 @@ public class MouseHandlerMixin {
             return 0.24;
         }
 
-        if (player.getVehicle() instanceof Lav150Entity lav150 && lav150.getFirstPassenger() == player) {
-            return 0.32;
+        if (player.getVehicle() instanceof Lav150Entity) {
+            if (ClientEventHandler.zoom) {
+                return 0.22;
+            } else {
+                return 0.31;
+            }
         }
 
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {

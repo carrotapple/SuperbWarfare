@@ -7,6 +7,7 @@ import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
+import com.atsuishio.superbwarfare.tools.ProjectileTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
@@ -29,6 +30,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
@@ -123,7 +125,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         this.durability -= 2;
         if (this.durability <= 0) {
             if (!this.level().isClientSide()) {
-                causeExplode();
+                causeExplode(entityHitResult);
             }
             this.discard();
         }
@@ -141,7 +143,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         BlockState blockState = this.level().getBlockState(BlockPos.containing(x, y, z));
         if (blockState.is(Blocks.BEDROCK) || blockState.is(Blocks.BARRIER)) {
             this.discard();
-            causeExplode();
+            causeExplode(blockHitResult);
             return;
         }
 
@@ -171,20 +173,19 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
 
         if (this.durability <= 0) {
             if (!this.level().isClientSide()) {
-                causeExplode();
+                causeExplode(blockHitResult);
                 this.discard();
             }
         } else {
             if (!this.level().isClientSide()) {
                 if (ExplosionDestroyConfig.EXPLOSION_DESTROY.get()) {
-                    BlockPos _pos = BlockPos.containing(x, y, z);
                     if (this.firstHit) {
                         ParticleTool.cannonHitParticles(this.level(), this.position());
-                        causeExplode();
+                        causeExplode(blockHitResult);
                         this.firstHit = false;
                         this.setNoGravity(true);
                     } else {
-                        apExplode(_pos);
+                        apExplode(blockHitResult);
                     }
                 }
             }
@@ -193,7 +194,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         if (this.durability > 0) {
             ModUtils.queueServerWork(2, () -> {
                 if (!this.level().isClientSide()) {
-                    causeExplode();
+                    causeExplode(blockHitResult);
                     this.discard();
                 }
             });
@@ -209,13 +210,15 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         }
         if (this.tickCount > 600 || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
-                causeExplode();
+                ProjectileTool.causeCustomExplode(this,
+                        ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
+                        this, this.explosionDamage, this.explosionRadius, 1.25f);
             }
             this.discard();
         }
     }
 
-    private void causeExplode() {
+    private void causeExplode(HitResult result) {
         if (Math.random() > fireProbability) {
             fireTime = 0;
         }
@@ -225,9 +228,9 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
                         this,
                         this.getOwner()),
                 explosionDamage,
-                this.getX(),
-                this.getY(),
-                this.getZ(),
+                result.getLocation().x,
+                result.getLocation().y,
+                result.getLocation().z,
                 explosionRadius,
                 ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
                 setDamageMultiplier(1).setFireTime(fireTime);
@@ -236,13 +239,13 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         explosion.finalizeExplosion(false);
 
         if (explosionRadius > 7) {
-            ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
+            ParticleTool.spawnHugeExplosionParticles(this.level(), result.getLocation());
         } else {
-            ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+            ParticleTool.spawnMediumExplosionParticles(this.level(), result.getLocation());
         }
     }
 
-    private void apExplode(BlockPos pos) {
+    private void apExplode(HitResult result) {
         if (Math.random() > fireProbability) {
             fireTime = 0;
         }
@@ -252,9 +255,9 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
                         this,
                         this.getOwner()),
                 explosionDamage,
-                pos.getX(),
-                pos.getY(),
-                pos.getZ(),
+                result.getLocation().x,
+                result.getLocation().y,
+                result.getLocation().z,
                 explosionRadius,
                 ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
                 setDamageMultiplier(1).setFireTime(fireTime);
@@ -263,9 +266,9 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         explosion.finalizeExplosion(false);
 
         if (explosionRadius > 7) {
-            ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
+            ParticleTool.spawnHugeExplosionParticles(this.level(), result.getLocation());
         } else {
-            ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+            ParticleTool.spawnMediumExplosionParticles(this.level(), result.getLocation());
         }
     }
 

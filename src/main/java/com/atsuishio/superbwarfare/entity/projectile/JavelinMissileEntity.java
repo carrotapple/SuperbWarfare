@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.entity.AnimatedEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
@@ -8,10 +9,7 @@ import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
-import com.atsuishio.superbwarfare.tools.EntityFindUtil;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
-import com.atsuishio.superbwarfare.tools.ProjectileTool;
-import com.atsuishio.superbwarfare.tools.SeekTool;
+import com.atsuishio.superbwarfare.tools.*;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -33,11 +31,13 @@ import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
@@ -149,9 +149,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
 
         if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this,
-                        ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        entity, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
+                causeExplode(result);
             }
         }
 
@@ -175,9 +173,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
 
         if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
-                ProjectileTool.causeCustomExplode(this,
-                        ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.explosion_damage, this.explosion_radius, this.monsterMultiplier);
+                causeExplode(blockHitResult);
             }
         }
 
@@ -232,7 +228,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
                     this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y) + Mth.clamp(4 * this.tickCount, 0, 90), this.entityData.get(TARGET_Z)));
                 } else {
                     this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y) + (entity instanceof EnderDragon ? -3 : 0), this.entityData.get(TARGET_Z)));
-                    this.setDeltaMovement(this.getDeltaMovement().scale(1.1));
+                    this.setDeltaMovement(this.getDeltaMovement().multiply(1.03, 1.03, 1.03));
                 }
 
             } else {
@@ -259,6 +255,24 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
             }
             this.discard();
         }
+    }
+
+    private void causeExplode(HitResult result) {
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(),
+                        this,
+                        this.getOwner()),
+                explosion_damage,
+                result.getLocation().x,
+                result.getLocation().y,
+                result.getLocation().z,
+                explosion_radius,
+                ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
+                setDamageMultiplier(this.monsterMultiplier);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnSmallExplosionParticles(this.level(), result.getLocation());
     }
 
     private void look(EntityAnchorArgument.Anchor pAnchor, Vec3 pTarget) {
