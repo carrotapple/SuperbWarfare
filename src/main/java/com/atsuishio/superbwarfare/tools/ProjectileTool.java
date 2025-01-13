@@ -17,7 +17,14 @@ public class ProjectileTool {
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(projectile.level(), explosion);
         explosion.finalizeExplosion(false);
-        ParticleTool.spawnMediumExplosionParticles(projectile.level(), projectile.position());
+        if (radius <= 5) {
+            ParticleTool.spawnSmallExplosionParticles(projectile.level(), projectile.position());
+        } else if (radius > 5 && radius < 10) {
+            ParticleTool.spawnMediumExplosionParticles(projectile.level(), projectile.position());
+        } else {
+            ParticleTool.spawnHugeExplosionParticles(projectile.level(), projectile.position());
+        }
+
         projectile.discard();
     }
 

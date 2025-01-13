@@ -409,24 +409,18 @@ public class ClientEventHandler {
             } else {
                 if (!clientTimer.started()) {
                     clientTimer.start();
-                    // 首发瞬间发射
-                    clientTimer.setProgress((cooldown + 1));
+                    shootClient(player);
                 }
 
                 if (clientTimer.getProgress() >= cooldown) {
-                    shootClient(player);
-                    clientTimer.setProgress((clientTimer.getProgress() - cooldown));
+                    clientTimer.stop();
                 }
             }
 
             if (notInGame()) {
                 clientTimer.stop();
             }
-
         } else {
-            if (mode != 0) {
-                clientTimer.stop();
-            }
             fireSpread = 0;
         }
 
@@ -659,23 +653,17 @@ public class ClientEventHandler {
             }
 
             double rps = (double) rpm / 60;
-
-            // cooldown in ms
             int cooldown = (int) (1000 / rps);
 
             if ((holdFire)) {
                 if (!clientTimerVehicle.started()) {
                     clientTimerVehicle.start();
-                    // 首发瞬间发射
-                    clientTimerVehicle.setProgress((cooldown + 1));
-                }
-                if (clientTimerVehicle.getProgress() >= cooldown) {
                     ModUtils.PACKET_HANDLER.sendToServer(new VehicleFireMessage(0));
                     playVehicleClientSounds(player, iVehicle);
-                    clientTimerVehicle.setProgress((clientTimerVehicle.getProgress() - cooldown));
                 }
-            } else {
-                clientTimerVehicle.stop();
+                if (clientTimerVehicle.getProgress() >= cooldown) {
+                    clientTimerVehicle.stop();
+                }
             }
         } else {
             clientTimerVehicle.stop();
@@ -694,7 +682,11 @@ public class ClientEventHandler {
             } else if (ah6Entity.getEntityData().get(WEAPON_TYPE) == 1) {
                 player.playSound(ModSounds.HELICOPTER_ROCKET_FIRE_1P.get(), 1f, 1);
             }
-
+        }
+        if (iVehicle instanceof Lav150Entity lav150) {
+            float pitch = lav150.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - lav150.getEntityData().get(HEAT)));
+            player.playSound(ModSounds.LAV_CANNON_FIRE_1P.get(), 1f, pitch);
+            player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
         }
     }
 

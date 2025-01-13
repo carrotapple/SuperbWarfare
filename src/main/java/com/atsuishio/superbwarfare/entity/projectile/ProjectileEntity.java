@@ -588,7 +588,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(projectile.level(), explosion);
         explosion.finalizeExplosion(false);
-        ParticleTool.spawnSmallExplosionParticles(this.level(), hitVec);
+        ParticleTool.spawnMiniExplosionParticles(this.level(), hitVec);
     }
 
     protected void explosionBulletEntity(Entity projectile, Entity target, float damage, int heLevel, float monsterMultiple) {
@@ -598,7 +598,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(projectile.level(), explosion);
         explosion.finalizeExplosion(false);
-        ParticleTool.spawnSmallExplosionParticles(target.level(), target.position());
+        ParticleTool.spawnMiniExplosionParticles(target.level(), target.position());
     }
 
     public void setDamage(float damage) {

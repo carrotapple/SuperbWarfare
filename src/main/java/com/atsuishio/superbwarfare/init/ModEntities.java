@@ -46,6 +46,8 @@ public class ModEntities {
                     .setUpdateInterval(1).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<GunGrenadeEntity>> GUN_GRENADE = register("projectile_gun_grenade",
             EntityType.Builder.<GunGrenadeEntity>of(GunGrenadeEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(GunGrenadeEntity::new).sized(0.5f, 0.5f));
+    public static final RegistryObject<EntityType<SmallCannonShellEntity>> SMALL_CANNON_SHELL = register("projectile_small_cannon_shell",
+            EntityType.Builder.<SmallCannonShellEntity>of(SmallCannonShellEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(SmallCannonShellEntity::new).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<RpgRocketEntity>> RPG_ROCKET = register("projectile_rpg_rocket",
             EntityType.Builder.<RpgRocketEntity>of(RpgRocketEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(RpgRocketEntity::new).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<MortarShellEntity>> MORTAR_SHELL = register("projectile_mortar_shell",

@@ -2704,5 +2704,37 @@
         "stream": false
       }
     ]
+  },
+  "lav_fire_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:lav/lav_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "lav_fire_3p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:lav/lav_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "lav_far": {
+    "sounds": [
+      {
+        "name": "superbwarfare:lav/lav_far",
+        "stream": false
+      }
+    ]
+  },
+  "lav_veryfar": {
+    "sounds": [
+      {
+        "name": "superbwarfare:lav/lav_veryfar",
+        "stream": false
+      }
+    ]
   }
 }

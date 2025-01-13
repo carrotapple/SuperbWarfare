@@ -3,7 +3,7 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
-import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
+import com.atsuishio.superbwarfare.entity.projectile.SmallCannonShellEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
@@ -48,6 +48,10 @@ import org.joml.Vector4f;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
@@ -231,9 +235,6 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         return false;
     }
 
-    /**
-     * 机枪塔开火
-     */
     @Override
     public void vehicleShoot(Player player) {
         if (this.cannotFire) return;
@@ -246,17 +247,29 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
         Vector4f worldPosition = transformPosition(transform, x, y, z);
 
-        ProjectileEntity projectile = new ProjectileEntity(player.level())
-                .shooter(player)
-                .damage(VehicleConfig.SPEEDBOAT_GUN_DAMAGE.get())
-                .headShot(2f)
-                .zoom(false);
+//        ProjectileEntity projectile = new ProjectileEntity(player.level())
+//                .shooter(player)
+//                .damage(80)
+//                .headShot(3f)
+//                .zoom(false);
+//
+//        projectile.heBullet(true, 5);
+//        projectile.bypassArmorRate(1);
+//        projectile.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
+//        projectile.shoot(player, getBarrelVector(1).x, getBarrelVector(1).y + 0.002f, getBarrelVector(1).z, 20,
+//                (float) 0.4);
+//        this.level().addFreshEntity(projectile);
 
-        projectile.bypassArmorRate(0.9f);
-        projectile.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
-        projectile.shoot(player, getBarrelVector(1).x, getBarrelVector(1).y + 0.002f, getBarrelVector(1).z, 20,
-                (float) 0.4);
-        this.level().addFreshEntity(projectile);
+        SmallCannonShellEntity smallCannonShell = new SmallCannonShellEntity(player, this.level(),
+                50,
+                40,
+                4.5f);
+
+
+        smallCannonShell.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
+        smallCannonShell.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 15,
+                0.5f);
+        this.level().addFreshEntity(smallCannonShell);
 
         sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z, 1, 0.02, 0.02, 0.02, 0, false);
 
@@ -264,9 +277,9 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
         if (!player.level().isClientSide) {
             if (player instanceof ServerPlayer serverPlayer) {
-                serverPlayer.playSound(ModSounds.M_2_FIRE_3P.get(), 4, pitch);
-                serverPlayer.playSound(ModSounds.M_2_FAR.get(), 12, pitch);
-                serverPlayer.playSound(ModSounds.M_2_VERYFAR.get(), 24, pitch);
+                serverPlayer.playSound(ModSounds.LAV_CANNON_FIRE_3P.get(), 4, pitch);
+                serverPlayer.playSound(ModSounds.LAV_CANNON_FAR.get(), 12, pitch);
+                serverPlayer.playSound(ModSounds.LAV_CANNON_VERYFAR.get(), 24, pitch);
             }
         }
 
@@ -275,11 +288,11 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
         for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
             if (target instanceof ServerPlayer serverPlayer) {
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 5, this.getX(), this.getEyeY(), this.getZ()));
+                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 9, this.getX(), this.getEyeY(), this.getZ()));
             }
         }
 
-        this.entityData.set(HEAT, this.entityData.get(HEAT) + 3);
+        this.entityData.set(HEAT, this.entityData.get(HEAT) + 6);
         this.entityData.set(FIRE_ANIM, 3);
         this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
     }
@@ -502,17 +515,17 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         this.clampRotation(entity);
     }
 
-//    private PlayState firePredicate(AnimationState<Lav150Entity> event) {
-//        if (this.entityData.get(FIRE_ANIM) > 1) {
-//            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.speedboat.fire"));
-//        }
-//
-//        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.speedboat.idle"));
-//    }
+    private PlayState firePredicate(AnimationState<Lav150Entity> event) {
+        if (this.entityData.get(FIRE_ANIM) > 1) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.lav.fire"));
+        }
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.lav.idle"));
+    }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-//        data.add(new AnimationController<>(this, "movement", 0, this::firePredicate));
+        data.add(new AnimationController<>(this, "movement", 0, this::firePredicate));
     }
 
     @Override
@@ -547,7 +560,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
     @Override
     public int mainGunRpm() {
-        return 240;
+        return 180;
     }
 
     @Override

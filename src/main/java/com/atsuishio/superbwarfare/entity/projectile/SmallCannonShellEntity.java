@@ -18,7 +18,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
@@ -34,31 +33,26 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEntity {
-    private float monsterMultiplier = 0.0f;
+public class SmallCannonShellEntity extends ThrowableItemProjectile implements GeoEntity {
     private float damage = 40.0f;
     private float explosionDamage = 80f;
     private float explosionRadius = 5f;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public GunGrenadeEntity(EntityType<? extends GunGrenadeEntity> type, Level world) {
+    public SmallCannonShellEntity(EntityType<? extends SmallCannonShellEntity> type, Level world) {
         super(type, world);
         this.noCulling = true;
     }
 
-    public GunGrenadeEntity(LivingEntity entity, Level level, float damage, float explosionDamage, float explosionRadius) {
+    public SmallCannonShellEntity(LivingEntity entity, Level level, float damage, float explosionDamage, float explosionRadius) {
         super(ModEntities.GUN_GRENADE.get(), entity, level);
         this.damage = damage;
         this.explosionDamage = explosionDamage;
         this.explosionRadius = explosionRadius;
     }
 
-    public GunGrenadeEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
-        this(ModEntities.GUN_GRENADE.get(), level);
-    }
-
-    public void setMonsterMultiplier(float monsterMultiplier) {
-        this.monsterMultiplier = monsterMultiplier;
+    public SmallCannonShellEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
+        this(ModEntities.SMALL_CANNON_SHELL.get(), level);
     }
 
     @Override
@@ -78,35 +72,27 @@ public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        float damageMultiplier = 1 + this.monsterMultiplier;
         Entity entity = result.getEntity();
-
         if (this.getOwner() instanceof LivingEntity living) {
             if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
                 living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
-
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
             }
         }
 
-        if (entity instanceof Monster monster) {
-            monster.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), 1.2f * this.damage * damageMultiplier);
-        } else {
-            entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), damage);
-        }
+        entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), damage);
 
         if (entity instanceof LivingEntity) {
             entity.invulnerableTime = 0;
         }
 
-        if (this.tickCount > 0) {
+        if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        entity, this.explosionDamage, this.explosionRadius, this.monsterMultiplier);
+                        entity, this.explosionDamage, this.explosionRadius, 1.25f);
             }
         }
-
         this.discard();
     }
 
@@ -119,15 +105,14 @@ public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
             bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
         }
 
-        if (this.tickCount > 0) {
+        if (this.tickCount > 1) {
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.explosionDamage, this.explosionRadius, this.monsterMultiplier);
+                        this, this.explosionDamage, this.explosionRadius, 1.25f);
             }
+            this.discard();
         }
-
-        this.discard();
     }
 
     @Override
@@ -139,11 +124,15 @@ public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
                     1, 0, 0, 0, 0.02, true);
         }
 
+        if (onGround()) {
+            this.setDeltaMovement(0,0,0);
+        }
+
         if (this.tickCount > 200 || this.isInWater()) {
-            if (this.level() instanceof ServerLevel) {
+            if (this.level() instanceof ServerLevel && !onGround()) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.explosionDamage, this.explosionRadius, this.monsterMultiplier);
+                        this, this.explosionDamage, this.explosionRadius, 1.25f);
             }
             this.discard();
         }

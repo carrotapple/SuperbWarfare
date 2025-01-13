@@ -9,7 +9,7 @@ public class Lav150Model extends GeoModel<Lav150Entity> {
 
     @Override
     public ResourceLocation getAnimationResource(Lav150Entity entity) {
-        return null;
+        return ModUtils.loc("animations/lav.animation.json");
     }
 
     @Override

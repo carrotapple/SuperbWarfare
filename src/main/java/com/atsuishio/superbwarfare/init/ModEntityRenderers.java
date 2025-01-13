@@ -35,5 +35,6 @@ public class ModEntityRenderers {
         event.registerEntityRenderer(ModEntities.AH_6.get(), Ah6Renderer::new);
         event.registerEntityRenderer(ModEntities.FLARE_DECOY.get(), FlareDecoyEntityRenderer::new);
         event.registerEntityRenderer(ModEntities.LAV_150.get(), Lav150Renderer::new);
+        event.registerEntityRenderer(ModEntities.SMALL_CANNON_SHELL.get(), SmallCannonShellRenderer::new);
     }
 }

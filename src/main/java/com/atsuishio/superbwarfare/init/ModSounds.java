@@ -396,5 +396,9 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> DECOY_FIRE = REGISTRY.register("decoy_fire", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("decoy_fire")));
     public static final RegistryObject<SoundEvent> DECOY_RELOAD = REGISTRY.register("decoy_reload", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("decoy_reload")));
     public static final RegistryObject<SoundEvent> LUNGE_MINE_GROWL = REGISTRY.register("lunge_mine_growl", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("lunge_mine_growl")));
+    public static final RegistryObject<SoundEvent> LAV_CANNON_FIRE_1P = REGISTRY.register("lav_cannon_fire_1p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("lav_fire_1p")));
+    public static final RegistryObject<SoundEvent> LAV_CANNON_FIRE_3P = REGISTRY.register("lav_cannon_fire_3p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("lav_fire_3p")));
+    public static final RegistryObject<SoundEvent> LAV_CANNON_FAR = REGISTRY.register("lav_cannon_far", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("lav_far")));
+    public static final RegistryObject<SoundEvent> LAV_CANNON_VERYFAR = REGISTRY.register("lav_cannon_veryfar", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("lav_veryfar")));
 }
 

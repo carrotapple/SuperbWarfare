@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
+import com.atsuishio.superbwarfare.client.layer.Lav150Layer;
 import com.atsuishio.superbwarfare.client.model.entity.Lav150Model;
 import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -18,6 +19,7 @@ public class Lav150Renderer extends GeoEntityRenderer<Lav150Entity> {
 
     public Lav150Renderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new Lav150Model());
+        this.addRenderLayer(new Lav150Layer(this));
     }
 
     @Override
