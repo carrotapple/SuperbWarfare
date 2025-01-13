@@ -68,7 +68,8 @@ public class LandArmorHudOverlay {
             if (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
                 int addW = (w / h) * 48;
                 int addH = (w / h) * 27;
-                preciseBlit(guiGraphics, FRAME, (float) -addW / 2, (float) -addH / 2, 0, 0.0F, w + addW, h + addH, w + addW, h + addH);
+                // TODO 把黑边框移动到最底层
+                preciseBlit(guiGraphics, FRAME, (float) -addW / 2, (float) -addH / 2,1, 0, 0.0F, w + addW, h + addH, w + addW, h + addH);
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_base.png"), k, l, 0, 0.0F, i, j, i, j);
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/compass.png"), (float) w / 2 - 128, (float) 6, 128 + ((float) 64 / 45 * player.getYRot()), 0, 256, 16, 512, 16);
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/speed_frame.png"), (float) w / 2 - 144, (float) h / 2 - 6, 0, 0, 50, 18, 50, 18);
