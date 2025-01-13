@@ -16,9 +16,12 @@ import javax.annotation.Nullable;
 public class RenderHelper {
 
     public static void preciseBlit(GuiGraphics gui, ResourceLocation pAtlasLocation, float pX, float pY, float pUOffset, float pVOffset, float pWidth, float pHeight, float pTextureWidth, float pTextureHeight) {
+        preciseBlit(gui, pAtlasLocation, pX, pY, 0, pUOffset, pVOffset, pWidth, pHeight, pTextureWidth, pTextureHeight);
+    }
+
+    public static void preciseBlit(GuiGraphics gui, ResourceLocation pAtlasLocation, float pX, float pY, float pBlitOffset, float pUOffset, float pVOffset, float pWidth, float pHeight, float pTextureWidth, float pTextureHeight) {
         float pX2 = pX + pWidth;
         float pY2 = pY + pHeight;
-        float pBlitOffset = 0;
 
         float pMinU = pUOffset / pTextureWidth;
         float pMaxU = (pUOffset + pWidth) / pTextureWidth;
