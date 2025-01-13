@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -65,11 +66,19 @@ public class LandArmorHudOverlay {
                 int addW = (w / h) * 48;
                 int addH = (w / h) * 27;
                 preciseBlit(guiGraphics, FRAME, (float) -addW / 2, (float) -addH / 2, 10, 0, 0.0F, w + addW, h + addH, w + addW, h + addH);
-                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_base.png"), k, l, 0, 0.0F, i, j, i, j);
-                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/compass.png"), (float) w / 2 - 128, (float) 6, 128 + ((float) 64 / 45 * player.getYRot()), 0, 256, 16, 512, 16);
-                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/speed_frame.png"), (float) w / 2 - 144, (float) h / 2 - 6, 0, 0, 50, 18, 50, 18);
-                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(lav150.getDeltaMovement().length() * 72) + "KM/H"),
-                        w / 2 - 140, h / 2, 0x66FF00, false);
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_cross.png"), k, l, 0, 0.0F, i, j, i, j);
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/compass.png"), (float) w / 2 - 128, (float) 10, 128 + ((float) 64 / 45 * player.getYRot()), 0, 256, 16, 512, 16);
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/roll_ind.png"), w / 2 - 8, 30, 0, 0.0F, 16, 16, 16, 16);
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/line.png"), w / 2 - 64, h - 56, 0, 0.0F, 128, 1, 128, 1);
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/line.png"), w / 2 + 112, h - 71, 0, 0.0F, 1, 16, 1, 16);
+
+                poseStack.pushPose();
+                poseStack.rotateAround(Axis.ZP.rotationDegrees(Mth.lerp(event.getPartialTick(), lav150.turretYRotO, lav150.getTurretYRot())),w / 2 + 112, h - 56, 0);
+                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/body.png"), w / 2 + 96, h - 72, 0, 0.0F, 32, 32, 32, 32);
+                poseStack.popPose();
+
+                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(lav150.getDeltaMovement().length() * 72) + " KM/H"),
+                        w / 2 + 160, h / 2 - 48, 0x66FF00, false);
                 if (lav150.getEnergy() < 0.02 * lav150.getMaxEnergy()) {
                     guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("NO POWER!"),
                             w / 2 - 144, h / 2 + 14, -65536, false);

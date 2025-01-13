@@ -375,12 +375,12 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         float diffY;
         float diffX;
 
-        diffY = Mth.wrapDegrees(gunAngle - getTurretYRot() + 0.1f);
+        diffY = Mth.wrapDegrees(gunAngle - getTurretYRot() + 0.05f);
         diffX = Mth.wrapDegrees(driver.getXRot() - this.getTurretXRot());
 
 
-        this.setTurretXRot(Mth.clamp(this.getTurretXRot() + Mth.clamp(0.5f * diffX, -2, 2), -25, 10));
-        this.setTurretYRot(this.getTurretYRot() + Mth.clamp(0.5f * diffY, -8, 8));
+        this.setTurretXRot(Mth.clamp(this.getTurretXRot() + Mth.clamp(0.95f * diffX, -5, 5), -32.5f, 15));
+        this.setTurretYRot(this.getTurretYRot() + Mth.clamp(0.95f * diffY, -20, 20));
     }
 
     public float getTurretYRot() {
@@ -490,7 +490,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
     protected void clampRotation(Entity entity) {
         float f = Mth.wrapDegrees(entity.getXRot());
-        float f1 = Mth.clamp(f, -25.0F, 10F);
+        float f1 = Mth.clamp(f, -32.5F, 15F);
         entity.xRotO += f1 - f;
         entity.setXRot(entity.getXRot() + f1 - f);
     }

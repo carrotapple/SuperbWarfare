@@ -90,7 +90,7 @@ public class SmallCannonShellEntity extends ThrowableItemProjectile implements G
             entity.invulnerableTime = 0;
         }
 
-        if (this.tickCount > 1) {
+        if (this.tickCount > 0) {
             if (this.level() instanceof ServerLevel) {
                 causeExplode(result);
             }

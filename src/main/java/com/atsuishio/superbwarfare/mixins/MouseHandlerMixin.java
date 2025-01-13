@@ -57,9 +57,9 @@ public class MouseHandlerMixin {
 
         if (player.getVehicle() instanceof Lav150Entity) {
             if (ClientEventHandler.zoom) {
-                return 0.22;
+                return 0.23;
             } else {
-                return 0.31;
+                return 0.28;
             }
         }
 

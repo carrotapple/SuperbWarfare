@@ -749,7 +749,7 @@ public class ClientEventHandler {
                 Minecraft.getInstance().gameRenderer.shutdownEffect();
             }
         }
-        
+
         if (level != null && stack.is(ModTags.Items.GUN)) {
             handleWeaponSway(living);
             handleWeaponMove(living);
@@ -1344,6 +1344,10 @@ public class ClientEventHandler {
         ItemStack stack = player.getMainHandItem();
 
         if (player.getVehicle() instanceof IHelicopterEntity iHelicopterEntity && iHelicopterEntity.isDriver(player)) {
+            event.setCanceled(true);
+        }
+
+        if (player.getVehicle() instanceof Lav150Entity) {
             event.setCanceled(true);
         }
 
