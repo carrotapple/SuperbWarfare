@@ -89,7 +89,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
     public Lav150Entity(EntityType<Lav150Entity> type, Level world) {
         super(type, world);
-        this.setMaxUpStep(1.5f);
+        this.setMaxUpStep(1.99f);
     }
 
     @Override
@@ -185,7 +185,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         }
 
         double fluidFloat;
-        fluidFloat = 0.045 * getSubmergedHeight(this);
+        fluidFloat = 0.052 * getSubmergedHeight(this);
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, fluidFloat, 0.0));
 
         if (this.onGround()) {
