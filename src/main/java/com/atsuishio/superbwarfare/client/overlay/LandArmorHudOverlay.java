@@ -31,6 +31,7 @@ import org.joml.Math;
 import java.text.DecimalFormat;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
+import static com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay.*;
 import static com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity.HEAT;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
@@ -144,11 +145,39 @@ public class LandArmorHudOverlay {
 
                 double heal = lav150.getHealth() / lav150.getMaxHealth();
                 guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(100 * lav150.getHealth() / lav150.getMaxHealth())), w / 2 - 165, h / 2 - 46, Mth.hsvToRgb((float) heal / 3.745318352059925F, 1.0F, 1.0F), false);
+
+                renderKillIndicator(guiGraphics, w, h);
             }
 
             poseStack.popPose();
         } else {
             scopeScale = 0.7f;
+        }
+    }
+
+    private static void renderKillIndicator(GuiGraphics guiGraphics, int w, int h) {
+        float posX = w / 2f - 7.5f + (float) (2 * (java.lang.Math.random() - 0.5f));
+        float posY = h / 2f - 7.5f + (float) (2 * (java.lang.Math.random() - 0.5f));
+        float rate = (40 - KILL_INDICATOR * 5) / 5.5f;
+
+        if (HIT_INDICATOR > 0) {
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/hit_marker.png"), posX, posY, 0, 0, 16, 16, 16, 16);
+        }
+
+        if (HEAD_INDICATOR > 0) {
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/headshot_mark.png"), posX, posY, 0, 0, 16, 16, 16, 16);
+        }
+
+        if (KILL_INDICATOR > 0) {
+            float posX1 = w / 2f - 7.5f - 2 + rate;
+            float posY1 = h / 2f - 7.5f - 2 + rate;
+            float posX2 = w / 2f - 7.5f + 2 - rate;
+            float posY2 = h / 2f - 7.5f + 2 - rate;
+
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark1.png"), posX1, posY1, 0, 0, 16, 16, 16, 16);
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark2.png"), posX2, posY1, 0, 0, 16, 16, 16, 16);
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark3.png"), posX1, posY2, 0, 0, 16, 16, 16, 16);
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark4.png"), posX2, posY2, 0, 0, 16, 16, 16, 16);
         }
     }
 }

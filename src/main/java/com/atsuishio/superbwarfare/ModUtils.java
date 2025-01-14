@@ -136,7 +136,6 @@ public class ModUtils {
         addNetworkMessage(AdjustZoomFovMessage.class, AdjustZoomFovMessage::encode, AdjustZoomFovMessage::decode, AdjustZoomFovMessage::handler);
         addNetworkMessage(AdjustMortarAngleMessage.class, AdjustMortarAngleMessage::encode, AdjustMortarAngleMessage::decode, AdjustMortarAngleMessage::handler);
         addNetworkMessage(InteractMessage.class, InteractMessage::encode, InteractMessage::decode, InteractMessage::handler);
-        addNetworkMessage(DroneMovementMessage.class, DroneMovementMessage::encode, DroneMovementMessage::decode, DroneMovementMessage::handler);
         addNetworkMessage(VehicleMovementMessage.class, VehicleMovementMessage::encode, VehicleMovementMessage::decode, VehicleMovementMessage::handler);
         addNetworkMessage(DroneFireMessage.class, DroneFireMessage::encode, DroneFireMessage::decode, DroneFireMessage::handler);
         addNetworkMessage(SimulationDistanceMessage.class, SimulationDistanceMessage::encode, SimulationDistanceMessage::decode, SimulationDistanceMessage::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));

@@ -300,7 +300,7 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntit
     }
 
     private PlayState movementPredicate(AnimationState<Mk42Entity> event) {
-        if (this.entityData.get(COOL_DOWN) > 10) {
+        if (this.entityData.get(COOL_DOWN) > 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.mk42.fire"));
         }
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mk42.idle"));
@@ -343,5 +343,20 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntit
         } else {
             return -1;
         }
+    }
+
+    @Override
+    public boolean banHand() {
+        return true;
+    }
+
+    @Override
+    public boolean hidePassenger() {
+        return true;
+    }
+
+    @Override
+    public int zoomFov() {
+        return 5;
     }
 }

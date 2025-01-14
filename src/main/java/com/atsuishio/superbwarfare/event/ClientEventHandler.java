@@ -4,7 +4,10 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.ClickHandler;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.DroneEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.*;
+import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
+import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
+import com.atsuishio.superbwarfare.entity.vehicle.SpeedboatEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -124,6 +127,9 @@ public class ClientEventHandler {
     public static boolean holdFire = false;
 
     public static boolean zoom = false;
+    public static boolean holdFireVehicle = false;
+
+    public static boolean zoomVehicle = false;
     public static int burstFireSize = 0;
 
     public static int customRpm = 0;
@@ -141,8 +147,6 @@ public class ClientEventHandler {
     public static double shakeAmplitude = 0;
     public static double[] shakePos = {0, 0, 0};
     public static double shakeType = 0;
-    public static double vehicleFov = 1;
-    public static double vehicleFovLerp = 1;
     public static int lungeAttack;
     public static int lungeDraw;
     public static int lungeSprint;
@@ -382,7 +386,8 @@ public class ClientEventHandler {
         }
 
         if ((holdFire || burstFireSize > 0)
-                && !((player.getVehicle() instanceof Ah6Entity ah6Entity && ah6Entity.isDriver(player)) || player.getVehicle() instanceof Lav150Entity)
+                && !(player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand())
+                && !holdFireVehicle
                 && (stack.is(ModTags.Items.NORMAL_GUN)
                 && cantFireTime == 0
                 && drawTime < 0.01
@@ -642,14 +647,9 @@ public class ClientEventHandler {
         if (player == null) return;
         if (level == null) return;
 
-        if (player.getMainHandItem().getItem() instanceof GunItem) {
-            clientTimerVehicle.stop();
-            return;
-        }
-
         if (notInGame()) {
             clientTimerVehicle.stop();
-            holdFire = false;
+            holdFireVehicle = false;
         }
 
         if (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player) && iVehicle.canShoot(player)) {
@@ -661,7 +661,7 @@ public class ClientEventHandler {
             double rps = (double) rpm / 60;
             int cooldown = (int) (1000 / rps);
 
-            if ((holdFire)) {
+            if ((holdFireVehicle)) {
                 if (!clientTimerVehicle.started()) {
                     clientTimerVehicle.start();
                     ModUtils.PACKET_HANDLER.sendToServer(new VehicleFireMessage(0));
@@ -683,8 +683,10 @@ public class ClientEventHandler {
             player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
         }
         if (iVehicle instanceof Ah6Entity ah6Entity) {
+            float pitch = ah6Entity.heat <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - ah6Entity.heat));
             if (ah6Entity.getEntityData().get(WEAPON_TYPE) == 0) {
-                player.playSound(ModSounds.HELICOPTER_CANNON_FIRE_1P.get(), 1f, 1);
+                ah6Entity.heat += 5;
+                player.playSound(ModSounds.HELICOPTER_CANNON_FIRE_1P.get(), 1f, pitch);
             } else if (ah6Entity.getEntityData().get(WEAPON_TYPE) == 1) {
                 player.playSound(ModSounds.HELICOPTER_ROCKET_FIRE_1P.get(), 1f, 1);
             }
@@ -702,7 +704,7 @@ public class ClientEventHandler {
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
-        if (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity) return;
+        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.hidePassenger()) return;
 
         float pose;
         float times = 2 * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
@@ -741,7 +743,6 @@ public class ClientEventHandler {
     public static void computeCameraAngles(ViewportEvent.ComputeCameraAngles event) {
         ClientLevel level = Minecraft.getInstance().level;
         Entity entity = event.getCamera().getEntity();
-        handlePlayerCamera(event);
 
         if (!(entity instanceof LivingEntity living)) return;
         ItemStack stack = living.getMainHandItem();
@@ -755,20 +756,6 @@ public class ClientEventHandler {
                 Minecraft.getInstance().gameRenderer.shutdownEffect();
             }
         }
-
-        if (level != null && stack.is(ModTags.Items.GUN)) {
-            handleWeaponSway(living);
-            handleWeaponMove(living);
-            handleWeaponZoom(living);
-            handlePlayerBreath(living);
-            handleWeaponFire(event, living);
-            handleWeaponShell();
-            handleGunRecoil();
-            handleBowPullAnimation(living);
-            handleWeaponDraw(living);
-        }
-
-        handleShockCamera(event, living);
 
         float times = Minecraft.getInstance().getDeltaFrameTime();
         LocalPlayer player = Minecraft.getInstance().player;
@@ -794,6 +781,23 @@ public class ClientEventHandler {
                 event.setRoll((float) (roll + (shakeTime * Math.sin(0.5 * Math.PI * shakeTime) * shakeAmplitude * shakeRadiusAmplitude * (onVehicle ? 0.15 : 1))));
             }
         }
+
+        if (player != null && player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand()) return;
+
+        if (level != null && stack.is(ModTags.Items.GUN)) {
+            handleWeaponSway(living);
+            handleWeaponMove(living);
+            handleWeaponZoom(living);
+            handlePlayerBreath(living);
+            handleWeaponFire(event, living);
+            handleWeaponShell();
+            handleGunRecoil();
+            handleBowPullAnimation(living);
+            handleWeaponDraw(living);
+            handlePlayerCamera(event);
+        }
+
+        handleShockCamera(event, living);
     }
 
     private static void handleDroneCamera(ViewportEvent.ComputeCameraAngles event, LivingEntity entity) {
@@ -842,15 +846,7 @@ public class ClientEventHandler {
             }
         }
 
-        if (player.getVehicle() instanceof ICannonEntity || player.getVehicle() instanceof Lav150Entity) {
-            event.setCanceled(true);
-        }
-
-        if (player.getVehicle() instanceof Ah6Entity ah6Entity && ah6Entity.getFirstPassenger() == player && !stack.getItem().isEdible()) {
-            event.setCanceled(true);
-        }
-
-        if ((player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player) && ClientEventHandler.zoom && stack.is(ItemStack.EMPTY.getItem())) {
+        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand()) {
             event.setCanceled(true);
         }
     }
@@ -946,7 +942,9 @@ public class ClientEventHandler {
         double weight = GunsTool.getGunDoubleTag(stack, "Weight") + GunsTool.getGunDoubleTag(stack, "CustomWeight");
         double speed = 1.5 - (0.07 * weight);
 
-        if (zoom && !notInGame()
+        if (zoom
+                && !(player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand())
+                && !notInGame()
                 && drawTime < 0.01
                 && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
             if (Minecraft.getInstance().player != null) {
@@ -1202,16 +1200,14 @@ public class ClientEventHandler {
             angle = Math.atan(Mth.abs((float) cameraLocation) / (lookDistance + 2.9)) * Mth.RAD_TO_DEG;
         }
 
-        if (player.getMainHandItem().is(ModTags.Items.GUN) || player.getMainHandItem().is(ModItems.LUNGE_MINE.get())) {
-            event.setPitch((float) (pitch + cameraRot[0] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.2 : 0) * turnRot[0] + 3 * velocityY));
-            if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK) {
-                event.setYaw((float) (yaw + cameraRot[1] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.8 : 0) * turnRot[1] - (cameraLocation > 0 ? 1 : -1) * angle * zoomPos));
-            } else {
-                event.setYaw((float) (yaw + cameraRot[1] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.8 : 0) * turnRot[1]));
-            }
-
-            event.setRoll((float) (roll + cameraRot[2] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.35 : 0) * turnRot[2]));
+        event.setPitch((float) (pitch + cameraRot[0] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.2 : 0) * turnRot[0] + 3 * velocityY));
+        if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK) {
+            event.setYaw((float) (yaw + cameraRot[1] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.8 : 0) * turnRot[1] - (cameraLocation > 0 ? 1 : -1) * angle * zoomPos));
+        } else {
+            event.setYaw((float) (yaw + cameraRot[1] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.8 : 0) * turnRot[1]));
         }
+
+        event.setRoll((float) (roll + cameraRot[2] + (DisplayConfig.CAMERA_ROTATE.get() ? 0.35 : 0) * turnRot[2]));
     }
 
     private static void handleBowPullAnimation(LivingEntity entity) {
@@ -1245,18 +1241,8 @@ public class ClientEventHandler {
 
         ItemStack stack = player.getMainHandItem();
 
-        if (player.isPassenger() && player.getVehicle() instanceof ICannonEntity && zoom) {
-            event.setFOV(event.getFOV() / 5);
-            return;
-        }
-
-        if (player.getVehicle() instanceof Ah6Entity ah6Entity && ah6Entity.getFirstPassenger() == player && zoom) {
-            event.setFOV(event.getFOV() / 3);
-            return;
-        }
-
-        if (player.getVehicle() instanceof Lav150Entity && zoom) {
-            event.setFOV(event.getFOV() / 3);
+        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand() && zoomVehicle) {
+            event.setFOV(event.getFOV() / iArmedVehicle.zoomFov());
             return;
         }
 
@@ -1305,11 +1291,6 @@ public class ClientEventHandler {
             event.setFOV(event.getFOV() / droneFovLerp);
             fov = event.getFOV();
         }
-
-        if (player.getVehicle() instanceof IArmedVehicleEntity && !(player.getVehicle() instanceof ICannonEntity) && zoom) {
-            vehicleFovLerp = Mth.lerp(0.1 * Minecraft.getInstance().getDeltaFrameTime(), vehicleFovLerp, vehicleFov);
-            event.setFOV(event.getFOV() / vehicleFovLerp);
-        }
     }
 
     public static void look(Player player, Vec3 pTarget) {
@@ -1328,7 +1309,7 @@ public class ClientEventHandler {
     public static void setPlayerInvisible(RenderPlayerEvent.Pre event) {
         var otherPlayer = event.getEntity();
 
-        if (otherPlayer.getVehicle() instanceof ICannonEntity || otherPlayer.getVehicle() instanceof Lav150Entity) {
+        if (otherPlayer.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.hidePassenger()) {
             event.setCanceled(true);
         }
     }
@@ -1351,19 +1332,11 @@ public class ClientEventHandler {
 
         ItemStack stack = player.getMainHandItem();
 
-        if (player.getVehicle() instanceof IHelicopterEntity iHelicopterEntity && iHelicopterEntity.isDriver(player)) {
+        if (stack.getItem() instanceof GunItem) {
             event.setCanceled(true);
         }
 
-        if (player.getVehicle() instanceof Lav150Entity) {
-            event.setCanceled(true);
-        }
-
-        if (player.getVehicle() instanceof SpeedboatEntity && zoom) {
-            event.setCanceled(true);
-        }
-
-        if (stack.is(ModTags.Items.GUN) || (player.getVehicle() != null && player.getVehicle() instanceof ICannonEntity)) {
+        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player)) {
             event.setCanceled(true);
         }
 

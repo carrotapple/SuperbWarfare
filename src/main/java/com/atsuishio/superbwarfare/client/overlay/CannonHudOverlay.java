@@ -77,7 +77,7 @@ public class CannonHudOverlay {
         int j = Mth.floor(f * f1);
         int k = (w - i) / 2;
         int l = (h - j) / 2;
-        if (ClientEventHandler.zoom) {
+        if (ClientEventHandler.zoomVehicle) {
             Entity lookingEntity = TraceTool.findLookingEntity(player, 512);
             boolean lookAtEntity = false;
             double blockRange = player.position().distanceTo((Vec3.atLowerCornerOf(player.level().clip(

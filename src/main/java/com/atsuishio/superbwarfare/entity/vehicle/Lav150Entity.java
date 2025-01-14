@@ -68,8 +68,8 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
     public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
 
-    public static final float MAX_HEALTH = 850;
-    public static final int MAX_ENERGY = 2000000;
+    public static final float MAX_HEALTH = VehicleConfig.LAV_150_HP.get();
+    public static final int MAX_ENERGY = VehicleConfig.LAV_150_MAX_ENERGY.get();
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public float turretYRot;
@@ -124,17 +124,21 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
             sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
         }
         if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
-            amount *= 2f;
+            amount *= 1.5f;
         }
         if (source.is(ModDamageTypes.CANNON_FIRE)) {
-            amount *= 3f;
+            amount *= 2.5f;
         }
         if (source.is(ModDamageTypes.GUN_FIRE)) {
             amount *= 0.4f;
         }
         if (source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE)) {
+            amount *= 0.6f;
+        }
+        if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
             amount *= 0.7f;
         }
+
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
         this.hurt(0.5f * Math.max(amount - 15, 0));
 
@@ -258,9 +262,9 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
         Vector4f worldPosition = transformPosition(transform, x, y, z);
         SmallCannonShellEntity smallCannonShell = new SmallCannonShellEntity(player, this.level(),
-                36,
-                22,
-                3f);
+                VehicleConfig.LAV_150_CANNON_DAMAGE.get(),
+                VehicleConfig.LAV_150_CANNON_EXPLOSION_DAMAGE.get(),
+                VehicleConfig.LAV_150_CANNON_EXPLOSION_RADIUS.get());
 
         smallCannonShell.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
         smallCannonShell.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 22,
@@ -348,7 +352,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         }
 
         if (backInputDown) {
-            this.entityData.set(POWER, this.entityData.get(POWER) - 0.005f);
+            this.entityData.set(POWER, this.entityData.get(POWER) - 0.008f);
         }
 
         if (rightInputDown) {
@@ -384,7 +388,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
         if (this.isInWater() || onGround()) {
             this.setYRot((float) (this.getYRot() - Math.max(10 * this.getDeltaMovement().horizontalDistance(), 0) * this.getRudderRot() * (this.entityData.get(POWER) > 0 ? 1 : -1)));
-            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (isInWater() ? 0.3f : 1) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (isInWater() ? 0.3f : 1) * this.entityData.get(POWER)));
+            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (isInWater() && !onGround() ? 0.3f : 1) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (isInWater() && !onGround() ? 0.3f : 1) * this.entityData.get(POWER)));
         }
     }
 
@@ -595,12 +599,26 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
     @Override
     public boolean canShoot(Player player) {
         return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())))
-                && !player.getMainHandItem().is(ModTags.Items.GUN)
                 && !cannotFire;
     }
 
     @Override
     public int getAmmoCount(Player player) {
         return this.entityData.get(AMMO);
+    }
+
+    @Override
+    public boolean banHand() {
+        return true;
+    }
+
+    @Override
+    public boolean hidePassenger() {
+        return true;
+    }
+
+    @Override
+    public int zoomFov() {
+        return 3;
     }
 }

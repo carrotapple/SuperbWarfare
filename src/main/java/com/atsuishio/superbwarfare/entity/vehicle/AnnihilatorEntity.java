@@ -511,4 +511,19 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     public int getAmmoCount(Player player) {
         return -1;
     }
+
+    @Override
+    public boolean banHand() {
+        return true;
+    }
+
+    @Override
+    public boolean hidePassenger() {
+        return true;
+    }
+
+    @Override
+    public int zoomFov() {
+        return 5;
+    }
 }

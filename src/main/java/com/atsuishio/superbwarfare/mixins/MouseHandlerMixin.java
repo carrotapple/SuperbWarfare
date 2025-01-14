@@ -1,7 +1,5 @@
 package com.atsuishio.superbwarfare.mixins;
 
-import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
-import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.ICannonEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
@@ -20,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import static com.atsuishio.superbwarfare.event.ClientEventHandler.droneFovLerp;
-import static com.atsuishio.superbwarfare.event.ClientEventHandler.vehicleFovLerp;
 
 /**
  * Author: MrCrayfish
@@ -42,23 +39,19 @@ public class MouseHandlerMixin {
         ItemStack stack = mc.player.getMainHandItem();
 
         if (player.getVehicle() instanceof ICannonEntity) {
-            return ClientEventHandler.zoom ? 0.15 : 0.3;
+            return ClientEventHandler.zoomVehicle ? 0.15 : 0.3;
         }
 
-        if (player.getVehicle() instanceof Ah6Entity ah6Entity && !ah6Entity.onGround() && ah6Entity.getFirstPassenger() == player) {
-            return 0.24;
-        }
+//        if (player.getVehicle() instanceof Ah6Entity ah6Entity && !ah6Entity.onGround() && ah6Entity.getFirstPassenger() == player) {
+//            return 0.24;
+//        }
 
         if (player.getVehicle() instanceof Lav150Entity) {
-            return ClientEventHandler.zoom ? 0.23 : 0.28;
+            return ClientEventHandler.zoomVehicle ? 0.23 : 0.28;
         }
 
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
             return 0.33 / (1 + 0.08 * (droneFovLerp - 1));
-        }
-
-        if (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player) && ClientEventHandler.zoom) {
-            return 0.33 / (1 + 0.08 * (vehicleFovLerp - 1));
         }
 
         if (!stack.is(ModTags.Items.GUN)) {

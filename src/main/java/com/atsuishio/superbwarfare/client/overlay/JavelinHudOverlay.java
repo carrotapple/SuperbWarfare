@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.RenderHelper;
+import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -55,6 +56,7 @@ public class JavelinHudOverlay {
 
             if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit)
                 return;
+            if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand()) return;
 
             if ((stack.getItem() == ModItems.JAVELIN.get() && !stack.getOrCreateTag().getBoolean("HoloHidden")) && Minecraft.getInstance().options.getCameraType().isFirstPerson() && ClientEventHandler.zoom) {
                 RenderSystem.disableDepthTest();

@@ -45,7 +45,7 @@ public abstract class CameraMixin {
         if (player != null) {
             ItemStack stack = player.getMainHandItem();
 
-            if ((player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player) && ClientEventHandler.zoom && stack.is(ItemStack.EMPTY.getItem())) {
+            if ((player.getVehicle() != null && player.getVehicle() instanceof SpeedboatEntity boat && boat.getFirstPassenger() == player) && ClientEventHandler.zoomVehicle && stack.is(ItemStack.EMPTY.getItem())) {
                 float yRot = boat.getYRot();
                 if (yRot < 0) {
                     yRot += 360;
@@ -117,7 +117,7 @@ public abstract class CameraMixin {
             move(-getMaxZoom(16), 1.3, 0.0);
             return;
         }
-        if (thirdPerson && entity.getVehicle() instanceof SpeedboatEntity && !ClientEventHandler.zoom) {
+        if (thirdPerson && entity.getVehicle() instanceof SpeedboatEntity && !ClientEventHandler.zoomVehicle) {
             move(-getMaxZoom(3), 1, 0.0);
             return;
         }
@@ -126,7 +126,7 @@ public abstract class CameraMixin {
             return;
         }
 
-        if (thirdPerson && entity.getVehicle() instanceof Lav150Entity && !ClientEventHandler.zoom) {
+        if (thirdPerson && entity.getVehicle() instanceof Lav150Entity && !ClientEventHandler.zoomVehicle) {
             move(-getMaxZoom(2.5), 0.75, 0.0);
             return;
         }

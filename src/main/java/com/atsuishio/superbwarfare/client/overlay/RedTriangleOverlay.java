@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.RenderHelper;
+import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.HudUtil;
 import com.atsuishio.superbwarfare.tools.SeekTool;
@@ -37,6 +38,7 @@ public class RedTriangleOverlay {
 
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModItems.RPG.get())) return;
+        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand()) return;
 
         Entity idf = SeekTool.seekLivingEntity(player, player.level(), 128, 6);
         if (idf == null) return;

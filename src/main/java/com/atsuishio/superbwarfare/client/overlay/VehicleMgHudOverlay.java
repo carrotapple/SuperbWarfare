@@ -8,9 +8,7 @@ import com.atsuishio.superbwarfare.init.ModTags;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -19,10 +17,6 @@ import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import java.text.DecimalFormat;
-
-import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class VehicleMgHudOverlay {
@@ -54,19 +48,11 @@ public class VehicleMgHudOverlay {
         int k = (w - i) / 2;
         int l = (h - j) / 2;
         RenderHelper.preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
-
-        if (ClientEventHandler.vehicleFovLerp > 1.01) {
-            event.getGuiGraphics().blit(ModUtils.loc("textures/screens/drone_fov.png"), w / 2 + 100, h / 2 - 64, 0, 0, 64, 129, 64, 129);
-            GuiGraphics guiGraphics = event.getGuiGraphics();
-            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/drone_fov_move.png"), (float) w / 2 + 100, (float) (h / 2 - 64 - ((ClientEventHandler.vehicleFovLerp - 1) * 23.8)), 0, 0, 64, 129, 64, 129);
-            event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##.#").format(ClientEventHandler.vehicleFovLerp) + "x"),
-                    w / 2 + 144, h / 2 + 56 - (int) ((ClientEventHandler.vehicleFovLerp - 1) * 23.8), -1, false);
-        }
     }
 
     private static boolean shouldRenderCrossHair(Player player) {
         if (player == null) return false;
         return !player.isSpectator()
-                && player.getVehicle() instanceof SpeedboatEntity && ClientEventHandler.zoom && !player.getMainHandItem().is(ModTags.Items.GUN);
+                && player.getVehicle() instanceof SpeedboatEntity && ClientEventHandler.zoomVehicle && !player.getMainHandItem().is(ModTags.Items.GUN);
     }
 }

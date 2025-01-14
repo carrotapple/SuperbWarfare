@@ -21,7 +21,7 @@ public class EnergyVehicleEntity extends VehicleEntity implements IChargeEntity 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(ENERGY, this.getMaxEnergy());
+        this.entityData.define(ENERGY, 0);
     }
 
     @Override

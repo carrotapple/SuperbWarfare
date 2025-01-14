@@ -513,12 +513,26 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
     @Override
     public boolean canShoot(Player player) {
         return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())))
-                && !player.getMainHandItem().is(ModTags.Items.GUN)
                 && !cannotFire;
     }
 
     @Override
     public int getAmmoCount(Player player) {
         return this.entityData.get(AMMO);
+    }
+
+    @Override
+    public boolean banHand() {
+        return true;
+    }
+
+    @Override
+    public boolean hidePassenger() {
+        return false;
+    }
+
+    @Override
+    public int zoomFov() {
+        return 3;
     }
 }

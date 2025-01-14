@@ -2,10 +2,7 @@ package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.RenderHelper;
-import com.atsuishio.superbwarfare.entity.vehicle.IHelicopterEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.MultiWeaponVehicleEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.*;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -118,11 +115,15 @@ public class HelicopterHudOverlay {
                 guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y, mobileVehicle.getDeltaMovement().z) * 72) + "KM/H"),
                         w / 2 - 140, h / 2, 0x66FF00, false);
 
-                if (multiWeaponVehicle.getWeaponType() == 0) {
-                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("20MM CANNON " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : iHelicopterEntity.getAmmoCount(player))), w / 2 - 160, h / 2 - 60, 0x66FF00, false);
-                } else {
-                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("70MM ROCKET " + iHelicopterEntity.getAmmoCount(player)), w / 2 - 160, h / 2 - 60, 0x66FF00, false);
+                if (mobileVehicle instanceof Ah6Entity ah6Entity) {
+                    if (multiWeaponVehicle.getWeaponType() == 0) {
+                        double heat = 1 - ah6Entity.heat / 100.0F;
+                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("20MM CANNON " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : iHelicopterEntity.getAmmoCount(player))), w / 2 - 160, h / 2 - 60, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
+                    } else {
+                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("70MM ROCKET " + iHelicopterEntity.getAmmoCount(player)), w / 2 - 160, h / 2 - 60, 0x66FF00, false);
+                    }
                 }
+
 
                 guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("FLARE " + iHelicopterEntity.getDecoy()), w / 2 - 160, h / 2 - 50, 0x66FF00, false);
 
@@ -160,7 +161,7 @@ public class HelicopterHudOverlay {
 
             var cPos = cameraPos.add(lookAngle);
 
-            Vec3 p = RenderHelper.worldToScreen(new Vec3(worldPosition.x, worldPosition.y, worldPosition.z).add(mobileVehicle.getViewVector(event.getPartialTick()).scale(192)), ClientEventHandler.zoom ? cPos : cameraPos);
+            Vec3 p = RenderHelper.worldToScreen(new Vec3(worldPosition.x, worldPosition.y, worldPosition.z).add(mobileVehicle.getViewVector(event.getPartialTick()).scale(192)), ClientEventHandler.zoomVehicle ? cPos : cameraPos);
 
             if (p != null) {
                 poseStack.pushPose();
@@ -182,11 +183,15 @@ public class HelicopterHudOverlay {
                     poseStack.translate(x, y, 0);
                     poseStack.scale(0.75f, 0.75f, 1);
 
-                    if (multiWeaponVehicle.getWeaponType() == 0) {
-                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("20MM CANNON " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : iHelicopterEntity.getAmmoCount(player))), 25, -9, -1, false);
-                    } else {
-                        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("70MM ROCKET " + iHelicopterEntity.getAmmoCount(player)), 25, -9, -1, false);
+                    if (mobileVehicle instanceof Ah6Entity ah6Entity) {
+                        if (multiWeaponVehicle.getWeaponType() == 0) {
+                            double heat = ah6Entity.heat / 100.0F;
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("20MM CANNON " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : iHelicopterEntity.getAmmoCount(player))), 25, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
+                        } else {
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("70MM ROCKET " + iHelicopterEntity.getAmmoCount(player)), 25, -9, -1, false);
+                        }
                     }
+
 
                     guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("FLARE " + iHelicopterEntity.getDecoy()), 25, 1, -1, false);
                     poseStack.popPose();

@@ -439,4 +439,19 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
             return -1;
         }
     }
+
+    @Override
+    public boolean banHand() {
+        return true;
+    }
+
+    @Override
+    public boolean hidePassenger() {
+        return true;
+    }
+
+    @Override
+    public int zoomFov() {
+        return 5;
+    }
 }

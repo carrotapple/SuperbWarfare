@@ -11,6 +11,7 @@ import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
+import com.atsuishio.superbwarfare.tools.SoundTool;
 import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -78,6 +79,8 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     public int reloadCoolDown;
     public int decoyReloadCoolDown;
     public int fireIndex;
+    public boolean cannotFire;
+    public int heat;
 
     public Ah6Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.AH_6.get(), world);
@@ -127,16 +130,19 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
         }
         if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
-            amount *= 2f;
+            amount *= 1f;
         }
         if (source.is(ModDamageTypes.CANNON_FIRE)) {
-            amount *= 3f;
+            amount *= 1.5f;
         }
         if (source.is(ModDamageTypes.GUN_FIRE)) {
             amount *= 0.3f;
         }
         if (source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE)) {
             amount *= 0.7f;
+        }
+        if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
+            amount *= 4f;
         }
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
         this.hurt(0.75f * Math.max(amount - 5, 0));
@@ -147,6 +153,24 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     public void baseTick() {
         propellerRotO = this.getPropellerRot();
         super.baseTick();
+
+        if (heat > 0) {
+            heat--;
+        }
+
+        if (heat < 40) {
+            cannotFire = false;
+        }
+
+        Entity driver = this.getFirstPassenger();
+        if (driver instanceof Player player) {
+            if (heat > 100) {
+                cannotFire = true;
+                if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_OVERHEAT.get(), 1f, 1f);
+                }
+            }
+        }
 
         if (this.level() instanceof ServerLevel) {
             if (reloadCoolDown > 0) {
@@ -486,6 +510,8 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
         Vector4f worldPositionLeft;
 
         if (entityData.get(WEAPON_TYPE) == 0) {
+            if (this.cannotFire) return;
+
             x = 1.15f;
             y = 0.62f;
             z = 0.8f;
@@ -656,7 +682,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     @Override
     public boolean canShoot(Player player) {
         if (entityData.get(WEAPON_TYPE) == 0) {
-            return this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()));
+            return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFire;
         } else if (entityData.get(WEAPON_TYPE) == 1) {
             return this.entityData.get(AMMO) > 0;
         }
@@ -666,6 +692,21 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     @Override
     public int getAmmoCount(Player player) {
         return this.entityData.get(AMMO);
+    }
+
+    @Override
+    public boolean banHand() {
+        return true;
+    }
+
+    @Override
+    public boolean hidePassenger() {
+        return false;
+    }
+
+    @Override
+    public int zoomFov() {
+        return 3;
     }
 
     @Override

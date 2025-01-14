@@ -38,6 +38,14 @@ public class VehicleConfig {
     public static ForgeConfigSpec.IntValue AH_6_ROCKET_EXPLOSION_DAMAGE;
     public static ForgeConfigSpec.IntValue AH_6_ROCKET_EXPLOSION_RADIUS;
 
+    public static ForgeConfigSpec.IntValue LAV_150_HP;
+    public static ForgeConfigSpec.IntValue LAV_150_ENERGY_COST;
+    public static ForgeConfigSpec.IntValue LAV_150_MAX_ENERGY;
+    public static ForgeConfigSpec.IntValue LAV_150_CANNON_DAMAGE;
+    public static ForgeConfigSpec.IntValue LAV_150_CANNON_EXPLOSION_DAMAGE;
+    public static ForgeConfigSpec.IntValue LAV_150_CANNON_EXPLOSION_RADIUS;
+
+
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("mk_42");
 
@@ -111,10 +119,10 @@ public class VehicleConfig {
         SPEEDBOAT_ENERGY_COST = builder.defineInRange("speedboat_energy_cost", 16, 0, 2147483647);
 
         builder.comment("The max energy storage of Speedboat");
-        SPEEDBOAT_MAX_ENERGY = builder.defineInRange("speedboat_max_energy", 1000000, 0, 2147483647);
+        SPEEDBOAT_MAX_ENERGY = builder.defineInRange("speedboat_max_energy", 10000000, 0, 2147483647);
 
         builder.comment("The gun damage of Speedboat");
-        SPEEDBOAT_GUN_DAMAGE = builder.defineInRange("speedboat_gun_damage", 45, 1, 10000000);
+        SPEEDBOAT_GUN_DAMAGE = builder.defineInRange("speedboat_gun_damage", 25, 1, 10000000);
 
         builder.pop();
 
@@ -143,6 +151,28 @@ public class VehicleConfig {
 
         builder.comment("The rocket explosion radius of AH-6");
         AH_6_ROCKET_EXPLOSION_RADIUS = builder.defineInRange("ah_6_rocket_explosion_radius", 5, 1, 10000000);
+
+        builder.pop();
+
+        builder.push("lav_150");
+
+        builder.comment("The HealthPoint of Lav_150");
+        LAV_150_HP = builder.defineInRange("lav_150_hp", 850, 1, 10000000);
+
+        builder.comment("The energy cost of Lav_150 per tick");
+        LAV_150_ENERGY_COST = builder.defineInRange("lav_150_energy_cost", 64, 0, 2147483647);
+
+        builder.comment("The max energy storage of Lav_150");
+        LAV_150_MAX_ENERGY = builder.defineInRange("lav_150_max_energy", 3000000, 0, 2147483647);
+
+        builder.comment("The cannon damage of Lav_150");
+        LAV_150_CANNON_DAMAGE = builder.defineInRange("lav_150_cannon_damage", 40, 1, 10000000);
+
+        builder.comment("The rocket explosion damage of Lav_150");
+        LAV_150_CANNON_EXPLOSION_DAMAGE = builder.defineInRange("lav_150_cannon_explosion_damage", 12, 1, 10000000);
+
+        builder.comment("The rocket explosion radius of Lav_150");
+        LAV_150_CANNON_EXPLOSION_RADIUS = builder.defineInRange("lav_150_cannon_explosion_radius", 3, 1, 10000000);
 
         builder.pop();
     }
