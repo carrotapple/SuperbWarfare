@@ -29,6 +29,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
@@ -89,7 +90,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
     public Lav150Entity(EntityType<Lav150Entity> type, Level world) {
         super(type, world);
-        this.setMaxUpStep(1.99f);
+        this.setMaxUpStep(1.5f);
     }
 
     @Override
@@ -226,6 +227,14 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         lowHealthWarning();
 
         this.refreshDimensions();
+    }
+
+    @Override
+    public void move(@NotNull MoverType movementType, @NotNull Vec3 movement) {
+        super.move(movementType, movement);
+        if (this.isInWater() && horizontalCollision) {
+            setDeltaMovement(this.getDeltaMovement().add(0,0.07,0));
+        }
     }
 
     public boolean zooming() {
