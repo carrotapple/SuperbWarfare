@@ -133,7 +133,7 @@ public class VehicleConfig {
         AH_6_MAX_ENERGY = builder.defineInRange("ah_6_max_energy", 4000000, 0, 2147483647);
 
         builder.comment("The cannon damage of AH-6");
-        AH_6_CANNON_DAMAGE = builder.defineInRange("ah_6_cannon_damage", 15, 1, 10000000);
+        AH_6_CANNON_DAMAGE = builder.defineInRange("ah_6_cannon_damage", 25, 1, 10000000);
 
         builder.comment("The rocket damage of AH-6");
         AH_6_ROCKET_DAMAGE = builder.defineInRange("ah_6_rocket_damage", 75, 1, 10000000);

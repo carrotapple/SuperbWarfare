@@ -74,11 +74,11 @@ public class ParticleTool {
         }
 
         if (level instanceof ServerLevel serverLevel) {
-            sendParticle(serverLevel, ParticleTypes.EXPLOSION, x, y + 1, z, 4, 0.25, 0.25, 0.25, 1, true);
+            sendParticle(serverLevel, ParticleTypes.EXPLOSION, x, y, z, 2, 0.05, 0.05, 0.05, 1, true);
             sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, x, y, z, 3, 0.1, 0.1, 0.1, 0.02, true);
             sendParticle(serverLevel, ParticleTypes.LARGE_SMOKE, x, y, z, 4, 0.2, 0.2, 0.2, 0.02, true);
             sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), x, y, z, 20, 0, 0, 0, 0.6, true);
-            sendParticle(serverLevel, ParticleTypes.FLASH, x, y + 0.2, z, 20, 0.1, 0.1, 0.1, 20, true);
+            sendParticle(serverLevel, ParticleTypes.FLASH, x, y, z, 5, 0.1, 0.1, 0.1, 20, true);
         }
     }
 

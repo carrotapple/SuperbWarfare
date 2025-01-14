@@ -66,7 +66,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
 
     public static final float MAX_HEALTH = 850;
-    public static final int MAX_ENERGY = VehicleConfig.SPEEDBOAT_MAX_ENERGY.get();
+    public static final int MAX_ENERGY = 2000000;
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public float turretYRot;
@@ -133,7 +133,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
             amount *= 0.7f;
         }
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.hurt(0.5f * Math.max(amount - 25, 0));
+        this.hurt(0.5f * Math.max(amount - 15, 0));
 
         return true;
     }
@@ -187,7 +187,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, fluidFloat, 0.0));
 
         if (this.onGround()) {
-            float f0 = 0.44f + 0.25f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90 - 0.02f * Mth.abs(this.getRudderRot());
+            float f0 = 0.54f + 0.25f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90 - 0.02f * Mth.abs(this.getRudderRot());
             this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.05 * this.getDeltaMovement().horizontalDistance())));
             this.setDeltaMovement(this.getDeltaMovement().multiply(f0, 0.85, f0));
         } else if (this.isInWater()) {
@@ -243,13 +243,13 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
         float x = -0.0234375f;
         float y = 0f;
-        float z = 3f;
+        float z = 4f;
 
         Vector4f worldPosition = transformPosition(transform, x, y, z);
         SmallCannonShellEntity smallCannonShell = new SmallCannonShellEntity(player, this.level(),
-                58,
+                36,
                 22,
-                3.5f);
+                3f);
 
         smallCannonShell.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
         smallCannonShell.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 22,
@@ -277,7 +277,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
             }
         }
 
-        this.entityData.set(HEAT, this.entityData.get(HEAT) + 10);
+        this.entityData.set(HEAT, this.entityData.get(HEAT) + 7);
         this.entityData.set(FIRE_ANIM, 3);
         this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
     }
@@ -302,7 +302,17 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         AABB aabb = AABB.ofSize(new Vec3(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ()), 3.6, 2.6, 3.6);
         BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
             BlockState blockstate = this.level().getBlockState(pos);
-            if (blockstate.is(Blocks.LILY_PAD) || blockstate.is(Blocks.ICE) || blockstate.is(Blocks.FROSTED_ICE)) {
+            if (blockstate.is(Blocks.LILY_PAD) || blockstate.is(Blocks.ICE) || blockstate.is(Blocks.FROSTED_ICE)
+//                    || blockstate.is(Blocks.BAMBOO)
+//                    || blockstate.is(Blocks.GLASS_PANE)
+//                    || blockstate.getBlock() instanceof FenceBlock
+//                    || blockstate.getBlock() instanceof DoorBlock
+//                    || blockstate.getBlock() instanceof LeavesBlock
+//                    || blockstate.getBlock() instanceof FenceGateBlock
+//                    || blockstate.getBlock() instanceof BambooSaplingBlock
+//                    || blockstate.getBlock() instanceof GlassBlock
+//                    || blockstate.getBlock() instanceof StainedGlassPaneBlock
+            ) {
                 this.level().destroyBlock(pos, true);
             }
         });
@@ -319,6 +329,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
             this.rightInputDown = false;
             this.forwardInputDown = false;
             this.backInputDown = false;
+            this.entityData.set(POWER, 0f);
         }
 
         if (forwardInputDown) {
@@ -545,7 +556,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
     @Override
     public int mainGunRpm() {
-        return 180;
+        return 300;
     }
 
     @Override

@@ -49,7 +49,7 @@ public class DragonTeethBlock extends Block {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return Shapes.or(box(2, 0, 2, 14, 24, 14));
+        return Shapes.or(box(2, 0, 2, 14, 25, 14));
     }
 
     @Override
