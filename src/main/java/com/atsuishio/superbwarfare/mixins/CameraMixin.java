@@ -103,8 +103,6 @@ public abstract class CameraMixin {
         return transform.transform(new Vector4f(x, y, z, 1));
     }
 
-
-
     @Inject(method = "setup", at = @At("TAIL"))
     public void ia$setup(BlockGetter area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
         if (thirdPerson && entity.getVehicle() instanceof Mk42Entity) {

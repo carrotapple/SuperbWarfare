@@ -83,13 +83,12 @@ public class FireMessage {
                 capability.syncPlayerVariables(player);
             });
 
-            if (player.getMainHandItem().getItem() == ModItems.BOCEK.get()) {
+            if (stack.getItem() == ModItems.BOCEK.get()) {
                 handleBowShoot(player);
             }
 
-            if (player.getMainHandItem().getItem() == ModItems.JAVELIN.get()) {
-                var handItem = player.getMainHandItem();
-                var tag = handItem.getOrCreateTag();
+            if (stack.getItem() == ModItems.JAVELIN.get()) {
+                var tag = stack.getOrCreateTag();
                 handleJavelinFire(player);
                 tag.putBoolean("Seeking", false);
                 tag.putInt("SeekTime", 0);

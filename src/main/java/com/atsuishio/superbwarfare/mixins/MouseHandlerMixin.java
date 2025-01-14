@@ -33,9 +33,7 @@ public class MouseHandlerMixin {
         Minecraft mc = Minecraft.getInstance();
         Player player = Minecraft.getInstance().player;
 
-        if (player == null) {
-            return original;
-        }
+        if (player == null) return original;
 
         if (player.hasEffect(ModMobEffects.SHOCK.get()) && !player.isSpectator()) {
             return 0;
@@ -44,11 +42,7 @@ public class MouseHandlerMixin {
         ItemStack stack = mc.player.getMainHandItem();
 
         if (player.getVehicle() instanceof ICannonEntity) {
-            if (ClientEventHandler.zoom) {
-                return 0.15;
-            } else {
-                return 0.3;
-            }
+            return ClientEventHandler.zoom ? 0.15 : 0.3;
         }
 
         if (player.getVehicle() instanceof Ah6Entity ah6Entity && !ah6Entity.onGround() && ah6Entity.getFirstPassenger() == player) {
@@ -56,11 +50,7 @@ public class MouseHandlerMixin {
         }
 
         if (player.getVehicle() instanceof Lav150Entity) {
-            if (ClientEventHandler.zoom) {
-                return 0.23;
-            } else {
-                return 0.28;
-            }
+            return ClientEventHandler.zoom ? 0.23 : 0.28;
         }
 
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {

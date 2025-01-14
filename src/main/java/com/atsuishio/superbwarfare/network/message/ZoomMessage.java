@@ -36,40 +36,39 @@ public class ZoomMessage {
         NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
             ServerPlayer player = context.getSender();
+            if (player == null) return;
 
-            if (player != null) {
-                if (message.type == 0) {
-                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                        capability.zoom = true;
-                        capability.edit = false;
-                        capability.syncPlayerVariables(player);
-                    });
+            if (message.type == 0) {
+                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    capability.zoom = true;
+                    capability.edit = false;
+                    capability.syncPlayerVariables(player);
+                });
 
-                    if (player.isPassenger() && player.getVehicle() instanceof IArmedVehicleEntity && !(player.getVehicle() instanceof WheelChairEntity)) {
-                        SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_IN.get(), 2, 1);
-                    }
+                if (player.isPassenger() && player.getVehicle() instanceof IArmedVehicleEntity && !(player.getVehicle() instanceof WheelChairEntity)) {
+                    SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_IN.get(), 2, 1);
+                }
+            }
+
+            if (message.type == 1) {
+                player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
+                    capability.zoom = false;
+                    capability.breath = false;
+                    capability.syncPlayerVariables(player);
+                });
+
+                if (player.isPassenger() && player.getVehicle() instanceof IArmedVehicleEntity && !(player.getVehicle() instanceof WheelChairEntity)) {
+                    SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_OUT.get(), 2, 1);
                 }
 
-                if (message.type == 1) {
-                    player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
-                        capability.zoom = false;
-                        capability.breath = false;
-                        capability.syncPlayerVariables(player);
-                    });
-
-                    if (player.isPassenger() && player.getVehicle() instanceof IArmedVehicleEntity && !(player.getVehicle() instanceof WheelChairEntity)) {
-                        SoundTool.playLocalSound(player, ModSounds.CANNON_ZOOM_OUT.get(), 2, 1);
-                    }
-
-                    if (player.getMainHandItem().getItem() == ModItems.JAVELIN.get()) {
-                        var handItem = player.getMainHandItem();
-                        var tag = handItem.getOrCreateTag();
-                        tag.putBoolean("Seeking", false);
-                        tag.putInt("SeekTime", 0);
-                        tag.putString("TargetEntity", "none");
-                        var clientboundstopsoundpacket = new ClientboundStopSoundPacket(new ResourceLocation(ModUtils.MODID, "javelin_lock"), SoundSource.PLAYERS);
-                        player.connection.send(clientboundstopsoundpacket);
-                    }
+                if (player.getMainHandItem().getItem() == ModItems.JAVELIN.get()) {
+                    var handItem = player.getMainHandItem();
+                    var tag = handItem.getOrCreateTag();
+                    tag.putBoolean("Seeking", false);
+                    tag.putInt("SeekTime", 0);
+                    tag.putString("TargetEntity", "none");
+                    var clientboundstopsoundpacket = new ClientboundStopSoundPacket(new ResourceLocation(ModUtils.MODID, "javelin_lock"), SoundSource.PLAYERS);
+                    player.connection.send(clientboundstopsoundpacket);
                 }
             }
         });

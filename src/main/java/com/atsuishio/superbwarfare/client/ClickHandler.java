@@ -331,7 +331,7 @@ public class ClickHandler {
                 player.playSound(ModSounds.TRIGGER_CLICK.get(), 1, 1);
             }
 
-            if (!gunItem.useBackpackAmmo(stack) && GunsTool.getGunIntTag(stack, "Ammo", 0) <= 0 && stack.getOrCreateTag().getInt("ReloadTime") == 0) {
+            if (!gunItem.useBackpackAmmo(stack) && GunsTool.getGunIntTag(stack, "Ammo", 0) <= 0 && GunsTool.getGunIntTag(stack, "ReloadTime") == 0) {
                 if (ReloadConfig.LEFT_CLICK_RELOAD.get()) {
                     ModUtils.PACKET_HANDLER.sendToServer(new ReloadMessage(0));
                 }

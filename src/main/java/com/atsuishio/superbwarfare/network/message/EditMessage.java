@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.network.message;
 
 import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -36,6 +37,7 @@ public class EditMessage {
         if (player == null) return;
 
         ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
         switch (type) {
