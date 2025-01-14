@@ -44,6 +44,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
+import java.util.List;
 
 public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntity {
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
@@ -136,22 +137,45 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntit
             this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
         }
 
+        lowHealthWarning();
+
         this.refreshDimensions();
     }
 
     @Override
     public void destroy() {
+        Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
+
         if (level() instanceof ServerLevel) {
-            Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
             CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), 150f,
-                    this.getX(), this.getY(), this.getZ(), 5f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), 100f,
+                    this.getX(), this.getY(), this.getZ(), 7f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
             explosion.explode();
             net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
             explosion.finalizeExplosion(false);
             ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
-            this.discard();
         }
+
+
+        List<Entity> passengers = this.getPassengers();
+        for (var entity : passengers) {
+            if (entity instanceof LivingEntity living) {
+                var tempAttacker = living == attacker ? null : attacker;
+
+                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                living.invulnerableTime = 0;
+                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                living.invulnerableTime = 0;
+                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                living.invulnerableTime = 0;
+                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                living.invulnerableTime = 0;
+                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+            }
+        }
+
+        this.discard();
+
     }
 
     @Override

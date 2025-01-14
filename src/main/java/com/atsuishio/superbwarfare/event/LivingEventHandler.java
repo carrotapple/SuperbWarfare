@@ -57,7 +57,7 @@ public class LivingEventHandler {
 
     @SubscribeEvent
     public static void onEntityAttacked(LivingAttackEvent event) {
-        if (event.getEntity().getVehicle() instanceof ICannonEntity || event.getEntity().getVehicle() instanceof Lav150Entity) {
+        if (!event.getSource().is(ModDamageTypes.VEHICLE_EXPLOSION) && (event.getEntity().getVehicle() instanceof ICannonEntity || event.getEntity().getVehicle() instanceof Lav150Entity)) {
             event.setCanceled(true);
         }
     }
@@ -97,7 +97,9 @@ public class LivingEventHandler {
         var vehicle = event.getEntity().getVehicle();
         if (vehicle != null) {
             if (vehicle instanceof ICannonEntity || vehicle instanceof Lav150Entity) {
-                event.setCanceled(true);
+                if (!event.getSource().is(ModDamageTypes.VEHICLE_EXPLOSION)) {
+                    event.setCanceled(true);
+                }
             } else if (vehicle instanceof IArmedVehicleEntity) {
                 event.setAmount(0.3f * event.getAmount());
             }

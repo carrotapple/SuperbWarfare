@@ -366,6 +366,9 @@
   "death.attack.lunge_mine": "%1$s被突刺爆雷戳到了屁股",
   "death.attack.lunge_mine.entity": "%1$s被%2$s用突刺爆雷戳到了屁股",
   "death.attack.lunge_mine.item": "%1$s被%2$s用%3$s型突刺爆雷戳到了屁股",
+  "death.attack.vehicle_explosion": "%1$s的载具被击毁了",
+  "death.attack.vehicle_explosion.entity": "%1$s的载具被%2$s击毁了",
+  "death.attack.vehicle_explosion.item": "%1$s的载具被%2$s用%3$s击毁了",
 
   "entity.superbwarfare.projectile": "Bullet",
   "entity.superbwarfare.projectile_mortar_shell": "Mortar Shell",

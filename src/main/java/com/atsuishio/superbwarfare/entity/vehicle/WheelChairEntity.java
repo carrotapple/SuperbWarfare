@@ -1,13 +1,14 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
+import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.entity.MortarEntity;
+import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModSounds;
-import com.atsuishio.superbwarfare.item.ContainerBlockItem;
+import com.atsuishio.superbwarfare.tools.CustomExplosion;
+import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -20,9 +21,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.WaterAnimal;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
@@ -262,19 +262,19 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
 
     @Override
     public void destroy() {
+        Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
+
         if (level() instanceof ServerLevel) {
-            ParticleTool.sendParticle((ServerLevel) this.level(), ParticleTypes.EXPLOSION, this.getX(), this.getY() + 1, this.getZ(), 10, 0.5, 0.5, 0.5, 1, false);
-            this.level().playSound(null, BlockPos.containing(this.position()), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 2.0F, (1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F) * 0.7F);
-            this.setHealth(this.getMaxHealth());
-            ItemStack container = ContainerBlockItem.createInstance(this);
-            if (this.level() instanceof ServerLevel level) {
-                ItemEntity itemEntity = new ItemEntity(level, this.getX(), this.getY(), this.getZ(), container);
-                itemEntity.setPickUpDelay(10);
-                level.addFreshEntity(itemEntity);
-            }
-            this.remove(RemovalReason.DISCARDED);
-            this.discard();
+            CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), 10f,
+                    this.getX(), this.getY(), this.getZ(), 2f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+            explosion.explode();
+            net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+            explosion.finalizeExplosion(false);
+            ParticleTool.spawnSmallExplosionParticles(this.level(), this.position());
         }
+
+        this.discard();
     }
 
     @Override

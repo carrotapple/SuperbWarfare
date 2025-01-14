@@ -84,7 +84,7 @@ public class SmallCannonShellEntity extends ThrowableItemProjectile implements G
             }
         }
 
-        entity.hurt(ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()), damage);
+        entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), damage);
 
         if (entity instanceof LivingEntity) {
             entity.invulnerableTime = 0;

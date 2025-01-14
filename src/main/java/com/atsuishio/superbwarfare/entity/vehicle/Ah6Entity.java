@@ -418,7 +418,28 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                     living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
                     living.invulnerableTime = 0;
                     living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
                 }
+            }
+        }
+
+        List<Entity> passengers = this.getPassengers();
+        for (var entity : passengers) {
+            if (entity instanceof LivingEntity living) {
+                var tempAttacker = living == attacker ? null : attacker;
+
+                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                living.invulnerableTime = 0;
+                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                living.invulnerableTime = 0;
+                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                living.invulnerableTime = 0;
+                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                living.invulnerableTime = 0;
+                living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
             }
         }
 
@@ -430,8 +451,9 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             ForgeEventFactory.onExplosionStart(this.level(), explosion);
             explosion.finalizeExplosion(false);
             ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
-            this.discard();
         }
+
+        this.discard();
     }
 
     @Override
