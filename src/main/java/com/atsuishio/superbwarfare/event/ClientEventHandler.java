@@ -409,18 +409,24 @@ public class ClientEventHandler {
             } else {
                 if (!clientTimer.started()) {
                     clientTimer.start();
-                    shootClient(player);
+                    // 首发瞬间发射
+                    clientTimer.setProgress((cooldown + 1));
                 }
 
                 if (clientTimer.getProgress() >= cooldown) {
-                    clientTimer.stop();
+                    shootClient(player);
+                    clientTimer.setProgress((clientTimer.getProgress() - cooldown));
                 }
             }
 
             if (notInGame()) {
                 clientTimer.stop();
             }
+
         } else {
+            if (mode != 0) {
+                clientTimer.stop();
+            }
             fireSpread = 0;
         }
 
