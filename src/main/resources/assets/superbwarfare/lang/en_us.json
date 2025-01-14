@@ -379,6 +379,7 @@
   "entity.superbwarfare.projectile_rgo_grenade": "Exploding RGO Grenade",
   "entity.superbwarfare.projectile_cannon_shell": "Cannon Shell",
   "entity.superbwarfare.projectile_javelin_missile": "Javelin Missile",
+  "entity.superbwarfare.projectile_small_cannon_shell": "小口径炮弹",
   "entity.superbwarfare.mortar": "Mortar",
   "entity.superbwarfare.target": "Target",
   "entity.superbwarfare.claymore": "Claymore",
@@ -390,6 +391,7 @@
   "entity.superbwarfare.speedboat": "Speedboat",
   "entity.superbwarfare.wheel_chair": "WheelChair",
   "entity.superbwarfare.ah_6": "AH-6 Little Bird",
+  "entity.superbwarfare.lav_150": "LAV-150 Commando",
   "entity.minecraft.villager.superbwarfare.armory": "Armory",
 
   "key.categories.superbwarfare": "Superb Warfare",

@@ -377,6 +377,7 @@
   "entity.superbwarfare.projectile_rgo_grenade": "快爆炸的RGO手榴弹",
   "entity.superbwarfare.projectile_cannon_shell": "炮弹",
   "entity.superbwarfare.projectile_javelin_missile": "标枪导弹",
+  "entity.superbwarfare.projectile_small_cannon_shell": "小口径炮弹",
   "entity.superbwarfare.mortar": "迫击炮",
   "entity.superbwarfare.target": "标靶",
   "entity.superbwarfare.claymore": "阔剑地雷",
@@ -388,6 +389,7 @@
   "entity.superbwarfare.speedboat": "快艇",
   "entity.superbwarfare.wheel_chair": "轮椅",
   "entity.superbwarfare.ah_6": "AH-6 小鸟直升机",
+  "entity.superbwarfare.lav_150": "LAV-150 Commando",
   "entity.minecraft.villager.superbwarfare.armory": "军械师",
 
   "key.categories.superbwarfare": "卓越前线",
