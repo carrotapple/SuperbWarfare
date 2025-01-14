@@ -64,7 +64,10 @@ public class FireMessage {
     }
 
     public static void pressAction(Player player, int type) {
-        handleGunBolt(player, player.getMainHandItem());
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return;
+
+        handleGunBolt(player, stack);
 
         if (type == 0) {
             handlePlayerShoot(player);
@@ -102,9 +105,7 @@ public class FireMessage {
     private static void handlePlayerShoot(Player player) {
         var stack = player.getMainHandItem();
 
-        if (!stack.is(ModTags.Items.GUN)) {
-            return;
-        }
+        if (!stack.is(ModTags.Items.GUN)) return;
 
         var tag = stack.getOrCreateTag();
 
@@ -147,6 +148,8 @@ public class FireMessage {
     }
 
     private static void handleGunBolt(Player player, ItemStack stack) {
+        if (!stack.is(ModTags.Items.GUN)) return;
+
         if (GunsTool.getGunIntTag(stack, "BoltActionTime", 0) > 0 && GunsTool.getGunIntTag(stack, "Ammo", 0) > (stack.is(ModTags.Items.REVOLVER) ? -1 : 0)
                 && GunsTool.getGunIntTag(stack, "BoltActionTick") == 0
                 && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
