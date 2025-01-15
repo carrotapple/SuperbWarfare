@@ -704,7 +704,8 @@ public class ClientEventHandler {
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
-        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.hidePassenger()) return;
+        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.hidePassenger())
+            return;
 
         float pose;
         float times = 2 * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
@@ -782,7 +783,8 @@ public class ClientEventHandler {
             }
         }
 
-        if (player != null && player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand()) return;
+        if (player != null && player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand())
+            return;
 
         if (level != null && stack.is(ModTags.Items.GUN)) {
             handleWeaponSway(living);
