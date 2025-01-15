@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.event;
 
 import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
+import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.tools.SeekTool;
@@ -8,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -19,6 +21,7 @@ import org.joml.Math;
 import java.util.List;
 
 import static com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity.PROPELLER_ROT;
+import static com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity.POWER;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientSoundHandler {
@@ -49,7 +52,15 @@ public class ClientSoundHandler {
                     if (player.getVehicle() == ah6Entity) {
                         player.playSound(ModSounds.HELICOPTER_ENGINE_1P.get(), 2 * (mobileVehicle.getEntityData().get(PROPELLER_ROT) - 0.012f), (float) ((2 * Math.random() - 1) * 0.1f + 1.0f));
                     } else {
-                        player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), 5 * (mobileVehicle.getEntityData().get(PROPELLER_ROT) - 0.012f) * distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.1f + 1.0f), false);
+                        player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), 5 * (mobileVehicle.getEntityData().get(PROPELLER_ROT) - 0.012f) * distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.1f + 1), false);
+                    }
+                }
+                if (e instanceof Lav150Entity lav150) {
+                    distanceReduce = (float) Math.max((1 - distance / 64), 0);
+                    if (player.getVehicle() == lav150) {
+                        player.playSound(ModSounds.LAV_ENGINE_1P.get(), 2 * (Mth.abs(mobileVehicle.getEntityData().get(POWER)) - 0.006f), (float) ((2 * Math.random() - 1) * 0.1f + 0.95f));
+                    } else {
+                        player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), 5 * (Mth.abs(mobileVehicle.getEntityData().get(POWER)) - 0.006f) * distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.1f + 1), false);
                     }
                 }
             }

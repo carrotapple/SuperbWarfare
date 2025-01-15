@@ -26,6 +26,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -137,6 +138,24 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         }
         if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
             amount *= 0.7f;
+        }
+        if (source.is(DamageTypes.PLAYER_ATTACK)) {
+            amount *= 0.05f;
+        }
+        if (source.is(DamageTypes.MOB_ATTACK)) {
+            amount *= 0.05f;
+        }
+        if (source.is(DamageTypes.MOB_ATTACK_NO_AGGRO)) {
+            amount *= 0.05f;
+        }
+        if (source.is(DamageTypes.MOB_PROJECTILE)) {
+            amount *= 0.05f;
+        }
+        if (source.is(DamageTypes.ARROW)) {
+            amount *= 0.05f;
+        }
+        if (source.is(DamageTypes.TRIDENT)) {
+            amount *= 0.05f;
         }
 
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
@@ -365,10 +384,6 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
             this.extraEnergy(VehicleConfig.SPEEDBOAT_ENERGY_COST.get());
         }
 
-        if (level().isClientSide) {
-            level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.forwardInputDown || this.backInputDown ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 1f), false);
-        }
-
         this.entityData.set(POWER, this.entityData.get(POWER) * 0.97f);
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * (float)Math.max(0.7f - 0.1f * this.getDeltaMovement().horizontalDistance(), 0.3));
 
@@ -451,7 +466,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
     @Override
     public SoundEvent getEngineSound() {
-        return ModSounds.BOAT_ENGINE.get();
+        return ModSounds.LAV_ENGINE.get();
     }
 
     @Override

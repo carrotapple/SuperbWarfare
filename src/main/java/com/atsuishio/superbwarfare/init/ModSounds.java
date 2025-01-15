@@ -400,5 +400,7 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> LAV_CANNON_FIRE_3P = REGISTRY.register("lav_cannon_fire_3p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("lav_fire_3p")));
     public static final RegistryObject<SoundEvent> LAV_CANNON_FAR = REGISTRY.register("lav_cannon_far", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("lav_far")));
     public static final RegistryObject<SoundEvent> LAV_CANNON_VERYFAR = REGISTRY.register("lav_cannon_veryfar", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("lav_veryfar")));
+    public static final RegistryObject<SoundEvent> LAV_ENGINE = REGISTRY.register("lav_engine", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("lav_engine")));
+    public static final RegistryObject<SoundEvent> LAV_ENGINE_1P = REGISTRY.register("lav_engine_1p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("lav_engine_1p")));
 }
 

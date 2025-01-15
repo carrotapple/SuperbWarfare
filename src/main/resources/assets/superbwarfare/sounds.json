@@ -2736,5 +2736,19 @@
         "stream": false
       }
     ]
+  },
+  "lav_engine": {
+    "sounds": [
+      {
+        "name": "superbwarfare:lav/lav_engine"
+      }
+    ]
+  },
+  "lav_engine_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:lav/lav_engine_1p"
+      }
+    ]
   }
 }
