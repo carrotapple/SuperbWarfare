@@ -476,9 +476,9 @@
   "config.superbwarfare.client.display.camera_rotate.des": "Slightly shaky view when holding a firearm in your hand",
   "config.superbwarfare.client.display.armor_plate_hud": "Armor Plate HUD",
   "config.superbwarfare.client.display.armor_plate_hud.des": "Display the durability of the bulletproof insert currently equipped on the chest armor in the lower left corner when turned on",
-  "config.superbwarfare.client.vrhicle": "Control Vehicle",
-  "config.superbwarfare.client.vrhicle.invert_aircraft_control": "Invert Aircraft Control",
-  "config.superbwarfare.client.vrhicle.left_click_reload.des": "Set TRUE to invert aircraft control",
+  "config.superbwarfare.client.vehicle": "Control Vehicle",
+  "config.superbwarfare.client.vehicle.invert_aircraft_control": "Invert Aircraft Control",
+  "config.superbwarfare.client.vehicle.left_click_reload.des": "Set TRUE to invert aircraft control",
 
   "config.superbwarfare.common.gameplay": "Gameplay Config",
   "config.superbwarfare.common.gameplay.respawn_reload": "Respawn Reload",
