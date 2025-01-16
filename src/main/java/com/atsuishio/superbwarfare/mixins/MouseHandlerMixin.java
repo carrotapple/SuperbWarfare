@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.mixins;
 
+import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.ICannonEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
@@ -42,9 +43,9 @@ public class MouseHandlerMixin {
             return ClientEventHandler.zoomVehicle ? 0.15 : 0.3;
         }
 
-//        if (player.getVehicle() instanceof Ah6Entity ah6Entity && !ah6Entity.onGround() && ah6Entity.getFirstPassenger() == player) {
-//            return 0.24;
-//        }
+        if (player.getVehicle() instanceof Ah6Entity ah6Entity && !ah6Entity.onGround() && ah6Entity.getFirstPassenger() == player) {
+            return 0.3;
+        }
 
         if (player.getVehicle() instanceof Lav150Entity) {
             return ClientEventHandler.zoomVehicle ? 0.23 : 0.28;

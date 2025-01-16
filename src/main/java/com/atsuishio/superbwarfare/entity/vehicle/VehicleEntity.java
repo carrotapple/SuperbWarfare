@@ -248,6 +248,16 @@ public class VehicleEntity extends Entity {
             yRotO = delta + getYRot();
         }
 
+        float deltaZ = Math.abs(getRoll() - prevRoll);
+        while (getRoll() > 180F) {
+            setZRot(getRoll() - 360F);
+            prevRoll = getRoll() - deltaZ;
+        }
+        while (getRoll() <= -180F) {
+            setZRot(getRoll() + 360F);
+            prevRoll = deltaZ + getRoll();
+        }
+
         handleClientSync();
 
         if (this.level() instanceof ServerLevel && this.getHealth() <= 0) {

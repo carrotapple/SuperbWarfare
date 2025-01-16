@@ -16,6 +16,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Vector3d;
 import org.joml.Vector4f;
@@ -63,7 +64,17 @@ public abstract class CameraMixin {
             }
 
             if ((player.getVehicle() instanceof Lav150Entity lav150 && lav150.getFirstPassenger() == player) && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
+
                 setRotation(-Mth.lerp(partialTicks, lav150.turretYRotO - lav150.yRotO, lav150.getTurretYRot() - lav150.getYRot()), Mth.lerp(partialTicks, lav150.turretXRotO - lav150.xRotO, lav150.getTurretXRot() - lav150.getXRot()));
+                setPosition(Mth.lerp(partialTicks, player.xo, player.getX()), Mth.lerp(partialTicks, player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(partialTicks, player.zo, player.getZ()));
+                info.cancel();
+
+                return;
+            }
+
+
+            if ((player.getVehicle() instanceof Ah6Entity ah6Entity && ah6Entity.isDriver(player) && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON)) {
+                setRotation(ah6Entity.getYaw(partialTicks), Mth.lerp(partialTicks, ah6Entity.xRotO, ah6Entity.getXRot()));
                 setPosition(Mth.lerp(partialTicks, player.xo, player.getX()), Mth.lerp(partialTicks, player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(partialTicks, player.zo, player.getZ()));
                 info.cancel();
 
