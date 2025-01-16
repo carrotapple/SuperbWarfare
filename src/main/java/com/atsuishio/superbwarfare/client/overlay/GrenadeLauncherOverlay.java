@@ -10,6 +10,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
@@ -19,7 +20,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
-public class M79UIOverlay {
+public class GrenadeLauncherOverlay {
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
@@ -29,7 +30,13 @@ public class M79UIOverlay {
 
         if (player != null && player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit)
             return;
-        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand()) return;
+        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand())
+            return;
+        if (!shouldRenderCrossHair(player)) return;
+
+        GuiGraphics guiGraphics = event.getGuiGraphics();
+
+        guiGraphics.pose().pushPose();
 
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
@@ -37,14 +44,16 @@ public class M79UIOverlay {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        if (shouldRenderCrossHair(player)) {
-            event.getGuiGraphics().blit(ModUtils.loc("textures/screens/rex.png"), w / 2 - 16, h / 2 - 16, 0, 0, 32, 32, 32, 32);
-        }
+
+        guiGraphics.blit(ModUtils.loc("textures/screens/rex.png"), w / 2 - 16, h / 2 - 16, 0, 0, 32, 32, 32, 32);
+
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
         RenderSystem.disableBlend();
         RenderSystem.setShaderColor(1, 1, 1, 1);
+
+        guiGraphics.pose().popPose();
     }
 
     private static boolean shouldRenderCrossHair(Player player) {

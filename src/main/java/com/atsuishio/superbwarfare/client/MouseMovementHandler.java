@@ -1,6 +1,5 @@
 package com.atsuishio.superbwarfare.client;
 
-import com.mojang.blaze3d.Blaze3D;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
@@ -17,9 +16,7 @@ public class MouseMovementHandler {
     public static Vec2 lastPos = null;
     public static Vec2 vel = null;
     private static MouseHandler mouseHandler = null;
-    private static double lastMouseEventTime;
     private static boolean mouseLockActive = false;
-    private static float deltaT = 0;
     private static Vector3f savedRot = new Vector3f();
 
     public static Vec2 getMousePos() {
@@ -46,18 +43,6 @@ public class MouseMovementHandler {
         Minecraft mc = Minecraft.getInstance();
         mouseHandler = mc.mouseHandler;
         lastPos = getMousePos();
-        lastMouseEventTime = Blaze3D.getTime();
-    }
-
-    public static void update() {
-        double d0 = Blaze3D.getTime();
-        deltaT = (float) (d0 - lastMouseEventTime);
-        lastMouseEventTime = d0;
-        Vec2 tmp = getMousePos();
-        vel = new Vec2(tmp.x - lastPos.x, tmp.y - lastPos.y);
-        delta = delta.add(vel);
-        vel = vel.scale(1 / deltaT);
-        lastPos = tmp;
     }
 
     public static float getX(boolean useVelocity) {
@@ -85,7 +70,6 @@ public class MouseMovementHandler {
         savedRot.z = 0;
         mouseLockActive = true;
         lastPos = getMousePos();
-        lastMouseEventTime = Blaze3D.getTime();
     }
 
     public static void deactivateMouseLock() {
