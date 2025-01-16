@@ -41,7 +41,7 @@ public class LungeMine extends Item implements GeoItem, AnimatedItem {
     public static ItemDisplayContext transformType;
 
     public LungeMine() {
-        super(new Properties().stacksTo(64));
+        super(new Properties().stacksTo(4));
     }
 
     @Override

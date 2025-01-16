@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.network.message;
 
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
@@ -56,7 +57,7 @@ public class LungeMineAttackMessage {
                         }
                         Entity lookingEntity = EntityFindUtil.findEntity(player.level(), String.valueOf(message.uuid));
                         if (lookingEntity != null) {
-                            lookingEntity.hurt(ModDamageTypes.causeLungeMineDamage(player.level().registryAccess(), player, player), 150);
+                            lookingEntity.hurt(ModDamageTypes.causeLungeMineDamage(player.level().registryAccess(), player, player), lookingEntity instanceof VehicleEntity ? 400 : 150);
                             causeLungeMineExplode(player.level(), player, lookingEntity);
                         }
                     } else if (message.type == 1) {

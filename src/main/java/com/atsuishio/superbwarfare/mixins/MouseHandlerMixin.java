@@ -48,6 +48,10 @@ public class MouseHandlerMixin {
             return ClientEventHandler.zoomVehicle ? 0.23 : 0.28;
         }
 
+        if (player.getVehicle() instanceof Ah6Entity ah6Entity && !ah6Entity.onGround() && ah6Entity.getFirstPassenger() == player) {
+            return 0.28;
+        }
+
         if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
             return 0.33 / (1 + 0.08 * (droneFovLerp - 1));
         }

@@ -166,7 +166,7 @@ public class ClientEventHandler {
         float xRot = player.getViewXRot(event.getPartialTick()) - xRotOffset;
         float yRot = player.getViewYRot(event.getPartialTick()) - yRotOffset;
         turnRot[0] = Mth.clamp(0.05 * xRot, -5, 5) * (1 - 0.75 * zoomTime);
-        turnRot[1] = Mth.clamp(0.05 * yRot, -10, 10) * (1 - 0.75 * zoomTime) + 1.5f * (Mth.DEG_TO_RAD * recoilHorizon) * (0.5 + 0.4 * fireSpread);
+        turnRot[1] = Mth.clamp(0.05 * yRot, -10, 10) * (1 - 0.75 * zoomTime);
         turnRot[2] = Mth.clamp(0.1 * yRot, -10, 10) * (1 - zoomTime);
     }
 
@@ -263,12 +263,12 @@ public class ClientEventHandler {
 
             boolean lookAtEntity = false;
 
-            Entity lookingEntity = TraceTool.findLookingEntity(player, 3.5);
+            Entity lookingEntity = TraceTool.findLookingEntity(player, player.getEntityReach() + 2);
 
-            BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(3.5)),
+            BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(player.getBlockReach() + 2)),
                     ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
 
-            Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(3.5)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
+            Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(player.getBlockReach() + 2)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
             BlockState blockState = player.level().getBlockState(BlockPos.containing(looking.x(), looking.y(), looking.z()));
 
             if (lookingEntity != null) {
@@ -1356,6 +1356,9 @@ public class ClientEventHandler {
             zoom = false;
             holdFire = false;
             ClickHandler.switchZoom = false;
+            lungeDraw = 30;
+            lungeSprint = 0;
+            lungeAttack = 0;
         }
     }
 

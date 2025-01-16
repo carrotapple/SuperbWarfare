@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.entity;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
@@ -180,7 +181,7 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
             final Vec3 center = new Vec3(x + 1.5 * this.getLookAngle().x, y + 1.5 * this.getLookAngle().y, z + 1.5 * this.getLookAngle().z);
             for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(2.5 / 2d), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
                 var condition = this.getOwner() != target
-                        && target instanceof LivingEntity
+                        && (target instanceof LivingEntity || target instanceof VehicleEntity)
                         && !(target instanceof TargetEntity)
                         && !(target instanceof Player player && (player.isCreative() || player.isSpectator()))
                         && (this.getOwner() != null && !this.getOwner().isAlliedTo(target) || target.getTeam() == null || target.getTeam().getName().equals("TDM"))
