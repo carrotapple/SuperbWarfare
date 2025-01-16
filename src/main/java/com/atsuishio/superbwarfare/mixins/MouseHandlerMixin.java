@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.mixins;
 
+import com.atsuishio.superbwarfare.config.client.VehicleControlConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.ICannonEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
@@ -44,6 +45,9 @@ public class MouseHandlerMixin {
         }
 
         if (player.getVehicle() instanceof Ah6Entity ah6Entity && !ah6Entity.onGround() && ah6Entity.getFirstPassenger() == player) {
+            if (VehicleControlConfig.INVERT_AIRCRAFT_CONTROL.get()) {
+                // TODO 开启反转时，反转玩家垂直视角
+            }
             return 0.3;
         }
 

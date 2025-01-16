@@ -476,6 +476,8 @@
   "config.superbwarfare.client.display.camera_rotate.des": "手持枪械时，视角会出现轻微的摇晃",
   "config.superbwarfare.client.display.armor_plate_hud": "防弹插板信息",
   "config.superbwarfare.client.display.armor_plate_hud.des": "开启时，在屏幕左下角显示当前胸甲装备的防弹插板的耐久",
+  "config.superbwarfare.client.display.invert_aircraft_control": "飞行器鼠标反转",
+  "config.superbwarfare.client.display.invert_aircraft_control.des": "开启飞行器鼠标反转",
 
   "config.superbwarfare.common.gameplay": "游戏内容配置",
   "config.superbwarfare.common.gameplay.respawn_reload": "重生换弹",
