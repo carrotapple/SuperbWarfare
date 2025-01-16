@@ -170,7 +170,8 @@ public class HelicopterHudOverlay {
 
 
                 if (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
-                    renderKillIndicator(guiGraphics, w - 7.5f + (float) (2 * (Math.random() - 0.5f)), h - 7.5f + (float) (2 * (Math.random() - 0.5f)));
+                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/crosshair_ind.png"), x - 8, y - 8, 0, 0, 16, 16, 16, 16);
+                    renderKillIndicator(guiGraphics, x - 7.5f + (float) (2 * (Math.random() - 0.5f)), y - 7.5f + (float) (2 * (Math.random() - 0.5f)));
                 } else if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK) {
                     poseStack.pushPose();
                     poseStack.rotateAround(Axis.ZP.rotationDegrees(iHelicopterEntity.getRotZ(event.getPartialTick())), x, y, 0);

@@ -72,15 +72,6 @@ public abstract class CameraMixin {
                 return;
             }
 
-
-            if ((player.getVehicle() instanceof Ah6Entity ah6Entity && ah6Entity.isDriver(player) && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON)) {
-                setRotation(ah6Entity.getYaw(partialTicks), Mth.lerp(partialTicks, ah6Entity.xRotO, ah6Entity.getXRot()));
-                setPosition(Mth.lerp(partialTicks, player.xo, player.getX()), Mth.lerp(partialTicks, player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(partialTicks, player.zo, player.getZ()));
-                info.cancel();
-
-                return;
-            }
-
             if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
                 DroneEntity drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
                 if (drone != null) {

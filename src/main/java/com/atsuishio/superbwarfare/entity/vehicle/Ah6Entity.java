@@ -274,7 +274,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                 this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 2.5f * this.entityData.get(PROPELLER_ROT));
             }
 
-            this.setYRot(this.getYRot() + Mth.clamp((this.onGround() ? 0.1f : 2f) * diffY * this.entityData.get(PROPELLER_ROT) - 0.5f * this.entityData.get(DELTA_ROT), -20f, 20f));
+            this.setYRot(this.getYRot() + Mth.clamp((this.onGround() ? 0.1f : 2f) * diffY * this.entityData.get(PROPELLER_ROT) - 0.5f * this.entityData.get(DELTA_ROT), -8f, 8f));
             this.setXRot(Mth.clamp(this.getXRot() + (this.onGround() ? 0 : 1.4f) * diffX * this.entityData.get(PROPELLER_ROT), -80, 80));
             this.setZRot(Mth.clamp(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.2f) * diffY * this.entityData.get(PROPELLER_ROT), -80, 80));
         }
