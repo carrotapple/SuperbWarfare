@@ -30,7 +30,7 @@ public class MouseHandlerMixin {
     @ModifyVariable(method = "turnPlayer()V", at = @At(value = "STORE", opcode = Opcodes.DSTORE), ordinal = 2)
     private double sensitivity(double original) {
         Minecraft mc = Minecraft.getInstance();
-        Player player = Minecraft.getInstance().player;
+        Player player = mc.player;
 
         if (player == null) return original;
 
@@ -45,9 +45,6 @@ public class MouseHandlerMixin {
         }
 
         if (player.getVehicle() instanceof Ah6Entity ah6Entity && !ah6Entity.onGround() && ah6Entity.getFirstPassenger() == player) {
-            if (VehicleControlConfig.INVERT_AIRCRAFT_CONTROL.get()) {
-                // TODO 开启反转时，反转玩家垂直视角
-            }
             return 0.3;
         }
 
@@ -71,5 +68,18 @@ public class MouseHandlerMixin {
         }
 
         return original;
+    }
+
+    @ModifyVariable(method = "turnPlayer()V", at = @At(value = "STORE", opcode = Opcodes.ISTORE))
+    private int modifyI(int i) {
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
+
+        if (player == null) return i;
+
+        if (player.getVehicle() instanceof Ah6Entity ah6Entity && ah6Entity.getFirstPassenger() == player) {
+            return VehicleControlConfig.INVERT_AIRCRAFT_CONTROL.get() ? -i : i;
+        }
+        return i;
     }
 }
