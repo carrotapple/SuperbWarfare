@@ -63,7 +63,7 @@ public abstract class CameraMixin {
                 return;
             }
 
-            if ((player.getVehicle() instanceof Lav150Entity lav150 && lav150.getFirstPassenger() == player) && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
+            if ((player.getVehicle() instanceof Lav150Entity lav150 && lav150.getFirstPassenger() == player) && (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || ClientEventHandler.zoomVehicle)) {
 
                 setRotation(-Mth.lerp(partialTicks, lav150.turretYRotO - lav150.yRotO, lav150.getTurretYRot() - lav150.getYRot()), Mth.lerp(partialTicks, lav150.turretXRotO - lav150.xRotO, lav150.getTurretXRot() - lav150.getXRot()));
                 setPosition(Mth.lerp(partialTicks, player.xo, player.getX()), Mth.lerp(partialTicks, player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(partialTicks, player.zo, player.getZ()));
@@ -129,7 +129,7 @@ public abstract class CameraMixin {
         }
 
         if (thirdPerson && entity.getVehicle() instanceof Lav150Entity && !ClientEventHandler.zoomVehicle) {
-            move(-getMaxZoom(2.5), 0.75, 0.0);
+            move(-getMaxZoom(2.75), 1, 0.0);
             return;
         }
         if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && entity instanceof Player player && player.getMainHandItem().is(ModTags.Items.GUN)) {

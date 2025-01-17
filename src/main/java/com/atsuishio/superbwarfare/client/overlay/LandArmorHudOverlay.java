@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.MultiWeaponVehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
@@ -74,7 +75,7 @@ public class LandArmorHudOverlay {
             float k = ((w - i) / 2);
             float l = ((h - j) / 2);
 
-            if (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON) {
+            if (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || ClientEventHandler.zoomVehicle) {
                 int addW = (w / h) * 48;
                 int addH = (w / h) * 27;
                 preciseBlit(guiGraphics, FRAME, (float) -addW / 2, (float) -addH / 2, 10, 0, 0.0F, w + addW, h + addH, w + addW, h + addH);
@@ -152,18 +153,54 @@ public class LandArmorHudOverlay {
                 //血量
 
                 double heal = lav150.getHealth() / lav150.getMaxHealth();
-                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(100 * lav150.getHealth() / lav150.getMaxHealth())), w / 2 - 165, h / 2 - 46, Mth.hsvToRgb((float) heal / 3.745318352059925F, 1.0F, 1.0F), false);
+                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(100 * heal)), w / 2 - 165, h / 2 - 46, Mth.hsvToRgb((float) heal / 3.745318352059925F, 1.0F, 1.0F), false);
 
                 renderKillIndicator(guiGraphics, w, h);
-            }
 
+            } else if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && !ClientEventHandler.zoomVehicle) {
+                Vec3 p = RenderHelper.worldToScreen(new Vec3(player.getX(), player.getY(), player.getZ()).add(lav150.getBarrelVector(event.getPartialTick()).scale(192)), cameraPos);
+
+                if (p != null) {
+                    poseStack.pushPose();
+                    float x = (float) p.x;
+                    float y = (float) p.y;
+
+                    poseStack.pushPose();
+                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/drone.png"), x - 12, y - 12, 0, 0, 24, 24, 24, 24);
+                    renderKillIndicator3P(guiGraphics, x - 7.5f + (float) (2 * (Math.random() - 0.5f)), y - 7.5f + (float) (2 * (Math.random() - 0.5f)));
+
+                    poseStack.pushPose();
+
+                    poseStack.translate(x, y, 0);
+                    poseStack.scale(0.75f, 0.75f, 1);
+
+                    if (multiWeaponVehicle instanceof Lav150Entity lav1501) {
+                        if (multiWeaponVehicle.getWeaponType() == 0) {
+                            double heat = lav1501.getEntityData().get(HEAT) / 100.0F;
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("20MM CANNON " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : lav1501.getAmmoCount(player))), 30, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
+                        } else {
+                            double heat2 = lav1501.getEntityData().get(COAX_HEAT) / 100.0F;
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("7.62MM COAX " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : lav1501.getAmmoCount(player))), 30, -9, Mth.hsvToRgb(0F, (float) heat2, 1.0F), false);
+                        }
+                    }
+
+                    double heal = 1 - lav150.getHealth() / lav150.getMaxHealth();
+
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("HP " + new DecimalFormat("##").format(100 * lav150.getHealth() / lav150.getMaxHealth())), 30, 1, Mth.hsvToRgb(0F, (float) heal, 1.0F), false);
+                    poseStack.popPose();
+                    poseStack.popPose();
+
+
+                    poseStack.popPose();
+                }
+            }
             poseStack.popPose();
         } else {
             scopeScale = 0.7f;
         }
     }
 
-    private static void renderKillIndicator(GuiGraphics guiGraphics, int w, int h) {
+    private static void renderKillIndicator(GuiGraphics guiGraphics, float w, float h) {
         float posX = w / 2f - 7.5f + (float) (2 * (java.lang.Math.random() - 0.5f));
         float posY = h / 2f - 7.5f + (float) (2 * (java.lang.Math.random() - 0.5f));
         float rate = (40 - KILL_INDICATOR * 5) / 5.5f;
@@ -181,6 +218,30 @@ public class LandArmorHudOverlay {
             float posY1 = h / 2f - 7.5f - 2 + rate;
             float posX2 = w / 2f - 7.5f + 2 - rate;
             float posY2 = h / 2f - 7.5f + 2 - rate;
+
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark1.png"), posX1, posY1, 0, 0, 16, 16, 16, 16);
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark2.png"), posX2, posY1, 0, 0, 16, 16, 16, 16);
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark3.png"), posX1, posY2, 0, 0, 16, 16, 16, 16);
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark4.png"), posX2, posY2, 0, 0, 16, 16, 16, 16);
+        }
+    }
+
+    private static void renderKillIndicator3P(GuiGraphics guiGraphics, float posX, float posY) {
+        float rate = (40 - KILL_INDICATOR * 5) / 5.5f;
+
+        if (HIT_INDICATOR > 0) {
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/hit_marker.png"), posX, posY, 0, 0, 16, 16, 16, 16);
+        }
+
+        if (HEAD_INDICATOR > 0) {
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/headshot_mark.png"), posX, posY, 0, 0, 16, 16, 16, 16);
+        }
+
+        if (KILL_INDICATOR > 0) {
+            float posX1 = posX - 2 + rate;
+            float posY1 = posY - 2 + rate;
+            float posX2 = posX + 2 - rate;
+            float posY2 = posY + 2 - rate;
 
             preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark1.png"), posX1, posY1, 0, 0, 16, 16, 16, 16);
             preciseBlit(guiGraphics, ModUtils.loc("textures/screens/kill_mark2.png"), posX2, posY1, 0, 0, 16, 16, 16, 16);
