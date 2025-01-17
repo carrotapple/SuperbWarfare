@@ -49,12 +49,12 @@ public class MortarShellEntity extends ThrowableItemProjectile implements GeoEnt
         this.noCulling = true;
     }
 
-    public MortarShellEntity(EntityType<? extends MortarShellEntity> type, LivingEntity entity, Level world) {
-        super(type, entity, world);
+    public MortarShellEntity(LivingEntity entity, Level level) {
+        super(ModEntities.MORTAR_SHELL.get(), entity, level);
     }
 
-    public MortarShellEntity(EntityType<? extends MortarShellEntity> type, LivingEntity entity, Level world, float damage) {
-        super(type, entity, world);
+    public MortarShellEntity(LivingEntity entity, Level world, float damage) {
+        super(ModEntities.MORTAR_SHELL.get(), entity, world);
         this.damage = damage;
     }
 

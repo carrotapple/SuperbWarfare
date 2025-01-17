@@ -162,7 +162,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
             ModUtils.queueServerWork(20, () -> {
                 Level level = this.level();
                 if (level instanceof ServerLevel server) {
-                    MortarShellEntity entityToSpawn = new MortarShellEntity(ModEntities.MORTAR_SHELL.get(), player, level);
+                    MortarShellEntity entityToSpawn = new MortarShellEntity(player, level);
                     entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
                     entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 8, (float) 0.3);
                     level.addFreshEntity(entityToSpawn);
