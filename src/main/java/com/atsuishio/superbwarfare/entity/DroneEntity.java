@@ -174,11 +174,21 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
         Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
 
+
         if (!this.onGround()) {
             if (controller != null) {
                 ItemStack stack = controller.getMainHandItem();
-                if (stack.getOrCreateTag().getBoolean("Using") && controller.level().isClientSide) {
-                    controller.playSound(ModSounds.DRONE_SOUND.get(), 32, 1);
+                if (stack.is(ModItems.MONITOR.get())) {
+                    if (stack.getOrCreateTag().getBoolean("Using") && controller.level().isClientSide) {
+                        controller.playSound(ModSounds.DRONE_SOUND.get(), 32, 1);
+                    }
+                } else {
+                    upInputDown = false;
+                    downInputDown = false;
+                    forwardInputDown = false;
+                    backInputDown = false;
+                    leftInputDown = false;
+                    rightInputDown = false;
                 }
                 if (!controller.level().isClientSide) {
                     this.level().playSound(null, this.getOnPos(), ModSounds.DRONE_SOUND.get(), SoundSource.AMBIENT, 3, 1);
