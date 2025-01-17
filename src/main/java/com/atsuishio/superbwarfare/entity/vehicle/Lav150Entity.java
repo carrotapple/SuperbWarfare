@@ -226,7 +226,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
             }
 
             if (this.getEntityData().get(WEAPON_TYPE) == 0) {
-                this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum());
+                this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.SMALL_SHELL.get())).mapToInt(ItemStack::getCount).sum());
             } else {
                 this.entityData.set(AMMO, this.getEntityData().get(LOADED_COAX_AMMO));
             }
@@ -356,7 +356,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
             this.entityData.set(HEAT, this.entityData.get(HEAT) + 7);
             this.entityData.set(FIRE_ANIM, 3);
-            this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+            this.getItemStacks().stream().filter(stack -> stack.is(ModItems.SMALL_SHELL.get())).findFirst().ifPresent(stack -> stack.shrink(1));
 
         } else if (entityData.get(WEAPON_TYPE) == 1) {
             if (this.cannotFireCoax) return;
@@ -466,7 +466,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         }
 
         this.entityData.set(POWER, this.entityData.get(POWER) * 0.97f);
-        this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * (float)Math.max(0.7f - 0.1f * this.getDeltaMovement().horizontalDistance(), 0.3));
+        this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * (float)Math.max(0.76f - 0.1f * this.getDeltaMovement().horizontalDistance(), 0.3));
 
         float angle = (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1));
         double s0;
@@ -483,7 +483,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         this.setRudderRot(Mth.clamp(this.getRudderRot() - this.entityData.get(DELTA_ROT), -0.8f, 0.8f) * 0.75f);
 
         if (this.isInWater() || onGround()) {
-            this.setYRot((float) (this.getYRot() - Math.max(10 * this.getDeltaMovement().horizontalDistance(), 0) * this.getRudderRot() * (this.entityData.get(POWER) > 0 ? 1 : -1)));
+            this.setYRot((float) (this.getYRot() - Math.max(12 * this.getDeltaMovement().horizontalDistance(), 0) * this.getRudderRot() * (this.entityData.get(POWER) > 0 ? 1 : -1)));
             this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (isInWater() && !onGround() ? 0.3f : 1) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (isInWater() && !onGround() ? 0.3f : 1) * this.entityData.get(POWER)));
         }
     }

@@ -386,8 +386,29 @@ public class ClickHandler {
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
-
         handleVehicleMove(key, state, player);
+        handleDroneMove(key, state, player);
+    }
+
+    private static void handleDroneMove(int key, int state, Player player) {
+        ItemStack stack = player.getMainHandItem();
+        if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+            var options = Minecraft.getInstance().options;
+
+            if (key == options.keyLeft.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(0, state == 1));
+            } else if (key == options.keyRight.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(1, state == 1));
+            } else if (key == options.keyUp.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(2, state == 1));
+            } else if (key == options.keyDown.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(3, state == 1));
+            } else if (key == options.keyJump.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(4, state == 1));
+            } else if (key == options.keyShift.getKey().getValue()) {
+                ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(5, state == 1));
+            }
+        }
     }
 
     private static void handleVehicleMove(int key, int state, Player player) {

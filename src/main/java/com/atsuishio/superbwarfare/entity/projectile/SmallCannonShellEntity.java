@@ -66,7 +66,7 @@ public class SmallCannonShellEntity extends ThrowableItemProjectile implements G
 
     @Override
     protected Item getDefaultItem() {
-        return ModItems.GRENADE_40MM.get();
+        return ModItems.SMALL_SHELL.get();
     }
 
     @Override

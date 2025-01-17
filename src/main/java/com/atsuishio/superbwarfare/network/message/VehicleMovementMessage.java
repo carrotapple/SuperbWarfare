@@ -2,8 +2,10 @@ package com.atsuishio.superbwarfare.network.message;
 
 import com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
+import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -34,6 +36,7 @@ public class VehicleMovementMessage {
                 Player player = context.getSender();
 
                 var vehicle = player.getVehicle();
+                ItemStack stack = player.getMainHandItem();
                 if (vehicle instanceof MobileVehicleEntity mobileVehicleEntity) {
                     switch (message.direction) {
                         case 0:
@@ -58,16 +61,28 @@ public class VehicleMovementMessage {
                             mobileVehicleEntity.decoyInputDown = message.clicked;
                             break;
                     }
-
-                    if (player.getMainHandItem().is(ModItems.MONITOR.get())) {
-                        if (player.getMainHandItem().getOrCreateTag().getBoolean("Using") && player.getMainHandItem().getOrCreateTag().getBoolean("Linked")) {
-                            mobileVehicleEntity.leftInputDown = false;
-                            mobileVehicleEntity.rightInputDown = false;
-                            mobileVehicleEntity.forwardInputDown = false;
-                            mobileVehicleEntity.backInputDown = false;
-                            mobileVehicleEntity.upInputDown = false;
-                            mobileVehicleEntity.downInputDown = false;
-                            mobileVehicleEntity.decoyInputDown = false;
+                } else if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
+                    var drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
+                    if (drone != null) {
+                        switch (message.direction) {
+                            case 0:
+                                drone.leftInputDown = message.clicked;
+                                break;
+                            case 1:
+                                drone.rightInputDown = message.clicked;
+                                break;
+                            case 2:
+                                drone.forwardInputDown = message.clicked;
+                                break;
+                            case 3:
+                                drone.backInputDown = message.clicked;
+                                break;
+                            case 4:
+                                drone.upInputDown = message.clicked;
+                                break;
+                            case 5:
+                                drone.downInputDown = message.clicked;
+                                break;
                         }
                     }
                 }

@@ -108,6 +108,7 @@ public class ModItems {
     public static final RegistryObject<Item> CLAYMORE_MINE = AMMO.register("claymore_mine", ClaymoreMine::new);
     public static final RegistryObject<Item> HEAVY_AMMO = AMMO.register("heavy_ammo", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> ROCKET_70 = AMMO.register("rocket_70", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> SMALL_SHELL = AMMO.register("small_shell", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> BEAM_TEST = AMMO.register("beam_test", BeamTest::new);
 
     /**
@@ -223,10 +224,11 @@ public class ModItems {
     public static final RegistryObject<Item> K_98_BLUEPRINT = ITEMS.register("k_98_blueprint", () -> new BlueprintItem(Rarity.RARE));
     public static final RegistryObject<Item> MOSIN_NAGANT_BLUEPRINT = ITEMS.register("mosin_nagant_blueprint", () -> new BlueprintItem(Rarity.RARE));
     public static final RegistryObject<Item> JAVELIN_BLUEPRINT = ITEMS.register("javelin_blueprint", () -> new BlueprintItem(RarityTool.LEGENDARY));
+    public static final RegistryObject<Item> M_2_HB_BLUEPRINT = ITEMS.register("m2hb_blueprint", () -> new BlueprintItem(Rarity.RARE));
+    public static final RegistryObject<Item> SECONDARY_CATACLYSM_BLUEPRINT = ITEMS.register("secondary_cataclysm_blueprint", () -> new BlueprintItem(RarityTool.LEGENDARY));
     public static final RegistryObject<Item> MK_42_BLUEPRINT = ITEMS.register("mk_42_blueprint", () -> new BlueprintItem(RarityTool.LEGENDARY));
     public static final RegistryObject<Item> MLE_1934_BLUEPRINT = ITEMS.register("mle_1934_blueprint", () -> new BlueprintItem(RarityTool.LEGENDARY));
     public static final RegistryObject<Item> ANNIHILATOR_BLUEPRINT = ITEMS.register("annihilator_blueprint", () -> new BlueprintItem(RarityTool.LEGENDARY));
-    public static final RegistryObject<Item> M_2_HB_BLUEPRINT = ITEMS.register("m2hb_blueprint", () -> new BlueprintItem(Rarity.RARE));
 
     /**
      * Block

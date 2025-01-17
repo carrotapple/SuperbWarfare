@@ -68,6 +68,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.BEAM_TEST);
         simpleItem(ModItems.HEAVY_AMMO);
         simpleItem(ModItems.ROCKET_70);
+        simpleItem(ModItems.SMALL_SHELL);
 
         simpleItem(ModItems.TUNGSTEN_ROD);
         simpleItem(ModItems.IRON_BARREL);
@@ -136,6 +137,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         cannonBlueprintItem(ModItems.MLE_1934_BLUEPRINT);
         cannonBlueprintItem(ModItems.ANNIHILATOR_BLUEPRINT);
         gunBlueprintItem(ModItems.M_2_HB_BLUEPRINT);
+        gunBlueprintItem(ModItems.SECONDARY_CATACLYSM_BLUEPRINT);
 
         // blocks
         evenSimplerBlockItem(ModBlocks.BARBED_WIRE);
