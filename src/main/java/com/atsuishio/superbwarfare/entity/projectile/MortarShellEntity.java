@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
+import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraftforge.common.world.ForgeChunkManager;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -68,7 +70,7 @@ public class MortarShellEntity extends ThrowableItemProjectile implements GeoEnt
         if (pCompound.contains("Damage")) {
             this.damage = pCompound.getFloat("Damage");
         } else {
-            this.damage = ExplosionConfig.MORTAR_SHELL_EXPLOSION_DAMAGE.get();;
+            this.damage = ExplosionConfig.MORTAR_SHELL_EXPLOSION_DAMAGE.get();
         }
 
         if (pCompound.contains("Life")) {
@@ -133,6 +135,17 @@ public class MortarShellEntity extends ThrowableItemProjectile implements GeoEnt
         if (this.level() instanceof ServerLevel serverLevel) {
             ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.xo, this.yo, this.zo,
                     1, 0, 0, 0, 0.001, true);
+
+            var movement = this.getDeltaMovement();
+            var currentX = this.chunkPosition().x;
+            var currentZ = this.chunkPosition().z;
+            var nextX = movement.x > 0 ? currentX + 1 : currentX - 1;
+            var nextZ = movement.z > 0 ? currentZ + 1 : currentZ - 1;
+
+            ForgeChunkManager.forceChunk(serverLevel, ModUtils.MODID, this, currentX, currentZ, true, false);
+            ForgeChunkManager.forceChunk(serverLevel, ModUtils.MODID, this, currentX, nextZ, true, false);
+            ForgeChunkManager.forceChunk(serverLevel, ModUtils.MODID, this, nextX, currentZ, true, false);
+            ForgeChunkManager.forceChunk(serverLevel, ModUtils.MODID, this, nextX, nextZ, true, false);
         }
         if (this.tickCount > this.life || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
