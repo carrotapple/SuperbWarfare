@@ -221,8 +221,8 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntit
                 stack.shrink(1);
             }
 
-            CannonShellEntity entityToSpawn = new CannonShellEntity(ModEntities.CANNON_SHELL.get(),
-                    player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime).durability(durability);
+            CannonShellEntity entityToSpawn = new CannonShellEntity(player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime)
+                    .durability(durability);
 
             entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
             entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 15, 0.05f);
@@ -283,7 +283,7 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntit
         float diffX = entity.getXRot() - 1.3f - this.getXRot();
         diffX = diffX * 0.15f;
 
-        this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY,-1.75f, 1.75f));
+        this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -1.75f, 1.75f));
         this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -3f, 3f), -85, 16.3f));
     }
 

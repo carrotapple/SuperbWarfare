@@ -248,8 +248,8 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
             leftPos.rotateY(-yRot * Mth.DEG_TO_RAD);
 
             // 左炮管
-            CannonShellEntity entityToSpawnLeft = new CannonShellEntity(ModEntities.CANNON_SHELL.get(),
-                    player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime).durability(durability);
+            CannonShellEntity entityToSpawnLeft = new CannonShellEntity(player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime)
+                    .durability(durability);
 
             entityToSpawnLeft.setPos(this.getX() + leftPos.x,
                     this.getEyeY() - 0.2 + leftPos.y,
@@ -293,8 +293,8 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
                 rightPos.rotateZ(-this.getXRot() * Mth.DEG_TO_RAD);
                 rightPos.rotateY(-yRot * Mth.DEG_TO_RAD);
 
-                CannonShellEntity entityToSpawnRight = new CannonShellEntity(ModEntities.CANNON_SHELL.get(),
-                        player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime).durability(durability);
+                CannonShellEntity entityToSpawnRight = new CannonShellEntity(player, level, hitDamage, explosionRadius, explosionDamage, fireProbability, fireTime)
+                        .durability(durability);
 
                 entityToSpawnRight.setPos(this.getX() + rightPos.x,
                         this.getEyeY() - 0.2 + rightPos.y,
@@ -374,7 +374,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
 
         diffX = diffX * 0.15f;
 
-        this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY,-1.25f, 1.25f));
+        this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -1.25f, 1.25f));
         this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -30, 4));
     }
 
@@ -415,7 +415,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
     public float getMaxHealth() {
         return MAX_HEALTH;
     }
-    
+
     @Override
     public boolean isDriver(Player player) {
         return player == this.getFirstPassenger();

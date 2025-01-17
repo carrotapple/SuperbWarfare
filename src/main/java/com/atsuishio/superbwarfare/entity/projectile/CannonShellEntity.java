@@ -10,6 +10,8 @@ import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.ProjectileTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -23,6 +25,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -32,6 +35,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.world.ForgeChunkManager;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
@@ -44,6 +48,9 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class CannonShellEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity {
 
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(CannonShellEntity.class, EntityDataSerializers.STRING);
@@ -51,22 +58,23 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
 
     public String animationprocedure = "empty";
     private float damage = 0;
-    private float explosionRadius = 0;
+    private float radius = 0;
     private float explosionDamage = 0;
     private float fireProbability = 0;
     private int fireTime = 0;
     private int durability = 40;
     private boolean firstHit = true;
+    public Set<Long> loadedChunks = new HashSet<>();
 
     public CannonShellEntity(EntityType<? extends CannonShellEntity> type, Level world) {
         super(type, world);
         this.noCulling = true;
     }
 
-    public CannonShellEntity(EntityType<? extends CannonShellEntity> type, LivingEntity entity, Level world, float damage, float explosionRadius, float explosionDamage, float fireProbability, int fireTime) {
-        super(type, entity, world);
+    public CannonShellEntity(LivingEntity entity, Level world, float damage, float radius, float explosionDamage, float fireProbability, int fireTime) {
+        super(ModEntities.CANNON_SHELL.get(), entity, world);
         this.damage = damage;
-        this.explosionRadius = explosionRadius;
+        this.radius = radius;
         this.explosionDamage = explosionDamage;
         this.fireProbability = fireProbability;
         this.fireTime = fireTime;
@@ -79,6 +87,63 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
     public CannonShellEntity durability(int durability) {
         this.durability = durability;
         return this;
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+
+        pCompound.putFloat("Damage", this.damage);
+        pCompound.putFloat("ExplosionDamage", this.explosionDamage);
+        pCompound.putFloat("Radius", this.radius);
+        pCompound.putFloat("FireProbability", this.fireProbability);
+        pCompound.putInt("FireTime", this.fireTime);
+        pCompound.putInt("Durability", this.durability);
+
+        ListTag listTag = new ListTag();
+        for (long chunkPos : this.loadedChunks) {
+            CompoundTag tag = new CompoundTag();
+            tag.putLong("Pos", chunkPos);
+            listTag.add(tag);
+        }
+        pCompound.put("Chunks", listTag);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+
+        if (pCompound.contains("Damage")) {
+            this.damage = pCompound.getFloat("Damage");
+        }
+
+        if (pCompound.contains("ExplosionDamage")) {
+            this.explosionDamage = pCompound.getFloat("ExplosionDamage");
+        }
+
+        if (pCompound.contains("Radius")) {
+            this.radius = pCompound.getFloat("Radius");
+        }
+
+        if (pCompound.contains("FireProbability")) {
+            this.fireProbability = pCompound.getFloat("FireProbability");
+        }
+
+        if (pCompound.contains("FireTime")) {
+            this.fireTime = pCompound.getInt("FireTime");
+        }
+
+        if (pCompound.contains("Durability")) {
+            this.durability = pCompound.getInt("Durability");
+        }
+
+        if (pCompound.contains("Chunks")) {
+            ListTag listTag = pCompound.getList("Chunks", 10);
+            for (int i = 0; i < listTag.size(); i++) {
+                CompoundTag tag = listTag.getCompound(i);
+                this.loadedChunks.add(tag.getLong("Pos"));
+            }
+        }
     }
 
     @Override
@@ -139,7 +204,6 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         int y = blockHitResult.getBlockPos().getY();
         int z = blockHitResult.getBlockPos().getZ();
 
-
         BlockState blockState = this.level().getBlockState(BlockPos.containing(x, y, z));
         if (blockState.is(Blocks.BEDROCK) || blockState.is(Blocks.BARRIER)) {
             this.discard();
@@ -151,9 +215,9 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         this.durability -= (int) hardness;
 
         if (ExplosionDestroyConfig.EXPLOSION_DESTROY.get() && hardness != -1 && hardness <= 50) {
-            BlockPos _pos = BlockPos.containing(x, y, z);
-            Block.dropResources(this.level().getBlockState(_pos), this.level(), BlockPos.containing(x, y, z), null);
-            this.level().destroyBlock(_pos, true);
+            BlockPos blockPos = BlockPos.containing(x, y, z);
+            Block.dropResources(this.level().getBlockState(blockPos), this.level(), BlockPos.containing(x, y, z), null);
+            this.level().destroyBlock(blockPos, true);
         }
 
         Vec3 vec = this.getDeltaMovement();
@@ -207,12 +271,28 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         if (this.level() instanceof ServerLevel serverLevel) {
             ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, this.xo, this.yo, this.zo,
                     1, 0, 0, 0, 0.001, true);
+
+            var movement = this.getDeltaMovement();
+            var currentX = this.chunkPosition().x;
+            var currentZ = this.chunkPosition().z;
+            var nextX = movement.x > 0 ? currentX + 1 : currentX - 1;
+            var nextZ = movement.z > 0 ? currentZ + 1 : currentZ - 1;
+
+            ForgeChunkManager.forceChunk(serverLevel, ModUtils.MODID, this, currentX, currentZ, true, false);
+            ForgeChunkManager.forceChunk(serverLevel, ModUtils.MODID, this, currentX, nextZ, true, false);
+            ForgeChunkManager.forceChunk(serverLevel, ModUtils.MODID, this, nextX, currentZ, true, false);
+            ForgeChunkManager.forceChunk(serverLevel, ModUtils.MODID, this, nextX, nextZ, true, false);
+
+            this.loadedChunks.add(ChunkPos.asLong(currentX, currentZ));
+            this.loadedChunks.add(ChunkPos.asLong(currentX, nextZ));
+            this.loadedChunks.add(ChunkPos.asLong(nextX, currentZ));
+            this.loadedChunks.add(ChunkPos.asLong(nextX, nextZ));
         }
         if (this.tickCount > 600 || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
                 ProjectileTool.causeCustomExplode(this,
                         ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
-                        this, this.explosionDamage, this.explosionRadius, 1.25f);
+                        this, this.explosionDamage, this.radius, 1.25f);
             }
             this.discard();
         }
@@ -231,14 +311,14 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
                 result.getLocation().x,
                 result.getLocation().y,
                 result.getLocation().z,
-                explosionRadius,
+                radius,
                 ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
                 setDamageMultiplier(1).setFireTime(fireTime);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
 
-        if (explosionRadius > 7) {
+        if (radius > 7) {
             ParticleTool.spawnHugeExplosionParticles(this.level(), result.getLocation());
         } else {
             ParticleTool.spawnMediumExplosionParticles(this.level(), result.getLocation());
@@ -258,14 +338,14 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
                 result.getLocation().x,
                 result.getLocation().y,
                 result.getLocation().z,
-                explosionRadius,
+                radius,
                 ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
                 setDamageMultiplier(1).setFireTime(fireTime);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
 
-        if (explosionRadius > 7) {
+        if (radius > 7) {
             ParticleTool.spawnHugeExplosionParticles(this.level(), result.getLocation());
         } else {
             ParticleTool.spawnMediumExplosionParticles(this.level(), result.getLocation());
@@ -319,5 +399,15 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    @Override
+    public void onRemovedFromWorld() {
+        if (this.level() instanceof ServerLevel serverLevel) {
+            for (long chunkPos : this.loadedChunks) {
+                ForgeChunkManager.forceChunk(serverLevel, ModUtils.MODID, this, ChunkPos.getX(chunkPos), ChunkPos.getZ(chunkPos), false, false);
+            }
+        }
+        super.onRemovedFromWorld();
     }
 }
