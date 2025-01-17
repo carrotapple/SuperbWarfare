@@ -10,6 +10,7 @@ import com.atsuishio.superbwarfare.tools.ProjectileTool;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,12 +33,16 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class MortarShellEntity extends ThrowableItemProjectile implements GeoEntity {
 
     private float damage = ExplosionConfig.MORTAR_SHELL_EXPLOSION_DAMAGE.get();
     private int life = 600;
     private float radius = ExplosionConfig.MORTAR_SHELL_EXPLOSION_RADIUS.get();
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    public Set<Long> loadedChunks = new HashSet<>();
 
     public MortarShellEntity(EntityType<? extends MortarShellEntity> type, Level world) {
         super(type, world);
@@ -62,6 +68,14 @@ public class MortarShellEntity extends ThrowableItemProjectile implements GeoEnt
         pCompound.putFloat("Damage", this.damage);
         pCompound.putInt("Life", this.life);
         pCompound.putFloat("Radius", this.radius);
+
+        ListTag listTag = new ListTag();
+        for (long chunkPos : this.loadedChunks) {
+            CompoundTag tag = new CompoundTag();
+            tag.putLong("Pos", chunkPos);
+            listTag.add(tag);
+        }
+        pCompound.put("Chunks", listTag);
     }
 
     @Override
@@ -83,6 +97,14 @@ public class MortarShellEntity extends ThrowableItemProjectile implements GeoEnt
             this.radius = pCompound.getFloat("Radius");
         } else {
             this.radius = ExplosionConfig.MORTAR_SHELL_EXPLOSION_RADIUS.get();
+        }
+
+        if (pCompound.contains("Chunks")) {
+            ListTag listTag = pCompound.getList("Chunks", 10);
+            for (int i = 0; i < listTag.size(); i++) {
+                CompoundTag tag = listTag.getCompound(i);
+                this.loadedChunks.add(tag.getLong("Pos"));
+            }
         }
     }
 
@@ -146,6 +168,11 @@ public class MortarShellEntity extends ThrowableItemProjectile implements GeoEnt
             ForgeChunkManager.forceChunk(serverLevel, ModUtils.MODID, this, currentX, nextZ, true, false);
             ForgeChunkManager.forceChunk(serverLevel, ModUtils.MODID, this, nextX, currentZ, true, false);
             ForgeChunkManager.forceChunk(serverLevel, ModUtils.MODID, this, nextX, nextZ, true, false);
+
+            this.loadedChunks.add(ChunkPos.asLong(currentX, currentZ));
+            this.loadedChunks.add(ChunkPos.asLong(currentX, nextZ));
+            this.loadedChunks.add(ChunkPos.asLong(nextX, currentZ));
+            this.loadedChunks.add(ChunkPos.asLong(nextX, nextZ));
         }
         if (this.tickCount > this.life || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
@@ -164,9 +191,18 @@ public class MortarShellEntity extends ThrowableItemProjectile implements GeoEnt
         return this.cache;
     }
 
-
     @Override
     protected float getGravity() {
         return 0.05F;
+    }
+
+    @Override
+    public void onRemovedFromWorld() {
+        if (this.level() instanceof ServerLevel serverLevel) {
+            for (long chunkPos : this.loadedChunks) {
+                ForgeChunkManager.forceChunk(serverLevel, ModUtils.MODID, this, ChunkPos.getX(chunkPos), ChunkPos.getZ(chunkPos), false, false);
+            }
+        }
+        super.onRemovedFromWorld();
     }
 }
