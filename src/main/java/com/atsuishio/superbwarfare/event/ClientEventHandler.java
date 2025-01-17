@@ -4,10 +4,7 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.ClickHandler;
 import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.DroneEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
-import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
-import com.atsuishio.superbwarfare.entity.vehicle.SpeedboatEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.*;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -62,7 +59,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-import static com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity.WEAPON_TYPE;
+import static com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity.COAX_HEAT;
 import static com.atsuishio.superbwarfare.entity.vehicle.SpeedboatEntity.HEAT;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -682,19 +679,28 @@ public class ClientEventHandler {
             player.playSound(ModSounds.M_2_FIRE_1P.get(), 1f, pitch);
             player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
         }
-        if (iVehicle instanceof Ah6Entity ah6Entity) {
-            float pitch = ah6Entity.heat <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - ah6Entity.heat));
-            if (ah6Entity.getEntityData().get(WEAPON_TYPE) == 0) {
-                ah6Entity.heat += 5;
-                player.playSound(ModSounds.HELICOPTER_CANNON_FIRE_1P.get(), 1f, pitch);
-            } else if (ah6Entity.getEntityData().get(WEAPON_TYPE) == 1) {
-                player.playSound(ModSounds.HELICOPTER_ROCKET_FIRE_1P.get(), 1f, 1);
+
+        if (iVehicle instanceof MultiWeaponVehicleEntity multiWeaponVehicle) {
+            if (iVehicle instanceof Ah6Entity ah6Entity) {
+                float pitch = ah6Entity.heat <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - ah6Entity.heat));
+                if (multiWeaponVehicle.getWeaponType() == 0) {
+                    ah6Entity.heat += 5;
+                    player.playSound(ModSounds.HELICOPTER_CANNON_FIRE_1P.get(), 1f, pitch);
+                } else if (multiWeaponVehicle.getWeaponType() == 1) {
+                    player.playSound(ModSounds.HELICOPTER_ROCKET_FIRE_1P.get(), 1f, 1);
+                }
             }
-        }
-        if (iVehicle instanceof Lav150Entity lav150) {
-            float pitch = lav150.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - lav150.getEntityData().get(HEAT)));
-            player.playSound(ModSounds.LAV_CANNON_FIRE_1P.get(), 1f, pitch);
-            player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
+            if (iVehicle instanceof Lav150Entity lav150) {
+                if (multiWeaponVehicle.getWeaponType() == 0) {
+                    float pitch = lav150.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - lav150.getEntityData().get(HEAT)));
+                    player.playSound(ModSounds.LAV_CANNON_FIRE_1P.get(), 1f, pitch);
+                    player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
+                } else if (multiWeaponVehicle.getWeaponType() == 1) {
+                    float pitch = lav150.getEntityData().get(COAX_HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - lav150.getEntityData().get(COAX_HEAT)));
+                    player.playSound(ModSounds.COAX_FIRE_1P.get(), 1f, pitch);
+                }
+
+            }
         }
     }
 

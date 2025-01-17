@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.entity.vehicle;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
+import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.projectile.SmallCannonShellEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.ModVariables;
@@ -62,12 +63,15 @@ import java.util.List;
 
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
-public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IChargeEntity, IArmedVehicleEntity {
+public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IChargeEntity, IArmedVehicleEntity, MultiWeaponVehicleEntity {
 
     public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> COAX_HEAT = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> LOADED_COAX_AMMO = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> WEAPON_TYPE = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
 
     public static final float MAX_HEALTH = VehicleConfig.LAV_150_HP.get();
     public static final int MAX_ENERGY = VehicleConfig.LAV_150_MAX_ENERGY.get();
@@ -84,6 +88,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
     public float leftWheelRotO;
     public float rightWheelRotO;
     public boolean cannotFire;
+    public boolean cannotFireCoax;
 
     public Lav150Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.LAV_150.get(), world);
@@ -101,16 +106,21 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         this.entityData.define(FIRE_ANIM, 0);
         this.entityData.define(DELTA_ROT, 0f);
         this.entityData.define(HEAT, 0);
+        this.entityData.define(COAX_HEAT, 0);
+        this.entityData.define(WEAPON_TYPE, 0);
+        this.entityData.define(LOADED_COAX_AMMO, 0);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
+        compound.putInt("LoadedCoaxAmmo", this.entityData.get(LOADED_COAX_AMMO));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
+        this.entityData.set(LOADED_COAX_AMMO, compound.getInt("LoadedCoaxAmmo"));
     }
 
     @Override
@@ -194,14 +204,48 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
             cannotFire = false;
         }
 
-        if (this.level() instanceof ServerLevel) {
-            this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum());
+        if (this.entityData.get(COAX_HEAT) > 0) {
+            this.entityData.set(COAX_HEAT, this.entityData.get(COAX_HEAT) - 1);
         }
+
+        if (this.entityData.get(COAX_HEAT) < 40) {
+            cannotFireCoax = false;
+        }
+
+        if (this.level() instanceof ServerLevel) {
+            Player player = (Player) this.getFirstPassenger();
+            if (player != null) {
+                if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO_BOX.get())).mapToInt(ItemStack::getCount).sum() > 0 && this.getEntityData().get(LOADED_COAX_AMMO) < 500)) {
+                    this.entityData.set(LOADED_COAX_AMMO, this.getEntityData().get(LOADED_COAX_AMMO) + 30);
+                    this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO_BOX.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+                }
+                if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO.get())).mapToInt(ItemStack::getCount).sum() > 0 && this.getEntityData().get(LOADED_COAX_AMMO) < 500)) {
+                    this.entityData.set(LOADED_COAX_AMMO, this.getEntityData().get(LOADED_COAX_AMMO) + 5);
+                    this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+                }
+            }
+
+            if (this.getEntityData().get(WEAPON_TYPE) == 0) {
+                this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum());
+            } else {
+                this.entityData.set(AMMO, this.getEntityData().get(LOADED_COAX_AMMO));
+            }
+        }
+
+//        if (this.level() instanceof ServerLevel) {
+//            this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).mapToInt(ItemStack::getCount).sum());
+//        }
 
         Entity driver = this.getFirstPassenger();
         if (driver instanceof Player player) {
             if (this.entityData.get(HEAT) > 100) {
                 cannotFire = true;
+                if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
+                    SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_OVERHEAT.get(), 1f, 1f);
+                }
+            }
+            if (this.entityData.get(COAX_HEAT) > 100) {
+                cannotFireCoax = true;
                 if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
                     SoundTool.playLocalSound(serverPlayer, ModSounds.MINIGUN_OVERHEAT.get(), 1f, 1f);
                 }
@@ -271,49 +315,86 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
     @Override
     public void vehicleShoot(Player player) {
-        if (this.cannotFire) return;
-
         Matrix4f transform = getBarrelTransform();
+        if (entityData.get(WEAPON_TYPE) == 0) {
+            if (this.cannotFire) return;
+            float x = -0.0234375f;
+            float y = 0f;
+            float z = 4f;
 
-        float x = -0.0234375f;
-        float y = 0f;
-        float z = 4f;
+            Vector4f worldPosition = transformPosition(transform, x, y, z);
+            SmallCannonShellEntity smallCannonShell = new SmallCannonShellEntity(player, this.level(),
+                    VehicleConfig.LAV_150_CANNON_DAMAGE.get(),
+                    VehicleConfig.LAV_150_CANNON_EXPLOSION_DAMAGE.get(),
+                    VehicleConfig.LAV_150_CANNON_EXPLOSION_RADIUS.get());
 
-        Vector4f worldPosition = transformPosition(transform, x, y, z);
-        SmallCannonShellEntity smallCannonShell = new SmallCannonShellEntity(player, this.level(),
-                VehicleConfig.LAV_150_CANNON_DAMAGE.get(),
-                VehicleConfig.LAV_150_CANNON_EXPLOSION_DAMAGE.get(),
-                VehicleConfig.LAV_150_CANNON_EXPLOSION_RADIUS.get());
+            smallCannonShell.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
+            smallCannonShell.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 22,
+                    0.25f);
+            this.level().addFreshEntity(smallCannonShell);
 
-        smallCannonShell.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
-        smallCannonShell.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 22,
-                0.25f);
-        this.level().addFreshEntity(smallCannonShell);
+            sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z, 1, 0.02, 0.02, 0.02, 0, false);
 
-        sendParticle((ServerLevel) this.level(), ParticleTypes.LARGE_SMOKE, worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z, 1, 0.02, 0.02, 0.02, 0, false);
+            float pitch = this.entityData.get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - this.entityData.get(HEAT)));
 
-        float pitch = this.entityData.get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - this.entityData.get(HEAT)));
+            if (!player.level().isClientSide) {
+                if (player instanceof ServerPlayer serverPlayer) {
+                    serverPlayer.playSound(ModSounds.LAV_CANNON_FIRE_3P.get(), 4, pitch);
+                    serverPlayer.playSound(ModSounds.LAV_CANNON_FAR.get(), 12, pitch);
+                    serverPlayer.playSound(ModSounds.LAV_CANNON_VERYFAR.get(), 24, pitch);
+                }
+            }
 
-        if (!player.level().isClientSide) {
-            if (player instanceof ServerPlayer serverPlayer) {
-                serverPlayer.playSound(ModSounds.LAV_CANNON_FIRE_3P.get(), 4, pitch);
-                serverPlayer.playSound(ModSounds.LAV_CANNON_FAR.get(), 12, pitch);
-                serverPlayer.playSound(ModSounds.LAV_CANNON_VERYFAR.get(), 24, pitch);
+            Level level = player.level();
+            final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
+
+            for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
+                if (target instanceof ServerPlayer serverPlayer) {
+                    ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 9, this.getX(), this.getEyeY(), this.getZ()));
+                }
+            }
+
+            this.entityData.set(HEAT, this.entityData.get(HEAT) + 7);
+            this.entityData.set(FIRE_ANIM, 3);
+            this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+
+        } else if (entityData.get(WEAPON_TYPE) == 1) {
+            if (this.cannotFireCoax) return;
+            float x = 0.3f;
+            float y = 0.08f;
+            float z = 0.7f;
+
+            Vector4f worldPosition = transformPosition(transform, x, y, z);
+
+            if (this.entityData.get(LOADED_COAX_AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+                ProjectileEntity projectileRight = new ProjectileEntity(player.level())
+                        .shooter(player)
+                        .damage(9.5f)
+                        .headShot(2f)
+                        .zoom(false);
+
+                projectileRight.bypassArmorRate(0.2f);
+                projectileRight.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
+                projectileRight.shoot(player, getBarrelVector(1).x, getBarrelVector(1).y + 0.002f, getBarrelVector(1).z, 36,
+                        0.25f);
+                this.level().addFreshEntity(projectileRight);
+
+                if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+                    this.entityData.set(LOADED_COAX_AMMO, this.getEntityData().get(LOADED_COAX_AMMO) - 1);
+                }
+            }
+
+            this.entityData.set(COAX_HEAT, this.entityData.get(COAX_HEAT) + 3);
+            this.entityData.set(FIRE_ANIM, 2);
+
+            if (!player.level().isClientSide) {
+                if (player instanceof ServerPlayer serverPlayer) {
+                    serverPlayer.playSound(ModSounds.M_60_FIRE_3P.get(), 3, 1);
+                    serverPlayer.playSound(ModSounds.M_60_FAR.get(), 6, 1);
+                    serverPlayer.playSound(ModSounds.M_60_VERYFAR.get(), 12, 1);
+                }
             }
         }
-
-        Level level = player.level();
-        final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
-
-        for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(4), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
-            if (target instanceof ServerPlayer serverPlayer) {
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 9, this.getX(), this.getEyeY(), this.getZ()));
-            }
-        }
-
-        this.entityData.set(HEAT, this.entityData.get(HEAT) + 7);
-        this.entityData.set(FIRE_ANIM, 3);
-        this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
     }
 
     public final Vec3 getBarrelVector(float pPartialTicks) {
@@ -367,11 +448,11 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         }
 
         if (forwardInputDown) {
-            this.entityData.set(POWER, this.entityData.get(POWER) + 0.006f);
+            this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.015f, 0.2f));
         }
 
         if (backInputDown) {
-            this.entityData.set(POWER, this.entityData.get(POWER) - 0.008f);
+            this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.01f, -0.2f));
         }
 
         if (rightInputDown) {
@@ -564,8 +645,12 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
     }
 
     private PlayState firePredicate(AnimationState<Lav150Entity> event) {
-        if (this.entityData.get(FIRE_ANIM) > 1) {
+        if (this.entityData.get(FIRE_ANIM) > 1 && entityData.get(WEAPON_TYPE) == 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.lav.fire"));
+        }
+
+        if (this.entityData.get(FIRE_ANIM) > 0 && entityData.get(WEAPON_TYPE) == 1) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.lav.fire2"));
         }
 
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.lav.idle"));
@@ -608,13 +693,22 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
     @Override
     public int mainGunRpm() {
+        if (entityData.get(WEAPON_TYPE) == 0) {
+            return 300;
+        } else if (entityData.get(WEAPON_TYPE) == 1) {
+            return 600;
+        }
         return 300;
     }
 
     @Override
     public boolean canShoot(Player player) {
-        return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())))
-                && !cannotFire;
+        if (entityData.get(WEAPON_TYPE) == 0) {
+            return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFire;
+        } else if (entityData.get(WEAPON_TYPE) == 1) {
+            return (this.entityData.get(LOADED_COAX_AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFireCoax;
+        }
+        return false;
     }
 
     @Override
@@ -635,5 +729,21 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
     @Override
     public int zoomFov() {
         return 3;
+    }
+
+    @Override
+    public void changeWeapon() {
+        if (entityData.get(WEAPON_TYPE) == 0) {
+            this.level().playSound(null, this, ModSounds.INTO_MISSILE.get(), this.getSoundSource(), 1, 1);
+            entityData.set(WEAPON_TYPE, 1);
+        } else if (entityData.get(WEAPON_TYPE) == 1) {
+            entityData.set(WEAPON_TYPE, 0);
+            this.level().playSound(null, this, ModSounds.INTO_CANNON.get(), this.getSoundSource(), 1, 1);
+        }
+    }
+
+    @Override
+    public int getWeaponType() {
+        return entityData.get(WEAPON_TYPE);
     }
 }

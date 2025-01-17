@@ -526,7 +526,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                         .headShot(2f)
                         .zoom(false);
 
-                projectileRight.heBullet(true, 3);
+                projectileRight.heBullet(true, 2);
                 projectileRight.bypassArmorRate(0.2f);
                 projectileRight.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
                 projectileRight.shoot(player, this.getLookAngle().x, this.getLookAngle().y + 0.018, this.getLookAngle().z, 20,

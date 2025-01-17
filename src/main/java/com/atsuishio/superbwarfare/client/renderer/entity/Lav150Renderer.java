@@ -67,10 +67,13 @@ public class Lav150Renderer extends GeoEntityRenderer<Lav150Entity> {
         if (name.equals("barrel")) {
             bone.setRotX(-Mth.lerp(partialTick, animatable.turretXRotO, animatable.getTurretXRot()) * Mth.DEG_TO_RAD);
         }
+        if (name.equals("flare")) {
+            bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
+        }
+        if (name.equals("flare2")) {
+            bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
+        }
 
-//        if (name.equals("flare")) {
-//            bone.setRotZ((float) (0.5 * (Math.random() - 0.5)));
-//        }
         super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 

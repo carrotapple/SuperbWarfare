@@ -2750,5 +2750,12 @@
         "name": "superbwarfare:lav/lav_engine_1p"
       }
     ]
+  },
+  "coax_fire_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:lav/coax_fire_1p"
+      }
+    ]
   }
 }

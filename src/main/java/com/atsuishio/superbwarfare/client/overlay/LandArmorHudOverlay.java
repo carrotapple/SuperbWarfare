@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
+import com.atsuishio.superbwarfare.entity.vehicle.MultiWeaponVehicleEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.SeekTool;
@@ -32,6 +33,7 @@ import java.text.DecimalFormat;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 import static com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay.*;
+import static com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity.COAX_HEAT;
 import static com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity.HEAT;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
@@ -53,7 +55,7 @@ public class LandArmorHudOverlay {
         Vec3 cameraPos = camera.getPosition();
 
         if (player == null) return;
-        if (player.getVehicle() instanceof Lav150Entity lav150 && lav150.isDriver(player)) {
+        if (player.getVehicle() instanceof Lav150Entity lav150 && lav150.isDriver(player) && player.getVehicle() instanceof MultiWeaponVehicleEntity multiWeaponVehicle) {
             poseStack.pushPose();
 
             poseStack.translate(-8 * ClientEventHandler.turnRot[1], -8 * ClientEventHandler.turnRot[0], 0);
@@ -137,8 +139,14 @@ public class LandArmorHudOverlay {
                 //武器名称
 
                 if (player.getVehicle() instanceof Lav150Entity lav) {
-                    double heat = 1 - lav.getEntityData().get(HEAT) / 100.0F;
-                    guiGraphics.drawString(mc.font, Component.literal("20MM CANNON " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : lav.getAmmoCount(player))), w / 2 - 33, h - 65, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
+                    if (multiWeaponVehicle.getWeaponType() == 0) {
+                        double heat = 1 - lav.getEntityData().get(HEAT) / 100.0F;
+                        guiGraphics.drawString(mc.font, Component.literal("20MM CANNON " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : lav.getAmmoCount(player))), w / 2 - 33, h - 65, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
+                    } else {
+                        double heat = 1 - lav.getEntityData().get(COAX_HEAT) / 100.0F;
+                        guiGraphics.drawString(mc.font, Component.literal("7.62MM COAX " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : lav.getAmmoCount(player))), w / 2 - 33, h - 65, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
+                    }
+
                 }
 
                 //血量
