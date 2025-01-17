@@ -1,16 +1,16 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.entity.vehicle.AnnihilatorEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.ICannonEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.Mk42Entity;
-import com.atsuishio.superbwarfare.entity.vehicle.Mle1934Entity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.tools.TraceTool;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -24,8 +24,11 @@ import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.joml.Math;
 
 import java.text.DecimalFormat;
+
+import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class CannonHudOverlay {
@@ -34,13 +37,19 @@ public class CannonHudOverlay {
     public static void eventHandler(RenderGuiEvent.Pre event) {
         int w = event.getWindow().getGuiScaledWidth();
         int h = event.getWindow().getGuiScaledHeight();
-        Player player = Minecraft.getInstance().player;
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
+        Camera camera = mc.gameRenderer.getMainCamera();
+        Vec3 cameraPos = camera.getPosition();
+        GuiGraphics guiGraphics = event.getGuiGraphics();
+        PoseStack poseStack = guiGraphics.pose();
 
         if (!shouldRenderCrossHair(player)) return;
 
         Entity cannon = player.getVehicle();
         if (cannon == null) return;
 
+        poseStack.pushPose();
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
@@ -48,29 +57,27 @@ public class CannonHudOverlay {
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         RenderSystem.setShaderColor(1, 1, 1, 1);
 
-        float indicatorPosH = 0;
-        if (cannon instanceof Mk42Entity) {
-            indicatorPosH = 1.3f;
-        }
+        preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/compass_white.png"), (float) w / 2 - 128, (float) 10, 128 + ((float) 64 / 45 * (Mth.lerp(event.getPartialTick(), cannon.yRotO, cannon.getYRot()))), 0, 256, 16, 512, 16);
+        preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/roll_ind_white.png"), w / 2 - 4, 27, 0, 0.0F, 8, 8, 8, 8);
 
-        if (cannon instanceof Mle1934Entity) {
-            indicatorPosH = 1.2f;
-        }
+        String angle = new DecimalFormat("#0.0").format(Mth.lerp(event.getPartialTick(), cannon.yRotO, cannon.getYRot()));
+        int width = Minecraft.getInstance().font.width(angle);
+        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.literal(angle), w / 2 - width / 2, 40, -1, false);
 
-        if (cannon instanceof AnnihilatorEntity) {
-            indicatorPosH = cannon.getEntityData().get(AnnihilatorEntity.OFFSET_ANGLE);
-        }
+        preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_pitch.png"), w / 2 + 166, h / 2 - 64, 0, 0.0F, 8, 128, 8, 128);
 
-        float yRotOffset = Mth.lerp(event.getPartialTick(), player.yRotO, player.getYRot());
-        float xRotOffset = Mth.lerp(event.getPartialTick(), player.xRotO, player.getXRot());
-        float diffY = cannon.getViewYRot(event.getPartialTick()) - yRotOffset;
-        float diffX = cannon.getViewXRot(event.getPartialTick()) - xRotOffset + indicatorPosH;
+        String pitch = new DecimalFormat("#0.0").format(-Mth.lerp(event.getPartialTick(), cannon.xRotO, cannon.getXRot()));
+        int widthP = Minecraft.getInstance().font.width(pitch);
+
+        poseStack.pushPose();
+
+        event.getGuiGraphics().pose().translate(0, Mth.lerp(event.getPartialTick(), cannon.xRotO, cannon.getXRot()) * 0.7, 0);
+        preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_pitch_ind.png"), w / 2 + 158, h / 2 - 4, 0, 0.0F, 8, 8, 8, 8);
+        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.literal(pitch), w / 2 + 157 - widthP, h / 2 - 4, -1, false);
+        poseStack.popPose();
+
         float fovAdjust = (float) 70 / Minecraft.getInstance().options.fov().get();
-        if (diffY > 180.0f) {
-            diffY -= 360.0f;
-        } else if (diffY < -180.0f) {
-            diffY += 360.0f;
-        }
+
         float f = (float) Math.min(w, h);
         float f1 = Math.min((float) w / f, (float) h / f) * fovAdjust;
         int i = Mth.floor(f * f1);
@@ -104,18 +111,18 @@ public class CannonHudOverlay {
                 }
             }
             if (cannon instanceof AnnihilatorEntity) {
-                RenderHelper.preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/laser_cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
+                preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/laser_cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
             } else {
-                RenderHelper.preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
+                preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_crosshair.png"), k, l, 0, 0.0F, i, j, i, j);
             }
-            RenderHelper.preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/indicator.png"), k + (float) Math.tan(Mth.clamp(Mth.DEG_TO_RAD * diffY, -1.5, 1.5)) * 5 * i / 1.4f * (90 - Math.abs(player.getXRot())) / 90, l + (float) Math.tan(Mth.clamp(Mth.DEG_TO_RAD * diffX, -1.5, 1.5)) * 5 * j / 1.4f, 0, 0.0F, i, j, i, j);
+            float diffY = -Mth.wrapDegrees(Mth.lerp(event.getPartialTick(), player.yHeadRotO, player.getYHeadRot()) - Mth.lerp(event.getPartialTick(), cannon.yRotO, cannon.getYRot()));
+
+            preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/indicator.png"), w / 2 - 4.3f + 0.45f * diffY, h / 2 - 10, 0, 0.0F, 8, 8, 8, 8);
         } else {
-            RenderHelper.preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
+            preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
         }
 
-        event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.mortar.pitch")
-                        .append(Component.literal(new DecimalFormat("##.#").format(-cannon.getXRot()) + "°")),
-                w / 2 + 14, h / 2 - 29, -1, false);
+        poseStack.popPose();
     }
 
     private static boolean shouldRenderCrossHair(Player player) {

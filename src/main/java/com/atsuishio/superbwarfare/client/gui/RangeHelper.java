@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 
 public class RangeHelper {
 
-    public static final int MAX_RANGE = 512;
+    public static final int MAX_RANGE = 1145;
 
     /**
      * 计算迫击炮理论水平射程
@@ -12,7 +12,7 @@ public class RangeHelper {
      * @param thetaDegrees 发射角度（以度为单位），需要根据实际情况修改
      */
     public static double getRange(double thetaDegrees) {
-        double initialVelocity = 8.0; // 初始速度 8 m/s
+        double initialVelocity = 14.741; // 初始速度 8 m/s
         double thetaRadians = Math.toRadians(thetaDegrees); // 将角度转换为弧度
         double gravity = 0.05; // 重力加速度
         double velocityDecay = 0.99; // 速度衰减系数
