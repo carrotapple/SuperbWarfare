@@ -14,6 +14,8 @@ import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.RarityTool;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
@@ -23,7 +25,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -43,6 +49,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -131,6 +138,10 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, AnimatedItem
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sc.iterativeload2"));
         }
 
+        if (ClientEventHandler.gunMelee > 0) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sc.hit"));
+        }
+
         if (stack.getOrCreateTag().getInt("reload_stage") == 3) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.sc.finish"));
         }
@@ -151,6 +162,7 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, AnimatedItem
                 && stack.getOrCreateTag().getInt("reload_stage") != 2
                 && stack.getOrCreateTag().getInt("reload_stage") != 3
                 && ClientEventHandler.drawTime < 0.01
+                && ClientEventHandler.gunMelee == 0
                 && !GunsTool.getGunBooleanTag(stack, "Reloading")) {
             if (player.hasEffect(MobEffects.MOVEMENT_SPEED)) {
                 return event.setAndContinue(RawAnimation.begin().thenLoop("animation.sc.run_fast"));
@@ -265,7 +277,24 @@ public class SecondaryCataclysm extends GunItem implements GeoItem, AnimatedItem
     }
 
     @Override
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+        Multimap<Attribute, AttributeModifier> map = super.getAttributeModifiers(slot, stack);
+        UUID uuid = new UUID(slot.toString().hashCode(), 0);
+        if (slot == EquipmentSlot.MAINHAND) {
+            map = HashMultimap.create(map);
+            map.put(Attributes.ATTACK_DAMAGE,
+                    new AttributeModifier(uuid, ModUtils.ATTRIBUTE_MODIFIER,19, AttributeModifier.Operation.ADDITION));
+        }
+        return map;
+    }
+
+    @Override
     public boolean isIterativeReload(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean canUseMelee(ItemStack stack) {
         return true;
     }
 

@@ -301,8 +301,6 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntit
                 this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -3f, 3f), -85, 16.3f));
             }
         }
-
-
     }
 
     public boolean setTarget(ItemStack stack) {

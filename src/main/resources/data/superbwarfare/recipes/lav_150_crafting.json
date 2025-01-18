@@ -2,22 +2,16 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "abc",
-    "def",
+    "dbf",
+    "eee",
     "hgh"
   ],
   "key": {
-    "a": {
-      "item": "superbwarfare:large_propeller"
-    },
     "b": {
-      "item": "superbwarfare:large_motor"
-    },
-    "c": {
-      "item": "superbwarfare:propeller"
+      "item": "superbwarfare:light_armament_module"
     },
     "d": {
-      "item": "minecraft:compass"
+      "item": "superbwarfare:cell"
     },
     "e": {
       "item":"superbwarfare:steel_block"
@@ -26,17 +20,17 @@
       "item": "minecraft:chest"
     },
     "g": {
-      "item": "superbwarfare:cell"
+      "item": "superbwarfare:large_motor"
     },
     "h": {
-      "item": "superbwarfare:light_armament_module"
+      "item": "superbwarfare:wheel"
     }
   },
   "result": {
     "item": "superbwarfare:container",
     "nbt": {
       "BlockEntityTag": {
-        "EntityType": "superbwarfare:ah_6"
+        "EntityType": "superbwarfare:lav_150"
       }
     }
   }

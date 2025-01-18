@@ -191,6 +191,7 @@
   "item.superbwarfare.large_propeller": "Large Propeller",
   "item.superbwarfare.motor": "Motor",
   "item.superbwarfare.large_motor": "Large Motor",
+  "item.superbwarfare.wheel": "Wheel",
   "item.superbwarfare.hand_grenade": "Hand Grenade",
   "item.superbwarfare.rgo_grenade": "RGO Grenade",
   "item.superbwarfare.transcript": "Transcript",
@@ -199,6 +200,7 @@
   "des.superbwarfare.transcript.distance": "Distance: ",
   "des.superbwarfare.transcript.total": "Total: ",
   "item.superbwarfare.beam_test": "[ZzzzBoom!]",
+  "item.superbwarfare.light_armament_module": "Light Armament Module",
 
   "attribute.superbwarfare.bullet_resistance": "Bullet Resistance",
 
@@ -414,6 +416,7 @@
   "key.superbwarfare.edit_stock": "Switch Stock",
   "key.superbwarfare.edit_grip": "Switch Grip",
   "key.superbwarfare.release_decoy": "Release Decoy",
+  "key.superbwarfare.melee": "Melee",
 
   "effect.superbwarfare.shock": "Shock",
   "effect.superbwarfare.burn": "Burn",

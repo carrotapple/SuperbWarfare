@@ -146,6 +146,7 @@ public class ClientEventHandler {
     public static double shakeType = 0;
     public static int lungeAttack;
     public static int lungeDraw;
+    public static int gunMelee;
     public static int lungeSprint;
     public static Entity entity;
 
@@ -220,6 +221,7 @@ public class ClientEventHandler {
         isProne(player);
         beamShoot(player, stack);
         handleLungeAttack(player, stack);
+        handleGunMelee(player, stack);
 
         if (event.phase == TickEvent.Phase.END) {
             handleVariableDecrease();
@@ -249,6 +251,43 @@ public class ClientEventHandler {
                 && !level.getBlockState(BlockPos.containing(player.getX() + 0.7 * player.getLookAngle().x, player.getY() + 1.5, player.getZ() + 0.7 * player.getLookAngle().z)).canOcclude();
     }
 
+    public static void handleGunMelee(Player player, ItemStack stack) {
+        if (stack.getItem() instanceof GunItem gunItem) {
+            if (gunItem.canUseMelee(stack) && gunMelee == 0 && drawTime < 0.01
+                    && ModKeyMappings.MELEE.isDown()
+                    && !(player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand())
+                    && !holdFireVehicle
+                    && !notInGame()
+                    && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit
+                    && !(stack.getOrCreateTag().getBoolean("is_normal_reloading") || stack.getOrCreateTag().getBoolean("is_empty_reloading"))
+                    && !GunsTool.getGunBooleanTag(stack, "Reloading")
+                    && !player.getCooldowns().isOnCooldown(stack.getItem())
+                    && !GunsTool.getGunBooleanTag(stack, "Charging")) {
+                gunMelee = 36;
+                cantFireTime = 40;
+                player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1f, 1);
+            }
+            if (gunMelee == 22) {
+
+                boolean lookAtEntity = false;
+
+                Entity lookingEntity = TraceTool.findMeleeEntity(player, player.getEntityReach());
+
+                if (lookingEntity != null) {
+                    lookAtEntity = true;
+                }
+
+                if (lookAtEntity) {
+                    ModUtils.PACKET_HANDLER.sendToServer(new MeleeAttackMessage(lookingEntity.getUUID()));
+                }
+            }
+        }
+
+        if (gunMelee > 0) {
+            gunMelee--;
+        }
+    }
+
     public static void handleLungeAttack(Player player, ItemStack stack) {
         if (stack.is(ModItems.LUNGE_MINE.get()) && lungeAttack == 0 && lungeDraw == 0 && holdFire) {
             lungeAttack = 36;
@@ -260,12 +299,12 @@ public class ClientEventHandler {
 
             boolean lookAtEntity = false;
 
-            Entity lookingEntity = TraceTool.findLookingEntity(player, player.getEntityReach() + 2);
+            Entity lookingEntity = TraceTool.findLookingEntity(player, player.getEntityReach() + 2.5);
 
-            BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(player.getBlockReach() + 2)),
+            BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(player.getBlockReach() + 2.5)),
                     ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
 
-            Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(player.getBlockReach() + 2)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
+            Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(player.getBlockReach() + 2.5)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
             BlockState blockState = player.level().getBlockState(BlockPos.containing(looking.x(), looking.y(), looking.z()));
 
             if (lookingEntity != null) {

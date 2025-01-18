@@ -44,6 +44,25 @@ public class TraceTool {
         return null;
     }
 
+    public static Entity findMeleeEntity(Entity entity, double entityReach) {
+        double distance = entityReach * entityReach;
+        Vec3 eyePos = entity.getEyePosition(1.0f);
+        HitResult hitResult = entity.pick(entityReach, 1.0f, false);
+
+        Vec3 viewVec = entity.getViewVector(1.0F);
+        Vec3 toVec = eyePos.add(viewVec.x * entityReach, viewVec.y * entityReach, viewVec.z * entityReach);
+        AABB aabb = entity.getBoundingBox().expandTowards(viewVec.scale(entityReach)).inflate(1.0D, 1.0D, 1.0D);
+        EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(entity, eyePos, toVec, aabb, p -> !p.isSpectator() && entity.getVehicle() != p && p.isAlive(), distance);
+        if (entityhitresult != null) {
+            hitResult = entityhitresult;
+
+        }
+        if (hitResult.getType() == HitResult.Type.ENTITY) {
+            return ((EntityHitResult) hitResult).getEntity();
+        }
+        return null;
+    }
+
     public static Entity laserfindLookingEntity(Entity player, double entityReach) {
 
         BlockHitResult blockResult = player.level().clip(

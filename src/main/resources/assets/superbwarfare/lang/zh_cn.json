@@ -191,6 +191,7 @@
   "item.superbwarfare.large_propeller": "大型螺旋桨",
   "item.superbwarfare.motor": "马达",
   "item.superbwarfare.large_motor": "大型电动机",
+  "item.superbwarfare.wheel": "车轮",
   "item.superbwarfare.hand_grenade": "M67手榴弹",
   "item.superbwarfare.rgo_grenade": "RGO手榴弹",
   "item.superbwarfare.transcript": "成绩单",
@@ -199,6 +200,7 @@
   "des.superbwarfare.transcript.distance": "距离：",
   "des.superbwarfare.transcript.total": "总环数：",
   "item.superbwarfare.beam_test": "[滋崩]",
+  "item.superbwarfare.light_armament_module": "轻型武装模块",
 
   "attribute.superbwarfare.bullet_resistance": "子弹防护",
 
@@ -412,6 +414,7 @@
   "key.superbwarfare.edit_stock": "切换枪托",
   "key.superbwarfare.edit_grip": "切换握把",
   "key.superbwarfare.release_decoy": "释放诱饵",
+  "key.superbwarfare.melee": "枪械近战",
 
   "effect.superbwarfare.shock": "电击",
   "effect.superbwarfare.burn": "点燃",

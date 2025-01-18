@@ -31,7 +31,9 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.LARGE_PROPELLER);
         simpleItem(ModItems.MOTOR);
         simpleItem(ModItems.LARGE_MOTOR);
+        simpleItem(ModItems.WHEEL);
         simpleItem(ModItems.DRONE);
+        simpleItem(ModItems.LIGHT_ARMAMENT_MODULE);
 
         simpleItem(ModItems.TARGET_DEPLOYER);
         simpleItem(ModItems.MORTAR_DEPLOYER);
