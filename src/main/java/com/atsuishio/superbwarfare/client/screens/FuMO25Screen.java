@@ -67,6 +67,12 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
 
         // 信息显示
         renderInfo(pGuiGraphics);
+
+        RenderSystem.depthMask(true);
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.enableDepthTest();
+        RenderSystem.disableBlend();
+        RenderSystem.setShaderColor(1, 1, 1, 1);
     }
 
     private void renderXLine(GuiGraphics guiGraphics, int i, int j) {
@@ -216,7 +222,9 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
     @Override
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         this.renderBackground(pGuiGraphics);
+        pGuiGraphics.pose().pushPose();
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        pGuiGraphics.pose().popPose();
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
     }
 
