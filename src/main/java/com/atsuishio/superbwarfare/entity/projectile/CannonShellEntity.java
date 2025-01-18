@@ -55,7 +55,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(CannonShellEntity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public String animationprocedure = "empty";
+    public String animationProcedure = "empty";
     private float damage = 0;
     private float radius = 0;
     private float explosionDamage = 0;
@@ -339,20 +339,20 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
     }
 
     private PlayState movementPredicate(AnimationState<CannonShellEntity> event) {
-        if (this.animationprocedure.equals("empty")) {
+        if (this.animationProcedure.equals("empty")) {
             return event.setAndContinue(RawAnimation.begin().thenLoop("animation.cannon_shell.idle"));
         }
         return PlayState.STOP;
     }
 
     private PlayState procedurePredicate(AnimationState<CannonShellEntity> event) {
-        if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
+        if (!animationProcedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+            event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationProcedure));
             if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-                this.animationprocedure = "empty";
+                this.animationProcedure = "empty";
                 event.getController().forceAnimationReset();
             }
-        } else if (animationprocedure.equals("empty")) {
+        } else if (animationProcedure.equals("empty")) {
             return PlayState.STOP;
         }
         return PlayState.CONTINUE;
@@ -373,7 +373,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
 
     @Override
     public void setAnimationProcedure(String procedure) {
-        this.animationprocedure = procedure;
+        this.animationProcedure = procedure;
     }
 
     @Override
