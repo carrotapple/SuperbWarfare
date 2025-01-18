@@ -295,6 +295,7 @@ public abstract class GunItem extends Item {
     public boolean ejectShell(ItemStack stack) {
         return false;
     }
+
     public boolean canUseMelee(ItemStack stack) {
         return false;
     }
