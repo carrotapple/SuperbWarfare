@@ -293,6 +293,41 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         gunnerAngle();
         lowHealthWarning();
 
+//        Matrix4f transform = getVehicleTransform();
+//        暂时屁用没有的点位计算
+//        Vector4f worldPosition1 = transformPosition(transform, 1.6f, 3f, 4);
+//        Vector4f worldPosition2 = transformPosition(transform, -1.6f, 3f, 4);
+//        Vector4f worldPosition3 = transformPosition(transform, 1.6f, 3f, -4);
+//        Vector4f worldPosition4 = transformPosition(transform, -1.6f, 3f, -4);
+//        Vector4f worldPosition5 = transformPosition(transform, 1.6f, 0.1f, 4);
+//        Vector4f worldPosition6 = transformPosition(transform, -1.6f, 0.1f, 4);
+//        Vector4f worldPosition7 = transformPosition(transform, 1.6f, 0.1f, -4);
+//        Vector4f worldPosition8 = transformPosition(transform, -1.6f, 0.1f, -4);
+//
+//        Vec3 p1 = new Vec3(worldPosition1.x,worldPosition1.y,worldPosition1.z);
+//        Vec3 p2 = new Vec3(worldPosition2.x,worldPosition2.y,worldPosition2.z);
+//        Vec3 p3 = new Vec3(worldPosition3.x,worldPosition3.y,worldPosition3.z);
+//        Vec3 p4 = new Vec3(worldPosition4.x,worldPosition4.y,worldPosition4.z);
+//        Vec3 p5 = new Vec3(worldPosition5.x,worldPosition5.y,worldPosition5.z);
+//        Vec3 p6 = new Vec3(worldPosition6.x,worldPosition6.y,worldPosition6.z);
+//        Vec3 p7 = new Vec3(worldPosition7.x,worldPosition7.y,worldPosition7.z);
+//        Vec3 p8 = new Vec3(worldPosition8.x,worldPosition8.y,worldPosition8.z);
+//
+//        Player player = (Player) this.getFirstPassenger();
+//
+//        if (player != null) {
+//            if (player.level() instanceof ServerLevel serverLevel ) {
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p1.x, p1.y, p1.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p2.x, p2.y, p2.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p3.x, p3.y, p3.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p4.x, p4.y, p4.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p5.x, p5.y, p5.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p6.x, p6.y, p6.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p7.x, p7.y, p7.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
+//                sendParticle(serverLevel, ParticleTypes.END_ROD, p8.x, p8.y, p8.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
+//            }
+//        }
+
         this.refreshDimensions();
     }
 
