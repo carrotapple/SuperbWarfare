@@ -14,7 +14,6 @@ public class MeleeAttackMessage {
     private final UUID uuid;
 
     public MeleeAttackMessage(UUID uuid) {
-
         this.uuid = uuid;
     }
 
@@ -40,6 +39,4 @@ public class MeleeAttackMessage {
         });
         context.setPacketHandled(true);
     }
-
-
 }

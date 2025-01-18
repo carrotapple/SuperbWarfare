@@ -268,16 +268,8 @@ public class ClientEventHandler {
                 player.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1f, 1);
             }
             if (gunMelee == 22) {
-
-                boolean lookAtEntity = false;
-
                 Entity lookingEntity = TraceTool.findMeleeEntity(player, player.getEntityReach());
-
                 if (lookingEntity != null) {
-                    lookAtEntity = true;
-                }
-
-                if (lookAtEntity) {
                     ModUtils.PACKET_HANDLER.sendToServer(new MeleeAttackMessage(lookingEntity.getUUID()));
                 }
             }
@@ -296,9 +288,6 @@ public class ClientEventHandler {
         }
 
         if (stack.is(ModItems.LUNGE_MINE.get()) && ((lungeAttack >= 18 && lungeAttack <= 21) || lungeSprint > 0)) {
-
-            boolean lookAtEntity = false;
-
             Entity lookingEntity = TraceTool.findLookingEntity(player, player.getEntityReach() + 1.5);
 
             BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(player.getBlockReach() + 1.5)),
@@ -308,10 +297,6 @@ public class ClientEventHandler {
             BlockState blockState = player.level().getBlockState(BlockPos.containing(looking.x(), looking.y(), looking.z()));
 
             if (lookingEntity != null) {
-                lookAtEntity = true;
-            }
-
-            if (lookAtEntity) {
                 ModUtils.PACKET_HANDLER.sendToServer(new LungeMineAttackMessage(0, lookingEntity.getUUID(), result));
                 lungeSprint = 0;
                 lungeAttack = 0;
