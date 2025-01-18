@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.entity.AnimatedEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
+import com.atsuishio.superbwarfare.tools.ChunkLoadTool;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.ProjectileTool;
@@ -25,7 +26,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -35,7 +35,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.world.ForgeChunkManager;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
@@ -272,21 +271,8 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
             ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, this.xo, this.yo, this.zo,
                     1, 0, 0, 0, 0.001, true);
 
-            var movement = this.getDeltaMovement();
-            var currentX = this.chunkPosition().x;
-            var currentZ = this.chunkPosition().z;
-            var nextX = movement.x > 0 ? currentX + 1 : currentX - 1;
-            var nextZ = movement.z > 0 ? currentZ + 1 : currentZ - 1;
-
-            ForgeChunkManager.forceChunk(serverLevel, ModUtils.MODID, this, currentX, currentZ, true, false);
-            ForgeChunkManager.forceChunk(serverLevel, ModUtils.MODID, this, currentX, nextZ, true, false);
-            ForgeChunkManager.forceChunk(serverLevel, ModUtils.MODID, this, nextX, currentZ, true, false);
-            ForgeChunkManager.forceChunk(serverLevel, ModUtils.MODID, this, nextX, nextZ, true, false);
-
-            this.loadedChunks.add(ChunkPos.asLong(currentX, currentZ));
-            this.loadedChunks.add(ChunkPos.asLong(currentX, nextZ));
-            this.loadedChunks.add(ChunkPos.asLong(nextX, currentZ));
-            this.loadedChunks.add(ChunkPos.asLong(nextX, nextZ));
+            // 更新需要加载的区块
+            ChunkLoadTool.updateLoadedChunks(serverLevel, this,  this.loadedChunks);
         }
         if (this.tickCount > 600 || this.isInWater()) {
             if (this.level() instanceof ServerLevel) {
@@ -404,9 +390,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
     @Override
     public void onRemovedFromWorld() {
         if (this.level() instanceof ServerLevel serverLevel) {
-            for (long chunkPos : this.loadedChunks) {
-                ForgeChunkManager.forceChunk(serverLevel, ModUtils.MODID, this, ChunkPos.getX(chunkPos), ChunkPos.getZ(chunkPos), false, false);
-            }
+            ChunkLoadTool.unloadAllChunks(serverLevel, this, this.loadedChunks);
         }
         super.onRemovedFromWorld();
     }
