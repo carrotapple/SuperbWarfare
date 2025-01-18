@@ -83,7 +83,7 @@ public class LungeMineAttackMessage {
     public static void causeLungeMineExplode(Level pLevel, Entity entity, Entity pLivingEntity) {
         CustomExplosion explosion = new CustomExplosion(pLevel, pLivingEntity,
                 ModDamageTypes.causeProjectileBoomDamage(pLevel.registryAccess(), pLivingEntity, entity), 60,
-                pLivingEntity.getX(), pLivingEntity.getY(), pLivingEntity.getZ(), 4f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
+                pLivingEntity.getX(), pLivingEntity.getEyeY(), pLivingEntity.getZ(), 4f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(pLevel, explosion);
         explosion.finalizeExplosion(false);

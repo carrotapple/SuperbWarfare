@@ -299,12 +299,12 @@ public class ClientEventHandler {
 
             boolean lookAtEntity = false;
 
-            Entity lookingEntity = TraceTool.findLookingEntity(player, player.getEntityReach() + 2.5);
+            Entity lookingEntity = TraceTool.findLookingEntity(player, player.getEntityReach() + 1.5);
 
-            BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(player.getBlockReach() + 2.5)),
+            BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(player.getBlockReach() + 1.5)),
                     ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
 
-            Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(player.getBlockReach() + 2.5)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
+            Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(player.getBlockReach() + 1.5)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
             BlockState blockState = player.level().getBlockState(BlockPos.containing(looking.x(), looking.y(), looking.z()));
 
             if (lookingEntity != null) {

@@ -39,6 +39,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
     private float damage = 40.0f;
     private float explosionDamage = 80f;
     private float explosionRadius = 5f;
+    private boolean charged = false;
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public GunGrenadeEntity(EntityType<? extends GunGrenadeEntity> type, Level world) {
@@ -59,6 +60,9 @@ public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
 
     public void setMonsterMultiplier(float monsterMultiplier) {
         this.monsterMultiplier = monsterMultiplier;
+    }
+    public void charged(boolean charged) {
+        this.charged = charged;
     }
 
     @Override
@@ -87,6 +91,10 @@ public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
 
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
             }
+        }
+
+        if (charged) {
+            damage *= 1.25f;
         }
 
         if (entity instanceof Monster monster) {

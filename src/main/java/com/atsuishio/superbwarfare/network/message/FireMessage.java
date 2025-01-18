@@ -559,7 +559,7 @@ public class FireMessage {
 
                 AtomicBoolean flag = new AtomicBoolean(false);
                 stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                        iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() >= 1500)
+                        iEnergyStorage -> flag.set(iEnergyStorage.getEnergyStored() >= 3000)
                 );
 
                 boolean chargeFire = zoom && flag.get();
@@ -577,31 +577,41 @@ public class FireMessage {
                         gunGrenadeEntity.setMonsterMultiplier(0.1f + 0.1f * perkLevel);
                     }
 
+                    if (chargeFire) {
+                        gunGrenadeEntity.charged(true);
+                    }
+
                     gunGrenadeEntity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
-                    gunGrenadeEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (chargeFire ? 3 : 1) * (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0),
+                    gunGrenadeEntity.shoot(player.getLookAngle().x, player.getLookAngle().y, player.getLookAngle().z, (chargeFire ? 4 : 1) * (float) GunsTool.getGunDoubleTag(stack, "Velocity", 0),
                             (float) (zoom ? 0.1 : spread));
                     level.addFreshEntity(gunGrenadeEntity);
                 }
 
                 if (player.level() instanceof ServerLevel serverLevel) {
                     ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, player.getX() + 1.8 * player.getLookAngle().x,
-                            player.getY() + player.getBbHeight() - 0.1 + 1.8 * player.getLookAngle().y,
+                            player.getEyeY() - 0.35 + 1.8 * player.getLookAngle().y,
                             player.getZ() + 1.8 * player.getLookAngle().z,
                             4, 0.1, 0.1, 0.1, 0.002, true);
                 }
                 player.getCooldowns().addCooldown(stack.getItem(), 2);
 
-                if (player instanceof ServerPlayer serverPlayer) {
-                    SoundTool.playLocalSound(serverPlayer, ModSounds.SECONDARY_CATACLYSM_FIRE_1P.get(), 1, 1);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_FIRE_3P.get(), SoundSource.PLAYERS, 3, 1);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_FAR.get(), SoundSource.PLAYERS, 5, 1);
-                    serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_VERYFAR.get(), SoundSource.PLAYERS, 10, 1);
-                }
-
                 if (chargeFire) {
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        SoundTool.playLocalSound(serverPlayer, ModSounds.SECONDARY_CATACLYSM_FIRE_1P_CHARGE.get(), 1, 1);
+                        serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_FIRE_3P_CHARGE.get(), SoundSource.PLAYERS, 3, 1);
+                        serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_FAR_CHARGE.get(), SoundSource.PLAYERS, 5, 1);
+                        serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_VERYFAR_CHARGE.get(), SoundSource.PLAYERS, 10, 1);
+                    }
                     stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(
-                            energy -> energy.extractEnergy(1500, false)
+                            energy -> energy.extractEnergy(3000, false)
                     );
+                } else {
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        SoundTool.playLocalSound(serverPlayer, ModSounds.SECONDARY_CATACLYSM_FIRE_1P.get(), 1, 1);
+                        serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_FIRE_3P.get(), SoundSource.PLAYERS, 3, 1);
+                        serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_FAR.get(), SoundSource.PLAYERS, 5, 1);
+                        serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.SECONDARY_CATACLYSM_VERYFAR.get(), SoundSource.PLAYERS, 10, 1);
+                    }
                 }
 
 
