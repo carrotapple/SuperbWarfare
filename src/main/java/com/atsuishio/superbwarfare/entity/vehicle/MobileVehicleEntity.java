@@ -100,16 +100,17 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
             }
             collisionCoolDown = 4;
             crash = true;
+            this.entityData.set(POWER, 0.4f * entityData.get(POWER));
         }
     }
 
     public void bounceHorizontal(Direction direction) {
         switch (direction.getAxis()) {
             case X:
-                this.setDeltaMovement(this.getDeltaMovement().multiply(-0.8, 0.99, 0.99));
+                this.setDeltaMovement(this.getDeltaMovement().multiply(-0.4, 0.99, 0.99));
                 break;
             case Z:
-                this.setDeltaMovement(this.getDeltaMovement().multiply(0.99, 0.99, -0.8));
+                this.setDeltaMovement(this.getDeltaMovement().multiply(0.99, 0.99, -0.4));
                 break;
         }
     }

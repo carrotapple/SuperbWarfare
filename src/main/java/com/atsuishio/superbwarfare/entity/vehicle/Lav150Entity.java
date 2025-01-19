@@ -257,11 +257,12 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, fluidFloat, 0.0));
 
         if (this.onGround()) {
-            float f0 = 0.54f + 0.25f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90 - 0.02f * Mth.abs(this.getRudderRot());
+            float f0 = 0.54f + 0.25f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
             this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.05 * this.getDeltaMovement().horizontalDistance())));
             this.setDeltaMovement(this.getDeltaMovement().multiply(f0, 0.85, f0));
+
         } else if (this.isInWater()) {
-            float f1 = 0.74f + 0.09f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90 - 0.01f * Mth.abs(this.getRudderRot());
+            float f1 = 0.74f + 0.09f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
             this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.04 * this.getDeltaMovement().horizontalDistance())));
             this.setDeltaMovement(this.getDeltaMovement().multiply(f1, 0.85, f1));
         } else {
@@ -483,11 +484,11 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         }
 
         if (forwardInputDown) {
-            this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.015f, 0.2f));
+            this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + (this.entityData.get(POWER) < 0 ? 0.012f : 0.0024f), 0.18f));
         }
 
         if (backInputDown) {
-            this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.01f, -0.2f));
+            this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - (this.entityData.get(POWER) > 0 ? 0.012f : 0.0024f), -0.13f));
         }
 
         if (rightInputDown) {
@@ -500,7 +501,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
             this.extraEnergy(VehicleConfig.SPEEDBOAT_ENERGY_COST.get());
         }
 
-        this.entityData.set(POWER, this.entityData.get(POWER) * 0.97f);
+        this.entityData.set(POWER, this.entityData.get(POWER) * (upInputDown ? 0.5f : (rightInputDown || leftInputDown) ? 0.977f : 0.99f));
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * (float)Math.max(0.76f - 0.1f * this.getDeltaMovement().horizontalDistance(), 0.3));
 
         float angle = (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1));
@@ -518,8 +519,8 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         this.setRudderRot(Mth.clamp(this.getRudderRot() - this.entityData.get(DELTA_ROT), -0.8f, 0.8f) * 0.75f);
 
         if (this.isInWater() || onGround()) {
-            this.setYRot((float) (this.getYRot() - Math.max(12 * this.getDeltaMovement().horizontalDistance(), 0) * this.getRudderRot() * (this.entityData.get(POWER) > 0 ? 1 : -1)));
-            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (isInWater() && !onGround() ? 0.3f : 1) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (isInWater() && !onGround() ? 0.3f : 1) * this.entityData.get(POWER)));
+            this.setYRot((float) (this.getYRot() - Math.max((isInWater() && !onGround() ? 5 : 10) * this.getDeltaMovement().horizontalDistance(), 0) * this.getRudderRot() * (this.entityData.get(POWER) > 0 ? 1 : -1)));
+            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.05f : (isInWater() && !onGround() ? 0.3f : 1)) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.05f : (isInWater() && !onGround() ? 0.3f : 1))  * this.entityData.get(POWER)));
         }
     }
 
