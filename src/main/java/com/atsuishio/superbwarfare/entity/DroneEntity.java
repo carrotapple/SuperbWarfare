@@ -9,6 +9,7 @@ import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.Monitor;
+import com.atsuishio.superbwarfare.tools.ChunkLoadTool;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
@@ -52,9 +53,7 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     public static final EntityDataAccessor<Boolean> LINKED = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
@@ -76,6 +75,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     public double lastTickVerticalSpeed;
     public float pitch;
     public float pitchO;
+    public Set<Long> loadedChunks = new HashSet<>();
 
     public DroneEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.DRONE.get(), world);
@@ -165,6 +165,11 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
         super.baseTick();
 
+        if (this.level() instanceof ServerLevel serverLevel) {
+            // 更新需要加载的区块
+            ChunkLoadTool.updateLoadedChunks(serverLevel, this,  this.loadedChunks);
+        }
+
         lastTickSpeed = this.getDeltaMovement().length();
         lastTickVerticalSpeed = this.getDeltaMovement().y;
 
@@ -177,6 +182,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
         if (!this.onGround()) {
             if (controller != null) {
+                handleSimulationDistance(controller);
                 ItemStack stack = controller.getMainHandItem();
                 if (stack.is(ModItems.MONITOR.get())) {
                     if (stack.getOrCreateTag().getBoolean("Using") && controller.level().isClientSide) {
@@ -192,6 +198,15 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                 }
                 if (!controller.level().isClientSide) {
                     this.level().playSound(null, this.getOnPos(), ModSounds.DRONE_SOUND.get(), SoundSource.AMBIENT, 3, 1);
+                }
+
+                if (tickCount %5 == 0) {
+                    controller.getInventory().items.stream().filter(pStack -> pStack.getItem() == ModItems.MONITOR.get())
+                            .forEach(pStack -> {
+                                if (pStack.getOrCreateTag().getString(Monitor.LINKED_DRONE).equals(this.getStringUUID())) {
+                                    Monitor.getDronePos(pStack,this.position());
+                                }
+                            });
                 }
             }
         }
@@ -220,6 +235,25 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         }
 
         this.refreshDimensions();
+    }
+
+    public void handleSimulationDistance(Player player) {
+        if (player.level() instanceof ServerLevel serverLevel && player instanceof ServerPlayer) {
+            var distanceManager = serverLevel.getChunkSource().chunkMap.getDistanceManager();
+            var playerTicketManager = distanceManager.playerTicketManager;
+            int maxDistance = playerTicketManager.viewDistance;
+
+            if (this.position().vectorTo(player.position()).horizontalDistance() > maxDistance * 16) {
+                upInputDown = false;
+                downInputDown = false;
+                forwardInputDown = false;
+                backInputDown = false;
+                leftInputDown = false;
+                rightInputDown = false;
+                Vec3 toVec = position().vectorTo(player.position()).normalize();
+                setDeltaMovement(getDeltaMovement().add(new Vec3(toVec.x, 0,toVec.z).scale(0.2)));
+            }
+        }
     }
 
     public float getPropellerRot() {
@@ -515,5 +549,13 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    @Override
+    public void onRemovedFromWorld() {
+        if (this.level() instanceof ServerLevel serverLevel) {
+            ChunkLoadTool.unloadAllChunks(serverLevel, this, this.loadedChunks);
+        }
+        super.onRemovedFromWorld();
     }
 }
