@@ -56,6 +56,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.*;
 
 public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
+
     public static final EntityDataAccessor<Boolean> LINKED = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> CONTROLLER = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.INT);
@@ -167,7 +168,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
         if (this.level() instanceof ServerLevel serverLevel) {
             // 更新需要加载的区块
-            ChunkLoadTool.updateLoadedChunks(serverLevel, this,  this.loadedChunks);
+            ChunkLoadTool.updateLoadedChunks(serverLevel, this, this.loadedChunks);
         }
 
         lastTickSpeed = this.getDeltaMovement().length();
@@ -178,7 +179,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         }
 
         Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
-
 
         if (!this.onGround()) {
             if (controller != null) {
@@ -200,11 +200,11 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                     this.level().playSound(null, this.getOnPos(), ModSounds.DRONE_SOUND.get(), SoundSource.AMBIENT, 3, 1);
                 }
 
-                if (tickCount %5 == 0) {
+                if (tickCount % 5 == 0) {
                     controller.getInventory().items.stream().filter(pStack -> pStack.getItem() == ModItems.MONITOR.get())
                             .forEach(pStack -> {
                                 if (pStack.getOrCreateTag().getString(Monitor.LINKED_DRONE).equals(this.getStringUUID())) {
-                                    Monitor.getDronePos(pStack,this.position());
+                                    Monitor.getDronePos(pStack, this.position());
                                 }
                             });
                 }
@@ -251,7 +251,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                 leftInputDown = false;
                 rightInputDown = false;
                 Vec3 toVec = position().vectorTo(player.position()).normalize();
-                setDeltaMovement(getDeltaMovement().add(new Vec3(toVec.x, 0,toVec.z).scale(0.2)));
+                setDeltaMovement(getDeltaMovement().add(new Vec3(toVec.x, 0, toVec.z).scale(0.2)));
             }
         }
     }
@@ -447,14 +447,13 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                 hitEntityCrash(controller, target);
             }
         }
-
     }
 
     public void hitEntityCrash(Player controller, Entity target) {
         if (lastTickSpeed > 0.12) {
             if (this.entityData.get(KAMIKAZE) && 20 * lastTickSpeed > this.getHealth()) {
                 target.hurt(ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, controller), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE.get());
-                if (controller.getMainHandItem().is(ModItems.MONITOR.get())) {
+                if (controller != null && controller.getMainHandItem().is(ModItems.MONITOR.get())) {
                     Monitor.disLink(controller.getMainHandItem(), controller);
                 }
             }
@@ -484,7 +483,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
     @Override
     public void destroy() {
-
         String id = this.entityData.get(CONTROLLER);
         UUID uuid;
         try {
@@ -529,7 +527,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
         this.discard();
     }
-
 
     private void kamikazeExplosion() {
         Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
