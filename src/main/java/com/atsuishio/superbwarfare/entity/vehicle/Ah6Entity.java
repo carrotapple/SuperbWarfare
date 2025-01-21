@@ -152,6 +152,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     @Override
     public void baseTick() {
         propellerRotO = this.getPropellerRot();
+        setZRot(roll * 0.9f);
         super.baseTick();
 
         if (heat > 0) {
@@ -403,10 +404,6 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             Vector4f worldPosition = transformPosition(transform, x, y, z);
             passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
             callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
-        } else if (i == 1) {
-            Vector4f worldPosition = transformPosition(transform, -x, y, z);
-            passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
-            callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
         }
 
         if (passenger != this.getFirstPassenger()) {
@@ -419,7 +416,6 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     public void copyEntityData(Entity entity) {
         float f = Mth.wrapDegrees(entity.getYRot() - getYRot());
         float g = Mth.clamp(f, -105.0f, 105.0f);
-
         entity.yRotO += g - f;
         entity.setYRot(entity.getYRot() + g - f);
         entity.setYHeadRot(entity.getYRot());

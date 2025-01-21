@@ -236,7 +236,6 @@ public class VehicleEntity extends Entity {
         lastHurtTick ++;
 
         prevRoll = this.getRoll();
-        setZRot(roll * 0.9f);
 
         float delta = Math.abs(getYRot() - yRotO);
         while (getYRot() > 180F) {

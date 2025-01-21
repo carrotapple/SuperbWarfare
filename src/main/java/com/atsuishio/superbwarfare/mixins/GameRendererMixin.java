@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
+import com.atsuishio.superbwarfare.entity.vehicle.Tom6Entity;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -46,6 +47,31 @@ public class GameRendererMixin {
         Entity entity = mainCamera.getEntity();
         //noinspection ConstantValue
         if (entity != null && !mainCamera.isDetached() && entity.getRootVehicle() instanceof Ah6Entity vehicle) {
+            // rotate camera
+
+            matrices.mulPose(Axis.ZP.rotationDegrees(vehicle.getRoll(tickDelta)));
+//            matrices.mulPose(Axis.XP.rotationDegrees(vehicle.getViewXRot(tickDelta)));
+
+            // fetch eye offset
+            float eye = entity.getEyeHeight();
+
+            // transform eye offset to match aircraft rotation
+            Vector3f offset = new Vector3f(0, -eye, 0);
+            Quaternionf quaternion = Axis.XP.rotationDegrees(0.0f);
+            quaternion.mul(Axis.YP.rotationDegrees(-vehicle.getViewYRot(tickDelta)));
+            quaternion.mul(Axis.XP.rotationDegrees(vehicle.getViewXRot(tickDelta)));
+            quaternion.mul(Axis.ZP.rotationDegrees(vehicle.getRoll(tickDelta)));
+            offset.rotate(quaternion);
+
+            // apply camera offset
+            matrices.mulPose(Axis.XP.rotationDegrees(mainCamera.getXRot()));
+            matrices.mulPose(Axis.YP.rotationDegrees(mainCamera.getYRot() + 180.0f));
+            matrices.translate(offset.x(), offset.y() + eye, offset.z());
+            matrices.mulPose(Axis.YP.rotationDegrees(-mainCamera.getYRot() - 180.0f));
+            matrices.mulPose(Axis.XP.rotationDegrees(-mainCamera.getXRot()));
+        }
+
+        if (entity != null && !mainCamera.isDetached() && entity.getRootVehicle() instanceof Tom6Entity vehicle) {
             // rotate camera
 
             matrices.mulPose(Axis.ZP.rotationDegrees(vehicle.getRoll(tickDelta)));
