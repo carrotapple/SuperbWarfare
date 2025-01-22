@@ -21,6 +21,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -104,6 +105,12 @@ public class Monitor extends Item {
         return super.getAttributeModifiers(slot, stack);
     }
 
+    public static void getDronePos(ItemStack itemstack, Vec3 vec3) {
+        itemstack.getOrCreateTag().putDouble("PosX", vec3.x);
+        itemstack.getOrCreateTag().putDouble("PosY", vec3.y);
+        itemstack.getOrCreateTag().putDouble("PosZ", vec3.z);
+    }
+
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
@@ -112,11 +119,18 @@ public class Monitor extends Item {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
 
-        DroneEntity drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString(LINKED_DRONE));
-        if (drone == null) return;
+        Vec3 droneVec = new Vec3(stack.getOrCreateTag().getDouble("PosX"), stack.getOrCreateTag().getDouble("PosY"), stack.getOrCreateTag().getDouble("PosZ"));
 
-        list.add(Component.translatable("des.superbwarfare.monitor",
-                new DecimalFormat("##.#").format(player.distanceTo(drone)) + "m").withStyle(ChatFormatting.GRAY));
+        list.add(Component.translatable("des.superbwarfare.monitor",new DecimalFormat("##.#").format(player.position().distanceTo(droneVec)) + "m").withStyle(ChatFormatting.GRAY));
+        list.add(Component.literal("X: " + new DecimalFormat("##.#").format(droneVec.x) +
+                " Y: " + new DecimalFormat("##.#").format(droneVec.y) +
+                " Z: " + new DecimalFormat("##.#").format(droneVec.z)
+        ));
+    }
+
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return false;
     }
 
     @Override

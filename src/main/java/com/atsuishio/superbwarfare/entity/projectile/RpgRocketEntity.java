@@ -51,7 +51,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
     public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(RpgRocketEntity.class, EntityDataSerializers.STRING);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public String animationprocedure = "empty";
+    public String animationProcedure = "empty";
 
     private float monsterMultiplier = 0.0f;
     private float damage = 250f;
@@ -205,7 +205,7 @@ public class RpgRocketEntity extends ThrowableItemProjectile implements GeoEntit
 
     @Override
     public void setAnimationProcedure(String procedure) {
-        this.animationprocedure = procedure;
+        this.animationProcedure = procedure;
     }
 
     @Override

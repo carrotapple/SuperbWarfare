@@ -68,6 +68,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
             collisionCoolDown--;
         }
         super.baseTick();
+        preventStacking();
         crushEntities(this.getDeltaMovement());
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.06, 0.0));
         this.move(MoverType.SELF, this.getDeltaMovement());
@@ -100,16 +101,17 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
             }
             collisionCoolDown = 4;
             crash = true;
+            this.entityData.set(POWER, 0.4f * entityData.get(POWER));
         }
     }
 
     public void bounceHorizontal(Direction direction) {
         switch (direction.getAxis()) {
             case X:
-                this.setDeltaMovement(this.getDeltaMovement().multiply(-0.8, 0.99, 0.99));
+                this.setDeltaMovement(this.getDeltaMovement().multiply(-0.4, 0.99, 0.99));
                 break;
             case Z:
-                this.setDeltaMovement(this.getDeltaMovement().multiply(0.99, 0.99, -0.8));
+                this.setDeltaMovement(this.getDeltaMovement().multiply(0.99, 0.99, -0.4));
                 break;
         }
     }
@@ -126,12 +128,35 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
     }
 
     /**
+     * 防止载具堆叠
+     */
+    public void preventStacking() {
+        var Box = getBoundingBox();
+
+        var entities = level().getEntities(EntityTypeTest.forClass(Entity.class), Box, entity -> entity != this && entity != getFirstPassenger() && entity.getVehicle() == null)
+                .stream().filter(entity -> entity instanceof VehicleEntity)
+                .toList();
+
+        for (var entity : entities) {
+            Vec3 toVec = this.position().add(new Vec3(1, 1 ,1).scale(random.nextFloat() * 0.01f + 1f)).vectorTo(entity.position());
+            Vec3 velAdd = toVec.normalize().scale(Math.max((this.getBbWidth() + 2) - position().distanceTo(entity.position()), 0) * 0.002);
+            double entitySize = entity.getBbWidth() * entity.getBbHeight();
+            double thisSize = this.getBbWidth() * this.getBbHeight();
+            double f = Math.min(entitySize / thisSize, 2);
+            double f1 = Math.min(thisSize / entitySize, 2);
+
+            this.push(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
+            entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
+        }
+    }
+
+    /**
      * 撞击实体并造成伤害
      * @param velocity 动量
      */
     public void crushEntities(Vec3 velocity) {
         if (this instanceof DroneEntity) return;
-        if (velocity.horizontalDistance() < 0.1) return;
+        if (velocity.horizontalDistance() < 0.25) return;
         if (isRemoved()) return;
         var frontBox = getBoundingBox().move(velocity.scale(0.5));
         var velAdd = velocity.add(0, 0, 0).scale(0.9);
@@ -149,7 +174,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
             double f = Math.min(entitySize / thisSize, 2);
             double f1 = Math.min(thisSize / entitySize, 4);
 
-            if (velocity.length() > 0.3) {
+            if (velocity.length() > 0.3 && getBoundingBox().distanceToSqr(entity.getBoundingBox().getCenter()) < 1) {
                 if (!this.level().isClientSide) {
                     this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
                 }

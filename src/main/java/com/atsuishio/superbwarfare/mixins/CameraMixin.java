@@ -128,6 +128,11 @@ public abstract class CameraMixin {
             return;
         }
 
+        if (thirdPerson && entity.getVehicle() instanceof Tom6Entity) {
+            move(-getMaxZoom(4), 1, 0);
+            return;
+        }
+
         if (thirdPerson && entity.getVehicle() instanceof Lav150Entity && !ClientEventHandler.zoomVehicle) {
             move(-getMaxZoom(2.75), 1, 0.0);
             return;

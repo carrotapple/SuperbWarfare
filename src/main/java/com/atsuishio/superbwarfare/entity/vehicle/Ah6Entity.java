@@ -154,6 +154,8 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
         propellerRotO = this.getPropellerRot();
         super.baseTick();
 
+        setZRot(getRoll() * 0.995f);
+
         if (heat > 0) {
             heat--;
         }
@@ -275,14 +277,14 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             }
 
             this.setYRot(this.getYRot() + Mth.clamp((this.onGround() ? 0.1f : 2f) * diffY * this.entityData.get(PROPELLER_ROT) - 0.5f * this.entityData.get(DELTA_ROT), -8f, 8f));
-            this.setXRot(Mth.clamp(this.getXRot() + (this.onGround() ? 0 : 1.4f) * diffX * this.entityData.get(PROPELLER_ROT), -80, 80));
-            this.setZRot(Mth.clamp(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.2f) * diffY * this.entityData.get(PROPELLER_ROT), -80, 80));
+            this.setXRot(Mth.clamp(this.getXRot() + ((this.onGround()) ? 0 : 1.4f) * diffX * this.entityData.get(PROPELLER_ROT), -80, 80));
+            this.setZRot(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.2f) * diffY * this.entityData.get(PROPELLER_ROT));
         }
 
         if (this.level() instanceof ServerLevel) {
             if (this.getEnergy() > 0) {
-                boolean up = this.upInputDown || this.forwardInputDown;
-                boolean down = this.downInputDown || this.backInputDown;
+                boolean up = upInputDown || forwardInputDown;
+                boolean down = this.downInputDown;
 
                 if (!engineStart && up) {
                     engineStart = true;
@@ -293,19 +295,26 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                     this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.002f, 0.12f));
                 }
 
-                if (down && engineStartOver) {
-                    this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0015f, this.onGround() ? 0 : 0.0375f));
+                if (engineStartOver) {
+                    if (down) {
+                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0015f, this.onGround() ? 0 : 0.0375f));
+                    } else if (backInputDown) {
+                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0015f, this.onGround() ? 0 : 0.052f));
+                        if (passenger != null) {
+                            passenger.setXRot(0.8f * passenger.getXRot());
+                        }
+                    }
                 }
 
                 if (engineStart && !engineStartOver) {
                     this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0012f, 0.045f));
                 }
 
-                if (!(up || down) && engineStartOver) {
+                if (!(up || down || backInputDown) && engineStartOver) {
                     if (this.getDeltaMovement().y() < 0) {
-                        this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0002f, 0.12f));
+                        this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0001f, 0.12f));
                     } else {
-                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - (this.onGround() ? 0.00005f : 0.0002f), 0));
+                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - (this.onGround() ? 0.00005f : 0.0001f), 0));
                     }
                 }
             } else {
@@ -329,10 +338,10 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
         setDeltaMovement(getDeltaMovement().add(0.0f, Math.min(Math.sin((90 - this.getXRot()) * Mth.DEG_TO_RAD), Math.sin((90 + this.getRoll()) * Mth.DEG_TO_RAD)) * this.entityData.get(PROPELLER_ROT), 0.0f));
 
         Vector3f direction = getRightDirection().mul(Math.cos((this.getRoll() + 90) * Mth.DEG_TO_RAD) * this.entityData.get(PROPELLER_ROT));
-        setDeltaMovement(getDeltaMovement().add(new Vec3(direction.x, direction.y, direction.z).scale(0.85)));
+        setDeltaMovement(getDeltaMovement().add(new Vec3(direction.x, direction.y, direction.z).scale(backInputDown ? 0.45 : 0.85)));
 
         Vector3f directionZ = getForwardDirection().mul(-Math.cos((this.getXRot() + 90) * Mth.DEG_TO_RAD) * this.entityData.get(PROPELLER_ROT));
-        setDeltaMovement(getDeltaMovement().add(new Vec3(directionZ.x, directionZ.y, directionZ.z).scale(0.35)));
+        setDeltaMovement(getDeltaMovement().add(new Vec3(directionZ.x, directionZ.y, directionZ.z).scale(backInputDown ? 0.1 : 0.35)));
 
         if (this.entityData.get(POWER) > 0.04f) {
             engineStartOver = true;
@@ -396,10 +405,6 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             Vector4f worldPosition = transformPosition(transform, x, y, z);
             passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
             callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
-        } else if (i == 1) {
-            Vector4f worldPosition = transformPosition(transform, -x, y, z);
-            passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
-            callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
         }
 
         if (passenger != this.getFirstPassenger()) {
@@ -412,7 +417,6 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     public void copyEntityData(Entity entity) {
         float f = Mth.wrapDegrees(entity.getYRot() - getYRot());
         float g = Mth.clamp(f, -105.0f, 105.0f);
-
         entity.yRotO += g - f;
         entity.setYRot(entity.getYRot() + g - f);
         entity.setYHeadRot(entity.getYRot());

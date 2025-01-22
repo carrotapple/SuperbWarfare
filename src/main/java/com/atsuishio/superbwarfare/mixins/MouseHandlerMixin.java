@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.config.client.VehicleControlConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.ICannonEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
+import com.atsuishio.superbwarfare.entity.vehicle.Tom6Entity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModMobEffects;
@@ -12,6 +13,7 @@ import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.objectweb.asm.Opcodes;
@@ -78,7 +80,11 @@ public class MouseHandlerMixin {
         if (player == null) return i;
 
         if (player.getVehicle() instanceof Ah6Entity ah6Entity && ah6Entity.getFirstPassenger() == player) {
-            return VehicleControlConfig.INVERT_AIRCRAFT_CONTROL.get() ? -i : i;
+            return VehicleControlConfig.INVERT_AIRCRAFT_CONTROL.get() ? (Mth.abs(ah6Entity.getRoll()) < 90 ? -i : i) : (Mth.abs(ah6Entity.getRoll()) < 90 ? i : -i);
+        }
+
+        if (player.getVehicle() instanceof Tom6Entity tom6 && tom6.getFirstPassenger() == player) {
+            return VehicleControlConfig.INVERT_AIRCRAFT_CONTROL.get() ? (Mth.abs(tom6.getRoll()) < 90 ? -i : i) : (Mth.abs(tom6.getRoll()) < 90 ? i : -i);
         }
         return i;
     }

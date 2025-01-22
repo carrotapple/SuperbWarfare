@@ -18,6 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.joml.Math;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -54,12 +55,12 @@ public class ContainerBlockEntity extends BlockEntity implements GeoBlockEntity 
             }
         } else {
             if (blockEntity.entity != null) {
-                blockEntity.entity.setPos(pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5);
+                blockEntity.entity.setPos(pPos.getX() + 0.5 + (2 * Math.random() - 1) * 0.1f, pPos.getY() + 0.5 + (2 * Math.random() - 1) * 0.1f, pPos.getZ() + 0.5 + (2 * Math.random() - 1) * 0.1f);
                 pLevel.addFreshEntity(blockEntity.entity);
             } else if (blockEntity.entityType != null) {
                 var entity = blockEntity.entityType.create(pLevel);
                 if (entity != null) {
-                    entity.setPos(pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5);
+                    entity.setPos(pPos.getX() + 0.5 + (2 * Math.random() - 1) * 0.1f, pPos.getY() + 0.5 + (2 * Math.random() - 1) * 0.1f, pPos.getZ() + 0.5 + (2 * Math.random() - 1) * 0.1f);
                     pLevel.addFreshEntity(entity);
                 }
             }

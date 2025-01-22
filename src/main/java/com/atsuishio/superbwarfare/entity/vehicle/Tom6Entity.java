@@ -1,0 +1,363 @@
+package com.atsuishio.superbwarfare.entity.vehicle;
+
+import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.entity.projectile.MelonBombEntity;
+import com.atsuishio.superbwarfare.init.ModDamageTypes;
+import com.atsuishio.superbwarfare.init.ModEntities;
+import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.tools.CustomExplosion;
+import com.atsuishio.superbwarfare.tools.EntityFindUtil;
+import com.atsuishio.superbwarfare.tools.ParticleTool;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.NotNull;
+import org.joml.Math;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
+
+import java.util.List;
+
+public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
+    public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Tom6Entity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Boolean> MELON = SynchedEntityData.defineId(Tom6Entity.class, EntityDataSerializers.BOOLEAN);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    public static final float MAX_HEALTH = 50;
+    public static final int MAX_ENERGY = 100000;
+
+    public Tom6Entity(PlayMessages.SpawnEntity packet, Level world) {
+        this(ModEntities.TOM_6.get(), world);
+    }
+
+    public Tom6Entity(EntityType<Tom6Entity> type, Level world) {
+        super(type, world);
+        this.setMaxUpStep(0.5f);
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DELTA_ROT, 0f);
+        this.entityData.define(MELON, false);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putBoolean("Melon", this.entityData.get(MELON));
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        this.entityData.set(MELON, compound.getBoolean("Melon"));
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        super.hurt(source, amount);
+        if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
+            amount *= 2f;
+        }
+        this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
+        this.hurt(amount);
+        return true;
+    }
+
+    @Override
+    public InteractionResult interact(Player player, InteractionHand hand) {
+        if (player.getMainHandItem().is(Items.MELON) && !entityData.get(MELON)) {
+            entityData.set(MELON, true);
+            player.getMainHandItem().shrink(1);
+            player.level().playSound(player, this.getOnPos(), SoundEvents.WOOD_PLACE, SoundSource.PLAYERS, 1, 1);
+            return InteractionResult.SUCCESS;
+        }
+        return super.interact(player, hand);
+    }
+
+    @Override
+    public void baseTick() {
+        super.baseTick();
+        float f;
+
+        f = (float) Mth.clamp(0.759f + 0.041f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90, 0.01, 0.99);
+
+        this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).scale((0.24) * this.getDeltaMovement().length())));
+        this.setDeltaMovement(this.getDeltaMovement().multiply(f, f, f));
+        this.refreshDimensions();
+    }
+
+    @Override
+    public void travel() {
+        Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
+
+//        if (this.getEnergy() <= 0) return;
+
+        float diffX;
+        float diffY;
+
+        if (passenger == null) {
+            this.leftInputDown = false;
+            this.rightInputDown = false;
+            this.forwardInputDown = false;
+            this.backInputDown = false;
+            this.setZRot(this.roll * 0.8f);
+            this.setXRot(this.getXRot() * 0.7f);
+            this.entityData.set(POWER, this.entityData.get(POWER) * 0.98f);
+            if (onGround()) {
+                this.setDeltaMovement(this.getDeltaMovement().multiply(0.8, 1, 0.8));
+            }
+        } else if (passenger instanceof Player player) {
+
+//            SoundTool.playLocalSound(player, SoundEvents.ELYTRA_FLYING);
+
+            diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
+            diffX = Math.clamp(-60f, 60f, Mth.wrapDegrees(passenger.getXRot() - this.getXRot()));
+
+            if (!onGround()) {
+                if (rightInputDown) {
+                    this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 0.4f);
+                } else if (this.leftInputDown) {
+                    this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.4f);
+                }
+            }
+
+            float roll = Mth.abs(Mth.clamp(getRoll() / 60 , -1.5f , 1.5f));
+
+            float addY = Mth.clamp(Math.min((this.onGround() ? 1.5f : 0.9f) * (float) Math.max(getDeltaMovement().length() - 0.06, 0.1), 0.9f) * diffY - 0.5f * this.entityData.get(DELTA_ROT), (entityData.get(MELON) ? -2f : -3f) * (roll + 1), (entityData.get(MELON) ? 2f : 3f) * (roll + 1));
+            float addX = Mth.clamp(Math.min((float) Math.max(getDeltaMovement().length() - 0.1, 0.01), 0.9f) * diffX, (entityData.get(MELON) ? -3f : -4f), (entityData.get(MELON) ? 3f : 4f));
+
+            this.setYRot(this.getYRot() + addY);
+            this.setXRot(Mth.clamp(this.getXRot() + addX, onGround() ? -10 : -120, onGround() ? 2 : 120));
+            this.setZRot(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.01f) * diffY * (float) getDeltaMovement().length());
+
+            if (upInputDown && !onGround() && entityData.get(MELON)) {
+                entityData.set(MELON, false);
+
+                Matrix4f transform = getVehicleTransform();
+                Vector4f worldPosition;
+                worldPosition = transformPosition(transform, 0, -0.2f, 0);
+
+                MelonBombEntity melonBomb = new MelonBombEntity(player, player.level());
+                melonBomb.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+                melonBomb.shoot(this.getDeltaMovement().x, this.getDeltaMovement().y, this.getDeltaMovement().z, 0.96f * (float)this.getDeltaMovement().length(), 0);
+                passenger.level().addFreshEntity(melonBomb);
+
+                this.level().playSound(null, this.getOnPos(), SoundEvents.IRON_DOOR_OPEN, SoundSource.PLAYERS, 1, 1);
+                upInputDown = false;
+            }
+        }
+
+        if (forwardInputDown) {
+            this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + (entityData.get(MELON) ? 0.003f : 0.0022f), entityData.get(MELON) ? 0.12f : 0.15f));
+        }
+
+        if (backInputDown || downInputDown) {
+            this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.006f, onGround() ? -0.12f : 0.04f));
+        }
+
+        if (onGround()) {
+            setXRot(getXRot() * 0.7f);
+            setZRot(getRoll() * 0.7f);
+        } else {
+            setZRot(getRoll() * 0.994f);
+        }
+
+//        if (this.forwardInputDown || this.backInputDown) {
+//            this.extraEnergy(VehicleConfig.SPEEDBOAT_ENERGY_COST.get());
+//        }
+
+        this.entityData.set(POWER, this.entityData.get(POWER) * 0.99f);
+        this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.95f);
+
+        this.setDeltaMovement(this.getDeltaMovement().add(
+                Mth.sin(-this.getYRot() * 0.017453292F) * (entityData.get(MELON) ? 0.16f : 0.19f) * this.entityData.get(POWER),
+                Mth.clamp(Math.sin((onGround() ? 45 : -(getXRot() - 30)) * Mth.DEG_TO_RAD) * getDeltaMovement().horizontalDistance() * (entityData.get(MELON) ? 0.047f : 0.067f), -0.04, 0.09),
+                Mth.cos(this.getYRot() * 0.017453292F) * (entityData.get(MELON) ? 0.16f : 0.19f) * this.entityData.get(POWER)
+                ));
+
+    }
+
+    @Override
+    public SoundEvent getEngineSound() {
+        return ModSounds.WHEEL_CHAIR_ENGINE.get();
+    }
+
+    protected void clampRotation(Entity entity) {
+        float f = Mth.wrapDegrees(entity.getXRot() - this.getXRot());
+        float f1 = Mth.clamp(f, -85.0F, 60F);
+        entity.xRotO += f1 - f;
+        entity.setXRot(entity.getXRot() + f1 - f);
+
+        entity.setYBodyRot(this.getYRot());
+        float f2 = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
+        float f3 = Mth.clamp(f2, -45.0F, 45.0F);
+        entity.yRotO += f3 - f2;
+        entity.setYRot(entity.getYRot() + f3 - f2);
+        entity.setYBodyRot(this.getYRot());
+    }
+
+    @Override
+    public void onPassengerTurned(Entity entity) {
+        this.clampRotation(entity);
+    }
+
+    @Override
+    public void positionRider(@NotNull Entity passenger, @NotNull MoveFunction callback) {
+        // From Immersive_Aircraft
+        if (!this.hasPassenger(passenger)) {
+            return;
+        }
+
+        Matrix4f transform = getVehicleTransform();
+
+        float x = 0f;
+        float y = 0.95f;
+        float z = -0.4f;
+        y += (float) passenger.getMyRidingOffset();
+
+        int i = this.getPassengers().indexOf(passenger);
+
+        if (i == 0) {
+            Vector4f worldPosition = transformPosition(transform, x, y, z);
+            passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+            callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
+        }
+
+        if (passenger != this.getFirstPassenger()) {
+            passenger.setXRot(passenger.getXRot() + (getXRot() - xRotO));
+        }
+
+        copyEntityData(passenger);
+    }
+
+    public void copyEntityData(Entity entity) {
+        float f = Mth.wrapDegrees(entity.getYRot() - getYRot());
+        float g = Mth.clamp(f, -105.0f, 105.0f);
+        entity.yRotO += g - f;
+        entity.setYRot(entity.getYRot() + g - f);
+        entity.setYHeadRot(entity.getYRot());
+        entity.setYBodyRot(getYRot());
+    }
+
+    @Override
+    public void destroy() {
+        Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
+        if (this.crash) {
+            List<Entity> passengers = this.getPassengers();
+            for (var entity : passengers) {
+                if (entity instanceof LivingEntity living) {
+                    var tempAttacker = living == attacker ? null : attacker;
+
+                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                }
+            }
+        } else {
+            List<Entity> passengers = this.getPassengers();
+            for (var entity : passengers) {
+                if (entity instanceof LivingEntity living) {
+                    var tempAttacker = living == attacker ? null : attacker;
+
+                    living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                }
+            }
+        }
+
+        if (level() instanceof ServerLevel) {
+            if (entityData.get(MELON)) {
+                CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                        ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, attacker), 1100.0f,
+                        this.getX(), this.getY(), this.getZ(), 16f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                explosion.explode();
+                ForgeEventFactory.onExplosionStart(this.level(), explosion);
+                explosion.finalizeExplosion(false);
+                ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
+            } else {
+                CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                        ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, attacker), 15.0f,
+                        this.getX(), this.getY(), this.getZ(), 2f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                explosion.explode();
+                ForgeEventFactory.onExplosionStart(this.level(), explosion);
+                explosion.finalizeExplosion(false);
+                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+            }
+        }
+
+        this.discard();
+    }
+
+    @Override
+    public float ignoreExplosionHorizontalKnockBack() {
+        return -0.2f;
+    }
+
+    @Override
+    public float ignoreExplosionVerticalKnockBack() {
+        return -0.3f;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
+    }
+
+    @Override
+    public float getMaxHealth() {
+        return MAX_HEALTH;
+    }
+
+    @Override
+    public int getMaxEnergy() {
+        return MAX_ENERGY;
+    }
+}

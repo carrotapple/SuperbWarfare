@@ -78,6 +78,10 @@ public class ModEntities {
             EntityType.Builder.<FlareDecoyEntity>of(FlareDecoyEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(FlareDecoyEntity::new).sized(0.5f, 0.5f));
     public static final RegistryObject<EntityType<Lav150Entity>> LAV_150 = register("lav_150",
             EntityType.Builder.<Lav150Entity>of(Lav150Entity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(Lav150Entity::new).fireImmune().sized(2.8f, 3.1f));
+    public static final RegistryObject<EntityType<Tom6Entity>> TOM_6 = register("tom_6",
+            EntityType.Builder.<Tom6Entity>of(Tom6Entity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(Tom6Entity::new).fireImmune().sized(1.05f, 1.0f));
+    public static final RegistryObject<EntityType<MelonBombEntity>> MELON_BOMB = register("melon_bomb",
+            EntityType.Builder.<MelonBombEntity>of(MelonBombEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(MelonBombEntity::new).sized(1f, 1f));
 
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String name, EntityType.Builder<T> entityTypeBuilder) {
         return REGISTRY.register(name, () -> entityTypeBuilder.build(name));

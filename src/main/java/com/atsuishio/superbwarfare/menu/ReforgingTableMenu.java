@@ -294,7 +294,7 @@ public class ReforgingTableMenu extends AbstractContainerMenu {
             ItemStack output = gun.copy();
             PerkHelper.removePerkByType(output, perkItem.getPerk().type);
             GunsTool.setGunDoubleTag(output, "UpgradePoint", Math.min(MAX_UPGRADE_POINT, level - 1 + GunsTool.getGunDoubleTag(output, "UpgradePoint", 0)));
-            this.upgradePoint.set((int) GunsTool.getGunDoubleTag(gun, "UpgradePoint", 0));
+            this.upgradePoint.set((int) GunsTool.getGunDoubleTag(output, "UpgradePoint", 0));
 
             this.container.setItem(INPUT_SLOT, output);
             this.container.setChanged();
