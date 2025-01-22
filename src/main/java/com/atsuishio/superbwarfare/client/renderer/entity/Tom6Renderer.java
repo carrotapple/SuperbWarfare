@@ -11,7 +11,10 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+
+import static com.atsuishio.superbwarfare.entity.vehicle.Tom6Entity.MELON;
 
 public class Tom6Renderer extends GeoEntityRenderer<Tom6Entity> {
 
@@ -42,5 +45,14 @@ public class Tom6Renderer extends GeoEntityRenderer<Tom6Entity> {
         poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, entityIn.prevRoll, entityIn.getRoll())));
         super.render(entityIn, entityYaw, partialTicks, poseStack, bufferIn, packedLightIn);
         poseStack.popPose();
+    }
+
+    @Override
+    public void renderRecursively(PoseStack poseStack, Tom6Entity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        String name = bone.getName();
+        if (name.equals("melon")) {
+            bone.setHidden(!animatable.getEntityData().get(MELON));
+        }
+        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }

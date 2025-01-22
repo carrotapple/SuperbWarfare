@@ -152,8 +152,9 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     @Override
     public void baseTick() {
         propellerRotO = this.getPropellerRot();
-        setZRot(roll * 0.9f);
         super.baseTick();
+
+        setZRot(getRoll() * 0.995f);
 
         if (heat > 0) {
             heat--;
@@ -277,7 +278,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
 
             this.setYRot(this.getYRot() + Mth.clamp((this.onGround() ? 0.1f : 2f) * diffY * this.entityData.get(PROPELLER_ROT) - 0.5f * this.entityData.get(DELTA_ROT), -8f, 8f));
             this.setXRot(Mth.clamp(this.getXRot() + ((this.onGround()) ? 0 : 1.4f) * diffX * this.entityData.get(PROPELLER_ROT), -80, 80));
-            this.setZRot(Mth.clamp(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.2f) * diffY * this.entityData.get(PROPELLER_ROT), -80, 80));
+            this.setZRot(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.2f) * diffY * this.entityData.get(PROPELLER_ROT));
         }
 
         if (this.level() instanceof ServerLevel) {

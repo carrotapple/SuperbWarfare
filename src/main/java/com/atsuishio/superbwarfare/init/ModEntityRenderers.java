@@ -37,5 +37,6 @@ public class ModEntityRenderers {
         event.registerEntityRenderer(ModEntities.LAV_150.get(), Lav150Renderer::new);
         event.registerEntityRenderer(ModEntities.SMALL_CANNON_SHELL.get(), SmallCannonShellRenderer::new);
         event.registerEntityRenderer(ModEntities.TOM_6.get(), Tom6Renderer::new);
+        event.registerEntityRenderer(ModEntities.MELON_BOMB.get(), MelonBombEntityRenderer::new);
     }
 }
