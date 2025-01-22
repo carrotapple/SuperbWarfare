@@ -18,6 +18,7 @@ public class ExplosionConfig {
     public static ForgeConfigSpec.IntValue DRONE_KAMIKAZE_HIT_DAMAGE;
     public static ForgeConfigSpec.IntValue DRONE_KAMIKAZE_EXPLOSION_DAMAGE;
     public static ForgeConfigSpec.IntValue DRONE_KAMIKAZE_EXPLOSION_RADIUS;
+    public static ForgeConfigSpec.IntValue DRONE_KAMIKAZE_HIT_DAMAGE_C4;
 
     public static ForgeConfigSpec.IntValue C4_EXPLOSION_COUNTDOWN;
     public static ForgeConfigSpec.IntValue C4_EXPLOSION_DAMAGE;
@@ -69,6 +70,9 @@ public class ExplosionConfig {
         builder.comment("The hit damage of Drone Kamikaze");
         DRONE_KAMIKAZE_HIT_DAMAGE = builder.defineInRange("drone_kamikaze_hit_damage", 300, 1, 10000000);
 
+        builder.comment("The hit damage of Drone Kamikaze with C4");
+        DRONE_KAMIKAZE_HIT_DAMAGE_C4 = builder.defineInRange("drone_kamikaze_hit_damage_c4", 700, 1, 10000000);
+
         builder.comment("The explosion damage of Drone Kamikaze");
         DRONE_KAMIKAZE_EXPLOSION_DAMAGE = builder.defineInRange("drone_kamikaze_explosion_damage", 160, 1, 10000000);
 
@@ -80,13 +84,13 @@ public class ExplosionConfig {
         builder.push("C4");
 
         builder.comment("The explosion damage of C4");
-        C4_EXPLOSION_DAMAGE = builder.defineInRange("c4_explosion_damage", 700, 1, Integer.MAX_VALUE);
+        C4_EXPLOSION_DAMAGE = builder.defineInRange("c4_explosion_damage", 500, 1, Integer.MAX_VALUE);
 
         builder.comment("The explosion countdown of C4");
         C4_EXPLOSION_COUNTDOWN = builder.defineInRange("c4_explosion_countdown", 514, 1, Integer.MAX_VALUE);
 
         builder.comment("The explosion radius of C4");
-        C4_EXPLOSION_RADIUS = builder.defineInRange("c4_explosion_radius", 24, 1, Integer.MAX_VALUE);
+        C4_EXPLOSION_RADIUS = builder.defineInRange("c4_explosion_radius", 14, 1, Integer.MAX_VALUE);
 
         builder.pop();
     }

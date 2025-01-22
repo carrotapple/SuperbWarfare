@@ -161,10 +161,12 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     @Override
     public void baseTick() {
         pitchO = this.getBodyPitch();
-        setBodyXRot(pitch * 0.9f);
+        setBodyXRot(pitch * 0.97f);
         propellerRotO = this.getPropellerRot();
 
         super.baseTick();
+
+        setZRot(getRoll() * 0.9f);
 
         if (this.level() instanceof ServerLevel serverLevel) {
             // 更新需要加载的区块
@@ -380,20 +382,19 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         if (!this.onGround()) {
             // left and right
             if (rightInputDown) {
-                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 0.3f);
+                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 0.28f);
             } else if (this.leftInputDown) {
-                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.3f);
+                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.28f);
             }
 
             // forward and backward
             if (forwardInputDown) {
-                this.entityData.set(DELTA_X_ROT, this.entityData.get(DELTA_X_ROT) - 0.3f);
+                this.entityData.set(DELTA_X_ROT, this.entityData.get(DELTA_X_ROT) - 0.25f);
             } else if (backInputDown) {
-                this.entityData.set(DELTA_X_ROT, this.entityData.get(DELTA_X_ROT) + 0.3f);
+                this.entityData.set(DELTA_X_ROT, this.entityData.get(DELTA_X_ROT) + 0.23f);
             }
 
-            float f = (float) (0.97f - 0.02f * lastTickSpeed);
-            this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.9, f));
+            this.setDeltaMovement(this.getDeltaMovement().multiply(0.84, 0.77, 0.84));
 
         } else {
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.8, 1, 0.8));
@@ -411,23 +412,23 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         boolean down = this.downInputDown;
 
         if (up) {
-            this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.01f, 0.15f));
+            this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.03f, 0.2f));
         }
 
         if (down) {
-            this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.01f, 0));
+            this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.02f, -0.1f));
         }
 
         if (!(up || down)) {
             if (this.getDeltaMovement().y() < 0) {
                 this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.001f, 0.15f));
             } else {
-                this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.001f, 0));
+                this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.001f, -0.1f));
             }
         }
 
-        this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.8f);
-        this.entityData.set(DELTA_X_ROT, this.entityData.get(DELTA_X_ROT) * 0.8f);
+        this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.7f);
+        this.entityData.set(DELTA_X_ROT, this.entityData.get(DELTA_X_ROT) * 0.7f);
         this.entityData.set(PROPELLER_ROT, Mth.lerp(0.08f, this.entityData.get(PROPELLER_ROT), this.entityData.get(POWER)));
         this.setPropellerRot(this.getPropellerRot() + 30 * this.entityData.get(PROPELLER_ROT));
         this.entityData.set(PROPELLER_ROT, this.entityData.get(PROPELLER_ROT) * 0.9995f);
@@ -437,10 +438,10 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
         setDeltaMovement(getDeltaMovement().add(0.0f, Math.min(Math.sin((90 - this.getBodyPitch()) * Mth.DEG_TO_RAD), Math.sin((90 + this.getRoll()) * Mth.DEG_TO_RAD)) * this.entityData.get(POWER), 0.0f));
 
-        Vector3f direction = getRightDirection().mul(Math.cos((this.getRoll() + 90) * Mth.DEG_TO_RAD) * 0.1f);
+        Vector3f direction = getRightDirection().mul(Math.cos((this.getRoll() + 90) * Mth.DEG_TO_RAD) * 0.2f);
         setDeltaMovement(getDeltaMovement().add(new Vec3(direction.x, direction.y, direction.z).scale(4)));
 
-        Vector3f directionZ = getForwardDirection().mul(-Math.cos((this.getBodyPitch() + 90) * Mth.DEG_TO_RAD) * 0.1f);
+        Vector3f directionZ = getForwardDirection().mul(-Math.cos((this.getBodyPitch() + 90) * Mth.DEG_TO_RAD) * 0.2f);
         setDeltaMovement(getDeltaMovement().add(new Vec3(directionZ.x, directionZ.y, directionZ.z).scale(4)));
 
         Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
@@ -468,7 +469,12 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     public void hitEntityCrash(Player controller, Entity target) {
         if (lastTickSpeed > 0.12) {
             if (this.entityData.get(KAMIKAZE_MODE) != 0 && 20 * lastTickSpeed > this.getHealth()) {
-                target.hurt(ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, controller), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE.get());
+                if (this.entityData.get(KAMIKAZE_MODE) == 1) {
+                    target.hurt(ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, controller), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE.get());
+                } else if (this.entityData.get(KAMIKAZE_MODE) == 2) {
+                    target.hurt(ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, controller), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE_C4.get());
+                }
+
                 if (controller != null && controller.getMainHandItem().is(ModItems.MONITOR.get())) {
                     Monitor.disLink(controller.getMainHandItem(), controller);
                 }
@@ -564,7 +570,13 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         explosion.explode();
         ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
-        ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+        if (mode == 1) {
+            ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+        }
+
+        if (mode == 2) {
+            ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
+        }
     }
 
     @Override

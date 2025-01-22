@@ -40,6 +40,7 @@ public class DroneModel extends GeoModel<DroneEntity> {
         CoreGeoBone ammo5 = getAnimationProcessor().getBone("ammo5");
         CoreGeoBone ammo6 = getAnimationProcessor().getBone("ammo6");
         CoreGeoBone shell = getAnimationProcessor().getBone("shell");
+        CoreGeoBone c4 = getAnimationProcessor().getBone("c4");
         // TODO 适配C4模型
 
         ammo6.setHidden(animatable.getEntityData().get(AMMO) <= 5);
@@ -49,6 +50,7 @@ public class DroneModel extends GeoModel<DroneEntity> {
         ammo2.setHidden(animatable.getEntityData().get(AMMO) <= 1);
         ammo1.setHidden(animatable.getEntityData().get(AMMO) <= 0);
         shell.setHidden(animatable.getEntityData().get(KAMIKAZE_MODE) != 1);
+        c4.setHidden(animatable.getEntityData().get(KAMIKAZE_MODE) != 2);
 
         CoreGeoBone weapon = getAnimationProcessor().getBone("Weapon");
         String id = animatable.getEntityData().get(CONTROLLER);
