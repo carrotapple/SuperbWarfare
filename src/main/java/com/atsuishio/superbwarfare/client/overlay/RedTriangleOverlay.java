@@ -38,18 +38,19 @@ public class RedTriangleOverlay {
 
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModItems.RPG.get())) return;
-        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand()) return;
+        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand())
+            return;
 
         Entity idf = SeekTool.seekLivingEntity(player, player.level(), 128, 6);
         if (idf == null) return;
         double distance = idf.position().distanceTo(cameraPos);
 
-        Vec3 p = RenderHelper.worldToScreen(new Vec3(idf.getX(), idf.getEyeY() + 0.5 + 0.07 * distance, idf.getZ()), cameraPos);
-        if (p == null) return;
+        Vec3 point = RenderHelper.worldToScreen(new Vec3(idf.getX(), idf.getEyeY() + 0.5 + 0.07 * distance, idf.getZ()), cameraPos);
+        if (point == null) return;
 
         poseStack.pushPose();
-        int x = (int) p.x;
-        int y = (int) p.y;
+        float x = (float) point.x;
+        float y = (float) point.y;
 
         HudUtil.blit(poseStack, TRIANGLE, x - 4, y - 4, 0, 0, 8, 8, 8, 8, -65536);
 

@@ -32,7 +32,8 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
-import static com.atsuishio.superbwarfare.entity.DroneEntity.*;
+import static com.atsuishio.superbwarfare.entity.DroneEntity.AMMO;
+import static com.atsuishio.superbwarfare.entity.DroneEntity.KAMIKAZE_MODE;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class DroneUIOverlay {
@@ -147,11 +148,11 @@ public class DroneUIOverlay {
                     Vec3 lookAngle = entity.getLookAngle().normalize().scale(pos.distanceTo(cameraPos) * (1 - 1.0 / zoom));
 
                     var cPos = cameraPos.add(lookAngle);
-                    Vec3 p = RenderHelper.worldToScreen(pos, cPos);
-                    if (p != null) {
+                    Vec3 point = RenderHelper.worldToScreen(pos, cPos);
+                    if (point != null) {
                         poseStack.pushPose();
-                        int x = (int) p.x;
-                        int y = (int) p.y;
+                        float x = (float) point.x;
+                        float y = (float) point.y;
 
                         HudUtil.blit(poseStack, FRAME, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
                         poseStack.popPose();

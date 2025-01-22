@@ -107,15 +107,15 @@ public class JavelinHudOverlay {
                     Vec3 lookAngle = player.getLookAngle().normalize().scale(pos.distanceTo(cameraPos) * (1 - 1.0 / zoom));
 
                     var cPos = cameraPos.add(lookAngle);
-                    Vec3 p = RenderHelper.worldToScreen(pos, cPos);
-                    if (p == null) return;
+                    Vec3 point = RenderHelper.worldToScreen(pos, cPos);
+                    if (point == null) return;
 
                     boolean lockOn = stack.getOrCreateTag().getInt("SeekTime") > 20 && e == targetEntity;
                     boolean nearest = e == naerestEntity;
 
                     poseStack.pushPose();
-                    int x = (int) p.x;
-                    int y = (int) p.y;
+                    float x = (float) point.x;
+                    float y = (float) point.y;
 
                     HudUtil.blit(poseStack, lockOn ? FRAME_LOCK : nearest ? FRAME_TARGET : FRAME, x - 12, y - 12, 0, 0, 24, 24, 24, 24, 1f);
                     poseStack.popPose();
