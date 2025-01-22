@@ -32,8 +32,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
-import static com.atsuishio.superbwarfare.entity.DroneEntity.AMMO;
-import static com.atsuishio.superbwarfare.entity.DroneEntity.KAMIKAZE;
+import static com.atsuishio.superbwarfare.entity.DroneEntity.*;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class DroneUIOverlay {
@@ -92,33 +91,40 @@ public class DroneUIOverlay {
 
                 int color = -1;
 
+                // 超出距离警告
                 if (distance > MAX_DISTANCE - 48) {
                     guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.warning"),
                             w / 2 - 18, h / 2 - 47, -65536, false);
                     color = -65536;
                 }
 
+                // 距离
                 guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.distance")
                                 .append(Component.literal(new DecimalFormat("##.#").format(distance) + "M")),
                         w / 2 + 10, h / 2 + 33, color, false);
 
+                // 血量
                 guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.health")
                                 .append(Component.literal(new DecimalFormat("##.#").format(entity.getHealth()) + "/" + new DecimalFormat("##.#").format(entity.getMaxHealth()))),
                         w / 2 - 77, h / 2 + 33, -1, false);
-                if (!entity.getEntityData().get(KAMIKAZE)) {
+                if (entity.getEntityData().get(KAMIKAZE_MODE) == 0) {
+                    // 弹药
                     guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.ammo")
                                     .append(Component.literal(new DecimalFormat("##.#").format(entity.getEntityData().get(AMMO)) + " / 6")),
                             w / 2 + 12, h / 2 - 37, -1, false);
                 } else {
+                    // 神风
                     guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.kamikaze"),
                             w / 2 + 12, h / 2 - 37, -65536, false);
                 }
 
                 if (lookAtEntity) {
+                    // 实体距离
                     guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.range")
                                     .append(Component.literal(new DecimalFormat("##.#").format(entityRange) + "M " + lookingEntity.getDisplayName().getString())),
                             w / 2 + 12, h / 2 - 28, color, false);
                 } else {
+                    // 方块距离
                     if (blockRange > 512) {
                         guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.range")
                                 .append(Component.literal("---M")), w / 2 + 12, h / 2 - 28, color, false);

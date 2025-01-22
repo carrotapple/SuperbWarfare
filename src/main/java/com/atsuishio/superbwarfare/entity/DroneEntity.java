@@ -60,7 +60,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     public static final EntityDataAccessor<Boolean> LINKED = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> CONTROLLER = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Boolean> KAMIKAZE = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Integer> KAMIKAZE_MODE = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> DELTA_X_ROT = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
@@ -124,7 +123,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         this.entityData.define(CONTROLLER, "undefined");
         this.entityData.define(LINKED, false);
         this.entityData.define(AMMO, 0);
-        this.entityData.define(KAMIKAZE, false);
         this.entityData.define(KAMIKAZE_MODE, 0);
     }
 
@@ -144,7 +142,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         compound.putBoolean("Linked", this.entityData.get(LINKED));
         compound.putString("Controller", this.entityData.get(CONTROLLER));
         compound.putInt("Ammo", this.entityData.get(AMMO));
-        compound.putBoolean("Kamikaze", this.entityData.get(KAMIKAZE));
         compound.putInt("KamikazeMode", this.entityData.get(KAMIKAZE_MODE));
     }
 
@@ -157,8 +154,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
             this.entityData.set(CONTROLLER, compound.getString("Controller"));
         if (compound.contains("Ammo"))
             this.entityData.set(AMMO, compound.getInt("Ammo"));
-        if (compound.contains("Kamikaze"))
-            this.entityData.set(KAMIKAZE, compound.getBoolean("Kamikaze"));
         if (compound.contains("KamikazeMode"))
             this.entityData.set(KAMIKAZE_MODE, compound.getInt("KamikazeMode"));
     }
@@ -227,7 +222,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                     droneDrop(controller);
                 }
             }
-            if (this.entityData.get(KAMIKAZE)) {
+            if (this.entityData.get(KAMIKAZE_MODE) != 0) {
                 if (controller != null) {
                     if (controller.getMainHandItem().is(ModItems.MONITOR.get())) {
                         Monitor.disLink(controller.getMainHandItem(), controller);
@@ -321,14 +316,19 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                 }
             }
         } else if (stack.isEmpty() && player.isCrouching()) {
+            // 返还物品
             ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.DRONE.get()));
 
+            // 返还普通弹药
             for (int index0 = 0; index0 < this.entityData.get(AMMO); index0++) {
                 ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.RGO_GRENADE.get()));
             }
 
-            if (this.entityData.get(KAMIKAZE)) {
+            // 返还神风弹药
+            if (this.entityData.get(KAMIKAZE_MODE) == 1) {
                 ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MORTAR_SHELLS.get()));
+            } else if (this.entityData.get(KAMIKAZE_MODE) == 2) {
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.EXPLOSIVE_MINE.get()));
             }
 
             player.getInventory().items.stream().filter(stack_ -> stack_.getItem() == ModItems.MONITOR.get())
@@ -339,7 +339,8 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                     });
 
             if (!this.level().isClientSide()) this.discard();
-        } else if (stack.getItem() == ModItems.RGO_GRENADE.get() && !this.entityData.get(KAMIKAZE)) {
+        } else if (stack.getItem() == ModItems.RGO_GRENADE.get() && this.entityData.get(KAMIKAZE_MODE) == 0) {
+            // 装载普通弹药
             if (this.entityData.get(AMMO) < 6) {
                 this.entityData.set(AMMO, this.entityData.get(AMMO) + 1);
                 if (!player.isCreative()) {
@@ -349,20 +350,21 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                     serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 0.5F, 1);
                 }
             }
-        } else if (stack.getItem() == ModItems.MORTAR_SHELLS.get() && this.entityData.get(AMMO) == 0 && !this.entityData.get(KAMIKAZE)) {
+        } else if (stack.getItem() == ModItems.MORTAR_SHELLS.get() && this.entityData.get(AMMO) == 0 && this.entityData.get(KAMIKAZE_MODE) == 0) {
+            // 迫击炮神风
             if (!player.isCreative()) {
                 stack.shrink(1);
             }
-            this.entityData.set(KAMIKAZE, true);
+            this.entityData.set(KAMIKAZE_MODE, 1);
             if (player instanceof ServerPlayer serverPlayer) {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 0.5F, 1);
             }
-        } else if (stack.getItem() == ModItems.EXPLOSIVE_MINE.get() && this.entityData.get(AMMO) == 0 && !this.entityData.get(KAMIKAZE)) {
+        } else if (stack.getItem() == ModItems.EXPLOSIVE_MINE.get() && this.entityData.get(AMMO) == 0 && this.entityData.get(KAMIKAZE_MODE) == 0) {
+            // C4神风
             if (!player.isCreative()) {
                 stack.shrink(1);
             }
-            this.entityData.set(KAMIKAZE, true);
-            this.entityData.set(KAMIKAZE_MODE, 1);
+            this.entityData.set(KAMIKAZE_MODE, 2);
             if (player instanceof ServerPlayer serverPlayer) {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 0.5F, 1);
             }
@@ -465,7 +467,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
     public void hitEntityCrash(Player controller, Entity target) {
         if (lastTickSpeed > 0.12) {
-            if (this.entityData.get(KAMIKAZE) && 20 * lastTickSpeed > this.getHealth()) {
+            if (this.entityData.get(KAMIKAZE_MODE) != 0 && 20 * lastTickSpeed > this.getHealth()) {
                 target.hurt(ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, controller), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE.get());
                 if (controller != null && controller.getMainHandItem().is(ModItems.MONITOR.get())) {
                     Monitor.disLink(controller.getMainHandItem(), controller);
@@ -473,7 +475,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
             }
             target.hurt(ModDamageTypes.causeDroneHitDamage(this.level().registryAccess(), this, controller), (float) (5 * lastTickSpeed));
 
-            this.hurt(new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.EXPLOSION), Objects.requireNonNullElse(controller, this)), (float) ((this.entityData.get(KAMIKAZE) ? 20 : 4) * lastTickSpeed));
+            this.hurt(new DamageSource(level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.EXPLOSION), Objects.requireNonNullElse(controller, this)), (float) (((this.entityData.get(KAMIKAZE_MODE) != 0) ? 20 : 4) * lastTickSpeed));
         }
     }
 
@@ -515,7 +517,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                     });
         }
 
-        if (this.entityData.get(KAMIKAZE)) {
+        if (this.entityData.get(KAMIKAZE_MODE) != 0) {
             kamikazeExplosion(this.entityData.get(KAMIKAZE_MODE));
         }
 
@@ -545,18 +547,20 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
     private void kamikazeExplosion(int mode) {
         Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
-        CustomExplosion explosion;
-        switch(mode) {
-            case 1:
-                explosion = new CustomExplosion(this.level(), this,
-                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), ExplosionConfig.C4_EXPLOSION_DAMAGE.get(),
-                    this.getX(), this.getY(), this.getZ(), ExplosionConfig.C4_EXPLOSION_RADIUS.get(), ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
-                break;
-            default:
-                explosion = new CustomExplosion(this.level(), this,
+        CustomExplosion explosion = switch (mode) {
+            case 1 -> new CustomExplosion(this.level(), this,
                     ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), ExplosionConfig.DRONE_KAMIKAZE_EXPLOSION_DAMAGE.get(),
                     this.getX(), this.getY(), this.getZ(), ExplosionConfig.DRONE_KAMIKAZE_EXPLOSION_RADIUS.get(), ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
-        }
+
+            case 2 -> new CustomExplosion(this.level(), this,
+                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), ExplosionConfig.C4_EXPLOSION_DAMAGE.get(),
+                    this.getX(), this.getY(), this.getZ(), ExplosionConfig.C4_EXPLOSION_RADIUS.get(), ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+
+            default -> null;
+        };
+
+        if (explosion == null) return;
+
         explosion.explode();
         ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
