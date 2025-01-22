@@ -67,7 +67,7 @@ public class ContainerMobileEntity extends MobileVehicleEntity implements HasCus
         if (player.getVehicle() == this) return InteractionResult.PASS;
 
         ItemStack stack = player.getMainHandItem();
-        if (stack.is(ModItems.EXPLOSIVE_MINE.get())) {
+        if (stack.is(ModItems.C4_BOMB.get())) {
             stack.use(player.level(), player, hand);
             return InteractionResult.SUCCESS;
         }

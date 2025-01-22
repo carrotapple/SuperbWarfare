@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.tools;
 
+import com.atsuishio.superbwarfare.entity.C4Entity;
 import com.atsuishio.superbwarfare.entity.ClaymoreEntity;
-import com.atsuishio.superbwarfare.entity.ExplosiveEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity;
 import net.minecraft.core.BlockPos;
@@ -40,7 +40,7 @@ public class SeekTool {
                             && e.isAlive()
                             && e.getVehicle() == null
                             && !(e instanceof Player player && (player.isSpectator()))
-                            && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand || e instanceof ClaymoreEntity || e instanceof ExplosiveEntity || e instanceof AreaEffectCloud)
+                            && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand || e instanceof ClaymoreEntity || e instanceof C4Entity || e instanceof AreaEffectCloud)
                     ) {
                         return level.clip(new ClipContext(entity.getEyePosition(), e.getEyePosition(),
                                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() != HitResult.Type.BLOCK;
@@ -55,7 +55,7 @@ public class SeekTool {
                     if (e.distanceTo(entity) <= seekRange && calculateAngle(e, entity) < seekAngle
                             && e != entity
                             && e.isAlive()
-                            && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand || e instanceof ClaymoreEntity || e instanceof ExplosiveEntity || e instanceof AreaEffectCloud)
+                            && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand || e instanceof ClaymoreEntity || e instanceof C4Entity || e instanceof AreaEffectCloud)
                             && e.getVehicle() == null
                             && !(e instanceof Player player && (player.isSpectator()))
                             && (!e.isAlliedTo(entity) || e.getTeam() == null || e.getTeam().getName().equals("TDM"))) {
@@ -72,7 +72,7 @@ public class SeekTool {
                     if (e.distanceTo(entity) <= seekRange && calculateAngle(e, entity) < seekAngle
                             && e != entity
                             && e.isAlive()
-                            && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand || e instanceof ClaymoreEntity || e instanceof ExplosiveEntity || e instanceof AreaEffectCloud)
+                            && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand || e instanceof ClaymoreEntity || e instanceof C4Entity || e instanceof AreaEffectCloud)
                             && e.getVehicle() == null
                             && !(e instanceof Player player && (player.isSpectator()))
                             && (!e.isAlliedTo(entity) || e.getTeam() == null || e.getTeam().getName().equals("TDM"))) {
@@ -87,7 +87,7 @@ public class SeekTool {
         return StreamSupport.stream(EntityFindUtil.getEntities(level).getAll().spliterator(), false)
                 .filter(e -> e.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= range * range
                         && e.isAlive()
-                        && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand || e instanceof ClaymoreEntity || e instanceof ExplosiveEntity || e instanceof AreaEffectCloud)
+                        && !(e instanceof ItemEntity || e instanceof ExperienceOrb || e instanceof HangingEntity || e instanceof ProjectileEntity || e instanceof Projectile || e instanceof ArmorStand || e instanceof ClaymoreEntity || e instanceof C4Entity || e instanceof AreaEffectCloud)
                         && !(e instanceof Player player && player.isSpectator()))
                 .toList();
     }

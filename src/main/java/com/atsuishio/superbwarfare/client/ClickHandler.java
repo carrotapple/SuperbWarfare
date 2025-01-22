@@ -21,7 +21,6 @@ import com.atsuishio.superbwarfare.tools.TraceTool;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -477,7 +476,7 @@ public class ClickHandler {
 
     private static void handleLaunchPress(Player player) {
         ItemStack item = player.getMainHandItem();
-        if (item.is(ModItems.EXPLOSIVE_MINE.get())) {
+        if (item.is(ModItems.C4_BOMB.get())) {
             item.use(player.level(),player,player.getUsedItemHand());
         }
     }

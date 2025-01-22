@@ -10,29 +10,19 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.OldUsersConverter;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.items.ItemHandlerHelper;
-import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -43,24 +33,24 @@ import java.util.Comparator;
 import java.util.Optional;
 import java.util.UUID;
 
-public class ExplosiveEntity extends Entity implements GeoEntity, AnimatedEntity, OwnableEntity {
+public class C4Entity extends Entity implements GeoEntity, AnimatedEntity, OwnableEntity {
 
-    protected static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(ExplosiveEntity.class, EntityDataSerializers.OPTIONAL_UUID);
-    protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(ExplosiveEntity.class, EntityDataSerializers.STRING);
-    protected static final EntityDataAccessor<Optional<UUID>> TARGET_UUID = SynchedEntityData.defineId(ExplosiveEntity.class, EntityDataSerializers.OPTIONAL_UUID);
-    protected static final EntityDataAccessor<Float> REL_X = SynchedEntityData.defineId(ExplosiveEntity.class, EntityDataSerializers.FLOAT);
-    protected static final EntityDataAccessor<Float> REL_Y = SynchedEntityData.defineId(ExplosiveEntity.class, EntityDataSerializers.FLOAT);
-    protected static final EntityDataAccessor<Float> REL_Z = SynchedEntityData.defineId(ExplosiveEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(ExplosiveEntity.class, EntityDataSerializers.FLOAT);
+    protected static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.OPTIONAL_UUID);
+    protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.STRING);
+    protected static final EntityDataAccessor<Optional<UUID>> TARGET_UUID = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.OPTIONAL_UUID);
+    protected static final EntityDataAccessor<Float> REL_X = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.FLOAT);
+    protected static final EntityDataAccessor<Float> REL_Y = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.FLOAT);
+    protected static final EntityDataAccessor<Float> REL_Z = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(C4Entity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public ExplosiveEntity(EntityType<ExplosiveEntity> type, Level world) {
+    public C4Entity(EntityType<C4Entity> type, Level world) {
         super(type, world);
         this.noCulling = true;
     }
 
-    public ExplosiveEntity(LivingEntity owner, Level level) {
-        super(ModEntities.EXPLOSIVE.get(), level);
+    public C4Entity(LivingEntity owner, Level level) {
+        super(ModEntities.C_4.get(), level);
         this.setOwnerUUID(owner.getUUID());
         ModUtils.queueServerWork(1, () -> {
             if (this.level().isClientSide()) return;
@@ -272,7 +262,7 @@ public class ExplosiveEntity extends Entity implements GeoEntity, AnimatedEntity
 
     public void destroy() {
         if (this.level() instanceof ServerLevel && this.tickCount < ExplosionConfig.C4_EXPLOSION_COUNTDOWN.get()) {
-            ItemEntity c4 = new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), new ItemStack(ModItems.EXPLOSIVE_MINE.get()));
+            ItemEntity c4 = new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), new ItemStack(ModItems.C4_BOMB.get()));
             c4.setPickUpDelay(10);
             this.level().addFreshEntity(c4);
             this.discard();

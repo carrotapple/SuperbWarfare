@@ -1,8 +1,8 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.entity.C4Entity;
 import com.atsuishio.superbwarfare.entity.DroneEntity;
-import com.atsuishio.superbwarfare.entity.ExplosiveEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModParticleTypes;
@@ -225,7 +225,7 @@ public class VehicleEntity extends Entity {
     @Override
     protected boolean canAddPassenger(Entity pPassenger) {
         ModUtils.LOGGER.info(pPassenger.getClass().toString());
-        return this.getPassengers().size() < this.getMaxPassengers() || pPassenger instanceof ExplosiveEntity;
+        return this.getPassengers().size() < this.getMaxPassengers() || pPassenger instanceof C4Entity;
     }
 
     public int getMaxPassengers() {

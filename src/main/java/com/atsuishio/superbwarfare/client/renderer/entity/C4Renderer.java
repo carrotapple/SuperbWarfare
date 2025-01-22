@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.renderer.entity;
 
-import com.atsuishio.superbwarfare.client.model.entity.ExplosiveModel;
-import com.atsuishio.superbwarfare.entity.ExplosiveEntity;
+import com.atsuishio.superbwarfare.client.model.entity.C4Model;
+import com.atsuishio.superbwarfare.entity.C4Entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -13,20 +13,20 @@ import net.minecraft.util.Mth;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class ExplosiveRenderer extends GeoEntityRenderer<ExplosiveEntity> {
+public class C4Renderer extends GeoEntityRenderer<C4Entity> {
 
-    public ExplosiveRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new ExplosiveModel());
+    public C4Renderer(EntityRendererProvider.Context renderManager) {
+        super(renderManager, new C4Model());
         this.shadowRadius = 0f;
     }
 
     @Override
-    public RenderType getRenderType(ExplosiveEntity animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+    public RenderType getRenderType(C4Entity animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
         return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
     @Override
-    public void preRender(PoseStack poseStack, ExplosiveEntity entity, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green,
+    public void preRender(PoseStack poseStack, C4Entity entity, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green,
                           float blue, float alpha) {
         float scale = 0.5f;
         this.scaleHeight = scale;
@@ -35,7 +35,7 @@ public class ExplosiveRenderer extends GeoEntityRenderer<ExplosiveEntity> {
     }
 
     @Override
-    public void render(ExplosiveEntity entityIn, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn) {
+    public void render(C4Entity entityIn, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn) {
         poseStack.pushPose();
         poseStack.mulPose(Axis.YP.rotationDegrees(-Mth.lerp(partialTicks, entityIn.yRotO, entityIn.getYRot())));
         super.render(entityIn, entityYaw, partialTicks, poseStack, bufferIn, packedLightIn);
@@ -43,12 +43,12 @@ public class ExplosiveRenderer extends GeoEntityRenderer<ExplosiveEntity> {
     }
 
     @Override
-    protected float getDeathMaxRotation(ExplosiveEntity entityLivingBaseIn) {
+    protected float getDeathMaxRotation(C4Entity entityLivingBaseIn) {
         return 0.0F;
     }
 
     @Override
-    public boolean shouldShowName(ExplosiveEntity animatable) {
+    public boolean shouldShowName(C4Entity animatable) {
         return false;
     }
 }

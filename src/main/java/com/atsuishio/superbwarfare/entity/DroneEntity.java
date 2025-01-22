@@ -328,7 +328,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
             if (this.entityData.get(KAMIKAZE_MODE) == 1) {
                 ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MORTAR_SHELLS.get()));
             } else if (this.entityData.get(KAMIKAZE_MODE) == 2) {
-                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.EXPLOSIVE_MINE.get()));
+                ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.C4_BOMB.get()));
             }
 
             player.getInventory().items.stream().filter(stack_ -> stack_.getItem() == ModItems.MONITOR.get())
@@ -359,7 +359,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
             if (player instanceof ServerPlayer serverPlayer) {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 0.5F, 1);
             }
-        } else if (stack.getItem() == ModItems.EXPLOSIVE_MINE.get() && this.entityData.get(AMMO) == 0 && this.entityData.get(KAMIKAZE_MODE) == 0) {
+        } else if (stack.getItem() == ModItems.C4_BOMB.get() && this.entityData.get(AMMO) == 0 && this.entityData.get(KAMIKAZE_MODE) == 0) {
             // C4神风
             if (!player.isCreative()) {
                 stack.shrink(1);

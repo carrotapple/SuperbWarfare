@@ -1,17 +1,16 @@
 package com.atsuishio.superbwarfare.item;
 
-import com.atsuishio.superbwarfare.entity.ExplosiveEntity;
+import com.atsuishio.superbwarfare.entity.C4Entity;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class ExplosiveMine extends Item {
-    public ExplosiveMine() {
+public class C4Bomb extends Item {
+    public C4Bomb() {
         super(new Item.Properties());
     }
 
@@ -25,7 +24,7 @@ public class ExplosiveMine extends Item {
             }
         }
         if (!level.isClientSide) {
-            ExplosiveEntity entity = new ExplosiveEntity(player, level);
+            C4Entity entity = new C4Entity(player, level);
             entity.moveTo(player.getX(), player.getY() + 1.1, player.getZ(), player.getYRot(), 0);
             entity.setYBodyRot(player.getYRot());
             entity.setYHeadRot(player.getYRot());

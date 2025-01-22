@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "superbwarfare:entity/c4",
-		"particle": "superbwarfare:entity/c4"
+		"0": "superbwarfare:item/c4",
+		"particle": "superbwarfare:item/c4"
 	},
 	"elements": [
 		{
