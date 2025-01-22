@@ -10,7 +10,7 @@ import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 
@@ -44,18 +44,10 @@ public class MelonBombEntity extends ThrowableItemProjectile {
     }
 
     @Override
-    protected void onHit(HitResult result) {
-        switch (result.getType()) {
-            case BLOCK:
-                ProjectileTool.causeCustomExplode(this, 1200, 24, 1.5f);
-                break;
-            case ENTITY:
-                if (tickCount < 2) return;
-                ProjectileTool.causeCustomExplode(this, 1200, 24, 1.5f);
-                break;
-            default:
-                break;
-        }
+    public void onHitBlock(BlockHitResult blockHitResult) {
+        super.onHitBlock(blockHitResult);
+        ProjectileTool.causeCustomExplode(this, 1000, 16, 1.5f);
+        this.discard();
     }
 
     @Override
@@ -64,7 +56,7 @@ public class MelonBombEntity extends ThrowableItemProjectile {
         if (tickCount > 600) {
             this.discard();
             if (!this.level().isClientSide) {
-                ProjectileTool.causeCustomExplode(this, 1200, 24, 1.2f);
+                ProjectileTool.causeCustomExplode(this, 1000, 16, 1.5f);
             }
         }
 
@@ -76,6 +68,6 @@ public class MelonBombEntity extends ThrowableItemProjectile {
 
     @Override
     protected float getGravity() {
-        return 0.06F;
+        return 0.05F;
     }
 }

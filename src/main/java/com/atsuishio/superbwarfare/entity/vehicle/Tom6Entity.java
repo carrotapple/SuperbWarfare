@@ -24,10 +24,12 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +40,8 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
+
+import java.util.List;
 
 public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Tom6Entity.class, EntityDataSerializers.FLOAT);
@@ -82,6 +86,9 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
     @Override
     public boolean hurt(DamageSource source, float amount) {
         super.hurt(source, amount);
+        if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
+            amount *= 2f;
+        }
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
         this.hurt(amount);
         return true;
@@ -154,7 +161,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
             this.setXRot(Mth.clamp(this.getXRot() + addX, onGround() ? -10 : -120, onGround() ? 2 : 120));
             this.setZRot(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.01f) * diffY * (float) getDeltaMovement().length());
 
-            if (upInputDown && !onGround()) {
+            if (upInputDown && !onGround() && entityData.get(MELON)) {
                 entityData.set(MELON, false);
 
                 Matrix4f transform = getVehicleTransform();
@@ -163,6 +170,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
 
                 MelonBombEntity melonBomb = new MelonBombEntity(player, player.level());
                 melonBomb.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+                melonBomb.shoot(this.getDeltaMovement().x, this.getDeltaMovement().y, this.getDeltaMovement().z, 0.96f * (float)this.getDeltaMovement().length(), 0);
                 passenger.level().addFreshEntity(melonBomb);
 
                 this.level().playSound(null, this.getOnPos(), SoundEvents.IRON_DOOR_OPEN, SoundSource.PLAYERS, 1, 1);
@@ -193,9 +201,9 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.95f);
 
         this.setDeltaMovement(this.getDeltaMovement().add(
-                Mth.sin(-this.getYRot() * 0.017453292F) * (entityData.get(MELON) ? 0.14f : 0.16f) * this.entityData.get(POWER),
+                Mth.sin(-this.getYRot() * 0.017453292F) * (entityData.get(MELON) ? 0.16f : 0.19f) * this.entityData.get(POWER),
                 Mth.clamp(Math.sin((onGround() ? 45 : -(getXRot() - 30)) * Mth.DEG_TO_RAD) * getDeltaMovement().horizontalDistance() * (entityData.get(MELON) ? 0.047f : 0.067f), -0.04, 0.09),
-                Mth.cos(this.getYRot() * 0.017453292F) * (entityData.get(MELON) ? 0.14f : 0.16f) * this.entityData.get(POWER)
+                Mth.cos(this.getYRot() * 0.017453292F) * (entityData.get(MELON) ? 0.16f : 0.19f) * this.entityData.get(POWER)
                 ));
 
     }
@@ -265,15 +273,60 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
     @Override
     public void destroy() {
         Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
+        if (this.crash) {
+            List<Entity> passengers = this.getPassengers();
+            for (var entity : passengers) {
+                if (entity instanceof LivingEntity living) {
+                    var tempAttacker = living == attacker ? null : attacker;
+
+                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeAirCrashDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                }
+            }
+        } else {
+            List<Entity> passengers = this.getPassengers();
+            for (var entity : passengers) {
+                if (entity instanceof LivingEntity living) {
+                    var tempAttacker = living == attacker ? null : attacker;
+
+                    living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                    living.invulnerableTime = 0;
+                    living.hurt(ModDamageTypes.causeVehicleExplosionDamage(this.level().registryAccess(), null, tempAttacker), Integer.MAX_VALUE);
+                }
+            }
+        }
 
         if (level() instanceof ServerLevel) {
-            CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), 10f,
-                    this.getX(), this.getY(), this.getZ(), 2f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
-            explosion.explode();
-            net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
-            explosion.finalizeExplosion(false);
-            ParticleTool.spawnSmallExplosionParticles(this.level(), this.position());
+            if (entityData.get(MELON)) {
+                CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                        ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, attacker), 1100.0f,
+                        this.getX(), this.getY(), this.getZ(), 16f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                explosion.explode();
+                ForgeEventFactory.onExplosionStart(this.level(), explosion);
+                explosion.finalizeExplosion(false);
+                ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
+            } else {
+                CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                        ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, attacker), 15.0f,
+                        this.getX(), this.getY(), this.getZ(), 2f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                explosion.explode();
+                ForgeEventFactory.onExplosionStart(this.level(), explosion);
+                explosion.finalizeExplosion(false);
+                ParticleTool.spawnMediumExplosionParticles(this.level(), this.position());
+            }
         }
 
         this.discard();
