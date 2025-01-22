@@ -2,6 +2,9 @@ package com.atsuishio.superbwarfare.entity;
 
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.entity.projectile.FlareDecoyEntity;
+import com.atsuishio.superbwarfare.entity.projectile.LaserEntity;
+import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.projectile.RgoGrenadeEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
@@ -31,11 +34,13 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -460,7 +465,8 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         var level = this.level();
         final Vec3 center = new Vec3(this.getX(), this.getY(), this.getZ());
         for (Entity target : level.getEntitiesOfClass(Entity.class, aabb, e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
-            if (this != target && target != null && !(target instanceof RgoGrenadeEntity)) {
+            if (this != target && target != null
+                    && !(target instanceof ItemEntity || target instanceof Projectile || target instanceof ProjectileEntity || target instanceof LaserEntity || target instanceof FlareDecoyEntity || target instanceof AreaEffectCloud || target instanceof C4Entity)) {
                 hitEntityCrash(controller, target);
             }
         }

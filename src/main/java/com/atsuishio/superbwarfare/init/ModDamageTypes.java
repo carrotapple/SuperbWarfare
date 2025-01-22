@@ -22,7 +22,6 @@ public class ModDamageTypes {
     public static final ResourceKey<DamageType> GUN_FIRE_HEADSHOT_ABSOLUTE = ResourceKey.create(Registries.DAMAGE_TYPE, ModUtils.loc("gunfire_headshot_absolute"));
     public static final ResourceKey<DamageType> BURN = ResourceKey.create(Registries.DAMAGE_TYPE, ModUtils.loc("burn"));
     public static final ResourceKey<DamageType> MINE = ResourceKey.create(Registries.DAMAGE_TYPE, ModUtils.loc("mine"));
-    public static final ResourceKey<DamageType> C4 = ResourceKey.create(Registries.DAMAGE_TYPE, ModUtils.loc("c4"));
     public static final ResourceKey<DamageType> BEAST = ResourceKey.create(Registries.DAMAGE_TYPE, ModUtils.loc("beast"));
     public static final ResourceKey<DamageType> SHOCK = ResourceKey.create(Registries.DAMAGE_TYPE, ModUtils.loc("shock"));
     public static final ResourceKey<DamageType> PROJECTILE_BOOM = ResourceKey.create(Registries.DAMAGE_TYPE, ModUtils.loc("projectile_boom"));
@@ -46,10 +45,6 @@ public class ModDamageTypes {
 
     public static DamageSource causeMineDamage(RegistryAccess registryAccess, @Nullable Entity entity) {
         return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(MINE), entity);
-    }
-
-    public static DamageSource causeC4Damage(RegistryAccess registryAccess, @Nullable Entity entity) {
-        return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(C4), entity);
     }
 
     public static DamageSource causeShockDamage(RegistryAccess registryAccess, @Nullable Entity attacker) {

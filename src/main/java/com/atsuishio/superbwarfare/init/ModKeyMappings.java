@@ -55,7 +55,6 @@ public class ModKeyMappings {
     public static final KeyMapping SWITCH_ZOOM = new KeyMapping("key.superbwarfare.switch_zoom", GLFW.GLFW_KEY_UNKNOWN, "key.categories.superbwarfare");
     public static final KeyMapping RELEASE_DECOY = new KeyMapping("key.superbwarfare.release_decoy", GLFW.GLFW_KEY_X, "key.categories.superbwarfare");
     public static final KeyMapping MELEE = new KeyMapping("key.superbwarfare.melee", GLFW.GLFW_KEY_V, "key.categories.superbwarfare");
-    public static final KeyMapping LAUNCH = new KeyMapping("key.superbwarfare.launch", GLFW.GLFW_KEY_H, "key.categories.superbwarfare");
 
     @SubscribeEvent
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
@@ -78,7 +77,6 @@ public class ModKeyMappings {
         event.register(SWITCH_ZOOM);
         event.register(RELEASE_DECOY);
         event.register(MELEE);
-        event.register(LAUNCH);
     }
 
     @Mod.EventBusSubscriber(value = Dist.CLIENT)

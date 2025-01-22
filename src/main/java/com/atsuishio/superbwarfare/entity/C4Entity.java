@@ -270,11 +270,12 @@ public class C4Entity extends Entity implements GeoEntity, AnimatedEntity, Ownab
     }
 
     private void triggerExplode(Entity target) {
-        CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeC4Damage(this.level().registryAccess(), this.getOwner()), ExplosionConfig.C4_EXPLOSION_DAMAGE.get(),
+        CustomExplosion explosion = new CustomExplosion(level(), this,
+                ModDamageTypes.causeProjectileBoomDamage(level().registryAccess(), getOwner(), getOwner()), ExplosionConfig.C4_EXPLOSION_DAMAGE.get(),
                 target.getX(), target.getY(), target.getZ(), ExplosionConfig.C4_EXPLOSION_RADIUS.get(), ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
-        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(level(), explosion);
+        ParticleTool.spawnHugeExplosionParticles(level(),position());
         explosion.finalizeExplosion(false);
     }
 

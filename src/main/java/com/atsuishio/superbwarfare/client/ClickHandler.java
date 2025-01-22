@@ -218,9 +218,6 @@ public class ClickHandler {
                 ClientEventHandler.holdFire = false;
                 ModUtils.PACKET_HANDLER.sendToServer(new EditModeMessage(0));
             }
-            if (key == ModKeyMappings.LAUNCH.getKey().getValue()) {
-                handleLaunchPress(player);
-            }
 
             if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
                 if (!(stack.getItem() instanceof GunItem gunItem)) return;
@@ -472,12 +469,5 @@ public class ClickHandler {
             return;
         }
         ModUtils.PACKET_HANDLER.sendToServer(new PlayerStopRidingMessage(0));
-    }
-
-    private static void handleLaunchPress(Player player) {
-        ItemStack item = player.getMainHandItem();
-        if (item.is(ModItems.C4_BOMB.get())) {
-            item.use(player.level(),player,player.getUsedItemHand());
-        }
     }
 }
