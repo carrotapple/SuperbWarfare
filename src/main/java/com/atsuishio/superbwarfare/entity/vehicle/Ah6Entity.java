@@ -419,11 +419,6 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
         entity.setYBodyRot(getYRot());
     }
 
-    @Override
-    protected boolean canAddPassenger(Entity pPassenger) {
-        return this.getPassengers().size() < this.getMaxPassengers();
-    }
-
     public int getMaxPassengers() {
         return 2;
     }

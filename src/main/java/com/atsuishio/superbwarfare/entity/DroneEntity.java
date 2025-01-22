@@ -61,6 +61,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     public static final EntityDataAccessor<String> CONTROLLER = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Boolean> KAMIKAZE = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Integer> KAMIKAZE_MODE = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> DELTA_X_ROT = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> PROPELLER_ROT = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
@@ -123,6 +124,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         this.entityData.define(LINKED, false);
         this.entityData.define(AMMO, 0);
         this.entityData.define(KAMIKAZE, false);
+        this.entityData.define(KAMIKAZE_MODE, 0);
     }
 
     @Override
@@ -142,6 +144,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         compound.putString("Controller", this.entityData.get(CONTROLLER));
         compound.putInt("Ammo", this.entityData.get(AMMO));
         compound.putBoolean("Kamikaze", this.entityData.get(KAMIKAZE));
+        compound.putInt("Kamikaze", this.entityData.get(KAMIKAZE_MODE));
     }
 
     @Override
@@ -155,6 +158,8 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
             this.entityData.set(AMMO, compound.getInt("Ammo"));
         if (compound.contains("Kamikaze"))
             this.entityData.set(KAMIKAZE, compound.getBoolean("Kamikaze"));
+        if (compound.contains("KamikazeMode"))
+            this.entityData.set(KAMIKAZE_MODE, compound.getInt("KamikazeMode"));
     }
 
     @Override
@@ -318,6 +323,15 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
             if (player instanceof ServerPlayer serverPlayer) {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 0.5F, 1);
             }
+        } else if (stack.getItem() == ModItems.EXPLOSIVE_MINE.get() && this.entityData.get(AMMO) == 0 && !this.entityData.get(KAMIKAZE)) {
+            if (!player.isCreative()) {
+                stack.shrink(1);
+            }
+            this.entityData.set(KAMIKAZE, true);
+            this.entityData.set(KAMIKAZE_MODE, 1);
+            if (player instanceof ServerPlayer serverPlayer) {
+                serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.BULLET_SUPPLY.get(), SoundSource.PLAYERS, 0.5F, 1);
+            }
         }
 
         return InteractionResult.sidedSuccess(this.level().isClientSide());
@@ -470,7 +484,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         }
 
         if (this.entityData.get(KAMIKAZE)) {
-            kamikazeExplosion();
+            kamikazeExplosion(this.entityData.get(KAMIKAZE_MODE));
         }
 
         ItemStack stack = new ItemStack(ModItems.RGO_GRENADE.get(), this.entityData.get(AMMO));
@@ -497,11 +511,20 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     }
 
 
-    private void kamikazeExplosion() {
+    private void kamikazeExplosion(int mode) {
         Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
-        CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), ExplosionConfig.DRONE_KAMIKAZE_EXPLOSION_DAMAGE.get(),
-                this.getX(), this.getY(), this.getZ(), ExplosionConfig.DRONE_KAMIKAZE_EXPLOSION_RADIUS.get(), ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+        CustomExplosion explosion;
+        switch(mode) {
+            case 1:
+                explosion = new CustomExplosion(this.level(), this,
+                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), ExplosionConfig.C4_EXPLOSION_DAMAGE.get(),
+                    this.getX(), this.getY(), this.getZ(), ExplosionConfig.C4_EXPLOSION_RADIUS.get(), ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                break;
+            default:
+                explosion = new CustomExplosion(this.level(), this,
+                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), ExplosionConfig.DRONE_KAMIKAZE_EXPLOSION_DAMAGE.get(),
+                    this.getX(), this.getY(), this.getZ(), ExplosionConfig.DRONE_KAMIKAZE_EXPLOSION_RADIUS.get(), ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+        }
         explosion.explode();
         ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);

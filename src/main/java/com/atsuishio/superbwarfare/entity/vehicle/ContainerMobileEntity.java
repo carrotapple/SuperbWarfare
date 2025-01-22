@@ -67,6 +67,10 @@ public class ContainerMobileEntity extends MobileVehicleEntity implements HasCus
         if (player.getVehicle() == this) return InteractionResult.PASS;
 
         ItemStack stack = player.getMainHandItem();
+        if (stack.is(ModItems.EXPLOSIVE_MINE.get())) {
+            stack.use(player.level(), player, hand);
+            return InteractionResult.SUCCESS;
+        }
         if (player.isShiftKeyDown() && stack.is(ModItems.CROWBAR.get())) {
             ItemStack container = ContainerBlockItem.createInstance(this);
             if (!player.addItem(container)) {
@@ -96,7 +100,7 @@ public class ContainerMobileEntity extends MobileVehicleEntity implements HasCus
                 player.setYRot(this.getYRot());
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             }
-            if (this.getPassengers().size() < this.getMaxPassengers()) {
+            if (this.canAddPassenger(player)) {
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             }
         }

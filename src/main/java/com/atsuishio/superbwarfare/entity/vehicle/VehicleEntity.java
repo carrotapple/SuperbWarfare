@@ -1,6 +1,8 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
+import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.entity.DroneEntity;
+import com.atsuishio.superbwarfare.entity.ExplosiveEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModParticleTypes;
@@ -129,7 +131,7 @@ public class VehicleEntity extends Entity {
                 player.setYRot(this.getYRot());
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             }
-            if (this.getPassengers().size() < this.getMaxPassengers()) {
+            if (this.canAddPassenger(player)) {
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             }
         }
@@ -222,7 +224,8 @@ public class VehicleEntity extends Entity {
 
     @Override
     protected boolean canAddPassenger(Entity pPassenger) {
-        return this.getPassengers().size() < this.getMaxPassengers();
+        ModUtils.LOGGER.info(pPassenger.getClass().toString());
+        return this.getPassengers().size() < this.getMaxPassengers() || pPassenger instanceof ExplosiveEntity;
     }
 
     public int getMaxPassengers() {

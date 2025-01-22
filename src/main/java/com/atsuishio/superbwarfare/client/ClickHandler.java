@@ -21,6 +21,7 @@ import com.atsuishio.superbwarfare.tools.TraceTool;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -217,6 +218,9 @@ public class ClickHandler {
             if (key == ModKeyMappings.EDIT_MODE.getKey().getValue() && ClientEventHandler.burstFireSize == 0) {
                 ClientEventHandler.holdFire = false;
                 ModUtils.PACKET_HANDLER.sendToServer(new EditModeMessage(0));
+            }
+            if (key == ModKeyMappings.LAUNCH.getKey().getValue()) {
+                handleLaunchPress(player);
             }
 
             if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
@@ -469,5 +473,12 @@ public class ClickHandler {
             return;
         }
         ModUtils.PACKET_HANDLER.sendToServer(new PlayerStopRidingMessage(0));
+    }
+
+    private static void handleLaunchPress(Player player) {
+        ItemStack item = player.getMainHandItem();
+        if (item.is(ModItems.EXPLOSIVE_MINE.get())) {
+            item.use(player.level(),player,player.getUsedItemHand());
+        }
     }
 }

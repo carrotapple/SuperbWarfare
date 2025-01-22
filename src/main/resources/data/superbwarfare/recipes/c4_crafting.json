@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "dbd",
+    "dcd",
+    "d d"
+  ],
+  "key": {
+    "b": {
+      "item": "minecraft:iron_ingot"
+    },
+    "c": {
+      "item": "superbwarfare:high_energy_explosives"
+    },
+    "d": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "superbwarfare:c4_mine",
+    "count": 1
+  }
+}

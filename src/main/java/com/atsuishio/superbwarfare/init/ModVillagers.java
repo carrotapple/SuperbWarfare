@@ -153,6 +153,8 @@ public class ModVillagers {
             trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 4),
                     new ItemStack(ModItems.CLAYMORE_MINE.get(), 1), 16, 5, 0.05f));
             trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 4),
+                    new ItemStack(ModItems.EXPLOSIVE_MINE.get(), 1), 16, 5, 0.05f));
+            trades.get(4).add(new BasicItemListing(new ItemStack(Items.EMERALD, 4),
                     new ItemStack(ModItems.ROCKET.get(), 1), 16, 5, 0.05f));
 
             trades.get(4).add(new BasicItemListing(new ItemStack(ModItems.GRENADE_40MM.get(), 1),
@@ -164,6 +166,8 @@ public class ModVillagers {
             trades.get(4).add(new BasicItemListing(new ItemStack(ModItems.MORTAR_SHELLS.get(), 3),
                     new ItemStack(Items.EMERALD, 2), 32, 5, 0.05f));
             trades.get(4).add(new BasicItemListing(new ItemStack(ModItems.CLAYMORE_MINE.get(), 1),
+                    new ItemStack(Items.EMERALD, 2), 32, 5, 0.05f));
+            trades.get(4).add(new BasicItemListing(new ItemStack(ModItems.EXPLOSIVE_MINE.get(), 1),
                     new ItemStack(Items.EMERALD, 2), 32, 5, 0.05f));
             trades.get(4).add(new BasicItemListing(new ItemStack(ModItems.ROCKET.get(), 1),
                     new ItemStack(Items.EMERALD, 2), 32, 5, 0.05f));
