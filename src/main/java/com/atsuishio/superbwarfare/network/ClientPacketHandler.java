@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay;
 import com.atsuishio.superbwarfare.client.overlay.DroneUIOverlay;
 import com.atsuishio.superbwarfare.client.screens.FuMO25ScreenHelper;
 import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
+import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.event.KillMessageHandler;
 import com.atsuishio.superbwarfare.menu.EnergyMenu;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
@@ -12,6 +13,7 @@ import com.atsuishio.superbwarfare.network.message.GunsDataMessage;
 import com.atsuishio.superbwarfare.network.message.RadarMenuOpenMessage;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.PlayerKillRecord;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageType;
@@ -21,6 +23,7 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class ClientPacketHandler {
@@ -73,5 +76,15 @@ public class ClientPacketHandler {
     public static void handleRadarMenuClose() {
         FuMO25ScreenHelper.resetEntities();
         FuMO25ScreenHelper.pos = null;
+    }
+
+    public static void handleResetCameraType(Supplier<NetworkEvent.Context> ctx) {
+        if (ctx.get().getDirection().getReceptionSide() == LogicalSide.CLIENT) {
+            Minecraft minecraft = Minecraft.getInstance();
+            Player player = minecraft.player;
+            if (player == null) return;
+
+            Minecraft.getInstance().options.setCameraType(Objects.requireNonNullElse(ClientEventHandler.lastCameraType, CameraType.FIRST_PERSON));
+        }
     }
 }

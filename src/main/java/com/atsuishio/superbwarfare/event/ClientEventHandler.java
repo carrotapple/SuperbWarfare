@@ -153,6 +153,8 @@ public class ClientEventHandler {
     public static int dismountCountdown = 0;
     public static int aimVillagerCountdown = 0;
 
+    public static CameraType lastCameraType;
+
     @SubscribeEvent
     public static void handleWeaponTurn(RenderHandEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;

@@ -530,12 +530,18 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                     });
         }
 
+        Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
+        if (controller != null) {
+            if (controller.getMainHandItem().is(ModItems.MONITOR.get())) {
+                Monitor.disLink(controller.getMainHandItem(), controller);
+            }
+        }
+
         if (this.entityData.get(KAMIKAZE_MODE) != 0) {
             kamikazeExplosion(this.entityData.get(KAMIKAZE_MODE));
         }
 
         ItemStack stack = new ItemStack(ModItems.RGO_GRENADE.get(), this.entityData.get(AMMO));
-
         if (this.level() instanceof ServerLevel level) {
             ItemEntity itemEntity = new ItemEntity(level, this.getX(), this.getY(), this.getZ(), stack);
             itemEntity.setPickUpDelay(10);
@@ -546,17 +552,8 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
             level().explode(null, this.getX(), this.getY(), this.getZ(), 0, Level.ExplosionInteraction.NONE);
         }
 
-        Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
-        if (controller != null) {
-            if (controller.getMainHandItem().is(ModItems.MONITOR.get())) {
-                Monitor.disLink(controller.getMainHandItem(), controller);
-                this.discard();
-            }
-        }
-
         this.discard();
     }
-
 
     private void kamikazeExplosion(int mode) {
         Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));

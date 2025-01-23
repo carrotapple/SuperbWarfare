@@ -1,6 +1,9 @@
 package com.atsuishio.superbwarfare.item;
 
+import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.entity.DroneEntity;
+import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.network.message.ResetCameraTypeMessage;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ItemNBTTool;
 import com.google.common.collect.ImmutableMultimap;
@@ -9,6 +12,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -24,12 +28,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
 public class Monitor extends Item {
-    private static CameraType lastCameraType;
+
     public static final String LINKED = "Linked";
     public static final String LINKED_DRONE = "LinkedDrone";
 
@@ -45,10 +50,8 @@ public class Monitor extends Item {
     public static void disLink(ItemStack itemstack, Player player) {
         ItemNBTTool.setBoolean(itemstack, LINKED, false);
         itemstack.getOrCreateTag().putString(LINKED_DRONE, "none");
-        if (player.level().isClientSide) {
-            if (lastCameraType != null) {
-                Minecraft.getInstance().options.setCameraType(lastCameraType);
-            }
+        if (player instanceof ServerPlayer serverPlayer) {
+            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ResetCameraTypeMessage(0));
         }
     }
 
@@ -74,14 +77,14 @@ public class Monitor extends Item {
         if (stack.getOrCreateTag().getBoolean("Using")) {
             stack.getOrCreateTag().putBoolean("Using", false);
             if (world.isClientSide) {
-                if (lastCameraType != null) {
-                    Minecraft.getInstance().options.setCameraType(lastCameraType);
+                if (ClientEventHandler.lastCameraType != null) {
+                    Minecraft.getInstance().options.setCameraType(ClientEventHandler.lastCameraType);
                 }
             }
         } else {
             stack.getOrCreateTag().putBoolean("Using", true);
             if (world.isClientSide) {
-                lastCameraType = Minecraft.getInstance().options.getCameraType();
+                ClientEventHandler.lastCameraType = Minecraft.getInstance().options.getCameraType();
                 Minecraft.getInstance().options.setCameraType(CameraType.THIRD_PERSON_BACK);
             }
         }
@@ -121,7 +124,7 @@ public class Monitor extends Item {
 
         Vec3 droneVec = new Vec3(stack.getOrCreateTag().getDouble("PosX"), stack.getOrCreateTag().getDouble("PosY"), stack.getOrCreateTag().getDouble("PosZ"));
 
-        list.add(Component.translatable("des.superbwarfare.monitor",new DecimalFormat("##.#").format(player.position().distanceTo(droneVec)) + "m").withStyle(ChatFormatting.GRAY));
+        list.add(Component.translatable("des.superbwarfare.monitor", new DecimalFormat("##.#").format(player.position().distanceTo(droneVec)) + "m").withStyle(ChatFormatting.GRAY));
         list.add(Component.literal("X: " + new DecimalFormat("##.#").format(droneVec.x) +
                 " Y: " + new DecimalFormat("##.#").format(droneVec.y) +
                 " Z: " + new DecimalFormat("##.#").format(droneVec.z)
@@ -142,8 +145,8 @@ public class Monitor extends Item {
             if (itemstack.getOrCreateTag().getBoolean("Using")) {
                 itemstack.getOrCreateTag().putBoolean("Using", false);
                 if (entity.level().isClientSide) {
-                    if (lastCameraType != null) {
-                        Minecraft.getInstance().options.setCameraType(lastCameraType);
+                    if (ClientEventHandler.lastCameraType != null) {
+                        Minecraft.getInstance().options.setCameraType(ClientEventHandler.lastCameraType);
                     }
                 }
             }
@@ -152,8 +155,8 @@ public class Monitor extends Item {
             if (itemstack.getOrCreateTag().getBoolean("Using")) {
                 itemstack.getOrCreateTag().putBoolean("Using", false);
                 if (entity.level().isClientSide) {
-                    if (lastCameraType != null) {
-                        Minecraft.getInstance().options.setCameraType(lastCameraType);
+                    if (ClientEventHandler.lastCameraType != null) {
+                        Minecraft.getInstance().options.setCameraType(ClientEventHandler.lastCameraType);
                     }
                 }
             }
