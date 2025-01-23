@@ -63,13 +63,14 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = VehicleConfig.AH_6_HP.get();
     public static final int MAX_ENERGY = VehicleConfig.AH_6_MAX_ENERGY.get();
+
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> PROPELLER_ROT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Integer> WEAPON_TYPE = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
-
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> DECOY_COUNT = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> LOADED_ROCKET = SynchedEntityData.defineId(Ah6Entity.class, EntityDataSerializers.INT);
+
     public boolean engineStart;
     public boolean engineStartOver;
     public float propellerRot;
@@ -106,16 +107,16 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("LoadedRocket", this.entityData.get(LOADED_ROCKET));
-        compound.putFloat("propellerRot", this.entityData.get(PROPELLER_ROT));
-        compound.putInt("decoyCount", this.entityData.get(DECOY_COUNT));
+        compound.putFloat("PropellerRot", this.entityData.get(PROPELLER_ROT));
+        compound.putInt("DecoyCount", this.entityData.get(DECOY_COUNT));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.entityData.set(LOADED_ROCKET, compound.getInt("LoadedRocket"));
-        this.entityData.set(PROPELLER_ROT, compound.getFloat("propellerRot"));
-        this.entityData.set(DECOY_COUNT, compound.getInt("decoyCount"));
+        this.entityData.set(PROPELLER_ROT, compound.getFloat("PropellerRot"));
+        this.entityData.set(DECOY_COUNT, compound.getInt("DecoyCount"));
     }
 
     @Override
@@ -227,7 +228,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                 Entity passenger = this.getPassengers().isEmpty() ? null : this.getPassengers().get(0);
                 for (int i = 0; i < 4; i++) {
                     FlareDecoyEntity flareDecoyEntity = new FlareDecoyEntity((LivingEntity) passenger, this.level());
-                    flareDecoyEntity.setPos(this.getX() + this.getDeltaMovement().x, this.getY() + 0.5 + this.getDeltaMovement().y, this.getZ()+ this.getDeltaMovement().z);
+                    flareDecoyEntity.setPos(this.getX() + this.getDeltaMovement().x, this.getY() + 0.5 + this.getDeltaMovement().y, this.getZ() + this.getDeltaMovement().z);
                     flareDecoyEntity.decoyShoot(this, this.getViewVector(1).yRot((45 + 90 * i) * Mth.DEG_TO_RAD), 0.8f, 8);
                     this.level().addFreshEntity(flareDecoyEntity);
                 }
@@ -239,16 +240,11 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             }
             decoyInputDown = false;
         }
-        if (this.entityData.get(DECOY_COUNT) < 6 && decoyReloadCoolDown == 0  && this.level() instanceof ServerLevel) {
+        if (this.entityData.get(DECOY_COUNT) < 6 && decoyReloadCoolDown == 0 && this.level() instanceof ServerLevel) {
             this.entityData.set(DECOY_COUNT, this.entityData.get(DECOY_COUNT) + 1);
             this.level().playSound(null, this, ModSounds.DECOY_RELOAD.get(), this.getSoundSource(), 1, 1);
             decoyReloadCoolDown = 300;
         }
-//        Player player = (Player) this.getFirstPassenger();
-//
-//        if (player != null) {
-//            player.displayClientMessage(Component.literal( new DecimalFormat("##").format(this.getEntityData().get(DECOY_COUNT))), true);
-//        }
     }
 
     @Override
@@ -266,7 +262,6 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             this.setXRot(this.getXRot() * 0.8f);
             this.entityData.set(POWER, this.entityData.get(POWER) * 0.98f);
         } else if (passenger instanceof Player) {
-
             diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
             diffX = Math.clamp(-60f, 60f, Mth.wrapDegrees(passenger.getXRot() - this.getXRot()));
 

@@ -67,10 +67,6 @@ public class ContainerMobileEntity extends MobileVehicleEntity implements HasCus
         if (player.getVehicle() == this) return InteractionResult.PASS;
 
         ItemStack stack = player.getMainHandItem();
-        if (stack.is(ModItems.C4_BOMB.get())) {
-            stack.use(player.level(), player, hand);
-            return InteractionResult.SUCCESS;
-        }
         if (player.isShiftKeyDown() && stack.is(ModItems.CROWBAR.get())) {
             ItemStack container = ContainerBlockItem.createInstance(this);
             if (!player.addItem(container)) {
@@ -132,13 +128,6 @@ public class ContainerMobileEntity extends MobileVehicleEntity implements HasCus
                             }
                         })
                 );
-
-//        Player player = (Player) this.getFirstPassenger();
-
-//        if (player != null) {
-//            player.displayClientMessage(Component.literal( new DecimalFormat("##.#").format(this.getEnergy())), true);
-//        }
-
         this.refreshDimensions();
     }
 

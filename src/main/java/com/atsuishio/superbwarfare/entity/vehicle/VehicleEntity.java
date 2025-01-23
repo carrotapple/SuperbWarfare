@@ -1,7 +1,5 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
-import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.entity.C4Entity;
 import com.atsuishio.superbwarfare.entity.DroneEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -56,6 +54,7 @@ public class VehicleEntity extends Entity {
     public float prevRoll;
     public int lastHurtTick;
     public boolean crash;
+
     public float getRoll() {
         return roll;
     }
@@ -224,8 +223,7 @@ public class VehicleEntity extends Entity {
 
     @Override
     protected boolean canAddPassenger(Entity pPassenger) {
-        ModUtils.LOGGER.info(pPassenger.getClass().toString());
-        return this.getPassengers().size() < this.getMaxPassengers() || pPassenger instanceof C4Entity;
+        return this.getPassengers().size() < this.getMaxPassengers();
     }
 
     public int getMaxPassengers() {
@@ -236,9 +234,9 @@ public class VehicleEntity extends Entity {
     public void baseTick() {
         super.baseTick();
 
-        lastHurtTick ++;
+        this.lastHurtTick++;
 
-        prevRoll = this.getRoll();
+        this.prevRoll = this.getRoll();
 
         float delta = Math.abs(getYRot() - yRotO);
         while (getYRot() > 180F) {
@@ -312,9 +310,9 @@ public class VehicleEntity extends Entity {
             }
         }
 
-        if (this.getHealth() < 0.1f * this.getMaxHealth() && tickCount %13 == 0) {
+        if (this.getHealth() < 0.1f * this.getMaxHealth() && tickCount % 13 == 0) {
             this.level().playSound(null, this.getOnPos(), ModSounds.NO_HEALTH.get(), SoundSource.PLAYERS, 1, 1);
-        } else if (this.getHealth() >= 0.1f && this.getHealth() < 0.4f * this.getMaxHealth() && tickCount %10 == 0) {
+        } else if (this.getHealth() >= 0.1f && this.getHealth() < 0.4f * this.getMaxHealth() && tickCount % 10 == 0) {
             this.level().playSound(null, this.getOnPos(), ModSounds.LOW_HEALTH.get(), SoundSource.PLAYERS, 1, 1);
         }
     }
