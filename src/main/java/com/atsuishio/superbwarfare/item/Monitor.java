@@ -117,10 +117,14 @@ public class Monitor extends Item {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, Level world, List<Component> list, TooltipFlag flag) {
-        if (stack.getOrCreateTag().getString(LINKED_DRONE).equals("none")) return;
+        if (!stack.getOrCreateTag().contains(LINKED_DRONE) || stack.getOrCreateTag().getString(LINKED_DRONE).equals("none"))
+            return;
 
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
+
+        if (!stack.getOrCreateTag().contains("PosX") || !stack.getOrCreateTag().contains("PosY") || !stack.getOrCreateTag().contains("PosZ"))
+            return;
 
         Vec3 droneVec = new Vec3(stack.getOrCreateTag().getDouble("PosX"), stack.getOrCreateTag().getDouble("PosY"), stack.getOrCreateTag().getDouble("PosZ"));
 
