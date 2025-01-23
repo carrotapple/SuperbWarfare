@@ -2,7 +2,7 @@ package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.RenderHelper;
-import com.atsuishio.superbwarfare.entity.DroneEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
@@ -32,8 +32,8 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
-import static com.atsuishio.superbwarfare.entity.DroneEntity.AMMO;
-import static com.atsuishio.superbwarfare.entity.DroneEntity.KAMIKAZE_MODE;
+import static com.atsuishio.superbwarfare.entity.vehicle.DroneEntity.AMMO;
+import static com.atsuishio.superbwarfare.entity.vehicle.DroneEntity.KAMIKAZE_MODE;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class DroneUIOverlay {

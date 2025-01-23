@@ -1,7 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.entity.C4Entity;
-import com.atsuishio.superbwarfare.entity.DroneEntity;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.entity.projectile.FlareDecoyEntity;
 import com.atsuishio.superbwarfare.entity.projectile.LaserEntity;
@@ -139,7 +138,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
                 .toList();
 
         for (var entity : entities) {
-            Vec3 toVec = this.position().add(new Vec3(1, 1 ,1).scale(random.nextFloat() * 0.01f + 1f)).vectorTo(entity.position());
+            Vec3 toVec = this.position().add(new Vec3(1, 1, 1).scale(random.nextFloat() * 0.01f + 1f)).vectorTo(entity.position());
             Vec3 velAdd = toVec.normalize().scale(Math.max((this.getBbWidth() + 2) - position().distanceTo(entity.position()), 0) * 0.002);
             double entitySize = entity.getBbWidth() * entity.getBbHeight();
             double thisSize = this.getBbWidth() * this.getBbHeight();
@@ -153,10 +152,11 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
 
     /**
      * 撞击实体并造成伤害
+     *
      * @param velocity 动量
      */
     public void crushEntities(Vec3 velocity) {
-        if (this instanceof DroneEntity) return;
+        if (!this.canCrushEntities()) return;
         if (velocity.horizontalDistance() < 0.25) return;
         if (isRemoved()) return;
         var frontBox = getBoundingBox().move(velocity.scale(0.5));
@@ -166,7 +166,8 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
                         entity -> entity != this && entity != getFirstPassenger() && entity.getVehicle() == null)
                 .stream().filter(entity -> entity.isAlive()
                         && !(entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ProjectileEntity || entity instanceof LaserEntity || entity instanceof FlareDecoyEntity || entity instanceof AreaEffectCloud || entity instanceof C4Entity)
-                        && !(entity instanceof Player player && (player.isSpectator() || player.isCreative())))
+                        && !(entity instanceof Player player && (player.isSpectator() || player.isCreative()))
+                        && !entity.getType().getDescriptionId().equals("entity.create.super_glue"))
                 .toList();
 
         for (var entity : entities) {
@@ -229,5 +230,9 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putFloat("Power", this.entityData.get(POWER));
+    }
+
+    public boolean canCrushEntities() {
+        return true;
     }
 }

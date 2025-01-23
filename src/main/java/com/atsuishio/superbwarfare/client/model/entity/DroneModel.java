@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.client.model.entity;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.entity.DroneEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import net.minecraft.resources.ResourceLocation;
@@ -13,7 +13,7 @@ import software.bernie.geckolib.model.GeoModel;
 
 import java.util.UUID;
 
-import static com.atsuishio.superbwarfare.entity.DroneEntity.*;
+import static com.atsuishio.superbwarfare.entity.vehicle.DroneEntity.*;
 
 public class DroneModel extends GeoModel<DroneEntity> {
     @Override

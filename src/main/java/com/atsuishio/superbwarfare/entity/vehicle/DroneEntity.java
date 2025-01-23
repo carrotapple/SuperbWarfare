@@ -1,12 +1,12 @@
-package com.atsuishio.superbwarfare.entity;
+package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.entity.C4Entity;
 import com.atsuishio.superbwarfare.entity.projectile.FlareDecoyEntity;
 import com.atsuishio.superbwarfare.entity.projectile.LaserEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.projectile.RgoGrenadeEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -608,5 +608,10 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
             ChunkLoadTool.unloadAllChunks(serverLevel, this, this.loadedChunks);
         }
         super.onRemovedFromWorld();
+    }
+
+    @Override
+    public boolean canCrushEntities() {
+        return false;
     }
 }
