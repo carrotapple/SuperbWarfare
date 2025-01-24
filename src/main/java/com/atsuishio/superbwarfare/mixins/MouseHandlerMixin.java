@@ -1,10 +1,7 @@
 package com.atsuishio.superbwarfare.mixins;
 
 import com.atsuishio.superbwarfare.config.client.VehicleControlConfig;
-import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
-import com.atsuishio.superbwarfare.entity.vehicle.ICannonEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
-import com.atsuishio.superbwarfare.entity.vehicle.Tom6Entity;
+import com.atsuishio.superbwarfare.entity.vehicle.*;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModMobEffects;
@@ -28,6 +25,9 @@ import static com.atsuishio.superbwarfare.event.ClientEventHandler.droneFovLerp;
  */
 @Mixin(MouseHandler.class)
 public class MouseHandlerMixin {
+
+    private static double x;
+    private static double y;
 
     @ModifyVariable(method = "turnPlayer()V", at = @At(value = "STORE", opcode = Opcodes.DSTORE), ordinal = 2)
     private double sensitivity(double original) {
@@ -80,12 +80,55 @@ public class MouseHandlerMixin {
         if (player == null) return i;
 
         if (player.getVehicle() instanceof Ah6Entity ah6Entity && ah6Entity.getFirstPassenger() == player) {
-            return VehicleControlConfig.INVERT_AIRCRAFT_CONTROL.get() ? (Mth.abs(ah6Entity.getRoll()) < 90 ? -i : i) : (Mth.abs(ah6Entity.getRoll()) < 90 ? i : -i);
+            return VehicleControlConfig.INVERT_AIRCRAFT_CONTROL.get() ? -i : i;
         }
 
         if (player.getVehicle() instanceof Tom6Entity tom6 && tom6.getFirstPassenger() == player) {
-            return VehicleControlConfig.INVERT_AIRCRAFT_CONTROL.get() ? (Mth.abs(tom6.getRoll()) < 90 ? -i : i) : (Mth.abs(tom6.getRoll()) < 90 ? i : -i);
+            return VehicleControlConfig.INVERT_AIRCRAFT_CONTROL.get() ? -i : i;
         }
         return i;
     }
+
+    @ModifyVariable(method = "turnPlayer()V", at = @At(value = "STORE", opcode = Opcodes.DSTORE), ordinal = 5)
+    private double modifyD2(double d) {
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
+
+        if (player == null) return d;
+
+        if (player.getVehicle() instanceof VehicleEntity vehicle) {
+            x = d;
+
+            double i = 0;
+
+            if (vehicle.getRoll() < 0) {
+                i = 1;
+            } else if (vehicle.getRoll() > 0) {
+                i = -1;
+            }
+
+            if (Mth.abs(vehicle.getRoll()) > 90) {
+                i *= (1 - (Mth.abs(vehicle.getRoll()) - 90) / 90);
+            }
+
+            return (1 - (Mth.abs(vehicle.getRoll()) / 90)) * d + ((Mth.abs(vehicle.getRoll()) / 90)) * y * i;
+        }
+        return d;
+    }
+
+    @ModifyVariable(method = "turnPlayer()V", at = @At(value = "STORE", opcode = Opcodes.DSTORE), ordinal = 6)
+    private double modifyD3(double d) {
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
+
+        if (player == null) return d;
+
+        if (player.getVehicle() instanceof VehicleEntity vehicle) {
+            y = d;
+            return (1 - (Mth.abs(vehicle.getRoll()) / 90)) * d + ((Mth.abs(vehicle.getRoll()) / 90)) * x * (vehicle.getRoll() < 0 ? -1 : 1);
+        }
+
+        return d;
+    }
+
 }

@@ -1,6 +1,8 @@
 package com.atsuishio.superbwarfare.event;
 
+import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.MouseMovementHandler;
+import com.atsuishio.superbwarfare.network.message.VehicleMovementMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
@@ -51,9 +53,48 @@ public class ClientMouseHandler {
             }
         }
 
-        lerpPosX = Mth.lerp(0.1,lerpPosX,0);
-        lerpPosY = Mth.lerp(0.1,lerpPosY,0);
+        lerpPosX = Mth.clamp(Mth.lerp(0.1,lerpPosX,0), -0.11, 0.11);
+        lerpPosY = Mth.clamp(Mth.lerp(0.1,lerpPosY,0), -0.11, 0.11);
 
-//        player.displayClientMessage(Component.literal(new DecimalFormat("##.##").format(lerpPosX)), true);
+        int typeX = 0;
+
+        if (lerpPosX < -0.05) {
+            typeX = -1;
+        } else if (lerpPosX > 0.05) {
+            typeX = 1;
+        }
+
+        int typeY = 0;
+
+        if (lerpPosY < -0.05) {
+            typeY = 1;
+        } else if (lerpPosY > 0.05) {
+            typeY = -1;
+        }
+
+        if (typeX == -1) {
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(7, true));
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(8, false));
+        } else if (typeX == 1) {
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(7, false));
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(8, true));
+        } else {
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(7, false));
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(8, false));
+        }
+
+
+        if (typeY == 1) {
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(9, true));
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(10, false));
+        } else if (typeY == -1) {
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(9, false));
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(10, true));
+        } else {
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(9, false));
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(10, false));
+        }
+
+//        player.displayClientMessage(Component.literal(typeX + " " + typeY), true);
     }
 }

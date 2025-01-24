@@ -190,7 +190,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
             setXRot(getXRot() * 0.7f);
             setZRot(getRoll() * 0.7f);
         } else {
-            setZRot(getRoll() * 0.994f);
+//            setZRot(getRoll() * 0.994f);
         }
 
 //        if (this.forwardInputDown || this.backInputDown) {

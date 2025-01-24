@@ -60,6 +60,18 @@ public class VehicleMovementMessage {
                         case 6:
                             mobileVehicleEntity.decoyInputDown = message.clicked;
                             break;
+                        case 7:
+                            mobileVehicleEntity.leftInputDownMouse = message.clicked;
+                            break;
+                        case 8:
+                            mobileVehicleEntity.rightInputDownMouse = message.clicked;
+                            break;
+                        case 9:
+                            mobileVehicleEntity.downInputDownMouse = message.clicked;
+                            break;
+                        case 10:
+                            mobileVehicleEntity.upInputDownMouse = message.clicked;
+                            break;
                     }
                 } else if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using") && stack.getOrCreateTag().getBoolean("Linked")) {
                     var drone = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
