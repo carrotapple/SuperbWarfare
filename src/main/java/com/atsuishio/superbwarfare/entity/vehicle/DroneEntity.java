@@ -477,9 +477,11 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         if (lastTickSpeed > 0.12) {
             if (this.entityData.get(KAMIKAZE_MODE) != 0 && 20 * lastTickSpeed > this.getHealth()) {
                 if (this.entityData.get(KAMIKAZE_MODE) == 1) {
-                    target.hurt(ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, controller), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE.get());
+                    target.hurt(ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, controller), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE.get());
+                    target.invulnerableTime = 0;
                 } else if (this.entityData.get(KAMIKAZE_MODE) == 2) {
-                    target.hurt(ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, controller), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE_C4.get());
+                    target.hurt(ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, controller), ExplosionConfig.DRONE_KAMIKAZE_HIT_DAMAGE_C4.get());
+                    target.invulnerableTime = 0;
                 }
 
                 if (controller != null && controller.getMainHandItem().is(ModItems.MONITOR.get())) {

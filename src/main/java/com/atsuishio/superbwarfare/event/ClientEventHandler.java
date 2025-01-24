@@ -291,10 +291,10 @@ public class ClientEventHandler {
         if (stack.is(ModItems.LUNGE_MINE.get()) && ((lungeAttack >= 18 && lungeAttack <= 21) || lungeSprint > 0)) {
             Entity lookingEntity = TraceTool.findLookingEntity(player, player.getEntityReach() + 1.5);
 
-            BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(player.getBlockReach() + 1.5)),
+            BlockHitResult result = player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(player.getBlockReach() + 0.5)),
                     ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
 
-            Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(player.getBlockReach() + 1.5)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
+            Vec3 looking = Vec3.atLowerCornerOf(player.level().clip(new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(player.getBlockReach() + 0.5)), ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos());
             BlockState blockState = player.level().getBlockState(BlockPos.containing(looking.x(), looking.y(), looking.z()));
 
             if (lookingEntity != null) {
@@ -302,7 +302,7 @@ public class ClientEventHandler {
                 lungeSprint = 0;
                 lungeAttack = 0;
                 lungeDraw = 30;
-            } else if (blockState.canOcclude() || blockState.getBlock() instanceof DoorBlock || blockState.getBlock() instanceof CrossCollisionBlock || blockState.getBlock() instanceof BellBlock) {
+            } else if ((blockState.canOcclude() || blockState.getBlock() instanceof DoorBlock || blockState.getBlock() instanceof CrossCollisionBlock || blockState.getBlock() instanceof BellBlock) && lungeSprint == 0) {
                 ModUtils.PACKET_HANDLER.sendToServer(new LungeMineAttackMessage(1, player.getUUID(), result));
                 lungeSprint = 0;
                 lungeAttack = 0;
@@ -451,7 +451,7 @@ public class ClientEventHandler {
             }
 
         } else {
-            if (mode != 0) {
+            if (mode != 0 && clientTimer.getProgress() >= cooldown) {
                 clientTimer.stop();
             }
             fireSpread = 0;
@@ -686,12 +686,17 @@ public class ClientEventHandler {
             if ((holdFireVehicle)) {
                 if (!clientTimerVehicle.started()) {
                     clientTimerVehicle.start();
+                    // 首发瞬间发射
+                    clientTimerVehicle.setProgress((cooldown + 1));
+                }
+
+                if (clientTimerVehicle.getProgress() >= cooldown) {
                     ModUtils.PACKET_HANDLER.sendToServer(new VehicleFireMessage(0));
                     playVehicleClientSounds(player, iVehicle);
+                    clientTimerVehicle.setProgress((clientTimerVehicle.getProgress() - cooldown));
                 }
-                if (clientTimerVehicle.getProgress() >= cooldown) {
-                    clientTimerVehicle.stop();
-                }
+            } else if (clientTimerVehicle.getProgress() >= cooldown) {
+                clientTimerVehicle.stop();
             }
         } else {
             clientTimerVehicle.stop();
