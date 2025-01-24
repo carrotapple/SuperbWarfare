@@ -514,11 +514,37 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
     @Override
     public void destroy() {
+        // 无人机爆炸
+        if (level() instanceof ServerLevel) {
+            level().explode(null, this.getX(), this.getY(), this.getZ(), 0, Level.ExplosionInteraction.NONE);
+        }
+
+        // 神风自爆
+        if (this.entityData.get(KAMIKAZE_MODE) != 0) {
+            kamikazeExplosion(this.entityData.get(KAMIKAZE_MODE));
+        }
+
+        // RGO投弹
+        ItemStack rgoGrenade = new ItemStack(ModItems.RGO_GRENADE.get(), this.entityData.get(AMMO));
+        if (this.level() instanceof ServerLevel level) {
+            ItemEntity itemEntity = new ItemEntity(level, this.getX(), this.getY(), this.getZ(), rgoGrenade);
+            itemEntity.setPickUpDelay(10);
+            level.addFreshEntity(itemEntity);
+        }
+
+        Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
+        if (controller != null) {
+            if (controller.getMainHandItem().is(ModItems.MONITOR.get())) {
+                Monitor.disLink(controller.getMainHandItem(), controller);
+            }
+        }
+
         String id = this.entityData.get(CONTROLLER);
         UUID uuid;
         try {
             uuid = UUID.fromString(id);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException ignored) {
+            this.discard();
             return;
         }
 
@@ -530,28 +556,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                             Monitor.disLink(stack, player);
                         }
                     });
-        }
-
-        Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
-        if (controller != null) {
-            if (controller.getMainHandItem().is(ModItems.MONITOR.get())) {
-                Monitor.disLink(controller.getMainHandItem(), controller);
-            }
-        }
-
-        if (this.entityData.get(KAMIKAZE_MODE) != 0) {
-            kamikazeExplosion(this.entityData.get(KAMIKAZE_MODE));
-        }
-
-        ItemStack stack = new ItemStack(ModItems.RGO_GRENADE.get(), this.entityData.get(AMMO));
-        if (this.level() instanceof ServerLevel level) {
-            ItemEntity itemEntity = new ItemEntity(level, this.getX(), this.getY(), this.getZ(), stack);
-            itemEntity.setPickUpDelay(10);
-            level.addFreshEntity(itemEntity);
-        }
-
-        if (level() instanceof ServerLevel) {
-            level().explode(null, this.getX(), this.getY(), this.getZ(), 0, Level.ExplosionInteraction.NONE);
         }
 
         this.discard();
