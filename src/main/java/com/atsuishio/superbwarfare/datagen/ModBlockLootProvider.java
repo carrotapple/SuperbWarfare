@@ -34,6 +34,7 @@ public class ModBlockLootProvider extends BlockLootSubProvider {
         this.dropSelf(ModBlocks.CEMENTED_CARBIDE_BLOCK.get());
         this.dropSelf(ModBlocks.SILVER_BLOCK.get());
         this.dropSelf(ModBlocks.CHARGING_STATION.get());
+        this.dropSelf(ModBlocks.CREATIVE_CHARGING_STATION.get());
         this.dropSelf(ModBlocks.FUMO_25.get());
 
         this.add(ModBlocks.GALENA_ORE.get(), this.createOreDrop(ModBlocks.GALENA_ORE.get(), ModItems.GALENA.get()));
