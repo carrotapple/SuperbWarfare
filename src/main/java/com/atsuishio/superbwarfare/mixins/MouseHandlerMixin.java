@@ -95,6 +95,7 @@ public class MouseHandlerMixin {
         Player player = mc.player;
 
         if (player == null) return d;
+        if (mc.options.getCameraType() != CameraType.FIRST_PERSON) return d;
 
         if (player.getVehicle() instanceof VehicleEntity vehicle) {
             x = d;
@@ -122,6 +123,7 @@ public class MouseHandlerMixin {
         Player player = mc.player;
 
         if (player == null) return d;
+        if (mc.options.getCameraType() != CameraType.FIRST_PERSON) return d;
 
         if (player.getVehicle() instanceof VehicleEntity vehicle) {
             y = d;
