@@ -54,7 +54,9 @@ public class EnergyVehicleEntity extends VehicleEntity implements IChargeEntity 
 
     @Override
     public void charge(int amount) {
-        this.setEnergy(Math.min(this.getEnergy() + amount, this.getMaxEnergy()));
+        long energy = (long) this.getEnergy() + (long) amount;
+        int e = energy > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) energy;
+        this.setEnergy(Math.min(e, this.getMaxEnergy()));
     }
 
     @Override

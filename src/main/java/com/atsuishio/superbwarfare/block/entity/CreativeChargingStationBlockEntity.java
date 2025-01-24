@@ -19,10 +19,10 @@ import org.jetbrains.annotations.NotNull;
  * Energy Data Slot Code based on @GoryMoon's Chargers
  */
 public class CreativeChargingStationBlockEntity extends BlockEntity {
+
     public static final int CHARGE_RADIUS = 8;
 
     private LazyOptional<EnergyStorage> energyHandler;
-
 
     public CreativeChargingStationBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.CREATIVE_CHARGING_STATION.get(), pos, state);
@@ -39,20 +39,18 @@ public class CreativeChargingStationBlockEntity extends BlockEntity {
     }
 
     private void chargeEntity() {
-        assert this.level != null;
+        if (this.level == null) return;
 
-        this.level
-                .getEntitiesOfClass(Entity.class, new AABB(this.getBlockPos()).inflate(CHARGE_RADIUS))
+        this.level.getEntitiesOfClass(Entity.class, new AABB(this.getBlockPos()).inflate(CHARGE_RADIUS))
                 .forEach(entity -> {
                     if (entity instanceof IChargeEntity chargeEntity && chargeEntity.canCharge()) {
-                        chargeEntity.charge(2147483647);
+                        chargeEntity.charge(10000000);
                     }
                 });
     }
 
-
     private void chargeBlock() {
-        assert this.level != null;
+        if (this.level == null) return;
 
         for (Direction direction : Direction.values()) {
             var blockEntity = this.level.getBlockEntity(this.getBlockPos().relative(direction));
@@ -63,13 +61,12 @@ public class CreativeChargingStationBlockEntity extends BlockEntity {
 
             blockEntity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
                 if (energy.canReceive() && energy.getEnergyStored() < energy.getMaxEnergyStored()) {
-                    energy.receiveEnergy(2147483647, false);
+                    energy.receiveEnergy(10000000, false);
                     blockEntity.setChanged();
                 }
             });
         }
     }
-
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
