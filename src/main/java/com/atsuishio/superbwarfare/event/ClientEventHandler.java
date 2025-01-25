@@ -731,6 +731,17 @@ public class ClientEventHandler {
                 }
 
             }
+            if (iVehicle instanceof Bmp2Entity bmp2) {
+                if (multiWeaponVehicle.getWeaponType() == 0) {
+                    float pitch = bmp2.getEntityData().get(HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - bmp2.getEntityData().get(HEAT)));
+                    player.playSound(ModSounds.LAV_CANNON_FIRE_1P.get(), 1f, pitch);
+                    player.playSound(ModSounds.SHELL_CASING_50CAL.get(), 0.3f, 1);
+                } else if (multiWeaponVehicle.getWeaponType() == 1) {
+                    float pitch = bmp2.getEntityData().get(COAX_HEAT) <= 60 ? 1 : (float) (1 - 0.011 * java.lang.Math.abs(60 - bmp2.getEntityData().get(COAX_HEAT)));
+                    player.playSound(ModSounds.COAX_FIRE_1P.get(), 1f, pitch);
+                }
+
+            }
         }
     }
 

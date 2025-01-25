@@ -58,16 +58,20 @@ public abstract class CameraMixin {
                 setRotation(Mth.lerp(partialTicks, player.yBobO, player.yBob), Mth.lerp(partialTicks, player.xBobO, player.xBob));
                 setPosition(Mth.lerp(partialTicks, boat.xo + CameraPos.x, boat.getX() + CameraPos.x), Mth.lerp(partialTicks, boat.yo + CameraPos.y, boat.getY() + CameraPos.y), Mth.lerp(partialTicks, boat.zo + CameraPos.z, boat.getZ() + CameraPos.z));
                 info.cancel();
-
                 return;
             }
 
             if ((player.getVehicle() instanceof Lav150Entity lav150 && lav150.getFirstPassenger() == player) && (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || ClientEventHandler.zoomVehicle)) {
-
                 setRotation(-Mth.lerp(partialTicks, lav150.turretYRotO - lav150.yRotO, lav150.getTurretYRot() - lav150.getYRot()), Mth.lerp(partialTicks, lav150.turretXRotO - lav150.xRotO, lav150.getTurretXRot() - lav150.getXRot()));
                 setPosition(Mth.lerp(partialTicks, player.xo, player.getX()), Mth.lerp(partialTicks, player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(partialTicks, player.zo, player.getZ()));
                 info.cancel();
+                return;
+            }
 
+            if ((player.getVehicle() instanceof Bmp2Entity bmp2 && bmp2.getFirstPassenger() == player) && (Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON || ClientEventHandler.zoomVehicle)) {
+                setRotation(-Mth.lerp(partialTicks, bmp2.turretYRotO - bmp2.yRotO, bmp2.getTurretYRot() - bmp2.getYRot()), Mth.lerp(partialTicks, bmp2.turretXRotO - bmp2.xRotO, bmp2.getTurretXRot() - bmp2.getXRot()));
+                setPosition(Mth.lerp(partialTicks, player.xo, player.getX()), Mth.lerp(partialTicks, player.yo + player.getEyeHeight(), player.getEyeY()), Mth.lerp(partialTicks, player.zo, player.getZ()));
+                info.cancel();
                 return;
             }
 
@@ -134,6 +138,11 @@ public abstract class CameraMixin {
 
         if (thirdPerson && entity.getVehicle() instanceof Lav150Entity && !ClientEventHandler.zoomVehicle) {
             move(-getMaxZoom(2.75), 1, 0.0);
+            return;
+        }
+
+        if (thirdPerson && entity.getVehicle() instanceof Bmp2Entity && !ClientEventHandler.zoomVehicle) {
+            move(-getMaxZoom(3), 1, 0.0);
             return;
         }
         if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && entity instanceof Player player && player.getMainHandItem().is(ModTags.Items.GUN)) {

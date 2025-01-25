@@ -43,13 +43,20 @@ public class VehicleConfig {
     public static ForgeConfigSpec.IntValue LAV_150_MAX_ENERGY;
     public static ForgeConfigSpec.IntValue LAV_150_CANNON_DAMAGE;
     public static ForgeConfigSpec.IntValue LAV_150_CANNON_EXPLOSION_DAMAGE;
-    public static ForgeConfigSpec.IntValue LAV_150_CANNON_EXPLOSION_RADIUS;
+    public static ForgeConfigSpec.DoubleValue LAV_150_CANNON_EXPLOSION_RADIUS;
 
     public static ForgeConfigSpec.IntValue TOM_6_HP;
     public static ForgeConfigSpec.IntValue TOM_6_MAX_ENERGY;
     public static ForgeConfigSpec.IntValue TOM_6_ENERGY_COST;
     public static ForgeConfigSpec.IntValue TOM_6_BOMB_EXPLOSION_DAMAGE;
-    public static ForgeConfigSpec.IntValue TOM_6_BOMB_EXPLOSION_RADIUS;
+    public static ForgeConfigSpec.DoubleValue TOM_6_BOMB_EXPLOSION_RADIUS;
+
+    public static ForgeConfigSpec.IntValue BMP_2_HP;
+    public static ForgeConfigSpec.IntValue BMP_2_ENERGY_COST;
+    public static ForgeConfigSpec.IntValue BMP_2_MAX_ENERGY;
+    public static ForgeConfigSpec.IntValue BMP_2_CANNON_DAMAGE;
+    public static ForgeConfigSpec.IntValue BMP_2_CANNON_EXPLOSION_DAMAGE;
+    public static ForgeConfigSpec.DoubleValue BMP_2_CANNON_EXPLOSION_RADIUS;
 
 
     public static void init(ForgeConfigSpec.Builder builder) {
@@ -178,7 +185,7 @@ public class VehicleConfig {
         LAV_150_CANNON_EXPLOSION_DAMAGE = builder.defineInRange("lav_150_cannon_explosion_damage", 12, 1, 10000000);
 
         builder.comment("The rocket explosion radius of Lav_150");
-        LAV_150_CANNON_EXPLOSION_RADIUS = builder.defineInRange("lav_150_cannon_explosion_radius", 3, 1, 10000000);
+        LAV_150_CANNON_EXPLOSION_RADIUS = builder.defineInRange("lav_150_cannon_explosion_radius", 3d, 1d, 10000000d);
 
         builder.pop();
 
@@ -197,9 +204,30 @@ public class VehicleConfig {
         TOM_6_BOMB_EXPLOSION_DAMAGE = builder.defineInRange("tom_6_bomb_explosion_damage", 1000, 1, 10000000);
 
         builder.comment("The Melon Bomb explosion radius of Tom_6");
-        TOM_6_BOMB_EXPLOSION_RADIUS = builder.defineInRange("tom_6_bomb_explosion_radius", 16, 1, 10000000);
+        TOM_6_BOMB_EXPLOSION_RADIUS = builder.defineInRange("tom_6_bomb_explosion_radius", 16d, 1d, 10000000d);
+
+        builder.pop();
+
+        builder.push("bmp_2");
+
+        builder.comment("The HealthPoint of Bmp_2");
+        BMP_2_HP = builder.defineInRange("bmp_2_hp", 1000, 1, 10000000);
+
+        builder.comment("The energy cost of Bmp_2 per tick");
+        BMP_2_ENERGY_COST = builder.defineInRange("bmp_2_energy_cost", 64, 0, 2147483647);
+
+        builder.comment("The max energy storage of Bmp_2");
+        BMP_2_MAX_ENERGY = builder.defineInRange("bmp_2_max_energy", 3000000, 0, 2147483647);
+
+        builder.comment("The cannon damage of Bmp_2");
+        BMP_2_CANNON_DAMAGE = builder.defineInRange("bmp_2_cannon_damage", 55, 1, 10000000);
+
+        builder.comment("The rocket explosion damage of Bmp_2");
+        BMP_2_CANNON_EXPLOSION_DAMAGE = builder.defineInRange("bmp_2_cannon_explosion_damage", 15, 1, 10000000);
+
+        builder.comment("The rocket explosion radius of Bmp_2");
+        BMP_2_CANNON_EXPLOSION_RADIUS = builder.defineInRange("bmp_2_cannon_explosion_radius", 4d, 1d, 10000000d);
 
         builder.pop();
     }
-
 }

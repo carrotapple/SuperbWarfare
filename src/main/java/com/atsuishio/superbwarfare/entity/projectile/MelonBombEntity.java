@@ -47,7 +47,7 @@ public class MelonBombEntity extends ThrowableItemProjectile {
     @Override
     public void onHitBlock(BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
-        ProjectileTool.causeCustomExplode(this, VehicleConfig.TOM_6_BOMB_EXPLOSION_DAMAGE.get(), VehicleConfig.TOM_6_BOMB_EXPLOSION_RADIUS.get(), 1.5f);
+        ProjectileTool.causeCustomExplode(this, VehicleConfig.TOM_6_BOMB_EXPLOSION_DAMAGE.get(), VehicleConfig.TOM_6_BOMB_EXPLOSION_RADIUS.get().floatValue(), 1.5f);
         this.discard();
     }
 
@@ -57,7 +57,7 @@ public class MelonBombEntity extends ThrowableItemProjectile {
         if (tickCount > 600) {
             this.discard();
             if (!this.level().isClientSide) {
-                ProjectileTool.causeCustomExplode(this, VehicleConfig.TOM_6_BOMB_EXPLOSION_DAMAGE.get(), VehicleConfig.TOM_6_BOMB_EXPLOSION_RADIUS.get(), 1.5f);
+                ProjectileTool.causeCustomExplode(this, VehicleConfig.TOM_6_BOMB_EXPLOSION_DAMAGE.get(), VehicleConfig.TOM_6_BOMB_EXPLOSION_RADIUS.get().floatValue(), 1.5f);
             }
         }
 

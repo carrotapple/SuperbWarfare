@@ -62,15 +62,17 @@ import java.util.List;
 
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
-public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IChargeEntity, ILandArmorEntity, MultiWeaponVehicleEntity {
+public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, IChargeEntity, ILandArmorEntity, MultiWeaponVehicleEntity {
 
-    public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> COAX_HEAT = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> LOADED_COAX_AMMO = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> WEAPON_TYPE = SynchedEntityData.defineId(Lav150Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> FIRE_ANIM = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Integer> HEAT = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> COAX_HEAT = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> LOADED_COAX_AMMO = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> WEAPON_TYPE = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Float> TRACK_L = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> TRACK_R = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.FLOAT);
 
     public static final float MAX_HEALTH = VehicleConfig.LAV_150_HP.get();
     public static final int MAX_ENERGY = VehicleConfig.LAV_150_MAX_ENERGY.get();
@@ -80,8 +82,6 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
     public float turretXRot;
     public float turretYRotO;
     public float turretXRotO;
-    public float rudderRot;
-    public float rudderRotO;
     public float leftWheelRot;
     public float rightWheelRot;
     public float leftWheelRotO;
@@ -89,11 +89,11 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
     public boolean cannotFire;
     public boolean cannotFireCoax;
 
-    public Lav150Entity(PlayMessages.SpawnEntity packet, Level world) {
-        this(ModEntities.LAV_150.get(), world);
+    public Bmp2Entity(PlayMessages.SpawnEntity packet, Level world) {
+        this(ModEntities.BMP_2.get(), world);
     }
 
-    public Lav150Entity(EntityType<Lav150Entity> type, Level world) {
+    public Bmp2Entity(EntityType<Bmp2Entity> type, Level world) {
         super(type, world);
         this.setMaxUpStep(1.5f);
     }
@@ -108,6 +108,8 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         this.entityData.define(COAX_HEAT, 0);
         this.entityData.define(WEAPON_TYPE, 0);
         this.entityData.define(LOADED_COAX_AMMO, 0);
+        this.entityData.define(TRACK_L, 0f);
+        this.entityData.define(TRACK_R, 0f);
     }
 
     @Override
@@ -134,23 +136,23 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
             sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
         }
         if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
-            amount *= 1.5f;
+            amount *= 1.2f;
         }
         if (source.is(ModDamageTypes.CANNON_FIRE)) {
-            amount *= 2.5f;
+            amount *= 2f;
         }
         if (source.is(ModDamageTypes.GUN_FIRE)) {
-            amount *= 0.4f;
+            amount *= 0.2f;
         }
         if (source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE)) {
-            amount *= 0.6f;
+            amount *= 0.3f;
         }
         if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
-            amount *= 0.7f;
+            amount *= 0.4f;
         }
 
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.hurt(0.5f * Math.max(amount - 10, 0));
+        this.hurt(0.5f * Math.max(amount - 13, 0));
 
         return true;
     }
@@ -167,11 +169,26 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
     public void baseTick() {
         turretYRotO = this.getTurretYRot();
         turretXRotO = this.getTurretXRot();
-        rudderRotO = this.getRudderRot();
         leftWheelRotO = this.getLeftWheelRot();
         rightWheelRotO = this.getRightWheelRot();
 
         super.baseTick();
+
+        if (this.entityData.get(TRACK_R) < 0) {
+            this.entityData.set(TRACK_R, 100f);
+        }
+
+        if (this.entityData.get(TRACK_R) > 100) {
+            this.entityData.set(TRACK_R, 0f);
+        }
+
+        if (this.entityData.get(TRACK_L) < 0) {
+            this.entityData.set(TRACK_L, 100f);
+        }
+
+        if (this.entityData.get(TRACK_L) > 100) {
+            this.entityData.set(TRACK_L, 0f);
+        }
 
         if (this.entityData.get(HEAT) > 0) {
             this.entityData.set(HEAT, this.entityData.get(HEAT) - 1);
@@ -265,51 +282,9 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
             turretYRotO = deltaT + getTurretYRot();
         }
 
-//        Player player = (Player) this.getFirstPassenger();
-//
-//        if (player != null) {
-//            player.displayClientMessage(Component.literal( new DecimalFormat("##").format(getTurretYRot())), true);
-//        }
-
         collideBlock();
         gunnerAngle();
         lowHealthWarning();
-
-//        Matrix4f transform = getVehicleTransform();
-//        暂时屁用没有的点位计算
-//        Vector4f worldPosition1 = transformPosition(transform, 1.6f, 3f, 4);
-//        Vector4f worldPosition2 = transformPosition(transform, -1.6f, 3f, 4);
-//        Vector4f worldPosition3 = transformPosition(transform, 1.6f, 3f, -4);
-//        Vector4f worldPosition4 = transformPosition(transform, -1.6f, 3f, -4);
-//        Vector4f worldPosition5 = transformPosition(transform, 1.6f, 0.1f, 4);
-//        Vector4f worldPosition6 = transformPosition(transform, -1.6f, 0.1f, 4);
-//        Vector4f worldPosition7 = transformPosition(transform, 1.6f, 0.1f, -4);
-//        Vector4f worldPosition8 = transformPosition(transform, -1.6f, 0.1f, -4);
-//
-//        Vec3 p1 = new Vec3(worldPosition1.x,worldPosition1.y,worldPosition1.z);
-//        Vec3 p2 = new Vec3(worldPosition2.x,worldPosition2.y,worldPosition2.z);
-//        Vec3 p3 = new Vec3(worldPosition3.x,worldPosition3.y,worldPosition3.z);
-//        Vec3 p4 = new Vec3(worldPosition4.x,worldPosition4.y,worldPosition4.z);
-//        Vec3 p5 = new Vec3(worldPosition5.x,worldPosition5.y,worldPosition5.z);
-//        Vec3 p6 = new Vec3(worldPosition6.x,worldPosition6.y,worldPosition6.z);
-//        Vec3 p7 = new Vec3(worldPosition7.x,worldPosition7.y,worldPosition7.z);
-//        Vec3 p8 = new Vec3(worldPosition8.x,worldPosition8.y,worldPosition8.z);
-//
-//        Player player = (Player) this.getFirstPassenger();
-//
-//        if (player != null) {
-//            if (player.level() instanceof ServerLevel serverLevel ) {
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p1.x, p1.y, p1.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p2.x, p2.y, p2.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p3.x, p3.y, p3.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p4.x, p4.y, p4.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p5.x, p5.y, p5.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p6.x, p6.y, p6.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p7.x, p7.y, p7.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
-//                sendParticle(serverLevel, ParticleTypes.END_ROD, p8.x, p8.y, p8.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
-//            }
-//        }
-
         this.refreshDimensions();
     }
 
@@ -335,18 +310,18 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         Matrix4f transform = getBarrelTransform();
         if (entityData.get(WEAPON_TYPE) == 0) {
             if (this.cannotFire) return;
-            float x = -0.0234375f;
-            float y = 0f;
-            float z = 4f;
+            float x = -0.1125f;
+            float y = 0.174025f;
+            float z = 4.2f;
 
             Vector4f worldPosition = transformPosition(transform, x, y, z);
             SmallCannonShellEntity smallCannonShell = new SmallCannonShellEntity(player, this.level(),
-                    VehicleConfig.LAV_150_CANNON_DAMAGE.get(),
-                    VehicleConfig.LAV_150_CANNON_EXPLOSION_DAMAGE.get(),
-                    VehicleConfig.LAV_150_CANNON_EXPLOSION_RADIUS.get().floatValue());
+                    VehicleConfig.BMP_2_CANNON_DAMAGE.get(),
+                    VehicleConfig.BMP_2_CANNON_EXPLOSION_DAMAGE.get(),
+                    VehicleConfig.BMP_2_CANNON_EXPLOSION_RADIUS.get().floatValue());
 
             smallCannonShell.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
-            smallCannonShell.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 24,
+            smallCannonShell.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 22,
                     0.25f);
             this.level().addFreshEntity(smallCannonShell);
 
@@ -377,9 +352,9 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
         } else if (entityData.get(WEAPON_TYPE) == 1) {
             if (this.cannotFireCoax) return;
-            float x = 0.3f;
-            float y = 0.08f;
-            float z = 0.7f;
+            float x = 0.1125f;
+            float y = 0.174025f;
+            float z = 2f;
 
             Vector4f worldPosition = transformPosition(transform, x, y, z);
 
@@ -406,9 +381,9 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
             if (!player.level().isClientSide) {
                 if (player instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.playSound(ModSounds.RPK_FIRE_3P.get(), 3, 1);
-                    serverPlayer.playSound(ModSounds.RPK_FAR.get(), 6, 1);
-                    serverPlayer.playSound(ModSounds.RPK_VERYFAR.get(), 12, 1);
+                    serverPlayer.playSound(ModSounds.M_60_FIRE_3P.get(), 3, 1);
+                    serverPlayer.playSound(ModSounds.M_60_FAR.get(), 6, 1);
+                    serverPlayer.playSound(ModSounds.M_60_VERYFAR.get(), 12, 1);
                 }
             }
         }
@@ -455,24 +430,24 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         }
 
         if (forwardInputDown) {
-            this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + (this.entityData.get(POWER) < 0 ? 0.012f : 0.0024f), 0.18f));
+            this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + (this.entityData.get(POWER) < 0 ? 0.016f : 0.0024f), 0.21f));
         }
 
         if (backInputDown) {
-            this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - (this.entityData.get(POWER) > 0 ? 0.012f : 0.0024f), -0.13f));
+            this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - (this.entityData.get(POWER) > 0 ? 0.016f : 0.0024f), -0.16f));
         }
 
         if (rightInputDown) {
-            this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.1f);
-        } else if (this.leftInputDown) {
             this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 0.1f);
+        } else if (this.leftInputDown) {
+            this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.1f);
         }
 
         if (this.forwardInputDown || this.backInputDown) {
             this.extraEnergy(VehicleConfig.SPEEDBOAT_ENERGY_COST.get());
         }
 
-        this.entityData.set(POWER, this.entityData.get(POWER) * (upInputDown ? 0.5f : (rightInputDown || leftInputDown) ? 0.977f : 0.99f));
+        this.entityData.set(POWER, this.entityData.get(POWER) * (upInputDown ? 0.5f : (rightInputDown || leftInputDown) ? 0.947f : 0.96f));
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * (float)Math.max(0.76f - 0.1f * this.getDeltaMovement().horizontalDistance(), 0.3));
 
         float angle = (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1));
@@ -484,14 +459,16 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
             s0 = -this.getDeltaMovement().horizontalDistance();
         }
 
-        this.setLeftWheelRot((float) ((this.getLeftWheelRot() - 1.25 * s0) - this.getDeltaMovement().horizontalDistance() * Mth.clamp(1.5f * this.entityData.get(DELTA_ROT), -5f, 5f)));
-        this.setRightWheelRot((float) ((this.getRightWheelRot() - 1.25 * s0) + this.getDeltaMovement().horizontalDistance() * Mth.clamp(1.5f * this.entityData.get(DELTA_ROT), -5f, 5f)));
+        this.setLeftWheelRot((float) ((this.getLeftWheelRot() - 1.25 * s0) + Mth.clamp(0.75f * this.entityData.get(DELTA_ROT), -5f, 5f)));
+        this.setRightWheelRot((float) ((this.getRightWheelRot() - 1.25 * s0) - Mth.clamp(0.75f * this.entityData.get(DELTA_ROT), -5f, 5f)));
 
-        this.setRudderRot(Mth.clamp(this.getRudderRot() - this.entityData.get(DELTA_ROT), -0.8f, 0.8f) * 0.75f);
+        this.entityData.set(TRACK_L, (float) ((entityData.get(TRACK_L) - 1.7 * Math.PI * s0) + Mth.clamp(0.75f * Math.PI * this.entityData.get(DELTA_ROT), -5f, 5f)));
+        this.entityData.set(TRACK_R, (float) ((entityData.get(TRACK_R) - 1.7 * Math.PI * s0) - Mth.clamp(0.75f * Math.PI * this.entityData.get(DELTA_ROT), -5f, 5f)));
+
 
         if (this.isInWater() || onGround()) {
-            this.setYRot((float) (this.getYRot() - Math.max((isInWater() && !onGround() ? 5 : 10) * this.getDeltaMovement().horizontalDistance(), 0) * this.getRudderRot() * (this.entityData.get(POWER) > 0 ? 1 : -1)));
-            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.05f : (isInWater() && !onGround() ? 0.3f : 1)) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.05f : (isInWater() && !onGround() ? 0.3f : 1))  * this.entityData.get(POWER)));
+            this.setYRot((float) (this.getYRot() - Math.max(isInWater() && !onGround() ? 2.5 : 6, 0) * entityData.get(DELTA_ROT) * (this.entityData.get(POWER) >= 0 ? 1 : -1)));
+            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.13f : (isInWater() && !onGround() ? 2f : 2.4)) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.13f : (isInWater() && !onGround() ? 2f : 2.4)) * this.entityData.get(POWER)));
         }
     }
 
@@ -508,8 +485,8 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         diffX = Mth.wrapDegrees(driver.getXRot() - this.getTurretXRot());
 
 
-        this.setTurretXRot(Mth.clamp(this.getTurretXRot() + Mth.clamp(0.95f * diffX, -5, 5), -32.5f, 15));
-        this.setTurretYRot(this.getTurretYRot() + Mth.clamp(0.95f * diffY, -20, 20));
+        this.setTurretXRot(Mth.clamp(this.getTurretXRot() + Mth.clamp(0.95f * diffX, -5, 5), -74f, 7.5f));
+        this.setTurretYRot(this.getTurretYRot() + Mth.clamp(0.95f * diffY, -15, 15));
     }
 
     @Override
@@ -543,14 +520,6 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         this.turretXRot = pTurretXRot;
     }
 
-    public float getRudderRot() {
-        return this.rudderRot;
-    }
-
-    public void setRudderRot(float pRudderRot) {
-        this.rudderRot = pRudderRot;
-    }
-
     public float getLeftWheelRot() {
         return this.leftWheelRot;
     }
@@ -581,9 +550,9 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
         Matrix4f transform = getTurretTransform();
 
-        float x = 0.36f;
-        float y = -0.3f;
-        float z = 0.56f;
+        float x = 0.5f;
+        float y = 0.1f;
+        float z = 0.75f;
         y += (float) passenger.getMyRidingOffset();
 
         int i = this.getPassengers().indexOf(passenger);
@@ -598,8 +567,8 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
     public Matrix4f getBarrelTransform() {
         Matrix4f transformT = getTurretTransform();
         float x = 0f;
-        float y = 0.33795f;
-        float z = 0.825f;
+        float y = 0.5541f;
+        float z = 0.83004375f;
         Vector4f worldPosition = transformPosition(transformT, x, y, z);
 
         Matrix4f transform = new Matrix4f();
@@ -611,8 +580,14 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
     }
 
     public Matrix4f getTurretTransform() {
+        Matrix4f transformT = getVehicleTransform();
+        float x = 0f;
+        float y = 2f;
+        float z = -0.703125f;
+        Vector4f worldPosition = transformPosition(transformT, x, y, z);
+
         Matrix4f transform = new Matrix4f();
-        transform.translate((float) getX(), (float) getY() + 2.4f, (float) getZ());
+        transform.translate(worldPosition.x, worldPosition.y, worldPosition.z);
         transform.rotate(Axis.YP.rotationDegrees(getTurretYRot() - getYRot()));
         transform.rotate(Axis.XP.rotationDegrees(getXRot()));
         transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
@@ -656,7 +631,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
     protected void clampRotation(Entity entity) {
         float f = Mth.wrapDegrees(entity.getXRot());
-        float f1 = Mth.clamp(f, -32.5F, 15F);
+        float f1 = Mth.clamp(f, -74F, 7.5F);
         entity.xRotO += f1 - f;
         entity.setXRot(entity.getXRot() + f1 - f);
     }
@@ -666,7 +641,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         this.clampRotation(entity);
     }
 
-    private PlayState firePredicate(AnimationState<Lav150Entity> event) {
+    private PlayState firePredicate(AnimationState<Bmp2Entity> event) {
         if (this.entityData.get(FIRE_ANIM) > 1 && entityData.get(WEAPON_TYPE) == 0) {
             return event.setAndContinue(RawAnimation.begin().thenPlay("animation.lav.fire"));
         }
@@ -716,11 +691,11 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
     @Override
     public int mainGunRpm() {
         if (entityData.get(WEAPON_TYPE) == 0) {
-            return 300;
+            return 250;
         } else if (entityData.get(WEAPON_TYPE) == 1) {
-            return 600;
+            return 750;
         }
-        return 300;
+        return 250;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.event;
 
 import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
+import com.atsuishio.superbwarfare.entity.vehicle.Bmp2Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModSounds;
@@ -21,6 +22,7 @@ import org.joml.Math;
 import java.util.List;
 
 import static com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity.PROPELLER_ROT;
+import static com.atsuishio.superbwarfare.entity.vehicle.Bmp2Entity.DELTA_ROT;
 import static com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity.POWER;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -61,6 +63,14 @@ public class ClientSoundHandler {
                         player.playSound(ModSounds.LAV_ENGINE_1P.get(), 2 * (Mth.abs(mobileVehicle.getEntityData().get(POWER)) - 0.006f), (float) ((2 * Math.random() - 1) * 0.1f + 0.95f));
                     } else {
                         player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), 5 * (Mth.abs(mobileVehicle.getEntityData().get(POWER)) - 0.006f) * distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.1f + 1), false);
+                    }
+                }
+                if (e instanceof Bmp2Entity bmp2) {
+                    distanceReduce = (float) Math.max((1 - distance / 64), 0);
+                    if (player.getVehicle() == bmp2) {
+                        player.playSound(ModSounds.LAV_ENGINE_1P.get(), 2 * (Mth.abs(mobileVehicle.getEntityData().get(POWER)) + Mth.abs(0.08f * mobileVehicle.getEntityData().get(DELTA_ROT)) - 0.004f), (float) ((2 * Math.random() - 1) * 0.1f + 0.95f));
+                    } else {
+                        player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), 5 * (Mth.abs(mobileVehicle.getEntityData().get(POWER)) + Mth.abs(0.08f * mobileVehicle.getEntityData().get(DELTA_ROT)) - 0.004f) * distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.1f + 1), false);
                     }
                 }
             }

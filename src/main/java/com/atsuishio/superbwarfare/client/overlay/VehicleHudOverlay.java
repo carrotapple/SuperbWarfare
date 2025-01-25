@@ -184,7 +184,9 @@ public class VehicleHudOverlay {
 
         if (player == null) return;
 
-        if (player.getVehicle() instanceof Lav150Entity lav150 && lav150.isDriver(player) && player.getVehicle() instanceof MultiWeaponVehicleEntity multiWeaponVehicle) {
+        if (player.getVehicle() instanceof ILandArmorEntity iLand && iLand.isDriver(player)
+                && iLand instanceof MultiWeaponVehicleEntity multiWeaponVehicle
+                && iLand instanceof MobileVehicleEntity mobileVehicle) {
             poseStack.pushPose();
 
             poseStack.translate(Mth.clamp(-8 * ClientEventHandler.turnRot[1], -10, 10), Mth.clamp(-8 * ClientEventHandler.turnRot[0], -10, 10), 0);
@@ -219,21 +221,21 @@ public class VehicleHudOverlay {
                 //炮塔方向
 
                 poseStack.pushPose();
-                poseStack.rotateAround(Axis.ZP.rotationDegrees(Mth.lerp(event.getPartialTick(), lav150.turretYRotO, lav150.getTurretYRot())),w / 2 + 112, h - 56, 0);
+                poseStack.rotateAround(Axis.ZP.rotationDegrees(Mth.lerp(event.getPartialTick(), iLand.turretYRotO(), iLand.turretYRot())),w / 2 + 112, h - 56, 0);
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/body.png"), w / 2 + 96, h - 72, 0, 0.0F, 32, 32, 32, 32);
                 poseStack.popPose();
 
                 //时速
 
-                guiGraphics.drawString(mc.font, Component.literal(new DecimalFormat("##").format(lav150.getDeltaMovement().length() * 72) + " KM/H"),
+                guiGraphics.drawString(mc.font, Component.literal(new DecimalFormat("##").format(mobileVehicle.getDeltaMovement().length() * 72) + " KM/H"),
                         w / 2 + 160, h / 2 - 48, 0x66FF00, false);
 
                 //低电量警告
 
-                if (lav150.getEnergy() < 0.02 * lav150.getMaxEnergy()) {
+                if (mobileVehicle.getEnergy() < 0.02 * mobileVehicle.getMaxEnergy()) {
                     guiGraphics.drawString(mc.font, Component.literal("NO POWER!"),
                             w / 2 - 144, h / 2 + 14, -65536, false);
-                } else if (lav150.getEnergy() < 0.2 * lav150.getMaxEnergy()) {
+                } else if (mobileVehicle.getEnergy() < 0.2 * mobileVehicle.getMaxEnergy()) {
                     guiGraphics.drawString(mc.font, Component.literal("LOW POWER"),
                             w / 2 - 144, h / 2 + 14, 0xFF6B00, false);
                 }
@@ -242,7 +244,7 @@ public class VehicleHudOverlay {
 
                 boolean lookAtEntity = false;
                 double blockRange = cameraPos.distanceTo((Vec3.atLowerCornerOf(player.level().clip(
-                        new ClipContext(player.getEyePosition(), player.getEyePosition().add(lav150.getBarrelVector(1).scale(520)),
+                        new ClipContext(player.getEyePosition(), player.getEyePosition().add(iLand.getBarrelVec(event.getPartialTick()).scale(520)),
                                 ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
 
                 double entityRange = 0;
@@ -278,15 +280,26 @@ public class VehicleHudOverlay {
 
                 }
 
+                if (player.getVehicle() instanceof Bmp2Entity bmp2) {
+                    if (multiWeaponVehicle.getWeaponType() == 0) {
+                        double heat = 1 - bmp2.getEntityData().get(HEAT) / 100.0F;
+                        guiGraphics.drawString(mc.font, Component.literal(" 30MM 2A42 " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : bmp2.getAmmoCount(player))), w / 2 - 33, h - 65, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
+                    } else {
+                        double heat = 1 - bmp2.getEntityData().get(COAX_HEAT) / 100.0F;
+                        guiGraphics.drawString(mc.font, Component.literal(" 7.62MM ПКТ " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : bmp2.getAmmoCount(player))), w / 2 - 33, h - 65, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
+                    }
+
+                }
+
                 //血量
 
-                double heal = lav150.getHealth() / lav150.getMaxHealth();
+                double heal = mobileVehicle.getHealth() / mobileVehicle.getMaxHealth();
                 guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(100 * heal)), w / 2 - 165, h / 2 - 46, Mth.hsvToRgb((float) heal / 3.745318352059925F, 1.0F, 1.0F), false);
 
                 renderKillIndicator(guiGraphics, w, h);
 
             } else if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && !ClientEventHandler.zoomVehicle) {
-                Vec3 p = RenderHelper.worldToScreen(new Vec3(player.getX(), player.getY(), player.getZ()).add(lav150.getBarrelVector(event.getPartialTick()).scale(192)), cameraPos);
+                Vec3 p = RenderHelper.worldToScreen(new Vec3(player.getX(), player.getY(), player.getZ()).add(iLand.getBarrelVec(event.getPartialTick()).scale(192)), cameraPos);
 
                 if (p != null) {
                     poseStack.pushPose();
@@ -312,9 +325,19 @@ public class VehicleHudOverlay {
                         }
                     }
 
-                    double heal = 1 - lav150.getHealth() / lav150.getMaxHealth();
+                    if (multiWeaponVehicle instanceof Bmp2Entity bmp201) {
+                        if (multiWeaponVehicle.getWeaponType() == 0) {
+                            double heat = bmp201.getEntityData().get(HEAT) / 100.0F;
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(" 30MM 2A42 " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : bmp201.getAmmoCount(player))), 30, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
+                        } else {
+                            double heat2 = bmp201.getEntityData().get(COAX_HEAT) / 100.0F;
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(" 7.62MM ПКТ " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : bmp201.getAmmoCount(player))), 30, -9, Mth.hsvToRgb(0F, (float) heat2, 1.0F), false);
+                        }
+                    }
 
-                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("HP " + new DecimalFormat("##").format(100 * lav150.getHealth() / lav150.getMaxHealth())), 30, 1, Mth.hsvToRgb(0F, (float) heal, 1.0F), false);
+                    double heal = 1 - mobileVehicle.getHealth() / mobileVehicle.getMaxHealth();
+
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("HP " + new DecimalFormat("##").format(100 * mobileVehicle.getHealth() / mobileVehicle.getMaxHealth())), 30, 1, Mth.hsvToRgb(0F, (float) heal, 1.0F), false);
                     poseStack.popPose();
                     poseStack.popPose();
 
