@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "aaa",
+    "aba",
+    "cdc"
+  ],
+  "key": {
+    "a": {
+      "tag": "minecraft:planks"
+    },
+    "b": {
+      "item": "superbwarfare:cell"
+    },
+    "c": {
+      "item": "superbwarfare:wheel"
+    },
+    "d": {
+      "item": "minecraft:dropper"
+    }
+  },
+  "result": {
+    "item": "superbwarfare:container",
+    "nbt": {
+      "BlockEntityTag": {
+        "EntityType": "superbwarfare:tom_6"
+      }
+    }
+  }
+}
