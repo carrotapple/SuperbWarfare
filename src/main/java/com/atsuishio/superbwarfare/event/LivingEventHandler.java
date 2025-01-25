@@ -8,8 +8,6 @@ import com.atsuishio.superbwarfare.entity.ICustomKnockback;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.ICannonEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
 import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -57,8 +55,11 @@ public class LivingEventHandler {
 
     @SubscribeEvent
     public static void onEntityAttacked(LivingAttackEvent event) {
-        if (!event.getSource().is(ModDamageTypes.VEHICLE_EXPLOSION) && (event.getEntity().getVehicle() instanceof ICannonEntity || event.getEntity().getVehicle() instanceof Lav150Entity)) {
-            event.setCanceled(true);
+        if (!event.getSource().is(ModDamageTypes.VEHICLE_EXPLOSION) && event.getEntity().getVehicle() instanceof VehicleEntity vehicle) {
+            if (event.getEntity().getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.hidePassenger()) {
+                vehicle.hurt(event.getSource(),event.getAmount());
+                event.setCanceled(true);
+            }
         }
     }
 
@@ -95,13 +96,16 @@ public class LivingEventHandler {
 
     private static void handleVehicleHurt(LivingHurtEvent event) {
         var vehicle = event.getEntity().getVehicle();
-        if (vehicle != null) {
-            if (vehicle instanceof ICannonEntity || vehicle instanceof Lav150Entity) {
-                if (!event.getSource().is(ModDamageTypes.VEHICLE_EXPLOSION)) {
-                    event.setCanceled(true);
+        if (vehicle instanceof VehicleEntity) {
+            if (vehicle instanceof IArmedVehicleEntity iArmedVehicle) {
+                if (iArmedVehicle.hidePassenger()){
+                    if (!event.getSource().is(ModDamageTypes.VEHICLE_EXPLOSION)) {
+                        event.setCanceled(true);
+                    }
+                } else {
+                    vehicle.hurt(event.getSource(),0.7f * event.getAmount());
+                    event.setAmount(0.3f * event.getAmount());
                 }
-            } else if (vehicle instanceof IArmedVehicleEntity) {
-                event.setAmount(0.3f * event.getAmount());
             }
         }
     }

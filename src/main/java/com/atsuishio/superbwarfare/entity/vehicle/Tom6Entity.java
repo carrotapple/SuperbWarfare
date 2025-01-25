@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.MelonBombEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModEntities;
@@ -47,8 +48,8 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Tom6Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Boolean> MELON = SynchedEntityData.defineId(Tom6Entity.class, EntityDataSerializers.BOOLEAN);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    public static final float MAX_HEALTH = 50;
-    public static final int MAX_ENERGY = 100000;
+    public static final float MAX_HEALTH = VehicleConfig.TOM_6_HP.get();
+    public static final int MAX_ENERGY = VehicleConfig.TOM_6_MAX_ENERGY.get();
 
     public Tom6Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.TOM_6.get(), world);
@@ -114,6 +115,12 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
 
         this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).scale((0.24) * this.getDeltaMovement().length())));
         this.setDeltaMovement(this.getDeltaMovement().multiply(f, f, f));
+
+        if (onGround()) {
+            setXRot(getXRot() * 0.7f);
+            setZRot(getRoll() * 0.7f);
+        }
+
         this.refreshDimensions();
     }
 
@@ -138,11 +145,18 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
                 this.setDeltaMovement(this.getDeltaMovement().multiply(0.8, 1, 0.8));
             }
         } else if (passenger instanceof Player player) {
+            if (level().isClientSide && this.getEnergy() > 0) {
+                level().playLocalSound(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ(), this.getEngineSound(), this.getSoundSource(), Math.min((this.forwardInputDown ? 7.5f : 5f) * 2 * Mth.abs(this.entityData.get(POWER)), 0.25f), (random.nextFloat() * 0.1f + 1.2f), false);
+            }
 
-//            SoundTool.playLocalSound(player, SoundEvents.ELYTRA_FLYING);
+            if (forwardInputDown && getEnergy() > 0) {
+                this.extraEnergy(VehicleConfig.TOM_6_ENERGY_COST.get());
+                this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + (entityData.get(MELON) ? 0.003f : 0.0022f), entityData.get(MELON) ? 0.12f : 0.15f));
+            }
 
-            diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
-            diffX = Math.clamp(-60f, 60f, Mth.wrapDegrees(passenger.getXRot() - this.getXRot()));
+            if (backInputDown || downInputDown) {
+                this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.006f, onGround() ? -0.12f : 0.04f));
+            }
 
             if (!onGround()) {
                 if (rightInputDown) {
@@ -151,6 +165,9 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
                     this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.4f);
                 }
             }
+
+            diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
+            diffX = Math.clamp(-60f, 60f, Mth.wrapDegrees(passenger.getXRot() - this.getXRot()));
 
             float roll = Mth.abs(Mth.clamp(getRoll() / 60 , -1.5f , 1.5f));
 
@@ -161,6 +178,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
             this.setXRot(Mth.clamp(this.getXRot() + addX, onGround() ? -10 : -120, onGround() ? 2 : 120));
             this.setZRot(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.01f) * diffY * (float) getDeltaMovement().length());
 
+            // 空格投掷西瓜炸弹
             if (upInputDown && !onGround() && entityData.get(MELON)) {
                 entityData.set(MELON, false);
 
@@ -170,32 +188,13 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
 
                 MelonBombEntity melonBomb = new MelonBombEntity(player, player.level());
                 melonBomb.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
-                melonBomb.shoot(this.getDeltaMovement().x, this.getDeltaMovement().y, this.getDeltaMovement().z, 0.96f * (float)this.getDeltaMovement().length(), 0);
+                melonBomb.shoot(getDeltaMovement().x, getDeltaMovement().y, getDeltaMovement().z, (float)getDeltaMovement().length(), 0);
                 passenger.level().addFreshEntity(melonBomb);
 
-                this.level().playSound(null, this.getOnPos(), SoundEvents.IRON_DOOR_OPEN, SoundSource.PLAYERS, 1, 1);
+                this.level().playSound(null, getOnPos(), SoundEvents.IRON_DOOR_OPEN, SoundSource.PLAYERS, 1, 1);
                 upInputDown = false;
             }
         }
-
-        if (forwardInputDown) {
-            this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + (entityData.get(MELON) ? 0.003f : 0.0022f), entityData.get(MELON) ? 0.12f : 0.15f));
-        }
-
-        if (backInputDown || downInputDown) {
-            this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.006f, onGround() ? -0.12f : 0.04f));
-        }
-
-        if (onGround()) {
-            setXRot(getXRot() * 0.7f);
-            setZRot(getRoll() * 0.7f);
-        } else {
-//            setZRot(getRoll() * 0.994f);
-        }
-
-//        if (this.forwardInputDown || this.backInputDown) {
-//            this.extraEnergy(VehicleConfig.SPEEDBOAT_ENERGY_COST.get());
-//        }
 
         this.entityData.set(POWER, this.entityData.get(POWER) * 0.99f);
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.95f);
@@ -205,7 +204,6 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
                 Mth.clamp(Math.sin((onGround() ? 45 : -(getXRot() - 30)) * Mth.DEG_TO_RAD) * getDeltaMovement().horizontalDistance() * (entityData.get(MELON) ? 0.047f : 0.067f), -0.04, 0.09),
                 Mth.cos(this.getYRot() * 0.017453292F) * (entityData.get(MELON) ? 0.16f : 0.19f) * this.entityData.get(POWER)
                 ));
-
     }
 
     @Override

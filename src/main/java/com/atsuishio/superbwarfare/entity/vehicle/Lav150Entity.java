@@ -27,7 +27,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -149,27 +148,9 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
             amount *= 0.7f;
         }
-        if (source.is(DamageTypes.PLAYER_ATTACK)) {
-            amount *= 0.05f;
-        }
-        if (source.is(DamageTypes.MOB_ATTACK)) {
-            amount *= 0.05f;
-        }
-        if (source.is(DamageTypes.MOB_ATTACK_NO_AGGRO)) {
-            amount *= 0.05f;
-        }
-        if (source.is(DamageTypes.MOB_PROJECTILE)) {
-            amount *= 0.05f;
-        }
-        if (source.is(DamageTypes.ARROW)) {
-            amount *= 0.05f;
-        }
-        if (source.is(DamageTypes.TRIDENT)) {
-            amount *= 0.05f;
-        }
 
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.hurt(0.5f * Math.max(amount - 15, 0));
+        this.hurt(0.5f * Math.max(amount - 10, 0));
 
         return true;
     }

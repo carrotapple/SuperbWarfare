@@ -45,6 +45,12 @@ public class VehicleConfig {
     public static ForgeConfigSpec.IntValue LAV_150_CANNON_EXPLOSION_DAMAGE;
     public static ForgeConfigSpec.IntValue LAV_150_CANNON_EXPLOSION_RADIUS;
 
+    public static ForgeConfigSpec.IntValue TOM_6_HP;
+    public static ForgeConfigSpec.IntValue TOM_6_MAX_ENERGY;
+    public static ForgeConfigSpec.IntValue TOM_6_ENERGY_COST;
+    public static ForgeConfigSpec.IntValue TOM_6_BOMB_EXPLOSION_DAMAGE;
+    public static ForgeConfigSpec.IntValue TOM_6_BOMB_EXPLOSION_RADIUS;
+
 
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("mk_42");
@@ -173,6 +179,25 @@ public class VehicleConfig {
 
         builder.comment("The rocket explosion radius of Lav_150");
         LAV_150_CANNON_EXPLOSION_RADIUS = builder.defineInRange("lav_150_cannon_explosion_radius", 3, 1, 10000000);
+
+        builder.pop();
+
+        builder.push("tom_6");
+
+        builder.comment("The HealthPoint of Tom_6");
+        TOM_6_HP = builder.defineInRange("tom_6_hp", 50, 1, 10000000);
+
+        builder.comment("The energy cost of Tom_6 per tick");
+        TOM_6_ENERGY_COST = builder.defineInRange("tom_6_energy_cost", 16, 0, 2147483647);
+
+        builder.comment("The max energy storage of Tom_6");
+        TOM_6_MAX_ENERGY = builder.defineInRange("tom_6_max_energy", 160000, 0, 2147483647);
+
+        builder.comment("The Melon Bomb explosion damage of Tom_6");
+        TOM_6_BOMB_EXPLOSION_DAMAGE = builder.defineInRange("tom_6_bomb_explosion_damage", 1000, 1, 10000000);
+
+        builder.comment("The Melon Bomb explosion radius of Tom_6");
+        TOM_6_BOMB_EXPLOSION_RADIUS = builder.defineInRange("tom_6_bomb_explosion_radius", 16, 1, 10000000);
 
         builder.pop();
     }
