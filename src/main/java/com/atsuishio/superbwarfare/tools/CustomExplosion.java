@@ -200,12 +200,10 @@ public class CustomExplosion extends Explosion {
                             d11 = damagePercent;
                         }
 
-                        xDistance *= d11;
                         yDistance *= d11;
-                        zDistance *= d11;
 
                         if (entity instanceof VehicleEntity vehicle && !bullet) {
-                            Vec3 knockbackVec = new Vec3(vehicle.ignoreExplosionHorizontalKnockBack() * xDistance, vehicle.ignoreExplosionVerticalKnockBack() * yDistance, vehicle.ignoreExplosionHorizontalKnockBack() * zDistance);
+                            Vec3 knockbackVec = new Vec3(0, -0.2 * yDistance, 0);
                             vehicle.setDeltaMovement(vehicle.getDeltaMovement().add(knockbackVec));
                         }
                     }

@@ -332,16 +332,6 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
     }
 
     @Override
-    public float ignoreExplosionHorizontalKnockBack() {
-        return -0.2f;
-    }
-
-    @Override
-    public float ignoreExplosionVerticalKnockBack() {
-        return -0.3f;
-    }
-
-    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
     }
 

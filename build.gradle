@@ -111,6 +111,10 @@ dependencies {
 
     implementation fg.deobf("curse.maven:oculus-581495:6020952")
     implementation fg.deobf("curse.maven:embeddium-908741:5681725")
+
+    implementation fg.deobf("curse.maven:timeless-and-classics-zero-1028108:6069384")
+
+    implementation fg.deobf("curse.maven:create-328085:5838779")
 }
 
 mixin {

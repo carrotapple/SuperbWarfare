@@ -599,16 +599,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     }
 
     @Override
-    public float ignoreExplosionHorizontalKnockBack() {
-        return 0;
-    }
-
-    @Override
-    public float ignoreExplosionVerticalKnockBack() {
-        return 0;
-    }
-
-    @Override
     public void onRemovedFromWorld() {
         if (this.level() instanceof ServerLevel serverLevel) {
             ChunkLoadTool.unloadAllChunks(serverLevel, this, this.loadedChunks);

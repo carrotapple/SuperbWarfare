@@ -98,9 +98,9 @@ public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
         }
 
         if (entity instanceof Monster monster) {
-            monster.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), 1.2f * this.damage * damageMultiplier);
+            monster.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), 1.2f * this.damage * damageMultiplier);
         } else {
-            entity.hurt(ModDamageTypes.causeGunFireHeadshotDamage(this.level().registryAccess(), this, this.getOwner()), damage);
+            entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), damage);
         }
 
         if (entity instanceof LivingEntity) {

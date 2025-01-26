@@ -25,6 +25,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -121,21 +122,62 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
         if (this.level() instanceof ServerLevel serverLevel) {
             sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
         }
-        if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
+
+        if (source.is(DamageTypes.ARROW)) {
+            amount *= 0.1f;
+        }
+        if (source.is(DamageTypes.TRIDENT)) {
+            amount *= 0.2f;
+        }
+        if (source.is(DamageTypes.MOB_ATTACK)) {
+            amount *= 0.2f;
+        }
+        if (source.is(DamageTypes.MOB_ATTACK_NO_AGGRO)) {
+            amount *= 0.2f;
+        }
+        if (source.is(DamageTypes.MOB_PROJECTILE)) {
+            amount *= 0.2f;
+        }
+        if (source.is(DamageTypes.PLAYER_ATTACK)) {
+            amount *= 0.2f;
+        }
+        if (source.is(DamageTypes.LAVA)) {
             amount *= 2f;
         }
-        if (source.is(ModDamageTypes.CANNON_FIRE)) {
-            amount *= 3f;
+        if (source.is(DamageTypes.EXPLOSION)) {
+            amount *= 3.5f;
         }
-        if (source.is(ModDamageTypes.GUN_FIRE)) {
-            amount *= 0.3f;
+        if (source.is(DamageTypes.PLAYER_EXPLOSION)) {
+            amount *= 3.5f;
         }
-        if (source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE)) {
-            amount *= 0.7f;
-        }
-        this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.hurt(0.5f * Math.max(amount - 3, 0));
 
+        if (source.is(ModDamageTypes.CUSTOM_EXPLOSION)) {
+            amount *= 0.5f;
+        }
+        if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
+            amount *= 0.5f;
+        }
+        if (source.is(ModDamageTypes.MINE)) {
+            amount *= 0.5f;
+        }
+        if (source.is(ModDamageTypes.LUNGE_MINE)) {
+            amount *= 0.5f;
+        }
+        if (source.is(ModDamageTypes.CANNON_FIRE)) {
+            amount *= 0.6f;
+        }
+        if (source.is(ModTags.DamageTypes.PROJECTILE)) {
+            amount *= 0.08f;
+        }
+        if (source.is(ModTags.DamageTypes.PROJECTILE_ABSOLUTE)) {
+            amount *= 0.5f;
+        }
+        if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
+            amount *= 5f;
+        }
+
+        this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
+        this.hurt(Math.max(amount - 2, 0));
         return true;
     }
 
@@ -230,7 +272,7 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
                 .headShot(2f)
                 .zoom(false);
 
-        projectile.bypassArmorRate(0.9f);
+        projectile.bypassArmorRate(1f);
         projectile.setPos(this.xo - this.getViewVector(1).scale(0.54).x - this.getDeltaMovement().x, this.yo + 3.0, this.zo - this.getViewVector(1).scale(0.54).z - this.getDeltaMovement().z);
         projectile.shoot(player, player.getLookAngle().x, player.getLookAngle().y + (zooming() ? 0.002f : -0.009f), player.getLookAngle().z, 20,
                 (float) 0.4);
@@ -473,16 +515,6 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public float ignoreExplosionHorizontalKnockBack() {
-        return -0.5f;
-    }
-
-    @Override
-    public float ignoreExplosionVerticalKnockBack() {
-        return -0.9f;
     }
 
     @Override

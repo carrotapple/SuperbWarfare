@@ -197,7 +197,7 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
 
                 ModUtils.queueServerWork(1, () -> {
                     if (!level.isClientSide())
-                        triggerExplode(target);
+                        triggerExplode();
                 });
             }
         }
@@ -241,10 +241,10 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
         }
     }
 
-    private void triggerExplode(Entity target) {
+    private void triggerExplode() {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
                 ModDamageTypes.causeMineDamage(this.level().registryAccess(), this.getOwner()), 140f,
-                target.getX(), target.getY(), target.getZ(), 4f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                this.getX(), this.getEyeY(), this.getZ(), 4f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);

@@ -263,9 +263,9 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
                         this,
                         this.getOwner()),
                 explosion_damage,
-                result.getLocation().x,
-                result.getLocation().y,
-                result.getLocation().z,
+                this.getX(),
+                this.getEyeY(),
+                this.getZ(),
                 explosion_radius,
                 ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
                 setDamageMultiplier(this.monsterMultiplier);

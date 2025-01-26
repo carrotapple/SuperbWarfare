@@ -63,7 +63,7 @@ public class VehicleConfig {
         builder.push("mk_42");
 
         builder.comment("The HealthPoint of MK-42");
-        MK42_HP = builder.defineInRange("mk_42_hp", 700, 1, 10000000);
+        MK42_HP = builder.defineInRange("mk_42_hp", 200, 1, 10000000);
 
         builder.comment("The AP shell damage of MK-42");
         MK42_AP_DAMAGE = builder.defineInRange("mk_42_ap_damage", 300, 1, 10000000);
@@ -88,7 +88,7 @@ public class VehicleConfig {
         builder.push("mle_1934");
 
         builder.comment("The HealthPoint of MLE-1934");
-        MLE1934_HP = builder.defineInRange("mle_1934_hp", 800, 1, 10000000);
+        MLE1934_HP = builder.defineInRange("mle_1934_hp", 200, 1, 10000000);
 
         builder.comment("The AP shell damage of MLE-1934");
         MLE1934_AP_DAMAGE = builder.defineInRange("mle_1934_ap_damage", 350, 1, 10000000);
@@ -113,7 +113,7 @@ public class VehicleConfig {
         builder.push("annihilator");
 
         builder.comment("The HealthPoint of Annihilator");
-        ANNIHILATOR_HP = builder.defineInRange("annihilator_hp", 4000, 1, 10000000);
+        ANNIHILATOR_HP = builder.defineInRange("annihilator_hp", 800, 1, 10000000);
 
         builder.comment("The energy cost of Annihilator per shoot");
         ANNIHILATOR_SHOOT_COST = builder.defineInRange("annihilator_shoot_cost", 2000000, 0, 2147483647);
@@ -126,7 +126,7 @@ public class VehicleConfig {
         builder.push("speedboat");
 
         builder.comment("The HealthPoint of Speedboat");
-        SPEEDBOAT_HP = builder.defineInRange("speedboat_hp", 500, 1, 10000000);
+        SPEEDBOAT_HP = builder.defineInRange("speedboat_hp", 200, 1, 10000000);
 
         builder.comment("The energy cost of Speedboat per tick");
         SPEEDBOAT_ENERGY_COST = builder.defineInRange("speedboat_energy_cost", 16, 0, 2147483647);
@@ -142,7 +142,7 @@ public class VehicleConfig {
         builder.push("ah_6");
 
         builder.comment("The HealthPoint of AH-6");
-        AH_6_HP = builder.defineInRange("ah_6_hp", 500, 1, 10000000);
+        AH_6_HP = builder.defineInRange("ah_6_hp", 250, 1, 10000000);
 
         builder.comment("The min energy cost of AH-6 per tick");
         AH_6_MIN_ENERGY_COST = builder.defineInRange("ah_6_min_energy_cost", 64, 0, 2147483647);
@@ -170,7 +170,7 @@ public class VehicleConfig {
         builder.push("lav_150");
 
         builder.comment("The HealthPoint of Lav_150");
-        LAV_150_HP = builder.defineInRange("lav_150_hp", 850, 1, 10000000);
+        LAV_150_HP = builder.defineInRange("lav_150_hp", 250, 1, 10000000);
 
         builder.comment("The energy cost of Lav_150 per tick");
         LAV_150_ENERGY_COST = builder.defineInRange("lav_150_energy_cost", 64, 0, 2147483647);
@@ -179,7 +179,7 @@ public class VehicleConfig {
         LAV_150_MAX_ENERGY = builder.defineInRange("lav_150_max_energy", 3000000, 0, 2147483647);
 
         builder.comment("The cannon damage of Lav_150");
-        LAV_150_CANNON_DAMAGE = builder.defineInRange("lav_150_cannon_damage", 40, 1, 10000000);
+        LAV_150_CANNON_DAMAGE = builder.defineInRange("lav_150_cannon_damage", 45, 1, 10000000);
 
         builder.comment("The rocket explosion damage of Lav_150");
         LAV_150_CANNON_EXPLOSION_DAMAGE = builder.defineInRange("lav_150_cannon_explosion_damage", 12, 1, 10000000);
@@ -192,7 +192,7 @@ public class VehicleConfig {
         builder.push("tom_6");
 
         builder.comment("The HealthPoint of Tom_6");
-        TOM_6_HP = builder.defineInRange("tom_6_hp", 50, 1, 10000000);
+        TOM_6_HP = builder.defineInRange("tom_6_hp", 40, 1, 10000000);
 
         builder.comment("The energy cost of Tom_6 per tick");
         TOM_6_ENERGY_COST = builder.defineInRange("tom_6_energy_cost", 16, 0, 2147483647);
@@ -211,7 +211,7 @@ public class VehicleConfig {
         builder.push("bmp_2");
 
         builder.comment("The HealthPoint of Bmp_2");
-        BMP_2_HP = builder.defineInRange("bmp_2_hp", 1000, 1, 10000000);
+        BMP_2_HP = builder.defineInRange("bmp_2_hp", 300, 1, 10000000);
 
         builder.comment("The energy cost of Bmp_2 per tick");
         BMP_2_ENERGY_COST = builder.defineInRange("bmp_2_energy_cost", 64, 0, 2147483647);
@@ -226,7 +226,7 @@ public class VehicleConfig {
         BMP_2_CANNON_EXPLOSION_DAMAGE = builder.defineInRange("bmp_2_cannon_explosion_damage", 15, 1, 10000000);
 
         builder.comment("The rocket explosion radius of Bmp_2");
-        BMP_2_CANNON_EXPLOSION_RADIUS = builder.defineInRange("bmp_2_cannon_explosion_radius", 4d, 1d, 10000000d);
+        BMP_2_CANNON_EXPLOSION_RADIUS = builder.defineInRange("bmp_2_cannon_explosion_radius", 3.2d, 1d, 10000000d);
 
         builder.pop();
     }

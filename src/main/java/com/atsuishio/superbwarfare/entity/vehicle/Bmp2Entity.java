@@ -27,6 +27,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -135,25 +136,64 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
         if (this.level() instanceof ServerLevel serverLevel) {
             sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
         }
-        if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
-            amount *= 1.2f;
+
+        if (source.is(DamageTypes.ARROW)) {
+            amount *= 0.1f;
         }
-        if (source.is(ModDamageTypes.CANNON_FIRE)) {
-            amount *= 2f;
+        if (source.is(DamageTypes.TRIDENT)) {
+            amount *= 0.1f;
         }
-        if (source.is(ModDamageTypes.GUN_FIRE)) {
-            amount *= 0.2f;
-        }
-        if (source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE)) {
+        if (source.is(DamageTypes.MOB_ATTACK)) {
             amount *= 0.3f;
         }
-        if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
+        if (source.is(DamageTypes.MOB_ATTACK_NO_AGGRO)) {
+            amount *= 0.15f;
+        }
+        if (source.is(DamageTypes.MOB_PROJECTILE)) {
+            amount *= 0.15f;
+        }
+        if (source.is(DamageTypes.PLAYER_ATTACK)) {
+            amount *= 0.1f;
+
+        }
+        if (source.is(DamageTypes.LAVA)) {
+            amount *= 2.5f;
+        }
+        if (source.is(DamageTypes.EXPLOSION)) {
+            amount *= 2f;
+        }
+
+        if (source.is(DamageTypes.PLAYER_EXPLOSION)) {
+            amount *= 2f;
+        }
+
+        if (source.is(ModDamageTypes.CUSTOM_EXPLOSION)) {
             amount *= 0.4f;
+        }
+        if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
+            amount *= 0.4f;
+        }
+        if (source.is(ModDamageTypes.MINE)) {
+            amount *= 0.14f;
+        }
+        if (source.is(ModDamageTypes.LUNGE_MINE)) {
+            amount *= 0.14f;
+        }
+        if (source.is(ModDamageTypes.CANNON_FIRE)) {
+            amount *= 0.3f;
+        }
+        if (source.is(ModTags.DamageTypes.PROJECTILE)) {
+            amount *= 0.02f;
+        }
+        if (source.is(ModTags.DamageTypes.PROJECTILE_ABSOLUTE)) {
+            amount *= 0.14f;
+        }
+        if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
+            amount *= 1.7f;
         }
 
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.hurt(0.5f * Math.max(amount - 13, 0));
-
+        this.hurt(Math.max(amount - 8, 0));
         return true;
     }
 
@@ -434,12 +474,17 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
 
         if (backInputDown) {
             this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - (this.entityData.get(POWER) > 0 ? 0.016f : 0.0024f), -0.16f));
-        }
-
-        if (rightInputDown) {
-            this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 0.1f);
-        } else if (this.leftInputDown) {
-            this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.1f);
+            if (rightInputDown) {
+                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.1f);
+            } else if (this.leftInputDown) {
+                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 0.1f);
+            }
+        } else {
+            if (rightInputDown) {
+                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 0.1f);
+            } else if (this.leftInputDown) {
+                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.1f);
+            }
         }
 
         if (this.forwardInputDown || this.backInputDown) {
@@ -461,8 +506,8 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
         this.setLeftWheelRot((float) ((this.getLeftWheelRot() - 1.25 * s0) + Mth.clamp(0.75f * this.entityData.get(DELTA_ROT), -5f, 5f)));
         this.setRightWheelRot((float) ((this.getRightWheelRot() - 1.25 * s0) - Mth.clamp(0.75f * this.entityData.get(DELTA_ROT), -5f, 5f)));
 
-        this.entityData.set(TRACK_L, (float) ((entityData.get(TRACK_L) - 1.7 * Math.PI * s0) + Mth.clamp(0.75f * Math.PI * this.entityData.get(DELTA_ROT), -5f, 5f)));
-        this.entityData.set(TRACK_R, (float) ((entityData.get(TRACK_R) - 1.7 * Math.PI * s0) - Mth.clamp(0.75f * Math.PI * this.entityData.get(DELTA_ROT), -5f, 5f)));
+        this.entityData.set(TRACK_L, (float) ((entityData.get(TRACK_L) - 1.9 * Math.PI * s0) + Mth.clamp(0.4f * Math.PI * this.entityData.get(DELTA_ROT), -5f, 5f)));
+        this.entityData.set(TRACK_R, (float) ((entityData.get(TRACK_R) - 1.9 * Math.PI * s0) - Mth.clamp(0.4f * Math.PI * this.entityData.get(DELTA_ROT), -5f, 5f)));
 
 
         if (this.isInWater() || onGround()) {
@@ -660,16 +705,6 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
-    }
-
-    @Override
-    public float ignoreExplosionHorizontalKnockBack() {
-        return -0.9f;
-    }
-
-    @Override
-    public float ignoreExplosionVerticalKnockBack() {
-        return -0.9f;
     }
 
     @Override

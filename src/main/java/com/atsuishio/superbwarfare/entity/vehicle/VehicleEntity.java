@@ -147,19 +147,11 @@ public class VehicleEntity extends Entity {
             return false;
         if (source.is(DamageTypes.DROWN))
             return false;
-        if (source.is(DamageTypes.LIGHTNING_BOLT))
-            return false;
-        if (source.is(DamageTypes.FALLING_ANVIL))
-            return false;
         if (source.is(DamageTypes.DRAGON_BREATH))
             return false;
         if (source.is(DamageTypes.WITHER))
             return false;
         if (source.is(DamageTypes.WITHER_SKULL))
-            return false;
-        if (source.is(DamageTypes.ON_FIRE))
-            return false;
-        if (source.is(DamageTypes.IN_FIRE))
             return false;
         if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
             amount -= 20;
@@ -167,7 +159,6 @@ public class VehicleEntity extends Entity {
         } else {
             crash = false;
         }
-
         if (source.getEntity() != null) {
             this.entityData.set(LAST_ATTACKER_UUID, source.getEntity().getStringUUID());
         }
@@ -321,14 +312,6 @@ public class VehicleEntity extends Entity {
     }
 
     public void travel() {
-    }
-
-    public float ignoreExplosionHorizontalKnockBack() {
-        return -1f;
-    }
-
-    public float ignoreExplosionVerticalKnockBack() {
-        return -1f;
     }
 
     // From Immersive_Aircraft

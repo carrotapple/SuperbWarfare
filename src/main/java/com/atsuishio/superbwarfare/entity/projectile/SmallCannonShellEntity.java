@@ -118,9 +118,9 @@ public class SmallCannonShellEntity extends ThrowableItemProjectile implements G
                         this,
                         this.getOwner()),
                 explosionDamage,
-                result.getLocation().x,
-                result.getLocation().y,
-                result.getLocation().z,
+                this.getX(),
+                this.getEyeY(),
+                this.getZ(),
                 explosionRadius,
                 ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
                 setDamageMultiplier(1.25f);
