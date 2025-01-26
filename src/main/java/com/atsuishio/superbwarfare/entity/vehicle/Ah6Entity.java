@@ -182,8 +182,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             if (decoyReloadCoolDown > 0) {
                 decoyReloadCoolDown--;
             }
-            Player player = (Player) this.getFirstPassenger();
-            if (player != null) {
+            if (this.getFirstPassenger() instanceof Player player) {
                 if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.ROCKET_70.get())).mapToInt(ItemStack::getCount).sum() > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && reloadCoolDown == 0 && this.getEntityData().get(LOADED_ROCKET) < 14) {
                     this.entityData.set(LOADED_ROCKET, this.getEntityData().get(LOADED_ROCKET) + 1);
                     reloadCoolDown = 25;

@@ -211,8 +211,7 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
         }
 
         if (this.level() instanceof ServerLevel) {
-            Player player = (Player) this.getFirstPassenger();
-            if (player != null) {
+            if (this.getFirstPassenger() instanceof Player player) {
                 if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO_BOX.get())).mapToInt(ItemStack::getCount).sum() > 0 && this.getEntityData().get(LOADED_COAX_AMMO) < 500)) {
                     this.entityData.set(LOADED_COAX_AMMO, this.getEntityData().get(LOADED_COAX_AMMO) + 30);
                     this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO_BOX.get())).findFirst().ifPresent(stack -> stack.shrink(1));

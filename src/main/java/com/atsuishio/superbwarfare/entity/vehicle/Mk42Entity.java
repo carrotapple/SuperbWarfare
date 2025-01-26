@@ -50,6 +50,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntity {
+
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(Mk42Entity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = VehicleConfig.MK42_HP.get();
@@ -287,12 +288,12 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntit
 
         if (passenger instanceof Player player) {
             if (player.getOffhandItem().getItem() == ModItems.FIRING_PARAMETERS.get()) {
-               if (setTarget(player.getOffhandItem())) {
-                   diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(entityData.get(YAW) - this.getYRot()));
-                   diffX = Mth.wrapDegrees(entityData.get(PITCH) - this.getXRot());
-                   this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -1.75f, 1.75f));
-                   this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(0.95f * diffX, -5, 5), -85, 15));
-               }
+                if (setTarget(player.getOffhandItem())) {
+                    diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(entityData.get(YAW) - this.getYRot()));
+                    diffX = Mth.wrapDegrees(entityData.get(PITCH) - this.getXRot());
+                    this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -1.75f, 1.75f));
+                    this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(0.95f * diffX, -5, 5), -85, 15));
+                }
             } else {
                 diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
                 diffX = passenger.getXRot() - 1.3f - this.getXRot();

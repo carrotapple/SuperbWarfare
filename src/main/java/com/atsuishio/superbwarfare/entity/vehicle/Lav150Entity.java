@@ -194,8 +194,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         }
 
         if (this.level() instanceof ServerLevel) {
-            Player player = (Player) this.getFirstPassenger();
-            if (player != null) {
+            if (this.getFirstPassenger() instanceof Player player) {
                 if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO_BOX.get())).mapToInt(ItemStack::getCount).sum() > 0 && this.getEntityData().get(LOADED_COAX_AMMO) < 500)) {
                     this.entityData.set(LOADED_COAX_AMMO, this.getEntityData().get(LOADED_COAX_AMMO) + 30);
                     this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO_BOX.get())).findFirst().ifPresent(stack -> stack.shrink(1));
@@ -265,12 +264,6 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
             turretYRotO = deltaT + getTurretYRot();
         }
 
-//        Player player = (Player) this.getFirstPassenger();
-//
-//        if (player != null) {
-//            player.displayClientMessage(Component.literal( new DecimalFormat("##").format(getTurretYRot())), true);
-//        }
-
         collideBlock();
         gunnerAngle();
         lowHealthWarning();
@@ -295,8 +288,6 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 //        Vec3 p7 = new Vec3(worldPosition7.x,worldPosition7.y,worldPosition7.z);
 //        Vec3 p8 = new Vec3(worldPosition8.x,worldPosition8.y,worldPosition8.z);
 //
-//        Player player = (Player) this.getFirstPassenger();
-//
 //        if (player != null) {
 //            if (player.level() instanceof ServerLevel serverLevel ) {
 //                sendParticle(serverLevel, ParticleTypes.END_ROD, p1.x, p1.y, p1.z, (int) (2 + 4 * this.getDeltaMovement().length()), 0, 0, 0, 0, true);
@@ -317,7 +308,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
     public void move(@NotNull MoverType movementType, @NotNull Vec3 movement) {
         super.move(movementType, movement);
         if (this.isInWater() && horizontalCollision) {
-            setDeltaMovement(this.getDeltaMovement().add(0,0.07,0));
+            setDeltaMovement(this.getDeltaMovement().add(0, 0.07, 0));
         }
     }
 
@@ -473,7 +464,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         }
 
         this.entityData.set(POWER, this.entityData.get(POWER) * (upInputDown ? 0.5f : (rightInputDown || leftInputDown) ? 0.977f : 0.99f));
-        this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * (float)Math.max(0.76f - 0.1f * this.getDeltaMovement().horizontalDistance(), 0.3));
+        this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * (float) Math.max(0.76f - 0.1f * this.getDeltaMovement().horizontalDistance(), 0.3));
 
         float angle = (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1));
         double s0;
@@ -491,7 +482,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
         if (this.isInWater() || onGround()) {
             this.setYRot((float) (this.getYRot() - Math.max((isInWater() && !onGround() ? 5 : 10) * this.getDeltaMovement().horizontalDistance(), 0) * this.getRudderRot() * (this.entityData.get(POWER) > 0 ? 1 : -1)));
-            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.05f : (isInWater() && !onGround() ? 0.3f : 1)) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.05f : (isInWater() && !onGround() ? 0.3f : 1))  * this.entityData.get(POWER)));
+            this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.05f : (isInWater() && !onGround() ? 0.3f : 1)) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.05f : (isInWater() && !onGround() ? 0.3f : 1)) * this.entityData.get(POWER)));
         }
     }
 

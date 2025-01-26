@@ -45,6 +45,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.List;
 
 public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
+
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(Tom6Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Boolean> MELON = SynchedEntityData.defineId(Tom6Entity.class, EntityDataSerializers.BOOLEAN);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -169,7 +170,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
             diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
             diffX = Math.clamp(-60f, 60f, Mth.wrapDegrees(passenger.getXRot() - this.getXRot()));
 
-            float roll = Mth.abs(Mth.clamp(getRoll() / 60 , -1.5f , 1.5f));
+            float roll = Mth.abs(Mth.clamp(getRoll() / 60, -1.5f, 1.5f));
 
             float addY = Mth.clamp(Math.min((this.onGround() ? 1.5f : 0.9f) * (float) Math.max(getDeltaMovement().length() - 0.06, 0.1), 0.9f) * diffY - 0.5f * this.entityData.get(DELTA_ROT), (entityData.get(MELON) ? -2f : -3f) * (roll + 1), (entityData.get(MELON) ? 2f : 3f) * (roll + 1));
             float addX = Mth.clamp(Math.min((float) Math.max(getDeltaMovement().length() - 0.1, 0.01), 0.9f) * diffX, (entityData.get(MELON) ? -3f : -4f), (entityData.get(MELON) ? 3f : 4f));
@@ -188,7 +189,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
 
                 MelonBombEntity melonBomb = new MelonBombEntity(player, player.level());
                 melonBomb.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
-                melonBomb.shoot(getDeltaMovement().x, getDeltaMovement().y, getDeltaMovement().z, (float)getDeltaMovement().length(), 0);
+                melonBomb.shoot(getDeltaMovement().x, getDeltaMovement().y, getDeltaMovement().z, (float) getDeltaMovement().length(), 0);
                 passenger.level().addFreshEntity(melonBomb);
 
                 this.level().playSound(null, getOnPos(), SoundEvents.IRON_DOOR_OPEN, SoundSource.PLAYERS, 1, 1);
@@ -203,7 +204,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
                 Mth.sin(-this.getYRot() * 0.017453292F) * (entityData.get(MELON) ? 0.16f : 0.19f) * this.entityData.get(POWER),
                 Mth.clamp(Math.sin((onGround() ? 45 : -(getXRot() - 30)) * Mth.DEG_TO_RAD) * getDeltaMovement().horizontalDistance() * (entityData.get(MELON) ? 0.047f : 0.067f), -0.04, 0.09),
                 Mth.cos(this.getYRot() * 0.017453292F) * (entityData.get(MELON) ? 0.16f : 0.19f) * this.entityData.get(POWER)
-                ));
+        ));
     }
 
     @Override
