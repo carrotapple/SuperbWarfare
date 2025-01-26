@@ -74,8 +74,8 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
     public static final EntityDataAccessor<Float> TRACK_L = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> TRACK_R = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.FLOAT);
 
-    public static final float MAX_HEALTH = VehicleConfig.LAV_150_HP.get();
-    public static final int MAX_ENERGY = VehicleConfig.LAV_150_MAX_ENERGY.get();
+    public static final float MAX_HEALTH = VehicleConfig.BMP_2_HP.get();
+    public static final int MAX_ENERGY = VehicleConfig.BMP_2_MAX_ENERGY.get();
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public float turretYRot;
@@ -292,7 +292,7 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
     public void move(@NotNull MoverType movementType, @NotNull Vec3 movement) {
         super.move(movementType, movement);
         if (this.isInWater() && horizontalCollision) {
-            setDeltaMovement(this.getDeltaMovement().add(0,0.07,0));
+            setDeltaMovement(this.getDeltaMovement().add(0, 0.07, 0));
         }
     }
 
@@ -444,11 +444,11 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
         }
 
         if (this.forwardInputDown || this.backInputDown) {
-            this.extraEnergy(VehicleConfig.SPEEDBOAT_ENERGY_COST.get());
+            this.extraEnergy(VehicleConfig.BMP_2_ENERGY_COST.get());
         }
 
         this.entityData.set(POWER, this.entityData.get(POWER) * (upInputDown ? 0.5f : (rightInputDown || leftInputDown) ? 0.947f : 0.96f));
-        this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * (float)Math.max(0.76f - 0.1f * this.getDeltaMovement().horizontalDistance(), 0.3));
+        this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * (float) Math.max(0.76f - 0.1f * this.getDeltaMovement().horizontalDistance(), 0.3));
 
         float angle = (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1));
         double s0;
