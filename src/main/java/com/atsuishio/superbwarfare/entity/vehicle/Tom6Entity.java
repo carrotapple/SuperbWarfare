@@ -150,7 +150,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
             }
 
             if (forwardInputDown && getEnergy() > 0) {
-                this.extraEnergy(VehicleConfig.TOM_6_ENERGY_COST.get());
+                this.consumeEnergy(VehicleConfig.TOM_6_ENERGY_COST.get());
                 this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + (entityData.get(MELON) ? 0.003f : 0.0022f), entityData.get(MELON) ? 0.12f : 0.15f));
             }
 

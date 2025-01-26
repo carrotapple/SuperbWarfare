@@ -444,7 +444,7 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
         }
 
         if (this.forwardInputDown || this.backInputDown) {
-            this.extraEnergy(VehicleConfig.BMP_2_ENERGY_COST.get());
+            this.consumeEnergy(VehicleConfig.BMP_2_ENERGY_COST.get());
         }
 
         this.entityData.set(POWER, this.entityData.get(POWER) * (upInputDown ? 0.5f : (rightInputDown || leftInputDown) ? 0.947f : 0.96f));

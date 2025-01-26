@@ -1,13 +1,11 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.init.ModItems;
-import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.menu.VehicleMenu;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -20,7 +18,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.ContainerEntity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -67,40 +64,12 @@ public class ContainerMobileEntity extends MobileVehicleEntity implements HasCus
         if (player.getVehicle() == this) return InteractionResult.PASS;
 
         ItemStack stack = player.getMainHandItem();
-        if (player.isShiftKeyDown() && stack.is(ModItems.CROWBAR.get())) {
-            ItemStack container = ContainerBlockItem.createInstance(this);
-            if (!player.addItem(container)) {
-                player.drop(container, false);
-            }
-            this.remove(RemovalReason.DISCARDED);
-            this.discard();
-            return InteractionResult.SUCCESS;
-        } else if (player.isShiftKeyDown()) {
+        if (player.isShiftKeyDown() && !stack.is(ModItems.CROWBAR.get())) {
             player.openMenu(this);
             return !player.level().isClientSide ? InteractionResult.CONSUME : InteractionResult.SUCCESS;
-        } else if (this.getHealth() < this.getMaxHealth() && stack.is(Items.IRON_INGOT)) {
-            this.heal(Math.min(50, this.getMaxHealth()));
-            stack.shrink(1);
-            if (!this.level().isClientSide) {
-                this.level().playSound(null, this, SoundEvents.IRON_GOLEM_REPAIR, this.getSoundSource(), 0.5f, 1);
-            }
-            return InteractionResult.SUCCESS;
-        } else if (!player.isShiftKeyDown()) {
-            if (this.getFirstPassenger() == null) {
-                player.setXRot(this.getXRot());
-                player.setYRot(this.getYRot());
-                return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
-            } else if (!(this.getFirstPassenger() instanceof Player)) {
-                this.getFirstPassenger().stopRiding();
-                player.setXRot(this.getXRot());
-                player.setYRot(this.getYRot());
-                return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
-            }
-            if (this.canAddPassenger(player)) {
-                return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
-            }
         }
-        return InteractionResult.PASS;
+
+        return super.interact(player, hand);
     }
 
     @Override

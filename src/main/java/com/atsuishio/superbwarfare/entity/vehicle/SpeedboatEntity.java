@@ -307,7 +307,7 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
         }
 
         if (this.forwardInputDown || this.backInputDown) {
-            this.extraEnergy(VehicleConfig.SPEEDBOAT_ENERGY_COST.get());
+            this.consumeEnergy(VehicleConfig.SPEEDBOAT_ENERGY_COST.get());
         }
 
         if (level().isClientSide) {

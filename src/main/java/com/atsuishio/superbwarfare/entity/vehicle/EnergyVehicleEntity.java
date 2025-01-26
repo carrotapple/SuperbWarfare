@@ -36,8 +36,17 @@ public class EnergyVehicleEntity extends VehicleEntity implements IChargeEntity 
         compound.putInt("Energy", this.entityData.get(ENERGY));
     }
 
-    public void extraEnergy(int extraAmount) {
-        this.setEnergy(this.getEnergy() - extraAmount);
+    /**
+     * 消耗指定电量
+     *
+     * @param amount 要消耗的电量
+     */
+    public void consumeEnergy(int amount) {
+        this.setEnergy(Math.max(0, this.getEnergy() - amount));
+    }
+
+    public boolean canConsume(int amount) {
+        return this.getEnergy() >= amount;
     }
 
     public int getEnergy() {

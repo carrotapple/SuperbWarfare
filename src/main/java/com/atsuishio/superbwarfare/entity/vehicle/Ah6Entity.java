@@ -327,7 +327,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
         this.entityData.set(PROPELLER_ROT, this.entityData.get(PROPELLER_ROT) * 0.9995f);
 
         if (engineStart) {
-            this.extraEnergy((int) (VehicleConfig.AH_6_MIN_ENERGY_COST.get() + this.entityData.get(POWER) * ((VehicleConfig.AH_6_MAX_ENERGY_COST.get() - VehicleConfig.AH_6_MIN_ENERGY_COST.get()) / 0.12)));
+            this.consumeEnergy((int) (VehicleConfig.AH_6_MIN_ENERGY_COST.get() + this.entityData.get(POWER) * ((VehicleConfig.AH_6_MAX_ENERGY_COST.get() - VehicleConfig.AH_6_MIN_ENERGY_COST.get()) / 0.12)));
         }
 
         setDeltaMovement(getDeltaMovement().add(0.0f, Math.min(Math.sin((90 - this.getXRot()) * Mth.DEG_TO_RAD), Math.sin((90 + this.getRoll()) * Mth.DEG_TO_RAD)) * this.entityData.get(PROPELLER_ROT), 0.0f));
@@ -622,7 +622,6 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
         Vec3 vec3d = getDismountOffset(getBbWidth() * Mth.SQRT_OF_TWO, passenger.getBbWidth() * Mth.SQRT_OF_TWO);
         double ox = getX() + vec3d.x;
-        ;
         int i = this.getPassengers().indexOf(passenger);
         if (i == 0 || i == 2) {
             ox = getX() - vec3d.x;

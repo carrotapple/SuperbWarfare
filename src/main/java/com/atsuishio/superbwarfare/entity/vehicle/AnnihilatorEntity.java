@@ -345,7 +345,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
             return;
         }
 
-        if (this.getEnergy() < SHOOT_COST) {
+        if (!this.canConsume(SHOOT_COST)) {
             player.displayClientMessage(Component.translatable("tips.superbwarfare.annihilator.energy_not_enough").withStyle(ChatFormatting.RED), true);
             return;
         }
@@ -360,7 +360,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
             }
 
             this.entityData.set(COOL_DOWN, 100);
-            this.extraEnergy(SHOOT_COST);
+            this.consumeEnergy(SHOOT_COST);
             final Vec3 center = new Vec3(this.getX(), this.getEyeY(), this.getZ());
             for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(20), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
                 if (target instanceof ServerPlayer serverPlayer) {

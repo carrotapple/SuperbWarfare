@@ -469,7 +469,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         }
 
         if (this.forwardInputDown || this.backInputDown) {
-            this.extraEnergy(VehicleConfig.SPEEDBOAT_ENERGY_COST.get());
+            this.consumeEnergy(VehicleConfig.LAV_150_ENERGY_COST.get());
         }
 
         this.entityData.set(POWER, this.entityData.get(POWER) * (upInputDown ? 0.5f : (rightInputDown || leftInputDown) ? 0.977f : 0.99f));

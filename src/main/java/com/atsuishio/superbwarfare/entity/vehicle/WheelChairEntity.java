@@ -180,13 +180,13 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
             if (passenger instanceof ServerPlayer serverPlayer) {
                 serverPlayer.level().playSound(null, serverPlayer.getOnPos(), ModSounds.WHEEL_CHAIR_JUMP.get(), SoundSource.PLAYERS, 1, 1);
             }
-            this.extraEnergy(400);
+            this.consumeEnergy(400);
             this.setDeltaMovement(this.getDeltaMovement().add(0, 0.6, 0));
             jumpCoolDown = 3;
         }
 
         if (this.forwardInputDown || this.backInputDown) {
-            this.extraEnergy(1);
+            this.consumeEnergy(1);
         }
 
         if (passenger instanceof Player player && player.level().isClientSide && this.handBusyTime > 0) {
