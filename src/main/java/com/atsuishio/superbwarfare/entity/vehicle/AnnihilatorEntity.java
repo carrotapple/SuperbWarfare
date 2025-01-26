@@ -443,16 +443,6 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
         this.setRot(this.getYRot(), this.getXRot());
     }
 
-    public static double calculateAngle(Vec3 passenger, Vec3 barrel) {
-        double startLength = passenger.length();
-        double endLength = barrel.length();
-        if (startLength > 0.0D && endLength > 0.0D) {
-            return Math.toDegrees(Math.acos(Mth.clamp(passenger.dot(barrel) / (startLength * endLength), -1, 1)));
-        } else {
-            return 0.0D;
-        }
-    }
-
     protected void clampRotation(Entity entity) {
         float f = Mth.wrapDegrees(entity.getXRot());
         float f1 = Mth.clamp(f, -45.0F, 5f + this.entityData.get(OFFSET_ANGLE));

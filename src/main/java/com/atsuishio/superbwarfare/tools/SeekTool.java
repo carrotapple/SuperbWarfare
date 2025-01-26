@@ -5,7 +5,6 @@ import com.atsuishio.superbwarfare.entity.ClaymoreEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -95,16 +94,7 @@ public class SeekTool {
     private static double calculateAngle(Entity entityA, Entity entityB) {
         Vec3 start = new Vec3(entityA.getX() - entityB.getX(), entityA.getY() - entityB.getY(), entityA.getZ() - entityB.getZ());
         Vec3 end = entityB.getLookAngle();
-        return calculateAngle(start, end);
+        return VectorTool.calculateAngle(start, end);
     }
 
-    private static double calculateAngle(Vec3 start, Vec3 end) {
-        double startLength = start.length();
-        double endLength = end.length();
-        if (startLength > 0.0D && endLength > 0.0D) {
-            return Math.toDegrees(Math.acos(Mth.clamp(start.dot(end) / (startLength * endLength), -1, 1)));
-        } else {
-            return 0.0D;
-        }
-    }
 }

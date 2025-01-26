@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.init.ModParticleTypes;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
+import com.atsuishio.superbwarfare.tools.VectorTool;
 import com.google.common.collect.Lists;
 import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
@@ -379,13 +380,7 @@ public class VehicleEntity extends Entity {
         move = move.multiply(1, 0, 1).normalize();
         view = view.multiply(1, 0, 1).normalize();
 
-        double startLength = move.length();
-        double endLength = view.length();
-        if (startLength > 0.0D && endLength > 0.0D) {
-            return Math.toDegrees(Math.acos(Mth.clamp(move.dot(view) / (startLength * endLength), -1, 1)));
-        } else {
-            return 0.0D;
-        }
+        return VectorTool.calculateAngle(move, view);
     }
 
     protected Vec3 getDismountOffset(double vehicleWidth, double passengerWidth) {
