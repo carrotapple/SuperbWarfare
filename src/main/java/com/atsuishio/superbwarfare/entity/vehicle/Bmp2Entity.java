@@ -467,7 +467,7 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
 
 
         if (this.isInWater() || onGround()) {
-            this.setYRot((float) (this.getYRot() - Math.max(isInWater() && !onGround() ? 2.5 : 6, 0) * entityData.get(DELTA_ROT) * (this.entityData.get(POWER) >= 0 ? 1 : -1)));
+            this.setYRot((float) (this.getYRot() - Math.max(isInWater() && !onGround() ? 2.5 : 6, 0) * entityData.get(DELTA_ROT)));
             this.setDeltaMovement(this.getDeltaMovement().add(Mth.sin(-this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.13f : (isInWater() && !onGround() ? 2f : 2.4)) * this.entityData.get(POWER), 0.0, Mth.cos(this.getYRot() * 0.017453292F) * (!isInWater() && !onGround() ? 0.13f : (isInWater() && !onGround() ? 2f : 2.4)) * this.entityData.get(POWER)));
         }
     }
