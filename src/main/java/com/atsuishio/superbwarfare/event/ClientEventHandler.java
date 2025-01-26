@@ -224,6 +224,16 @@ public class ClientEventHandler {
         handleLungeAttack(player, stack);
         handleGunMelee(player, stack);
 
+        if (notInGame()) {
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(0, false));
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(1, false));
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(2, false));
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(3, false));
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(4, false));
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(5, false));
+            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(6, false));
+        }
+
         if (event.phase == TickEvent.Phase.END) {
             handleVariableDecrease();
             aimAtVillager(player);
@@ -330,6 +340,10 @@ public class ClientEventHandler {
 
         if (player == null) return;
         if (level == null) return;
+
+        if (notInGame()) {
+            holdFire = false;
+        }
 
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) {
