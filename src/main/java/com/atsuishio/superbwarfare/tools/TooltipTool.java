@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -16,6 +17,10 @@ public class TooltipTool {
         if (Screen.hasShiftDown()) {
             tooltip.add(text);
         }
+    }
+
+    public static void addDevelopingText(List<Component> tooltip) {
+        tooltip.add(Component.literal("本物品还在开发中").withStyle(ChatFormatting.LIGHT_PURPLE).withStyle(ChatFormatting.BOLD));
     }
 
     public static double perkDamage(ItemStack stack) {
