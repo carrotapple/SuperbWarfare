@@ -63,10 +63,10 @@ public class VehicleConfig {
         builder.push("mk_42");
 
         builder.comment("The HealthPoint of MK-42");
-        MK42_HP = builder.defineInRange("mk_42_hp", 200, 1, 10000000);
+        MK42_HP = builder.defineInRange("mk_42_hp", 350, 1, 10000000);
 
         builder.comment("The AP shell damage of MK-42");
-        MK42_AP_DAMAGE = builder.defineInRange("mk_42_ap_damage", 300, 1, 10000000);
+        MK42_AP_DAMAGE = builder.defineInRange("mk_42_ap_damage", 450, 1, 10000000);
 
         builder.comment("The AP shell explosion damage of MK-42");
         MK42_AP_EXPLOSION_DAMAGE = builder.defineInRange("mk_42_ap_explosion_damage", 120, 1, 10000000);
@@ -88,10 +88,10 @@ public class VehicleConfig {
         builder.push("mle_1934");
 
         builder.comment("The HealthPoint of MLE-1934");
-        MLE1934_HP = builder.defineInRange("mle_1934_hp", 200, 1, 10000000);
+        MLE1934_HP = builder.defineInRange("mle_1934_hp", 350, 1, 10000000);
 
         builder.comment("The AP shell damage of MLE-1934");
-        MLE1934_AP_DAMAGE = builder.defineInRange("mle_1934_ap_damage", 350, 1, 10000000);
+        MLE1934_AP_DAMAGE = builder.defineInRange("mle_1934_ap_damage", 500, 1, 10000000);
 
         builder.comment("The AP shell explosion damage of MLE-1934");
         MLE1934_AP_EXPLOSION_DAMAGE = builder.defineInRange("mle_1934_ap_explosion_damage", 150, 1, 10000000);
@@ -113,7 +113,7 @@ public class VehicleConfig {
         builder.push("annihilator");
 
         builder.comment("The HealthPoint of Annihilator");
-        ANNIHILATOR_HP = builder.defineInRange("annihilator_hp", 800, 1, 10000000);
+        ANNIHILATOR_HP = builder.defineInRange("annihilator_hp", 1200, 1, 10000000);
 
         builder.comment("The energy cost of Annihilator per shoot");
         ANNIHILATOR_SHOOT_COST = builder.defineInRange("annihilator_shoot_cost", 2000000, 0, 2147483647);
@@ -201,10 +201,10 @@ public class VehicleConfig {
         TOM_6_MAX_ENERGY = builder.defineInRange("tom_6_max_energy", 160000, 0, 2147483647);
 
         builder.comment("The Melon Bomb explosion damage of Tom_6");
-        TOM_6_BOMB_EXPLOSION_DAMAGE = builder.defineInRange("tom_6_bomb_explosion_damage", 1000, 1, 10000000);
+        TOM_6_BOMB_EXPLOSION_DAMAGE = builder.defineInRange("tom_6_bomb_explosion_damage", 500, 1, 10000000);
 
         builder.comment("The Melon Bomb explosion radius of Tom_6");
-        TOM_6_BOMB_EXPLOSION_RADIUS = builder.defineInRange("tom_6_bomb_explosion_radius", 16d, 1d, 10000000d);
+        TOM_6_BOMB_EXPLOSION_RADIUS = builder.defineInRange("tom_6_bomb_explosion_radius", 10d, 1d, 10000000d);
 
         builder.pop();
 

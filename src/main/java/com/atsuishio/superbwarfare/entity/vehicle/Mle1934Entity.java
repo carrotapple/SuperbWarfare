@@ -23,6 +23,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -46,6 +47,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Comparator;
 import java.util.List;
+
+import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEntity {
 
@@ -111,24 +114,66 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
     public boolean hurt(DamageSource source, float amount) {
         super.hurt(source, amount);
         if (this.level() instanceof ServerLevel serverLevel) {
-            ParticleTool.sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
+            sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
         }
 
-        if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
-            amount *= 0.5f;
-        }
-        if (source.is(ModDamageTypes.CANNON_FIRE)) {
-            amount *= 1.4f;
-        }
-        if (source.is(ModDamageTypes.GUN_FIRE)) {
+        if (source.is(DamageTypes.ARROW)) {
             amount *= 0.1f;
         }
-        if (source.is(ModDamageTypes.GUN_FIRE_ABSOLUTE)) {
-            amount *= 0.5f;
+        if (source.is(DamageTypes.TRIDENT)) {
+            amount *= 0.1f;
+        }
+        if (source.is(DamageTypes.MOB_ATTACK)) {
+            amount *= 0.3f;
+        }
+        if (source.is(DamageTypes.MOB_ATTACK_NO_AGGRO)) {
+            amount *= 0.15f;
+        }
+        if (source.is(DamageTypes.MOB_PROJECTILE)) {
+            amount *= 0.15f;
+        }
+        if (source.is(DamageTypes.PLAYER_ATTACK)) {
+            amount *= 0.1f;
+
+        }
+        if (source.is(DamageTypes.LAVA)) {
+            amount *= 2.5f;
+        }
+        if (source.is(DamageTypes.EXPLOSION)) {
+            amount *= 2f;
+        }
+
+        if (source.is(DamageTypes.PLAYER_EXPLOSION)) {
+            amount *= 2f;
+        }
+
+        if (source.is(ModDamageTypes.CUSTOM_EXPLOSION)) {
+            amount *= 0.4f;
+        }
+        if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
+            amount *= 0.4f;
+        }
+        if (source.is(ModDamageTypes.MINE)) {
+            amount *= 0.14f;
+        }
+        if (source.is(ModDamageTypes.LUNGE_MINE)) {
+            amount *= 0.14f;
+        }
+        if (source.is(ModDamageTypes.CANNON_FIRE)) {
+            amount *= 0.3f;
+        }
+        if (source.is(ModTags.DamageTypes.PROJECTILE)) {
+            amount *= 0.02f;
+        }
+        if (source.is(ModTags.DamageTypes.PROJECTILE_ABSOLUTE)) {
+            amount *= 0.14f;
+        }
+        if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
+            amount *= 1.7f;
         }
 
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.hurt(0.5f * Math.max(amount - 5, 0));
+        this.hurt(Math.max(amount - 8, 0));
         return true;
     }
 
