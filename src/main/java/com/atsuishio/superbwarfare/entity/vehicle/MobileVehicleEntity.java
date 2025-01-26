@@ -163,7 +163,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
         if (!this.canCrushEntities()) return;
         if (velocity.horizontalDistance() < 0.25) return;
         if (isRemoved()) return;
-        var frontBox = getBoundingBox().move(velocity.scale(0.5));
+        var frontBox = getBoundingBox().move(velocity.scale(0.6));
         var velAdd = velocity.add(0, 0, 0).scale(0.9);
 
         var entities = level().getEntities(EntityTypeTest.forClass(Entity.class), frontBox,
