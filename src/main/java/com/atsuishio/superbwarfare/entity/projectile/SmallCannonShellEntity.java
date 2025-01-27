@@ -130,7 +130,7 @@ public class SmallCannonShellEntity extends ThrowableItemProjectile implements G
         explosion.finalizeExplosion(false);
         ParticleTool.spawnSmallExplosionParticles(this.level(),
                 new Vec3(entity.getX(),
-                        entity.getY() + 0.5 * entity.getBbHeight(),
+                        entity.getEyeY(),
                         entity.getZ()));
     }
 

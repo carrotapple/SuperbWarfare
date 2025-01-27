@@ -161,10 +161,10 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
         }
 
         if (source.is(ModDamageTypes.CUSTOM_EXPLOSION)) {
-            amount *= 1.5f;
+            amount *= 1f;
         }
         if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
-            amount *= 1.5f;
+            amount *= 1f;
         }
         if (source.is(ModDamageTypes.MINE)) {
             amount *= 0.5f;
@@ -173,7 +173,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             amount *= 0.5f;
         }
         if (source.is(ModDamageTypes.CANNON_FIRE)) {
-            amount *= 0.6f;
+            amount *= 0.4f;
         }
         if (source.is(ModTags.DamageTypes.PROJECTILE)) {
             amount *= 0.08f;

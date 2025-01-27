@@ -375,7 +375,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
                     VehicleConfig.LAV_150_CANNON_EXPLOSION_RADIUS.get().floatValue());
 
             smallCannonShell.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
-            smallCannonShell.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 15,
+            smallCannonShell.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 20,
                     0.25f);
             this.level().addFreshEntity(smallCannonShell);
 
