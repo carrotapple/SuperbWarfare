@@ -136,19 +136,19 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         }
 
         if (source.is(DamageTypes.ARROW)) {
-            amount *= 0.1f;
+            amount *= 0.3f;
         }
         if (source.is(DamageTypes.TRIDENT)) {
-            amount *= 0.2f;
+            amount *= 0.3f;
         }
         if (source.is(DamageTypes.MOB_ATTACK)) {
-            amount *= 0.2f;
+            amount *= 0.5f;
         }
         if (source.is(DamageTypes.MOB_ATTACK_NO_AGGRO)) {
-            amount *= 0.2f;
+            amount *= 0.4f;
         }
         if (source.is(DamageTypes.MOB_PROJECTILE)) {
-            amount *= 0.2f;
+            amount *= 0.3f;
         }
         if (source.is(DamageTypes.PLAYER_ATTACK)) {
             amount *= 0.2f;

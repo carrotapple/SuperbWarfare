@@ -144,23 +144,22 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
         }
 
         if (source.is(DamageTypes.ARROW)) {
-            amount *= 0.1f;
-        }
-        if (source.is(DamageTypes.TRIDENT)) {
-            amount *= 0.1f;
-        }
-        if (source.is(DamageTypes.MOB_ATTACK)) {
             amount *= 0.3f;
         }
+        if (source.is(DamageTypes.TRIDENT)) {
+            amount *= 0.3f;
+        }
+        if (source.is(DamageTypes.MOB_ATTACK)) {
+            amount *= 0.5f;
+        }
         if (source.is(DamageTypes.MOB_ATTACK_NO_AGGRO)) {
-            amount *= 0.15f;
+            amount *= 0.4f;
         }
         if (source.is(DamageTypes.MOB_PROJECTILE)) {
-            amount *= 0.15f;
+            amount *= 0.3f;
         }
         if (source.is(DamageTypes.PLAYER_ATTACK)) {
-            amount *= 0.1f;
-
+            amount *= 0.2f;
         }
         if (source.is(DamageTypes.LAVA)) {
             amount *= 2.5f;
@@ -451,7 +450,7 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
             Vector4f worldPosition = transformPosition(transformT, 0, 1, 0);
 
             WgMissileEntity wgMissileEntity = new WgMissileEntity(player, player.level(),
-                    400,
+                    500,
                     60,
                     6);
 

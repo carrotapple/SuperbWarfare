@@ -152,11 +152,11 @@ public class WgMissileEntity extends ThrowableItemProjectile implements GeoEntit
 
 
             // 控制速度
-            if (this.getDeltaMovement().length() < 2.4) {
+            if (this.getDeltaMovement().length() < 2.1) {
                 this.setDeltaMovement(this.getDeltaMovement().multiply(1.06, 1.06, 1.06));
             }
 
-            if (this.getDeltaMovement().length() > 2.8) {
+            if (this.getDeltaMovement().length() > 2.4) {
                 this.setDeltaMovement(this.getDeltaMovement().multiply(0.9, 0.9, 0.9));
             }
 
