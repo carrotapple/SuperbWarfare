@@ -85,7 +85,7 @@ public class ContainerBlock extends BaseEntityBlock {
         return containerBlockEntity.entity != null || containerBlockEntity.entityType != null;
     }
 
-    public boolean canOpen(Level pLevel, BlockPos pPos, EntityType<?> entityType, Entity entity) {
+    public static boolean canOpen(Level pLevel, BlockPos pPos, EntityType<?> entityType, Entity entity) {
         boolean flag = true;
 
         int w = 0;
@@ -131,30 +131,28 @@ public class ContainerBlock extends BaseEntityBlock {
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
         CompoundTag tag = BlockItem.getBlockEntityData(pStack);
-        if (tag != null) {
-            if (tag.contains("EntityType")) {
-                String s = getTranslationKey(tag.getString("EntityType"));
-                pTooltip.add(Component.translatable(s == null ? "des.superbwarfare.container.empty" : s).withStyle(ChatFormatting.GRAY));
+        if (tag != null && tag.contains("EntityType")) {
+            String s = getTranslationKey(tag.getString("EntityType"));
+            pTooltip.add(Component.translatable(s == null ? "des.superbwarfare.container.empty" : s).withStyle(ChatFormatting.GRAY));
 
-                var entityType = EntityType.byString(tag.getString("EntityType")).orElse(null);
-                if (entityType != null) {
-                    int w = 0, h = 0;
-                    if (pLevel instanceof Level level && tag.contains("Entity")) {
-                        var entity = entityType.create(level);
-                        if (entity != null) {
-                            entity.load(tag.getCompound("Entity"));
-                            w = (int) (entity.getType().getDimensions().width + 1);
-                            if (w % 2 == 0) w++;
-                            h = (int) (entity.getType().getDimensions().height + 1);
-                        }
-                    } else {
-                        w = (int) (entityType.getDimensions().width + 1);
+            var entityType = EntityType.byString(tag.getString("EntityType")).orElse(null);
+            if (entityType != null) {
+                int w = 0, h = 0;
+                if (pLevel instanceof Level level && tag.contains("Entity")) {
+                    var entity = entityType.create(level);
+                    if (entity != null) {
+                        entity.load(tag.getCompound("Entity"));
+                        w = (int) (entity.getType().getDimensions().width + 1);
                         if (w % 2 == 0) w++;
-                        h = (int) (entityType.getDimensions().height + 1);
+                        h = (int) (entity.getType().getDimensions().height + 1);
                     }
-                    if (w != 0 && h != 0) {
-                        pTooltip.add(Component.literal(w + " x " + w + " x " + h).withStyle(ChatFormatting.YELLOW));
-                    }
+                } else {
+                    w = (int) (entityType.getDimensions().width + 1);
+                    if (w % 2 == 0) w++;
+                    h = (int) (entityType.getDimensions().height + 1);
+                }
+                if (w != 0 && h != 0) {
+                    pTooltip.add(Component.literal(w + " x " + w + " x " + h).withStyle(ChatFormatting.YELLOW));
                 }
             }
         }
