@@ -133,11 +133,10 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntit
             amount *= 2.5f;
         }
         if (source.is(DamageTypes.EXPLOSION)) {
-            amount *= 2f;
+            amount *= 1f;
         }
-
         if (source.is(DamageTypes.PLAYER_EXPLOSION)) {
-            amount *= 2f;
+            amount *= 1f;
         }
 
         if (source.is(ModDamageTypes.CUSTOM_EXPLOSION)) {

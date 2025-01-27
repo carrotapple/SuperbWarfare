@@ -142,10 +142,10 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
             amount *= 0f;
         }
         if (source.is(DamageTypes.EXPLOSION)) {
-            amount *= 0.5f;
+            amount *= 0.75f;
         }
         if (source.is(DamageTypes.PLAYER_EXPLOSION)) {
-            amount *= 0.5f;
+            amount *= 0.75f;
         }
 
         if (source.is(ModDamageTypes.CUSTOM_EXPLOSION)) {

@@ -189,7 +189,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         this.durability -= 2;
         if (this.durability <= 0) {
             if (!this.level().isClientSide()) {
-                causeExplode(entityHitResult);
+                causeExplode(entity);
             }
             this.discard();
         }
@@ -206,7 +206,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         BlockState blockState = this.level().getBlockState(BlockPos.containing(x, y, z));
         if (blockState.is(Blocks.BEDROCK) || blockState.is(Blocks.BARRIER)) {
             this.discard();
-            causeExplode(blockHitResult);
+            causeExplodeBlock(blockHitResult);
             return;
         }
 
@@ -236,7 +236,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
 
         if (this.durability <= 0) {
             if (!this.level().isClientSide()) {
-                causeExplode(blockHitResult);
+                causeExplodeBlock(blockHitResult);
                 this.discard();
             }
         } else {
@@ -244,7 +244,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
                 if (ExplosionDestroyConfig.EXPLOSION_DESTROY.get()) {
                     if (this.firstHit) {
                         ParticleTool.cannonHitParticles(this.level(), this.position());
-                        causeExplode(blockHitResult);
+                        causeExplodeBlock(blockHitResult);
                         this.firstHit = false;
                         this.setNoGravity(true);
                     } else {
@@ -257,7 +257,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         if (this.durability > 0) {
             ModUtils.queueServerWork(2, () -> {
                 if (!this.level().isClientSide()) {
-                    causeExplode(blockHitResult);
+                    causeExplodeBlock(blockHitResult);
                     this.discard();
                 }
             });
@@ -284,7 +284,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         }
     }
 
-    private void causeExplode(HitResult result) {
+    private void causeExplode(Entity entity) {
         if (Math.random() > fireProbability) {
             fireTime = 0;
         }
@@ -294,9 +294,40 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
                         this,
                         this.getOwner()),
                 explosionDamage,
-                this.getX(),
-                this.getEyeY(),
-                this.getZ(),
+                entity.getX(),
+                entity.getY() + 0.5 * entity.getBbHeight(),
+                entity.getZ(),
+                radius,
+                ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
+                setDamageMultiplier(1).setFireTime(fireTime);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+
+        if (radius > 7) {
+            ParticleTool.spawnHugeExplosionParticles(this.level(), new Vec3(entity.getX(),
+                    entity.getY() + 0.5 * entity.getBbHeight(),
+                    entity.getZ()));
+        } else {
+            ParticleTool.spawnMediumExplosionParticles(this.level(), new Vec3(entity.getX(),
+                    entity.getY() + 0.5 * entity.getBbHeight(),
+                    entity.getZ()));
+        }
+    }
+
+    private void causeExplodeBlock(HitResult result) {
+        if (Math.random() > fireProbability) {
+            fireTime = 0;
+        }
+
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(),
+                        this,
+                        this.getOwner()),
+                explosionDamage,
+                result.getLocation().x,
+                result.getLocation().y,
+                result.getLocation().z,
                 radius,
                 ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
                 setDamageMultiplier(1).setFireTime(fireTime);

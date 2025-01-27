@@ -157,10 +157,10 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
             amount *= 2.5f;
         }
         if (source.is(DamageTypes.EXPLOSION)) {
-            amount *= 2f;
+            amount *= 1.2f;
         }
         if (source.is(DamageTypes.PLAYER_EXPLOSION)) {
-            amount *= 2f;
+            amount *= 1.2f;
         }
 
         if (source.is(ModDamageTypes.CUSTOM_EXPLOSION)) {
@@ -173,7 +173,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
             amount *= 0.15f;
         }
         if (source.is(ModDamageTypes.LUNGE_MINE)) {
-            amount *= 0.15f;
+            amount *= 0.2f;
         }
         if (source.is(ModDamageTypes.CANNON_FIRE)) {
             amount *= 0.3f;
@@ -375,7 +375,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
                     VehicleConfig.LAV_150_CANNON_EXPLOSION_RADIUS.get().floatValue());
 
             smallCannonShell.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
-            smallCannonShell.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 24,
+            smallCannonShell.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 15,
                     0.25f);
             this.level().addFreshEntity(smallCannonShell);
 

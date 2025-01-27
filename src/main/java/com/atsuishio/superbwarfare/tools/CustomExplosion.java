@@ -3,7 +3,6 @@ package com.atsuishio.superbwarfare.tools;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
-import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
@@ -12,10 +11,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.item.enchantment.ProtectionEnchantment;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
@@ -191,20 +188,6 @@ public class CustomExplosion extends Explosion {
 
                         if (fireTime > 0) {
                             entity.setSecondsOnFire(fireTime);
-                        }
-
-                        double d11;
-                        if (entity instanceof LivingEntity livingentity) {
-                            d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener(livingentity, damagePercent);
-                        } else {
-                            d11 = damagePercent;
-                        }
-
-                        yDistance *= d11;
-
-                        if (entity instanceof VehicleEntity vehicle && !bullet) {
-                            Vec3 knockbackVec = new Vec3(0, -0.2 * yDistance, 0);
-                            vehicle.setDeltaMovement(vehicle.getDeltaMovement().add(knockbackVec));
                         }
                     }
                 }

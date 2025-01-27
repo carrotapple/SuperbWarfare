@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
@@ -92,7 +93,7 @@ public class SmallCannonShellEntity extends ThrowableItemProjectile implements G
 
         if (this.tickCount > 0) {
             if (this.level() instanceof ServerLevel) {
-                causeExplode(result);
+                causeExplode(entity);
             }
         }
         this.discard();
@@ -107,20 +108,41 @@ public class SmallCannonShellEntity extends ThrowableItemProjectile implements G
             bell.attemptToRing(this.level(), resultPos, blockHitResult.getDirection());
         }
         if (this.level() instanceof ServerLevel) {
-            causeExplode(blockHitResult);
+            causeExplodeBlock(blockHitResult);
         }
         this.discard();
     }
 
-    private void causeExplode(HitResult result) {
+    private void causeExplode(Entity entity) {
         CustomExplosion explosion = new CustomExplosion(this.level(), this,
                 ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(),
                         this,
                         this.getOwner()),
                 explosionDamage,
-                this.getX(),
-                this.getEyeY(),
-                this.getZ(),
+                entity.getX(),
+                entity.getY() + 0.6 * entity.getBbHeight(),
+                entity.getZ(),
+                explosionRadius,
+                ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
+                setDamageMultiplier(1.25f);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnSmallExplosionParticles(this.level(),
+                new Vec3(entity.getX(),
+                        entity.getY() + 0.5 * entity.getBbHeight(),
+                        entity.getZ()));
+    }
+
+    private void causeExplodeBlock(HitResult result) {
+        CustomExplosion explosion = new CustomExplosion(this.level(), this,
+                ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(),
+                        this,
+                        this.getOwner()),
+                explosionDamage,
+                result.getLocation().x,
+                result.getLocation().y,
+                result.getLocation().z,
                 explosionRadius,
                 ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
                 setDamageMultiplier(1.25f);

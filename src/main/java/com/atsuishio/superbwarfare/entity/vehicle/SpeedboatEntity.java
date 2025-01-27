@@ -145,10 +145,10 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
             amount *= 2f;
         }
         if (source.is(DamageTypes.EXPLOSION)) {
-            amount *= 3.5f;
+            amount *= 2f;
         }
         if (source.is(DamageTypes.PLAYER_EXPLOSION)) {
-            amount *= 3.5f;
+            amount *= 2f;
         }
 
         if (source.is(ModDamageTypes.CUSTOM_EXPLOSION)) {

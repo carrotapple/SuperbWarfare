@@ -160,11 +160,10 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
             amount *= 2.5f;
         }
         if (source.is(DamageTypes.EXPLOSION)) {
-            amount *= 2f;
+            amount *= 1.2f;
         }
-
         if (source.is(DamageTypes.PLAYER_EXPLOSION)) {
-            amount *= 2f;
+            amount *= 1.2f;
         }
 
         if (source.is(ModDamageTypes.CUSTOM_EXPLOSION)) {
@@ -177,7 +176,7 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
             amount *= 0.14f;
         }
         if (source.is(ModDamageTypes.LUNGE_MINE)) {
-            amount *= 0.14f;
+            amount *= 0.18f;
         }
         if (source.is(ModDamageTypes.CANNON_FIRE)) {
             amount *= 0.3f;
@@ -360,7 +359,7 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
                     VehicleConfig.BMP_2_CANNON_EXPLOSION_RADIUS.get().floatValue());
 
             smallCannonShell.setPos(worldPosition.x - 1.1 * this.getDeltaMovement().x, worldPosition.y, worldPosition.z - 1.1 * this.getDeltaMovement().z);
-            smallCannonShell.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 22,
+            smallCannonShell.shoot(getBarrelVector(1).x, getBarrelVector(1).y + 0.005f, getBarrelVector(1).z, 15,
                     0.25f);
             this.level().addFreshEntity(smallCannonShell);
 

@@ -154,17 +154,17 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             amount *= 2f;
         }
         if (source.is(DamageTypes.EXPLOSION)) {
-            amount *= 3.5f;
+            amount *= 2f;
         }
         if (source.is(DamageTypes.PLAYER_EXPLOSION)) {
-            amount *= 3.5f;
+            amount *= 2f;
         }
 
         if (source.is(ModDamageTypes.CUSTOM_EXPLOSION)) {
-            amount *= 0.5f;
+            amount *= 1.5f;
         }
         if (source.is(ModDamageTypes.PROJECTILE_BOOM)) {
-            amount *= 0.5f;
+            amount *= 1.5f;
         }
         if (source.is(ModDamageTypes.MINE)) {
             amount *= 0.5f;
