@@ -1,4 +1,4 @@
-// 1.20.1	2025-01-24T23:46:19.2276768	Item Models: superbwarfare
+// 1.20.1	2025-01-27T23:57:54.4907094	Item Models: superbwarfare
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_47_blueprint.json
@@ -114,3 +114,4 @@ fe78719387b06e37de4abe02c808a8f2dba179f8 assets/superbwarfare/models/item/us_che
 01dabedc256e53d58a14f4ba9ce83b839f3a7bdb assets/superbwarfare/models/item/us_helmet_pastg.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/vector_blueprint.json
 7e4ba98653b69bcdc7e9bdbd05d2e8b8b20df293 assets/superbwarfare/models/item/wheel.json
+a2b4b6f79b504888b66681107ce9c8307d1a3abc assets/superbwarfare/models/item/wire_guide_missile.json

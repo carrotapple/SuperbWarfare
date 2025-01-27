@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.entity.projectile.SmallCannonShellEntity;
+import com.atsuishio.superbwarfare.entity.projectile.WgMissileEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
@@ -71,6 +72,7 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
     public static final EntityDataAccessor<Integer> COAX_HEAT = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> AMMO = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> LOADED_COAX_AMMO = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> LOADED_MISSILE = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> WEAPON_TYPE = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> TRACK_L = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> TRACK_R = SynchedEntityData.defineId(Bmp2Entity.class, EntityDataSerializers.FLOAT);
@@ -89,6 +91,7 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
     public float rightWheelRotO;
     public boolean cannotFire;
     public boolean cannotFireCoax;
+    public int reloadCoolDown;
 
     public Bmp2Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.BMP_2.get(), world);
@@ -109,6 +112,7 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
         this.entityData.define(COAX_HEAT, 0);
         this.entityData.define(WEAPON_TYPE, 0);
         this.entityData.define(LOADED_COAX_AMMO, 0);
+        this.entityData.define(LOADED_MISSILE, 0);
         this.entityData.define(TRACK_L, 0f);
         this.entityData.define(TRACK_R, 0f);
     }
@@ -117,12 +121,14 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("LoadedCoaxAmmo", this.entityData.get(LOADED_COAX_AMMO));
+        compound.putInt("LoadedMissile", this.entityData.get(LOADED_MISSILE));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.entityData.set(LOADED_COAX_AMMO, compound.getInt("LoadedCoaxAmmo"));
+        this.entityData.set(LOADED_MISSILE, compound.getInt("LoadedMissile"));
     }
 
     @Override
@@ -250,6 +256,9 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
         }
 
         if (this.level() instanceof ServerLevel) {
+            if (reloadCoolDown > 0) {
+                reloadCoolDown--;
+            }
             if (this.getFirstPassenger() instanceof Player player) {
                 if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.RIFLE_AMMO_BOX.get())).mapToInt(ItemStack::getCount).sum() > 0 && this.getEntityData().get(LOADED_COAX_AMMO) < 500)) {
                     this.entityData.set(LOADED_COAX_AMMO, this.getEntityData().get(LOADED_COAX_AMMO) + 30);
@@ -261,10 +270,23 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
                 }
             }
 
+            if (this.getFirstPassenger() instanceof Player player) {
+                if ((this.getItemStacks().stream().filter(stack -> stack.is(ModItems.WIRE_GUIDE_MISSILE.get())).mapToInt(ItemStack::getCount).sum() > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && reloadCoolDown == 0 && this.getEntityData().get(LOADED_MISSILE) < 1) {
+                    this.entityData.set(LOADED_MISSILE, this.getEntityData().get(LOADED_MISSILE) + 1);
+                    reloadCoolDown = 160;
+                    if (!player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) {
+                        this.getItemStacks().stream().filter(stack -> stack.is(ModItems.WIRE_GUIDE_MISSILE.get())).findFirst().ifPresent(stack -> stack.shrink(1));
+                    }
+                    this.level().playSound(null, this, ModSounds.BMP_MISSILE_RELOAD.get(), this.getSoundSource(), 1, 1);
+                }
+            }
+
             if (this.getEntityData().get(WEAPON_TYPE) == 0) {
                 this.entityData.set(AMMO, this.getItemStacks().stream().filter(stack -> stack.is(ModItems.SMALL_SHELL.get())).mapToInt(ItemStack::getCount).sum());
-            } else {
+            } else if (this.getEntityData().get(WEAPON_TYPE) == 1) {
                 this.entityData.set(AMMO, this.getEntityData().get(LOADED_COAX_AMMO));
+            } else {
+                this.entityData.set(AMMO, this.getEntityData().get(LOADED_MISSILE));
             }
         }
 
@@ -369,7 +391,7 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
 
             if (!player.level().isClientSide) {
                 if (player instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.playSound(ModSounds.LAV_CANNON_FIRE_3P.get(), 4, pitch);
+                    serverPlayer.playSound(ModSounds.BMP_CANNON_FIRE_3P.get(), 4, pitch);
                     serverPlayer.playSound(ModSounds.LAV_CANNON_FAR.get(), 12, pitch);
                     serverPlayer.playSound(ModSounds.LAV_CANNON_VERYFAR.get(), 24, pitch);
                 }
@@ -424,6 +446,27 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
                     serverPlayer.playSound(ModSounds.M_60_VERYFAR.get(), 12, 1);
                 }
             }
+        } else if (entityData.get(WEAPON_TYPE) == 2 && this.getEntityData().get(LOADED_MISSILE) > 0) {
+            Matrix4f transformT = getBarrelTransform();
+            Vector4f worldPosition = transformPosition(transformT, 0, 1, 0);
+
+            WgMissileEntity wgMissileEntity = new WgMissileEntity(player, player.level(),
+                    400,
+                    60,
+                    6);
+
+            wgMissileEntity.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+            wgMissileEntity.shoot(getBarrelVector(1).x, 0, getBarrelVector(1).z, 2f, 0f);
+            player.level().addFreshEntity(wgMissileEntity);
+
+            if (!player.level().isClientSide) {
+                if (player instanceof ServerPlayer serverPlayer) {
+                    serverPlayer.playSound(ModSounds.BMP_MISSILE_FIRE_3P.get(), 6, 1);
+                }
+            }
+
+            this.entityData.set(LOADED_MISSILE, this.getEntityData().get(LOADED_MISSILE) - 1);
+            reloadCoolDown = 160;
         }
     }
 
@@ -581,7 +624,7 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
 
     @Override
     public SoundEvent getEngineSound() {
-        return ModSounds.LAV_ENGINE.get();
+        return ModSounds.BMP_ENGINE.get();
     }
 
     @Override
@@ -737,6 +780,8 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
             return (this.entityData.get(AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFire;
         } else if (entityData.get(WEAPON_TYPE) == 1) {
             return (this.entityData.get(LOADED_COAX_AMMO) > 0 || player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get()))) && !cannotFireCoax;
+        } else if (entityData.get(WEAPON_TYPE) == 2) {
+            return (this.entityData.get(LOADED_MISSILE) > 0);
         }
         return false;
     }
@@ -767,8 +812,11 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
             this.level().playSound(null, this, ModSounds.INTO_MISSILE.get(), this.getSoundSource(), 1, 1);
             entityData.set(WEAPON_TYPE, 1);
         } else if (entityData.get(WEAPON_TYPE) == 1) {
-            entityData.set(WEAPON_TYPE, 0);
+            entityData.set(WEAPON_TYPE, 2);
             this.level().playSound(null, this, ModSounds.INTO_CANNON.get(), this.getSoundSource(), 1, 1);
+        } else if (entityData.get(WEAPON_TYPE) == 2) {
+            entityData.set(WEAPON_TYPE, 0);
+            this.level().playSound(null, this, ModSounds.INTO_MISSILE.get(), this.getSoundSource(), 1, 1);
         }
     }
 

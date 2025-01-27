@@ -70,6 +70,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleItem(ModItems.BEAM_TEST);
         simpleItem(ModItems.HEAVY_AMMO);
         simpleItem(ModItems.ROCKET_70);
+        simpleItem(ModItems.WIRE_GUIDE_MISSILE);
         simpleItem(ModItems.SMALL_SHELL);
 
         simpleItem(ModItems.TUNGSTEN_ROD);

@@ -284,9 +284,11 @@ public class VehicleHudOverlay {
                     if (multiWeaponVehicle.getWeaponType() == 0) {
                         double heat = 1 - bmp2.getEntityData().get(HEAT) / 100.0F;
                         guiGraphics.drawString(mc.font, Component.literal(" 30MM 2A42 " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : bmp2.getAmmoCount(player))), w / 2 - 33, h - 65, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
-                    } else {
+                    } else if (multiWeaponVehicle.getWeaponType() == 1) {
                         double heat = 1 - bmp2.getEntityData().get(COAX_HEAT) / 100.0F;
                         guiGraphics.drawString(mc.font, Component.literal(" 7.62MM ПКТ " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : bmp2.getAmmoCount(player))), w / 2 - 33, h - 65, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
+                    } else {
+                        guiGraphics.drawString(mc.font, Component.literal("    9M113  " + bmp2.getAmmoCount(player)), w / 2 - 33, h - 65, 0x66FF00, false);
                     }
 
                 }
@@ -328,10 +330,12 @@ public class VehicleHudOverlay {
                     if (multiWeaponVehicle instanceof Bmp2Entity bmp201) {
                         if (multiWeaponVehicle.getWeaponType() == 0) {
                             double heat = bmp201.getEntityData().get(HEAT) / 100.0F;
-                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(" 30MM 2A42 " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : bmp201.getAmmoCount(player))), 30, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
-                        } else {
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("30MM 2A42 " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : bmp201.getAmmoCount(player))), 30, -9, Mth.hsvToRgb(0F, (float) heat, 1.0F), false);
+                        } else if (multiWeaponVehicle.getWeaponType() == 1) {
                             double heat2 = bmp201.getEntityData().get(COAX_HEAT) / 100.0F;
-                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(" 7.62MM ПКТ " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : bmp201.getAmmoCount(player))), 30, -9, Mth.hsvToRgb(0F, (float) heat2, 1.0F), false);
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("7.62MM ПКТ " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : bmp201.getAmmoCount(player))), 30, -9, Mth.hsvToRgb(0F, (float) heat2, 1.0F), false);
+                        } else {
+                            guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("9M113 " + bmp201.getAmmoCount(player)), 30, -9, -1, false);
                         }
                     }
 

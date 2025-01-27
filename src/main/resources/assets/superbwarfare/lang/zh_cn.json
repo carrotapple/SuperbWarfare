@@ -156,6 +156,7 @@
   "item.superbwarfare.lunge_mine": "突刺爆雷",
   "item.superbwarfare.rocket_70": "70mm火箭弹",
   "item.superbwarfare.small_shell": "小口径炮弹",
+  "item.superbwarfare.wire_guide_missile": "线控导弹",
 
   "block.superbwarfare.container": "集装箱",
   "des.superbwarfare.container.empty": "空的",
@@ -395,10 +396,12 @@
   "entity.superbwarfare.speedboat": "快艇",
   "entity.superbwarfare.wheel_chair": "轮椅",
   "entity.superbwarfare.ah_6": "AH-6 小鸟直升机",
-  "entity.superbwarfare.lav_150": "LAV-150 Commando",
+  "entity.superbwarfare.lav_150": "LAV-150 轮式步兵战车",
   "entity.minecraft.villager.superbwarfare.armory": "军械师",
   "entity.superbwarfare.tom_6": "汤姆 F6F",
   "entity.superbwarfare.melon_bomb": "西瓜航弹",
+  "entity.superbwarfare.bmp_2": "BMP-2 履带式步兵战车",
+  "entity.superbwarfare.wg_missile": "线控导弹",
 
   "key.categories.superbwarfare": "卓越前线",
   "key.superbwarfare.hold_zoom": "瞄准(按住)",

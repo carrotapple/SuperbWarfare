@@ -2757,5 +2757,59 @@
         "name": "superbwarfare:lav/coax_fire_1p"
       }
     ]
+  },
+  "bmp_fire_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:bmp/bmp_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "bmp_fire_3p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:bmp/bmp_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "bmp_engine": {
+    "sounds": [
+      {
+        "name": "superbwarfare:bmp/bmp_engine"
+      }
+    ]
+  },
+  "bmp_engine_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:bmp/bmp_engine_1p"
+      }
+    ]
+  },
+  "bmp_missile_fire_1p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:bmp/bmp_missile_fire_1p",
+        "stream": false
+      }
+    ]
+  },
+  "bmp_missile_fire_3p": {
+    "sounds": [
+      {
+        "name": "superbwarfare:bmp/bmp_missile_fire_3p",
+        "stream": false
+      }
+    ]
+  },
+  "bmp_missile_reload": {
+    "sounds": [
+      {
+        "name": "superbwarfare:bmp/bmp_missile_reload",
+        "stream": false
+      }
+    ]
   }
 }

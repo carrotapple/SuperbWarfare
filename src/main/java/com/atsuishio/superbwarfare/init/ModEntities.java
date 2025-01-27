@@ -84,6 +84,8 @@ public class ModEntities {
             EntityType.Builder.<MelonBombEntity>of(MelonBombEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(1).setCustomClientFactory(MelonBombEntity::new).sized(1f, 1f));
     public static final RegistryObject<EntityType<Bmp2Entity>> BMP_2 = register("bmp_2",
             EntityType.Builder.<Bmp2Entity>of(Bmp2Entity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(Bmp2Entity::new).fireImmune().sized(4f, 3f));
+    public static final RegistryObject<EntityType<WgMissileEntity>> WG_MISSILE = register("wg_missile",
+            EntityType.Builder.<WgMissileEntity>of(WgMissileEntity::new, MobCategory.MISC).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).setCustomClientFactory(WgMissileEntity::new).fireImmune().sized(0.5f, 0.5f));
 
     private static <T extends Entity> RegistryObject<EntityType<T>> register(String name, EntityType.Builder<T> entityTypeBuilder) {
         return REGISTRY.register(name, () -> entityTypeBuilder.build(name));

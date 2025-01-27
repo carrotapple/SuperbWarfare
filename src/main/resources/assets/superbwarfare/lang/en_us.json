@@ -156,6 +156,7 @@
   "item.superbwarfare.lunge_mine": "Lunge Mine",
   "item.superbwarfare.rocket_70": "70mm Rocket",
   "item.superbwarfare.small_shell": "Small Caliber Shells",
+  "item.superbwarfare.wire_guide_missile": "Wire Guide Missile",
 
   "block.superbwarfare.container": "Container",
   "des.superbwarfare.container.empty": "空的",
@@ -401,6 +402,8 @@
   "entity.minecraft.villager.superbwarfare.armory": "Armory",
   "entity.superbwarfare.tom_6": "Tom F6F",
   "entity.superbwarfare.melon_bomb": "Melon Bomb",
+  "entity.superbwarfare.bmp_2": "BMP-2",
+  "entity.superbwarfare.wg_missile": "Wire Guide Missile",
 
   "key.categories.superbwarfare": "Superb Warfare",
   "key.superbwarfare.hold_zoom": "Zoom(Hold)",

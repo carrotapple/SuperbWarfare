@@ -1,0 +1,216 @@
+package com.atsuishio.superbwarfare.entity.projectile;
+
+import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.entity.AnimatedEntity;
+import com.atsuishio.superbwarfare.init.ModDamageTypes;
+import com.atsuishio.superbwarfare.init.ModEntities;
+import com.atsuishio.superbwarfare.init.ModItems;
+import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
+import com.atsuishio.superbwarfare.tools.CustomExplosion;
+import com.atsuishio.superbwarfare.tools.ParticleTool;
+import com.atsuishio.superbwarfare.tools.VectorTool;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.PlayMessages;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
+
+import javax.annotation.Nullable;
+
+public class WgMissileEntity extends ThrowableItemProjectile implements GeoEntity, AnimatedEntity {
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    public String animationProcedure = "empty";
+
+    private float damage = 250f;
+    private float explosion_damage = 200f;
+    private float explosion_radius = 10f;
+
+    public WgMissileEntity(EntityType<? extends WgMissileEntity> type, Level world) {
+        super(type, world);
+        this.noCulling = true;
+    }
+
+    public WgMissileEntity(LivingEntity entity, Level level, float damage, float explosion_damage, float explosion_radius) {
+        super(ModEntities.WG_MISSILE.get(), entity, level);
+        this.damage = damage;
+        this.explosion_damage = explosion_damage;
+        this.explosion_radius = explosion_radius;
+    }
+
+    public WgMissileEntity(PlayMessages.SpawnEntity spawnEntity, Level level) {
+        this(ModEntities.WG_MISSILE.get(), level);
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    protected Item getDefaultItem() {
+        return ModItems.ROCKET.get();
+    }
+
+    @Override
+    public boolean shouldRenderAtSqrDistance(double pDistance) {
+        return true;
+    }
+
+    @Override
+    protected void onHitEntity(EntityHitResult result) {
+        Entity entity = result.getEntity();
+        if (this.tickCount < 1) return;
+        if (entity == this.getOwner() || entity == this.getVehicle()) return;
+
+        if (this.getOwner() instanceof LivingEntity living) {
+            if (!living.level().isClientSide() && living instanceof ServerPlayer player) {
+                living.level().playSound(null, living.blockPosition(), ModSounds.INDICATION.get(), SoundSource.VOICE, 1, 1);
+
+                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(0, 5));
+            }
+        }
+
+        entity.hurt(ModDamageTypes.causeCannonFireDamage(this.level().registryAccess(), this, this.getOwner()), this.damage);
+
+        if (entity instanceof LivingEntity) {
+            entity.invulnerableTime = 0;
+        }
+
+        if (this.tickCount > 2) {
+            if (this.level() instanceof ServerLevel) {
+                causeMissileExplode(this,
+                        ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
+                        entity, this.explosion_damage, this.explosion_radius);
+            }
+        }
+
+        this.discard();
+    }
+
+    @Override
+    public void onHitBlock(BlockHitResult blockHitResult) {
+        super.onHitBlock(blockHitResult);
+        if (this.level() instanceof ServerLevel) {
+            causeMissileExplode(this,
+                    ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
+                    this, this.explosion_damage, this.explosion_radius);
+        }
+        this.discard();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        if (this.tickCount == 1) {
+            if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.CLOUD, this.xo, this.yo, this.zo, 15, 0.8, 0.8, 0.8, 0.01, true);
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.xo, this.yo, this.zo, 10, 0.8, 0.8, 0.8, 0.01, true);
+            }
+        }
+        if (this.tickCount > 2) {
+            this.setDeltaMovement(this.getDeltaMovement().multiply(1.03, 1.03, 1.03));
+
+            if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
+                ParticleTool.sendParticle(serverLevel, ParticleTypes.SMOKE, this.xo, this.yo, this.zo, 1, 0, 0, 0, 0, true);
+            }
+        }
+
+        if (tickCount > 5 && this.getOwner() != null) {
+            Entity shooter = this.getOwner();
+            Vec3 lookVec = shooter.getViewVector(1).normalize();
+            Vec3 toVec = shooter.getEyePosition().vectorTo(this.getEyePosition()).normalize();
+            Vec3 addVec = lookVec.add(toVec.scale(-0.85)).normalize();
+            double angle = Mth.abs((float) VectorTool.calculateAngle(lookVec, toVec));
+            setDeltaMovement(getDeltaMovement().add(addVec.scale(Math.min(0.1 + 0.15 * angle, tickCount < 15 ? 0.04 : 0.2))));
+
+
+            // 控制速度
+            if (this.getDeltaMovement().length() < 2.4) {
+                this.setDeltaMovement(this.getDeltaMovement().multiply(1.06, 1.06, 1.06));
+            }
+
+            if (this.getDeltaMovement().length() > 2.8) {
+                this.setDeltaMovement(this.getDeltaMovement().multiply(0.9, 0.9, 0.9));
+            }
+
+            this.setDeltaMovement(this.getDeltaMovement().multiply(0.96, 0.96, 0.96));
+        }
+
+        if (this.tickCount > 300 || this.isInWater()) {
+            if (this.level() instanceof ServerLevel) {
+                causeMissileExplode(this,
+                        ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
+                        this, this.explosion_damage, this.explosion_radius);
+            }
+            this.discard();
+        }
+    }
+
+    public static void causeMissileExplode(ThrowableItemProjectile projectile, @Nullable DamageSource source, Entity target, float damage, float radius) {
+        CustomExplosion explosion = new CustomExplosion(projectile.level(), projectile, source, damage,
+                target.getX(), target.getEyeY(), target.getZ(), radius, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1.25f);
+        explosion.explode();
+        net.minecraftforge.event.ForgeEventFactory.onExplosionStart(projectile.level(), explosion);
+        explosion.finalizeExplosion(false);
+        ParticleTool.spawnMediumExplosionParticles(projectile.level(), projectile.position());
+        projectile.discard();
+    }
+
+    private PlayState movementPredicate(AnimationState<WgMissileEntity> event) {
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.jvm.idle"));
+    }
+
+    @Override
+    protected float getGravity() {
+        return 0;
+    }
+
+    public String getSyncedAnimation() {
+        return null;
+    }
+
+    public void setAnimation(String animation) {
+    }
+
+    @Override
+    public void setAnimationProcedure(String procedure) {
+        this.animationProcedure = procedure;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        data.add(new AnimationController<>(this, "movement", 0, this::movementPredicate));
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
+    }
+}
