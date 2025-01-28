@@ -9,6 +9,7 @@ import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -30,6 +31,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
@@ -78,6 +80,11 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.entityData.set(MELON, compound.getBoolean("Melon"));
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pPos, BlockState pState) {
+        this.playSound(ModSounds.WHEEL_STEP.get(), (float) (getDeltaMovement().length() * 0.5), random.nextFloat() * 0.1f + 1f);
     }
 
     @Override
@@ -312,7 +319,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
             if (entityData.get(MELON)) {
                 CustomExplosion explosion = new CustomExplosion(this.level(), this,
                         ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, attacker), VehicleConfig.TOM_6_BOMB_EXPLOSION_DAMAGE.get(),
-                        this.getX(), this.getY(), this.getZ(), VehicleConfig.TOM_6_BOMB_EXPLOSION_DAMAGE.get(), ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                        this.getX(), this.getY(), this.getZ(), VehicleConfig.TOM_6_BOMB_EXPLOSION_RADIUS.get().floatValue(), ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
                 explosion.explode();
                 ForgeEventFactory.onExplosionStart(this.level(), explosion);
                 explosion.finalizeExplosion(false);

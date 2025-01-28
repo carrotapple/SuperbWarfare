@@ -60,7 +60,7 @@ public class ClientSoundHandler {
                 if (e instanceof Lav150Entity lav150) {
                     distanceReduce = (float) Math.max((1 - distance / 64), 0);
                     if (player.getVehicle() == lav150) {
-                        player.playSound(ModSounds.LAV_ENGINE_1P.get(), 2 * (Mth.abs(mobileVehicle.getEntityData().get(POWER)) - 0.006f), (float) ((2 * Math.random() - 1) * 0.1f + 0.95f));
+                        player.playSound(ModSounds.LAV_ENGINE_1P.get(), 1 * (Mth.abs(mobileVehicle.getEntityData().get(POWER)) - 0.006f), (float) ((2 * Math.random() - 1) * 0.1f + 0.95f));
                     } else {
                         player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), 5 * (Mth.abs(mobileVehicle.getEntityData().get(POWER)) - 0.006f) * distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.1f + 1), false);
                     }
@@ -68,7 +68,7 @@ public class ClientSoundHandler {
                 if (e instanceof Bmp2Entity bmp2) {
                     distanceReduce = (float) Math.max((1 - distance / 64), 0);
                     if (player.getVehicle() == bmp2) {
-                        player.playSound(ModSounds.BMP_ENGINE_1P.get(), 2 * (Mth.abs(mobileVehicle.getEntityData().get(POWER)) + Mth.abs(0.08f * mobileVehicle.getEntityData().get(DELTA_ROT)) - 0.004f), (float) ((2 * Math.random() - 1) * 0.1f + 0.95f));
+                        player.playSound(ModSounds.BMP_ENGINE_1P.get(), 1 * (Mth.abs(mobileVehicle.getEntityData().get(POWER)) + Mth.abs(0.08f * mobileVehicle.getEntityData().get(DELTA_ROT)) - 0.004f), (float) ((2 * Math.random() - 1) * 0.1f + 0.95f));
                     } else {
                         player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), 5 * (Mth.abs(mobileVehicle.getEntityData().get(POWER)) + Mth.abs(0.08f * mobileVehicle.getEntityData().get(DELTA_ROT)) - 0.004f) * distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.1f + 1), false);
                     }

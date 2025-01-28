@@ -1,4 +1,4 @@
-// 1.20.1	2025-01-27T23:57:54.4907094	Item Models: superbwarfare
+// 1.20.1	2025-01-28T15:44:32.1906572	Item Models: superbwarfare
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/aa_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_12_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/ak_47_blueprint.json
@@ -54,6 +54,7 @@ f66c351b4843ad4d4e086ccfb7d4d0221227d196 assets/superbwarfare/models/item/legend
 ec76dc1a79f4c0e502fee53be8aa8e04420845fc assets/superbwarfare/models/item/light_armament_module.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/m2hb_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/marlin_blueprint.json
+0033cd03b0203cd3fa071fb5354c74d33bc1afa8 assets/superbwarfare/models/item/medium_armament_module.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/minigun_blueprint.json
 c206cd345f459733399e0be4692586849ef0aac2 assets/superbwarfare/models/item/missile_engine.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/mk_14_blueprint.json
@@ -106,6 +107,7 @@ b4e009177af3af6ad6dda54e3e2fed43dc243ff2 assets/superbwarfare/models/item/steel_
 dbba3ca532b6aa949c84ea8b3f10fe3a0bf472e7 assets/superbwarfare/models/item/target_deployer.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/taser_blueprint.json
 13ca8d5676888ff51f3308d88e4bf67691fa34f8 assets/superbwarfare/models/item/trachelium_blueprint.json
+a6d50c9f0c57dc33828a35f45f3f9ca59725c1a1 assets/superbwarfare/models/item/track.json
 cae31335c134b57962bd7b318d02c71655ef5479 assets/superbwarfare/models/item/transcript.json
 f391a7df36c738dfaeb2ab82ac077e3442a59b98 assets/superbwarfare/models/item/tungsten_ingot.json
 b4e6c184478f8dc764fb7071ac5e30939cd01d9d assets/superbwarfare/models/item/tungsten_powder.json

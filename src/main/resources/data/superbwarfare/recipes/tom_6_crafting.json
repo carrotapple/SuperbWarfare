@@ -4,7 +4,7 @@
   "pattern": [
     "aaa",
     "aba",
-    "cdc"
+    " c "
   ],
   "key": {
     "a": {
@@ -14,10 +14,7 @@
       "item": "superbwarfare:cell"
     },
     "c": {
-      "item": "superbwarfare:wheel"
-    },
-    "d": {
-      "item": "minecraft:dropper"
+      "item": "minecraft:minecart"
     }
   },
   "result": {

@@ -109,8 +109,6 @@ public class WgMissileEntity extends ThrowableItemProjectile implements GeoEntit
                         entity, this.explosion_damage, this.explosion_radius);
             }
         }
-
-        this.discard();
     }
 
     @Override
@@ -121,7 +119,6 @@ public class WgMissileEntity extends ThrowableItemProjectile implements GeoEntit
                     ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), this, this.getOwner()),
                     this, this.explosion_damage, this.explosion_radius);
         }
-        this.discard();
     }
 
     @Override
@@ -148,15 +145,15 @@ public class WgMissileEntity extends ThrowableItemProjectile implements GeoEntit
             Vec3 toVec = shooter.getEyePosition().vectorTo(this.getEyePosition()).normalize();
             Vec3 addVec = lookVec.add(toVec.scale(-0.85)).normalize();
             double angle = Mth.abs((float) VectorTool.calculateAngle(lookVec, toVec));
-            setDeltaMovement(getDeltaMovement().add(addVec.scale(Math.min(0.1 + 0.15 * angle, tickCount < 15 ? 0.04 : 0.2))));
+            setDeltaMovement(getDeltaMovement().add(addVec.scale(Math.min(0.1 + 0.15 * angle + distanceTo(getOwner()) * 0.003, tickCount < 15 ? 0.04 : 0.4))));
 
 
             // 控制速度
-            if (this.getDeltaMovement().length() < 2.1) {
+            if (this.getDeltaMovement().length() < 2.8) {
                 this.setDeltaMovement(this.getDeltaMovement().multiply(1.06, 1.06, 1.06));
             }
 
-            if (this.getDeltaMovement().length() > 2.4) {
+            if (this.getDeltaMovement().length() > 3) {
                 this.setDeltaMovement(this.getDeltaMovement().multiply(0.9, 0.9, 0.9));
             }
 

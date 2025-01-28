@@ -565,6 +565,6 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
 
     @Override
     public int zoomFov() {
-        return 3;
+        return 1;
     }
 }

@@ -201,6 +201,11 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
         return true;
     }
 
+    @Override
+    protected void playStepSound(BlockPos pPos, BlockState pState) {
+        this.playSound(ModSounds.BMP_STEP.get(), Mth.abs(this.entityData.get(POWER)) * 8, random.nextFloat() * 0.15f + 1f);
+    }
+
     public double getSubmergedHeight(Entity entity) {
         for (FluidType fluidType : ForgeRegistries.FLUID_TYPES.get().getValues()) {
             if (entity.level().getFluidState(entity.blockPosition()).getFluidType() == fluidType)
@@ -319,7 +324,7 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
             this.setDeltaMovement(this.getDeltaMovement().multiply(f0, 0.85, f0));
 
         } else if (this.isInWater()) {
-            float f1 = 0.74f + 0.09f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
+            float f1 = 0.61f + 0.08f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90;
             this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).normalize().scale(0.04 * this.getDeltaMovement().horizontalDistance())));
             this.setDeltaMovement(this.getDeltaMovement().multiply(f1, 0.85, f1));
         } else {

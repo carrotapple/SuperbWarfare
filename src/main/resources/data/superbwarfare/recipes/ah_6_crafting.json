@@ -20,7 +20,7 @@
       "item": "minecraft:compass"
     },
     "e": {
-      "item":"superbwarfare:steel_block"
+      "tag": "forge:storage_blocks/steel"
     },
     "f": {
       "item": "minecraft:chest"

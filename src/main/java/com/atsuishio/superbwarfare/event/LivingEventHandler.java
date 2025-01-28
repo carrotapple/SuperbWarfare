@@ -57,7 +57,13 @@ public class LivingEventHandler {
     public static void onEntityAttacked(LivingAttackEvent event) {
         if (!event.getSource().is(ModDamageTypes.VEHICLE_EXPLOSION) && event.getEntity().getVehicle() instanceof VehicleEntity vehicle) {
             if (event.getEntity().getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.hidePassenger()) {
-                vehicle.hurt(event.getSource(),event.getAmount());
+                if (!(event.getSource().is(DamageTypes.EXPLOSION)
+                        || event.getSource().is(DamageTypes.PLAYER_EXPLOSION)
+                        || event.getSource().is(ModDamageTypes.CUSTOM_EXPLOSION)
+                        || event.getSource().is(ModDamageTypes.MINE)
+                        || event.getSource().is(ModDamageTypes.PROJECTILE_BOOM))) {
+                    vehicle.hurt(event.getSource(),event.getAmount());
+                }
                 event.setCanceled(true);
             }
         }
@@ -103,7 +109,14 @@ public class LivingEventHandler {
                         event.setCanceled(true);
                     }
                 } else {
-                    vehicle.hurt(event.getSource(),0.7f * event.getAmount());
+                    if (!(event.getSource().is(DamageTypes.EXPLOSION)
+                            || event.getSource().is(DamageTypes.PLAYER_EXPLOSION)
+                            || event.getSource().is(ModDamageTypes.CUSTOM_EXPLOSION)
+                            || event.getSource().is(ModDamageTypes.MINE)
+                            || event.getSource().is(ModDamageTypes.PROJECTILE_BOOM))) {
+                        vehicle.hurt(event.getSource(),0.7f * event.getAmount());
+                    }
+
                     event.setAmount(0.3f * event.getAmount());
                 }
             }

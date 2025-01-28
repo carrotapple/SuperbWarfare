@@ -2811,5 +2811,21 @@
         "stream": false
       }
     ]
+  },
+  "bmp_step": {
+    "sounds": [
+      {
+        "name": "superbwarfare:bmp/bmp_step",
+        "stream": false
+      }
+    ]
+  },
+  "wheel_step": {
+    "sounds": [
+      {
+        "name": "superbwarfare:wheel_step",
+        "stream": false
+      }
+    ]
   }
 }

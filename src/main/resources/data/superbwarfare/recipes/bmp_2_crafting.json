@@ -17,20 +17,20 @@
       "tag": "forge:storage_blocks/steel"
     },
     "f": {
-      "item": "minecraft:chest"
+      "item": "superbwarfare:medium_armament_module"
     },
     "g": {
       "item": "superbwarfare:large_motor"
     },
     "h": {
-      "item": "superbwarfare:wheel"
+      "item": "superbwarfare:track"
     }
   },
   "result": {
     "item": "superbwarfare:container",
     "nbt": {
       "BlockEntityTag": {
-        "EntityType": "superbwarfare:lav_150"
+        "EntityType": "superbwarfare:bmp_2"
       }
     }
   }

@@ -126,6 +126,7 @@ public class ModItems {
     public static final RegistryObject<Item> MOTOR = ITEMS.register("motor", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> LARGE_MOTOR = ITEMS.register("large_motor", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> WHEEL = ITEMS.register("wheel", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> TRACK = ITEMS.register("track", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> DRONE = ITEMS.register("drone", Drone::new);
 
     public static final RegistryObject<Item> MONITOR = ITEMS.register("monitor", Monitor::new);
@@ -233,6 +234,7 @@ public class ModItems {
     public static final RegistryObject<Item> MLE_1934_BLUEPRINT = ITEMS.register("mle_1934_blueprint", () -> new BlueprintItem(RarityTool.LEGENDARY));
     public static final RegistryObject<Item> ANNIHILATOR_BLUEPRINT = ITEMS.register("annihilator_blueprint", () -> new BlueprintItem(RarityTool.LEGENDARY));
     public static final RegistryObject<Item> LIGHT_ARMAMENT_MODULE = ITEMS.register("light_armament_module", () -> new BlueprintItem(Rarity.RARE));
+    public static final RegistryObject<Item> MEDIUM_ARMAMENT_MODULE = ITEMS.register("medium_armament_module", () -> new BlueprintItem(Rarity.EPIC));
 
     /**
      * Block

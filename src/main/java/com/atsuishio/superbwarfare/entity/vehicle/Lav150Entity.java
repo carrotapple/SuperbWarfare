@@ -124,6 +124,11 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
     }
 
     @Override
+    protected void playStepSound(BlockPos pPos, BlockState pState) {
+        this.playSound(ModSounds.BMP_STEP.get(), Mth.abs(this.entityData.get(POWER)) * 3, random.nextFloat() * 0.15f + 1.05f);
+    }
+
+    @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
