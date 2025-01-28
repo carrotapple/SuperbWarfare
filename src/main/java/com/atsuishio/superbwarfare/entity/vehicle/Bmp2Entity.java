@@ -1,6 +1,7 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.ModUtils;
+import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
@@ -455,9 +456,9 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
             Vector4f worldPosition = transformPosition(transformT, 0, 1, 0);
 
             WgMissileEntity wgMissileEntity = new WgMissileEntity(player, player.level(),
-                    500,
-                    60,
-                    6);
+                    ExplosionConfig.WIRE_GUIDE_MISSILE_DAMAGE.get(),
+                    ExplosionConfig.WIRE_GUIDE_MISSILE_EXPLOSION_DAMAGE.get(),
+                    ExplosionConfig.WIRE_GUIDE_MISSILE_EXPLOSION_RADIUS.get());
 
             wgMissileEntity.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
             wgMissileEntity.shoot(getBarrelVector(1).x, 0, getBarrelVector(1).z, 2f, 0f);

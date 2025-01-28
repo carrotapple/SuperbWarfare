@@ -222,10 +222,10 @@ public class VehicleConfig {
         builder.comment("The cannon damage of Bmp_2");
         BMP_2_CANNON_DAMAGE = builder.defineInRange("bmp_2_cannon_damage", 55, 1, 10000000);
 
-        builder.comment("The rocket explosion damage of Bmp_2");
+        builder.comment("The cannon explosion damage of Bmp_2");
         BMP_2_CANNON_EXPLOSION_DAMAGE = builder.defineInRange("bmp_2_cannon_explosion_damage", 15, 1, 10000000);
 
-        builder.comment("The rocket explosion radius of Bmp_2");
+        builder.comment("The cannon explosion radius of Bmp_2");
         BMP_2_CANNON_EXPLOSION_RADIUS = builder.defineInRange("bmp_2_cannon_explosion_radius", 3.2d, 1d, 10000000d);
 
         builder.pop();

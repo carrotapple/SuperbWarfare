@@ -24,6 +24,10 @@ public class ExplosionConfig {
     public static ForgeConfigSpec.IntValue C4_EXPLOSION_DAMAGE;
     public static ForgeConfigSpec.IntValue C4_EXPLOSION_RADIUS;
 
+    public static ForgeConfigSpec.IntValue WIRE_GUIDE_MISSILE_DAMAGE;
+    public static ForgeConfigSpec.IntValue WIRE_GUIDE_MISSILE_EXPLOSION_DAMAGE;
+    public static ForgeConfigSpec.IntValue WIRE_GUIDE_MISSILE_EXPLOSION_RADIUS;
+
     public static void init(ForgeConfigSpec.Builder builder) {
         builder.push("explosion");
 
@@ -91,6 +95,19 @@ public class ExplosionConfig {
 
         builder.comment("The explosion radius of C4");
         C4_EXPLOSION_RADIUS = builder.defineInRange("c4_explosion_radius", 14, 1, Integer.MAX_VALUE);
+
+        builder.pop();
+
+        builder.push("Wire_Guide_Missile");
+
+        builder.comment("The damage of wire guide missile");
+        WIRE_GUIDE_MISSILE_DAMAGE = builder.defineInRange("wire_guide_missile_damage", 500, 1, Integer.MAX_VALUE);
+
+        builder.comment("The explosion damage of wire guide missile");
+        WIRE_GUIDE_MISSILE_EXPLOSION_DAMAGE = builder.defineInRange("wire_guide_missile_explosion_damage", 60, 1, Integer.MAX_VALUE);
+
+        builder.comment("The explosion radius of wre guide missile");
+        WIRE_GUIDE_MISSILE_EXPLOSION_RADIUS = builder.defineInRange("wire_guide_missile_explosion_radius", 6, 1, Integer.MAX_VALUE);
 
         builder.pop();
     }

@@ -439,6 +439,10 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             Vector4f worldPosition = transformPosition(transform, x, y, z);
             passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
             callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
+        } else if (i == 1) {
+            Vector4f worldPosition = transformPosition(transform, -x, y, z);
+            passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+            callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
         }
 
         if (passenger != this.getFirstPassenger()) {
