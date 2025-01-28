@@ -311,8 +311,8 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
         if (level() instanceof ServerLevel) {
             if (entityData.get(MELON)) {
                 CustomExplosion explosion = new CustomExplosion(this.level(), this,
-                        ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, attacker), 1100.0f,
-                        this.getX(), this.getY(), this.getZ(), 16f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                        ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, attacker), VehicleConfig.TOM_6_BOMB_EXPLOSION_DAMAGE.get(),
+                        this.getX(), this.getY(), this.getZ(), VehicleConfig.TOM_6_BOMB_EXPLOSION_DAMAGE.get(), ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
                 explosion.explode();
                 ForgeEventFactory.onExplosionStart(this.level(), explosion);
                 explosion.finalizeExplosion(false);
