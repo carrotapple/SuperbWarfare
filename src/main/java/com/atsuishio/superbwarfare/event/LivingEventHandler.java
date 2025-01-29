@@ -7,6 +7,7 @@ import com.atsuishio.superbwarfare.config.common.GameplayConfig;
 import com.atsuishio.superbwarfare.entity.ICustomKnockback;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.ContainerMobileEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.atsuishio.superbwarfare.init.*;
@@ -38,11 +39,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.vehicle.ContainerEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
@@ -731,6 +732,17 @@ public class LivingEventHandler {
     }
 
     @SubscribeEvent
+    public static void onPickup(EntityItemPickupEvent event) {
+        if (event.getEntity().getVehicle() instanceof ContainerMobileEntity containerMobileEntity) {
+            var pickUp = event.getItem();
+            if (!containerMobileEntity.level().isClientSide) {
+                HopperBlockEntity.addItem(containerMobileEntity, pickUp);
+            }
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
     public static void onLivingDrops(LivingDropsEvent event) {
         DamageSource source = event.getSource();
         if (source == null) return;
@@ -738,18 +750,16 @@ public class LivingEventHandler {
         if (!(sourceEntity instanceof Player player)) return;
         ItemStack stack = player.getMainHandItem();
 
-        if (sourceEntity.getVehicle() instanceof IArmedVehicleEntity vehicle && source.is(ModDamageTypes.VEHICLE_STRIKE)) {
+        if (player.getVehicle() instanceof ContainerMobileEntity containerMobileEntity && source.is(ModDamageTypes.VEHICLE_STRIKE)) {
             var drops = event.getDrops();
-            if (vehicle instanceof ContainerEntity containerEntity) {
-                drops.forEach(itemEntity -> {
-                    ItemStack item = itemEntity.getItem();
-                    if (!HopperBlockEntity.addItem(containerEntity, itemEntity)) {
-                        player.drop(item, false);
-                    }
-                });
-                event.setCanceled(true);
-                return;
-            }
+            drops.forEach(itemEntity -> {
+                ItemStack item = itemEntity.getItem();
+                if (!HopperBlockEntity.addItem(containerMobileEntity, itemEntity)) {
+                    player.drop(item, false);
+                }
+            });
+            event.setCanceled(true);
+            return;
         }
 
         if (stack.is(ModTags.Items.GUN) && PerkHelper.getItemPerkLevel(ModPerks.POWERFUL_ATTRACTION.get(), stack) > 0) {
@@ -768,6 +778,13 @@ public class LivingEventHandler {
     public static void onLivingExperienceDrop(LivingExperienceDropEvent event) {
         Player player = event.getAttackingPlayer();
         if (player == null) return;
+
+        if (player.getVehicle() instanceof IArmedVehicleEntity) {
+            player.giveExperiencePoints(event.getDroppedExperience());
+            event.setCanceled(true);
+            return;
+        }
+
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModTags.Items.GUN)) return;
 
