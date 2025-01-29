@@ -1,7 +1,5 @@
 package com.atsuishio.superbwarfare.network.message;
 
-import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.MultiWeaponVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -127,10 +125,6 @@ public class FireModeMessage {
                     GunsTool.setGunBooleanTag(stack, "NeedBoltAction", true);
                 }
             }
-            return;
-        }
-        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle instanceof MultiWeaponVehicleEntity multiWeaponVehicle) {
-            multiWeaponVehicle.changeWeapon();
         }
     }
 

@@ -209,9 +209,18 @@ public class VehicleHudOverlay {
                 int addW = (w / h) * 48;
                 int addH = (w / h) * 27;
                 preciseBlit(guiGraphics, FRAME, (float) -addW / 2, (float) -addH / 2, 10, 0, 0.0F, w + addW, h + addH, w + addW, h + addH);
-                preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_cross.png"), k, l, 0, 0.0F, i, j, i, j);
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/line.png"), w / 2 - 64, h - 56, 0, 0.0F, 128, 1, 128, 1);
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/line.png"), w / 2 + 112, h - 71, 0, 0.0F, 1, 16, 1, 16);
+
+                //不同武器种类的准星
+
+                if (multiWeaponVehicle.getWeaponType() == 0) {
+                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_cannon_cross.png"), k, l, 0, 0.0F, i, j, i, j);
+                } else if (multiWeaponVehicle.getWeaponType() == 1) {
+                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_gun_cross.png"), k, l, 0, 0.0F, i, j, i, j);
+                } else if (multiWeaponVehicle.getWeaponType() == 2) {
+                    preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_missile_cross.png"), k, l, 0, 0.0F, i, j, i, j);
+                }
 
                 //指南针
 
@@ -277,7 +286,6 @@ public class VehicleHudOverlay {
                         double heat = 1 - lav.getEntityData().get(COAX_HEAT) / 100.0F;
                         guiGraphics.drawString(mc.font, Component.literal("7.62MM COAX " + (player.getInventory().hasAnyMatching(s -> s.is(ModItems.CREATIVE_AMMO_BOX.get())) ? "∞" : lav.getAmmoCount(player))), w / 2 - 33, h - 65, Mth.hsvToRgb((float) heat / 3.745318352059925F, 1.0F, 1.0F), false);
                     }
-
                 }
 
                 if (player.getVehicle() instanceof Bmp2Entity bmp2) {

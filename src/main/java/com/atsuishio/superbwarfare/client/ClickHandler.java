@@ -5,10 +5,7 @@ import com.atsuishio.superbwarfare.compat.CompatHolder;
 import com.atsuishio.superbwarfare.compat.clothconfig.ClothConfigHelper;
 import com.atsuishio.superbwarfare.config.client.ReloadConfig;
 import com.atsuishio.superbwarfare.entity.MortarEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.ICannonEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.*;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
@@ -154,6 +151,11 @@ public class ClickHandler {
         }
 
         double scroll = event.getScrollDelta();
+
+        if (player.getVehicle() instanceof MultiWeaponVehicleEntity multiWeaponVehicle && multiWeaponVehicle.isDriver(player)) {
+            ModUtils.PACKET_HANDLER.sendToServer(new SwitchVehicleWeaponMessage(-scroll));
+            event.setCanceled(true);
+        }
 
         if (stack.is(ModTags.Items.GUN) && ClientEventHandler.zoom) {
             var tag = stack.getOrCreateTag();
