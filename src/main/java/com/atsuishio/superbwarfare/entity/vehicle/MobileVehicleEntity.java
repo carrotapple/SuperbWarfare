@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
+import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.C4Entity;
 import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.entity.projectile.FlareDecoyEntity;
@@ -88,6 +89,8 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
 
     public void collideBlock() {
         if (level() instanceof ServerLevel) {
+            if (!VehicleConfig.COLLISION_DESTROY_BLOCKS.get()) return;
+
             AABB aabb = getBoundingBox().inflate(0.1).move(this.getDeltaMovement().scale(0.6));
             BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
                 BlockState blockstate = this.level().getBlockState(pos);
@@ -95,7 +98,6 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
                         || blockstate.is(BlockTags.LEAVES) || blockstate.is(BlockTags.FENCES)
                         || blockstate.is(BlockTags.FENCE_GATES) || blockstate.is(BlockTags.DOORS)
                         || blockstate.is(BlockTags.TRAPDOORS) || blockstate.is(Blocks.BAMBOO)
-                        || blockstate.is(Tags.Blocks.GLASS) || blockstate.is(Tags.Blocks.GLASS_PANES)
                         || blockstate.is(Blocks.MELON) || blockstate.is(Blocks.PUMPKIN)
                         || blockstate.is(Blocks.HAY_BLOCK) || blockstate.is(Blocks.BELL)
                         || blockstate.is(BlockTags.WALLS) || blockstate.is(Blocks.CHAIN)) {
@@ -108,10 +110,13 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
 
     public void collideHardBlock() {
         if (level() instanceof ServerLevel) {
+            if (!VehicleConfig.COLLISION_DESTROY_HARD_BLOCKS.get()) return;
+
             AABB aabb = getBoundingBox().inflate(0.1).move(this.getDeltaMovement().scale(0.6));
             BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
                 BlockState blockstate = this.level().getBlockState(pos);
-                if (blockstate.is(BlockTags.LOGS) || blockstate.is(BlockTags.PLANKS)) {
+                if (blockstate.is(BlockTags.LOGS) || blockstate.is(BlockTags.PLANKS)
+                        || blockstate.is(Tags.Blocks.GLASS) || blockstate.is(Tags.Blocks.GLASS_PANES)) {
                     this.level().destroyBlock(pos, true);
                     this.setDeltaMovement(this.getDeltaMovement().scale(0.6));
                 }

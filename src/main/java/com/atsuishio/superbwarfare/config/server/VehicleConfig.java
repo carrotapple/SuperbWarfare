@@ -4,6 +4,9 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class VehicleConfig {
 
+    public static ForgeConfigSpec.BooleanValue COLLISION_DESTROY_BLOCKS;
+    public static ForgeConfigSpec.BooleanValue COLLISION_DESTROY_HARD_BLOCKS;
+
     public static ForgeConfigSpec.IntValue MK42_HP;
     public static ForgeConfigSpec.IntValue MK42_AP_DAMAGE;
     public static ForgeConfigSpec.IntValue MK42_AP_EXPLOSION_DAMAGE;
@@ -58,8 +61,17 @@ public class VehicleConfig {
     public static ForgeConfigSpec.IntValue BMP_2_CANNON_EXPLOSION_DAMAGE;
     public static ForgeConfigSpec.DoubleValue BMP_2_CANNON_EXPLOSION_RADIUS;
 
-
     public static void init(ForgeConfigSpec.Builder builder) {
+        builder.push("vehicle");
+
+        builder.comment("Allows vehicles to destroy blocks via collision");
+        COLLISION_DESTROY_BLOCKS = builder.define("collision_destroy_blocks", false);
+
+        builder.comment("Allows vehicles to destroy hard blocks via collision");
+        COLLISION_DESTROY_HARD_BLOCKS = builder.define("collision_destroy_hard_blocks", false);
+
+        builder.pop();
+
         builder.push("mk_42");
 
         builder.comment("The HealthPoint of MK-42");
