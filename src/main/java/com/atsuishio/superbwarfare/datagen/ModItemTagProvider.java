@@ -101,7 +101,7 @@ public class ModItemTagProvider extends ItemTagsProvider {
         this.tag(ModTags.Items.MILITARY_ARMOR).add(ModItems.RU_CHEST_6B43.get(), ModItems.US_CHEST_IOTV.get());
     }
 
-    private static TagKey<Item> forgeTag(String name) {
+    public static TagKey<Item> forgeTag(String name) {
         return ItemTags.create(new ResourceLocation("forge", name));
     }
 }

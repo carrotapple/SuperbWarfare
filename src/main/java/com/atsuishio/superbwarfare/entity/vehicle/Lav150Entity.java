@@ -36,7 +36,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -308,6 +307,11 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         }
 
         collideBlock();
+        if (this.getDeltaMovement().length() > 0.2) {
+            collideHardBlock();
+        }
+
+
         gunnerAngle();
         lowHealthWarning();
 
@@ -458,20 +462,6 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
     public float getBarrelYRot(float pPartialTick) {
         return -Mth.lerp(pPartialTick, turretYRotO - this.yRotO, getTurretYRot() - this.getYRot());
-    }
-
-
-    /**
-     * 撞掉莲叶和冰块
-     */
-    public void collideBlock() {
-        AABB aabb = getBoundingBox().inflate(0.1).move(this.getDeltaMovement().scale(0.6));
-        BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
-            BlockState blockstate = this.level().getBlockState(pos);
-            if (blockstate.is(Blocks.LILY_PAD) || blockstate.is(Blocks.CACTUS)) {
-                this.level().destroyBlock(pos, true);
-            }
-        });
     }
 
     @Override

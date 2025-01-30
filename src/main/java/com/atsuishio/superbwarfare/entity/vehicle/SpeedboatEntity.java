@@ -244,7 +244,7 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
             sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, this.getX() - 4.5 * this.getLookAngle().x, this.getY() - 0.25, this.getZ() - 4.5 * this.getLookAngle().z, (int) (40 * Mth.abs(this.entityData.get(POWER))), 0.15, 0.15, 0.15, 0.02, true);
         }
 
-        collideBlock();
+        collideBoatBlock();
         gunnerAngle();
         lowHealthWarning();
 
@@ -307,7 +307,7 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
     /**
      * 撞掉莲叶和冰块
      */
-    public void collideBlock() {
+    public void collideBoatBlock() {
         AABB aabb = AABB.ofSize(new Vec3(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ()), 3.6, 2.6, 3.6);
         BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
             BlockState blockstate = this.level().getBlockState(pos);

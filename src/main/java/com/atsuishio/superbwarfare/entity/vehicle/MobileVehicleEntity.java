@@ -7,13 +7,16 @@ import com.atsuishio.superbwarfare.entity.projectile.LaserEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
@@ -23,8 +26,12 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
 import org.joml.Vector3f;
@@ -79,33 +86,68 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
         this.refreshDimensions();
     }
 
+    public void collideBlock() {
+        if (level() instanceof ServerLevel) {
+            AABB aabb = getBoundingBox().inflate(0.1).move(this.getDeltaMovement().scale(0.6));
+            BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
+                BlockState blockstate = this.level().getBlockState(pos);
+                if (blockstate.is(Blocks.LILY_PAD) || blockstate.is(Blocks.CACTUS)
+                        || blockstate.is(BlockTags.LEAVES) || blockstate.is(BlockTags.FENCES)
+                        || blockstate.is(BlockTags.FENCE_GATES) || blockstate.is(BlockTags.DOORS)
+                        || blockstate.is(BlockTags.TRAPDOORS) || blockstate.is(Blocks.BAMBOO)
+                        || blockstate.is(Tags.Blocks.GLASS) || blockstate.is(Tags.Blocks.GLASS_PANES)
+                        || blockstate.is(Blocks.MELON) || blockstate.is(Blocks.PUMPKIN)
+                        || blockstate.is(Blocks.HAY_BLOCK) || blockstate.is(Blocks.BELL)
+                        || blockstate.is(BlockTags.WALLS) || blockstate.is(Blocks.CHAIN)) {
+                    this.level().destroyBlock(pos, true);
+                    this.setDeltaMovement(this.getDeltaMovement().scale(0.96));
+                }
+            });
+        }
+    }
+
+    public void collideHardBlock() {
+        if (level() instanceof ServerLevel) {
+            AABB aabb = getBoundingBox().inflate(0.1).move(this.getDeltaMovement().scale(0.6));
+            BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
+                BlockState blockstate = this.level().getBlockState(pos);
+                if (blockstate.is(BlockTags.LOGS) || blockstate.is(BlockTags.PLANKS)) {
+                    this.level().destroyBlock(pos, true);
+                    this.setDeltaMovement(this.getDeltaMovement().scale(0.6));
+                }
+            });
+        }
+    }
+
     @Override
     public void move(@NotNull MoverType movementType, @NotNull Vec3 movement) {
         super.move(movementType, movement);
-        if (lastTickSpeed < 0.3 || collisionCoolDown > 0) return;
+        if (level() instanceof ServerLevel) {
+            if (lastTickSpeed < 0.3 || collisionCoolDown > 0) return;
 
-        if ((verticalCollision)) {
-            if (this instanceof IHelicopterEntity) {
-                this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (20 * ((lastTickSpeed - 0.3) * (lastTickSpeed - 0.3))));
-                this.bounceVertical(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
-            } else if (Mth.abs((float) lastTickVerticalSpeed) > 0.6) {
-                this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (48 * ((Mth.abs((float) lastTickVerticalSpeed) - 0.6) * (lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
+            if ((verticalCollision)) {
+                if (this instanceof IHelicopterEntity) {
+                    this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (20 * ((lastTickSpeed - 0.3) * (lastTickSpeed - 0.3))));
+                    this.bounceVertical(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
+                } else if (Mth.abs((float) lastTickVerticalSpeed) > 0.6) {
+                    this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (48 * ((Mth.abs((float) lastTickVerticalSpeed) - 0.6) * (lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
+                    if (!this.level().isClientSide) {
+                        this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
+                    }
+                    this.bounceVertical(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
+                }
+            }
+
+            if (this.horizontalCollision) {
+                this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (36 * ((lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
+                this.bounceHorizontal(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
                 if (!this.level().isClientSide) {
                     this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
                 }
-                this.bounceVertical(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
+                collisionCoolDown = 4;
+                crash = true;
+                this.entityData.set(POWER, 0.4f * entityData.get(POWER));
             }
-        }
-
-        if (this.horizontalCollision) {
-            this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (36 * ((lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
-            this.bounceHorizontal(Direction.getNearest(this.getDeltaMovement().x(), this.getDeltaMovement().y(), this.getDeltaMovement().z()).getOpposite());
-            if (!this.level().isClientSide) {
-                this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
-            }
-            collisionCoolDown = 4;
-            crash = true;
-            this.entityData.set(POWER, 0.4f * entityData.get(POWER));
         }
     }
 
@@ -160,40 +202,42 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
      * @param velocity 动量
      */
     public void crushEntities(Vec3 velocity) {
-        if (!this.canCrushEntities()) return;
-        if (velocity.horizontalDistance() < 0.25) return;
-        if (isRemoved()) return;
-        var frontBox = getBoundingBox().move(velocity.scale(0.6));
-        var velAdd = velocity.add(0, 0, 0).scale(0.9);
+        if (level() instanceof ServerLevel) {
+            if (!this.canCrushEntities()) return;
+            if (velocity.horizontalDistance() < 0.25) return;
+            if (isRemoved()) return;
+            var frontBox = getBoundingBox().move(velocity.scale(0.6));
+            var velAdd = velocity.add(0, 0, 0).scale(0.9);
 
-        var entities = level().getEntities(EntityTypeTest.forClass(Entity.class), frontBox,
-                        entity -> entity != this && entity != getFirstPassenger() && entity.getVehicle() == null)
-                .stream().filter(entity -> entity.isAlive()
-                        && !(entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ProjectileEntity || entity instanceof LaserEntity || entity instanceof FlareDecoyEntity || entity instanceof AreaEffectCloud || entity instanceof C4Entity)
-                        && !(entity instanceof Player player && (player.isSpectator() || player.isCreative()))
-                        && !entity.getType().getDescriptionId().equals("entity.create.super_glue"))
-                .toList();
+            var entities = level().getEntities(EntityTypeTest.forClass(Entity.class), frontBox,
+                            entity -> entity != this && entity != getFirstPassenger() && entity.getVehicle() == null)
+                    .stream().filter(entity -> entity.isAlive()
+                            && !(entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ProjectileEntity || entity instanceof LaserEntity || entity instanceof FlareDecoyEntity || entity instanceof AreaEffectCloud || entity instanceof C4Entity)
+                            && !(entity instanceof Player player && (player.isSpectator() || player.isCreative()))
+                            && !entity.getType().getDescriptionId().equals("entity.create.super_glue"))
+                    .toList();
 
-        for (var entity : entities) {
-            double entitySize = entity.getBbWidth() * entity.getBbHeight();
-            double thisSize = this.getBbWidth() * this.getBbHeight();
-            double f = Math.min(entitySize / thisSize, 2);
-            double f1 = Math.min(thisSize / entitySize, 4);
+            for (var entity : entities) {
+                double entitySize = entity.getBbWidth() * entity.getBbHeight();
+                double thisSize = this.getBbWidth() * this.getBbHeight();
+                double f = Math.min(entitySize / thisSize, 2);
+                double f1 = Math.min(thisSize / entitySize, 4);
 
-            if (velocity.length() > 0.3 && getBoundingBox().distanceToSqr(entity.getBoundingBox().getCenter()) < 1) {
-                if (!this.level().isClientSide) {
-                    this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
+                if (velocity.length() > 0.3 && getBoundingBox().distanceToSqr(entity.getBoundingBox().getCenter()) < 1) {
+                    if (!this.level().isClientSide) {
+                        this.level().playSound(null, this, ModSounds.VEHICLE_STRIKE.get(), this.getSoundSource(), 1, 1);
+                    }
+                    if (!(entity instanceof TargetEntity)) {
+                        this.push(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
+                    }
+                    entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
+                    entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (thisSize * 20 * ((velocity.length() - 0.3) * (velocity.length() - 0.3))));
+                    if (entities instanceof VehicleEntity) {
+                        this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), entity, entity.getFirstPassenger() == null ? entity : entity.getFirstPassenger()), (float) (entitySize * 10 * ((velocity.length() - 0.3) * (velocity.length() - 0.3))));
+                    }
+                } else {
+                    entity.push(0.3 * f1 * velAdd.x, 0.3 * f1 * velAdd.y, 0.3 * f1 * velAdd.z);
                 }
-                if (!(entity instanceof TargetEntity)) {
-                    this.push(-f * velAdd.x, -f * velAdd.y, -f * velAdd.z);
-                }
-                entity.push(f1 * velAdd.x, f1 * velAdd.y, f1 * velAdd.z);
-                entity.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (thisSize * 20 * ((velocity.length() - 0.3) * (velocity.length() - 0.3))));
-                if (entities instanceof VehicleEntity) {
-                    this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), entity, entity.getFirstPassenger() == null ? entity : entity.getFirstPassenger()), (float) (entitySize * 10 * ((velocity.length() - 0.3) * (velocity.length() - 0.3))));
-                }
-            } else {
-                entity.push(0.3 * f1 * velAdd.x, 0.3 * f1 * velAdd.y, 0.3 * f1 * velAdd.z);
             }
         }
     }
