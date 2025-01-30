@@ -46,14 +46,14 @@ public class VehicleTeamOverlay {
             poseStack.scale(0.8f, 0.8f, 1);
             if (lookingEntity.getFirstPassenger() instanceof Player player1) {
                 event.getGuiGraphics().drawString(Minecraft.getInstance().font,
-                Component.literal(player1.getDisplayName().getString() + (player1.getTeam() == null ? "" : " <" + (player1.getTeam().getName()) + ">")),
+                        Component.literal(player1.getDisplayName().getString() + (player1.getTeam() == null ? "" : " <" + (player1.getTeam().getName()) + ">")),
                         w / 2 + 90, h / 2 - 4, player1.getTeamColor(), false);
                 event.getGuiGraphics().drawString(Minecraft.getInstance().font,
-                        Component.literal(lookingEntity.getDisplayName().getString() + " " + new DecimalFormat("##.#").format(entityRange) + "M"),
+                        Component.literal(lookingEntity.getDisplayName().getString() + new DecimalFormat(" ##.#M").format(entityRange)),
                         w / 2 + 90, h / 2 + 5, player1.getTeamColor(), false);
             } else {
                 event.getGuiGraphics().drawString(Minecraft.getInstance().font,
-                        Component.literal(lookingEntity.getDisplayName().getString() + " " + new DecimalFormat("##.#").format(entityRange) + "M"),
+                        Component.literal(lookingEntity.getDisplayName().getString() + new DecimalFormat(" ##.#M").format(entityRange)),
                         w / 2 + 90, h / 2 + 5, -1, false);
             }
             poseStack.popPose();

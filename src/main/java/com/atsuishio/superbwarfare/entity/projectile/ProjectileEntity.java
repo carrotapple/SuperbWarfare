@@ -411,7 +411,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
         player.displayClientMessage(Component.literal(String.valueOf(score))
                 .append(Component.translatable("tips.superbwarfare.shoot.rings"))
-                .append(Component.literal(" " + new DecimalFormat("##.#").format(distance) + "m")), false);
+                .append(Component.literal(" " + new DecimalFormat("##.#m").format(distance) )), false);
 
         if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer serverPlayer) {
             var holder = score == 10 ? Holder.direct(ModSounds.HEADSHOT.get()) : Holder.direct(ModSounds.INDICATION.get());

@@ -42,7 +42,7 @@ public class Transcript extends Item {
             tooltip.add(Component.translatable("des.superbwarfare.transcript.score").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal(score + " ").withStyle(score == 10 ? ChatFormatting.GOLD : ChatFormatting.WHITE))
                     .append(Component.translatable("des.superbwarfare.transcript.distance").withStyle(ChatFormatting.GRAY))
-                    .append(Component.literal(new DecimalFormat("##.#").format(tag.getDouble("Distance")) + "m").withStyle(ChatFormatting.WHITE)));
+                    .append(Component.literal(new DecimalFormat("##.#m").format(tag.getDouble("Distance"))).withStyle(ChatFormatting.WHITE)));
         }
 
         tooltip.add(Component.translatable("des.superbwarfare.transcript.total").withStyle(ChatFormatting.YELLOW)

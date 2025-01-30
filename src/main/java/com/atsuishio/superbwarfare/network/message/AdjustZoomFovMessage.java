@@ -59,7 +59,7 @@ public class AdjustZoomFovMessage {
                 if (GunsTool.getGunIntTag(stack, "RPM", 0) == 1095) {
                     GunsTool.setGunIntTag(stack, "RPM", 1100);
                 }
-                player.displayClientMessage(Component.literal("RPM: " + new DecimalFormat("##").format(GunsTool.getGunIntTag(stack, "RPM", 0))), true);
+                player.displayClientMessage(Component.literal(new DecimalFormat("RPM: ##").format(GunsTool.getGunIntTag(stack, "RPM", 0))), true);
                 int rpm = GunsTool.getGunIntTag(stack, "RPM", 0);
                 if (rpm > minRpm && rpm < maxRpm) {
                     SoundTool.playLocalSound(player, ModSounds.ADJUST_FOV.get(), 1f, 0.7f);

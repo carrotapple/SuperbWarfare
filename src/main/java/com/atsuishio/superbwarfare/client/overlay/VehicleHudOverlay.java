@@ -174,7 +174,7 @@ public class VehicleHudOverlay {
         return 9;
     }
 
-    public static void renderLandArmorHud(RenderGuiEvent.Pre event ,int w, int h) {
+    public static void renderLandArmorHud(RenderGuiEvent.Pre event, int w, int h) {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
         GuiGraphics guiGraphics = event.getGuiGraphics();
@@ -230,13 +230,13 @@ public class VehicleHudOverlay {
                 //炮塔方向
 
                 poseStack.pushPose();
-                poseStack.rotateAround(Axis.ZP.rotationDegrees(Mth.lerp(event.getPartialTick(), iLand.turretYRotO(), iLand.turretYRot())),w / 2 + 112, h - 56, 0);
+                poseStack.rotateAround(Axis.ZP.rotationDegrees(Mth.lerp(event.getPartialTick(), iLand.turretYRotO(), iLand.turretYRot())), w / 2 + 112, h - 56, 0);
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/body.png"), w / 2 + 96, h - 72, 0, 0.0F, 32, 32, 32, 32);
                 poseStack.popPose();
 
                 //时速
 
-                guiGraphics.drawString(mc.font, Component.literal(new DecimalFormat("##").format(mobileVehicle.getDeltaMovement().length() * 72) + " KM/H"),
+                guiGraphics.drawString(mc.font, Component.literal(new DecimalFormat("## KM/H").format(mobileVehicle.getDeltaMovement().length() * 72)),
                         w / 2 + 160, h / 2 - 48, 0x66FF00, false);
 
                 //低电量警告
@@ -265,14 +265,14 @@ public class VehicleHudOverlay {
                 }
 
                 if (lookAtEntity) {
-                    guiGraphics.drawString(mc.font, Component.literal(new DecimalFormat("##").format(entityRange)),
+                    guiGraphics.drawString(mc.font, Component.literal(new DecimalFormat("##.#M").format(entityRange)),
                             w / 2 - 6, h - 53, 0x66FF00, false);
                 } else {
                     if (blockRange > 512) {
                         guiGraphics.drawString(mc.font, Component.literal("---"), w / 2 - 6, h - 53, 0x66FF00, false);
                     } else {
-                        guiGraphics.drawString(mc.font, Component.literal(new DecimalFormat("##").format(blockRange)),
-                                w / 2 - 6,  h - 53, 0x66FF00, false);
+                        guiGraphics.drawString(mc.font, Component.literal(new DecimalFormat("##.#M").format(blockRange)),
+                                w / 2 - 6, h - 53, 0x66FF00, false);
                     }
                 }
 

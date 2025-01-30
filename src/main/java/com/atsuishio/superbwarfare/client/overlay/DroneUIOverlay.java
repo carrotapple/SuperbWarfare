@@ -70,7 +70,7 @@ public class DroneUIOverlay {
             guiGraphics.blit(ModUtils.loc("textures/screens/drone_fov.png"), w / 2 + 100, h / 2 - 64, 0, 0, 64, 129, 64, 129);
 
             preciseBlit(guiGraphics, ModUtils.loc("textures/screens/drone_fov_move.png"), (float) w / 2 + 100, (float) (h / 2 - 64 - ((ClientEventHandler.droneFovLerp - 1) * 23.8)), 0, 0, 64, 129, 64, 129);
-            guiGraphics.drawString(mc.font, Component.literal(new DecimalFormat("##.#").format(ClientEventHandler.droneFovLerp) + "x"),
+            guiGraphics.drawString(mc.font, Component.literal(new DecimalFormat("##.#x").format(ClientEventHandler.droneFovLerp)),
                     w / 2 + 144, h / 2 + 56 - (int) ((ClientEventHandler.droneFovLerp - 1) * 23.8), -1, false);
 
             DroneEntity entity = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
@@ -101,7 +101,7 @@ public class DroneUIOverlay {
 
                 // 距离
                 guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.distance")
-                                .append(Component.literal(new DecimalFormat("##.#").format(distance) + "M")),
+                                .append(Component.literal(new DecimalFormat("##.#M").format(distance))),
                         w / 2 + 10, h / 2 + 33, color, false);
 
                 // 血量
@@ -111,7 +111,7 @@ public class DroneUIOverlay {
                 if (entity.getEntityData().get(KAMIKAZE_MODE) == 0) {
                     // 弹药
                     guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.ammo")
-                                    .append(Component.literal(new DecimalFormat("##.#").format(entity.getEntityData().get(AMMO)) + " / 6")),
+                                    .append(Component.literal(new DecimalFormat("##.# / 6").format(entity.getEntityData().get(AMMO)))),
                             w / 2 + 12, h / 2 - 37, -1, false);
                 } else {
                     // 神风
@@ -122,7 +122,7 @@ public class DroneUIOverlay {
                 if (lookAtEntity) {
                     // 实体距离
                     guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.range")
-                                    .append(Component.literal(new DecimalFormat("##.#").format(entityRange) + "M " + lookingEntity.getDisplayName().getString())),
+                                    .append(Component.literal(new DecimalFormat("##.#M ").format(entityRange) + lookingEntity.getDisplayName().getString())),
                             w / 2 + 12, h / 2 - 28, color, false);
                 } else {
                     // 方块距离
@@ -131,7 +131,7 @@ public class DroneUIOverlay {
                                 .append(Component.literal("---M")), w / 2 + 12, h / 2 - 28, color, false);
                     } else {
                         guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.range")
-                                        .append(Component.literal(new DecimalFormat("##.#").format(blockRange) + "M")),
+                                        .append(Component.literal(new DecimalFormat("##.#M").format(blockRange))),
                                 w / 2 + 12, h / 2 - 28, color, false);
                     }
                 }

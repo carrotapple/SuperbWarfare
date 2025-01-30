@@ -129,7 +129,7 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
 
             if (sourceEntity instanceof Player player) {
                 player.displayClientMessage(Component.translatable("tips.superbwarfare.target.down",
-                        new java.text.DecimalFormat("##.#").format((entity.position()).distanceTo((sourceEntity.position()))) + "M"), true);
+                        new java.text.DecimalFormat("##.#M").format((entity.position()).distanceTo((sourceEntity.position())))), true);
                 SoundTool.playLocalSound(player, ModSounds.TARGET_DOWN.get(), 1, 1);
                 targetEntity.entityData.set(DOWN_TIME, 40);
             }

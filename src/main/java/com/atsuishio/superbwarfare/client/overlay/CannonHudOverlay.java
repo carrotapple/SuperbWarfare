@@ -98,7 +98,7 @@ public class CannonHudOverlay {
             }
             if (lookAtEntity) {
                 event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.drone.range")
-                                .append(Component.literal(new DecimalFormat("##.#").format(entityRange) + "M " + lookingEntity.getDisplayName().getString())),
+                                .append(Component.literal(new DecimalFormat("##.#M ").format(entityRange) + lookingEntity.getDisplayName().getString())),
                         w / 2 + 14, h / 2 - 20, -1, false);
             } else {
                 if (blockRange > 511) {
@@ -106,7 +106,7 @@ public class CannonHudOverlay {
                             .append(Component.literal("---M")), w / 2 + 14, h / 2 - 20, -1, false);
                 } else {
                     event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.drone.range")
-                                    .append(Component.literal(new DecimalFormat("##.#").format(blockRange) + "M")),
+                                    .append(Component.literal(new DecimalFormat("##.#M").format(blockRange))),
                             w / 2 + 14, h / 2 - 20, -1, false);
                 }
             }

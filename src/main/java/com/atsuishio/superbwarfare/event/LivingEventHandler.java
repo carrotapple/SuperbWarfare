@@ -63,7 +63,7 @@ public class LivingEventHandler {
                         || event.getSource().is(ModDamageTypes.CUSTOM_EXPLOSION)
                         || event.getSource().is(ModDamageTypes.MINE)
                         || event.getSource().is(ModDamageTypes.PROJECTILE_BOOM))) {
-                    vehicle.hurt(event.getSource(),event.getAmount());
+                    vehicle.hurt(event.getSource(), event.getAmount());
                 }
                 event.setCanceled(true);
             }
@@ -105,7 +105,7 @@ public class LivingEventHandler {
         var vehicle = event.getEntity().getVehicle();
         if (vehicle instanceof VehicleEntity) {
             if (vehicle instanceof IArmedVehicleEntity iArmedVehicle) {
-                if (iArmedVehicle.hidePassenger()){
+                if (iArmedVehicle.hidePassenger()) {
                     if (!event.getSource().is(ModDamageTypes.VEHICLE_EXPLOSION)) {
                         event.setCanceled(true);
                     }
@@ -115,7 +115,7 @@ public class LivingEventHandler {
                             || event.getSource().is(ModDamageTypes.CUSTOM_EXPLOSION)
                             || event.getSource().is(ModDamageTypes.MINE)
                             || event.getSource().is(ModDamageTypes.PROJECTILE_BOOM))) {
-                        vehicle.hurt(event.getSource(),0.7f * event.getAmount());
+                        vehicle.hurt(event.getSource(), 0.7f * event.getAmount());
                     }
 
                     event.setAmount(0.3f * event.getAmount());
@@ -190,7 +190,7 @@ public class LivingEventHandler {
         if (entity instanceof TargetEntity && sourceEntity instanceof Player player) {
             player.displayClientMessage(Component.translatable("tips.superbwarfare.target.damage",
                     new DecimalFormat("##.##").format(damage),
-                    new DecimalFormat("##.#").format(entity.position().distanceTo(sourceEntity.position())) + "m"), false);
+                    new DecimalFormat("##.#m").format(entity.position().distanceTo(sourceEntity.position()))), false);
         }
     }
 

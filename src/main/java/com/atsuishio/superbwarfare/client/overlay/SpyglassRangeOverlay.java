@@ -40,7 +40,7 @@ public class SpyglassRangeOverlay {
 
             if (lookAtEntity) {
                 event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.drone.range")
-                                .append(Component.literal(new DecimalFormat("##.#").format(entityRange) + "M " + lookingEntity.getDisplayName().getString())),
+                                .append(Component.literal(new DecimalFormat("##.#M ").format(entityRange) + lookingEntity.getDisplayName().getString())),
                         w / 2 + 12, h / 2 - 28, -1, false);
             } else {
                 if (blockRange > 512) {
@@ -48,7 +48,7 @@ public class SpyglassRangeOverlay {
                             .append(Component.literal("---M")), w / 2 + 12, h / 2 - 28, -1, false);
                 } else {
                     event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.drone.range")
-                                    .append(Component.literal(new DecimalFormat("##.#").format(blockRange) + "M")),
+                                    .append(Component.literal(new DecimalFormat("##.#M").format(blockRange))),
                             w / 2 + 12, h / 2 - 28, -1, false);
                 }
             }

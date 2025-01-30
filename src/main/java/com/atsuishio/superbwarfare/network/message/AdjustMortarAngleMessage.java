@@ -51,8 +51,8 @@ public class AdjustMortarAngleMessage {
             }
 
             player.displayClientMessage(Component.translatable("tips.superbwarfare.mortar.angle",
-                    new DecimalFormat("##.##").format(angle) + "°",
-                    new DecimalFormat("##.#").format((int) RangeHelper.getRange(angle)) + "m"), true);
+                    new DecimalFormat("##.##°").format(angle),
+                    new DecimalFormat("##.#m").format((int) RangeHelper.getRange(angle))), true);
             SoundTool.playLocalSound(player, ModSounds.ADJUST_FOV.get(), 1f, 0.7f);
         });
         context.get().setPacketHandled(true);

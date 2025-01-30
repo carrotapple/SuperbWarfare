@@ -180,7 +180,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
 
         return Component.translatable("des.superbwarfare.guns.bypass").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##.##").format(bypassRate * 100) + "%").withStyle(ChatFormatting.GOLD));
+                .append(Component.literal(new DecimalFormat("##.##%").format(bypassRate * 100)).withStyle(ChatFormatting.GOLD));
     }
 
     /**
@@ -190,7 +190,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
         double headshot = GunsTool.getGunDoubleTag(stack, "Headshot", 0);
         return Component.translatable("des.superbwarfare.guns.headshot").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##.#").format(headshot) + "x").withStyle(ChatFormatting.AQUA));
+                .append(Component.literal(new DecimalFormat("##.#x").format(headshot)).withStyle(ChatFormatting.AQUA));
     }
 
     /**
