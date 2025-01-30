@@ -340,7 +340,6 @@ public class LivingEventHandler {
             player.getCapability(ModCapabilities.LASER_CAPABILITY).ifPresent(LaserCapability.ILaserCapability::stop);
 
             if (player instanceof ServerPlayer serverPlayer) {
-                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new DrawClientMessage(true));
                 if (newStack.getItem() != oldStack.getItem()
                         || newStack.getTag() == null || oldStack.getTag() == null
                         || (newStack.is(ModTags.Items.GUN) && !GunsTool.getGunData(newStack).hasUUID("UUID"))
@@ -420,6 +419,10 @@ public class LivingEventHandler {
                         int level = PerkHelper.getItemPerkLevel(ModPerks.KILLING_TALLY.get(), newStack);
                         if (level != 0) {
                             GunsTool.setPerkIntTag(newStack, "KillingTally", 0);
+                        }
+
+                        if (player.level() instanceof ServerLevel) {
+                            ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new DrawClientMessage(true));
                         }
 
                         player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).ifPresent(capability -> {
