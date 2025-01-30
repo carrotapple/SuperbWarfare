@@ -762,20 +762,16 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
 
     @Override
     public void changeWeapon(int scroll) {
-        entityData.set(WEAPON_TYPE, entityData.get(WEAPON_TYPE) + scroll);
-        if (entityData.get(WEAPON_TYPE) == 0) {
-            this.level().playSound(null, this, ModSounds.INTO_MISSILE.get(), this.getSoundSource(), 1, 1);
-        }
-        if (entityData.get(WEAPON_TYPE) == 1) {
-            this.level().playSound(null, this, ModSounds.INTO_CANNON.get(), this.getSoundSource(), 1, 1);
-        }
+        var type = (entityData.get(WEAPON_TYPE) + scroll + 2) % 2;
+        entityData.set(WEAPON_TYPE, type);
 
-        if (entityData.get(WEAPON_TYPE) <= -1) {
-            entityData.set(WEAPON_TYPE, 1);
-        }
-        if (entityData.get(WEAPON_TYPE) >= 2) {
-            entityData.set(WEAPON_TYPE, 0);
-        }
+        var sound = switch (type) {
+            case 0 -> ModSounds.INTO_MISSILE.get();
+            case 1 -> ModSounds.INTO_CANNON.get();
+            default -> throw new IllegalStateException("Unexpected type: " + type);
+        };
+        
+        this.level().playSound(null, this, sound, this.getSoundSource(), 1, 1);
     }
 
     @Override
