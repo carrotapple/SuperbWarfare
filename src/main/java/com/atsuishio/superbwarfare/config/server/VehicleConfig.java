@@ -70,8 +70,6 @@ public class VehicleConfig {
         builder.comment("Allows vehicles to destroy hard blocks via collision");
         COLLISION_DESTROY_HARD_BLOCKS = builder.define("collision_destroy_hard_blocks", false);
 
-        builder.pop();
-
         builder.push("mk_42");
 
         builder.comment("The HealthPoint of MK-42");
@@ -239,6 +237,8 @@ public class VehicleConfig {
 
         builder.comment("The cannon explosion radius of Bmp_2");
         BMP_2_CANNON_EXPLOSION_RADIUS = builder.defineInRange("bmp_2_cannon_explosion_radius", 3.2d, 1d, 10000000d);
+
+        builder.pop();
 
         builder.pop();
     }
