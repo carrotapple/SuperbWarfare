@@ -22,7 +22,6 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
@@ -82,17 +81,21 @@ public class ContainerMobileEntity extends MobileVehicleEntity implements HasCus
         super.baseTick();
 //        pickUpItem();
 
-        this.getItemStacks().stream().filter(stack -> stack.is(ModItems.CELL.get()) && stack.getCapability(ForgeCapabilities.ENERGY).map(IEnergyStorage::getEnergyStored).orElse(0) > 0)
-                .forEach(stack ->
-                        stack.getCapability(ForgeCapabilities.ENERGY).ifPresent(energyStorage -> {
-                            if (this.getEnergy() < this.getMaxEnergy()) {
-                                int energy = this.getMaxEnergy() - this.getEnergy();
-                                int stackEnergyNeed = Math.min(energyStorage.getEnergyStored(), energy);
-                                energyStorage.extractEnergy(stackEnergyNeed, false);
-                                this.setEnergy(this.getEnergy() + stackEnergyNeed);
-                            }
-                        })
-                );
+        for (var stack : this.getItemStacks()) {
+            int neededEnergy = this.getMaxEnergy() - this.getEnergy();
+            if (neededEnergy <= 0) break;
+
+            var energyCap = stack.getCapability(ForgeCapabilities.ENERGY).resolve();
+            if (energyCap.isEmpty()) continue;
+
+            var energyStorage = energyCap.get();
+            var stored = energyStorage.getEnergyStored();
+            if (stored <= 0) continue;
+
+            int energyToExtract = Math.min(stored, neededEnergy);
+            energyStorage.extractEnergy(energyToExtract, false);
+            this.setEnergy(this.getEnergy() + energyToExtract);
+        }
         this.refreshDimensions();
     }
 
