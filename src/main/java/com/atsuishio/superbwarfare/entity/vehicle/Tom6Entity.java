@@ -121,7 +121,9 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
 
         f = (float) Mth.clamp(0.759f + 0.041f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90, 0.01, 0.99);
 
-        this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).scale((0.24) * this.getDeltaMovement().length())));
+        boolean forward = Mth.abs((float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) < 90;
+
+        this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).scale((forward ? 0.24 : -0.24) * this.getDeltaMovement().length())));
         this.setDeltaMovement(this.getDeltaMovement().multiply(f, f, f));
 
         if (onGround()) {
@@ -146,11 +148,11 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
             this.rightInputDown = false;
             this.forwardInputDown = false;
             this.backInputDown = false;
-            this.setZRot(this.roll * 0.8f);
-            this.setXRot(this.getXRot() * 0.7f);
-            this.entityData.set(POWER, this.entityData.get(POWER) * 0.98f);
+            this.entityData.set(POWER, this.entityData.get(POWER) * 0.95f);
             if (onGround()) {
-                this.setDeltaMovement(this.getDeltaMovement().multiply(0.8, 1, 0.8));
+                this.setDeltaMovement(this.getDeltaMovement().multiply(0.96, 1, 0.96));
+            } else {
+                this.setXRot(Mth.clamp(this.getXRot() + 0.1f, -89, 89));
             }
         } else if (passenger instanceof Player player) {
             if (level().isClientSide && this.getEnergy() > 0) {
@@ -163,7 +165,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
             }
 
             if (backInputDown || downInputDown) {
-                this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.006f, onGround() ? -0.12f : 0.04f));
+                this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - (this.entityData.get(POWER) > 0 ? 0.006f : 0.001f), onGround() ? -0.12f : 0.04f));
             }
 
             if (!onGround()) {

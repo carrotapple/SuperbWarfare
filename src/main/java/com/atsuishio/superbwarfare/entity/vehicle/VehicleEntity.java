@@ -42,6 +42,7 @@ public class VehicleEntity extends Entity {
 
     public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.FLOAT);
     protected static final EntityDataAccessor<String> LAST_ATTACKER_UUID = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.STRING);
+    protected static final EntityDataAccessor<String> LAST_DRIVER_UUID = SynchedEntityData.defineId(VehicleEntity.class, EntityDataSerializers.STRING);
 
     protected int interpolationSteps;
     protected double x;
@@ -84,11 +85,13 @@ public class VehicleEntity extends Entity {
     protected void defineSynchedData() {
         this.entityData.define(HEALTH, this.getMaxHealth());
         this.entityData.define(LAST_ATTACKER_UUID, "undefined");
+        this.entityData.define(LAST_DRIVER_UUID, "undefined");
     }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag compound) {
         this.entityData.set(LAST_ATTACKER_UUID, compound.getString("LastAttacker"));
+        this.entityData.set(LAST_DRIVER_UUID, compound.getString("LastDriver"));
         this.entityData.set(HEALTH, compound.getFloat("Health"));
     }
 
@@ -96,6 +99,7 @@ public class VehicleEntity extends Entity {
     public void addAdditionalSaveData(CompoundTag compound) {
         compound.putFloat("Health", this.entityData.get(HEALTH));
         compound.putString("LastAttacker", this.entityData.get(LAST_ATTACKER_UUID));
+        compound.putString("LastDriver", this.entityData.get(LAST_DRIVER_UUID));
     }
 
     @Override
@@ -262,6 +266,10 @@ public class VehicleEntity extends Entity {
             if (!(this instanceof DroneEntity)) {
                 this.heal(0.05f);
             }
+        }
+
+        if (getFirstPassenger() != null) {
+            this.entityData.set(LAST_DRIVER_UUID, getFirstPassenger().getStringUUID());
         }
 
         this.refreshDimensions();
