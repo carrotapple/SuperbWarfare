@@ -492,10 +492,10 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
      * 撞掉莲叶和冰块
      */
     public void collideBlock() {
-        AABB aabb = AABB.ofSize(new Vec3(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ()), 3.6, 2.6, 3.6);
+        AABB aabb = getBoundingBox().inflate(0.1).move(this.getDeltaMovement().scale(0.6));
         BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
             BlockState blockstate = this.level().getBlockState(pos);
-            if (blockstate.is(Blocks.LILY_PAD)) {
+            if (blockstate.is(Blocks.LILY_PAD) || blockstate.is(Blocks.CACTUS)) {
                 this.level().destroyBlock(pos, true);
             }
         });
