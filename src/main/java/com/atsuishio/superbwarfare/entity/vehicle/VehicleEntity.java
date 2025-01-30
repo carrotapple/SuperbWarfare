@@ -90,7 +90,6 @@ public class VehicleEntity extends Entity {
     protected void readAdditionalSaveData(CompoundTag compound) {
         this.entityData.set(LAST_ATTACKER_UUID, compound.getString("LastAttacker"));
         this.entityData.set(HEALTH, compound.getFloat("Health"));
-
     }
 
     @Override
@@ -104,7 +103,7 @@ public class VehicleEntity extends Entity {
         if (player.getVehicle() == this) return InteractionResult.PASS;
 
         ItemStack stack = player.getMainHandItem();
-        if (player.isShiftKeyDown() && stack.is(ModItems.CROWBAR.get())) {
+        if (player.isShiftKeyDown() && stack.is(ModItems.CROWBAR.get()) && this.getFirstPassenger() == null) {
             ItemStack container = ContainerBlockItem.createInstance(this);
             if (!player.addItem(container)) {
                 player.drop(container, false);
