@@ -254,7 +254,7 @@ public class ModItems {
     public static final RegistryObject<Item> REFORGING_TABLE = block(ModBlocks.REFORGING_TABLE);
     public static final RegistryObject<Item> CHARGING_STATION = block(ModBlocks.CHARGING_STATION);
     public static final RegistryObject<Item> CREATIVE_CHARGING_STATION = BLOCKS.register("creative_charging_station",
-            () -> new BlockItem(ModBlocks.CREATIVE_CHARGING_STATION.get(), new Item.Properties().rarity(Rarity.EPIC)));
+            () -> new CreativeChargingStationBlockItem(ModBlocks.CREATIVE_CHARGING_STATION.get(), new Item.Properties().rarity(Rarity.EPIC)));
     public static final RegistryObject<Item> LEAD_BLOCK = block(ModBlocks.LEAD_BLOCK);
     public static final RegistryObject<Item> STEEL_BLOCK = block(ModBlocks.STEEL_BLOCK);
     public static final RegistryObject<Item> TUNGSTEN_BLOCK = block(ModBlocks.TUNGSTEN_BLOCK);
