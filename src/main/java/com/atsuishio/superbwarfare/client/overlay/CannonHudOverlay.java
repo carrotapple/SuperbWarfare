@@ -29,6 +29,7 @@ import org.joml.Math;
 import java.text.DecimalFormat;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
+import static com.atsuishio.superbwarfare.client.overlay.VehicleHudOverlay.renderKillIndicator;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class CannonHudOverlay {
@@ -121,6 +122,8 @@ public class CannonHudOverlay {
         } else {
             preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_crosshair_notzoom.png"), k, l, 0, 0.0F, i, j, i, j);
         }
+
+        renderKillIndicator(guiGraphics, w, h);
 
         poseStack.popPose();
     }

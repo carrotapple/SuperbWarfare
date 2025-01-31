@@ -6,18 +6,23 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModParticleTypes;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.item.ContainerBlockItem;
+import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
+import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.VectorTool;
 import com.google.common.collect.Lists;
 import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -33,6 +38,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
 import org.joml.Matrix4f;
@@ -179,8 +185,14 @@ public class VehicleEntity extends Entity {
 
     }
 
-    public void hurt(float pHealAmount) {
+    public void hurt(float pHealAmount, Entity attacker, boolean send) {
         if (this.level() instanceof ServerLevel) {
+            if (attacker instanceof ServerPlayer player && pHealAmount > 0 && this.getHealth() > 0 && send && !(this instanceof DroneEntity)) {
+                var holder = Holder.direct(ModSounds.INDICATION_VEHICLE.get());
+                player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getEyeY(), player.getZ(), 0.25f + (2.75f * pHealAmount / getMaxHealth()), random.nextFloat() * 0.1f + 0.9f, player.level().random.nextLong()));
+
+                ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(3, 5));
+            }
             this.setHealth(this.getHealth() - pHealAmount);
         }
     }
@@ -262,8 +274,10 @@ public class VehicleEntity extends Entity {
 
         travel();
 
+        Entity attacker = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_ATTACKER_UUID));
+
         if (this.getHealth() <= 0.1 * this.getMaxHealth()) {
-            this.hurt(0.1f);
+            this.hurt(0.1f, attacker, false);
         } else {
             if (!(this instanceof DroneEntity)) {
                 this.heal(0.05f);

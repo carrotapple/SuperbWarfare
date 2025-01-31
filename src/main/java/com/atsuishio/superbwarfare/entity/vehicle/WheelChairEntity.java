@@ -106,7 +106,7 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
     public boolean hurt(DamageSource source, float amount) {
         super.hurt(source, amount);
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.hurt(amount);
+        this.hurt(amount, source.getEntity(), true);
         return true;
     }
 

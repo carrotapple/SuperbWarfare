@@ -41,6 +41,7 @@ public class CrossHairOverlay {
     public static int HIT_INDICATOR = 0;
     public static int HEAD_INDICATOR = 0;
     public static int KILL_INDICATOR = 0;
+    public static int VEHICLE_INDICATOR = 0;
     private static float scopeScale = 1f;
     public static float gunRot;
 
@@ -166,6 +167,10 @@ public class CrossHairOverlay {
             preciseBlit(guiGraphics, ModUtils.loc("textures/screens/hit_marker.png"), posX + moveX, posY + moveY, 0, 0, 16, 16, 16, 16);
         }
 
+        if (VEHICLE_INDICATOR > 0) {
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/hit_marker_vehicle.png"), posX + moveX, posY + moveY, 0, 0, 16, 16, 16, 16);
+        }
+
         if (HEAD_INDICATOR > 0) {
             preciseBlit(guiGraphics, ModUtils.loc("textures/screens/headshot_mark.png"), posX + moveX, posY + moveY, 0, 0, 16, 16, 16, 16);
         }
@@ -196,5 +201,6 @@ public class CrossHairOverlay {
         HEAD_INDICATOR = Math.max(0, HEAD_INDICATOR - 1);
         HIT_INDICATOR = Math.max(0, HIT_INDICATOR - 1);
         KILL_INDICATOR = Math.max(0, KILL_INDICATOR - 1);
+        VEHICLE_INDICATOR = Math.max(0, VEHICLE_INDICATOR - 1);
     }
 }

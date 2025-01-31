@@ -101,7 +101,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
             amount *= 2f;
         }
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.hurt(amount);
+        this.hurt(amount, source.getEntity(), true);
         return true;
     }
 

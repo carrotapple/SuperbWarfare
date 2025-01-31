@@ -198,7 +198,7 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
         }
 
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.hurt(Math.max(amount - 8, 0));
+        this.hurt(Math.max(amount - 8, 0), source.getEntity(), true);
         return true;
     }
 

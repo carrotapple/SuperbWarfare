@@ -33,6 +33,7 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> HIT = REGISTRY.register("hit", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("hit")));
     public static final RegistryObject<SoundEvent> TARGET_DOWN = REGISTRY.register("targetdown", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("targetdown")));
     public static final RegistryObject<SoundEvent> INDICATION = REGISTRY.register("indication", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("indication")));
+    public static final RegistryObject<SoundEvent> INDICATION_VEHICLE = REGISTRY.register("indication_vehicle", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("indication_vehicle")));
     public static final RegistryObject<SoundEvent> JUMP = REGISTRY.register("jump", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("jump")));
     public static final RegistryObject<SoundEvent> DOUBLE_JUMP = REGISTRY.register("doublejump", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("doublejump")));
 

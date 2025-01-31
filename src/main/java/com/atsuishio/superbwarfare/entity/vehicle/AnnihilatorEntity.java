@@ -157,10 +157,10 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
             amount *= 0.1f;
         }
         if (source.is(ModDamageTypes.LUNGE_MINE)) {
-            amount *= 0.1f;
+            amount *= 0.12f;
         }
         if (source.is(ModDamageTypes.CANNON_FIRE)) {
-            amount *= 0.2f;
+            amount *= 0.22f;
         }
         if (source.is(ModTags.DamageTypes.PROJECTILE)) {
             amount *= 0f;
@@ -173,7 +173,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
         }
 
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.hurt(Math.max(amount - 16, 0));
+        this.hurt(Math.max(amount - 10, 0), source.getEntity(), true);
         return true;
     }
 

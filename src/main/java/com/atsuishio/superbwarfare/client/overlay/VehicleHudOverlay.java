@@ -365,13 +365,17 @@ public class VehicleHudOverlay {
         }
     }
 
-    private static void renderKillIndicator(GuiGraphics guiGraphics, float w, float h) {
+    public static void renderKillIndicator(GuiGraphics guiGraphics, float w, float h) {
         float posX = w / 2f - 7.5f + (float) (2 * (java.lang.Math.random() - 0.5f));
         float posY = h / 2f - 7.5f + (float) (2 * (java.lang.Math.random() - 0.5f));
         float rate = (40 - KILL_INDICATOR * 5) / 5.5f;
 
         if (HIT_INDICATOR > 0) {
             preciseBlit(guiGraphics, ModUtils.loc("textures/screens/hit_marker.png"), posX, posY, 0, 0, 16, 16, 16, 16);
+        }
+
+        if (VEHICLE_INDICATOR > 0) {
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/hit_marker_vehicle.png"), posX, posY, 0, 0, 16, 16, 16, 16);
         }
 
         if (HEAD_INDICATOR > 0) {
@@ -396,6 +400,10 @@ public class VehicleHudOverlay {
 
         if (HIT_INDICATOR > 0) {
             preciseBlit(guiGraphics, ModUtils.loc("textures/screens/hit_marker.png"), posX, posY, 0, 0, 16, 16, 16, 16);
+        }
+
+        if (VEHICLE_INDICATOR > 0) {
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/hit_marker_vehicle.png"), posX, posY, 0, 0, 16, 16, 16, 16);
         }
 
         if (HEAD_INDICATOR > 0) {

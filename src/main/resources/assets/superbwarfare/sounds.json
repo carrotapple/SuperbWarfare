@@ -1815,6 +1815,14 @@
       }
     ]
   },
+  "indication_vehicle": {
+    "sounds": [
+      {
+        "name": "superbwarfare:indication_vehicle",
+        "stream": false
+      }
+    ]
+  },
   "jump": {
     "sounds": [
       {

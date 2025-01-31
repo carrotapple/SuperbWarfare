@@ -48,6 +48,7 @@ public class ClientPacketHandler {
             switch (message.type) {
                 case 1 -> CrossHairOverlay.HEAD_INDICATOR = message.value;
                 case 2 -> CrossHairOverlay.KILL_INDICATOR = message.value;
+                case 3 -> CrossHairOverlay.VEHICLE_INDICATOR = message.value;
                 default -> CrossHairOverlay.HIT_INDICATOR = message.value;
             }
         }

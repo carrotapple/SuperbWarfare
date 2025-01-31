@@ -213,6 +213,10 @@ public class HelicopterHudOverlay {
             preciseBlit(guiGraphics, ModUtils.loc("textures/screens/hit_marker.png"), posX, posY, 0, 0, 16, 16, 16, 16);
         }
 
+        if (VEHICLE_INDICATOR > 0) {
+            preciseBlit(guiGraphics, ModUtils.loc("textures/screens/hit_marker_vehicle.png"), posX, posY, 0, 0, 16, 16, 16, 16);
+        }
+
         if (HEAD_INDICATOR > 0) {
             preciseBlit(guiGraphics, ModUtils.loc("textures/screens/headshot_mark.png"), posX, posY, 0, 0, 16, 16, 16, 16);
         }

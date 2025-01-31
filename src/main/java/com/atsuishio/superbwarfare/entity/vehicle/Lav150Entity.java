@@ -194,7 +194,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         }
 
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.hurt(Math.max(amount - 7, 0));
+        this.hurt(Math.max(amount - 7, 0), source.getEntity(), true);
         return true;
     }
 

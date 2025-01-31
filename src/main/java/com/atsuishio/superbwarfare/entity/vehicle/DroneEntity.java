@@ -107,7 +107,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     @Override
     public boolean hurt(DamageSource source, float amount) {
         super.hurt(source, amount);
-        this.hurt(amount);
+        this.hurt(amount, source.getEntity(), false);
         return true;
     }
 
