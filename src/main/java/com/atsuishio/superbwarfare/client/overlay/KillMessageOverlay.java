@@ -2,6 +2,8 @@ package com.atsuishio.superbwarfare.client.overlay;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.client.KillMessageConfig;
+import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.atsuishio.superbwarfare.event.KillMessageHandler;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModItems;
@@ -170,42 +172,85 @@ public class KillMessageOverlay {
             );
         }
 
+        Player player = Minecraft.getInstance().player;
         boolean renderItem = false;
         int itemIconW = damageTypeIcon != null ? w - targetNameWidth - 64 : w - targetNameWidth - 46;
-        // 如果是枪械击杀，则渲染枪械图标
-        if (record.stack.getItem() instanceof GunItem gunItem) {
-            renderItem = true;
 
-            ResourceLocation resourceLocation = gunItem.getGunIcon();
+        if (player != null && player.getVehicle() instanceof VehicleEntity vehicleEntity) {
+            // 载具图标
+            if ((vehicleEntity instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand()) || record.damageType == ModDamageTypes.VEHICLE_STRIKE) {
+                renderItem = true;
 
-            preciseBlit(gui,
-                    resourceLocation,
-                    itemIconW,
-                    top,
-                    0,
-                    0,
-                    32,
-                    8,
-                    -32,
-                    8
-            );
-        }
+                ResourceLocation resourceLocation = vehicleEntity.getVehicleIcon();
 
-        // TODO 如果是特殊武器击杀，则渲染对应图标
-        if (record.stack.getItem().getDescriptionId().equals("item.dreamaticvoyage.world_peace_staff")) {
-            renderItem = true;
+                preciseBlit(gui,
+                        resourceLocation,
+                        itemIconW,
+                        top,
+                        0,
+                        0,
+                        32,
+                        8,
+                        -32,
+                        8
+                );
+            } else {
+                if (record.stack.getItem() instanceof GunItem gunItem) {
+                    renderItem = true;
 
-            preciseBlit(gui,
-                    WORLD_PEACE_STAFF,
-                    itemIconW,
-                    top,
-                    0,
-                    0,
-                    32,
-                    8,
-                    32,
-                    8
-            );
+                    ResourceLocation resourceLocation = gunItem.getGunIcon();
+
+                    preciseBlit(gui,
+                            resourceLocation,
+                            itemIconW,
+                            top,
+                            0,
+                            0,
+                            32,
+                            8,
+                            -32,
+                            8
+                    );
+                }
+            }
+
+        } else {
+
+            // 如果是枪械击杀，则渲染枪械图标
+            if (record.stack.getItem() instanceof GunItem gunItem) {
+                renderItem = true;
+
+                ResourceLocation resourceLocation = gunItem.getGunIcon();
+
+                preciseBlit(gui,
+                        resourceLocation,
+                        itemIconW,
+                        top,
+                        0,
+                        0,
+                        32,
+                        8,
+                        -32,
+                        8
+                );
+            }
+
+            // TODO 如果是特殊武器击杀，则渲染对应图标
+            if (record.stack.getItem().getDescriptionId().equals("item.dreamaticvoyage.world_peace_staff")) {
+                renderItem = true;
+
+                preciseBlit(gui,
+                        WORLD_PEACE_STAFF,
+                        itemIconW,
+                        top,
+                        0,
+                        0,
+                        32,
+                        8,
+                        32,
+                        8
+                );
+            }
         }
 
         // 渲染击杀者名称

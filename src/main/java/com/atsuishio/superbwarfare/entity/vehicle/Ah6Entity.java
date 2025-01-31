@@ -21,6 +21,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -777,5 +778,10 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     @Override
     public int getWeaponType() {
         return entityData.get(WEAPON_TYPE);
+    }
+
+    @Override
+    public ResourceLocation getVehicleIcon() {
+        return ModUtils.loc("textures/vehicle_icon/ah_6_icon.png");
     }
 }

@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
+import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
 import com.atsuishio.superbwarfare.entity.MortarEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
@@ -13,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -301,5 +303,10 @@ public class WheelChairEntity extends MobileVehicleEntity implements GeoEntity {
     @Override
     public int getMaxEnergy() {
         return MAX_ENERGY;
+    }
+
+    @Override
+    public ResourceLocation getVehicleIcon() {
+        return ModUtils.loc("textures/vehicle_icon/wheel_chair_icon.png");
     }
 }

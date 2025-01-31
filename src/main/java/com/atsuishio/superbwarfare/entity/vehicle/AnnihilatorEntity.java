@@ -16,6 +16,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -551,5 +552,10 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     @Override
     public int zoomFov() {
         return 5;
+    }
+
+    @Override
+    public ResourceLocation getVehicleIcon() {
+        return ModUtils.loc("textures/vehicle_icon/annihilator_icon.png");
     }
 }
