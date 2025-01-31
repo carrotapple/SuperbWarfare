@@ -59,7 +59,6 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     public static final EntityDataAccessor<Float> LASER_LEFT_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> LASER_MIDDLE_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> LASER_RIGHT_LENGTH = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> OFFSET_ANGLE = SynchedEntityData.defineId(AnnihilatorEntity.class, EntityDataSerializers.FLOAT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public static final float MAX_HEALTH = VehicleConfig.ANNIHILATOR_HP.get();
@@ -83,7 +82,6 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
         this.entityData.define(LASER_LEFT_LENGTH, 0f);
         this.entityData.define(LASER_MIDDLE_LENGTH, 0f);
         this.entityData.define(LASER_RIGHT_LENGTH, 0f);
-        this.entityData.define(OFFSET_ANGLE, 0f);
     }
 
     @Override
@@ -437,15 +435,15 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
             barrelLookAt = new Vec3(lookingAt.getX() - barrelRootPos.x, lookingAt.getEyeY() - barrelRootPos.y, lookingAt.getZ() - barrelRootPos.z);
         }
 
-        this.entityData.set(OFFSET_ANGLE, (float) calculateAngle(entity.getViewVector(1), barrelLookAt));
+        float offset = (float) VectorTool.calculateAngle(entity.getViewVector(1), barrelLookAt);
 
         float diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(entity.getYHeadRot() - this.getYRot()));
-        float diffX = entity.getXRot() - this.entityData.get(OFFSET_ANGLE) - this.getXRot();
+        float diffX = entity.getXRot() - offset - this.getXRot();
 
         diffX = diffX * 0.15f;
 
         this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -0.6f, 0.6f));
-        this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -45, 5f + this.entityData.get(OFFSET_ANGLE)));
+        this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -2f, 2f), -45, 5f));
     }
 
     public void autoAim() {
@@ -482,7 +480,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
 
     protected void clampRotation(Entity entity) {
         float f = Mth.wrapDegrees(entity.getXRot());
-        float f1 = Mth.clamp(f, -45.0F, 5f + this.entityData.get(OFFSET_ANGLE));
+        float f1 = Mth.clamp(f, -45.0F, 5);
         entity.xRotO += f1 - f;
         entity.setXRot(entity.getXRot() + f1 - f);
     }

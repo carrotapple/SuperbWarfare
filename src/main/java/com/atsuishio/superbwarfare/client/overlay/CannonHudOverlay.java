@@ -87,8 +87,8 @@ public class CannonHudOverlay {
         if (ClientEventHandler.zoomVehicle) {
             Entity lookingEntity = TraceTool.findLookingEntity(player, 512);
             boolean lookAtEntity = false;
-            double blockRange = player.position().distanceTo((Vec3.atLowerCornerOf(player.level().clip(
-                    new ClipContext(new Vec3(player.getX(), player.getEyeY() + 1, player.getZ()), new Vec3(player.getX(), player.getEyeY() + 1, player.getZ()).add(player.getLookAngle().scale(512)),
+            double blockRange = player.getEyePosition().distanceTo((Vec3.atLowerCornerOf(player.level().clip(
+                    new ClipContext(player.getEyePosition(), player.getEyePosition().add(player.getLookAngle().scale(512)),
                             ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player)).getBlockPos())));
 
             double entityRange = 0;
