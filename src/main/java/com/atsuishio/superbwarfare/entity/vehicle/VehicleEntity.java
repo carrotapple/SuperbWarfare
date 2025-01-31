@@ -159,7 +159,7 @@ public class VehicleEntity extends Entity {
         if (source.is(DamageTypes.WITHER_SKULL))
             return false;
         if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
-            amount -= 20;
+            amount -= 8;
             crash = true;
         } else {
             crash = false;

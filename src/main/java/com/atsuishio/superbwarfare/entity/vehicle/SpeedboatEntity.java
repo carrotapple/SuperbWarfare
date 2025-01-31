@@ -12,7 +12,6 @@ import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -35,8 +34,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidType;
@@ -245,9 +242,12 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
             sendParticle(serverLevel, ParticleTypes.BUBBLE_COLUMN_UP, this.getX() - 4.5 * this.getLookAngle().x, this.getY() - 0.25, this.getZ() - 4.5 * this.getLookAngle().z, (int) (40 * Mth.abs(this.entityData.get(POWER))), 0.15, 0.15, 0.15, 0.02, true);
         }
 
-        collideBoatBlock();
         gunnerAngle();
         lowHealthWarning();
+        collideBlock();
+        if (this.getDeltaMovement().length() > 0.15) {
+            collideHardBlock();
+        }
 
         this.refreshDimensions();
     }
@@ -302,20 +302,6 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
         this.entityData.set(HEAT, this.entityData.get(HEAT) + 3);
         this.entityData.set(FIRE_ANIM, 3);
         this.getItemStacks().stream().filter(stack -> stack.is(ModItems.HEAVY_AMMO.get())).findFirst().ifPresent(stack -> stack.shrink(1));
-    }
-
-
-    /**
-     * 撞掉莲叶和冰块
-     */
-    public void collideBoatBlock() {
-        AABB aabb = AABB.ofSize(new Vec3(this.getX(), this.getY() + this.getBbHeight() * 0.5, this.getZ()), 3.6, 2.6, 3.6);
-        BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
-            BlockState blockstate = this.level().getBlockState(pos);
-            if (blockstate.is(Blocks.LILY_PAD) || blockstate.is(Blocks.ICE) || blockstate.is(Blocks.FROSTED_ICE)) {
-                this.level().destroyBlock(pos, true);
-            }
-        });
     }
 
     @Override

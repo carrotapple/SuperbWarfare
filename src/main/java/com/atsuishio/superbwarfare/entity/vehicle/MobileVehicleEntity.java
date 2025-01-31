@@ -85,23 +85,37 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
         crushEntities(this.getDeltaMovement());
         this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.06, 0.0));
         this.move(MoverType.SELF, this.getDeltaMovement());
+        collideLilyPadBlock();
         this.refreshDimensions();
+    }
+
+    public void collideLilyPadBlock() {
+        if (level() instanceof ServerLevel) {
+            AABB aabb = getBoundingBox().inflate(0.05).move(this.getDeltaMovement().scale(0.6));
+            BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
+                BlockState blockstate = this.level().getBlockState(pos);
+                if (blockstate.is(Blocks.LILY_PAD)) {
+                    this.level().destroyBlock(pos, true);
+                }
+            });
+        }
     }
 
     public void collideBlock() {
         if (level() instanceof ServerLevel) {
             if (!VehicleConfig.COLLISION_DESTROY_BLOCKS.get()) return;
 
-            AABB aabb = getBoundingBox().inflate(0.1).move(this.getDeltaMovement().scale(0.6));
+            AABB aabb = getBoundingBox().move(this.getDeltaMovement().scale(0.6));
             BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
                 BlockState blockstate = this.level().getBlockState(pos);
-                if (blockstate.is(Blocks.LILY_PAD) || blockstate.is(Blocks.CACTUS)
+                if (blockstate.is(Blocks.CACTUS)
                         || blockstate.is(BlockTags.LEAVES) || blockstate.is(BlockTags.FENCES)
                         || blockstate.is(BlockTags.FENCE_GATES) || blockstate.is(BlockTags.DOORS)
                         || blockstate.is(BlockTags.TRAPDOORS) || blockstate.is(Blocks.BAMBOO)
                         || blockstate.is(Blocks.MELON) || blockstate.is(Blocks.PUMPKIN)
                         || blockstate.is(Blocks.HAY_BLOCK) || blockstate.is(Blocks.BELL)
-                        || blockstate.is(BlockTags.WALLS) || blockstate.is(Blocks.CHAIN)) {
+                        || blockstate.is(BlockTags.WALLS) || blockstate.is(Blocks.CHAIN)
+                        || blockstate.is(Blocks.SNOW_BLOCK)) {
                     this.level().destroyBlock(pos, true);
                     this.setDeltaMovement(this.getDeltaMovement().scale(0.96));
                 }
@@ -113,11 +127,13 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
         if (level() instanceof ServerLevel) {
             if (!VehicleConfig.COLLISION_DESTROY_HARD_BLOCKS.get()) return;
 
-            AABB aabb = getBoundingBox().inflate(0.1).move(this.getDeltaMovement().scale(0.6));
+            AABB aabb = getBoundingBox().move(this.getDeltaMovement().scale(0.6));
             BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
                 BlockState blockstate = this.level().getBlockState(pos);
                 if (blockstate.is(BlockTags.LOGS) || blockstate.is(BlockTags.PLANKS)
-                        || blockstate.is(Tags.Blocks.GLASS) || blockstate.is(Tags.Blocks.GLASS_PANES)) {
+                        || blockstate.is(Tags.Blocks.GLASS) || blockstate.is(Tags.Blocks.GLASS_PANES)
+                        || blockstate.is(Blocks.ICE) || blockstate.is(Blocks.FROSTED_ICE)
+                        || blockstate.is(Blocks.PACKED_ICE) || blockstate.is(Blocks.BLUE_ICE)) {
                     this.level().destroyBlock(pos, true);
                     this.setDeltaMovement(this.getDeltaMovement().scale(0.6));
                 }
