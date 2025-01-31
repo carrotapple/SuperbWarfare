@@ -224,7 +224,7 @@ public class ClientEventHandler {
         handleLungeAttack(player, stack);
         handleGunMelee(player, stack);
 
-        if (notInGame()) {
+        if (player.getVehicle() instanceof MobileVehicleEntity mobileVehicle && mobileVehicle.getFirstPassenger() == player && notInGame()) {
             ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(0, false));
             ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(1, false));
             ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(2, false));
@@ -266,7 +266,7 @@ public class ClientEventHandler {
         if (stack.getItem() instanceof GunItem gunItem) {
             if (gunItem.canUseMelee(stack) && gunMelee == 0 && drawTime < 0.01
                     && ModKeyMappings.MELEE.isDown()
-                    && !(player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand())
+                    && !(player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand())
                     && !holdFireVehicle
                     && !notInGame()
                     && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit
@@ -422,7 +422,7 @@ public class ClientEventHandler {
         }
 
         if ((holdFire || burstFireSize > 0)
-                && !(player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand())
+                && !(player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand())
                 && !holdFireVehicle
                 && (stack.is(ModTags.Items.NORMAL_GUN)
                 && cantFireTime == 0
@@ -846,7 +846,7 @@ public class ClientEventHandler {
             }
         }
 
-        if (player != null && player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand())
+        if (player != null && player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand())
             return;
 
         if (level != null && stack.is(ModTags.Items.GUN)) {
@@ -911,7 +911,7 @@ public class ClientEventHandler {
             }
         }
 
-        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand()) {
+        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand()) {
             event.setCanceled(true);
         }
     }
@@ -1008,7 +1008,7 @@ public class ClientEventHandler {
         double speed = 1.5 - (0.07 * weight);
 
         if (zoom
-                && !(player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand())
+                && !(player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand())
                 && !notInGame()
                 && drawTime < 0.01
                 && !player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {

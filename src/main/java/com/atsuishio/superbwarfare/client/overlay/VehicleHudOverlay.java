@@ -94,7 +94,7 @@ public class VehicleHudOverlay {
         }
         poseStack.popPose();
 
-        if (vehicle instanceof IArmedVehicleEntity iVehicle && iVehicle.getAmmoCount(player) != -1) {
+        if (vehicle instanceof IArmedVehicleEntity iVehicle && iVehicle.getAmmoCount(player) != -1 && iVehicle.isDriver(player)) {
             boolean iCharge = iVehicle instanceof IChargeEntity;
 
             // 渲染当前弹药量
@@ -129,6 +129,7 @@ public class VehicleHudOverlay {
             ItemStack stack = player.getMainHandItem();
 
             // 渲染弹药类型
+
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     getVehicleAmmoType(stack, iVehicle),
@@ -137,6 +138,7 @@ public class VehicleHudOverlay {
                     0xFFFFFF,
                     true
             );
+
         }
     }
 

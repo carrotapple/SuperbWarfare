@@ -303,8 +303,10 @@ public class ClickHandler {
         }
 
 
-        if (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player) && iVehicle.banHand()) {
-            ClientEventHandler.holdFireVehicle = true;
+        if (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.banHand()) {
+            if (iVehicle.isDriver(player)) {
+                ClientEventHandler.holdFireVehicle = true;
+            }
             return;
         }
 
@@ -349,8 +351,10 @@ public class ClickHandler {
     public static void handleWeaponZoomPress(Player player, ItemStack stack) {
         ModUtils.PACKET_HANDLER.sendToServer(new ZoomMessage(0));
 
-        if (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.isDriver(player) && iVehicle.banHand()) {
-            ClientEventHandler.zoomVehicle = true;
+        if (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.banHand()) {
+            if (iVehicle.isDriver(player)) {
+                ClientEventHandler.zoomVehicle = true;
+            }
             return;
         }
 

@@ -605,6 +605,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
         }
 
         Matrix4f transform = getTurretTransform();
+        Matrix4f transformV = getVehicleTransform();
 
         float x = 0.36f;
         float y = -0.3f;
@@ -613,11 +614,18 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
 
         int i = this.getPassengers().indexOf(passenger);
 
+        Vector4f worldPosition;
         if (i == 0) {
-            Vector4f worldPosition = transformPosition(transform, x, y, z);
-            passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
-            callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
+            worldPosition = transformPosition(transform, x, y, z);
+        } else {
+            worldPosition = transformPosition(transformV, 0, 1, 0);
         }
+        passenger.setPos(worldPosition.x, worldPosition.y, worldPosition.z);
+        callback.accept(passenger, worldPosition.x, worldPosition.y, worldPosition.z);
+    }
+
+    public int getMaxPassengers() {
+        return 5;
     }
 
     public Matrix4f getBarrelTransform() {

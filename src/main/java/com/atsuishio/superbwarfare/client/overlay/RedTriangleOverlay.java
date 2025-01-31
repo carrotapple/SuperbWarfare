@@ -38,7 +38,7 @@ public class RedTriangleOverlay {
 
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(ModItems.RPG.get())) return;
-        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.banHand())
+        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand())
             return;
 
         Entity idf = SeekTool.seekLivingEntity(player, player.level(), 128, 6);
