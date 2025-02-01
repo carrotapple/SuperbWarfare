@@ -211,7 +211,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
         boolean dir = Math.sqrt(Math.pow(px - ex, 2) + Math.pow(pz - ez, 2)) < 30;
         Vec3 targetPos = new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y) + (entity instanceof EnderDragon ? -3 : 0), this.entityData.get(TARGET_Z));
         if (entity != null) {
-            Vec3 toVec = getEyePosition().vectorTo(targetPos).normalize();
+            Vec3 toVec = getEyePosition().vectorTo(targetPos.add(entity.getDeltaMovement().scale(0.5))).normalize();
             if (this.tickCount > 3) {
                 if (entityData.get(TOP)) {
                     if (!dir) {
@@ -221,13 +221,13 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
                     } else {
                         boolean lostTarget = this.getY() < entity.getY();
                         if (!lostTarget) {
-                            setDeltaMovement(getDeltaMovement().add(toVec.scale(0.8)).scale(0.95));
+                            setDeltaMovement(getDeltaMovement().add(toVec.scale(1)).scale(0.87));
                         }
                     }
                 } else {
                     boolean lostTarget = (VectorTool.calculateAngle(getDeltaMovement(), toVec) > 80);
                     if (!lostTarget) {
-                        setDeltaMovement(getDeltaMovement().add(toVec.scale(0.8)).scale(0.9));
+                        setDeltaMovement(getDeltaMovement().add(toVec.scale(1)).scale(0.87));
                     }
                 }
             }
@@ -257,11 +257,11 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
         }
 
         // 控制速度
-        if (this.getDeltaMovement().length() < 3) {
+        if (this.getDeltaMovement().length() < 2.6) {
             this.setDeltaMovement(this.getDeltaMovement().multiply(1.06, 1.06, 1.06));
         }
 
-        if (this.getDeltaMovement().length() > 3.3) {
+        if (this.getDeltaMovement().length() > 2.9) {
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.9, 0.9, 0.9));
         }
 
