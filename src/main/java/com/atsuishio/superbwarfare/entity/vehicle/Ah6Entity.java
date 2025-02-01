@@ -311,9 +311,9 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                 this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 2.5f * this.entityData.get(PROPELLER_ROT));
             }
 
-            this.setYRot(this.getYRot() + Mth.clamp((this.onGround() ? 0.1f : 2f) * diffY * this.entityData.get(PROPELLER_ROT) - 0.5f * this.entityData.get(DELTA_ROT), -8f, 8f));
-            this.setXRot(Mth.clamp(this.getXRot() + ((this.onGround()) ? 0 : 1.4f) * diffX * this.entityData.get(PROPELLER_ROT), -80, 80));
-            this.setZRot(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.2f) * diffY * this.entityData.get(PROPELLER_ROT));
+            this.setYRot(this.getYRot() + Mth.clamp((this.onGround() ? 0.1f : 2f) * diffY * this.entityData.get(PROPELLER_ROT) - 0.5f * this.entityData.get(DELTA_ROT), -10f, 10f));
+            this.setXRot(Mth.clamp(this.getXRot() + ((this.onGround()) ? 0 : 1.5f) * diffX * this.entityData.get(PROPELLER_ROT), -80, 80));
+            this.setZRot(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.25f) * diffY * this.entityData.get(PROPELLER_ROT));
         }
 
         if (this.level() instanceof ServerLevel) {
@@ -327,14 +327,14 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                 }
 
                 if (up && engineStartOver) {
-                    this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.002f, 0.12f));
+                    this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0032f, 0.12f));
                 }
 
                 if (engineStartOver) {
                     if (down) {
-                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0015f, this.onGround() ? 0 : 0.0375f));
+                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0022f, this.onGround() ? 0 : 0.01f));
                     } else if (backInputDown) {
-                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0015f, this.onGround() ? 0 : 0.052f));
+                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0022f, this.onGround() ? 0 : 0.052f));
                         if (passenger != null) {
                             passenger.setXRot(0.8f * passenger.getXRot());
                         }
@@ -362,7 +362,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
         }
 
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.95f);
-        this.entityData.set(PROPELLER_ROT, Mth.lerp(0.08f, this.entityData.get(PROPELLER_ROT), this.entityData.get(POWER)));
+        this.entityData.set(PROPELLER_ROT, Mth.lerp(0.5f, this.entityData.get(PROPELLER_ROT), this.entityData.get(POWER)));
         this.setPropellerRot(this.getPropellerRot() + 30 * this.entityData.get(PROPELLER_ROT));
         this.entityData.set(PROPELLER_ROT, this.entityData.get(PROPELLER_ROT) * 0.9995f);
 

@@ -37,13 +37,8 @@ public class JavelinMissileRenderer extends GeoEntityRenderer<JavelinMissileEnti
     @Override
     public void render(JavelinMissileEntity entityIn, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int packedLightIn) {
         poseStack.pushPose();
-        if (entityIn.tickCount > 3) {
-            poseStack.mulPose(Axis.YP.rotationDegrees(90 - Mth.lerp(partialTicks, entityIn.yRotO, entityIn.getYRot())));
-            poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, entityIn.xRotO, entityIn.getXRot()) - 90));
-        } else {
-            poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entityIn.yRotO, entityIn.getYRot()) - 90));
-            poseStack.mulPose(Axis.ZP.rotationDegrees(90 + Mth.lerp(partialTicks, entityIn.xRotO, entityIn.getXRot())));
-        }
+        poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entityIn.yRotO, entityIn.getYRot()) - 90));
+        poseStack.mulPose(Axis.ZP.rotationDegrees(90 + Mth.lerp(partialTicks, entityIn.xRotO, entityIn.getXRot())));
         super.render(entityIn, entityYaw, partialTicks, poseStack, bufferIn, packedLightIn);
         poseStack.popPose();
     }

@@ -581,6 +581,16 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
     }
 
     @Override
+    public float turretXRotO() {
+        return turretXRotO;
+    }
+
+    @Override
+    public float turretXRot() {
+        return turretXRot;
+    }
+
+    @Override
     public Vec3 getBarrelVec(float ticks) {
         return getBarrelVector(ticks);
     }

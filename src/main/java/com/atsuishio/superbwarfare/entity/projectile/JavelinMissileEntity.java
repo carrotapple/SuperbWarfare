@@ -10,7 +10,6 @@ import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.tools.*;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.Packet;
@@ -196,16 +195,12 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
         if (entity != null) {
             if (entity.level() instanceof ServerLevel) {
                 this.entityData.set(TARGET_X, (float) entity.getX());
-                this.entityData.set(TARGET_Y, (float) entity.getEyeY());
+                this.entityData.set(TARGET_Y, (float) entity.getY() + 0.5f * entity.getBbHeight());
                 this.entityData.set(TARGET_Z, (float) entity.getZ());
                 if ((!entity.getPassengers().isEmpty() || entity instanceof VehicleEntity) && entity.tickCount %((int)Math.max(0.04 * this.distanceTo(entity),2)) == 0) {
                     entity.level().playSound(null, entity.getOnPos(), entity instanceof Pig ? SoundEvents.PIG_HURT : ModSounds.MISSILE_WARNING.get(), SoundSource.PLAYERS, 2, 1f);
                 }
             }
-        } else  {
-            this.entityData.set(TARGET_X, (float)(this.getX() + this.getDeltaMovement().scale(10).x));
-            this.entityData.set(TARGET_Y, (float)(this.getY() + this.getDeltaMovement().scale(10).y));
-            this.entityData.set(TARGET_Z, (float)(this.getZ() + this.getDeltaMovement().scale(10).z));
         }
 
 
@@ -213,7 +208,31 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
         double ex = this.entityData.get(TARGET_X);
         double pz = this.getZ();
         double ez = this.entityData.get(TARGET_Z);
-        boolean dir = Math.sqrt(Math.pow(px - ex, 2) + Math.pow(pz - ez, 2)) < 10;
+        boolean dir = Math.sqrt(Math.pow(px - ex, 2) + Math.pow(pz - ez, 2)) < 30;
+        Vec3 targetPos = new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y) + (entity instanceof EnderDragon ? -3 : 0), this.entityData.get(TARGET_Z));
+        if (entity != null) {
+            Vec3 toVec = getEyePosition().vectorTo(targetPos).normalize();
+            if (this.tickCount > 3) {
+                if (entityData.get(TOP)) {
+                    if (!dir) {
+                        Vec3 targetTopPos = new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y) + Mth.clamp(5 * this.tickCount, 0, 90), this.entityData.get(TARGET_Z));
+                        Vec3 toTopVec = getEyePosition().vectorTo(targetTopPos).normalize();
+                        setDeltaMovement(getDeltaMovement().add(toTopVec.scale(0.5)));
+                    } else {
+                        boolean lostTarget = this.getY() < entity.getY();
+                        if (!lostTarget) {
+                            setDeltaMovement(getDeltaMovement().add(toVec.scale(0.8)).scale(0.95));
+                        }
+                    }
+                } else {
+                    boolean lostTarget = (VectorTool.calculateAngle(getDeltaMovement(), toVec) > 80);
+                    if (!lostTarget) {
+                        setDeltaMovement(getDeltaMovement().add(toVec.scale(0.8)).scale(0.9));
+                    }
+                }
+            }
+        }
+
 
         if (this.tickCount == 4) {
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
@@ -222,26 +241,7 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
             }
         }
 
-        if (this.tickCount > 3) {
-            if (entityData.get(TOP)) {
-                if (!dir) {
-                    this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y) + Mth.clamp(4 * this.tickCount, 0, 90), this.entityData.get(TARGET_Z)));
-                } else {
-                    this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y) + (entity instanceof EnderDragon ? -3 : 0), this.entityData.get(TARGET_Z)));
-                    this.setDeltaMovement(this.getDeltaMovement().multiply(1.03, 1.03, 1.03));
-                }
-
-            } else {
-                this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(this.entityData.get(TARGET_X), this.entityData.get(TARGET_Y) + (entity instanceof EnderDragon ? -3 : 0), this.entityData.get(TARGET_Z)));
-            }
-        }
-
         if (this.tickCount > 4) {
-            this.setDeltaMovement(new Vec3(
-                    0.7f * this.getDeltaMovement().x + (dir ? 3 : 1.3f) * this.getLookAngle().x,
-                    0.7f * this.getDeltaMovement().y + (dir ? 3 : 1.3f) * this.getLookAngle().y,
-                    0.7f * this.getDeltaMovement().z + (dir ? 3 : 1.3f) * this.getLookAngle().z
-            ));
             if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
                 ParticleTool.sendParticle(serverLevel, ParticleTypes.CAMPFIRE_COSY_SMOKE, this.xo, this.yo, this.zo, 1, 0, 0, 0, 0, true);
             }
@@ -255,6 +255,17 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
             }
             this.discard();
         }
+
+        // 控制速度
+        if (this.getDeltaMovement().length() < 3) {
+            this.setDeltaMovement(this.getDeltaMovement().multiply(1.06, 1.06, 1.06));
+        }
+
+        if (this.getDeltaMovement().length() > 3.3) {
+            this.setDeltaMovement(this.getDeltaMovement().multiply(0.9, 0.9, 0.9));
+        }
+
+        this.setDeltaMovement(this.getDeltaMovement().multiply(0.96, 0.96, 0.96));
     }
 
     private void causeExplode(HitResult result) {
@@ -273,19 +284,6 @@ public class JavelinMissileEntity extends ThrowableItemProjectile implements Geo
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
         ParticleTool.spawnSmallExplosionParticles(this.level(), result.getLocation());
-    }
-
-    private void look(EntityAnchorArgument.Anchor pAnchor, Vec3 pTarget) {
-        Vec3 vec3 = pAnchor.apply(this);
-        double d0 = (pTarget.x - vec3.x) * 0.2;
-        double d1 = (pTarget.y - vec3.y) * 0.2;
-        double d2 = (pTarget.z - vec3.z) * 0.2;
-        double d3 = Math.sqrt(d0 * d0 + d2 * d2);
-        this.setXRot(Mth.wrapDegrees((float) (-(Mth.atan2(d1, d3) * 57.2957763671875))));
-        this.setYRot(Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));
-        this.setYHeadRot(this.getYRot());
-        this.xRotO = this.getXRot();
-        this.yRotO = this.getYRot();
     }
 
     private PlayState movementPredicate(AnimationState<JavelinMissileEntity> event) {
