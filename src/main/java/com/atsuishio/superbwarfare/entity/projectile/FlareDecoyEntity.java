@@ -8,7 +8,6 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,12 +36,6 @@ public class FlareDecoyEntity extends Entity {
     }
 
     @Override
-    public boolean hurt(DamageSource source, float amount) {
-        this.discard();
-        return super.hurt(source, amount);
-    }
-
-    @Override
     protected void readAdditionalSaveData(CompoundTag compoundTag) {
 
     }
@@ -50,11 +43,6 @@ public class FlareDecoyEntity extends Entity {
     @Override
     protected void addAdditionalSaveData(CompoundTag compoundTag) {
 
-    }
-
-    @Override
-    public boolean isPickable() {
-        return !this.isRemoved();
     }
 
     @Override
