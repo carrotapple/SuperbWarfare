@@ -502,6 +502,6 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
 
     @Override
     public ResourceLocation getVehicleIcon() {
-        return ModUtils.loc("textures/vehicle_icon/mle_1934_icon.png");
+        return ModUtils.loc("textures/vehicle_icon/mle1934_icon.png");
     }
 }
