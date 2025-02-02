@@ -180,7 +180,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
 
         return Component.translatable("des.superbwarfare.guns.bypass").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##.##%").format(bypassRate * 100)).withStyle(ChatFormatting.GOLD));
+                .append(Component.literal(new DecimalFormat("##.##").format(bypassRate * 100) + "%").withStyle(ChatFormatting.GOLD));
     }
 
     /**
