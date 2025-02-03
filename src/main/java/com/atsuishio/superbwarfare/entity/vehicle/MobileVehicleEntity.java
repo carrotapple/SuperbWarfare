@@ -34,6 +34,7 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
 import org.joml.Vector3f;
@@ -234,10 +235,17 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
 
             var entities = level().getEntities(EntityTypeTest.forClass(Entity.class), frontBox,
                             entity -> entity != this && entity != getFirstPassenger() && entity.getVehicle() == null)
-                    .stream().filter(entity -> entity.isAlive()
-                            && !(entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ProjectileEntity || entity instanceof LaserEntity || entity instanceof FlareDecoyEntity || entity instanceof AreaEffectCloud || entity instanceof C4Entity)
-                            && !(entity instanceof Player player && (player.isSpectator() || player.isCreative()))
-                            && !entity.getType().getDescriptionId().equals("entity.create.super_glue"))
+                    .stream().filter(entity -> {
+                                if (entity.isAlive()
+                                        && !(entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ProjectileEntity || entity instanceof LaserEntity || entity instanceof FlareDecoyEntity || entity instanceof AreaEffectCloud || entity instanceof C4Entity)
+                                        && !(entity instanceof Player player && (player.isSpectator() || player.isCreative()))) {
+                                    var type = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+                                    if (type == null) return false;
+                                    return !VehicleConfig.COLLISION_ENTITY_BLACKLIST.get().contains(type.toString());
+                                }
+                                return false;
+                            }
+                    )
                     .toList();
 
             for (var entity : entities) {

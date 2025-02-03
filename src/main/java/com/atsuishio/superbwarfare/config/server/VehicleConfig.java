@@ -2,10 +2,18 @@ package com.atsuishio.superbwarfare.config.server;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import java.util.List;
+
 public class VehicleConfig {
 
     public static ForgeConfigSpec.BooleanValue COLLISION_DESTROY_BLOCKS;
     public static ForgeConfigSpec.BooleanValue COLLISION_DESTROY_HARD_BLOCKS;
+
+    public static ForgeConfigSpec.ConfigValue<List<? extends String>> COLLISION_ENTITY_BLACKLIST;
+
+    @SuppressWarnings("SpellCheckingInspection")
+    public static final List<? extends String> DEFAULT_COLLISION_ENTITY_BLACKLIST =
+            List.of("create:super_glue", "zombieawareness:scent");
 
     public static ForgeConfigSpec.IntValue MK42_HP;
     public static ForgeConfigSpec.IntValue MK42_AP_DAMAGE;
@@ -69,6 +77,11 @@ public class VehicleConfig {
 
         builder.comment("Allows vehicles to destroy hard blocks via collision");
         COLLISION_DESTROY_HARD_BLOCKS = builder.define("collision_destroy_hard_blocks", false);
+
+        builder.comment("List of entities that cannot be damaged by collision");
+        COLLISION_ENTITY_BLACKLIST = builder.defineList("collision_entity_blacklist",
+                DEFAULT_COLLISION_ENTITY_BLACKLIST,
+                e -> e instanceof String);
 
         builder.push("mk_42");
 
