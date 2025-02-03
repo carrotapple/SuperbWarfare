@@ -5,6 +5,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 public class ExplosionConfig {
 
     public static ForgeConfigSpec.IntValue EXPLOSION_PENETRATION_RATIO;
+    public static ForgeConfigSpec.BooleanValue EXPLOSION_DESTROY;
 
     public static ForgeConfigSpec.IntValue RGO_GRENADE_EXPLOSION_DAMAGE;
     public static ForgeConfigSpec.IntValue RGO_GRENADE_EXPLOSION_RADIUS;
@@ -32,10 +33,10 @@ public class ExplosionConfig {
         builder.push("explosion");
 
         builder.comment("The percentage of explosion damage you take behind cover");
-        EXPLOSION_PENETRATION_RATIO = builder.defineInRange("explosion_destroy", 15, 0, 100);
+        EXPLOSION_PENETRATION_RATIO = builder.defineInRange("explosion_penetration_ratio", 15, 0, 100);
 
-        builder.pop();
-
+        builder.comment("Set TRUE to allow Explosion to destroy blocks");
+        EXPLOSION_DESTROY = builder.define("explosion_destroy", false);
 
         builder.push("RGO Grenade");
 
@@ -59,7 +60,7 @@ public class ExplosionConfig {
         builder.pop();
 
 
-        builder.push("Mortar shell");
+        builder.push("Mortar Shell");
 
         builder.comment("The explosion damage of Mortar shell");
         MORTAR_SHELL_EXPLOSION_DAMAGE = builder.defineInRange("mortar_shell_explosion_damage", 160, 1, 10000000);
@@ -98,7 +99,7 @@ public class ExplosionConfig {
 
         builder.pop();
 
-        builder.push("Wire_Guide_Missile");
+        builder.push("Wire Guide Missile");
 
         builder.comment("The damage of wire guide missile");
         WIRE_GUIDE_MISSILE_DAMAGE = builder.defineInRange("wire_guide_missile_damage", 500, 1, Integer.MAX_VALUE);
@@ -110,6 +111,7 @@ public class ExplosionConfig {
         WIRE_GUIDE_MISSILE_EXPLOSION_RADIUS = builder.defineInRange("wire_guide_missile_explosion_radius", 6, 1, Integer.MAX_VALUE);
 
         builder.pop();
-    }
 
+        builder.pop();
+    }
 }

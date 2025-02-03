@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
@@ -271,7 +271,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
 
             float hardness = this.level().getBlockState(_pos).getBlock().defaultDestroyTime();
 
-            if (ExplosionDestroyConfig.EXPLOSION_DESTROY.get() && hardness != -1) {
+            if (ExplosionConfig.EXPLOSION_DESTROY.get() && hardness != -1) {
                 Block.dropResources(this.level().getBlockState(_pos), this.level(), _pos, null);
                 this.level().destroyBlock(_pos, true);
             }
@@ -279,7 +279,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
             if (this.entityData.get(COOL_DOWN) > 98) {
                 laserExplosion(hitPos);
             }
-            this.level().explode(this, hitPos.x, hitPos.y, hitPos.z, 5, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
+            this.level().explode(this, hitPos.x, hitPos.y, hitPos.z, 5, ExplosionConfig.EXPLOSION_DESTROY.get() ? Level.ExplosionInteraction.BLOCK : Level.ExplosionInteraction.NONE);
 
         }
 
@@ -332,7 +332,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
 
         CustomExplosion explosion = new CustomExplosion(this.level(), passenger,
                 ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), passenger, passenger), 300f,
-                pos.x, pos.y, pos.z, 15f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                pos.x, pos.y, pos.z, 15f, ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
         explosion.finalizeExplosion(false);
@@ -346,7 +346,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
         if (level() instanceof ServerLevel) {
             CustomExplosion explosion = new CustomExplosion(this.level(), this,
                     ModDamageTypes.causeProjectileBoomDamage(this.level().registryAccess(), attacker, attacker), 600f,
-                    this.getX(), this.getY(), this.getZ(), 15f, ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
+                    this.getX(), this.getY(), this.getZ(), 15f, ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).setDamageMultiplier(1);
             explosion.explode();
             net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
             explosion.finalizeExplosion(false);

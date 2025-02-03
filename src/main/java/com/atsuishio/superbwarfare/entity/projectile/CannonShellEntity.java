@@ -1,7 +1,7 @@
 package com.atsuishio.superbwarfare.entity.projectile;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.config.server.ExplosionDestroyConfig;
+import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.entity.AnimatedEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
@@ -213,7 +213,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
         float hardness = this.level().getBlockState(BlockPos.containing(x, y, z)).getBlock().defaultDestroyTime();
         this.durability -= (int) hardness;
 
-        if (ExplosionDestroyConfig.EXPLOSION_DESTROY.get() && hardness != -1 && hardness <= 50) {
+        if (ExplosionConfig.EXPLOSION_DESTROY.get() && hardness != -1 && hardness <= 50) {
             BlockPos blockPos = BlockPos.containing(x, y, z);
             Block.dropResources(this.level().getBlockState(blockPos), this.level(), BlockPos.containing(x, y, z), null);
             this.level().destroyBlock(blockPos, true);
@@ -241,7 +241,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
             }
         } else {
             if (!this.level().isClientSide()) {
-                if (ExplosionDestroyConfig.EXPLOSION_DESTROY.get()) {
+                if (ExplosionConfig.EXPLOSION_DESTROY.get()) {
                     if (this.firstHit) {
                         ParticleTool.cannonHitParticles(this.level(), this.position());
                         causeExplodeBlock(blockHitResult);
@@ -298,7 +298,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
                 entity.getY() + 0.5 * entity.getBbHeight(),
                 entity.getZ(),
                 radius,
-                ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
+                ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
                 setDamageMultiplier(1).setFireTime(fireTime);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
@@ -329,7 +329,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
                 result.getLocation().y,
                 result.getLocation().z,
                 radius,
-                ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
+                ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
                 setDamageMultiplier(1).setFireTime(fireTime);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
@@ -356,7 +356,7 @@ public class CannonShellEntity extends ThrowableItemProjectile implements GeoEnt
                 result.getLocation().y,
                 result.getLocation().z,
                 radius,
-                ExplosionDestroyConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
+                ExplosionConfig.EXPLOSION_DESTROY.get() ? Explosion.BlockInteraction.DESTROY : Explosion.BlockInteraction.KEEP).
                 setDamageMultiplier(1).setFireTime(fireTime);
         explosion.explode();
         net.minecraftforge.event.ForgeEventFactory.onExplosionStart(this.level(), explosion);
