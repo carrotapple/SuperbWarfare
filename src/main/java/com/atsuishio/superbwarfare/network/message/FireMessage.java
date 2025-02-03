@@ -299,13 +299,13 @@ public class FireMessage {
             projectile.beast();
         } else if (perk == ModPerks.JHP_BULLET.get()) {
             int level = PerkHelper.getItemPerkLevel(perk, stack);
-            projectile.jhpBullet(true, level);
+            projectile.jhpBullet(level);
         } else if (perk == ModPerks.HE_BULLET.get()) {
             int level = PerkHelper.getItemPerkLevel(perk, stack);
-            projectile.heBullet(true, level);
+            projectile.heBullet(level);
         } else if (perk == ModPerks.INCENDIARY_BULLET.get()) {
             int level = PerkHelper.getItemPerkLevel(perk, stack);
-            projectile.fireBullet(true, level, !zoom);
+            projectile.fireBullet(level, !zoom);
         }
 
         var dmgPerk = PerkHelper.getPerkByType(stack, Perk.Type.DAMAGE);
