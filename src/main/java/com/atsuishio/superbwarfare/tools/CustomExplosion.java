@@ -30,6 +30,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public class CustomExplosion extends Explosion {
+
     private final Level level;
     private final double x;
     private final double y;
@@ -42,7 +43,6 @@ public class CustomExplosion extends Explosion {
     private final float damage;
     private int fireTime;
     private float damageMultiplier;
-    private boolean bullet;
 
     public CustomExplosion(Level pLevel, @Nullable Entity pSource, @Nullable DamageSource source, @Nullable ExplosionDamageCalculator pDamageCalculator,
                            float damage, double pToBlowX, double pToBlowY, double pToBlowZ, float pRadius,
@@ -80,9 +80,7 @@ public class CustomExplosion extends Explosion {
         this(pLevel, pSource, source, null, damage, pToBlowX, pToBlowY, pToBlowZ, pRadius, BlockInteraction.KEEP);
 
         final Vec3 center = new Vec3(pToBlowX, pToBlowY, pToBlowZ);
-
         for (Entity target : level.getEntitiesOfClass(Entity.class, new AABB(center, center).inflate(radius), e -> true).stream().sorted(Comparator.comparingDouble(e -> e.distanceToSqr(center))).toList()) {
-
             if (target instanceof ServerPlayer serverPlayer && !(target == pSource && pSource.getVehicle() != null)) {
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(20 + 0.02 * damage, pRadius,10 + 0.03 * damage, pToBlowX, pToBlowY, pToBlowZ));
             }
@@ -99,8 +97,7 @@ public class CustomExplosion extends Explosion {
         return this;
     }
 
-    public CustomExplosion isBulletExplode(boolean bullet) {
-        this.bullet = bullet;
+    public CustomExplosion bulletExplode() {
         return this;
     }
 
@@ -172,14 +169,12 @@ public class CustomExplosion extends Explosion {
                     double yDistance = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - this.y;
                     double zDistance = entity.getZ() - this.z;
                     double distance = Math.sqrt(xDistance * xDistance + yDistance * yDistance + zDistance * zDistance);
+
                     if (distance != 0.0D) {
-                        xDistance /= distance;
-                        yDistance /= distance;
-                        zDistance /= distance;
                         double seenPercent = Mth.clamp(getSeenPercent(position, entity), 0.01 * ExplosionConfig.EXPLOSION_PENETRATION_RATIO.get(), Double.POSITIVE_INFINITY);
                         double damagePercent = (1.0D - distanceRate) * seenPercent;
-
                         double damageFinal = (damagePercent * damagePercent + damagePercent) / 2.0D * damage;
+
                         if (entity instanceof Monster monster) {
                             monster.hurt(this.damageSource, (float) damageFinal * (1 + 0.2f * this.damageMultiplier));
                         } else {
