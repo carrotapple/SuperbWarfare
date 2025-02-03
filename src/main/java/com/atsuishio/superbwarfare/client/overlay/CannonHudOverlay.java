@@ -4,11 +4,11 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.entity.vehicle.AnnihilatorEntity;
 import com.atsuishio.superbwarfare.entity.vehicle.ICannonEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
+import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.TraceTool;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
@@ -26,8 +26,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Math;
 
-import java.text.DecimalFormat;
-
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 import static com.atsuishio.superbwarfare.client.overlay.VehicleHudOverlay.renderKillIndicator;
 
@@ -40,8 +38,6 @@ public class CannonHudOverlay {
         int h = event.getWindow().getGuiScaledHeight();
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
-        Camera camera = mc.gameRenderer.getMainCamera();
-        Vec3 cameraPos = camera.getPosition();
         GuiGraphics guiGraphics = event.getGuiGraphics();
         PoseStack poseStack = guiGraphics.pose();
 
@@ -61,13 +57,13 @@ public class CannonHudOverlay {
         preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/compass_white.png"), (float) w / 2 - 128, (float) 10, 128 + ((float) 64 / 45 * (Mth.lerp(event.getPartialTick(), cannon.yRotO, cannon.getYRot()))), 0, 256, 16, 512, 16);
         preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/roll_ind_white.png"), w / 2 - 4, 27, 0, 0.0F, 8, 8, 8, 8);
 
-        String angle = new DecimalFormat("#0.0").format(Mth.lerp(event.getPartialTick(), cannon.yRotO, cannon.getYRot()));
+        String angle = FormatTool.DECIMAL_FORMAT_1ZZ.format(Mth.lerp(event.getPartialTick(), cannon.yRotO, cannon.getYRot()));
         int width = Minecraft.getInstance().font.width(angle);
         event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.literal(angle), w / 2 - width / 2, 40, -1, false);
 
         preciseBlit(event.getGuiGraphics(), ModUtils.loc("textures/screens/cannon/cannon_pitch.png"), w / 2 + 166, h / 2 - 64, 0, 0.0F, 8, 128, 8, 128);
 
-        String pitch = new DecimalFormat("#0.0").format(-Mth.lerp(event.getPartialTick(), cannon.xRotO, cannon.getXRot()));
+        String pitch = FormatTool.DECIMAL_FORMAT_1ZZ.format(-Mth.lerp(event.getPartialTick(), cannon.xRotO, cannon.getXRot()));
         int widthP = Minecraft.getInstance().font.width(pitch);
 
         poseStack.pushPose();
@@ -99,15 +95,15 @@ public class CannonHudOverlay {
             }
             if (lookAtEntity) {
                 event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.drone.range")
-                                .append(Component.literal(new DecimalFormat("##.#M ").format(entityRange) + lookingEntity.getDisplayName().getString())),
+                                .append(Component.literal(FormatTool.format1D(entityRange, "m ") + lookingEntity.getDisplayName().getString())),
                         w / 2 + 14, h / 2 - 20, -1, false);
             } else {
                 if (blockRange > 511) {
                     event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.drone.range")
-                            .append(Component.literal("---M")), w / 2 + 14, h / 2 - 20, -1, false);
+                            .append(Component.literal("---m")), w / 2 + 14, h / 2 - 20, -1, false);
                 } else {
                     event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.drone.range")
-                                    .append(Component.literal(new DecimalFormat("##.#M").format(blockRange))),
+                                    .append(Component.literal(FormatTool.format1D(blockRange, "m"))),
                             w / 2 + 14, h / 2 - 20, -1, false);
                 }
             }

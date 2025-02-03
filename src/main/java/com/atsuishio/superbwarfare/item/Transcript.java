@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.item;
 
+import com.atsuishio.superbwarfare.tools.FormatTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -14,10 +15,10 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 public class Transcript extends Item {
+
     public static final String TAG_SCORES = "Scores";
 
     public Transcript() {
@@ -42,7 +43,7 @@ public class Transcript extends Item {
             tooltip.add(Component.translatable("des.superbwarfare.transcript.score").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal(score + " ").withStyle(score == 10 ? ChatFormatting.GOLD : ChatFormatting.WHITE))
                     .append(Component.translatable("des.superbwarfare.transcript.distance").withStyle(ChatFormatting.GRAY))
-                    .append(Component.literal(new DecimalFormat("##.#m").format(tag.getDouble("Distance"))).withStyle(ChatFormatting.WHITE)));
+                    .append(Component.literal(FormatTool.format1D(tag.getDouble("Distance"), "m")).withStyle(ChatFormatting.WHITE)));
         }
 
         tooltip.add(Component.translatable("des.superbwarfare.transcript.total").withStyle(ChatFormatting.YELLOW)

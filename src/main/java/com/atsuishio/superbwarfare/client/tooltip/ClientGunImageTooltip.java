@@ -8,6 +8,7 @@ import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
+import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -19,8 +20,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
-import java.text.DecimalFormat;
 
 public class ClientGunImageTooltip implements ClientTooltipComponent {
 
@@ -93,8 +92,8 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
         double damage = GunsTool.getGunDoubleTag(stack, "Damage", 0) * TooltipTool.perkDamage(stack);
         return Component.translatable("des.superbwarfare.guns.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##.#").format(damage) + (TooltipTool.heBullet(stack) ? " + "
-                        + new DecimalFormat("##.#").format(0.8 * damage * (1 + 0.1 * TooltipTool.heBulletLevel(stack))) : "")).withStyle(ChatFormatting.GREEN));
+                .append(Component.literal(FormatTool.format1D(damage) + (TooltipTool.heBullet(stack) ? " + "
+                        + FormatTool.format1D(0.8 * damage * (1 + 0.1 * TooltipTool.heBulletLevel(stack))) : "")).withStyle(ChatFormatting.GREEN));
     }
 
     /**
@@ -104,7 +103,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
         if (this.stack.getItem() instanceof GunItem gunItem && gunItem.autoWeapon(this.stack)) {
             return Component.translatable("des.superbwarfare.guns.rpm").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                    .append(Component.literal(new DecimalFormat("##").format(GunsTool.getGunIntTag(stack, "RPM", 0)))
+                    .append(Component.literal(FormatTool.format0D(GunsTool.getGunIntTag(stack, "RPM", 0)))
                             .withStyle(ChatFormatting.GREEN));
         }
         return Component.literal("");
@@ -143,7 +142,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
                 .append(Component.literal(level + "").withStyle(formatting).withStyle(ChatFormatting.BOLD))
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(" (" + new DecimalFormat("#0.00").format(rate * 100) + "%)").withStyle(ChatFormatting.GRAY));
+                .append(Component.literal(" (" + FormatTool.DECIMAL_FORMAT_2ZZZ.format(rate * 100) + "%)").withStyle(ChatFormatting.GRAY));
     }
 
     /**
@@ -180,7 +179,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
 
         return Component.translatable("des.superbwarfare.guns.bypass").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##.##").format(bypassRate * 100) + "%").withStyle(ChatFormatting.GOLD));
+                .append(Component.literal(FormatTool.format2D(bypassRate * 100, "%")).withStyle(ChatFormatting.GOLD));
     }
 
     /**
@@ -190,7 +189,7 @@ public class ClientGunImageTooltip implements ClientTooltipComponent {
         double headshot = GunsTool.getGunDoubleTag(stack, "Headshot", 0);
         return Component.translatable("des.superbwarfare.guns.headshot").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##.#x").format(headshot)).withStyle(ChatFormatting.AQUA));
+                .append(Component.literal(FormatTool.format1D(headshot, "x")).withStyle(ChatFormatting.AQUA));
     }
 
     /**

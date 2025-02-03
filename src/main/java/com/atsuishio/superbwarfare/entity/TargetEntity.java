@@ -4,6 +4,7 @@ import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
@@ -129,7 +130,7 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
 
             if (sourceEntity instanceof Player player) {
                 player.displayClientMessage(Component.translatable("tips.superbwarfare.target.down",
-                        new java.text.DecimalFormat("##.#M").format((entity.position()).distanceTo((sourceEntity.position())))), true);
+                        FormatTool.format1D((entity.position()).distanceTo((sourceEntity.position()))), "m"), true);
                 SoundTool.playLocalSound(player, ModSounds.TARGET_DOWN.get(), 1, 1);
                 targetEntity.entityData.set(DOWN_TIME, 40);
             }

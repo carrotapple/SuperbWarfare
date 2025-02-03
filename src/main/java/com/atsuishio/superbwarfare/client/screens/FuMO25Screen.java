@@ -8,6 +8,7 @@ import com.atsuishio.superbwarfare.menu.FuMO25Menu;
 import com.atsuishio.superbwarfare.network.message.RadarChangeModeMessage;
 import com.atsuishio.superbwarfare.network.message.RadarSetParametersMessage;
 import com.atsuishio.superbwarfare.network.message.RadarSetPosMessage;
+import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
@@ -25,7 +26,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -162,11 +162,11 @@ public class FuMO25Screen extends AbstractContainerScreen<FuMO25Menu> {
             StringBuilder sb = new StringBuilder();
             sb.append(currentTarget.getDisplayName().getString());
             if (currentTarget instanceof LivingEntity living) {
-                sb.append(" (HP: ").append(new DecimalFormat("##.#").format(living.getHealth()))
-                        .append("/").append(new DecimalFormat("##.#").format(living.getMaxHealth())).append(")");
+                sb.append(" (HP: ").append(FormatTool.format1D(living.getHealth()))
+                        .append("/").append(FormatTool.format1D(living.getMaxHealth())).append(")");
             } else if (currentTarget instanceof VehicleEntity vehicle) {
-                sb.append(" (HP: ").append(new DecimalFormat("##.#").format(vehicle.getHealth()))
-                        .append("/").append(new DecimalFormat("##.#").format(vehicle.getMaxHealth())).append(")");
+                sb.append(" (HP: ").append(FormatTool.format1D(vehicle.getHealth()))
+                        .append("/").append(FormatTool.format1D(vehicle.getMaxHealth())).append(")");
             }
 
             guiGraphics.drawString(this.font, Component.translatable("des.superbwarfare.fumo_25.current_target", sb),

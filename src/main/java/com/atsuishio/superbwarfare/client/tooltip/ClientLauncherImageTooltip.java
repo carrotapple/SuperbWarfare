@@ -2,11 +2,10 @@ package com.atsuishio.superbwarfare.client.tooltip;
 
 import com.atsuishio.superbwarfare.client.TooltipTool;
 import com.atsuishio.superbwarfare.client.tooltip.component.GunImageComponent;
+import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-
-import java.text.DecimalFormat;
 
 public class ClientLauncherImageTooltip extends ClientGunImageTooltip {
 
@@ -21,8 +20,8 @@ public class ClientLauncherImageTooltip extends ClientGunImageTooltip {
 
         return Component.translatable("des.superbwarfare.guns.damage").withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##.#").format(damage)).withStyle(ChatFormatting.GREEN)
+                .append(Component.literal(FormatTool.format1D(damage)).withStyle(ChatFormatting.GREEN)
                         .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                        .append(Component.literal(" + " + new DecimalFormat("##.#").format(explosionDamage)).withStyle(ChatFormatting.GOLD)));
+                        .append(Component.literal(" + " + FormatTool.format1D(explosionDamage)).withStyle(ChatFormatting.GOLD)));
     }
 }

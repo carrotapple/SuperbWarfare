@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.network.message;
 import com.atsuishio.superbwarfare.client.gui.RangeHelper;
 import com.atsuishio.superbwarfare.entity.MortarEntity;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import com.atsuishio.superbwarfare.tools.TraceTool;
 import net.minecraft.network.FriendlyByteBuf;
@@ -12,10 +13,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.text.DecimalFormat;
 import java.util.function.Supplier;
-
-import static com.atsuishio.superbwarfare.entity.MortarEntity.PITCH;
 
 public class AdjustMortarAngleMessage {
 
@@ -46,13 +44,13 @@ public class AdjustMortarAngleMessage {
             double angle = 0;
 
             if (looking instanceof MortarEntity mortar) {
-                mortar.getEntityData().set(PITCH, (float) Mth.clamp(mortar.getEntityData().get(PITCH) + 0.5 * message.scroll, 20, 89));
-                angle = mortar.getEntityData().get(PITCH);
+                mortar.getEntityData().set(MortarEntity.PITCH, (float) Mth.clamp(mortar.getEntityData().get(MortarEntity.PITCH) + 0.5 * message.scroll, 20, 89));
+                angle = mortar.getEntityData().get(MortarEntity.PITCH);
             }
 
             player.displayClientMessage(Component.translatable("tips.superbwarfare.mortar.angle",
-                    new DecimalFormat("##.##°").format(angle),
-                    new DecimalFormat("##.#m").format((int) RangeHelper.getRange(angle))), true);
+                    FormatTool.format2D(angle),
+                    FormatTool.format1D((int) RangeHelper.getRange(angle)), "m"), true);
             SoundTool.playLocalSound(player, ModSounds.ADJUST_FOV.get(), 1f, 0.7f);
         });
         context.get().setPacketHandled(true);

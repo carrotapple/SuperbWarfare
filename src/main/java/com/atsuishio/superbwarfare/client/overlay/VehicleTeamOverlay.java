@@ -1,12 +1,11 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
-import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
+import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.TraceTool;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
@@ -15,12 +14,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.text.DecimalFormat;
-
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class VehicleTeamOverlay {
-
-    private static final ResourceLocation TRIANGLE = ModUtils.loc("textures/screens/red_triangle.png");
 
     @SubscribeEvent(priority = EventPriority.NORMAL)
     public static void eventHandler(RenderGuiEvent.Pre event) {
@@ -41,7 +36,6 @@ public class VehicleTeamOverlay {
         }
 
         if (lookAtEntity) {
-
             poseStack.pushPose();
             poseStack.scale(0.8f, 0.8f, 1);
             if (lookingEntity.getFirstPassenger() instanceof Player player1) {
@@ -49,11 +43,11 @@ public class VehicleTeamOverlay {
                         Component.literal(player1.getDisplayName().getString() + (player1.getTeam() == null ? "" : " <" + (player1.getTeam().getName()) + ">")),
                         w / 2 + 90, h / 2 - 4, player1.getTeamColor(), false);
                 event.getGuiGraphics().drawString(Minecraft.getInstance().font,
-                        Component.literal(lookingEntity.getDisplayName().getString() + new DecimalFormat(" ##.#M").format(entityRange)),
+                        Component.literal(lookingEntity.getDisplayName().getString() + FormatTool.format1D(entityRange, "m")),
                         w / 2 + 90, h / 2 + 5, player1.getTeamColor(), false);
             } else {
                 event.getGuiGraphics().drawString(Minecraft.getInstance().font,
-                        Component.literal(lookingEntity.getDisplayName().getString() + new DecimalFormat(" ##.#M").format(entityRange)),
+                        Component.literal(lookingEntity.getDisplayName().getString() + " " + FormatTool.format1D(entityRange, "M")),
                         w / 2 + 90, h / 2 + 5, -1, false);
             }
             poseStack.popPose();

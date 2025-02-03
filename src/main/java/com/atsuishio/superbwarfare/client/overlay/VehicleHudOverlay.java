@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.config.client.DisplayConfig;
 import com.atsuishio.superbwarfare.entity.vehicle.*;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
+import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.SeekTool;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -32,8 +33,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Math;
 
-import java.text.DecimalFormat;
-
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 import static com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay.*;
 import static com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity.WEAPON_TYPE;
@@ -42,6 +41,7 @@ import static com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity.HEAT;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class VehicleHudOverlay {
+
     private static float scopeScale = 1;
     private static final ResourceLocation FRAME = ModUtils.loc("textures/screens/land/tv_frame.png");
     private static final ResourceLocation ARMOR = ModUtils.loc("textures/screens/armor.png");
@@ -129,7 +129,6 @@ public class VehicleHudOverlay {
             ItemStack stack = player.getMainHandItem();
 
             // 渲染弹药类型
-
             event.getGuiGraphics().drawString(
                     Minecraft.getInstance().font,
                     getVehicleAmmoType(stack, iVehicle),
@@ -138,7 +137,6 @@ public class VehicleHudOverlay {
                     0xFFFFFF,
                     true
             );
-
         }
     }
 
@@ -214,8 +212,7 @@ public class VehicleHudOverlay {
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/line.png"), w / 2 - 64, h - 56, 0, 0.0F, 128, 1, 128, 1);
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/line.png"), w / 2 + 112, h - 71, 0, 0.0F, 1, 16, 1, 16);
 
-                //不同武器种类的准星
-
+                // 不同武器种类的准星
                 if (multiWeaponVehicle.getWeaponType() == 0) {
                     preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_cannon_cross.png"), k, l, 0, 0.0F, i, j, i, j);
                 } else if (multiWeaponVehicle.getWeaponType() == 1) {
@@ -224,24 +221,21 @@ public class VehicleHudOverlay {
                     preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/lav_missile_cross.png"), k, l, 0, 0.0F, i, j, i, j);
                 }
 
-                //指南针
-
+                // 指南针
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/compass.png"), (float) w / 2 - 128, (float) 10, 128 + ((float) 64 / 45 * player.getYRot()), 0, 256, 16, 512, 16);
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/roll_ind.png"), w / 2 - 8, 30, 0, 0.0F, 16, 16, 16, 16);
 
-                //炮塔方向
-
+                // 炮塔方向
                 poseStack.pushPose();
                 poseStack.rotateAround(Axis.ZP.rotationDegrees(Mth.lerp(event.getPartialTick(), iLand.turretYRotO(), iLand.turretYRot())), w / 2 + 112, h - 56, 0);
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/land/body.png"), w / 2 + 96, h - 72, 0, 0.0F, 32, 32, 32, 32);
                 poseStack.popPose();
 
-                //时速
-
-                guiGraphics.drawString(mc.font, Component.literal(new DecimalFormat("## KM/H").format(mobileVehicle.getDeltaMovement().length() * 72)),
+                // 时速
+                guiGraphics.drawString(mc.font, Component.literal(FormatTool.format0D(mobileVehicle.getDeltaMovement().length() * 72, " km/h")),
                         w / 2 + 160, h / 2 - 48, 0x66FF00, false);
 
-                //低电量警告
+                // 低电量警告
 
                 if (mobileVehicle.getEnergy() < 0.02 * mobileVehicle.getMaxEnergy()) {
                     guiGraphics.drawString(mc.font, Component.literal("NO POWER!"),
@@ -251,8 +245,7 @@ public class VehicleHudOverlay {
                             w / 2 - 144, h / 2 + 14, 0xFF6B00, false);
                 }
 
-                //测距
-
+                // 测距
                 boolean lookAtEntity = false;
                 double blockRange = cameraPos.distanceTo((Vec3.atLowerCornerOf(player.level().clip(
                         new ClipContext(player.getEyePosition(), player.getEyePosition().add(iLand.getBarrelVec(event.getPartialTick()).scale(520)),
@@ -267,19 +260,18 @@ public class VehicleHudOverlay {
                 }
 
                 if (lookAtEntity) {
-                    guiGraphics.drawString(mc.font, Component.literal(new DecimalFormat("##.#M").format(entityRange)),
+                    guiGraphics.drawString(mc.font, Component.literal(FormatTool.format1D(entityRange, "m")),
                             w / 2 - 6, h - 53, 0x66FF00, false);
                 } else {
                     if (blockRange > 512) {
-                        guiGraphics.drawString(mc.font, Component.literal("---"), w / 2 - 6, h - 53, 0x66FF00, false);
+                        guiGraphics.drawString(mc.font, Component.literal("---m"), w / 2 - 6, h - 53, 0x66FF00, false);
                     } else {
-                        guiGraphics.drawString(mc.font, Component.literal(new DecimalFormat("##.#M").format(blockRange)),
+                        guiGraphics.drawString(mc.font, Component.literal(FormatTool.format1D(blockRange, "m")),
                                 w / 2 - 6, h - 53, 0x66FF00, false);
                     }
                 }
 
-                //武器名称
-
+                // 武器名称
                 if (player.getVehicle() instanceof Lav150Entity lav) {
                     if (multiWeaponVehicle.getWeaponType() == 0) {
                         double heat = 1 - lav.getEntityData().get(HEAT) / 100.0F;
@@ -303,10 +295,9 @@ public class VehicleHudOverlay {
 
                 }
 
-                //血量
-
+                // 血量
                 double heal = mobileVehicle.getHealth() / mobileVehicle.getMaxHealth();
-                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(100 * heal)), w / 2 - 165, h / 2 - 46, Mth.hsvToRgb((float) heal / 3.745318352059925F, 1.0F, 1.0F), false);
+                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(FormatTool.format0D(100 * heal)), w / 2 - 165, h / 2 - 46, Mth.hsvToRgb((float) heal / 3.745318352059925F, 1.0F, 1.0F), false);
 
                 renderKillIndicator(guiGraphics, w, h);
 
@@ -351,11 +342,11 @@ public class VehicleHudOverlay {
 
                     double heal = 1 - mobileVehicle.getHealth() / mobileVehicle.getMaxHealth();
 
-                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("HP " + new DecimalFormat("##").format(100 * mobileVehicle.getHealth() / mobileVehicle.getMaxHealth())), 30, 1, Mth.hsvToRgb(0F, (float) heal, 1.0F), false);
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("HP " +
+                            FormatTool.format0D(100 * mobileVehicle.getHealth() / mobileVehicle.getMaxHealth())), 30, 1, Mth.hsvToRgb(0F, (float) heal, 1.0F), false);
+
                     poseStack.popPose();
                     poseStack.popPose();
-
-
                     poseStack.popPose();
                 }
             }

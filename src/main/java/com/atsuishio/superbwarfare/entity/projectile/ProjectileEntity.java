@@ -9,10 +9,7 @@ import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.Transcript;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.network.message.PlayerGunKillMessage;
-import com.atsuishio.superbwarfare.tools.CustomExplosion;
-import com.atsuishio.superbwarfare.tools.ExtendedEntityRayTraceResult;
-import com.atsuishio.superbwarfare.tools.HitboxHelper;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
+import com.atsuishio.superbwarfare.tools.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -60,7 +57,6 @@ import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -411,7 +407,7 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
 
         player.displayClientMessage(Component.literal(String.valueOf(score))
                 .append(Component.translatable("tips.superbwarfare.shoot.rings"))
-                .append(Component.literal(" " + new DecimalFormat("##.#m").format(distance) )), false);
+                .append(Component.literal(" " + FormatTool.format1D(distance, "m"))), false);
 
         if (!this.shooter.level().isClientSide() && this.shooter instanceof ServerPlayer serverPlayer) {
             var holder = score == 10 ? Holder.direct(ModSounds.HEADSHOT.get()) : Holder.direct(ModSounds.INDICATION.get());

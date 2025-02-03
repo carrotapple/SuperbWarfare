@@ -20,6 +20,7 @@ import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.atsuishio.superbwarfare.tools.DamageTypeTool;
+import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.nbt.CompoundTag;
@@ -48,7 +49,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 
-import java.text.DecimalFormat;
 import java.util.Objects;
 
 @Mod.EventBusSubscriber
@@ -189,8 +189,8 @@ public class LivingEventHandler {
 
         if (entity instanceof TargetEntity && sourceEntity instanceof Player player) {
             player.displayClientMessage(Component.translatable("tips.superbwarfare.target.damage",
-                    new DecimalFormat("##.##").format(damage),
-                    new DecimalFormat("##.#m").format(entity.position().distanceTo(sourceEntity.position()))), false);
+                    FormatTool.format2D(damage),
+                    FormatTool.format1D(entity.position().distanceTo(sourceEntity.position())), "m"), false);
         }
     }
 

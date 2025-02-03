@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
+import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.SeekTool;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -27,7 +28,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
@@ -69,7 +69,7 @@ public class DroneUIOverlay {
             guiGraphics.blit(ModUtils.loc("textures/screens/drone_fov.png"), w / 2 + 100, h / 2 - 64, 0, 0, 64, 129, 64, 129);
 
             preciseBlit(guiGraphics, ModUtils.loc("textures/screens/drone_fov_move.png"), (float) w / 2 + 100, (float) (h / 2 - 64 - ((ClientEventHandler.droneFovLerp - 1) * 23.8)), 0, 0, 64, 129, 64, 129);
-            guiGraphics.drawString(mc.font, Component.literal(new DecimalFormat("##.#x").format(ClientEventHandler.droneFovLerp)),
+            guiGraphics.drawString(mc.font, Component.literal(FormatTool.format1D(ClientEventHandler.droneFovLerp, "x")),
                     w / 2 + 144, h / 2 + 56 - (int) ((ClientEventHandler.droneFovLerp - 1) * 23.8), -1, false);
 
             DroneEntity entity = EntityFindUtil.findDrone(player.level(), stack.getOrCreateTag().getString("LinkedDrone"));
@@ -100,17 +100,17 @@ public class DroneUIOverlay {
 
                 // 距离
                 guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.distance")
-                                .append(Component.literal(new DecimalFormat("##.#M").format(distance))),
+                                .append(Component.literal(FormatTool.format1D(distance, "m"))),
                         w / 2 + 10, h / 2 + 33, color, false);
 
                 // 血量
                 guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.health")
-                                .append(Component.literal(new DecimalFormat("##.#").format(entity.getHealth()) + "/" + new DecimalFormat("##.#").format(entity.getMaxHealth()))),
+                                .append(Component.literal(FormatTool.format1D(entity.getHealth()) + " / " + FormatTool.format1D(entity.getMaxHealth()))),
                         w / 2 - 77, h / 2 + 33, -1, false);
                 if (entity.getEntityData().get(KAMIKAZE_MODE) == 0) {
                     // 弹药
                     guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.ammo")
-                                    .append(Component.literal(new DecimalFormat("##.# / 6").format(entity.getEntityData().get(AMMO)))),
+                                    .append(Component.literal(FormatTool.format1D(entity.getEntityData().get(AMMO), " / 6"))),
                             w / 2 + 12, h / 2 - 37, -1, false);
                 } else {
                     // 神风
@@ -121,16 +121,16 @@ public class DroneUIOverlay {
                 if (lookAtEntity) {
                     // 实体距离
                     guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.range")
-                                    .append(Component.literal(new DecimalFormat("##.#M ").format(entityRange) + lookingEntity.getDisplayName().getString())),
+                                    .append(Component.literal(FormatTool.format1D(entityRange, "m ") + lookingEntity.getDisplayName().getString())),
                             w / 2 + 12, h / 2 - 28, color, false);
                 } else {
                     // 方块距离
                     if (blockRange > 512) {
                         guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.range")
-                                .append(Component.literal("---M")), w / 2 + 12, h / 2 - 28, color, false);
+                                .append(Component.literal("---m")), w / 2 + 12, h / 2 - 28, color, false);
                     } else {
                         guiGraphics.drawString(mc.font, Component.translatable("tips.superbwarfare.drone.range")
-                                        .append(Component.literal(new DecimalFormat("##.#M").format(blockRange))),
+                                        .append(Component.literal(FormatTool.format1D(blockRange, "m"))),
                                 w / 2 + 12, h / 2 - 28, color, false);
                     }
                 }

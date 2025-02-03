@@ -2,6 +2,7 @@ package com.atsuishio.superbwarfare.item.common.ammo;
 
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.ItemNBTTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -18,7 +19,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 public class AmmoBox extends Item {
@@ -132,19 +132,19 @@ public class AmmoBox extends Item {
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box").withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.rifle").withStyle(ChatFormatting.GREEN)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getInt(stack, "RifleAmmo", 0)) + ((type == 0 || type == 1) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(FormatTool.format0D(ItemNBTTool.getInt(stack, "RifleAmmo", 0)) + ((type == 0 || type == 1) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.handgun").withStyle(ChatFormatting.AQUA)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getInt(stack, "HandgunAmmo", 0)) + ((type == 0 || type == 2) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(FormatTool.format0D(ItemNBTTool.getInt(stack, "HandgunAmmo", 0)) + ((type == 0 || type == 2) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.shotgun").withStyle(ChatFormatting.RED)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getInt(stack, "ShotgunAmmo", 0)) + ((type == 0 || type == 3) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(FormatTool.format0D(ItemNBTTool.getInt(stack, "ShotgunAmmo", 0)) + ((type == 0 || type == 3) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
 
         tooltip.add(Component.translatable("des.superbwarfare.ammo_box.sniper").withStyle(ChatFormatting.GOLD)
                 .append(Component.literal("").withStyle(ChatFormatting.RESET))
-                .append(Component.literal(new DecimalFormat("##").format(ItemNBTTool.getInt(stack, "SniperAmmo", 0)) + ((type == 0 || type == 4) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
+                .append(Component.literal(FormatTool.format0D(ItemNBTTool.getInt(stack, "SniperAmmo", 0)) + ((type == 0 || type == 4) ? " ←-" : " ")).withStyle(ChatFormatting.BOLD)));
     }
 
 }

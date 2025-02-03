@@ -5,6 +5,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.network.message.ResetCameraTypeMessage;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
+import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.ItemNBTTool;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
@@ -30,7 +31,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.PacketDistributor;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 public class Monitor extends Item {
@@ -128,10 +128,11 @@ public class Monitor extends Item {
 
         Vec3 droneVec = new Vec3(stack.getOrCreateTag().getDouble("PosX"), stack.getOrCreateTag().getDouble("PosY"), stack.getOrCreateTag().getDouble("PosZ"));
 
-        list.add(Component.translatable("des.superbwarfare.monitor", new DecimalFormat("##.#m").format(player.position().distanceTo(droneVec))).withStyle(ChatFormatting.GRAY));
-        list.add(Component.literal("X: " + new DecimalFormat("##.#").format(droneVec.x) +
-                " Y: " + new DecimalFormat("##.#").format(droneVec.y) +
-                " Z: " + new DecimalFormat("##.#").format(droneVec.z)
+        list.add(Component.translatable("des.superbwarfare.monitor",
+                FormatTool.format1D(player.position().distanceTo(droneVec)), "m").withStyle(ChatFormatting.GRAY));
+        list.add(Component.literal("X: " + FormatTool.format1D(droneVec.x) +
+                " Y: " + FormatTool.format1D(droneVec.y) +
+                " Z: " + FormatTool.format1D(droneVec.z)
         ));
     }
 

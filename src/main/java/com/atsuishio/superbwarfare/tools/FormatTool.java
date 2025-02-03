@@ -9,6 +9,9 @@ public class FormatTool {
     public static final DecimalFormat DECIMAL_FORMAT_2 = new DecimalFormat("##.##");
 
     public static final DecimalFormat DECIMAL_FORMAT_1Z = new DecimalFormat("##.0");
+    public static final DecimalFormat DECIMAL_FORMAT_1ZZ = new DecimalFormat("#0.0");
+
+    public static final DecimalFormat DECIMAL_FORMAT_2ZZZ = new DecimalFormat("#0.00");
 
     public static String format0D(double num) {
         return format0D(num, "");
