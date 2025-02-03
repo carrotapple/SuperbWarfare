@@ -13,7 +13,10 @@ public interface IArmedVehicleEntity {
     boolean canShoot(Player player);
 
     int getAmmoCount(Player player);
+
     boolean banHand();
+
     boolean hidePassenger();
+
     int zoomFov();
 }

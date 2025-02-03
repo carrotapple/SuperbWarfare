@@ -308,10 +308,10 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             diffX = Math.clamp(-60f, 60f, Mth.wrapDegrees(passenger.getXRot() - this.getXRot()));
 
             if (rightInputDown) {
-                holdTick ++;
+                holdTick++;
                 this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 2f * Math.min(holdTick, 7) * this.entityData.get(PROPELLER_ROT));
             } else if (this.leftInputDown) {
-                holdTick ++;
+                holdTick++;
                 this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 2f * Math.min(holdTick, 7) * this.entityData.get(PROPELLER_ROT));
             } else {
                 holdTick = 0;
@@ -617,7 +617,6 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                     ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ShakeClientMessage(6, 5, 7, this.getX(), this.getEyeY(), this.getZ()));
                 }
             }
-
         } else if (entityData.get(WEAPON_TYPE) == 1 && this.getEntityData().get(LOADED_ROCKET) > 0) {
             x = 1.7f;
             y = 0.62f;
@@ -777,7 +776,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             case 1 -> ModSounds.INTO_CANNON.get();
             default -> throw new IllegalStateException("Unexpected type: " + type);
         };
-        
+
         this.level().playSound(null, this, sound, this.getSoundSource(), 1, 1);
     }
 

@@ -10,6 +10,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class VehicleMenu extends AbstractContainerMenu {
+
     private final Container container;
     private final int containerRows;
 
@@ -77,6 +78,4 @@ public class VehicleMenu extends AbstractContainerMenu {
     public boolean stillValid(Player pPlayer) {
         return this.container.stillValid(pPlayer);
     }
-
-
 }

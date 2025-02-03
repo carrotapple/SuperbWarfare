@@ -35,6 +35,7 @@ import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEntity {
+
     private float monsterMultiplier = 0.0f;
     private float damage = 40.0f;
     private float explosionDamage = 80f;
@@ -61,6 +62,7 @@ public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
     public void setMonsterMultiplier(float monsterMultiplier) {
         this.monsterMultiplier = monsterMultiplier;
     }
+
     public void charged(boolean charged) {
         this.charged = charged;
     }
@@ -165,5 +167,4 @@ public class GunGrenadeEntity extends ThrowableItemProjectile implements GeoEnti
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
     }
-
 }

@@ -12,12 +12,14 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.HasCustomInventoryScreen;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.ContainerEntity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -25,6 +27,8 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
+
+import java.util.List;
 
 public class ContainerMobileEntity extends MobileVehicleEntity implements HasCustomInventoryScreen, ContainerEntity {
 
@@ -75,11 +79,13 @@ public class ContainerMobileEntity extends MobileVehicleEntity implements HasCus
         super.remove(pReason);
     }
 
-
     @Override
     public void baseTick() {
         super.baseTick();
-//        pickUpItem();
+
+        if (this.canPickUpItems()) {
+            this.pickUpItems();
+        }
 
         for (var stack : this.getItemStacks()) {
             int neededEnergy = this.getMaxEnergy() - this.getEnergy();
@@ -99,16 +105,20 @@ public class ContainerMobileEntity extends MobileVehicleEntity implements HasCus
         this.refreshDimensions();
     }
 
-//    public void pickUpItem() {
-//        List<ItemEntity> list = this.level().getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(0.2F, 0.1, 0.2F));
-//        if (!list.isEmpty()) {
-//            for (ItemEntity entity : list) {
-//                if (!this.level().isClientSide) {
-//                    HopperBlockEntity.addItem(this, entity);
-//                }
-//            }
-//        }
-//    }
+    public boolean canPickUpItems() {
+        return false;
+    }
+
+    public void pickUpItems() {
+        List<ItemEntity> list = this.level().getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(0.2F, 0.1, 0.2F));
+        if (!list.isEmpty()) {
+            for (ItemEntity entity : list) {
+                if (!this.level().isClientSide) {
+                    HopperBlockEntity.addItem(this, entity);
+                }
+            }
+        }
+    }
 
     @Override
     public void openCustomInventoryScreen(Player pPlayer) {

@@ -34,7 +34,6 @@ public class SwitchVehicleWeaponMessage {
             if (player.getVehicle() instanceof MultiWeaponVehicleEntity multiWeaponVehicle && multiWeaponVehicle.isDriver(player)) {
                 multiWeaponVehicle.changeWeapon(Mth.clamp(message.scroll > 0 ? Mth.ceil(message.scroll) : Mth.floor(message.scroll), -1, 1));
             }
-
         });
         context.get().setPacketHandled(true);
     }

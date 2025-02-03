@@ -18,6 +18,7 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 
 public class FlareDecoyEntity extends Entity {
+
     public FlareDecoyEntity(EntityType<? extends FlareDecoyEntity> type, Level world) {
         super(type, world);
     }
@@ -37,12 +38,10 @@ public class FlareDecoyEntity extends Entity {
 
     @Override
     protected void readAdditionalSaveData(CompoundTag compoundTag) {
-
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag compoundTag) {
-
     }
 
     @Override
@@ -66,11 +65,11 @@ public class FlareDecoyEntity extends Entity {
     }
 
     public void decoyShoot(Entity entity, Vec3 shootVec, float pVelocity, float pInaccuracy) {
-        Vec3 vec3 = shootVec.normalize().add(this.random.triangle(0.0, 0.0172275 * (double)pInaccuracy), this.random.triangle(0.0, 0.0172275 * (double)pInaccuracy), this.random.triangle(0.0, 0.0172275 * (double)pInaccuracy)).scale((double)pVelocity);
+        Vec3 vec3 = shootVec.normalize().add(this.random.triangle(0.0, 0.0172275 * (double) pInaccuracy), this.random.triangle(0.0, 0.0172275 * (double) pInaccuracy), this.random.triangle(0.0, 0.0172275 * (double) pInaccuracy)).scale((double) pVelocity);
         this.setDeltaMovement(entity.getDeltaMovement().scale(0.75).add(vec3));
         double d0 = vec3.horizontalDistance();
-        this.setYRot((float)(Mth.atan2(vec3.x, vec3.z) * 57.2957763671875));
-        this.setXRot((float)(Mth.atan2(vec3.y, d0) * 57.2957763671875));
+        this.setYRot((float) (Mth.atan2(vec3.x, vec3.z) * 57.2957763671875));
+        this.setXRot((float) (Mth.atan2(vec3.y, d0) * 57.2957763671875));
         this.yRotO = this.getYRot();
         this.xRotO = this.getXRot();
     }
