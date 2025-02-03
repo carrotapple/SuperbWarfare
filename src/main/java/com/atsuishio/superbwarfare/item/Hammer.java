@@ -1,9 +1,15 @@
 package com.atsuishio.superbwarfare.item;
 
+import com.atsuishio.superbwarfare.init.ModItems;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class Hammer extends SwordItem {
+
     public Hammer() {
         super(new Tier() {
             public int getUses() {
@@ -39,12 +45,12 @@ public class Hammer extends SwordItem {
 
     @Override
     public ItemStack getCraftingRemainingItem(ItemStack itemstack) {
-        ItemStack retval = new ItemStack(this);
-        retval.setDamageValue(itemstack.getDamageValue() + 1);
-        if (retval.getDamageValue() >= retval.getMaxDamage()) {
+        ItemStack stack = new ItemStack(this);
+        stack.setDamageValue(itemstack.getDamageValue() + 1);
+        if (stack.getDamageValue() >= stack.getMaxDamage()) {
             return ItemStack.EMPTY;
         }
-        return retval;
+        return stack;
     }
 
     @Override
@@ -52,4 +58,23 @@ public class Hammer extends SwordItem {
         return true;
     }
 
+    @SubscribeEvent
+    public static void onItemCrafted(PlayerEvent.ItemCraftedEvent event) {
+        var item = event.getCrafting();
+        var container = event.getInventory();
+        var player = event.getEntity();
+        if (player == null) return;
+
+        if (player.level().isClientSide) return;
+
+        if (item.is(ModItems.HAMMER.get())) {
+            int count = 0;
+            for (int i = 0; i < container.getContainerSize(); i++) {
+                if (container.getItem(i).is(ModItems.HAMMER.get())) count++;
+            }
+            if (count == 2) {
+                container.clearContent();
+            }
+        }
+    }
 }
