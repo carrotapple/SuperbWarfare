@@ -85,6 +85,8 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     public boolean cannotFire;
     public int heat;
 
+    public int holdTick;
+
     public Ah6Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.AH_6.get(), world);
     }
@@ -196,7 +198,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
         propellerRotO = this.getPropellerRot();
         super.baseTick();
 
-        setZRot(getRoll() * 0.995f);
+        setZRot(getRoll() * 0.997f);
 
         if (heat > 0) {
             heat--;
@@ -306,9 +308,13 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             diffX = Math.clamp(-60f, 60f, Mth.wrapDegrees(passenger.getXRot() - this.getXRot()));
 
             if (rightInputDown) {
-                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 2.5f * this.entityData.get(PROPELLER_ROT));
+                holdTick ++;
+                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 2f * Math.min(holdTick, 7) * this.entityData.get(PROPELLER_ROT));
             } else if (this.leftInputDown) {
-                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 2.5f * this.entityData.get(PROPELLER_ROT));
+                holdTick ++;
+                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 2f * Math.min(holdTick, 7) * this.entityData.get(PROPELLER_ROT));
+            } else {
+                holdTick = 0;
             }
 
             this.setYRot(this.getYRot() + Mth.clamp((this.onGround() ? 0.1f : 2f) * diffY * this.entityData.get(PROPELLER_ROT) - 0.5f * this.entityData.get(DELTA_ROT), -10f, 10f));
@@ -347,9 +353,9 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
 
                 if (!(up || down || backInputDown) && engineStartOver) {
                     if (this.getDeltaMovement().y() < 0) {
-                        this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0001f, 0.12f));
+                        this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.001f, 0.12f));
                     } else {
-                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - (this.onGround() ? 0.00005f : 0.0001f), 0));
+                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - (this.onGround() ? 0.00005f : 0.001f), 0));
                     }
                 }
             } else {
@@ -361,7 +367,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             }
         }
 
-        this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.95f);
+        this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.9f);
         this.entityData.set(PROPELLER_ROT, Mth.lerp(0.5f, this.entityData.get(PROPELLER_ROT), this.entityData.get(POWER)));
         this.setPropellerRot(this.getPropellerRot() + 30 * this.entityData.get(PROPELLER_ROT));
         this.entityData.set(PROPELLER_ROT, this.entityData.get(PROPELLER_ROT) * 0.9995f);
@@ -627,7 +633,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                         VehicleConfig.AH_6_ROCKET_EXPLOSION_RADIUS.get());
 
                 heliRocketEntityRight.setPos(worldPositionRight.x, worldPositionRight.y, worldPositionRight.z);
-                heliRocketEntityRight.shoot(this.getLookAngle().x, this.getLookAngle().y + 0.0125, this.getLookAngle().z, 5, 0.25f);
+                heliRocketEntityRight.shoot(this.getLookAngle().x, this.getLookAngle().y + 0.008, this.getLookAngle().z, 7, 0.25f);
                 player.level().addFreshEntity(heliRocketEntityRight);
                 fireIndex = 1;
             } else if (fireIndex == 1) {
@@ -637,7 +643,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                         VehicleConfig.AH_6_ROCKET_EXPLOSION_RADIUS.get());
 
                 heliRocketEntityLeft.setPos(worldPositionLeft.x, worldPositionLeft.y, worldPositionLeft.z);
-                heliRocketEntityLeft.shoot(this.getLookAngle().x, this.getLookAngle().y + 0.0125, this.getLookAngle().z, 5, 0.25f);
+                heliRocketEntityLeft.shoot(this.getLookAngle().x, this.getLookAngle().y + 0.008, this.getLookAngle().z, 7, 0.25f);
                 player.level().addFreshEntity(heliRocketEntityLeft);
                 fireIndex = 0;
             }

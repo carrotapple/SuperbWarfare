@@ -91,7 +91,7 @@ public class HelicopterHudOverlay {
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_line.png"), (float) w / 2 - 128, (float) h / 2 - 512 - 5.475f * pitch, 0, 0, 256, 1024, 256, 1024);
                 poseStack.popPose();
                 poseStack.pushPose();
-                poseStack.rotateAround(Axis.ZP.rotationDegrees(-iHelicopterEntity.getRotZ(event.getPartialTick())), w / 2f, h / 2f - 56, 0);
+                poseStack.rotateAround(Axis.ZP.rotationDegrees(iHelicopterEntity.getRotZ(event.getPartialTick())), w / 2f, h / 2f - 56, 0);
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/roll_ind.png"), (float) w / 2 - 8, (float) h / 2 - 88, 0, 0, 16, 16, 16, 16);
                 poseStack.popPose();
 
