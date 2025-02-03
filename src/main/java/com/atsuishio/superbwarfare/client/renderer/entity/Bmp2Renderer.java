@@ -51,9 +51,6 @@ public class Bmp2Renderer extends GeoEntityRenderer<Bmp2Entity> {
             if (name.equals("wheelL" + i)) {
                 bone.setRotX(1.5f * Mth.lerp(partialTick, animatable.leftWheelRotO, animatable.getLeftWheelRot()));
             }
-        }
-
-        for (int i = 0; i < 8; i++) {
             if (name.equals("wheelR" + i)) {
                 bone.setRotX(1.5f * Mth.lerp(partialTick, animatable.rightWheelRotO, animatable.getRightWheelRot()));
             }
