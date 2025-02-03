@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.network.message;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
+import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.GunsTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import net.minecraft.network.FriendlyByteBuf;
@@ -12,7 +13,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.text.DecimalFormat;
 import java.util.function.Supplier;
 
 public class AdjustZoomFovMessage {
@@ -59,7 +59,7 @@ public class AdjustZoomFovMessage {
                 if (GunsTool.getGunIntTag(stack, "RPM", 0) == 1095) {
                     GunsTool.setGunIntTag(stack, "RPM", 1100);
                 }
-                player.displayClientMessage(Component.literal(new DecimalFormat("RPM: ##").format(GunsTool.getGunIntTag(stack, "RPM", 0))), true);
+                player.displayClientMessage(Component.literal("RPM: " + FormatTool.format0D(GunsTool.getGunIntTag(stack, "RPM", 0))), true);
                 int rpm = GunsTool.getGunIntTag(stack, "RPM", 0);
                 if (rpm > minRpm && rpm < maxRpm) {
                     SoundTool.playLocalSound(player, ModSounds.ADJUST_FOV.get(), 1f, 0.7f);
@@ -77,5 +77,4 @@ public class AdjustZoomFovMessage {
         });
         context.get().setPacketHandled(true);
     }
-
 }

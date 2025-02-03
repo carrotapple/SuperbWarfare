@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.entity.vehicle.*;
 import com.atsuishio.superbwarfare.event.ClientEventHandler;
 import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.network.ModVariables;
+import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -29,8 +30,6 @@ import net.minecraftforge.fml.common.Mod;
 import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
-
-import java.text.DecimalFormat;
 
 import static com.atsuishio.superbwarfare.client.RenderHelper.preciseBlit;
 import static com.atsuishio.superbwarfare.client.overlay.CrossHairOverlay.*;
@@ -62,7 +61,7 @@ public class HelicopterHudOverlay {
         if (player.getVehicle() instanceof IHelicopterEntity iHelicopterEntity && player.getVehicle() instanceof MobileVehicleEntity mobileVehicle && iHelicopterEntity.isDriver(player) && player.getVehicle() instanceof MultiWeaponVehicleEntity multiWeaponVehicle) {
             poseStack.pushPose();
 
-            poseStack.translate(-6 * ClientEventHandler.turnRot[1],-6 * ClientEventHandler.turnRot[0],0);
+            poseStack.translate(-6 * ClientEventHandler.turnRot[1], -6 * ClientEventHandler.turnRot[0], 0);
             RenderSystem.disableDepthTest();
             RenderSystem.depthMask(false);
             RenderSystem.enableBlend();
@@ -107,12 +106,12 @@ public class HelicopterHudOverlay {
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_power.png"), (float) w / 2 + 130f, ((float) h / 2 - 64 + 124 - power * 980), 0, 0, 4, power * 980, 4, power * 980);
                 lerpVy = (float) Mth.lerp(0.021f * event.getPartialTick(), lerpVy, mobileVehicle.getDeltaMovement().y());
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/heli_vy_move.png"), (float) w / 2 + 138, ((float) h / 2 - 3 - Math.max(lerpVy * 20, -24) * 2.5f), 0, 0, 8, 8, 8, 8);
-                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##m/s").format(lerpVy * 20) ),
+                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(FormatTool.format0D(lerpVy * 20, "m/s")),
                         w / 2 + 146, (int) (h / 2 - 3 - Math.max(lerpVy * 20, -24) * 2.5), (lerpVy * 20 < -24 || ((lerpVy * 20 < -10 || (lerpVy * 20 < -1 && length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y, mobileVehicle.getDeltaMovement().z) * 72 > 100)) && height < 36) || (length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y, mobileVehicle.getDeltaMovement().z) * 72 > 40 && blockInWay < 72) ? -65536 : 0x66FF00), false);
-                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##").format(mobileVehicle.getY())),
+                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(FormatTool.format0D(mobileVehicle.getY())),
                         w / 2 + 104, h / 2, 0x66FF00, false);
                 preciseBlit(guiGraphics, ModUtils.loc("textures/screens/helicopter/speed_frame.png"), (float) w / 2 - 144, (float) h / 2 - 6, 0, 0, 50, 18, 50, 18);
-                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(new DecimalFormat("##KM/H").format(length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y, mobileVehicle.getDeltaMovement().z) * 72)),
+                guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(FormatTool.format0D(length(mobileVehicle.getDeltaMovement().x, mobileVehicle.getDeltaMovement().y, mobileVehicle.getDeltaMovement().z) * 72, "km/h")),
                         w / 2 - 140, h / 2, 0x66FF00, false);
 
                 if (mobileVehicle instanceof Ah6Entity ah6Entity) {
@@ -137,10 +136,10 @@ public class HelicopterHudOverlay {
                 }
 
                 if (mobileVehicle.getEnergy() < 0.02 * mobileVehicle.getMaxEnergy()) {
-                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal( "NO POWER!"),
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("NO POWER!"),
                             w / 2 - 144, h / 2 + 14, -65536, false);
                 } else if (mobileVehicle.getEnergy() < 0.2 * mobileVehicle.getMaxEnergy()) {
-                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal( "LOW POWER"),
+                    guiGraphics.drawString(Minecraft.getInstance().font, Component.literal("LOW POWER"),
                             w / 2 - 144, h / 2 + 14, 0xFF6B00, false);
                 }
 

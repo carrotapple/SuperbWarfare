@@ -1,5 +1,6 @@
 package com.atsuishio.superbwarfare.client.overlay;
 
+import com.atsuishio.superbwarfare.tools.FormatTool;
 import com.atsuishio.superbwarfare.tools.TraceTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -13,8 +14,6 @@ import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import java.text.DecimalFormat;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class SpyglassRangeOverlay {
@@ -40,7 +39,7 @@ public class SpyglassRangeOverlay {
 
             if (lookAtEntity) {
                 event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.drone.range")
-                                .append(Component.literal(new DecimalFormat("##.#M ").format(entityRange) + lookingEntity.getDisplayName().getString())),
+                                .append(Component.literal(FormatTool.format1D(entityRange, "M ") + lookingEntity.getDisplayName().getString())),
                         w / 2 + 12, h / 2 - 28, -1, false);
             } else {
                 if (blockRange > 512) {
@@ -48,7 +47,7 @@ public class SpyglassRangeOverlay {
                             .append(Component.literal("---M")), w / 2 + 12, h / 2 - 28, -1, false);
                 } else {
                     event.getGuiGraphics().drawString(Minecraft.getInstance().font, Component.translatable("tips.superbwarfare.drone.range")
-                                    .append(Component.literal(new DecimalFormat("##.#M").format(blockRange))),
+                                    .append(Component.literal(FormatTool.format1D(blockRange, "M"))),
                             w / 2 + 12, h / 2 - 28, -1, false);
                 }
             }
