@@ -4,7 +4,6 @@ import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.RenderHelper;
 import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
 import com.atsuishio.superbwarfare.init.ModItems;
-import com.atsuishio.superbwarfare.tools.HudUtil;
 import com.atsuishio.superbwarfare.tools.SeekTool;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -52,7 +51,7 @@ public class RedTriangleOverlay {
         float x = (float) point.x;
         float y = (float) point.y;
 
-        HudUtil.blit(poseStack, TRIANGLE, x - 4, y - 4, 0, 0, 8, 8, 8, 8, -65536);
+        RenderHelper.blit(poseStack, TRIANGLE, x - 4, y - 4, 0, 0, 8, 8, 8, 8, -65536);
 
         RenderSystem.depthMask(true);
         RenderSystem.defaultBlendFunc();

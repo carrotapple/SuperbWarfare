@@ -1,4 +1,4 @@
-package com.atsuishio.superbwarfare.tools;
+package com.atsuishio.superbwarfare.client;
 
 import com.atsuishio.superbwarfare.init.ModPerks;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
@@ -43,5 +43,4 @@ public class TooltipTool {
         }
         return 0;
     }
-
 }

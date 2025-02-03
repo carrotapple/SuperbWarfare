@@ -1,8 +1,8 @@
 package com.atsuishio.superbwarfare.item;
 
+import com.atsuishio.superbwarfare.client.TooltipTool;
 import com.atsuishio.superbwarfare.entity.C4Entity;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
-import com.atsuishio.superbwarfare.tools.TooltipTool;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;

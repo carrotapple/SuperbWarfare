@@ -1,11 +1,11 @@
 package com.atsuishio.superbwarfare.client.tooltip;
 
+import com.atsuishio.superbwarfare.client.TooltipTool;
 import com.atsuishio.superbwarfare.client.tooltip.component.GunImageComponent;
 import com.atsuishio.superbwarfare.perk.AmmoPerk;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.atsuishio.superbwarfare.tools.GunsTool;
-import com.atsuishio.superbwarfare.tools.TooltipTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
