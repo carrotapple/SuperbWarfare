@@ -1,10 +1,10 @@
 package com.atsuishio.superbwarfare.mobeffect;
 
-import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModMobEffects;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -23,6 +23,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class BurnMobEffect extends MobEffect {
+
     public BurnMobEffect() {
         super(MobEffectCategory.HARMFUL, -12708330);
     }
@@ -36,7 +37,7 @@ public class BurnMobEffect extends MobEffect {
             attacker = entity.level().getEntity(entity.getPersistentData().getInt("BurnAttacker"));
         }
 
-        entity.hurt(new DamageSource(entity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(ModDamageTypes.BURN), attacker), 0.6f + (0.3f * amplifier));
+        entity.hurt(ModDamageTypes.causeBurnDamage(entity.level().registryAccess(), attacker), 0.6f + (0.3f * amplifier));
         entity.invulnerableTime = 0;
 
         if (attacker instanceof ServerPlayer player) {

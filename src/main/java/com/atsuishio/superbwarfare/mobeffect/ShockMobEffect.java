@@ -1,10 +1,10 @@
 package com.atsuishio.superbwarfare.mobeffect;
 
-import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModMobEffects;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -28,6 +28,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ShockMobEffect extends MobEffect {
+
     public ShockMobEffect() {
         super(MobEffectCategory.HARMFUL, -256);
         addAttributeModifier(Attributes.MOVEMENT_SPEED, "7107DE5E-7CE8-4030-940E-514C1F160890", -10.0F, AttributeModifier.Operation.ADDITION);
@@ -124,16 +125,12 @@ public class ShockMobEffect extends MobEffect {
         if (event == null || event.getEntity() == null) {
             return;
         }
-        shockCancelDamage(event);
-    }
-
-    private static void shockCancelDamage(LivingAttackEvent event) {
         DamageSource source = event.getSource();
-        Entity sourceentity = source.getDirectEntity();
-        if (sourceentity == null) {
+        Entity entity = source.getDirectEntity();
+        if (entity == null) {
             return;
         }
-        if (sourceentity instanceof LivingEntity living && living.hasEffect(ModMobEffects.SHOCK.get())) {
+        if (entity instanceof LivingEntity living && living.hasEffect(ModMobEffects.SHOCK.get())) {
             event.setCanceled(true);
         }
     }
