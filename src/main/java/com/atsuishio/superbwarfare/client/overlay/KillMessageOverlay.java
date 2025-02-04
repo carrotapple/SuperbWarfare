@@ -172,7 +172,7 @@ public class KillMessageOverlay {
             );
         }
 
-        Player player = Minecraft.getInstance().player;
+        Player player = record.attacker;
         boolean renderItem = false;
         int itemIconW = damageTypeIcon != null ? w - targetNameWidth - 64 : w - targetNameWidth - 46;
 
@@ -213,9 +213,7 @@ public class KillMessageOverlay {
                     );
                 }
             }
-
         } else {
-
             // 如果是枪械击杀，则渲染枪械图标
             if (record.stack.getItem() instanceof GunItem gunItem) {
                 renderItem = true;
@@ -313,7 +311,7 @@ public class KillMessageOverlay {
                     icon = BEAST;
                 } else if (record.damageType == ModDamageTypes.MINE) {
                     icon = CLAYMORE;
-                }  else if (record.damageType == ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("dreamaticvoyage", "bleeding"))) {
+                } else if (record.damageType == ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("dreamaticvoyage", "bleeding"))) {
                     icon = BLEEDING;
                 } else if (record.damageType == ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("dreamaticvoyage", "blood_crystal"))) {
                     icon = BLOOD_CRYSTAL;
