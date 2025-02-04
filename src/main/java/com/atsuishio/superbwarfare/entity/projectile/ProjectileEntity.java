@@ -37,6 +37,7 @@ import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -63,7 +64,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 @SuppressWarnings({"unused", "UnusedReturnValue", "SuspiciousNameCombination"})
-public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnData, GeoEntity, AnimatedEntity {
+public class ProjectileEntity extends Projectile implements IEntityAdditionalSpawnData, GeoEntity {
 
     public static final EntityDataAccessor<Float> COLOR_R = SynchedEntityData.defineId(ProjectileEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> COLOR_G = SynchedEntityData.defineId(ProjectileEntity.class, EntityDataSerializers.FLOAT);
@@ -329,7 +330,8 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         tag.putBoolean("ForceKnockback", this.forceKnockback);
     }
 
-    private void onHit(HitResult result) {
+    @Override
+    protected void onHit(HitResult result) {
         if (result instanceof BlockHitResult blockHitResult) {
             if (blockHitResult.getType() == HitResult.Type.MISS) {
                 return;
@@ -777,17 +779,6 @@ public class ProjectileEntity extends Entity implements IEntityAdditionalSpawnDa
         public boolean isLegShot() {
             return this.legShot;
         }
-    }
-
-    public String getSyncedAnimation() {
-        return null;
-    }
-
-    public void setAnimation(String animation) {
-    }
-
-    @Override
-    public void setAnimationProcedure(String procedure) {
     }
 
     @Override
