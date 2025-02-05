@@ -45,6 +45,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class VehicleEntity extends Entity {
 
@@ -187,12 +188,22 @@ public class VehicleEntity extends Entity {
 
     public void hurt(float pHealAmount, Entity attacker, boolean send) {
         if (this.level() instanceof ServerLevel) {
+            var holder = Holder.direct(ModSounds.INDICATION_VEHICLE.get());
             if (attacker instanceof ServerPlayer player && pHealAmount > 0 && this.getHealth() > 0 && send && !(this instanceof DroneEntity)) {
-                var holder = Holder.direct(ModSounds.INDICATION_VEHICLE.get());
-                player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getEyeY(), player.getZ(), 0.25f + (2.75f * pHealAmount / getMaxHealth()), random.nextFloat() * 0.1f + 0.9f, player.level().random.nextLong()));
 
+                player.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player.getX(), player.getEyeY(), player.getZ(), 0.25f + (2.75f * pHealAmount / getMaxHealth()), random.nextFloat() * 0.1f + 0.9f, player.level().random.nextLong()));
                 ModUtils.PACKET_HANDLER.send(PacketDistributor.PLAYER.with(() -> player), new ClientIndicatorMessage(3, 5));
             }
+
+            if (pHealAmount > 0 && this.getHealth() > 0 && send) {
+                List<Entity> passengers = this.getPassengers();
+                for (var entity : passengers) {
+                    if (entity instanceof ServerPlayer player1) {
+                        player1.connection.send(new ClientboundSoundPacket(holder, SoundSource.PLAYERS, player1.getX(), player1.getEyeY(), player1.getZ(), 0.25f + (4.75f * pHealAmount / getMaxHealth()), random.nextFloat() * 0.1f + 0.6f, player1.level().random.nextLong()));
+                    }
+                }
+            }
+
             this.setHealth(this.getHealth() - pHealAmount);
         }
     }

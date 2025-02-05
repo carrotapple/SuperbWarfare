@@ -138,6 +138,11 @@ public class TargetEntity extends LivingEntity implements GeoEntity, AnimatedEnt
     }
 
     @Override
+    public boolean isPickable() {
+        return this.entityData.get(DOWN_TIME) == 0;
+    }
+
+    @Override
     public void die(DamageSource source) {
         super.die(source);
     }
