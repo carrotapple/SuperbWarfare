@@ -198,7 +198,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
         propellerRotO = this.getPropellerRot();
         super.baseTick();
 
-        setZRot(getRoll() * 0.997f);
+        setZRot(getRoll() * 0.99f);
 
         if (heat > 0) {
             heat--;
@@ -248,8 +248,8 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             this.setZRot(this.roll * 0.9f);
             this.setXRot(this.getXRot() * 0.9f);
         } else {
-            float f = (float) Mth.clamp(0.875f + 0.02f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90, 0.01, 0.99);
-            this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).scale((this.getXRot() < 0 ? -0.032 : (this.getXRot() > 0 ? 0.032 : 0)) * this.getDeltaMovement().length())));
+            float f = (float) Mth.clamp(0.9f - 0.015 * getDeltaMovement().length() + 0.02f * Mth.abs(90 - (float) calculateAngle(this.getDeltaMovement(), this.getViewVector(1))) / 90, 0.01, 0.99);
+            this.setDeltaMovement(this.getDeltaMovement().add(this.getViewVector(1).scale((this.getXRot() < 0 ? -0.035 : (this.getXRot() > 0 ? 0.035 : 0)) * this.getDeltaMovement().length())));
             this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.95, f));
         }
 
@@ -317,7 +317,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                 holdTick = 0;
             }
 
-            this.setYRot(this.getYRot() + Mth.clamp((this.onGround() ? 0.1f : 2f) * diffY * this.entityData.get(PROPELLER_ROT) - 0.5f * this.entityData.get(DELTA_ROT), -10f, 10f));
+            this.setYRot(this.getYRot() + Mth.clamp((this.onGround() ? 0.1f : 2f) * diffY * this.entityData.get(PROPELLER_ROT), -10f, 10f));
             this.setXRot(Mth.clamp(this.getXRot() + ((this.onGround()) ? 0 : 1.5f) * diffX * this.entityData.get(PROPELLER_ROT), -80, 80));
             this.setZRot(this.getRoll() - this.entityData.get(DELTA_ROT) + (this.onGround() ? 0 : 0.25f) * diffY * this.entityData.get(PROPELLER_ROT));
         }
@@ -353,9 +353,9 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
 
                 if (!(up || down || backInputDown) && engineStartOver) {
                     if (this.getDeltaMovement().y() < 0) {
-                        this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.001f, 0.12f));
+                        this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.00005f, 0.12f));
                     } else {
-                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - (this.onGround() ? 0.00005f : 0.001f), 0));
+                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - (this.onGround() ? 0.00005f : 0.00006f), 0));
                     }
                 }
             } else {
@@ -378,8 +378,12 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
 
         setDeltaMovement(getDeltaMovement().add(0.0f, Math.min(Math.sin((90 - this.getXRot()) * Mth.DEG_TO_RAD), Math.sin((90 + this.getRoll()) * Mth.DEG_TO_RAD)) * this.entityData.get(POWER), 0.0f));
 
-        Vector3f direction = getRightDirection().mul(Math.cos((this.getRoll() + 90) * Mth.DEG_TO_RAD) * this.entityData.get(PROPELLER_ROT));
-        setDeltaMovement(getDeltaMovement().add(new Vec3(direction.x, direction.y, direction.z).scale(backInputDown ? 0.1 : 2)));
+        Vector3f direction = getRightDirection().mul(-Math.sin(this.getRoll() * Mth.DEG_TO_RAD) * this.entityData.get(PROPELLER_ROT));
+        setDeltaMovement(getDeltaMovement().add(new Vec3(direction.x, direction.y, direction.z).scale(backInputDown ? 0.1 : 2.5)));
+
+//        if (passenger instanceof Player player) {
+//            player.displayClientMessage(Component.literal(this.getRoll() + ""), true);
+//        }
 
         Vector3f directionZ = getForwardDirection().mul(-Math.cos((this.getXRot() + 90) * Mth.DEG_TO_RAD) * this.entityData.get(PROPELLER_ROT));
         setDeltaMovement(getDeltaMovement().add(new Vec3(directionZ.x, directionZ.y, directionZ.z).scale(backInputDown ? 0.1 : 2)));
