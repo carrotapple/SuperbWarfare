@@ -69,7 +69,7 @@ public class ContainerBlockItem extends BlockItem implements GeoItem {
         Player player = pContext.getPlayer();
         if (player != null) {
             var tag = BlockItem.getBlockEntityData(stack);
-            if (tag != null && tag.get("Entity") != null) {
+            if (tag != null && tag.get("Entity") != null && pContext.canPlace()) {
                 player.getInventory().removeItem(stack);
             }
         }
