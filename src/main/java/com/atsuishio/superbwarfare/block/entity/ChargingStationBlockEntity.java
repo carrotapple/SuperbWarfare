@@ -16,6 +16,7 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -145,7 +146,27 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
             if (burnTime > 0) {
                 blockEntity.fuelTick = burnTime;
                 blockEntity.maxFuelTick = burnTime;
-                fuel.shrink(1);
+
+                if (fuel.hasCraftingRemainingItem()) {
+                    if (fuel.getCount() <= 1) {
+                        blockEntity.setItem(SLOT_FUEL, fuel.getCraftingRemainingItem());
+                    } else {
+                        ItemStack copy = fuel.getCraftingRemainingItem().copy();
+                        copy.setCount(1);
+
+                        ItemEntity itemEntity = new ItemEntity(pLevel,
+                                pPos.getX() + 0.5,
+                                pPos.getY() + 0.2,
+                                pPos.getZ() + 0.5,
+                                copy);
+                        pLevel.addFreshEntity(itemEntity);
+
+                        fuel.shrink(1);
+                    }
+                } else {
+                    fuel.shrink(1);
+                }
+
                 blockEntity.setChanged();
             } else if (fuel.getItem().isEdible()) {
                 var properties = fuel.getFoodProperties(null);
