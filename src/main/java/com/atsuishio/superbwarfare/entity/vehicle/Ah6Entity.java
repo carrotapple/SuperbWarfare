@@ -731,8 +731,8 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     }
 
     @Override
-    public boolean banHand() {
-        return true;
+    public boolean banHand(Player player) {
+        return player == this.getFirstPassenger();
     }
 
     @Override

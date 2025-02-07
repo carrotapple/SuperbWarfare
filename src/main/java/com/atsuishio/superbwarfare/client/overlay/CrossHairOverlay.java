@@ -57,7 +57,7 @@ public class CrossHairOverlay {
 
         if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit)
             return;
-        if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand()) return;
+        if (!player.getMainHandItem().is(ModTags.Items.GUN) || (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))) return;
 
         GuiGraphics guiGraphics = event.getGuiGraphics();
 

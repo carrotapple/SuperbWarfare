@@ -486,7 +486,7 @@ public class Mle1934Entity extends VehicleEntity implements GeoEntity, ICannonEn
     }
 
     @Override
-    public boolean banHand() {
+    public boolean banHand(Player player) {
         return true;
     }
 

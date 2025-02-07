@@ -5,7 +5,6 @@ import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.*;
-import com.atsuishio.superbwarfare.item.gun.GunItem;
 import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.network.message.ShakeClientMessage;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
@@ -542,8 +541,8 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
     }
 
     @Override
-    public boolean banHand() {
-        return !(this.getFirstPassenger() instanceof Player player) || !(player.getMainHandItem().getItem() instanceof GunItem);
+    public boolean banHand(Player player) {
+        return player == this.getFirstPassenger();
     }
 
     @Override

@@ -772,7 +772,7 @@ public class Lav150Entity extends ContainerMobileEntity implements GeoEntity, IC
     }
 
     @Override
-    public boolean banHand() {
+    public boolean banHand(Player player) {
         return true;
     }
 

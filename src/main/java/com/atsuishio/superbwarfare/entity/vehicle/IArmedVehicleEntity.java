@@ -14,7 +14,7 @@ public interface IArmedVehicleEntity {
 
     int getAmmoCount(Player player);
 
-    boolean banHand();
+    boolean banHand(Player player);
 
     boolean hidePassenger();
 

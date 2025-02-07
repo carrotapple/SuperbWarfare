@@ -804,7 +804,7 @@ public class Bmp2Entity extends ContainerMobileEntity implements GeoEntity, ICha
     }
 
     @Override
-    public boolean banHand() {
+    public boolean banHand(Player player) {
         return true;
     }
 

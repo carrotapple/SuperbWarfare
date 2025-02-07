@@ -435,7 +435,7 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntit
     }
 
     @Override
-    public boolean banHand() {
+    public boolean banHand(Player player) {
         return true;
     }
 

@@ -92,7 +92,7 @@ public class ClickHandler {
         int button = event.getButton();
 
         if (stack.is(ModTags.Items.GUN) || stack.is(ModItems.MONITOR.get()) || stack.is(ModItems.LUNGE_MINE.get()) || player.hasEffect(ModMobEffects.SHOCK.get())
-                || (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand())) {
+                || (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))) {
             if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 event.setCanceled(true);
             }
@@ -303,7 +303,7 @@ public class ClickHandler {
         }
 
 
-        if (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.banHand()) {
+        if (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.banHand(player)) {
             if (iVehicle.isDriver(player)) {
                 ClientEventHandler.holdFireVehicle = true;
             }
@@ -351,7 +351,7 @@ public class ClickHandler {
     public static void handleWeaponZoomPress(Player player, ItemStack stack) {
         ModUtils.PACKET_HANDLER.sendToServer(new ZoomMessage(0));
 
-        if (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.banHand()) {
+        if (player.getVehicle() instanceof IArmedVehicleEntity iVehicle && iVehicle.banHand(player)) {
             if (iVehicle.isDriver(player)) {
                 ClientEventHandler.zoomVehicle = true;
             }

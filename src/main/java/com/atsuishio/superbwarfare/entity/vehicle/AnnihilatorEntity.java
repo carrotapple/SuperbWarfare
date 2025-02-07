@@ -538,7 +538,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     }
 
     @Override
-    public boolean banHand() {
+    public boolean banHand(Player player) {
         return true;
     }
 
