@@ -154,6 +154,7 @@ public class ClientEventHandler {
 
     public static CameraType lastCameraType;
 
+
     @SubscribeEvent
     public static void handleWeaponTurn(RenderHandEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
@@ -176,6 +177,10 @@ public class ClientEventHandler {
         if (mc.screen != null) return true;
         if (!mc.mouseHandler.isMouseGrabbed()) return true;
         return !mc.isWindowActive();
+    }
+
+    public static boolean isFreeCam(Player player) {
+        return player.getVehicle() instanceof VehicleEntity vehicle && vehicle.allowFreeCam() && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON && ModKeyMappings.FREE_CAMERA.isDown();
     }
 
     private static boolean revolverPre() {
@@ -846,8 +851,9 @@ public class ClientEventHandler {
             }
         }
 
-        if (player != null && player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player))
+        if (player != null && player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.banHand(player)) {
             return;
+        }
 
         if (level != null && stack.is(ModTags.Items.GUN)) {
             handleWeaponSway(living);

@@ -1,16 +1,16 @@
 package com.atsuishio.superbwarfare.event;
 
-import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.MouseMovementHandler;
-import com.atsuishio.superbwarfare.network.message.VehicleMovementMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import static com.atsuishio.superbwarfare.event.ClientEventHandler.isFreeCam;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientMouseHandler {
@@ -22,6 +22,9 @@ public class ClientMouseHandler {
     public static double PosY = 0;
     public static double lerpPosY = 0;
 
+    public static double freeCameraPitch = 0;
+    public static double freeCameraYaw = 0;
+
     private static boolean notInGame() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return true;
@@ -32,7 +35,7 @@ public class ClientMouseHandler {
     }
 
     @SubscribeEvent
-    public static void handleClientTick(TickEvent.ClientTickEvent event) {
+    public static void handleClientTick(ViewportEvent.ComputeCameraAngles event) {
         LocalPlayer player = Minecraft.getInstance().player;
 
         if (player == null) {
@@ -53,48 +56,24 @@ public class ClientMouseHandler {
             }
         }
 
-        lerpPosX = Mth.clamp(Mth.lerp(0.1,lerpPosX,0), -0.11, 0.11);
-        lerpPosY = Mth.clamp(Mth.lerp(0.1,lerpPosY,0), -0.11, 0.11);
+        lerpPosX = Mth.clamp(Mth.lerp(event.getPartialTick(),lerpPosX,0), -1, 1);
+        lerpPosY = Mth.clamp(Mth.lerp(event.getPartialTick(),lerpPosY,0), -1, 1);
 
-        int typeX = 0;
 
-        if (lerpPosX < -0.05) {
-            typeX = -1;
-        } else if (lerpPosX > 0.05) {
-            typeX = 1;
+        if (isFreeCam(player)) {
+            freeCameraYaw = Mth.clamp(freeCameraYaw + 4 * lerpPosX, -100 , 100);
+            freeCameraPitch = Mth.clamp(freeCameraPitch + 4 * lerpPosY, -90 , 90);
         }
 
-        int typeY = 0;
+        float yaw = event.getYaw();
+        float pitch = event.getPitch();
 
-        if (lerpPosY < -0.05) {
-            typeY = 1;
-        } else if (lerpPosY > 0.05) {
-            typeY = -1;
+        event.setYaw((float) (yaw + freeCameraYaw));
+        event.setPitch((float) (pitch + freeCameraPitch));
+
+        if (!isFreeCam(player)) {
+            freeCameraYaw *= 0.8;
+            freeCameraPitch *= 0.8;
         }
-
-        if (typeX == -1) {
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(7, true));
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(8, false));
-        } else if (typeX == 1) {
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(7, false));
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(8, true));
-        } else {
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(7, false));
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(8, false));
-        }
-
-
-        if (typeY == 1) {
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(9, true));
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(10, false));
-        } else if (typeY == -1) {
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(9, false));
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(10, true));
-        } else {
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(9, false));
-            ModUtils.PACKET_HANDLER.sendToServer(new VehicleMovementMessage(10, false));
-        }
-
-//        player.displayClientMessage(Component.literal(typeX + " " + typeY), true);
     }
 }

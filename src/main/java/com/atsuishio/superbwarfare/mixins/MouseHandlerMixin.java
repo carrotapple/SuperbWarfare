@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import static com.atsuishio.superbwarfare.event.ClientEventHandler.droneFovLerp;
+import static com.atsuishio.superbwarfare.event.ClientEventHandler.isFreeCam;
 
 /**
  * Author: MrCrayfish
@@ -41,6 +42,10 @@ public class MouseHandlerMixin {
         }
 
         ItemStack stack = mc.player.getMainHandItem();
+
+        if (isFreeCam(player)) {
+            return 0;
+        }
 
         if (player.getVehicle() instanceof ICannonEntity) {
             return ClientEventHandler.zoomVehicle ? 0.15 : 0.3;

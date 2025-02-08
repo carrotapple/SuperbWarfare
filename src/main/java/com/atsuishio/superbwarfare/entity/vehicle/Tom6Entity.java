@@ -372,4 +372,9 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
     public ResourceLocation getVehicleIcon() {
         return ModUtils.loc("textures/vehicle_icon/tom_6_icon.png");
     }
+
+    @Override
+    public boolean allowFreeCam() {
+        return true;
+    }
 }

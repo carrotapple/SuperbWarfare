@@ -457,4 +457,8 @@ public class VehicleEntity extends Entity {
     public ResourceLocation getVehicleIcon() {
         return ModUtils.loc("textures/gun_icon/default_icon.png");
     }
+
+    public boolean allowFreeCam() {
+        return false;
+    }
 }

@@ -793,4 +793,8 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     public ResourceLocation getVehicleIcon() {
         return ModUtils.loc("textures/vehicle_icon/ah_6_icon.png");
     }
+    @Override
+    public boolean allowFreeCam() {
+        return true;
+    }
 }
