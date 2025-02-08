@@ -133,6 +133,13 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
             setZRot(getRoll() * 0.7f);
         }
 
+        if (this.isInWater() && this.tickCount % 4 == 0) {
+            this.setDeltaMovement(this.getDeltaMovement().multiply(0.6, 0.6, 0.6));
+            if (lastTickSpeed > 0.4) {
+                this.hurt(ModDamageTypes.causeVehicleStrikeDamage(this.level().registryAccess(), this, this.getFirstPassenger() == null ? this : this.getFirstPassenger()), (float) (20 * ((lastTickSpeed - 0.4) * (lastTickSpeed - 0.4))));
+            }
+        }
+
         this.refreshDimensions();
     }
 
@@ -145,7 +152,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
         float diffX;
         float diffY;
 
-        if (passenger == null) {
+        if (passenger == null || isInWater()) {
             this.leftInputDown = false;
             this.rightInputDown = false;
             this.forwardInputDown = false;

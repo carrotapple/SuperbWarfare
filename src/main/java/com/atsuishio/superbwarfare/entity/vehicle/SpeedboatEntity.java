@@ -35,11 +35,9 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Math;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -177,14 +175,6 @@ public class SpeedboatEntity extends ContainerMobileEntity implements GeoEntity,
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
         this.hurt(Math.max(amount - 2, 0), source.getEntity(), true);
         return true;
-    }
-
-    public double getSubmergedHeight(Entity entity) {
-        for (FluidType fluidType : ForgeRegistries.FLUID_TYPES.get().getValues()) {
-            if (entity.level().getFluidState(entity.blockPosition()).getFluidType() == fluidType)
-                return entity.getFluidTypeHeight(fluidType);
-        }
-        return 0;
     }
 
     @Override

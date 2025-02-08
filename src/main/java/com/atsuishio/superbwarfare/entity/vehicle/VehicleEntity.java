@@ -38,7 +38,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
 import org.joml.Matrix4f;
@@ -63,6 +65,7 @@ public class VehicleEntity extends Entity {
     public float roll;
     public float prevRoll;
     public int lastHurtTick;
+    public int repairCoolDown;
     public boolean crash;
 
     public float getRoll() {
@@ -175,6 +178,7 @@ public class VehicleEntity extends Entity {
             this.entityData.set(LAST_ATTACKER_UUID, source.getEntity().getStringUUID());
         }
         lastHurtTick = 0;
+        repairCoolDown = 200;
 
         return super.hurt(source, amount);
     }
@@ -249,11 +253,23 @@ public class VehicleEntity extends Entity {
         return 1;
     }
 
+    public double getSubmergedHeight(Entity entity) {
+        for (FluidType fluidType : ForgeRegistries.FLUID_TYPES.get().getValues()) {
+            if (entity.level().getFluidState(entity.blockPosition()).getFluidType() == fluidType)
+                return entity.getFluidTypeHeight(fluidType);
+        }
+        return 0;
+    }
+
     @Override
     public void baseTick() {
         super.baseTick();
 
         this.lastHurtTick++;
+
+        if (repairCoolDown > 0) {
+            repairCoolDown--;
+        }
 
         this.prevRoll = this.getRoll();
 
@@ -290,7 +306,7 @@ public class VehicleEntity extends Entity {
         if (this.getHealth() <= 0.1 * this.getMaxHealth()) {
             this.hurt(0.1f, attacker, false);
         } else {
-            if (!(this instanceof DroneEntity)) {
+            if (!(this instanceof DroneEntity) && repairCoolDown == 0) {
                 this.heal(0.05f);
             }
         }
