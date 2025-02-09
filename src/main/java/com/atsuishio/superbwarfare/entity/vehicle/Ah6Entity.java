@@ -341,10 +341,10 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                 if (engineStartOver) {
                     if (down) {
                         holdPowerTick++;
-                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0004f * Math.min(holdPowerTick, 10), this.onGround() ? 0 : 0.01f));
+                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.001f * Math.min(holdPowerTick, 5), this.onGround() ? 0 : 0.025f));
                     } else if (backInputDown) {
                         holdPowerTick++;
-                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0004f * Math.min(holdPowerTick, 10), this.onGround() ? 0 : 0.052f));
+                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.001f * Math.min(holdPowerTick, 5), this.onGround() ? 0 : 0.052f));
                         if (passenger != null) {
                             passenger.setXRot(0.8f * passenger.getXRot());
                         }
