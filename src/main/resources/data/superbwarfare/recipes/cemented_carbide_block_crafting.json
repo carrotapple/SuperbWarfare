@@ -3,14 +3,11 @@
   "category": "equipment",
   "pattern": [
     "aaa",
-    "aba",
+    "aaa",
     "aaa"
   ],
   "key": {
     "a": {
-      "tag": "superbwarfare:ingots/cemented_carbide"
-    },
-    "b": {
       "item": "superbwarfare:cemented_carbide_ingot"
     }
   },
