@@ -12,9 +12,9 @@ public class RangeHelper {
      * @param thetaDegrees 发射角度（以度为单位），需要根据实际情况修改
      */
     public static double getRange(double thetaDegrees) {
-        double initialVelocity = 8; // 初始速度 8 m/s
+        double initialVelocity = 11.4; // 初始速度 11.4 m/s
         double thetaRadians = Math.toRadians(thetaDegrees); // 将角度转换为弧度
-        double gravity = 0.05; // 重力加速度
+        double gravity = 0.146; // 重力加速度
         double velocityDecay = 0.99; // 速度衰减系数
 
         // 计算射程

@@ -164,7 +164,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
                 if (level instanceof ServerLevel server) {
                     MortarShellEntity entityToSpawn = new MortarShellEntity(player, level);
                     entityToSpawn.setPos(this.getX(), this.getEyeY(), this.getZ());
-                    entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 8f, (float) 0.3);
+                    entityToSpawn.shoot(this.getLookAngle().x, this.getLookAngle().y, this.getLookAngle().z, 11.4f, (float) 0.1);
                     level.addFreshEntity(entityToSpawn);
                     server.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, (this.getX() + 3 * this.getLookAngle().x), (this.getY() + 0.1 + 3 * this.getLookAngle().y), (this.getZ() + 3 * this.getLookAngle().z), 8, 0.4, 0.4, 0.4,
                             0.007);
@@ -212,7 +212,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
         this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(targetX, targetY, targetZ));
 
         double[] angles = new double[2];
-        boolean flag = RangeHelper.canReachTarget(8, 0.05, 0.99,
+        boolean flag = RangeHelper.canReachTarget(11, 0.146, 0.99,
                 new BlockPos((int) this.getX(), (int) this.getEyeY(), (int) this.getZ()),
                 new BlockPos(targetX, targetY, targetZ),
                 angles);
