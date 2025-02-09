@@ -86,6 +86,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
     public int heat;
 
     public int holdTick;
+    public int holdPowerTick;
 
     public Ah6Entity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.AH_6.get(), world);
@@ -333,14 +334,17 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
                 }
 
                 if (up && engineStartOver) {
-                    this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.005f, 0.12f));
+                    holdPowerTick++;
+                    this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0007f * Math.min(holdPowerTick, 10), 0.12f));
                 }
 
                 if (engineStartOver) {
                     if (down) {
-                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0036f, this.onGround() ? 0 : 0.01f));
+                        holdPowerTick++;
+                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0004f * Math.min(holdPowerTick, 10), this.onGround() ? 0 : 0.01f));
                     } else if (backInputDown) {
-                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0036f, this.onGround() ? 0 : 0.052f));
+                        holdPowerTick++;
+                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0004f * Math.min(holdPowerTick, 10), this.onGround() ? 0 : 0.052f));
                         if (passenger != null) {
                             passenger.setXRot(0.8f * passenger.getXRot());
                         }
@@ -353,10 +357,11 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
 
                 if (!(up || down || backInputDown) && engineStartOver) {
                     if (this.getDeltaMovement().y() < 0) {
-                        this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.00005f, 0.12f));
+                        this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.0002f, 0.12f));
                     } else {
-                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - (this.onGround() ? 0.00005f : 0.00006f), 0));
+                        this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - (this.onGround() ? 0.00005f : 0.0002f), 0));
                     }
+                    holdPowerTick = 0;
                 }
             } else {
                 this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.0001f, 0));

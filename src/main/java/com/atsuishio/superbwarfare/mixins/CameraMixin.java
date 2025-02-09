@@ -26,6 +26,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static com.atsuishio.superbwarfare.event.ClientEventHandler.zoom;
+
 @Mixin(Camera.class)
 public abstract class CameraMixin {
 
@@ -122,6 +124,12 @@ public abstract class CameraMixin {
 
     @Inject(method = "setup", at = @At("TAIL"))
     public void ia$setup(BlockGetter area, Entity entity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
+
+        if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && entity instanceof Player player && player.getMainHandItem().is(ModTags.Items.GUN) && zoom) {
+            move(-getMaxZoom(-2.9 * Math.max(ClientEventHandler.pullPos, ClientEventHandler.zoomPos)), 0, -ClientEventHandler.cameraLocation * Math.max(ClientEventHandler.pullPos, ClientEventHandler.zoomPos));
+            return;
+        }
+
         if (thirdPerson && entity.getVehicle() instanceof Mk42Entity) {
             move(-getMaxZoom(8), 1, 0.0);
             return;
@@ -155,12 +163,7 @@ public abstract class CameraMixin {
 
         if (thirdPerson && entity.getVehicle() instanceof Bmp2Entity && !ClientEventHandler.zoomVehicle) {
             move(-getMaxZoom(3), 1, 0.0);
-            return;
         }
-        if (Minecraft.getInstance().options.getCameraType() == CameraType.THIRD_PERSON_BACK && entity instanceof Player player && player.getMainHandItem().is(ModTags.Items.GUN)) {
-            move(-getMaxZoom(-2.9 * Math.max(ClientEventHandler.pullPos, ClientEventHandler.zoomPos)), 0, -ClientEventHandler.cameraLocation * Math.max(ClientEventHandler.pullPos, ClientEventHandler.zoomPos));
-        }
-
     }
 
     @Shadow
