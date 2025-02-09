@@ -32,6 +32,9 @@ public class ModTags {
         public static final TagKey<Item> MILITARY_ARMOR = tag("military_armor");
         public static final TagKey<Item> MILITARY_ARMOR_HEAVY = tag("military_armor_heavy");
 
+        public static final TagKey<Item> INGOTS_STEEL = tag("ingots/steel");
+        public static final TagKey<Item> STORAGE_BLOCK_STEEL = tag("storage_blocks/steel");
+
         private static TagKey<Item> tag(String name) {
             return ItemTags.create(new ResourceLocation(ModUtils.MODID, name));
         }

@@ -11,7 +11,7 @@
       "item": "superbwarfare:empty_perk"
     },
     "b": {
-      "tag":"forge:ingots/steel"
+      "tag": "superbwarfare:ingots/steel"
     },
     "c": {
       "item": "minecraft:piston"

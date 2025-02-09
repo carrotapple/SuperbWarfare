@@ -8,7 +8,7 @@
   ],
   "key": {
     "a": {
-      "tag":"forge:storage_blocks/steel"
+      "tag": "superbwarfare:storage_blocks/steel"
     },
     "b": {
       "item": "minecraft:dispenser"

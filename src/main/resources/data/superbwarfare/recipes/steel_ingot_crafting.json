@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category":"misc",
+  "category": "misc",
   "ingredients": [
     {
-      "item":"superbwarfare:steel_block"
+      "item": "superbwarfare:steel_block"
     }
   ],
   "result": {

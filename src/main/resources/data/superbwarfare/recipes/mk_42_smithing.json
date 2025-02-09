@@ -7,7 +7,7 @@
     "item": "superbwarfare:cannon_core"
   },
   "addition": {
-    "tag": "forge:storage_blocks/steel"
+    "tag": "superbwarfare:storage_blocks/steel"
   },
   "result": {
     "item": "superbwarfare:container",

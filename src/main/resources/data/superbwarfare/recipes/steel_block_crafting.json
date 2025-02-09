@@ -8,10 +8,10 @@
   ],
   "key": {
     "a": {
-      "item": "superbwarfare:steel_ingot"
+      "tag": "superbwarfare:ingots/steel"
     },
     "b": {
-      "tag":"forge:ingots/steel"
+      "item": "superbwarfare:steel_ingot"
     }
   },
   "result": {

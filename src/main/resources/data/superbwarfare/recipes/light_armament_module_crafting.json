@@ -17,7 +17,7 @@
       "item": "minecraft:dispenser"
     },
     "d": {
-      "tag":"forge:ingots/steel"
+      "tag": "superbwarfare:ingots/steel"
     }
   },
   "result": {

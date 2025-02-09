@@ -8,13 +8,13 @@
   ],
   "key": {
     "a": {
-      "tag":"forge:ingots/steel"
+      "tag": "superbwarfare:ingots/steel"
     },
     "b": {
       "item": "superbwarfare:wheel"
     },
     "c": {
-      "tag": "forge:storage_blocks/steel"
+      "tag": "superbwarfare:storage_blocks/steel"
     }
   },
   "result": {

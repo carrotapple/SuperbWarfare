@@ -7,7 +7,7 @@
     "item": "superbwarfare:rare_material_pack"
   },
   "addition": {
-    "tag":"forge:ingots/steel"
+    "tag": "superbwarfare:ingots/steel"
   },
   "result": {
     "item": "superbwarfare:m_4"

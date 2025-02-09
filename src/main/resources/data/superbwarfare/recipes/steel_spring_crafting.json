@@ -3,12 +3,15 @@
   "category": "misc",
   "pattern": [
     "a",
-    "a",
+    "b",
     "a"
   ],
   "key": {
     "a": {
-      "tag":"forge:ingots/steel"
+      "tag": "superbwarfare:ingots/steel"
+    },
+    "b": {
+      "item": "superbwarfare:steel_ingot"
     }
   },
   "result": {

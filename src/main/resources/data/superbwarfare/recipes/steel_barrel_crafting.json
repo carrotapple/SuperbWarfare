@@ -2,11 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "aaa"
+    "aba"
   ],
   "key": {
     "a": {
-      "tag":"forge:ingots/steel"
+      "tag": "superbwarfare:ingots/steel"
+    },
+    "b": {
+      "item": "superbwarfare:steel_ingot"
     }
   },
   "result": {
