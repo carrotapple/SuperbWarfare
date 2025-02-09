@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "aaa",
+    "aca",
     "aba"
   ],
   "key": {
@@ -11,6 +11,9 @@
     },
     "b": {
       "tag": "forge:dyes/black"
+    },
+    "c": {
+      "item": "superbwarfare:steel_ingot"
     }
   },
   "result": {

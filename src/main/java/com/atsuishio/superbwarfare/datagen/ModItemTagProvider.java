@@ -39,6 +39,8 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
         this.tag(ModTags.Items.INGOTS_STEEL).addTag(forgeTag("ingots/steel"))
                 .addOptional(new ResourceLocation("dreamaticvoyage", "fukamizu_bread_ingot"));
+        this.tag(ModTags.Items.INGOTS_CEMENTED_CARBIDE).add(ModItems.CEMENTED_CARBIDE_INGOT.get())
+                .addOptional(new ResourceLocation("dreamaticvoyage", "hqss_bread_ingot"));
 
         this.tag(Tags.Items.STORAGE_BLOCKS).addTags(forgeTag("storage_blocks/lead"), forgeTag("storage_blocks/steel"), forgeTag("storage_blocks/tungsten"), forgeTag("storage_blocks/silver"));
         this.tag(forgeTag("storage_blocks/lead")).add(ModItems.LEAD_BLOCK.get());
@@ -47,7 +49,9 @@ public class ModItemTagProvider extends ItemTagsProvider {
         this.tag(forgeTag("storage_blocks/silver")).add(ModItems.SILVER_BLOCK.get());
 
         this.tag(ModTags.Items.STORAGE_BLOCK_STEEL).addTag(forgeTag("storage_blocks/steel"))
-                .addOptional(new ResourceLocation("dreamaticvoyage", "fukamizu_bread_block"));
+                .addOptional(new ResourceLocation("dreamaticvoyage", "fukamizu_bread_bricks"));
+        this.tag(ModTags.Items.STORAGE_BLOCK_CEMENTED_CARBIDE).add(ModItems.CEMENTED_CARBIDE_BLOCK.get())
+                .addOptional(new ResourceLocation("dreamaticvoyage", "hqss_bread_bricks"));
 
         this.tag(Tags.Items.ORES).addTags(forgeTag("ores/lead"), forgeTag("ores/tungsten"), forgeTag("ores/silver"));
         this.tag(forgeTag("ores/lead")).add(ModItems.GALENA_ORE.get(), ModItems.DEEPSLATE_GALENA_ORE.get());

@@ -2,15 +2,18 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "aaa",
+    "aca",
     "aba"
   ],
   "key": {
     "a": {
-      "item": "superbwarfare:cemented_carbide_ingot"
+      "tag": "superbwarfare:ingots/cemented_carbide"
     },
     "b": {
       "item": "minecraft:sand"
+    },
+    "c": {
+      "item": "superbwarfare:cemented_carbide_ingot"
     }
   },
   "result": {

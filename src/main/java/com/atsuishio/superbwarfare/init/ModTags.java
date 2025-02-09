@@ -35,6 +35,9 @@ public class ModTags {
         public static final TagKey<Item> INGOTS_STEEL = tag("ingots/steel");
         public static final TagKey<Item> STORAGE_BLOCK_STEEL = tag("storage_blocks/steel");
 
+        public static final TagKey<Item> INGOTS_CEMENTED_CARBIDE = tag("ingots/cemented_carbide");
+        public static final TagKey<Item> STORAGE_BLOCK_CEMENTED_CARBIDE = tag("storage_blocks/cemented_carbide");
+
         private static TagKey<Item> tag(String name) {
             return ItemTags.create(new ResourceLocation(ModUtils.MODID, name));
         }

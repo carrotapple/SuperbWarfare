@@ -3,13 +3,16 @@
   "category": "misc",
   "pattern": [
     "ab",
-    " b"
+    " c"
   ],
   "key": {
     "a": {
       "item": "minecraft:tripwire_hook"
     },
     "b": {
+      "tag": "superbwarfare:ingots/cemented_carbide"
+    },
+    "c": {
       "item": "superbwarfare:cemented_carbide_ingot"
     }
   },

@@ -3,15 +3,18 @@
   "category": "misc",
   "pattern": [
     "aba",
-    "aaa",
+    "aca",
     "aaa"
   ],
   "key": {
     "a": {
-      "item": "superbwarfare:cemented_carbide_ingot"
+      "tag": "superbwarfare:ingots/cemented_carbide"
     },
     "b": {
       "tag": "forge:dyes/green"
+    },
+    "c": {
+      "item": "superbwarfare:cemented_carbide_ingot"
     }
   },
   "result": {

@@ -17,7 +17,7 @@
       "item": "superbwarfare:light_armament_module"
     },
     "d": {
-      "item":"superbwarfare:cemented_carbide_ingot"
+      "tag": "superbwarfare:ingots/cemented_carbide"
     }
   },
   "result": {

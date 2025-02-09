@@ -3,11 +3,14 @@
   "category": "misc",
   "pattern": [
     "a",
-    "a",
+    "b",
     "a"
   ],
   "key": {
     "a": {
+      "tag": "superbwarfare:ingots/cemented_carbide"
+    },
+    "b": {
       "item": "superbwarfare:cemented_carbide_ingot"
     }
   },
