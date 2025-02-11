@@ -67,13 +67,15 @@ public class ContainerBlockItem extends BlockItem implements GeoItem {
     public InteractionResult place(BlockPlaceContext pContext) {
         ItemStack stack = pContext.getItemInHand();
         Player player = pContext.getPlayer();
+        var res = super.place(pContext);
+
         if (player != null) {
             var tag = BlockItem.getBlockEntityData(stack);
-            if (tag != null && tag.get("Entity") != null && pContext.canPlace()) {
+            if (tag != null && tag.get("Entity") != null && res == InteractionResult.SUCCESS) {
                 player.getInventory().removeItem(stack);
             }
         }
-        return super.place(pContext);
+        return res;
     }
 
     private PlayState predicate(AnimationState<ContainerBlockItem> event) {
