@@ -51,6 +51,7 @@ import java.util.stream.StreamSupport;
 import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 
 public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, OwnableEntity {
+
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(LaserTowerEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Boolean> ACTIVE = SynchedEntityData.defineId(LaserTowerEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(LaserTowerEntity.class, EntityDataSerializers.OPTIONAL_UUID);
@@ -71,7 +72,7 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
     }
 
     public LaserTowerEntity(LivingEntity owner, Level level) {
-        super(ModEntities.CLAYMORE.get(), level);
+        super(ModEntities.LASER_TOWER.get(), level);
         this.setOwnerUUID(owner.getUUID());
     }
 
@@ -309,8 +310,6 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
                     return false;
                 }).min(Comparator.comparingDouble(e -> e.distanceTo(this))).orElse(null);
     }
-
-
 
     private PlayState movementPredicate(AnimationState<LaserTowerEntity> event) {
         if (this.entityData.get(COOL_DOWN) > 10) {
