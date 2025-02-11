@@ -23,7 +23,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
@@ -206,7 +206,7 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
     public InteractionResult interact(Player player, InteractionHand hand) {
         ItemStack stack = player.getMainHandItem();
         if (player.isCrouching()) {
-            if (stack.is(ModItems.CROWBAR.get())) {
+            if (stack.is(ModItems.CROWBAR.get()) && (getOwner() == null || player == getOwner())) {
                 ItemStack container = ContainerBlockItem.createInstance(this);
                 if (!player.addItem(container)) {
                     player.drop(container, false);
@@ -268,7 +268,7 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
     public void autoAim() {
         if (this.entityData.get(ENERGY) <= 0 || !entityData.get(ACTIVE) || this.entityData.get(COOL_DOWN) > 10) return;
 
-        Entity naerestEntity = seekNearLivingEntity(80);
+        Entity naerestEntity = seekNearLivingEntity(128);
 
         if (naerestEntity != null) {
             Vec3 barrelRootPos = new Vec3(this.getX(), this.getY() + 1.390625f, this.getZ());
@@ -303,7 +303,7 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
         return StreamSupport.stream(EntityFindUtil.getEntities(level()).getAll().spliterator(), false)
                 .filter(e -> {
                     // TODO 自定义目标列表
-                    if (e.distanceTo(this) <= seekRange && e instanceof Monster) {
+                    if (e.distanceTo(this) <= seekRange && e instanceof Enemy) {
                         return level().clip(new ClipContext(this.getEyePosition(), e.getEyePosition(),
                                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() != HitResult.Type.BLOCK;
                     }
