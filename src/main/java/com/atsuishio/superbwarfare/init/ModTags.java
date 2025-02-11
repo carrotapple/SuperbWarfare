@@ -2,11 +2,12 @@ package com.atsuishio.superbwarfare.init;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 
 public class ModTags {
 
@@ -39,7 +40,16 @@ public class ModTags {
         public static final TagKey<Item> STORAGE_BLOCK_CEMENTED_CARBIDE = tag("storage_blocks/cemented_carbide");
 
         private static TagKey<Item> tag(String name) {
-            return ItemTags.create(new ResourceLocation(ModUtils.MODID, name));
+            return ItemTags.create(ModUtils.loc(name));
+        }
+    }
+
+    public static class Blocks {
+        public static final TagKey<Block> SOFT_COLLISION = tag("soft_collision");
+        public static final TagKey<Block> HARD_COLLISION = tag("hard_collision");
+
+        private static TagKey<Block> tag(String name) {
+            return BlockTags.create(ModUtils.loc(name));
         }
     }
 
@@ -48,7 +58,7 @@ public class ModTags {
         public static final TagKey<DamageType> PROJECTILE_ABSOLUTE = tag("projectile_absolute");
 
         private static TagKey<DamageType> tag(String name) {
-            return TagKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ModUtils.MODID, name));
+            return TagKey.create(Registries.DAMAGE_TYPE, ModUtils.loc(name));
         }
     }
 }

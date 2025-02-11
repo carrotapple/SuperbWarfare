@@ -8,6 +8,7 @@ import com.atsuishio.superbwarfare.entity.projectile.LaserEntity;
 import com.atsuishio.superbwarfare.entity.projectile.ProjectileEntity;
 import com.atsuishio.superbwarfare.init.ModDamageTypes;
 import com.atsuishio.superbwarfare.init.ModSounds;
+import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,7 +19,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
@@ -33,7 +33,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
@@ -105,14 +104,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
             AABB aabb = getBoundingBox().move(this.getDeltaMovement().scale(0.6));
             BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
                 BlockState blockstate = this.level().getBlockState(pos);
-                if (blockstate.is(Blocks.CACTUS)
-                        || blockstate.is(BlockTags.LEAVES) || blockstate.is(BlockTags.FENCES)
-                        || blockstate.is(BlockTags.FENCE_GATES) || blockstate.is(BlockTags.DOORS)
-                        || blockstate.is(BlockTags.TRAPDOORS) || blockstate.is(Blocks.BAMBOO)
-                        || blockstate.is(Blocks.MELON) || blockstate.is(Blocks.PUMPKIN)
-                        || blockstate.is(Blocks.HAY_BLOCK) || blockstate.is(Blocks.BELL)
-                        || blockstate.is(BlockTags.WALLS) || blockstate.is(Blocks.CHAIN)
-                        || blockstate.is(Blocks.SNOW_BLOCK)) {
+                if (blockstate.is(ModTags.Blocks.SOFT_COLLISION)) {
                     this.level().destroyBlock(pos, true);
                     this.setDeltaMovement(this.getDeltaMovement().scale(0.96));
                 }
@@ -127,10 +119,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
             AABB aabb = getBoundingBox().move(this.getDeltaMovement().scale(0.6));
             BlockPos.betweenClosedStream(aabb).forEach((pos) -> {
                 BlockState blockstate = this.level().getBlockState(pos);
-                if (blockstate.is(BlockTags.LOGS) || blockstate.is(BlockTags.PLANKS)
-                        || blockstate.is(Tags.Blocks.GLASS) || blockstate.is(Tags.Blocks.GLASS_PANES)
-                        || blockstate.is(Blocks.ICE) || blockstate.is(Blocks.FROSTED_ICE)
-                        || blockstate.is(Blocks.PACKED_ICE) || blockstate.is(Blocks.BLUE_ICE)) {
+                if (blockstate.is(ModTags.Blocks.HARD_COLLISION)) {
                     this.level().destroyBlock(pos, true);
                     this.setDeltaMovement(this.getDeltaMovement().scale(0.6));
                 }

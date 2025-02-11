@@ -1,0 +1,12 @@
+{
+  "values": [
+    "#minecraft:logs",
+    "#minecraft:planks",
+    "#forge:glass",
+    "#forge:glass_panes",
+    "minecraft:ice",
+    "minecraft:frosted_ice",
+    "minecraft:packed_ice",
+    "minecraft:blue_ice"
+  ]
+}
