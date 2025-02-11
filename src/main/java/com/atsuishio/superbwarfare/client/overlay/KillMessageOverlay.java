@@ -321,7 +321,7 @@ public class KillMessageOverlay {
                     icon = BURN;
                 } else if (record.damageType == ModDamageTypes.DRONE_HIT) {
                     icon = DRONE;
-                } else if (record.damageType == ModDamageTypes.LASER || record.damageType == ModDamageTypes.LASER_HEADSHOT) {
+                } else if (record.damageType == ModDamageTypes.LASER || record.damageType == ModDamageTypes.LASER_HEADSHOT || record.damageType == ModDamageTypes.LASER_STATIC) {
                     icon = LASER;
                 } else if (record.damageType == ModDamageTypes.VEHICLE_STRIKE) {
                     icon = VEHICLE;

@@ -2835,5 +2835,13 @@
         "stream": false
       }
     ]
+  },
+  "laser_tower_shoot": {
+    "sounds": [
+      {
+        "name": "superbwarfare:laser_tower_shoot",
+        "stream": false
+      }
+    ]
   }
 }

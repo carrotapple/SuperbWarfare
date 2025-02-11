@@ -6,6 +6,7 @@ import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.VectorTool;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -287,10 +288,12 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
             this.setRot(this.getYRot(), this.getXRot());
 
             if (this.entityData.get(COOL_DOWN) == 0 && VectorTool.calculateAngle(getViewVector(1), targetVec) < 1) {
-                if (level() instanceof ServerLevel) {
-                    this.level().playSound(this, getOnPos(), ModSounds.CHARGE_RIFLE_FIRE_BOOM_3P.get(), SoundSource.PLAYERS, 2, 1);
+                if (level() instanceof ServerLevel serverLevel) {
+                    this.level().playSound(this, getOnPos(), ModSounds.LASER_TOWER_SHOOT.get(), SoundSource.PLAYERS, 2, 1);
+                    sendParticle(serverLevel, ParticleTypes.END_ROD, naerestEntity.getX(), naerestEntity.getEyeY(), naerestEntity.getZ(), 12, 0, 0, 0, 0.05, true);
+                    sendParticle(serverLevel, ParticleTypes.LAVA, naerestEntity.getX(), naerestEntity.getEyeY(), naerestEntity.getZ(), 4, 0, 0, 0, 0.15, true);
                 }
-                naerestEntity.hurt(ModDamageTypes.causeLaserDamage(this.level().registryAccess(), getOwner(), getOwner()), (float) 25);
+                naerestEntity.hurt(ModDamageTypes.causeLaserStaticDamage(this.level().registryAccess(), getOwner(), getOwner()), (float) 25);
                 naerestEntity.invulnerableTime = 0;
                 entityData.set(LASER_LENGTH, distanceTo(naerestEntity));
                 this.entityData.set(COOL_DOWN, 20);

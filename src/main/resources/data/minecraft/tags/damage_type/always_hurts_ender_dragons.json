@@ -5,6 +5,7 @@
     "superbwarfare:custom_explosion",
     "superbwarfare:cannon_fire",
     "superbwarfare:laser",
-    "superbwarfare:laser_headshot"
+    "superbwarfare:laser_headshot",
+    "superbwarfare:laser_static"
   ]
 }

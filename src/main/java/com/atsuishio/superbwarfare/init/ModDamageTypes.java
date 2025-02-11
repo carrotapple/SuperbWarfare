@@ -30,6 +30,7 @@ public class ModDamageTypes {
     public static final ResourceKey<DamageType> DRONE_HIT = ResourceKey.create(Registries.DAMAGE_TYPE, ModUtils.loc("drone_hit"));
     public static final ResourceKey<DamageType> LASER = ResourceKey.create(Registries.DAMAGE_TYPE, ModUtils.loc("laser"));
     public static final ResourceKey<DamageType> LASER_HEADSHOT = ResourceKey.create(Registries.DAMAGE_TYPE, ModUtils.loc("laser_headshot"));
+    public static final ResourceKey<DamageType> LASER_STATIC = ResourceKey.create(Registries.DAMAGE_TYPE, ModUtils.loc("laser_static"));
     public static final ResourceKey<DamageType> VEHICLE_STRIKE = ResourceKey.create(Registries.DAMAGE_TYPE, ModUtils.loc("vehicle_strike"));
     public static final ResourceKey<DamageType> AIR_CRASH = ResourceKey.create(Registries.DAMAGE_TYPE, ModUtils.loc("air_crash"));
     public static final ResourceKey<DamageType> LUNGE_MINE = ResourceKey.create(Registries.DAMAGE_TYPE, ModUtils.loc("lunge_mine"));
@@ -81,6 +82,10 @@ public class ModDamageTypes {
 
     public static DamageSource causeLaserDamage(RegistryAccess registryAccess, @Nullable Entity directEntity, @Nullable Entity attacker) {
         return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(LASER), directEntity, attacker);
+    }
+
+    public static DamageSource causeLaserStaticDamage(RegistryAccess registryAccess, @Nullable Entity directEntity, @Nullable Entity attacker) {
+        return new DamageMessages(registryAccess.registry(Registries.DAMAGE_TYPE).get().getHolderOrThrow(LASER_STATIC), directEntity, attacker);
     }
 
     public static DamageSource causeLaserHeadshotDamage(RegistryAccess registryAccess, @Nullable Entity directEntity, @Nullable Entity attacker) {

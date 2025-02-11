@@ -19,6 +19,10 @@ public class DamageTypeTool {
                 || damageType == ModDamageTypes.GUN_FIRE_ABSOLUTE || damageType == ModDamageTypes.GUN_FIRE_HEADSHOT_ABSOLUTE;
     }
 
+    public static boolean isExplosionDamage(DamageSource source) {
+        return source.is(ModDamageTypes.CUSTOM_EXPLOSION) || source.is(ModDamageTypes.PROJECTILE_BOOM);
+    }
+
     public static boolean isHeadshotDamage(DamageSource source) {
         return source.is(ModDamageTypes.GUN_FIRE_HEADSHOT) || source.is(ModDamageTypes.GUN_FIRE_HEADSHOT_ABSOLUTE);
     }
