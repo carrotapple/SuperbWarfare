@@ -106,6 +106,7 @@ public class ModTabs {
                             output.accept(ContainerBlockItem.createInstance(ModEntities.MK_42.get()));
                             output.accept(ContainerBlockItem.createInstance(ModEntities.MLE_1934.get()));
                             output.accept(ContainerBlockItem.createInstance(ModEntities.ANNIHILATOR.get()));
+                            output.accept(ContainerBlockItem.createInstance(ModEntities.LASER_TOWER.get()));
                             output.accept(ContainerBlockItem.createInstance(ModEntities.SPEEDBOAT.get(), true));
                             output.accept(ContainerBlockItem.createInstance(ModEntities.AH_6.get()));
                             output.accept(ContainerBlockItem.createInstance(ModEntities.LAV_150.get(),true));

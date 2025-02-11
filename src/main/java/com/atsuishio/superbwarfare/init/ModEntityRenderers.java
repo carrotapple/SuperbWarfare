@@ -41,5 +41,6 @@ public class ModEntityRenderers {
         event.registerEntityRenderer(ModEntities.MELON_BOMB.get(), MelonBombEntityRenderer::new);
         event.registerEntityRenderer(ModEntities.BMP_2.get(), Bmp2Renderer::new);
         event.registerEntityRenderer(ModEntities.WG_MISSILE.get(), WgMissileRenderer::new);
+        event.registerEntityRenderer(ModEntities.LASER_TOWER.get(), LaserTowerRenderer::new);
     }
 }
