@@ -196,9 +196,11 @@ public class ClaymoreEntity extends Entity implements GeoEntity, AnimatedEntity,
                 }
 
                 ModUtils.queueServerWork(1, () -> {
-                    if (!level.isClientSide())
+                    if (!level.isClientSide()) {
                         triggerExplode();
+                    }
                 });
+                break;
             }
         }
 
