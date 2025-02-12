@@ -11,11 +11,11 @@ import snownee.jade.api.IServerDataProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 
-public enum EnergyVehicleProvider implements IEntityComponentProvider,
+public enum VehicleEnergyProvider implements IEntityComponentProvider,
         IServerDataProvider<EntityAccessor> {
     INSTANCE;
 
-    private static final ResourceLocation ID = new ResourceLocation(ModUtils.MODID, "energy_vehicle");
+    private static final ResourceLocation ID = new ResourceLocation(ModUtils.MODID, "vehicle_energy");
 
 
     @Override

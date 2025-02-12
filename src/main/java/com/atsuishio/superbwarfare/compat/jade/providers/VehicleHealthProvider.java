@@ -15,7 +15,7 @@ public enum VehicleHealthProvider implements IEntityComponentProvider {
     private static final ResourceLocation ID = new ResourceLocation(ModUtils.MODID, "vehicle_health");
 
     public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
-        // 对EntityHealthProvider的拙劣模仿
+        // 对EntityHealthProvider的拙劣模仿罢了
 
         var vehicle = (VehicleEntity) accessor.getEntity();
         float health = vehicle.getHealth();
