@@ -89,6 +89,9 @@ repositories {
     }
     maven {
         url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
 }
 
@@ -101,19 +104,25 @@ dependencies {
 
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.20.1:4.4.6')
 
+    // 可选mod依赖
+
+    // JEI相关
     // compile against the JEI API but do not include it at runtime
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"))
     compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}"))
     // at runtime, use the full JEI jar for Forge
     runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}"))
 
+    // Cloth Config相关
     implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:${cloth_config_version}")
 
+    // Jade相关
+    implementation fg.deobf("curse.maven:jade-324717:${jade_version}")
+
+    // 测试用mod
     implementation fg.deobf("curse.maven:oculus-581495:6020952")
     implementation fg.deobf("curse.maven:embeddium-908741:5681725")
-
     implementation fg.deobf("curse.maven:timeless-and-classics-zero-1028108:6069384")
-
     implementation fg.deobf("curse.maven:create-328085:5838779")
 }
 

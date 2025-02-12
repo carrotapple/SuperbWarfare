@@ -520,5 +520,7 @@
   "des.superbwarfare.tips.ammo_type.rocket": "ROCKET",
 
   "jei.superbwarfare.ancient_cpu": "神秘的古代科技，可以在古城找到。",
-  "jei.superbwarfare.charging_station": "使用燃料或食物进行发电，也可以接收主动输入的FE能量。能够为相邻的方块提供FE能量，为周围一定范围内的可充能载具充能。"
+  "jei.superbwarfare.charging_station": "使用燃料或食物进行发电，也可以接收主动输入的FE能量。能够为相邻的方块提供FE能量，为周围一定范围内的可充能载具充能。",
+
+  "config.jade.plugin_superbwarfare.energy_vehicle": "能量载具"
 }

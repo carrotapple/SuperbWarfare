@@ -520,5 +520,7 @@
   "des.superbwarfare.tips.ammo_type.rocket": "ROCKET",
 
   "jei.superbwarfare.ancient_cpu": "Mysterious ancient technology, can be found at ancient cities.",
-  "jei.superbwarfare.charging_station": "Generates power by consuming fuel or food, and can also accept FE energy input. This block supplies FE energy to adjacent blocks, and can also charge rechargeable vehicles within range."
+  "jei.superbwarfare.charging_station": "Generates power by consuming fuel or food, and can also accept FE energy input. This block supplies FE energy to adjacent blocks, and can also charge rechargeable vehicles within range.",
+
+  "config.jade.plugin_superbwarfare.energy_vehicle": "Energy Vehicle"
 }
