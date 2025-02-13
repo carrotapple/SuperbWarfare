@@ -12,7 +12,7 @@ import snownee.jade.impl.ui.HealthElement;
 public enum VehicleHealthProvider implements IEntityComponentProvider {
     INSTANCE;
 
-    private static final ResourceLocation ID = new ResourceLocation(ModUtils.MODID, "vehicle_health");
+    private static final ResourceLocation ID = ModUtils.loc("vehicle_health");
 
     public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig config) {
         // 对EntityHealthProvider的拙劣模仿罢了

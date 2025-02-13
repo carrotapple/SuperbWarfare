@@ -1,6 +1,5 @@
 package com.atsuishio.superbwarfare.compat.jade;
 
-
 import com.atsuishio.superbwarfare.compat.jade.providers.VehicleEnergyProvider;
 import com.atsuishio.superbwarfare.compat.jade.providers.VehicleHealthProvider;
 import com.atsuishio.superbwarfare.entity.vehicle.EnergyVehicleEntity;
@@ -10,9 +9,9 @@ import snownee.jade.api.IWailaCommonRegistration;
 import snownee.jade.api.IWailaPlugin;
 import snownee.jade.api.WailaPlugin;
 
-
 @WailaPlugin
 public class SbwJadePlugin implements IWailaPlugin {
+
     @Override
     public void register(IWailaCommonRegistration registration) {
         registration.registerEntityDataProvider(VehicleEnergyProvider.INSTANCE, EnergyVehicleEntity.class);

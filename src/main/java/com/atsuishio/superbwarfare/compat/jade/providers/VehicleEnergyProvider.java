@@ -15,8 +15,7 @@ public enum VehicleEnergyProvider implements IEntityComponentProvider,
         IServerDataProvider<EntityAccessor> {
     INSTANCE;
 
-    private static final ResourceLocation ID = new ResourceLocation(ModUtils.MODID, "vehicle_energy");
-
+    private static final ResourceLocation ID = ModUtils.loc("vehicle_energy");
 
     @Override
     public void appendTooltip(
