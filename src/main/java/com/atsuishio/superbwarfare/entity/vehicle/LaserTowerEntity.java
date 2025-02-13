@@ -54,6 +54,7 @@ import static com.atsuishio.superbwarfare.tools.ParticleTool.sendParticle;
 public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, OwnableEntity {
 
     public static final EntityDataAccessor<Integer> COOL_DOWN = SynchedEntityData.defineId(LaserTowerEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<String> TARGET_UUID = SynchedEntityData.defineId(LaserTowerEntity.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Boolean> ACTIVE = SynchedEntityData.defineId(LaserTowerEntity.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(LaserTowerEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     public static final EntityDataAccessor<Float> LASER_LENGTH = SynchedEntityData.defineId(LaserTowerEntity.class, EntityDataSerializers.FLOAT);
@@ -84,6 +85,7 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
+        this.entityData.define(TARGET_UUID, "none");
         this.entityData.define(OWNER_UUID, Optional.empty());
         this.entityData.define(COOL_DOWN, 0);
         this.entityData.define(LASER_LENGTH, 0f);
@@ -246,7 +248,6 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
         } else {
             this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
         }
-
         autoAim();
         this.refreshDimensions();
     }
@@ -267,13 +268,20 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
     }
 
     public void autoAim() {
-        if (this.entityData.get(ENERGY) <= 0 || !entityData.get(ACTIVE) || this.entityData.get(COOL_DOWN) > 10) return;
+        if (this.entityData.get(ENERGY) <= 0 || !entityData.get(ACTIVE) || this.entityData.get(COOL_DOWN) > 30) return;
 
-        Entity naerestEntity = seekNearLivingEntity(128);
+        if (entityData.get(TARGET_UUID).equals("none") && tickCount %10 == 0) {
+            Entity naerestEntity = seekNearLivingEntity(72);
+            if (naerestEntity != null) {
+                entityData.set(TARGET_UUID, naerestEntity.getStringUUID());
+            }
+        }
 
-        if (naerestEntity != null) {
+        Entity target = EntityFindUtil.findEntity(level(), entityData.get(TARGET_UUID));
+
+        if (target != null) {
             Vec3 barrelRootPos = new Vec3(this.getX(), this.getY() + 1.390625f, this.getZ());
-            Vec3 targetVec = barrelRootPos.vectorTo(naerestEntity.getEyePosition()).normalize();
+            Vec3 targetVec = barrelRootPos.vectorTo(target.getEyePosition()).normalize();
 
             double d0 = targetVec.x;
             double d1 = targetVec.y;
@@ -284,21 +292,30 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
 
             float diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(targetY - this.getYRot()));
 
-            this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -25f, 25f));
+            this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -60f, 60f));
             this.setRot(this.getYRot(), this.getXRot());
 
             if (this.entityData.get(COOL_DOWN) == 0 && VectorTool.calculateAngle(getViewVector(1), targetVec) < 1) {
+
+                this.entityData.set(COOL_DOWN, 40);
+
                 if (level() instanceof ServerLevel serverLevel) {
-                    this.level().playSound(this, getOnPos(), ModSounds.LASER_TOWER_SHOOT.get(), SoundSource.PLAYERS, 2, 1);
-                    sendParticle(serverLevel, ParticleTypes.END_ROD, naerestEntity.getX(), naerestEntity.getEyeY(), naerestEntity.getZ(), 12, 0, 0, 0, 0.05, true);
-                    sendParticle(serverLevel, ParticleTypes.LAVA, naerestEntity.getX(), naerestEntity.getEyeY(), naerestEntity.getZ(), 4, 0, 0, 0, 0.15, true);
+                    this.level().playSound(this, getOnPos(), ModSounds.LASER_TOWER_SHOOT.get(), SoundSource.PLAYERS, 2, random.nextFloat() * 0.1f + 1);
+                    sendParticle(serverLevel, ParticleTypes.END_ROD, target.getX(), target.getEyeY(), target.getZ(), 12, 0, 0, 0, 0.05, true);
+                    sendParticle(serverLevel, ParticleTypes.LAVA, target.getX(), target.getEyeY(), target.getZ(), 4, 0, 0, 0, 0.15, true);
                 }
-                naerestEntity.hurt(ModDamageTypes.causeLaserStaticDamage(this.level().registryAccess(), getOwner(), getOwner()), (float) 25);
-                naerestEntity.invulnerableTime = 0;
-                entityData.set(LASER_LENGTH, distanceTo(naerestEntity));
-                this.entityData.set(COOL_DOWN, 20);
+
+                target.hurt(ModDamageTypes.causeLaserStaticDamage(this.level().registryAccess(), getOwner(), getOwner()), (float) 15);
+                target.invulnerableTime = 0;
+                entityData.set(LASER_LENGTH, distanceTo(target));
+                entityData.set(TARGET_UUID, "none");
+                if (Math.random() < 0.25 && target instanceof LivingEntity living) {
+                    living.setSecondsOnFire(2);
+                }
                 this.consumeEnergy(SHOOT_COST);
             }
+        } else {
+            entityData.set(TARGET_UUID, "none");
         }
     }
 
@@ -306,7 +323,9 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
         return StreamSupport.stream(EntityFindUtil.getEntities(level()).getAll().spliterator(), false)
                 .filter(e -> {
                     // TODO 自定义目标列表
-                    if (e.distanceTo(this) <= seekRange && e instanceof Enemy) {
+                    if (e.distanceTo(this) <= seekRange && (
+                            (e instanceof LivingEntity living && living instanceof Enemy && living.getHealth() > 0)
+                    )) {
                         return level().clip(new ClipContext(this.getEyePosition(), e.getEyePosition(),
                                 ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() != HitResult.Type.BLOCK;
                     }
