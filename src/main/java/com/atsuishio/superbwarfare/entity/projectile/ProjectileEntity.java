@@ -2,9 +2,8 @@ package com.atsuishio.superbwarfare.entity.projectile;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.block.BarbedWireBlock;
-import com.atsuishio.superbwarfare.entity.*;
-import com.atsuishio.superbwarfare.entity.vehicle.DroneEntity;
-import com.atsuishio.superbwarfare.entity.vehicle.IArmedVehicleEntity;
+import com.atsuishio.superbwarfare.entity.ICustomKnockback;
+import com.atsuishio.superbwarfare.entity.TargetEntity;
 import com.atsuishio.superbwarfare.init.*;
 import com.atsuishio.superbwarfare.item.Transcript;
 import com.atsuishio.superbwarfare.network.message.ClientIndicatorMessage;
@@ -217,12 +216,10 @@ public class ProjectileEntity extends Projectile implements IEntityAdditionalSpa
         boolean legShot = false;
         float eyeHeight = entity.getEyeHeight();
         float bodyHeight = entity.getBbHeight();
-        if ((eyeHeight - 0.35) < hitBoxPos.y && hitBoxPos.y < (eyeHeight + 0.4) &&
-                !(entity instanceof C4Entity || entity instanceof ClaymoreEntity || entity instanceof MortarEntity || entity instanceof IArmedVehicleEntity || entity instanceof DroneEntity)) {
+        if ((eyeHeight - 0.35) < hitBoxPos.y && hitBoxPos.y < (eyeHeight + 0.4) && entity instanceof LivingEntity) {
             headshot = true;
         }
-        if (hitBoxPos.y < (0.33 * bodyHeight) && !(entity instanceof C4Entity || entity instanceof ClaymoreEntity || entity instanceof MortarEntity ||
-                entity instanceof IArmedVehicleEntity || entity instanceof DroneEntity)) {
+        if (hitBoxPos.y < (0.33 * bodyHeight) && entity instanceof LivingEntity) {
             legShot = true;
         }
 

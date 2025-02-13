@@ -144,7 +144,7 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
     public boolean hurt(DamageSource source, float amount) {
         super.hurt(source, amount);
         if (this.level() instanceof ServerLevel serverLevel) {
-            sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 2.5, this.getZ(), 4, 0.2, 0.2, 0.2, 0.2, false);
+            sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 0.8, this.getZ(), 4, 0.1, 0.1, 0.1, 0.2, false);
         }
 
         if (source.is(DamageTypes.ARROW)) {
@@ -191,17 +191,17 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
             amount *= 0.6f;
         }
         if (source.is(ModTags.DamageTypes.PROJECTILE)) {
-            amount *= 0.08f;
-        }
-        if (source.is(ModTags.DamageTypes.PROJECTILE_ABSOLUTE)) {
             amount *= 0.5f;
         }
+        if (source.is(ModTags.DamageTypes.PROJECTILE_ABSOLUTE)) {
+            amount *= 0.8f;
+        }
         if (source.is(ModDamageTypes.VEHICLE_STRIKE)) {
-            amount *= 5f;
+            amount *= 2f;
         }
 
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.hurt(Math.max(amount - 2, 0), source.getEntity(), false);
+        this.hurt(Math.max(amount - 1, 0), source.getEntity(), true);
         return true;
     }
 
