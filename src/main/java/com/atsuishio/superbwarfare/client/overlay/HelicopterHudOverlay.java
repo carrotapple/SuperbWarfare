@@ -242,7 +242,7 @@ public class HelicopterHudOverlay {
 
     public static Matrix4f getVehicleTransform(VehicleEntity vehicle) {
         Matrix4f transform = new Matrix4f();
-        transform.translate((float) vehicle.getX(), (float) vehicle.getY(), (float) vehicle.getZ());
+        transform.translate((float) vehicle.getX(), (float) vehicle.getY() + 1.45f, (float) vehicle.getZ());
         transform.rotate(Axis.YP.rotationDegrees(-vehicle.getYRot()));
         transform.rotate(Axis.XP.rotationDegrees(vehicle.getXRot()));
         transform.rotate(Axis.ZP.rotationDegrees(vehicle.getRoll()));

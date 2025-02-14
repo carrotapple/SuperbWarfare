@@ -13,6 +13,7 @@ import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
 import com.google.common.collect.Lists;
+import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -445,7 +446,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
         Matrix4f transform = getVehicleTransform();
 
         float x = 0.6f;
-        float y = 1.2f;
+        float y = 1.2f - 1.45f;
         float z = 1f;
         y += (float) passenger.getMyRidingOffset();
 
@@ -479,6 +480,16 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
 
     public int getMaxPassengers() {
         return 2;
+    }
+
+    @Override
+    public Matrix4f getVehicleTransform() {
+        Matrix4f transform = new Matrix4f();
+        transform.translate((float) getX(), (float) getY() + 1.45f, (float) getZ());
+        transform.rotate(Axis.YP.rotationDegrees(-getYRot()));
+        transform.rotate(Axis.XP.rotationDegrees(getXRot()));
+        transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
+        return transform;
     }
 
     @Override
@@ -566,7 +577,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             if (this.cannotFire) return;
 
             x = 1.15f;
-            y = 0.62f;
+            y = 0.62f - 1.45f;
             z = 0.8f;
 
             worldPositionRight = transformPosition(transform, -x, y, z);
@@ -628,7 +639,7 @@ public class Ah6Entity extends ContainerMobileEntity implements GeoEntity, IHeli
             }
         } else if (entityData.get(WEAPON_TYPE) == 1 && this.getEntityData().get(LOADED_ROCKET) > 0) {
             x = 1.7f;
-            y = 0.62f;
+            y = 0.62f - 1.45f;
             z = 0.8f;
 
             worldPositionRight = transformPosition(transform, -x, y, z);

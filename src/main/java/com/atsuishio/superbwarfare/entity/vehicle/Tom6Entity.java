@@ -10,6 +10,7 @@ import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
+import com.mojang.math.Axis;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -259,7 +260,7 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
         Matrix4f transform = getVehicleTransform();
 
         float x = 0f;
-        float y = 0.95f;
+        float y = 0.45f;
         float z = -0.4f;
         y += (float) passenger.getMyRidingOffset();
 
@@ -285,6 +286,16 @@ public class Tom6Entity extends MobileVehicleEntity implements GeoEntity {
         entity.setYRot(entity.getYRot() + g - f);
         entity.setYHeadRot(entity.getYRot());
         entity.setYBodyRot(getYRot());
+    }
+
+    @Override
+    public Matrix4f getVehicleTransform() {
+        Matrix4f transform = new Matrix4f();
+        transform.translate((float) getX(), (float) getY() + 0.5f, (float) getZ());
+        transform.rotate(Axis.YP.rotationDegrees(-getYRot()));
+        transform.rotate(Axis.XP.rotationDegrees(getXRot()));
+        transform.rotate(Axis.ZP.rotationDegrees(getRoll()));
+        return transform;
     }
 
     @Override
