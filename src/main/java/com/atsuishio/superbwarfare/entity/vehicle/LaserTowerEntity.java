@@ -280,6 +280,10 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
         Entity target = EntityFindUtil.findEntity(level(), entityData.get(TARGET_UUID));
 
         if (target != null) {
+            if (target instanceof LivingEntity living && living.getHealth() <= 0) {
+                entityData.set(TARGET_UUID, "none");
+                return;
+            }
             Vec3 barrelRootPos = new Vec3(this.getX(), this.getY() + 1.390625f, this.getZ());
             Vec3 targetVec = barrelRootPos.vectorTo(target.getEyePosition()).normalize();
 
