@@ -79,7 +79,9 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
         super.baseTick();
         preventStacking();
         crushEntities(this.getDeltaMovement());
-        this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.06, 0.0));
+        if (!(this instanceof DroneEntity)) {
+            this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.06, 0.0));
+        }
         this.move(MoverType.SELF, this.getDeltaMovement());
         collideLilyPadBlock();
         this.refreshDimensions();

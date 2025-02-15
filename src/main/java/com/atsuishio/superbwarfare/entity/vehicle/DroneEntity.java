@@ -67,20 +67,21 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     public static final EntityDataAccessor<Integer> KAMIKAZE_MODE = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> DELTA_ROT = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
     public static final EntityDataAccessor<Float> DELTA_X_ROT = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> PROPELLER_ROT = SynchedEntityData.defineId(DroneEntity.class, EntityDataSerializers.FLOAT);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     public static final float MAX_HEALTH = 5;
-
-    public float propellerRot;
-    public float propellerRotO;
 
     public boolean fire;
     public int collisionCoolDown;
     public double lastTickSpeed;
     public double lastTickVerticalSpeed;
+
     public float pitch;
     public float pitchO;
+
+    public int holdTickX;
+    public int holdTickY;
+    public int holdTickZ;
     public Set<Long> loadedChunks = new HashSet<>();
 
     public DroneEntity(PlayMessages.SpawnEntity packet, Level world) {
@@ -122,7 +123,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(PROPELLER_ROT, 0f);
         this.entityData.define(DELTA_ROT, 0f);
         this.entityData.define(DELTA_X_ROT, 0f);
         this.entityData.define(CONTROLLER, "undefined");
@@ -166,8 +166,7 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     @Override
     public void baseTick() {
         pitchO = this.getBodyPitch();
-        setBodyXRot(pitch * 0.97f);
-        propellerRotO = this.getPropellerRot();
+        setBodyXRot(pitch * 0.9f);
 
         super.baseTick();
 
@@ -261,14 +260,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                 setDeltaMovement(getDeltaMovement().add(new Vec3(toVec.x, 0, toVec.z).scale(0.2)));
             }
         }
-    }
-
-    public float getPropellerRot() {
-        return this.propellerRot;
-    }
-
-    public void setPropellerRot(float pPropellerRot) {
-        this.propellerRot = pPropellerRot;
     }
 
     private void droneDrop(Player player) {
@@ -387,25 +378,32 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         if (!this.onGround()) {
             // left and right
             if (rightInputDown) {
-                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 0.28f);
+                holdTickX++;
+                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) - 0.3f * Math.min(holdTickX, 5));
             } else if (this.leftInputDown) {
-                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.28f);
+                holdTickX++;
+                this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) + 0.3f * Math.min(holdTickX, 5));
+            } else {
+                holdTickX = 0;
             }
 
             // forward and backward
             if (forwardInputDown) {
-                this.entityData.set(DELTA_X_ROT, this.entityData.get(DELTA_X_ROT) - 0.25f);
+                holdTickZ++;
+                this.entityData.set(DELTA_X_ROT, this.entityData.get(DELTA_X_ROT) - 0.3f * Math.min(holdTickZ, 5));
             } else if (backInputDown) {
-                this.entityData.set(DELTA_X_ROT, this.entityData.get(DELTA_X_ROT) + 0.23f);
+                holdTickZ++;
+                this.entityData.set(DELTA_X_ROT, this.entityData.get(DELTA_X_ROT) + 0.3f * Math.min(holdTickZ, 5));
+            } else {
+                holdTickZ = 0;
             }
 
-            this.setDeltaMovement(this.getDeltaMovement().multiply(0.84, 0.77, 0.84));
-
+            this.setDeltaMovement(this.getDeltaMovement().multiply(0.94, 0.55, 0.94));
         } else {
             this.setDeltaMovement(this.getDeltaMovement().multiply(0.8, 1, 0.8));
-            this.setZRot(this.roll * 0.9f);
-            this.setXRot(this.getXRot() * 0.9f);
-            this.setBodyXRot(this.getBodyPitch() * 0.9f);
+            this.setZRot(this.roll * 0.7f);
+            this.setXRot(this.getXRot() * 0.7f);
+            this.setBodyXRot(this.getBodyPitch() * 0.7f);
         }
 
         if (this.isInWater() && this.tickCount % 4 == 0) {
@@ -417,37 +415,37 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         boolean down = this.downInputDown;
 
         if (up) {
-            this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.03f, 0.2f));
+            holdTickY ++;
+            this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.06f * Math.min(holdTickY, 5), 0.5f));
+        } else if (down) {
+            holdTickY ++;
+            this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.06f * Math.min(holdTickY, 5), -0.5f));
+        } else {
+            holdTickY = 0;
         }
 
-        if (down) {
-            this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.02f, -0.1f));
-        }
+//        if (!(up || down)) {
+//            if (this.getDeltaMovement().y() < 0) {
+//                this.entityData.set(POWER, this.entityData.get(POWER) + 0.01f);
+//            } else {
+//                this.entityData.set(POWER, this.entityData.get(POWER) - 0.01f);
+//            }
+//        }
 
-        if (!(up || down)) {
-            if (this.getDeltaMovement().y() < 0) {
-                this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.001f, 0.15f));
-            } else {
-                this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.001f, -0.1f));
-            }
-        }
-
+        this.entityData.set(POWER, this.entityData.get(POWER) * 0.7f);
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.7f);
         this.entityData.set(DELTA_X_ROT, this.entityData.get(DELTA_X_ROT) * 0.7f);
-        this.entityData.set(PROPELLER_ROT, Mth.lerp(0.08f, this.entityData.get(PROPELLER_ROT), this.entityData.get(POWER)));
-        this.setPropellerRot(this.getPropellerRot() + 30 * this.entityData.get(PROPELLER_ROT));
-        this.entityData.set(PROPELLER_ROT, this.entityData.get(PROPELLER_ROT) * 0.9995f);
 
         this.setZRot(Mth.clamp(this.getRoll() - this.entityData.get(DELTA_ROT), -30, 30));
         this.setBodyXRot(Mth.clamp(this.getBodyPitch() - this.entityData.get(DELTA_X_ROT), -30, 30));
 
         setDeltaMovement(getDeltaMovement().add(0.0f, Math.min(Math.sin((90 - this.getBodyPitch()) * Mth.DEG_TO_RAD), Math.sin((90 + this.getRoll()) * Mth.DEG_TO_RAD)) * this.entityData.get(POWER), 0.0f));
 
-        Vector3f direction = getRightDirection().mul(Math.cos((this.getRoll() + 90) * Mth.DEG_TO_RAD) * 0.2f);
-        setDeltaMovement(getDeltaMovement().add(new Vec3(direction.x, direction.y, direction.z).scale(4)));
+        Vector3f direction = getRightDirection().mul(this.entityData.get(DELTA_ROT));
+        setDeltaMovement(getDeltaMovement().add(new Vec3(direction.x, direction.y, direction.z).scale(0.04)));
 
-        Vector3f directionZ = getForwardDirection().mul(-Math.cos((this.getBodyPitch() + 90) * Mth.DEG_TO_RAD) * 0.2f);
-        setDeltaMovement(getDeltaMovement().add(new Vec3(directionZ.x, directionZ.y, directionZ.z).scale(4)));
+        Vector3f directionZ = getForwardDirection().mul(-this.entityData.get(DELTA_X_ROT));
+        setDeltaMovement(getDeltaMovement().add(new Vec3(directionZ.x, directionZ.y, directionZ.z).scale(0.04)));
 
         Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
         if (controller != null) {
@@ -500,8 +498,8 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
         if (lastTickSpeed < 0.2 || collisionCoolDown > 0) return;
 
-        if ((verticalCollision) && Mth.abs((float) lastTickVerticalSpeed) > 0.3) {
-            this.hurt(ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, controller == null ? this : controller), (float) (20 * ((Mth.abs((float) lastTickVerticalSpeed) - 0.3) * (lastTickSpeed - 0.2) * (lastTickSpeed - 0.2))));
+        if ((verticalCollision) && Mth.abs((float) lastTickVerticalSpeed) > 0.5) {
+            this.hurt(ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, controller == null ? this : controller), (float) (20 * ((Mth.abs((float) lastTickVerticalSpeed) - 0.5) * (lastTickSpeed - 0.2) * (lastTickSpeed - 0.2))));
             collisionCoolDown = 4;
         }
 
@@ -586,6 +584,11 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
         if (mode == 2) {
             ParticleTool.spawnHugeExplosionParticles(this.level(), this.position());
         }
+    }
+
+    @Override
+    public boolean isNoGravity() {
+        return super.isNoGravity();
     }
 
     @Override
