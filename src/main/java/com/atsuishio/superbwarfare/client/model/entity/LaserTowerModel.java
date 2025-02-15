@@ -2,7 +2,9 @@ package com.atsuishio.superbwarfare.client.model.entity;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.entity.vehicle.LaserTowerEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
@@ -18,7 +20,21 @@ public class LaserTowerModel extends GeoModel<LaserTowerEntity> {
 
     @Override
     public ResourceLocation getModelResource(LaserTowerEntity entity) {
-        return ModUtils.loc("geo/laser_tower.geo.json");
+        Player player = Minecraft.getInstance().player;
+
+        int distance = 0;
+
+        if (player != null) {
+            distance = (int) player.position().distanceTo(entity.position());
+        }
+
+        if (distance < 24 || player.isScoping()) {
+            return ModUtils.loc("geo/laser_tower.geo.json");
+        } else if (distance < 48) {
+            return ModUtils.loc("geo/laser_tower.lod1.geo.json");
+        } else {
+            return ModUtils.loc("geo/laser_tower.lod2.geo.json");
+        }
     }
 
     @Override

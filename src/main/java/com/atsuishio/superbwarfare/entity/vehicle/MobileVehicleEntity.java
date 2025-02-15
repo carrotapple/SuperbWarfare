@@ -133,7 +133,7 @@ public class MobileVehicleEntity extends EnergyVehicleEntity {
     public void move(@NotNull MoverType movementType, @NotNull Vec3 movement) {
         super.move(movementType, movement);
         if (level() instanceof ServerLevel) {
-            if (lastTickSpeed < 0.3 || collisionCoolDown > 0) return;
+            if (lastTickSpeed < 0.3 || collisionCoolDown > 0 || this instanceof DroneEntity) return;
             Entity driver = EntityFindUtil.findEntity(this.level(), this.entityData.get(LAST_DRIVER_UUID));
 
             if ((verticalCollision)) {

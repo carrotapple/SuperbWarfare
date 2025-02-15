@@ -47,17 +47,19 @@ public class DroneRenderer extends GeoEntityRenderer<DroneEntity> {
 	@Override
 	public void renderRecursively(PoseStack poseStack, DroneEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 		String name = bone.getName();
-		if (name.equals("wingFL")) {
-			bone.setRotY(bone.getRotY() + 2);
-		}
-		if (name.equals("wingFR")) {
-			bone.setRotY(bone.getRotY() + 2);
-		}
-		if (name.equals("wingBL")) {
-			bone.setRotY(bone.getRotY() + 2);
-		}
-		if (name.equals("wingBR")) {
-			bone.setRotY(bone.getRotY() + 2);
+		if (!animatable.onGround()) {
+			if (name.equals("wingFL")) {
+				bone.setRotY((System.currentTimeMillis() % 36000000) / 12f);
+			}
+			if (name.equals("wingFR")) {
+				bone.setRotY((System.currentTimeMillis() % 36000000) / 12f);
+			}
+			if (name.equals("wingBL")) {
+				bone.setRotY((System.currentTimeMillis() % 36000000) / 12f);
+			}
+			if (name.equals("wingBR")) {
+				bone.setRotY((System.currentTimeMillis() % 36000000) / 12f);
+			}
 		}
 		super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 	}

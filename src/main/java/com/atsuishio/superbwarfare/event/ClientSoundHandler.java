@@ -1,9 +1,7 @@
 package com.atsuishio.superbwarfare.event;
 
-import com.atsuishio.superbwarfare.entity.vehicle.Ah6Entity;
-import com.atsuishio.superbwarfare.entity.vehicle.Bmp2Entity;
-import com.atsuishio.superbwarfare.entity.vehicle.Lav150Entity;
-import com.atsuishio.superbwarfare.entity.vehicle.MobileVehicleEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.*;
+import com.atsuishio.superbwarfare.init.ModItems;
 import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.tools.SeekTool;
 import net.minecraft.client.Minecraft;
@@ -12,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
@@ -71,6 +70,15 @@ public class ClientSoundHandler {
                         player.playSound(ModSounds.BMP_ENGINE_1P.get(), 1 * (Mth.abs(mobileVehicle.getEntityData().get(POWER)) + Mth.abs(0.08f * mobileVehicle.getEntityData().get(DELTA_ROT)) - 0.004f), (float) ((2 * Math.random() - 1) * 0.1f + 0.95f));
                     } else {
                         player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), 5 * (Mth.abs(mobileVehicle.getEntityData().get(POWER)) + Mth.abs(0.08f * mobileVehicle.getEntityData().get(DELTA_ROT)) - 0.004f) * distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.1f + 1), false);
+                    }
+                }
+                if (e instanceof DroneEntity drone) {
+                    distanceReduce = (float) Math.max((1 - distance / 64), 0);
+                    ItemStack stack = player.getMainHandItem();
+                    if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using")) {
+                        player.playSound(engineSound, 1, (float) ((2 * Math.random() - 1) * 0.002f + 1.05));
+                    } else {
+                        player.level().playLocalSound(BlockPos.containing(engineSoundPos), engineSound, mobileVehicle.getSoundSource(), e.onGround() ? 0 : distanceReduce * distanceReduce, (float) ((2 * Math.random() - 1) * 0.002f + 1.05), false);
                     }
                 }
             }

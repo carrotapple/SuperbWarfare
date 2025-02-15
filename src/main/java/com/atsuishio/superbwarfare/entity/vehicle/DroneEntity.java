@@ -26,6 +26,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -190,9 +191,9 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
             if (controller != null) {
                 handleSimulationDistance(controller);
                 ItemStack stack = controller.getMainHandItem();
-                if (stack.is(ModItems.MONITOR.get())) {
-                    if (stack.getOrCreateTag().getBoolean("Using") && controller.level().isClientSide) {
-                        controller.playSound(ModSounds.DRONE_SOUND.get(), 32, 1);
+                if (stack.is(ModItems.MONITOR.get()) && stack.getOrCreateTag().getBoolean("Using")) {
+                    if (controller.level().isClientSide) {
+                        controller.playSound(ModSounds.DRONE_SOUND.get(), 114, 1);
                     }
                 } else {
                     upInputDown = false;
@@ -201,9 +202,6 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
                     backInputDown = false;
                     leftInputDown = false;
                     rightInputDown = false;
-                }
-                if (!controller.level().isClientSide) {
-                    this.level().playSound(null, this.getOnPos(), ModSounds.DRONE_SOUND.get(), SoundSource.AMBIENT, 3, 1);
                 }
 
                 if (tickCount % 5 == 0) {
@@ -416,21 +414,13 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
 
         if (up) {
             holdTickY ++;
-            this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.06f * Math.min(holdTickY, 5), 0.5f));
+            this.entityData.set(POWER, Math.min(this.entityData.get(POWER) + 0.06f * Math.min(holdTickY, 5), 0.9f));
         } else if (down) {
             holdTickY ++;
-            this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.06f * Math.min(holdTickY, 5), -0.5f));
+            this.entityData.set(POWER, Math.max(this.entityData.get(POWER) - 0.06f * Math.min(holdTickY, 5), -0.9f));
         } else {
             holdTickY = 0;
         }
-
-//        if (!(up || down)) {
-//            if (this.getDeltaMovement().y() < 0) {
-//                this.entityData.set(POWER, this.entityData.get(POWER) + 0.01f);
-//            } else {
-//                this.entityData.set(POWER, this.entityData.get(POWER) - 0.01f);
-//            }
-//        }
 
         this.entityData.set(POWER, this.entityData.get(POWER) * 0.7f);
         this.entityData.set(DELTA_ROT, this.entityData.get(DELTA_ROT) * 0.7f);
@@ -492,14 +482,19 @@ public class DroneEntity extends MobileVehicleEntity implements GeoEntity {
     }
 
     @Override
+    public SoundEvent getEngineSound() {
+        return ModSounds.DRONE_SOUND.get();
+    }
+
+    @Override
     public void move(@NotNull MoverType movementType, @NotNull Vec3 movement) {
         super.move(movementType, movement);
         Player controller = EntityFindUtil.findPlayer(this.level(), this.entityData.get(CONTROLLER));
 
         if (lastTickSpeed < 0.2 || collisionCoolDown > 0) return;
 
-        if ((verticalCollision) && Mth.abs((float) lastTickVerticalSpeed) > 0.5) {
-            this.hurt(ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, controller == null ? this : controller), (float) (20 * ((Mth.abs((float) lastTickVerticalSpeed) - 0.5) * (lastTickSpeed - 0.2) * (lastTickSpeed - 0.2))));
+        if ((verticalCollision) && Mth.abs((float) lastTickVerticalSpeed) > 1) {
+            this.hurt(ModDamageTypes.causeCustomExplosionDamage(this.level().registryAccess(), this, controller == null ? this : controller), (float) (20 * ((Mth.abs((float) lastTickVerticalSpeed) - 1) * (lastTickSpeed - 0.2) * (lastTickSpeed - 0.2))));
             collisionCoolDown = 4;
         }
 
