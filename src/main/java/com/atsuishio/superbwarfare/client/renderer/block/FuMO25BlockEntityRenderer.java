@@ -1,42 +1,25 @@
 package com.atsuishio.superbwarfare.client.renderer.block;
 
-import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.block.FuMO25Block;
 import com.atsuishio.superbwarfare.block.entity.FuMO25BlockEntity;
 import com.atsuishio.superbwarfare.client.model.block.FuMO25Model;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import software.bernie.geckolib.cache.object.GeoBone;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
-@SuppressWarnings("rawtypes")
-@OnlyIn(Dist.CLIENT)
-public class FuMO25BlockEntityRenderer implements BlockEntityRenderer<FuMO25BlockEntity> {
 
-    public static final ResourceLocation TEXTURE = ModUtils.loc("textures/entity/fumo_25.png");
-    private final FuMO25Model model;
-
-    public FuMO25BlockEntityRenderer(BlockEntityRendererProvider.Context pContext) {
-        this.model = new FuMO25Model(pContext.bakeLayer(FuMO25Model.LAYER_LOCATION));
+public class FuMO25BlockEntityRenderer extends GeoBlockRenderer<FuMO25BlockEntity> {
+    public FuMO25BlockEntityRenderer() {
+        super(new FuMO25Model());
     }
 
     @Override
-    public void render(FuMO25BlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        pPoseStack.pushPose();
-
-        pPoseStack.translate(0.5f, 2.7f, 0.5f);
-
-        VertexConsumer vertexconsumer = ItemRenderer.getFoilBufferDirect(pBuffer, this.model.renderType(TEXTURE), false, false);
-        this.model.render(pPoseStack, vertexconsumer, 0xffffff, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F,
-                pBlockEntity.getBlockState().getValue(FuMO25Block.POWERED));
-        pPoseStack.popPose();
+    public RenderType getRenderType(FuMO25BlockEntity animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
+        return RenderType.entityTranslucent(getTextureLocation(animatable));
     }
 
     @Override
@@ -45,12 +28,16 @@ public class FuMO25BlockEntityRenderer implements BlockEntityRenderer<FuMO25Bloc
     }
 
     @Override
-    public boolean shouldRender(FuMO25BlockEntity pBlockEntity, Vec3 pCameraPos) {
-        return Vec3.atCenterOf(pBlockEntity.getBlockPos()).multiply(1.0, 0.0, 1.0).closerThan(pCameraPos.multiply(1.0, 0.0, 1.0), (double)this.getViewDistance());
+    public int getViewDistance() {
+        return 512;
     }
 
     @Override
-    public int getViewDistance() {
-        return 192;
+    public void renderRecursively(PoseStack poseStack, FuMO25BlockEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        String name = bone.getName();
+        if (name.equals("mian") && animatable.getBlockState().getValue(FuMO25Block.POWERED)) {
+            bone.setRotY((System.currentTimeMillis() % 36000000) / 1200f);
+        }
+        super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }

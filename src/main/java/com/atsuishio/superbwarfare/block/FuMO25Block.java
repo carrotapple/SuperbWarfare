@@ -51,12 +51,12 @@ public class FuMO25Block extends Block implements EntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        return Shapes.or(box(1, 0, 1, 15, 6, 15), box(6, 6, 6, 10, 24, 10));
+        return Shapes.or(box(1, 0, 1, 15, 6, 15), box(6, 6, 6, 10, 58, 10));
     }
 
     @Override
     public RenderShape getRenderShape(BlockState pState) {
-        return RenderShape.MODEL;
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Nullable
