@@ -462,7 +462,7 @@
   "tips.superbwarfare.annihilator.energy_not_enough": "能量不足",
   "tips.superbwarfare.target.down": "目标倒下 %1$s",
   "tips.superbwarfare.target.damage": "伤害：%1$s 距离：%2$s",
-  "tips.superbwarfare.mortar.angle": "角度：%1$s 射程：%2$s",
+  "tips.superbwarfare.mortar.range": "射程：",
   "tips.superbwarfare.mortar.yaw": "水平朝向：",
   "tips.superbwarfare.mortar.pitch": "俯仰角度：",
   "tips.superbwarfare.mortar.target_pos": "目标坐标：",

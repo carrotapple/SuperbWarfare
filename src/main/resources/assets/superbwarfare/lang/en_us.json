@@ -464,7 +464,7 @@
   "tips.superbwarfare.annihilator.energy_not_enough": "Energy is Not Enough",
   "tips.superbwarfare.target.down": "Target Down %1$s",
   "tips.superbwarfare.target.damage": "Damage: %1$s Distance: %2$s",
-  "tips.superbwarfare.mortar.angle": "Angle: %1$s Range: %2$s",
+  "tips.superbwarfare.mortar.range": "Range: ",
   "tips.superbwarfare.mortar.yaw": "Yaw：",
   "tips.superbwarfare.mortar.pitch": "Pitch：",
   "tips.superbwarfare.mortar.target_pos": "Target Position：",

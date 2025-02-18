@@ -3,11 +3,10 @@ package com.atsuishio.superbwarfare.entity;
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.client.gui.RangeHelper;
 import com.atsuishio.superbwarfare.entity.projectile.MortarShellEntity;
+import com.atsuishio.superbwarfare.entity.vehicle.VehicleEntity;
 import com.atsuishio.superbwarfare.init.ModEntities;
 import com.atsuishio.superbwarfare.init.ModItems;
-import com.atsuishio.superbwarfare.init.ModParticleTypes;
 import com.atsuishio.superbwarfare.init.ModSounds;
-import com.atsuishio.superbwarfare.tools.ParticleTool;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
@@ -25,17 +24,19 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
+import org.joml.Math;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -45,22 +46,16 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
-
+public class MortarEntity extends VehicleEntity implements GeoEntity, AnimatedEntity {
     public static final EntityDataAccessor<Integer> FIRE_TIME = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Float> PITCH = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> Y_ROT = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.FLOAT);
-    public static final EntityDataAccessor<Float> HEALTH = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Float> YAW = SynchedEntityData.defineId(MortarEntity.class, EntityDataSerializers.FLOAT);
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    protected int interpolationSteps;
-    protected double serverYRot;
-    protected double serverXRot;
 
     public MortarEntity(PlayMessages.SpawnEntity packet, Level world) {
         this(ModEntities.MORTAR.get(), world);
-        this.noCulling = true;
     }
 
     public MortarEntity(EntityType<MortarEntity> type, Level world) {
@@ -69,10 +64,15 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
 
     @Override
     protected void defineSynchedData() {
+        super.defineSynchedData();
         this.entityData.define(FIRE_TIME, 0);
-        this.entityData.define(PITCH, 70f);
-        this.entityData.define(Y_ROT, 0f);
-        this.entityData.define(HEALTH, 100f);
+        this.entityData.define(PITCH, -70f);
+        this.entityData.define(YAW, 0f);
+    }
+
+    @Override
+    public boolean canBeCollidedWith() {
+        return false;
     }
 
     @Override
@@ -92,55 +92,27 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud)
-            return false;
-        if (source.is(DamageTypes.FALL))
-            return false;
-        if (source.is(DamageTypes.CACTUS))
-            return false;
-        if (source.is(DamageTypes.DROWN))
-            return false;
-        if (source.is(DamageTypes.LIGHTNING_BOLT))
-            return false;
-        if (source.is(DamageTypes.FALLING_ANVIL))
-            return false;
-        if (source.is(DamageTypes.DRAGON_BREATH))
-            return false;
-        if (source.is(DamageTypes.WITHER))
-            return false;
-        if (source.is(DamageTypes.WITHER_SKULL))
-            return false;
-
-        if (this.level() instanceof ServerLevel serverLevel) {
-            ParticleTool.sendParticle(serverLevel, ModParticleTypes.FIRE_STAR.get(), this.getX(), this.getY() + 1, this.getZ(), 2, 0.05, 0.05, 0.05, 0.1, false);
-        }
+        super.hurt(source, amount);
         this.level().playSound(null, this.getOnPos(), ModSounds.HIT.get(), SoundSource.PLAYERS, 1, 1);
-        this.entityData.set(HEALTH, this.entityData.get(HEALTH) - amount);
-
+        this.hurt(amount, source.getEntity(), true);
         return true;
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
-        compound.putInt("FireTime", this.entityData.get(FIRE_TIME));
+        super.addAdditionalSaveData(compound);
         compound.putFloat("Pitch", this.entityData.get(PITCH));
-        compound.putFloat("YRot", this.entityData.get(Y_ROT));
-        compound.putFloat("Health", this.entityData.get(HEALTH));
+        compound.putFloat("Yaw", this.entityData.get(YAW));
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
-        if (compound.contains("FireTime")) {
-            this.entityData.set(FIRE_TIME, compound.getInt("FireTime"));
-        }
+        super.readAdditionalSaveData(compound);
         if (compound.contains("Pitch")) {
             this.entityData.set(PITCH, compound.getFloat("Pitch"));
         }
         if (compound.contains("YRot")) {
-            this.entityData.set(Y_ROT, compound.getFloat("YRot"));
-        }
-        if (compound.contains("Health")) {
-            this.entityData.set(HEALTH, compound.getFloat("Health"));
+            this.entityData.set(YAW, compound.getFloat("Yaw"));
         }
     }
 
@@ -198,7 +170,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
                 ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(ModItems.MORTAR_DEPLOYER.get()));
                 return InteractionResult.SUCCESS;
             }
-            this.entityData.set(Y_ROT, Mth.clamp(player.getYRot(), -180, 180));
+            entityData.set(YAW, player.getYRot());
         }
 
         return InteractionResult.SUCCESS;
@@ -218,7 +190,7 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
                 angles);
 
         if (flag) {
-            this.entityData.set(PITCH, (float) angles[1]);
+            entityData.set(PITCH, (float) -angles[1]);
         }
 
         return flag;
@@ -228,13 +200,12 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
         Vec3 vec3 = pAnchor.apply(this);
         double d0 = (pTarget.x - vec3.x) * 0.2;
         double d2 = (pTarget.z - vec3.z) * 0.2;
-        this.entityData.set(Y_ROT, Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));
+        entityData.set(YAW, Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));
     }
 
     @Override
-    public void lerpTo(double x, double y, double z, float yaw, float pitch, int interpolationSteps, boolean interpolate) {
-        serverXRot = pitch;
-        this.interpolationSteps = 10;
+    public Vec3 getDeltaMovement() {
+        return new Vec3(0, Math.min(super.getDeltaMovement().y, 0), 0);
     }
 
     @Override
@@ -243,36 +214,49 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
         if (this.entityData.get(FIRE_TIME) > 0) {
             this.entityData.set(FIRE_TIME, this.entityData.get(FIRE_TIME) - 1);
         }
-        this.setXRot(-Mth.clamp(entityData.get(PITCH), 20, 89));
-        this.xRotO = this.getXRot();
-        this.setYRot(entityData.get(Y_ROT));
-        this.setYBodyRot(this.getYRot());
-        this.setYHeadRot(this.getYRot());
-        this.yRotO = this.getYRot();
-        this.setRot(this.getYRot(), this.getXRot());
-
-        this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
-
-        if (!this.level().noCollision(this.getBoundingBox())) {
-            this.moveTowardsClosestSpace(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0, this.getZ());
-        }
 
         this.move(MoverType.SELF, this.getDeltaMovement());
-        float f = 0.98F;
         if (this.onGround()) {
-            BlockPos pos = this.getBlockPosBelowThatAffectsMyMovement();
-            f = this.level().getBlockState(pos).getFriction(this.level(), pos, this) * 0.98F;
+            this.setDeltaMovement(Vec3.ZERO);
+        } else {
+            this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
+        }
+    }
+
+    @Override
+    public void handleClientSync() {
+        if (isControlledByLocalInstance()) {
+            interpolationSteps = 0;
+            syncPacketPositionCodec(getX(), getY(), getZ());
+        }
+        if (interpolationSteps <= 0) {
+            return;
         }
 
-        this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.98, f));
-        if (this.onGround()) {
-            this.setDeltaMovement(this.getDeltaMovement().multiply(1.0, -0.9, 1.0));
-        }
+        double interpolatedYaw = Mth.wrapDegrees(serverYRot - (double) getYRot());
+        setYRot(getYRot() + (float) interpolatedYaw / (float) interpolationSteps);
+        setXRot(getXRot() + (float) (serverXRot - (double) getXRot()) / (float) interpolationSteps);
+        setRot(getYRot(), getXRot());
 
-        if (this.entityData.get(HEALTH) <= 0) {
-            destroy();
-        }
-        this.refreshDimensions();
+    }
+
+    @Override
+    public void lerpTo(double x, double y, double z, float yaw, float pitch, int interpolationSteps, boolean interpolate) {
+        serverYRot = yaw;
+        serverXRot = pitch;
+        this.interpolationSteps = 10;
+    }
+
+    @Override
+    public void travel() {
+        float diffY;
+        float diffX;
+
+        diffY = (float) Mth.wrapDegrees(entityData.get(YAW) - this.getYRot());
+        diffX = (float) Mth.wrapDegrees(entityData.get(PITCH) - this.getXRot());
+
+        this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -20f, 20f));
+        this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(0.5f * diffX, -20f, 20f), -89, -20));
     }
 
     private PlayState movementPredicate(AnimationState<MortarEntity> event) {
@@ -282,7 +266,8 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.mortar.idle"));
     }
 
-    protected void destroy() {
+    @Override
+    public void destroy() {
         if (this.level() instanceof ServerLevel level) {
             var x = this.getX();
             var y = this.getY();
@@ -293,6 +278,11 @@ public class MortarEntity extends Entity implements GeoEntity, AnimatedEntity {
             level.addFreshEntity(mortar);
             this.discard();
         }
+    }
+
+    @Override
+    public float getMaxHealth() {
+        return 100;
     }
 
     public String getSyncedAnimation() {

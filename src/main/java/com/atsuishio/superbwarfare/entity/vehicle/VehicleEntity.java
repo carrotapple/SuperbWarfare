@@ -378,7 +378,7 @@ public class VehicleEntity extends Entity {
         return transform.transform(new Vector4f(x, y, z, 1));
     }
 
-    protected void handleClientSync() {
+    public void handleClientSync() {
         if (isControlledByLocalInstance()) {
             interpolationSteps = 0;
             syncPacketPositionCodec(getX(), getY(), getZ());

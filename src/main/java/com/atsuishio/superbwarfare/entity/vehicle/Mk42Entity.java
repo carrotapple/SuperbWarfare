@@ -1,7 +1,6 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
 import com.atsuishio.superbwarfare.ModUtils;
-import com.atsuishio.superbwarfare.client.gui.RangeHelper;
 import com.atsuishio.superbwarfare.config.server.ExplosionConfig;
 import com.atsuishio.superbwarfare.config.server.VehicleConfig;
 import com.atsuishio.superbwarfare.entity.projectile.CannonShellEntity;
@@ -12,8 +11,6 @@ import com.atsuishio.superbwarfare.tools.CustomExplosion;
 import com.atsuishio.superbwarfare.tools.EntityFindUtil;
 import com.atsuishio.superbwarfare.tools.ParticleTool;
 import com.atsuishio.superbwarfare.tools.SoundTool;
-import net.minecraft.commands.arguments.EntityAnchorArgument;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -191,8 +188,30 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntit
         }
 
         lowHealthWarning();
+    }
 
-        this.refreshDimensions();
+    @Override
+    public void handleClientSync() {
+        if (isControlledByLocalInstance()) {
+            interpolationSteps = 0;
+            syncPacketPositionCodec(getX(), getY(), getZ());
+        }
+        if (interpolationSteps <= 0) {
+            return;
+        }
+
+        double interpolatedYaw = Mth.wrapDegrees(serverYRot - (double) getYRot());
+        setYRot(getYRot() + (float) interpolatedYaw / (float) interpolationSteps);
+        setXRot(getXRot() + (float) (serverXRot - (double) getXRot()) / (float) interpolationSteps);
+        setRot(getYRot(), getXRot());
+
+    }
+
+    @Override
+    public void lerpTo(double x, double y, double z, float yaw, float pitch, int interpolationSteps, boolean interpolate) {
+        serverYRot = yaw;
+        serverXRot = pitch;
+        this.interpolationSteps = 10;
     }
 
     @Override
@@ -332,48 +351,12 @@ public class Mk42Entity extends VehicleEntity implements GeoEntity, ICannonEntit
         float diffX = 0;
 
         if (passenger instanceof Player player) {
-            if (player.getOffhandItem().getItem() == ModItems.FIRING_PARAMETERS.get()) {
-                if (setTarget(player.getOffhandItem())) {
-                    diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(entityData.get(YAW) - this.getYRot()));
-                    diffX = Mth.wrapDegrees(entityData.get(PITCH) - this.getXRot());
-                    this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -1.75f, 1.75f));
-                    this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(0.95f * diffX, -5, 5), -85, 15));
-                }
-            } else {
-                diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
-                diffX = passenger.getXRot() - 1.3f - this.getXRot();
-                diffX = diffX * 0.15f;
-                this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -1.75f, 1.75f));
-                this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -3f, 3f), -85, 16.3f));
-            }
+            diffY = Math.clamp(-90f, 90f, Mth.wrapDegrees(passenger.getYHeadRot() - this.getYRot()));
+            diffX = passenger.getXRot() - 1.3f - this.getXRot();
+            diffX = diffX * 0.15f;
+            this.setYRot(this.getYRot() + Mth.clamp(0.5f * diffY, -1.75f, 1.75f));
+            this.setXRot(Mth.clamp(this.getXRot() + Mth.clamp(diffX, -3f, 3f), -85, 16.3f));
         }
-    }
-
-    public boolean setTarget(ItemStack stack) {
-        int targetX = stack.getOrCreateTag().getInt("TargetX");
-        int targetY = stack.getOrCreateTag().getInt("TargetY");
-        int targetZ = stack.getOrCreateTag().getInt("TargetZ");
-
-        this.look(EntityAnchorArgument.Anchor.EYES, new Vec3(targetX, targetY, targetZ));
-
-        double[] angles = new double[2];
-        boolean flag = RangeHelper.canReachTarget(15, 0.05, 0.99,
-                new BlockPos((int) this.getX(), (int) this.getEyeY(), (int) this.getZ()),
-                new BlockPos(targetX, targetY, targetZ),
-                angles);
-
-        if (flag) {
-            this.entityData.set(PITCH, -(float) angles[1]);
-        }
-
-        return flag;
-    }
-
-    private void look(EntityAnchorArgument.Anchor pAnchor, Vec3 pTarget) {
-        Vec3 vec3 = pAnchor.apply(this);
-        double d0 = (pTarget.x - vec3.x) * 0.2;
-        double d2 = (pTarget.z - vec3.z) * 0.2;
-        this.entityData.set(YAW, Mth.wrapDegrees((float) (Mth.atan2(d2, d0) * 57.2957763671875) - 90.0F));
     }
 
     protected void clampRotation(Entity entity) {
