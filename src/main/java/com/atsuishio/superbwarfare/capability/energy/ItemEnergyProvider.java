@@ -22,10 +22,6 @@ public class ItemEnergyProvider implements ICapabilityProvider {
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction dire) {
-        if (cap == ForgeCapabilities.ENERGY) {
-            return capability.cast();
-        }
-
-        return LazyOptional.empty();
+        return ForgeCapabilities.ENERGY.orEmpty(cap, capability);
     }
 }

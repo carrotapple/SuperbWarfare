@@ -14,9 +14,8 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Math;
 
-public class EnergyVehicleEntity extends VehicleEntity implements IChargeEntity {
+public class EnergyVehicleEntity extends VehicleEntity {
 
     public static final EntityDataAccessor<Integer> ENERGY = SynchedEntityData.defineId(EnergyVehicleEntity.class, EntityDataSerializers.INT);
 
@@ -83,18 +82,6 @@ public class EnergyVehicleEntity extends VehicleEntity implements IChargeEntity 
 
     public int getMaxEnergy() {
         return 100000;
-    }
-
-    @Override
-    public void charge(int amount) {
-        long energy = (long) this.getEnergy() + (long) amount;
-        int e = energy > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) energy;
-        this.setEnergy(Math.min(e, this.getMaxEnergy()));
-    }
-
-    @Override
-    public boolean canCharge() {
-        return this.getEnergy() < this.getMaxEnergy();
     }
 
     @Override

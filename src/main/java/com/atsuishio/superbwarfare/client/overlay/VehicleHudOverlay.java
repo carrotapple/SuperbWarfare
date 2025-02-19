@@ -95,7 +95,7 @@ public class VehicleHudOverlay {
         poseStack.popPose();
 
         if (vehicle instanceof IArmedVehicleEntity iVehicle && iVehicle.getAmmoCount(player) != -1 && iVehicle.isDriver(player)) {
-            boolean iCharge = iVehicle instanceof IChargeEntity;
+            boolean iCharge = iVehicle instanceof EnergyVehicleEntity;
 
             // 渲染当前弹药量
             poseStack.pushPose();

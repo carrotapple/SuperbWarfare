@@ -1,7 +1,6 @@
 package com.atsuishio.superbwarfare.block.entity;
 
 import com.atsuishio.superbwarfare.block.ChargingStationBlock;
-import com.atsuishio.superbwarfare.entity.vehicle.IChargeEntity;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import com.atsuishio.superbwarfare.menu.ChargingStationMenu;
 import com.atsuishio.superbwarfare.network.dataslot.ContainerEnergyData;
@@ -193,12 +192,12 @@ public class ChargingStationBlockEntity extends BlockEntity implements WorldlyCo
         if (this.level == null) return;
 
         List<Entity> entities = this.level.getEntitiesOfClass(Entity.class, new AABB(this.getBlockPos()).inflate(CHARGE_RADIUS));
-        entities.forEach(entity -> {
-            if (entity instanceof IChargeEntity chargeEntity && handler.getEnergyStored() > 0 && chargeEntity.canCharge()) {
-                chargeEntity.charge(Math.min(CHARGE_OTHER_SPEED, handler.getEnergyStored()));
-                handler.extractEnergy(Math.min(CHARGE_OTHER_SPEED, handler.getEnergyStored()), false);
+        entities.forEach(entity -> entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(cap -> {
+            if (cap.canReceive()) {
+                int charged = cap.receiveEnergy(Math.min(handler.getEnergyStored(), CHARGE_OTHER_SPEED), false);
+                handler.extractEnergy(charged, false);
             }
-        });
+        }));
         this.setChanged();
     }
 

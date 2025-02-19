@@ -1,6 +1,6 @@
 package com.atsuishio.superbwarfare.block.entity;
 
-import com.atsuishio.superbwarfare.entity.vehicle.IChargeEntity;
+import com.atsuishio.superbwarfare.capability.energy.InfinityEnergyStorage;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,8 +12,10 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * Energy Data Slot Code based on @GoryMoon's Chargers
@@ -22,11 +24,11 @@ public class CreativeChargingStationBlockEntity extends BlockEntity {
 
     public static final int CHARGE_RADIUS = 8;
 
-    private LazyOptional<EnergyStorage> energyHandler;
+    private LazyOptional<IEnergyStorage> energyHandler;
 
     public CreativeChargingStationBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.CREATIVE_CHARGING_STATION.get(), pos, state);
-        this.energyHandler = LazyOptional.of(() -> new EnergyStorage(2147483647));
+        this.energyHandler = LazyOptional.of(InfinityEnergyStorage::new);
     }
 
     public static void serverTick(CreativeChargingStationBlockEntity blockEntity) {
@@ -41,12 +43,12 @@ public class CreativeChargingStationBlockEntity extends BlockEntity {
     private void chargeEntity() {
         if (this.level == null) return;
 
-        this.level.getEntitiesOfClass(Entity.class, new AABB(this.getBlockPos()).inflate(CHARGE_RADIUS))
-                .forEach(entity -> {
-                    if (entity instanceof IChargeEntity chargeEntity && chargeEntity.canCharge()) {
-                        chargeEntity.charge(10000000);
-                    }
-                });
+        List<Entity> entities = this.level.getEntitiesOfClass(Entity.class, new AABB(this.getBlockPos()).inflate(CHARGE_RADIUS));
+        entities.forEach(entity -> entity.getCapability(ForgeCapabilities.ENERGY).ifPresent(cap -> {
+            if (cap.canReceive()) {
+                cap.receiveEnergy(Integer.MAX_VALUE, false);
+            }
+        }));
     }
 
     private void chargeBlock() {
@@ -61,7 +63,7 @@ public class CreativeChargingStationBlockEntity extends BlockEntity {
 
             blockEntity.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy -> {
                 if (energy.canReceive() && energy.getEnergyStored() < energy.getMaxEnergyStored()) {
-                    energy.receiveEnergy(10000000, false);
+                    energy.receiveEnergy(Integer.MAX_VALUE, false);
                     blockEntity.setChanged();
                 }
             });
@@ -75,10 +77,7 @@ public class CreativeChargingStationBlockEntity extends BlockEntity {
 
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
-        if (cap == ForgeCapabilities.ENERGY) {
-            return energyHandler.cast();
-        }
-        return super.getCapability(cap, side);
+        return ForgeCapabilities.ENERGY.orEmpty(cap, energyHandler);
     }
 
     @Override
@@ -90,6 +89,6 @@ public class CreativeChargingStationBlockEntity extends BlockEntity {
     @Override
     public void reviveCaps() {
         super.reviveCaps();
-        this.energyHandler = LazyOptional.of(() -> new EnergyStorage(2147483647));
+        this.energyHandler = LazyOptional.of(InfinityEnergyStorage::new);
     }
 }

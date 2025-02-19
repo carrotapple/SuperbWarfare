@@ -1,14 +1,17 @@
 package com.atsuishio.superbwarfare.item;
 
-import com.atsuishio.superbwarfare.capability.energy.ItemEnergyProvider;
+import com.atsuishio.superbwarfare.capability.energy.InfinityEnergyStorage;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class CreativeChargingStationBlockItem extends BlockItem {
     public CreativeChargingStationBlockItem(Block pBlock, Properties pProperties) {
@@ -17,14 +20,12 @@ public class CreativeChargingStationBlockItem extends BlockItem {
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag tag) {
-        return new ItemEnergyProvider(stack, 2147483647);
+        return new ICapabilityProvider() {
+            @Override
+            public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+                return ForgeCapabilities.ENERGY.orEmpty(cap, LazyOptional.of(InfinityEnergyStorage::new));
+            }
+        };
     }
 
-    @Override
-    public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
-        pStack.getCapability(ForgeCapabilities.ENERGY).ifPresent(energy ->
-                energy.receiveEnergy(2147483647 - energy.getEnergyStored(), false)
-        );
-        super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
-    }
 }
