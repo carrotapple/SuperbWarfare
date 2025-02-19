@@ -291,9 +291,10 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
     }
 
     public void autoAim() {
-        if (this.entityData.get(ENERGY) <= 0 || !entityData.get(ACTIVE) || this.entityData.get(COOL_DOWN) > 30) return;
+        if (this.getEnergy() <= 0 || !entityData.get(ACTIVE) || this.entityData.get(COOL_DOWN) > 30)
+            return;
 
-        if (entityData.get(TARGET_UUID).equals("none") && tickCount %10 == 0) {
+        if (entityData.get(TARGET_UUID).equals("none") && tickCount % 10 == 0) {
             Entity naerestEntity = seekNearLivingEntity(72);
             if (naerestEntity != null) {
                 entityData.set(TARGET_UUID, naerestEntity.getStringUUID());

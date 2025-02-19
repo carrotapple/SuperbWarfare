@@ -469,7 +469,7 @@ public class AnnihilatorEntity extends EnergyVehicleEntity implements GeoEntity,
     }
 
     public void autoAim() {
-        if (this.entityData.get(ENERGY) <= 0) return;
+        if (this.getEnergy() <= 0) return;
 
         Entity target = SeekTool.seekLivingEntity(this, this.level(), 64, 30);
 

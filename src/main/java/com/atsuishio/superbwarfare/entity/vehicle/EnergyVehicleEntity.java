@@ -1,17 +1,27 @@
 package com.atsuishio.superbwarfare.entity.vehicle;
 
+import com.atsuishio.superbwarfare.capability.energy.SyncedEntityEnergyStorage;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Math;
 
 public class EnergyVehicleEntity extends VehicleEntity implements IChargeEntity {
 
     public static final EntityDataAccessor<Integer> ENERGY = SynchedEntityData.defineId(EnergyVehicleEntity.class, EntityDataSerializers.INT);
+
+    protected final SyncedEntityEnergyStorage energyStorage = new SyncedEntityEnergyStorage(this.getMaxEnergy(), this.entityData, ENERGY);
+    protected final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> energyStorage);
 
     public EnergyVehicleEntity(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -27,13 +37,21 @@ public class EnergyVehicleEntity extends VehicleEntity implements IChargeEntity 
     @Override
     protected void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        this.entityData.set(ENERGY, compound.getInt("Energy"));
+        if (compound.get("Energy") instanceof IntTag energyNBT) {
+            energyStorage.deserializeNBT(energyNBT);
+        }
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        energy.invalidate();
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        compound.putInt("Energy", this.entityData.get(ENERGY));
+        compound.put("Energy", energyStorage.serializeNBT());
     }
 
     /**
@@ -42,7 +60,7 @@ public class EnergyVehicleEntity extends VehicleEntity implements IChargeEntity 
      * @param amount 要消耗的电量
      */
     public void consumeEnergy(int amount) {
-        this.setEnergy(Math.max(0, this.getEnergy() - amount));
+        this.energyStorage.extractEnergy(amount, false);
     }
 
     public boolean canConsume(int amount) {
@@ -50,11 +68,17 @@ public class EnergyVehicleEntity extends VehicleEntity implements IChargeEntity 
     }
 
     public int getEnergy() {
-        return this.entityData.get(ENERGY);
+        return this.energyStorage.getEnergyStored();
     }
 
     public void setEnergy(int pEnergy) {
-        this.entityData.set(ENERGY, Mth.clamp(pEnergy, 0, this.getMaxEnergy()));
+        int targetEnergy = Mth.clamp(pEnergy, 0, this.getMaxEnergy());
+
+        if (targetEnergy > energyStorage.getEnergyStored()) {
+            energyStorage.receiveEnergy(targetEnergy - energyStorage.getEnergyStored(), false);
+        } else {
+            energyStorage.extractEnergy(energyStorage.getEnergyStored() - targetEnergy, false);
+        }
     }
 
     public int getMaxEnergy() {
@@ -71,5 +95,10 @@ public class EnergyVehicleEntity extends VehicleEntity implements IChargeEntity 
     @Override
     public boolean canCharge() {
         return this.getEnergy() < this.getMaxEnergy();
+    }
+
+    @Override
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap) {
+        return ForgeCapabilities.ENERGY.orEmpty(cap, energy);
     }
 }
