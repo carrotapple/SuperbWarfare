@@ -132,7 +132,7 @@ public class ContainerBlock extends BaseEntityBlock {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
         CompoundTag tag = BlockItem.getBlockEntityData(pStack);
         if (tag != null && tag.contains("EntityType")) {
-            String s = getTranslationKey(tag.getString("EntityType"));
+            String s = getEntityTranslationKey(tag.getString("EntityType"));
             pTooltip.add(Component.translatable(s == null ? "des.superbwarfare.container.empty" : s).withStyle(ChatFormatting.GRAY));
 
             var entityType = EntityType.byString(tag.getString("EntityType")).orElse(null);
@@ -159,7 +159,7 @@ public class ContainerBlock extends BaseEntityBlock {
     }
 
     @Nullable
-    public String getTranslationKey(String path) {
+    public static String getEntityTranslationKey(String path) {
         String[] parts = path.split(":");
         if (parts.length > 1) {
             return "entity." + parts[0] + "." + parts[1];

@@ -523,5 +523,6 @@
   "jei.superbwarfare.charging_station": "Generates power by consuming fuel or food, and can also accept FE energy input. This block supplies FE energy to adjacent blocks, and can also charge rechargeable vehicles within range.",
 
   "config.jade.plugin_superbwarfare.vehicle_energy": "Vehicle Energy",
-  "config.jade.plugin_superbwarfare.vehicle_health": "Vehicle Health"
+  "config.jade.plugin_superbwarfare.vehicle_health": "Vehicle Health",
+  "config.jade.plugin_superbwarfare.container_entity": "Container Entity"
 }
