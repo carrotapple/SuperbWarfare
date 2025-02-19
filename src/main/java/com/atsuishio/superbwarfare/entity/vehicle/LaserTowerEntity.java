@@ -333,7 +333,7 @@ public class LaserTowerEntity extends EnergyVehicleEntity implements GeoEntity, 
                     sendParticle(serverLevel, ParticleTypes.LAVA, target.getX(), target.getEyeY(), target.getZ(), 4, 0, 0, 0, 0.15, true);
                 }
 
-                target.hurt(ModDamageTypes.causeLaserStaticDamage(this.level().registryAccess(), getOwner(), getOwner()), (float) 15);
+                target.hurt(ModDamageTypes.causeLaserStaticDamage(this.level().registryAccess(), this, this.getOwner()), (float) 15);
                 target.invulnerableTime = 0;
                 entityData.set(LASER_LENGTH, distanceTo(target));
                 entityData.set(TARGET_UUID, "none");
