@@ -223,6 +223,9 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> SVD_FIRE_3P = REGISTRY.register("svd_fire_3p", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("svd_fire_3p")));
     public static final RegistryObject<SoundEvent> SVD_FAR = REGISTRY.register("svd_far", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("svd_far")));
     public static final RegistryObject<SoundEvent> SVD_VERYFAR = REGISTRY.register("svd_veryfar", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("svd_veryfar")));
+    public static final RegistryObject<SoundEvent> SVD_FIRE_1P_S = REGISTRY.register("svd_fire_1p_s", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("svd_fire_1p_s")));
+    public static final RegistryObject<SoundEvent> SVD_FIRE_3P_S = REGISTRY.register("svd_fire_3p_s", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("svd_fire_3p_s")));
+    public static final RegistryObject<SoundEvent> SVD_FAR_S = REGISTRY.register("svd_far_s", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("svd_far_s")));
     public static final RegistryObject<SoundEvent> SVD_RELOAD_NORMAL = REGISTRY.register("svd_reload_normal", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("svd_reload_normal")));
     public static final RegistryObject<SoundEvent> SVD_RELOAD_EMPTY = REGISTRY.register("svd_reload_empty", () -> SoundEvent.createVariableRangeEvent(ModUtils.loc("svd_reload_empty")));
 

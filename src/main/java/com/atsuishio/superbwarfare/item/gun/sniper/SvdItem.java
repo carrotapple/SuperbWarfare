@@ -9,6 +9,7 @@ import com.atsuishio.superbwarfare.init.ModSounds;
 import com.atsuishio.superbwarfare.init.ModTags;
 import com.atsuishio.superbwarfare.item.AnimatedItem;
 import com.atsuishio.superbwarfare.item.gun.GunItem;
+import com.atsuishio.superbwarfare.network.ModVariables;
 import com.atsuishio.superbwarfare.perk.Perk;
 import com.atsuishio.superbwarfare.perk.PerkHelper;
 import com.atsuishio.superbwarfare.tools.GunsTool;
@@ -16,15 +17,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
@@ -94,10 +98,25 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
         return event.setAndContinue(RawAnimation.begin().thenLoop("animation.svd.idle"));
     }
 
+    private PlayState editPredicate(AnimationState<SvdItem> event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return PlayState.STOP;
+        ItemStack stack = player.getMainHandItem();
+        if (!stack.is(ModTags.Items.GUN)) return PlayState.STOP;
+
+        if (player.getCapability(ModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ModVariables.PlayerVariables()).edit) {
+            return event.setAndContinue(RawAnimation.begin().thenPlay("animation.svd.edit"));
+        }
+
+        return event.setAndContinue(RawAnimation.begin().thenLoop("animation.svd.idle"));
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        var idleController = new AnimationController<>(this, "idleController", 4, this::idlePredicate);
+        var idleController = new AnimationController<>(this, "idleController", 3, this::idlePredicate);
         data.add(idleController);
+        var editController = new AnimationController<>(this, "editController", 1, this::editPredicate);
+        data.add(editController);
     }
 
     @Override
@@ -121,6 +140,34 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
     }
 
     @Override
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
+
+        int scopeType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.SCOPE);
+        int magType = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.MAGAZINE);
+
+        if (scopeType == 3) {
+            CompoundTag tag = stack.getOrCreateTag().getCompound("Attachments");
+            tag.putInt("Scope", 0);
+        }
+
+        int customMag = switch (magType) {
+            case 1 -> 10;
+            case 2 -> 20;
+            default -> 0;
+        };
+
+        double customZoom = switch (scopeType) {
+            case 0, 1 -> 0;
+            case 2 -> 3.75;
+            default -> GunsTool.getGunDoubleTag(stack, "CustomZoom", 0);
+        };
+
+        GunsTool.setGunDoubleTag(stack, "CustomZoom", customZoom);
+        GunsTool.setGunIntTag(stack, "CustomMagazine", customMag);
+    }
+
+    @Override
     public ResourceLocation getGunIcon() {
         return ModUtils.loc("textures/gun_icon/svd_icon.png");
     }
@@ -133,6 +180,26 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
     @Override
     public boolean canApplyPerk(Perk perk) {
         return PerkHelper.SNIPER_RIFLE_PERKS.test(perk) || PerkHelper.MAGAZINE_PERKS.test(perk);
+    }
+
+    @Override
+    public boolean canCustom(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean canCustomBarrel(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean canCustomScope(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean canCustomMagazine(ItemStack stack) {
+        return true;
     }
 
     @Override
@@ -152,6 +219,11 @@ public class SvdItem extends GunItem implements GeoItem, AnimatedItem {
 
     @Override
     public boolean ejectShell(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean hasBipod(ItemStack stack) {
         return true;
     }
 

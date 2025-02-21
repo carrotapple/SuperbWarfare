@@ -771,7 +771,7 @@ public class ClientEventHandler {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         ItemStack stack = player.getMainHandItem();
-        if (!stack.is(ModTags.Items.GUN)) return;
+        if (!(stack.getItem() instanceof GunItem gunItem)) return;
         if (player.getVehicle() instanceof IArmedVehicleEntity iArmedVehicle && iArmedVehicle.isDriver(player) && iArmedVehicle.hidePassenger())
             return;
 
@@ -781,7 +781,7 @@ public class ClientEventHandler {
         if (player.isCrouching() && player.getBbHeight() >= 1 && !isProne(player)) {
             pose = 0.85f;
         } else if (isProne(player)) {
-            pose = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 3 ? 0 : 0.25f;
+            pose = (GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 3 || gunItem.hasBipod(stack)) ? 0 : 0.25f;
         } else {
             pose = 1;
         }
@@ -924,14 +924,14 @@ public class ClientEventHandler {
 
     private static void handleWeaponSway(LivingEntity entity) {
         ItemStack stack = entity.getMainHandItem();
-        if (stack.is(ModTags.Items.GUN) && entity instanceof Player player) {
+        if (stack.getItem() instanceof GunItem gunItem && entity instanceof Player player) {
             float times = 2 * (float) Math.min(Minecraft.getInstance().getDeltaFrameTime(), 0.8);
             double pose;
 
             if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && isProne(player)) {
                 pose = 0.85;
             } else if (isProne(player)) {
-                pose = GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 3 ? 0 : 0.25f;
+                pose = (GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 3 || gunItem.hasBipod(stack)) ? 0 : 0.25f;
             } else {
                 pose = 1;
             }
@@ -1175,7 +1175,7 @@ public class ClientEventHandler {
         if (player.isShiftKeyDown() && player.getBbHeight() >= 1 && !isProne(player)) {
             pose = 0.7f;
         } else if (isProne(player)) {
-            if (GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 3) {
+            if (GunsTool.getAttachmentType(stack, GunsTool.AttachmentType.GRIP) == 3 || gunItem.hasBipod(stack)) {
                 pose = 0.1f;
             } else {
                 pose = 0.5f;

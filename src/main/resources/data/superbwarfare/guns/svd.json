@@ -1,5 +1,4 @@
 {
-  "CustomZoom": 2.75,
   "Spread": 5.5,
   "RecoilX": 0.004,
   "RecoilY": 0.009,
@@ -8,8 +7,8 @@
   "Velocity": 42,
   "Magazine": 10,
   "Weight": 5,
-  "NormalReloadTime": 56,
-  "EmptyReloadTime": 70,
+  "NormalReloadTime": 59,
+  "EmptyReloadTime": 78,
   "BypassesArmor": 0.45,
   "SoundRadius": 17,
   "RPM": 300

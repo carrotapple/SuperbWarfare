@@ -291,6 +291,9 @@ public abstract class GunItem extends Item {
     public boolean canCustomStock(ItemStack stack) {
         return false;
     }
+    public boolean hasBipod(ItemStack stack) {
+        return false;
+    }
 
     public boolean ejectShell(ItemStack stack) {
         return false;

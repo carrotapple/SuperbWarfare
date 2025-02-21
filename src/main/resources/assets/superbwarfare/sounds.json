@@ -1119,6 +1119,30 @@
       }
     ]
   },
+  "svd_fire_1p_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:svd/svd_fire_1p_s",
+        "stream": false
+      }
+    ]
+  },
+  "svd_fire_3p_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:svd/svd_fire_3p_s",
+        "stream": false
+      }
+    ]
+  },
+  "svd_far_s": {
+    "sounds": [
+      {
+        "name": "superbwarfare:svd/svd_far_s",
+        "stream": false
+      }
+    ]
+  },
   "svd_reload_normal": {
     "sounds": [
       {
