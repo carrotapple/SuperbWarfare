@@ -20,11 +20,16 @@ import com.atsuishio.superbwarfare.item.gun.smg.VectorItem;
 import com.atsuishio.superbwarfare.item.gun.sniper.*;
 import com.atsuishio.superbwarfare.item.gun.special.BocekItem;
 import com.atsuishio.superbwarfare.item.gun.special.TaserItem;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -93,7 +98,16 @@ public class ModTabs {
                     .title(Component.translatable("item_group.superbwarfare.ammo"))
                     .icon(() -> new ItemStack(ModItems.SHOTGUN_AMMO_BOX.get()))
                     .withTabsBefore(PERK_TAB.getKey())
-                    .displayItems((param, output) -> ModItems.AMMO.getEntries().forEach(registryObject -> output.accept(registryObject.get())))
+                    .displayItems((param, output) -> {
+                        ModItems.AMMO.getEntries().forEach(registryObject -> {
+                            if (registryObject.get() != ModItems.POTION_MORTAR_SHELL.get()) {
+                                output.accept(registryObject.get());
+                            }
+                        });
+
+                        param.holders().lookup(Registries.POTION)
+                                .ifPresent(potion -> generatePotionEffectTypes(output, potion, ModItems.POTION_MORTAR_SHELL.get()));
+                    })
                     .build());
 
     public static final RegistryObject<CreativeModeTab> ITEM_TAB = TABS.register("item",
@@ -109,8 +123,8 @@ public class ModTabs {
                             output.accept(ContainerBlockItem.createInstance(ModEntities.LASER_TOWER.get()));
                             output.accept(ContainerBlockItem.createInstance(ModEntities.SPEEDBOAT.get(), true));
                             output.accept(ContainerBlockItem.createInstance(ModEntities.AH_6.get()));
-                            output.accept(ContainerBlockItem.createInstance(ModEntities.LAV_150.get(),true));
-                            output.accept(ContainerBlockItem.createInstance(ModEntities.BMP_2.get(),true));
+                            output.accept(ContainerBlockItem.createInstance(ModEntities.LAV_150.get(), true));
+                            output.accept(ContainerBlockItem.createInstance(ModEntities.BMP_2.get(), true));
                             output.accept(ContainerBlockItem.createInstance(ModEntities.WHEEL_CHAIR.get()));
                             output.accept(ContainerBlockItem.createInstance(ModEntities.TOM_6.get()));
                         } else {
@@ -135,5 +149,11 @@ public class ModTabs {
         if (tabData.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
             tabData.accept(ModItems.SENPAI_SPAWN_EGG.get());
         }
+    }
+
+    private static void generatePotionEffectTypes(CreativeModeTab.Output output, HolderLookup<Potion> potions, Item potionItem) {
+        potions.listElements().filter(potion -> !potion.is(Potions.EMPTY_ID))
+                .map(potion -> PotionUtils.setPotion(new ItemStack(potionItem), potion.value()))
+                .forEach(output::accept);
     }
 }
