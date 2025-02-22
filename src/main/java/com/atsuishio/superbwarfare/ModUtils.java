@@ -191,6 +191,6 @@ public class ModUtils {
     }
 
     public void onRegisterColorHandlers(final RegisterColorHandlersEvent.Item event) {
-        event.register((stack, count) -> count == 0 ? PotionUtils.getColor(stack) : -1, ModItems.POTION_MORTAR_SHELL.get());
+        event.register((stack, layer) -> layer == 1 ? PotionUtils.getColor(stack) : -1, ModItems.POTION_MORTAR_SHELL.get());
     }
 }
