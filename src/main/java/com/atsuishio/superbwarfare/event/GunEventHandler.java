@@ -365,7 +365,7 @@ public class GunEventHandler {
         }
 
         if (stack.getItem() == ModItems.SVD.get()) {
-            if (data.getInt("ReloadTime") == 18) {
+            if (data.getInt("ReloadTime") == 17) {
                 data.putBoolean("HoldOpen", false);
             }
         }

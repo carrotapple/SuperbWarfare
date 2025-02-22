@@ -135,10 +135,10 @@ public class SvdItemModel extends GeoModel<SvdItem> {
 
         CrossHairOverlay.gunRot = shen.getRotZ();
 
-        bolt.setPosZ(5f * (float) fp);
+        bolt.setPosZ(4.5f * (float) fp);
 
         if (GunsTool.getGunBooleanTag(stack, "HoldOpen")) {
-            bolt.setPosZ(4f);
+            bolt.setPosZ(3.5f);
         }
 
         CoreGeoBone l = getAnimationProcessor().getBone("l");

@@ -104,7 +104,7 @@ public class SvdItemRenderer extends GeoItemRenderer<SvdItem> {
         }
 
         if (GunsTool.getAttachmentType(itemStack, GunsTool.AttachmentType.SCOPE) == 2
-                && (name.equals("Hidden") || name.equals("gun") || name.equals("bolt") || name.equals("Lefthand") || name.equals("Barrel")) && ClientEventHandler.zoom && !itemStack.getOrCreateTag().getBoolean("HoloHidden")) {
+                && (name.equals("Hidden") || name.equals("gun") || name.equals("bolt") || name.equals("Lefthand") || name.equals("Barrel") || name.equals("bipod")) && ClientEventHandler.zoom && !itemStack.getOrCreateTag().getBoolean("HoloHidden")) {
             bone.setHidden(true);
             renderingArms = false;
         }
