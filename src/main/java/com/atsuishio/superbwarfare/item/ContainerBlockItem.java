@@ -3,6 +3,7 @@ package com.atsuishio.superbwarfare.item;
 import com.atsuishio.superbwarfare.client.renderer.block.ContainerBlockItemRenderer;
 import com.atsuishio.superbwarfare.init.ModBlockEntities;
 import com.atsuishio.superbwarfare.init.ModBlocks;
+import com.atsuishio.superbwarfare.init.ModEntities;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -29,9 +30,27 @@ import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class ContainerBlockItem extends BlockItem implements GeoItem {
+
+    /**
+     * 集装箱可用实体列表
+     */
+    public static final List<Supplier<ItemStack>> CONTAINER_ENTITIES = List.of(
+            () -> ContainerBlockItem.createInstance(ModEntities.MK_42.get()),
+            () -> ContainerBlockItem.createInstance(ModEntities.MLE_1934.get()),
+            () -> ContainerBlockItem.createInstance(ModEntities.ANNIHILATOR.get()),
+            () -> ContainerBlockItem.createInstance(ModEntities.LASER_TOWER.get()),
+            () -> ContainerBlockItem.createInstance(ModEntities.SPEEDBOAT.get(), true),
+            () -> ContainerBlockItem.createInstance(ModEntities.AH_6.get()),
+            () -> ContainerBlockItem.createInstance(ModEntities.LAV_150.get(), true),
+            () -> ContainerBlockItem.createInstance(ModEntities.BMP_2.get(), true),
+            () -> ContainerBlockItem.createInstance(ModEntities.WHEEL_CHAIR.get()),
+            () -> ContainerBlockItem.createInstance(ModEntities.TOM_6.get())
+    );
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 

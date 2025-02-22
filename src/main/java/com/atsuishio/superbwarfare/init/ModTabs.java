@@ -2,7 +2,6 @@ package com.atsuishio.superbwarfare.init;
 
 import com.atsuishio.superbwarfare.ModUtils;
 import com.atsuishio.superbwarfare.item.ArmorPlate;
-import com.atsuishio.superbwarfare.item.ContainerBlockItem;
 import com.atsuishio.superbwarfare.item.gun.handgun.*;
 import com.atsuishio.superbwarfare.item.gun.launcher.JavelinItem;
 import com.atsuishio.superbwarfare.item.gun.launcher.M79Item;
@@ -35,6 +34,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.function.Supplier;
+
+import static com.atsuishio.superbwarfare.item.ContainerBlockItem.CONTAINER_ENTITIES;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModTabs {
@@ -117,16 +120,7 @@ public class ModTabs {
                     .withTabsBefore(AMMO_TAB.getKey())
                     .displayItems((param, output) -> ModItems.ITEMS.getEntries().forEach(registryObject -> {
                         if (registryObject.get() == ModItems.CONTAINER.get()) {
-                            output.accept(ContainerBlockItem.createInstance(ModEntities.MK_42.get()));
-                            output.accept(ContainerBlockItem.createInstance(ModEntities.MLE_1934.get()));
-                            output.accept(ContainerBlockItem.createInstance(ModEntities.ANNIHILATOR.get()));
-                            output.accept(ContainerBlockItem.createInstance(ModEntities.LASER_TOWER.get()));
-                            output.accept(ContainerBlockItem.createInstance(ModEntities.SPEEDBOAT.get(), true));
-                            output.accept(ContainerBlockItem.createInstance(ModEntities.AH_6.get()));
-                            output.accept(ContainerBlockItem.createInstance(ModEntities.LAV_150.get(), true));
-                            output.accept(ContainerBlockItem.createInstance(ModEntities.BMP_2.get(), true));
-                            output.accept(ContainerBlockItem.createInstance(ModEntities.WHEEL_CHAIR.get()));
-                            output.accept(ContainerBlockItem.createInstance(ModEntities.TOM_6.get()));
+                            CONTAINER_ENTITIES.stream().map(Supplier::get).forEach(output::accept);
                         } else {
                             output.accept(registryObject.get());
                             if (registryObject.get() == ModItems.ARMOR_PLATE.get()) {

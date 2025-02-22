@@ -38,6 +38,12 @@ public class SbwJEIPlugin implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
+        registration.registerSubtypeInterpreter(ModItems.CONTAINER.get(), (ingredient, context) -> {
+                    assert ingredient.getTag() != null;
+                    return ingredient.getTag().getCompound("BlockEntityTag").getString("EntityType");
+                }
+        );
+
         registration.registerSubtypeInterpreter(ModItems.POTION_MORTAR_SHELL.get(), (stack, context) -> {
             if (!stack.hasTag()) {
                 return IIngredientSubtypeInterpreter.NONE;
