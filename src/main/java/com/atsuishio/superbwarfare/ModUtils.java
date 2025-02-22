@@ -65,6 +65,7 @@ public class ModUtils {
         ModPotion.POTIONS.register(bus);
         ModMenuTypes.REGISTRY.register(bus);
         ModVillagers.register(bus);
+        ModRecipes.RECIPE_SERIALIZERS.register(bus);
 
         bus.addListener(this::onCommonSetup);
         bus.addListener(this::onClientSetup);
